@@ -21,6 +21,7 @@ ARCHIVE_DIR=$QCARCHIVEDIR/go
 #EC="'J:72245'"
 #MLC="'J:72246'"
 #FANTOM2="J:80000"
+#UNKNOWN="J:73796"
 
 GO_FISH=59154
 SWISS_PROT=61933
@@ -29,8 +30,9 @@ ORTHOLOGY=74017
 EC=73197
 MLC=73198
 FANTOM2=80961
+UNKNOWN=74750
 
-MANUAL_NOT_IN_CLAUSE="($GO_FISH,$SWISS_PROT,$INTERPRO,$ORTHOLOGY,$EC,$MLC,$FANTOM2)"
+MANUAL_NOT_IN_CLAUSE="($GO_FISH,$SWISS_PROT,$INTERPRO,$ORTHOLOGY,$EC,$MLC,$FANTOM2,$UNKNOWN)"
 
 COUNT_ALL_ANNOTATIONS="a._Annot_key"
 COUNT_DISTINCT_MARKERS="distinct(_Marker_key)"
@@ -203,6 +205,7 @@ getCounts "ORTHOLOGY"  $EQUALS               $ORTHOLOGY
 getCounts "EC"         $EQUALS               $EC
 getCounts "MLC"        $EQUALS               $MLC
 getCounts "FANTOM2"    $EQUALS               $FANTOM2
+getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
 
 cat /usr/local/mgi/dbutils/mgidbutilities/text/copyrightnotice >> $REPORT
 
