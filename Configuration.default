@@ -48,7 +48,7 @@ setenv DBUTILITIESPATH		/usr/local/mgi/dbutils/mgidbutilities
 set path = ($DBUTILITIESPATH/bin $path $SYBASE/bin)
 
 # Database Server
-setenv DBSERVER MGD
+setenv DSQUERY MGD
 
 # MGD Database
 setenv MGD mgd

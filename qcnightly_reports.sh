@@ -12,12 +12,12 @@ cd `dirname $0` && source Configuration
 
 umask 002
 
-foreach i (`ls $QCMGD/*.sql`)
-sql.sh $MGD $i
+foreach i (`ls $QCMGD/PRB_Strain*.sql`)
+reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DBSERVER $MGD
 end
 
 foreach i (`ls $QCNOMEN/*.sql`)
-sql.sh $NOMEN $i
+reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DBSERVER $NOMEN
 end
 
 cd $QCMGD
