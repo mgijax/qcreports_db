@@ -31,7 +31,7 @@ $i
 end
 
 cd $QCREPORTOUTPUTDIR
-foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt)
+foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt HMD_SymbolDiffs2.sql.rpt)
 rcp $i $HUGOWEBDIR
 rcp $i $HUGOFTPDIR
 end
