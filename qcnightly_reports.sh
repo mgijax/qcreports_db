@@ -11,7 +11,14 @@
 cd `dirname $0` && source ./Configuration
 
 foreach i ($QCMGD/*.sql)
-reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
+	mv -f $QCREPORTOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
+	rm -rf $QCREPORTOUTPUTDIR/`basename $i`.current.rpt
+	reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.${DATE}.rpt $DSQUERY $MGD
+	ln -s $QCREPORTOUTPUTDIR/`basename $i`.${DATE}.rpt $QCREPORTOUTPUTDIR/`basename $i`.current.rpt
+else
+	reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+endif
 end
 
 foreach i ($QCNOMEN/*.sql)
