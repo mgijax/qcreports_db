@@ -1,3 +1,21 @@
+TAG: qcreports_db-13-0-0
+DATE: 11/01/2001
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 2358 - remove Strains database
+	PRB_Strain*
+b) TR 2714
+	PRB_AltTranscripts.sql
+	PRB_Marker.sql
+	PRB_NoMarkerSeq.sql
+c) TR 2976
+	HMD_SymbolDiffs.sql
+d) ALL_NomenTransgene.py (error determined by Lori; no TR)
+e) use mgidbutilities/reportisql.csh script
+f) TR 3027
+	MRK_RatNoGO.sql
+
 TAG: qcreports_db-12-0-0
 DATE: 09/18/2001
 STAFF: lec
