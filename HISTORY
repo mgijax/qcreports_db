@@ -1,3 +1,11 @@
+TAG:  qcreports_db-23-0-6
+DATE: 08/16/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.01
+b) merged changes in from qcreports_db-jsam-patch-1
+
 TAG:  qcreports_db-23-0-5
 DATE: 07/23/2004
 STAFF: lec
@@ -23,6 +31,13 @@ STAFF: lec
 RELEASE: A
 CHANGES:
 a) MGI 3.01
+
+TAG:  qcreports_db-jsam-patch-1
+DATE: 07/09/2004
+STAFF: dbm
+RELEASE: A
+CHANGES:
+a) fix for cloneload and add gbcdnaload
 
 TAG:  qcreports_db-22-0-25
 DATE: 06/08/2004
