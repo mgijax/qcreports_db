@@ -80,6 +80,10 @@ def writeRecord1(fp, r):
 
 def writeRecord2(fp, r):
 
+	# for each marker/go ID, print one row in the output file
+	# each row will contain the unique list of evidence codes
+	# used for those marker/go ID annotations
+
 	key = `r['_Marker_key']` + ':' + r['goID']
 
 	fp.write(accid[r['_Marker_key']] + TAB + \
@@ -101,6 +105,7 @@ fpD = reportlib.init("MRK_GOGold_D", printHeading = 0, outputdir = os.environ['Q
 
 cmds = []
 
+# select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
 cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
 'into #m1 ' + \
 'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
@@ -117,6 +122,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 'and n._DAG_key = d._DAG_key '
 'order by m.symbol')
 
+# select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI
 cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
 'into #m2 ' + \
 'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
@@ -133,6 +139,8 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 'and n._DAG_key = d._DAG_key '
 'order by m.symbol')
 
+# select MGI accession ids for mouse genes from set 1
+# this will also suffice for set 2 which is a subset of set 1
 cmds.append('select distinct m._Marker_key, ma.accID ' + \
 'from #m1 m, MRK_Acc_View ma ' + \
 'where m._Marker_key = ma._Object_key ' + \
@@ -143,20 +151,28 @@ cmds.append('select * from #m1')
 
 cmds.append('select * from #m2')
 
+# select all records from set 1 which have multiple annotations to the same GO term
 cmds.append('select * into #m3 from #m1 group by _Marker_key, goID having count(*) > 1')
 
+# select distinct marker, GO ID, evidence code from set 1 annotations
+# we're doing this because for a given marker/go ID we only want to print
+# one row in the output file which will contain the list of unique evidence codes
+# used for that marker/go ID annotation
 cmds.append('select distinct _Marker_key, goID, evidenceCode from #m3')
 
 cmds.append('select distinct _Marker_key, symbol, name, term, goID, abbreviation from #m3 order by symbol')
 
+# select all records from set 2 which have multiple annotations to the same GO term
 cmds.append('select * into #m4 from #m2 group by _Marker_key, goID having count(*) > 1')
 
+# select distinct marker, GO ID, evidence code from set 2 annotations
 cmds.append('select distinct _Marker_key, goID, evidenceCode from #m4')
 
 cmds.append('select distinct _Marker_key, symbol, name, term, goID, abbreviation from #m4 order by symbol')
 
 results = db.sql(cmds, 'auto')
 
+# store dictionary of mgi ids for mouse genes
 accid = {}
 for r in results[2]:
 	accid[r['_Marker_key']] = r['accID']
@@ -167,6 +183,7 @@ for r in results[3]:
 for r in results[4]:
 	writeRecord1(fpB, r)
 
+# store dictionary of evidence cods by marker/go ID
 ecode = {}
 for r in results[6]:
 	key = `r['_Marker_key']` + ':' + r['goID']
@@ -178,6 +195,7 @@ for r in results[6]:
 for r in results[7]:
 	writeRecord2(fpC, r)
 
+# store dictionary of evidence cods by marker/go ID
 ecode = {}
 for r in results[9]:
 	key = `r['_Marker_key']` + ':' + r['goID']
