@@ -36,6 +36,9 @@ setenv MLCINDEX			/usr/local/mgi/wi/prod/www/images/mlc/index
 # EI Log files
 setenv EILOGFILES		/export/titan
 
+# EI Log Name
+setenv EILOGNAME		.ei-log
+
 # FTP 
 setenv FTPURL			ftp.informatics.jax.org
 
