@@ -12,6 +12,8 @@ USER=$PUBUSER
 PASSWORD=`cat $PUBPASSWORDFILE`
 DATABASE=$MGD
 
+ARCHIVE_DIR=$QCARCHIVEDIR/go
+
 #GO_FISH="'J:56000'"
 #SWISS_PROT="'J:60000'"
 #INTERPRO="'J:72247'"
@@ -242,10 +244,10 @@ getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
 cat ${DBUTILITIESPATH}/text/copyrightnotice >> $REPORT
 
 #Archive the file
-if [ ! -d $QCGOARCHIVE ]
+if [ ! -d $ARCHIVE_DIR ]
 then
    echo "...creating data directory $1"
-   mkdir $QCGOARCHIVE
+   mkdir $ARCHIVE_DIR
 fi
-ARCHIVE_FILE_NAME="$QCGOARCHIVE/GO_stats.`date +%Y%m%d`"
+ARCHIVE_FILE_NAME="$ARCHIVE_DIR/GO_stats.`date +%Y%m%d`"
 cp -p $REPORT $ARCHIVE_FILE_NAME

@@ -10,6 +10,10 @@
 
 cd `dirname $0` && source ./Configuration
 
+setenv LOG	${QCLOGSDIR}/$0.log
+rm -rf ${LOG}
+touch ${LOG}
+
 foreach i ($QCMONTHLY/*.sql)
 
 if ( $i == "$QCMONTHLY/ALL_Progress.sql" ) then
