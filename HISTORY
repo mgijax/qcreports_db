@@ -1,3 +1,10 @@
+TAG:  qcreports_db-17-0-21
+DATE: 08/01/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 3958; added weekly, qcweekly_reports.sh
+
 TAG:  qcreports_db-17-0-20
 DATE: 07/26/2002
 STAFF: lec
