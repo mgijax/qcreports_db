@@ -146,10 +146,10 @@ cmds.append('select distinct a.symbol, a._Allele_key from #pairs p, GXD_AlleleGe
 # Cache the Allele keys
 
 
-cmds.append('select distinct g._Genotype_key, g._Allele_key from #pairs p, GXD_AlleleGenotype g ' +
+cmds.append('select distinct g._Genotype_key, g._Allele_key_1, g._Allele_key_2 from #pairs p, GXD_AllelePair g ' +
 	    'where p.geno1 = g._Genotype_key ' +
 	    'union ' +
-            'select distinct g._Genotype_key, g._Allele_key from #pairs p, GXD_AlleleGenotype g ' +
+            'select distinct g._Genotype_key, g._Allele_key_1, g._Allele_key_2 from #pairs p, GXD_AllelePair g ' +
 	    'where p.geno2 = g._Genotype_key ')
 
 #
@@ -175,10 +175,12 @@ for r in results[-3]:
 alleles = {}
 for r in results[-2]:
     key = r['_Genotype_key']
-    value = r['_Allele_key']
+    value1 = r['_Allele_key_1']
+    value2 = r['_Allele_key_2']
     if not alleles.has_key(key):
 	alleles[key] = []
-    alleles[key].append(value)
+    alleles[key].append(value1)
+    alleles[key].append(value2)
 
 #
 #  Now cycle through and create a distinct set of genotype pairs.
