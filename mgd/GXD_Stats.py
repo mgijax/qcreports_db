@@ -137,7 +137,7 @@ def indexOnly():
     #  statistics as of December 31st of that year.
     #
 
-    for year in range(startYear, endYear):
+    for year in range(startYear, endYear + 1):
 
         #
         #  Fill Index temp table
@@ -333,7 +333,10 @@ def fullCoded():
     # Assays, Assay Results and Genes by source
     #
 
-    fp.write('Assays, Assay Results and Genes by Source:' + 2*CRT)
+    fp.write('Assays, Assay Results and Genes by Source:' + CRT)
+    fp.write('(Electronic References are:  J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, ' + CRT)
+    fp.write('                             J:85124 Sousa-Nunes, J:91257 Gray)' + 2*CRT)
+
     fp.write(string.ljust('             ', 15))
     fp.write(string.ljust('Electronic Submission', 25))
     fp.write(string.ljust('Literature Submission', 25))
