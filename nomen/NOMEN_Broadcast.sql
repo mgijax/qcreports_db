@@ -19,5 +19,5 @@ from #nomen n, MRK_Nomen_View v, MRK_Nomen_Reference_View r
 where n._Nomen_key = v._Nomen_key
 and v._Nomen_key = r._Nomen_key
 and r.isPrimary = 1
-order by v.broadcastBy, v.broadcastDate, v.submittedBy
+order by v.broadcastBy, v.broadcast_date, v.submittedBy
 go
