@@ -123,7 +123,7 @@ rows = 0
 for r in results[4]:
 	key = `r['_Marker_key']` + ':' + `r['_Refs_key']`
 
-	fp.write(string.ljust(r['symbol'], 27) + \
+	fp.write(string.ljust(r['symbol'], 52) + \
 	 	 string.ljust(r['goID'], 32) + \
 	 	 string.ljust(r['term'], 52) + \
 	 	 string.ljust(r['jnumID'], 12) + \
