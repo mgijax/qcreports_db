@@ -1,3 +1,11 @@
+TAG:  qcreports_db-maint6300-12
+DATE: 01/21/2005
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) GXD_SpecNoAge.sql
+
 TAG:  qcreports_db-maint6300-11
 TAG:  qcreports_db-maint6300-10
 TAG:  qcreports_db-maint6300-9
