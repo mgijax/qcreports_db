@@ -39,35 +39,75 @@ print ""
 print "InSitu Specimens with NULL Age Value (when there should be one)"
 print ""
 
-select a.mgiID, a.jnumID, s.specimenLabel
-from #spec1 s, GXD_Assay_View a
-where s._Assay_key = a._Assay_key
+select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
+from #spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
+where s._Assay_key = ga._Assay_key
+and ga._Marker_key = a1._Object_key
+and a1._MGIType_key = 2
+and a1._LogicalDB_key = 1
+and a1.prefixPart = "MGI:"
+and a1.preferred = 1
+and ga._Refs_key = a2._Object_key
+and a2._MGIType_key = 2
+and a2._LogicalDB_key = 1
+and a2.prefixPart = "J:"
+and a2.preferred = 1
 go
 
 print ""
 print "Gel Lane Specimens with NULL Age Value (when there should be one)"
 print ""
 
-select a.mgiID, a.jnumID, s.laneLabel
-from #spec2 s, GXD_Assay_View a
-where s._Assay_key = a._Assay_key
+select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
+from #spec2 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
+where s._Assay_key = ga._Assay_key
+and ga._Marker_key = a1._Object_key
+and a1._MGIType_key = 2
+and a1._LogicalDB_key = 1
+and a1.prefixPart = "MGI:"
+and a1.preferred = 1
+and ga._Refs_key = a2._Object_key
+and a2._MGIType_key = 2
+and a2._LogicalDB_key = 1
+and a2.prefixPart = "J:"
+and a2.preferred = 1
 go
 
 print ""
 print "InSitu Specimens with Not Applicable, Not Specified or Embryonic"
 print ""
 
-select a.mgiID, a.jnumID, s.specimenLabel
-from #spec3 s, GXD_Assay_View a
-where s._Assay_key = a._Assay_key
+select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
+from #spec3 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
+where s._Assay_key = ga._Assay_key
+and ga._Marker_key = a1._Object_key
+and a1._MGIType_key = 2
+and a1._LogicalDB_key = 1
+and a1.prefixPart = "MGI:"
+and a1.preferred = 1
+and ga._Refs_key = a2._Object_key
+and a2._MGIType_key = 2
+and a2._LogicalDB_key = 1
+and a2.prefixPart = "J:"
+and a2.preferred = 1
 go
 
 print ""
 print "Gel Lane Specimens with Not Applicable, Not Specified or Embryonic"
 print ""
 
-select a.mgiID, a.jnumID, s.laneLabel
-from #spec4 s, GXD_Assay_View a
-where s._Assay_key = a._Assay_key
+select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
+from #spec4 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
+where s._Assay_key = ga._Assay_key
+and ga._Marker_key = a1._Object_key
+and a1._MGIType_key = 2
+and a1._LogicalDB_key = 1
+and a1.prefixPart = "MGI:"
+and a1.preferred = 1
+and ga._Refs_key = a2._Object_key
+and a2._MGIType_key = 2
+and a2._LogicalDB_key = 1
+and a2.prefixPart = "J:"
+and a2.preferred = 1
 go
 
