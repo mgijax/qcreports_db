@@ -17,11 +17,11 @@ setenv QCREPORTOUTPUTDIR	$QCREPORTINSTALLDIR/output
 setenv QCARCHIVEDIR		$QCREPORTOUTPUTDIR/archive
 
 # private HUGO directories
-setenv HUGOWEBDIR		/usr/local/mgi/private/www/hugo
-setenv HUGOFTPDIR		/export/l1/ftp/private/hes
+setenv HUGOWEBDIR		gondor:/usr/local/mgi/private/www/hugo
+setenv HUGOFTPDIR		/net/gondor/export/gondor/ftp/private/hes
 
 # RIKEN FTP report directory
-setenv RIKENFTPDIR              /export/l1/ftp/private/riken
+setenv RIKENFTPDIR              /net/gondor/export/gondor/ftp/private/riken
 
 # Alleles archive directory
 setenv QCALLELEARCHIVE          $QCARCHIVEDIR/alleles
@@ -46,7 +46,7 @@ setenv QCMONTHLY                $QCREPORTINSTALLDIR/monthly
 setenv MLCINDEX			/usr/local/mgi/wi/prod/www/images/mlc/index
 
 # EI Log files
-setenv EILOGFILES		/export/titan
+setenv EILOGFILES		/export/shire
 
 # EI Log Name
 setenv EILOGNAME		.ei-log
@@ -67,7 +67,7 @@ setenv DBUTILITIESPATH		/usr/local/mgi/dbutils/mgidbutilities
 set path = ($DBUTILITIESPATH/bin $path $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
 
 # Database Server
-setenv DSQUERY MGD
+setenv DSQUERY PROD_MGI
 
 # MGD Database
 setenv MGD mgd
