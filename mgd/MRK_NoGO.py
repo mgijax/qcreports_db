@@ -75,7 +75,7 @@
 # lec	02/23/2004
 #	- exclude Gene Model markers, DNA Segments (already excluded), Pseudogenes (already excluded),
 #	  genes whose symbol is a GenBank # (AFXXXXX, BCXXXXX, etc.),
-#	  ORFs, genes with only J:81149 as a reference.
+#	  ORFs, genes with only J:81149, J:77944 as a reference.
 #
 # lec	04/11/2003
 #	- TR 4698; added PubMed ID to 1D
@@ -213,7 +213,7 @@ cmds.append('select distinct r._Refs_key ' + \
 
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
-'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149) ' + \
+'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
 'and short_citation not like "%Genbank Submission%" ' + \
 'group by _Marker_key ' + \
 'order by symbol')
@@ -224,7 +224,7 @@ cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_
 
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
-'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149) ' + \
+'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
 'and short_citation not like "%Genbank Submission%" ' + \
 'group by _Marker_key ' + \
 'order by symbol')
