@@ -253,16 +253,6 @@ select distinct
 	   Month   = convert(numeric(2), datepart(month, creation_date))
 into #periods
 from GXD_Assay
-UNION
-select distinct 
-	   Year    = convert(numeric(4), datepart(year, creation_date)),
-	   Month   = convert(numeric(2), datepart(month, creation_date))
-from GXD_GelBand
-UNION
-select distinct 
-	   Year    = convert(numeric(4), datepart(year, creation_date)),
-	   Month   = convert(numeric(2), datepart(month, creation_date))
-from GXD_InSituResult
 
 /* Result acquisition stats by month/year periods & AssayTypes */
 /* table with all rows & columns needed to accummulate these counts*/
@@ -304,16 +294,17 @@ go
 
 /* get detailed counts for period and period-AssayType counts */
 /* ... for Gel Results */
-select Year    = convert(numeric(4), datepart(year, r.creation_date)), 
-	   Month   = convert(numeric(2), datepart(month, r.creation_date)),
+select Year    = convert(numeric(4), datepart(year, a.creation_date)), 
+	   Month   = convert(numeric(2), datepart(month, a.creation_date)),
 	   _AssayType_key,
 	   Results = count (*)
 into #gelresults
-from GXD_GelBand r, GXD_GelLane l, GXD_Assay a
+from GXD_Assay a, GXD_GelLane l, GXD_GelLaneStructure gls
 where a._Assay_key = l._Assay_key
-and l._GelLane_key = r._GelLane_key
-group by datepart(year, r.creation_date), 
-		 datepart(month, r.creation_date),
+and l._GelControl_key = 1
+and l._GelLane_key = gls._GelLane_key
+group by datepart(year, a.creation_date), 
+		 datepart(month, a.creation_date),
 		 _AssayType_key
 
 
@@ -327,16 +318,17 @@ and r._AssayType_key = p._AssayType_key
 go
 
 /* ... for InSitu Results */
-select Year    = convert(numeric(4), datepart(year, r.creation_date)), 
-	   Month   = convert(numeric(2), datepart(month, r.creation_date)), 
+select Year    = convert(numeric(4), datepart(year, a.creation_date)), 
+	   Month   = convert(numeric(2), datepart(month, a.creation_date)), 
 	   _AssayType_key,
 	   Results   = count (*)
 into #insituResults
-from GXD_InsituResult r, GXD_Specimen s, GXD_Assay a
-where r._Specimen_key = s._Specimen_key 
-and s._Assay_key = a._Assay_key
-group by datepart(year, r.creation_date), 
-		 datepart(month, r.creation_date),
+from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure rs
+where a._Assay_key = s._Assay_key
+and s._Specimen_key = r._Specimen_key
+and r._Result_key = rs._Result_key
+group by datepart(year, a.creation_date), 
+		 datepart(month, a.creation_date),
 		 _AssayType_key
 go
 
