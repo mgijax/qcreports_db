@@ -107,7 +107,5 @@ quit
 
 EOSQL
 
-./QC_MS_InvalidLibrary.py ${OUTPUTDIR} ${JOBSTREAM}
-
 date >> $LOG
 

@@ -4,7 +4,7 @@
 # $Name$
 
 #
-# Program: loadQC.csh
+# Program: runQC.csh
 #
 # Original Author: Lori Corbani
 #
@@ -18,7 +18,7 @@
 #
 # Usage:
 #
-#	loadQC.csh [RADAR DB Schema path] [MGD Database Name] [Job Stream Key] [Output Directory]
+#	runQC.csh [RADAR DB Schema path] [MGD Database Name] [Job Stream Key] [Output Directory]
 #
 # Envvars:
 #
@@ -54,17 +54,25 @@ setenv OUTPUTDIR $4
 source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
 
-setenv LOG ${QCREPORTOUTPUTDIR}/$0.log
+setenv LOG ${OUTPUTDIR}/$0.log
 rm -rf $LOG
 touch $LOG
  
 date | tee ${LOG}
+
+# load QC tables which were not loaded during execution of the MSP
 
 ./loadQC_MS_InvalidLibrary.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
 ./loadQC_MS_InvalidStrain.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
 ./loadQC_MS_InvalidTissue.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
 ./loadQC_MS_InvalidCellLine.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
 ./loadQC_MS_InvalidGender.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
+
+# execute all reports
+
+foreach i (*.py)
+./$i ${OUTPUTDIR} ${JOBSTREAM} ${MGDDBNAME}
+end
 
 date | tee -a ${LOG}
 

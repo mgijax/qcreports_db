@@ -109,7 +109,5 @@ quit
 
 EOSQL
 
-./QC_MS_InvalidStrain.py ${OUTPUTDIR} ${JOBSTREAM}
-
 date >> $LOG
 

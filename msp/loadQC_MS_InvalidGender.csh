@@ -109,7 +109,5 @@ quit
 
 EOSQL
 
-./QC_MS_InvalidGender.py ${OUTPUTDIR} ${JOBSTREAM}
-
 date >> $LOG
 
