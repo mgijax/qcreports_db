@@ -10,18 +10,25 @@
 #
 # Purpose:
 #
-#	To load the Molecular Source Processor QC tables with
-#	data from the specified Job Stream.
+#	To load the Molecular Source Processor QC_MS_InvalidTissue table
+#	with data from the specified Job Stream.
 #
 # Requirements Satisfied by This Program:
 #
+#	JSAM
+#
 # Usage:
+#
+#	loadQC_MS_InvalidTissue.csh [RADAR DB Schema path] [MGD Database Name] [Job Stream Key] [Output Directory]
 #
 # Envvars:
 #
 # Inputs:
 #
 # Outputs:
+#
+#	QC_MS_InvalidTissue.rpt
+#	log file
 #
 # Exit Codes:
 #
@@ -35,6 +42,8 @@
 #
 # Modification History:
 #
+# 03/16/2004 lec
+#	- created
 #
 
 setenv RDRSCHEMADIR $1

@@ -10,15 +10,23 @@
 #
 # Purpose:
 #
+#	To execute all Molecular Source Processor QC reports
+#
 # Requirements Satisfied by This Program:
 #
+#	JSAM
+#
 # Usage:
+#
+#	loadQC.csh [RADAR DB Schema path] [MGD Database Name] [Job Stream Key] [Output Directory]
 #
 # Envvars:
 #
 # Inputs:
 #
 # Outputs:
+#
+#	log file
 #
 # Exit Codes:
 #
@@ -32,6 +40,8 @@
 #
 # Modification History:
 #
+# 03/16/2004	lec
+#	- created
 #
 
 setenv RDRSCHEMADIR $1
