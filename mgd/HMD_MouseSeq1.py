@@ -80,7 +80,7 @@ cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 cmds.append('select m._Marker_key, a.accID ' + 
 	'from #markers m, MRK_ACC_View a ' + \
 	'where m._Marker_key = a._Object_key ' + \
-	'and a._LogicalDB_Key = 9')
+	'and a._LogicalDB_Key in (9, 27)')
 
 cmds.append('select * from #markers order by symbol')
 
