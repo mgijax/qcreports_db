@@ -18,13 +18,13 @@ print "Human Markers with > 1 GDB record ID in LocusLink"
 print ""
 
 select m.symbol, l.locusID "LL ID", m.accID "MGD GDB ID", l.gsdbID "LL GDB ID"
-from #markers m, tempdb..LL l
+from #markers m, radar..DP_LL l
 where m.symbol = l.osymbol
 and l.taxID = 9606
 and m.accID != l.gsdbID
 union
 select m.symbol, l.locusID, m.accID, l.gsdbID
-from #markers m, tempdb..LL l
+from #markers m, radar..DP_LL l
 where m.symbol = l.isymbol
 and l.taxID = 9606
 and m.accID != l.gsdbID

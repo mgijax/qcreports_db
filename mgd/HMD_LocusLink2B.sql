@@ -2,7 +2,7 @@
 /* Comparison of orthologous relationships between MGD and LocusLink */
 /* Uses the LL file homol_seq_pairs which is downloaded from their */
 /* ftp site using the locuslinkload product */
-/* This file is dumped into tempdb..LLHomology */
+/* This file is dumped into radar..DP_LLHomology */
 
 set nocount on
 go
@@ -11,7 +11,7 @@ select h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1,
 h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
 h.maxidentity, h.avgidentity, h.lenmatchseq
 into #homology
-from tempdb..LLHomology h, tempdb..LL l
+from radar..DP_LLHomology h, radar..DP_LL l
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"
 and h.symbol1 != h.symbol2

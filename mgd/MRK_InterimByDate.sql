@@ -47,18 +47,18 @@ go
 
 select h.*, hstatus = "O"
 into #results
-from #homology h, tempdb..LL l
+from #homology h, radar..DP_LL l
 where h.hsymbol = l.osymbol
 and l.taxID = 9606
 union
 select h.*, hstatus = "I"
-from #homology h, tempdb..LL l
+from #homology h, radar..DP_LL l
 where h.hsymbol = l.isymbol
 and l.taxID = 9606
 union
 select h.*, hstatus = "?"
 from #homology h
-where not exists (select 1 from tempdb..LL l
+where not exists (select 1 from radar..DP_LL l
 where l.taxID = 9606 and (h.hsymbol = l.osymbol or h.hsymbol = l.isymbol))
 go
 

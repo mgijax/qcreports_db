@@ -44,18 +44,18 @@ go
 
 select m.*, hstatus = "O"
 into #results
-from #markers m, tempdb..LL l
+from #markers m, radar..DP_LL l
 where m.locusID = l.locusID
 and m.hsymbol = l.osymbol
 union
 select m.*, hstatus = "I"
-from #markers m, tempdb..LL l
+from #markers m, radar..DP_LL l
 where m.locusID = l.locusID
 and m.hsymbol = l.isymbol
 union
 select m.*, hstatus = "?"
 from #markers m
-where not exists (select 1 from tempdb..LL l
+where not exists (select 1 from radar..DP_LL l
 where m.locusID = l.locusID and (m.hsymbol = l.osymbol or m.hsymbol = l.isymbol))
 go
 

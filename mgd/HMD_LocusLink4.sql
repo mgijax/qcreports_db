@@ -2,7 +2,7 @@
 /* Comparison of orthologous relationships between MGD and LocusLink */
 /* Uses the LL file homol_seq_pairs which is downloaded from their */
 /* ftp site using the locuslinkload product */
-/* This file is dumped into tempdb..LLHomology */
+/* This file is dumped into radar..DP_LLHomology */
 
 print ""
 print "The mouse/human orthologous pairs that LocusLink is reporting that we are"
@@ -13,7 +13,7 @@ print ""
 select distinct h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1, h.length1,
 h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
 h.maxidentity, h.avgidentity, h.lenmatchseq
-from tempdb..LLHomology h, HMD_Homology_Marker hm1, MRK_Marker m1, HMD_Homology h1
+from radar..DP_LLHomology h, HMD_Homology_Marker hm1, MRK_Marker m1, HMD_Homology h1
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"
 and h.symbol2 = m1.symbol

@@ -47,7 +47,7 @@ go
 
 select s.*, refID = c.pubmedID
 into #sequencesFinal
-from #sequences2 s, MRK_Acc_View a, tempdb..LLCit c
+from #sequences2 s, MRK_Acc_View a, radar..DP_LLCit c
 where s._Marker_key = a._Object_key
 and a._LogicalDB_key = 24
 and a.accID = c.locusID
@@ -56,7 +56,7 @@ select s.*, null
 from #sequences2 s, MRK_Acc_View a
 where s._Marker_key = a._Object_key
 and a._LogicalDB_key = 24
-and not exists (select 1 from tempdb..LLCit c
+and not exists (select 1 from radar..DP_LLCit c
 where a.accID = c.locusID)
 go
 
