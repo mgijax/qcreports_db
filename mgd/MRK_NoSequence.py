@@ -30,6 +30,9 @@
 #
 # History:
 #
+# lec	01/29/2004
+#	- exclude phenotypic mutants (TR 5139)
+#
 # lec	02/08/2003
 #	- created
 #
@@ -71,6 +74,20 @@ fp.write('-' * 25 + '  ' + \
 cmds = []
 
 #
+# select phenotypic mutant genes
+#
+cmds.append('select distinct m._Marker_key ' + \
+'into #mutants ' + \
+'from MRK_Marker m, ALL_ALlele a ' + \
+'where m._Species_key = 1 ' + \
+'and m._Marker_Type_key = 1 ' + \
+'and m._Marker_key = a._Marker_key ' + \
+'and m.symbol = a.symbol ' + \
+'and not exists (select 1 from MRK_Acc_View a ' + \
+'where m._Marker_key = a._Object_key ' + \
+'and a._LogicalDB_Key in (9, 13, 27, 41)) ')
+
+#
 # select Genes with no sequences
 #
 cmds.append('select m._Marker_key, m.symbol ' + \
@@ -81,7 +98,8 @@ cmds.append('select m._Marker_key, m.symbol ' + \
 'and m._Marker_Status_key in (1,3) ' + \
 'and not exists (select 1 from MRK_Acc_View a ' + \
 'where m._Marker_key = a._Object_key ' + \
-'and a._LogicalDB_Key in (9, 13)) ')
+'and a._LogicalDB_Key in (9, 13)) ' + \
+'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)')
 
 cmds.append('create nonclustered index idx_marker_key on #markers(_Marker_key)')
 
@@ -145,7 +163,7 @@ results = db.sql(cmds, 'auto')
 
 # store dictionary of orthologs
 species = {}
-for r in results[3]:
+for r in results[4]:
 	key = r['_Marker_key']
 	value = r['name']
 	if not species.has_key(key):
@@ -154,7 +172,7 @@ for r in results[3]:
 
 # store dictionary of orthologs/ll ids
 llids = {}
-for r in results[4]:
+for r in results[5]:
 	key = r['_Marker_key']
 	value = r['accID']
 	if not llids.has_key(key):
@@ -163,20 +181,20 @@ for r in results[4]:
 
 # store dictionary of gxd references
 gxd = {}
-for r in results[5]:
+for r in results[6]:
 	key = r['_Marker_key']
 	value = str(r['gxd'])
 	gxd[key] = value
 
 # store list of AP use values
 ap = []
-for r in results[6]:
+for r in results[7]:
 	key = r['_Marker_key']
 	ap.append(key)
 
 # store dictionary of primary references
 ref = {}
-for r in results[7]:
+for r in results[8]:
 	key = r['_Marker_key']
 	value = r['accID']
 	ref[key] = value

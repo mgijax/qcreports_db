@@ -1,6 +1,19 @@
 set nocount on
 go
 
+/* select phenotypic mutants */
+select distinct m._Marker_key
+into #mutants
+from MRK_Marker m, ALL_Allele a
+where m._Marker_Type_key = 1
+and m._Marker_key = a._Marker_key
+and m.symbol = a.symbol
+and not exists (select 1 from MRK_Acc_View a
+where m._Marker_key = a._Object_key
+and a._LogicalDB_key in (9,13,27,41))
+go
+
+/* select interim markers; exclude phenotypic mutants */
 select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date, h.jnum
 into #marker
 from MRK_Marker m, MRK_History_Ref_View h
@@ -9,6 +22,7 @@ and m._Marker_Status_key = 3
 and m._Marker_key = h._Marker_key
 and m._Marker_key = h._History_key
 and h._Marker_Event_key = 1
+and not exists (select 1 from #mutants t where m._Marker_key = t._Marker_key)
 go
 
 select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date, m.jnum
