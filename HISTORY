@@ -1,3 +1,10 @@
+TAG: qcreports_db-2-2-1
+DATE: 07/18/2000
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) forgot to uncomment "processMedlineFile" in HMD_Potentials.py
+
 TAG: qcreports_db-2-2-0
 DATE: 07/18/2000
 STAFF: lec
