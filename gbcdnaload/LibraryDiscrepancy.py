@@ -12,7 +12,6 @@
 #       2) 1 or more sequence IDs (comma separated if more than one)
 #       3) Resolved clone library name
 #       4) 1 or more clone IDs (comma separated if more than one)
-#       5) 0 or more MGI IDs (comma separated if more than one)
 #
 #       This report assumes that the GenBank EST cDNA clone load has been
 #       run and the data for the report has been populated in the
@@ -72,7 +71,6 @@ oldPrimarySeqID = ""
 
 seqIDs = ""
 cloneIDs = ""
-mgiIDs = ""
 library = ""
 
 for r in results[0]:
@@ -85,12 +83,11 @@ for r in results[0]:
     if (cloneNum != oldCloneNum or primarySeqID != oldPrimarySeqID):
         if (oldCloneNum != 0):
             fp.write(str(oldCloneNum) + TAB + seqIDs + TAB + \
-                     library + TAB + cloneIDs + TAB + mgiIDs + CRT)
+                     library + TAB + cloneIDs + CRT)
         oldCloneNum = cloneNum
         oldPrimarySeqID = primarySeqID
         seqIDs = ""
         cloneIDs = ""
-        mgiIDs = ""
         library = ""
 
     if (logicalDB == "Sequence DB"):
@@ -98,12 +95,6 @@ for r in results[0]:
             seqIDs = accID
         else:
             seqIDs = seqIDs + "," + accID
-
-    elif (logicalDB == "MGI"):
-        if (mgiIDs == ""):
-            mgiIDs = accID
-        else:
-            mgiIDs = mgiIDs + "," + accID
 
     else:
         if (cloneIDs == ""):
@@ -115,6 +106,6 @@ for r in results[0]:
 
 if (oldCloneNum != 0):
     fp.write(str(oldCloneNum) + TAB + seqIDs + TAB + library + TAB + \
-             cloneIDs + TAB + mgiIDs + CRT)
+             cloneIDs + CRT)
 
 reportlib.finish_nonps(fp)
