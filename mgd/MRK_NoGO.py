@@ -133,7 +133,7 @@ def reportClose():
 
 def runQueries():
 
-    global hasOrthology, pubMedIDs, gxd
+    global hasOrthology, pubMedIDs, gxd, url
 
     results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
     for r in results:
