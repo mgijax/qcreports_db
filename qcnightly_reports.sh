@@ -15,6 +15,7 @@ cd `dirname $0` && source ./Configuration
 ./goStats.sh
 
 foreach i ($QCMGD/*.sql)
+echo $i, `date`
 if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
 	mv -f $QCREPORTOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
 	rm -rf $QCREPORTOUTPUTDIR/`basename $i`.current.rpt
@@ -23,11 +24,14 @@ if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
 else
 	reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
 endif
+echo $i, `date`
 end
 
 cd $QCMGD
 foreach i (*.py)
+echo $i, `date`
 $i
+echo $i, `date`
 end
 
 cd $QCREPORTOUTPUTDIR

@@ -77,6 +77,9 @@ exit 0
 
 
 #  $Log$
+#  Revision 1.2  2004/08/16 14:57:07  lec
+#  qcreports_db-23-0-6
+#
 #  Revision 1.1.2.1  2004/07/09 15:14:01  dbm
 #  Moved from parent directory
 #
