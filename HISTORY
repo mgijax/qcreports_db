@@ -1,3 +1,10 @@
+TAG: qcreports_db-16-0-1
+DATE: 01/30/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) removed MRK_NomenChrAberr.py; not ready for prime time
+
 TAG: qcreports_db-16-0-0
 DATE: 01/30/2002
 STAFF: lec
