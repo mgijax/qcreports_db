@@ -110,6 +110,7 @@ union
 select total = count(*), category = "everything else", seq = 5
 from ALL_Allele
 where _Allele_Type_key not in (2,3,15)
+and symbol not like '%<+>'
 
 set nocount off
 
