@@ -4,31 +4,24 @@ go
 
 /* select all Sequences which are annotated to Markers or Molecular Segments */
 
-select sa._Object_key
-into #seqs1
-from ACC_Accession sa, ACC_Accession ma
-where sa._MGIType_key = 19
-and sa.accID = ma.accID
-and ma._MGIType_key = 2
+select distinct _Sequence_key into #seqs1 from SEQ_Marker_Cache
 go
 
-select sa._Object_key
-into #seqs2
-from ACC_Accession sa, ACC_Accession ma
-where sa._MGIType_key = 19
-and sa.accID = ma.accID
-and ma._MGIType_key = 3
+select distinct _Sequence_key into #seqs2 from SEQ_Probe_Cache
 go
 
-select _Object_key
-into #seqs3
-from #seqs1
-union
-select _Object_key
-from #seqs2
+create nonclustered index idx1 on #seqs1(_Sequence_key)
 go
 
-create nonclustered index idx_obj on #seqs3(_Object_key)
+create nonclustered index idx1 on #seqs2(_Sequence_key)
+go
+
+select _Sequence_key into #seqs3 from #seqs1 
+union 
+select _Sequence_key from #seqs2
+go
+
+create nonclustered index idx1 on #seqs3(_Sequence_key)
 go
 
 /* select all Sequence References */
@@ -36,7 +29,7 @@ go
 select r._Object_key, r._Refs_key
 into #refs1
 from #seqs3 s, MGI_Reference_Assoc r
-where s._Object_key = r._Object_key
+where s._Sequence_key = r._Object_key
 and r._MGIType_key = 19
 go
 
@@ -61,6 +54,7 @@ and not exists (select 1 from GXD_Assay a where r._Refs_key = a._Refs_key)
 and not exists (select 1 from GXD_Index a where r._Refs_key = a._Refs_key)
 and not exists (select 1 from HMD_Homology a where r._Refs_key = a._Refs_key)
 and not exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key)
+and not exists (select 1 from MGI_Reference_Assoc a where r._Refs_key = a._Refs_key and a._MGIType_key != 19)
 go
 
 create nonclustered index idx_refs on #refs2(_Refs_key)
@@ -74,7 +68,6 @@ from #refs2 r
 where exists (select 1 from MLC_Reference a where r._Refs_key = a._Refs_key)
 or exists (select 1 from MLD_Expts a where r._Refs_key = a._Refs_key)
 or exists (select 1 from MLD_Marker a where r._Refs_key = a._Refs_key)
-or exists (select 1 from MLD_Notes a where r._Refs_key = a._Refs_key)
 or exists (select 1 from MRK_Reference a where r._Refs_key = a._Refs_key)
 or exists (select 1 from NOM_Synonym a where r._Refs_key = a._Refs_key)
 or exists (select 1 from PRB_Marker a where r._Refs_key = a._Refs_key)
