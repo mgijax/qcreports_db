@@ -110,7 +110,7 @@ cmds.append('select distinct s._Object_key, s.mgiType, m.symbol ' + \
 'where s._MGIType_key = 2 ' + \
 'and s._Object_key = m._Marker_key ' + \
 'union ' + \
-'select distinct s._Object_key, s.mgiType, pm.symbol ' + \
+'select distinct s._Object_key, s.mgiType, symbol = pm.symbol + ":" + pm.relationship ' + \
 'from #seqIDs s, PRB_Marker_View pm ' + \
 'where s._MGIType_key = 3 ' + \
 'and s._Object_key = pm._Probe_key')
@@ -186,10 +186,20 @@ for r in results[-1]:
 	  # print out each Symbol in a separate tuple
 	  for mgiSymbol in symbols[mgiObject]:
 
- 	      fp.write(reportlib.TAB + mgiName + '|' + \
-		       names[mgiObject] + '|' + \
-		       mgiIDs[mgiObject] + '|' + \
-		       mgiSymbol)
+	      if string.find(mgiSymbol, ':') >= 0:
+		  [symbol, rel] = string.split(mgiSymbol, ':')
+		  if len(rel) == 0:
+		      rel = 'N'
+ 	          fp.write(reportlib.TAB + mgiName + '|' + \
+		           names[mgiObject] + '|' + \
+		           mgiIDs[mgiObject] + '|' + \
+		           symbol + '|' + \
+			   rel)
+	      else:
+ 	          fp.write(reportlib.TAB + mgiName + '|' + \
+		           names[mgiObject] + '|' + \
+		           mgiIDs[mgiObject] + '|' + \
+		           mgiSymbol)
 
 	# else, just print out the tuple with a blank Symbol
 
