@@ -5,6 +5,7 @@ select a._Assay_key, a._Refs_key, p._Probe_key
 into #probe
 from GXD_Assay a, GXD_ProbePrep p
 where a._ProbePrep_key = p._ProbePrep_key
+and a._AssayType_key != 9
 and not exists (select r.* from PRB_Reference r where
                 p._Probe_key = r._Probe_key
                 and a._Refs_key = r._Refs_key)

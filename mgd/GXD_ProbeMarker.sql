@@ -5,6 +5,7 @@ select a._Assay_key, a._Marker_key, p._Probe_key
 into #probe
 from GXD_Assay a, GXD_ProbePrep p
 where a._ProbePrep_key = p._ProbePrep_key
+and a._AssayType_key != 9
 go
 
 set nocount off
