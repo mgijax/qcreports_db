@@ -2,10 +2,10 @@ print ""
 print "References Which Need NLM Updates"
 print "in Medline query format:"
 print ""
-print "'first author' [AU] AND 'year' [YR] AND 'journal name' [TA]"
+print "first author [AU] AND year [YR] AND journal name [TA]"
 print ""
 
-select "'" + r._primary + "' [AU] AND '"  + convert(char(4), r.year) + "' [YR] AND '" + r.journal + "' [TA]"
+select r._primary + " [AU] AND "  + convert(char(4), r.year) + " [YR] AND " + r.journal + " [TA]"
 from BIB_Refs r
 where NLMstatus = 'Y'
 and not exists
