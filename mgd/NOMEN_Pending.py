@@ -145,7 +145,7 @@ for r in results[-1]:
 	fp.write(r['mgiID'] + TAB)
 	fp.write(r['symbol'] + TAB)
 	fp.write(r['name'] + TAB)
-	fp.write(mgi_utils.prvalue(r['submittedBy']) + TAB)
+	fp.write(mgi_utils.prvalue(r['createdBy']) + TAB)
 	fp.write(mgi_utils.prvalue(r['modDate']) + TAB)
 
 	if accids.has_key(r['_Marker_key']):

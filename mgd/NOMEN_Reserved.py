@@ -53,46 +53,36 @@ cmds.append('select m._Nomen_key, m.symbol, m.name, m.statusNote, mgiID = a.accI
 'and m._Nomen_key = a._Object_key ' + \
 'and a._LogicalDB_Key = 1 ')
 
-cmds.append('select n.*, a.accID ' + \
+cmds.append('select n._Nomen_key, a.accID ' + \
 'from #nomen n, NOM_Acc_View a ' + \
-'where n._Nomen_key *= a._Object_key ' + \
-'and a._LogicalDB_Key != 1 ' + \
-'order by n.symbol')
+'where n._Nomen_key = a._Object_key ' + \
+'and a._LogicalDB_Key != 1 ')
+
+cmds.append('select * from #nomen order by symbol')
 
 results = db.sql(cmds, 'auto')
 
-prevNomen = ''
-accids = []
-
+accids = {}
 for r in results[1]:
+    key = r['_Nomen_key']
+    value = r['accID']
+    if not accids.has_key(key):
+	accids[key] = []
+    accids[key].append(value)
 
-	if prevNomen != r['_Nomen_key']:
+for r in results[2]:
 
-		if len(accids) > 0:
-			fp.write(string.join(accids, ';') + CRT)
-		elif prevNomen != '':
-			fp.write(CRT)
+	fp.write(r['mgiID'] + TAB)
+	fp.write(r['symbol'] + TAB)
+	fp.write(r['name'] + TAB)
 
-		fp.write(r['mgiID'] + TAB)
-		fp.write(r['symbol'] + TAB)
-		fp.write(r['name'] + TAB)
+	if r['statusNote'] != None:
+		fp.write(regsub.gsub('\n', ' ', r['statusNote']))
+	fp.write(TAB)
 
-		if r['statusNote'] != None:
-			fp.write(regsub.gsub('\n', ' ', r['statusNote']))
-		fp.write(TAB)
-
-		prevNomen = r['_Nomen_key']
-		accids = []
-		
-		if r['accID'] is not None and r['accID'] not in accids:
-			accids.append(r['accID'])
-	else:
-		if r['accID'] is not None and r['accID'] not in accids:
-			accids.append(r['accID'])
-
-if len(accids) > 0:
-	fp.write(string.join(accids, ';'))
-fp.write(CRT)
+	if accids.has_key(r['_Nomen_key']):
+		fp.write(string.join(accids[r['_Nomen_key']], ';'))
+	fp.write(CRT)
 
 reportlib.finish_nonps(fp)
 
