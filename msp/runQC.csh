@@ -46,10 +46,19 @@
 
 cd `dirname $0`
 
-setenv RDRSCHEMADIR $1
-setenv MGDDBNAME $2
-setenv JOBSTREAM $3
-setenv OUTPUTDIR $4
+#
+#  Verify the argument(s) to the shell script.
+#
+
+if  ( ${#argv} != 4 ) then
+    echo "Usage: $0  RADARDBSchemaDir MGD  JobKey OutputDir"
+    exit 1
+else
+    setenv RDRSCHEMADIR $1
+    setenv MGDDBNAME $2
+    setenv JOBSTREAM $3
+    setenv OUTPUTDIR $4
+endif
 
 source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
