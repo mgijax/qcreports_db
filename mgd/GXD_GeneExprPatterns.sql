@@ -20,7 +20,7 @@ union
 select distinct i._Refs_key, type = 'insitu'
 from GXD_Index i, GXD_Index_Stages s, BIB_Refs b
 where i._Refs_key = b._Refs_key
-and b.journal = "Mech Dev"
+and b.journal = "Gene Expr Patterns"
 and (insitu_protein_section = 1
      or insitu_rna_section = 1
      or insitu_protein_mount = 1 
