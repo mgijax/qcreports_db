@@ -32,7 +32,6 @@ setenv QCALLELEARCHIVE          $QCARCHIVEDIR/alleles
 setenv QCMGD			$QCREPORTINSTALLDIR/mgd
 
 # nomen-specific reports directory
-setenv QCNOMEN			$QCREPORTINSTALLDIR/nomen
 setenv QCNOMENARCHIVE		$QCARCHIVEDIR/nomen
 
 # gdb-specific reports directory
@@ -78,9 +77,6 @@ setenv DSQUERY ${DBSERVER}
 # MGD Database
 setenv DBNAME mgd
 setenv MGD ${DBNAME}
-
-# Nomen Database
-setenv NOMEN nomen
 
 # DBO User
 setenv DBOUSER  mgd_dbo
