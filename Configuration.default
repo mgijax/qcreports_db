@@ -13,11 +13,15 @@ setenv QCREPORTINSTALLDIR	/usr/local/mgi/qcreports_db
 # report output directory
 setenv QCREPORTOUTPUTDIR	/usr/local/mgi/qcreports_db/output
 
+# archive output directory
+setenv QCARCHIVEDIR		/usr/local/mgi/qcreports_db/archive
+
 # mgd-specific reports directory
 setenv QCMGD			$QCREPORTINSTALLDIR/mgd
 
 # nomen-specific reports directory
 setenv QCNOMEN			$QCREPORTINSTALLDIR/nomen
+setenv QCNOMENARCHIVE		$QCARCHIVEDIR/nomen
 
 # gdb-specific reports directory
 setenv QCGDB			$QCREPORTINSTALLDIR/gdb
