@@ -38,7 +38,7 @@ import reportlib
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
