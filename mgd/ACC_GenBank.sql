@@ -1,6 +1,8 @@
 set nocount on
 go
 
+/* GenBank IDs annotated to Molecular Segments */
+
 select a.accID
 into #accs1
 from ACC_Accession a
@@ -17,22 +19,36 @@ go
 create index idx1 on #paccs(accID)
 go
 
-select a.accID
+/* GenBank IDs annotated to Mouse Genes */
+
+select c._Sequence_key
 into #accs2
-from ACC_Accession a, MRK_Marker m
-where a._LogicalDB_key = 9
-and a._MGIType_key = 2
-and a._Object_key = m._Marker_key
-and m._Organism_key = 1
+from SEQ_Marker_Cache c, SEQ_Sequence s, VOC_Term t
+where c._Sequence_key = s._Sequence_key
+and s._SequenceProvider_key = t._Term_key
+and t.term like 'Genbank%'
 go
 
-create index idx1 on #accs2(accID)
+create index idx1 on #accs2(_Sequence_key)
 go
 
-select distinct accID into #maccs from #accs2
+select distinct _Sequence_key into #accs3 from #accs2
+go
+
+create index idx1 on #accs3(_Sequence_key)
+go
+
+select a.accID
+into #maccs
+from #accs3 a2, ACC_Accession a
+where a2._Sequence_key = a._Object_key
+and a._MGIType_key = 19
 go
 
 create index idx1 on #maccs(accID)
+go
+
+set nocount off
 go
 
 print ""
