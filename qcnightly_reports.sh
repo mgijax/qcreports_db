@@ -35,4 +35,5 @@ end
 #
 
 rcp $QCREPORTOUTPUTDIR/NOMEN_Reserved.rpt $HUGODIR
+rcp $QCREPORTOUTPUTDIR/NOMEN_Pending.rpt $HUGODIR
 
