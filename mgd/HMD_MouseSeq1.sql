@@ -1,6 +1,6 @@
 print ""
 print "Mouse Genes with Sequence ID but no Human Homology"
-print "(Excludes RIKEN genes, Expressed Sequence, EST)"
+print "(Excludes RIKEN genes, Expressed Sequence, EST, Hypothetical)"
 print ""
 
 select distinct m.symbol "Symbol", a.accID "Seq ID"
@@ -10,6 +10,7 @@ and m._Marker_Type_key = 1
 and m.symbol not like "%Rik"
 and m.name not like "%expressed%"
 and m.name not like "EST%"
+and m.name not like "%hypothetical%"
 and m._Marker_key = a._Object_key
 and a._LogicalDB_Key = 9
 and not exists (select 1 
