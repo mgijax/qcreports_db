@@ -51,6 +51,26 @@ from #ageLookup a, PRB_Source e
 where a.age = e.age
 and a.ageMin != e.ageMin
 and a.ageMax != e.agemax
+union
+select dbTable = "GXD_Expression", primaryKey = e._Expression_key, age = substring(e.age,1,20), e.ageMin, e.ageMax, a.ageMin, a.ageMax
+from #ageLookup a, GXD_Expression e
+where a.age = e.age
+and e.ageMin is null
+union
+select dbTable = "GXD_GelLane", primaryKey = e._GelLane_key, age = substring(e.age,1,20), e.ageMin, e.ageMax, a.ageMin, a.ageMax
+from #ageLookup a, GXD_GelLane e
+where a.age = e.age
+and e.ageMin is null
+union
+select dbTable = "GXD_Specimen", primaryKey = e._Specimen_key, age = substring(e.age,1,20), e.ageMin, e.ageMax, a.ageMin, a.ageMax
+from #ageLookup a, GXD_Specimen e
+where a.age = e.age
+and e.ageMin is null
+union
+select dbTable = "PRB_Source", primaryKey = e._Source_key, age = substring(e.age,1,20), e.ageMin, e.ageMax, a.ageMin, a.ageMax
+from #ageLookup a, PRB_Source e
+where a.age = e.age
+and e.ageMin is null
 order by age
 
 go
