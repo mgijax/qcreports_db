@@ -10,12 +10,6 @@ and a.prefixPart = "GDB:"
 and a._LogicalDB_key = 2
 go
 
-create index index_symbol on #markers (symbol)
-go
-
-create index index_acc on #markers (accID)
-go
-
 set nocount off
 go
 
