@@ -39,6 +39,9 @@ setenv QCFANTOM			$QCREPORTINSTALLDIR/fantom
 # gdb-specific reports directory
 setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 
+# monthly reports directory
+setenv QCMONTHLY                $QCREPORTINSTALLDIR/monthly
+
 # MLC index file
 setenv MLCINDEX			/usr/local/mgi/wi/prod/www/images/mlc/index
 
