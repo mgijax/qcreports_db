@@ -39,7 +39,7 @@ import reportlib
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
+fp.write('Invalid "Inferred From" Values in GO Annotations (MGI only)' + 2 * reportlib.CRT)
 rows = 0
 
 # use for Mol Segs...quicker than mgiLookup method due to number of Mol Segs
@@ -65,6 +65,7 @@ db.sql('select a._Term_key, a._Object_key, e.inferredFrom, evidenceCode = t.abbr
 	'where a._AnnotType_key = 1000 ' + \
 	'and a._Annot_key = e._Annot_key ' + \
 	'and e.inferredFrom != null ' + \
+	'and e.inferredFrom not like "INTERPRO%" ' + \
 	'and e._EvidenceTerm_key = t._Term_key', None)
 db.sql('create nonclustered index idx1 on #annotations(_Term_key)', None)
 db.sql('create nonclustered index idx2 on #annotations(_Object_key)', None)
@@ -103,17 +104,11 @@ for r in results:
 	id = regsub.gsub('"', '', id)
 
 	if string.find(id, 'MGI:') >= 0:
-	    if id not in mgiLookup and r['evidenceCode'] != 'IMP':
-		# it's not in our set, so query the database directly
-		results = db.sql(findID % (id), 'auto')
-		if len(results) == 0:
-		    	fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
-			rows = rows + 1
-
-	if string.find(id, 'INTERPRO:') >= 0:
-	    [prefixPart, idPart] = string.split(id, 'INTERPRO:')
-	    if idPart not in mgiLookup:
-		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
+	    if id not in mgiLookup:
+		fp.write(id + reportlib.TAB + \
+			 r['accID'] + reportlib.TAB + \
+			 r['evidenceCode'] + reportlib.TAB + \
+			 r['symbol'] + reportlib.CRT)
 		rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
