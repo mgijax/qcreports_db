@@ -1,3 +1,10 @@
+TAG:  qcreports_db-18-0-2
+DATE: 09/06/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) Sybase bug; had to rewrite part of PRB_StrainStd.sql, PRB_StrainNonStd.sql
+
 TAG:  qcreports_db-18-0-1
 DATE: 09/05/2002
 STAFF: lec
