@@ -33,6 +33,9 @@ setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 # MLC index file
 setenv MLCINDEX			/usr/local/mgi/wi/prod/www/images/mlc/index
 
+# EI Log files
+setenv EILOGFILES		/export/titan
+
 # FTP 
 setenv FTPURL			ftp.informatics.jax.org
 
