@@ -56,7 +56,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq)'
+title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq), excluding Mutant Phenotypes'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
 fp.write(string.ljust('Gene Symbol', 27) + \
