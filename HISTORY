@@ -1,3 +1,9 @@
+TAG: qcreports_db-1-0-14
+DATE: 04/17/2000
+STAFF: lec
+RELEASE: A
+CHANGES: added QCARHIVEDIR and QCNOMENARCHIVE to Configuration.default
+
 TAG: qcreports_db-1-0-13
 DATE: 04/13/2000
 STAFF: lec
