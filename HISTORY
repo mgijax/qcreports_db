@@ -1,3 +1,13 @@
+TAG:  qcreports_db-19-0-1
+DATE: 04/14/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 4626; MRK_ESTSynonyms.sql
+b) TR 4697; ALL_NoAnnotation.py
+c) TR 4698; MRK_NoGO.py; MRK_GOIEA.py, MRK_AllNoGO.py
+d) TR 4706; ALL_ImmuneSystem.sql
+
 TAG:  qcreports_db-19-0-0
 DATE: 04/11/2003
 STAFF: lec
