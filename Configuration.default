@@ -14,7 +14,7 @@ setenv QCREPORTINSTALLDIR	/usr/local/mgi/qcreports_db
 setenv QCREPORTOUTPUTDIR	/usr/local/mgi/qcreports_db/output
 
 # archive output directory
-setenv QCARCHIVEDIR		/usr/local/mgi/qcreports_db/archive
+setenv QCARCHIVEDIR		/usr/local/mgi/qcreports_db/output/archive
 
 # mgd-specific reports directory
 setenv QCMGD			$QCREPORTINSTALLDIR/mgd
