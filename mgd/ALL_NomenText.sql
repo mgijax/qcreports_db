@@ -25,7 +25,7 @@ print ""
 
 select a.symbol "Allele Symbol", m.symbol "Old Symbol", m.current_symbol "New Symbol", 
 convert(char(10), m.event_date, 101) "Event Date"
-from #markers m, ALL_Allele a, ALL_Molecular_Note n
+from #markers m, ALL_Allele a, ALL_Note_Molecular_View n
 where n.note like '% ' + m.symbol + ' %'
 and n._Allele_key = a._Allele_key
 order by m.event_date desc
