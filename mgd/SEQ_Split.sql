@@ -22,6 +22,9 @@ go
 print ""
 print "Split Sequences"
 print ""
+print "A row in this report represents a Sequence that is designated as Split"
+print "by the Sequence Provider."
+print ""
 
 select seqID = s.accID
 from #split2 s
