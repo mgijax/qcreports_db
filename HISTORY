@@ -1,3 +1,10 @@
+TAG: qcreports_db-16-0-0
+DATE: 01/30/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 2.8 (MRK_NoGO.py MRK_GOIEA.py MRK_WithdrawnAdditional.sql MRK_RatNoGO.sql
+
 TAG: qcreports_db-15-0-0
 DATE: 01/25/2002
 STAFF: lec
