@@ -70,3 +70,6 @@ foreach i (`ls gdb/*.sql gdb/*.py`)
 	cp -r $i $QCGDB
 end
 
+rm -f $QCHTML/qcr.html
+cp qcr.html $QCHTML
+

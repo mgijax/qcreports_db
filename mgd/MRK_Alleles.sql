@@ -4,7 +4,7 @@ print ""
 
 select distinct m.symbol "Symbol", m.chromosome "Chr", a.symbol "Allele",
 substring(a.name, 1, 40) "Name"
-from MRK_Marker m, MRK_Allele a
+from MRK_Marker m, ALL_Allele a
 where m._Species_key = 1
 and m._Marker_key = a._Marker_key
 and a.name = 'allele name in progress'
@@ -16,7 +16,7 @@ print "Markers which contain Alleles which do not match the Marker Symbol (exclu
 print ""
 
 select m.symbol "Marker", a.symbol "Allele"
-from MRK_Allele a, MRK_Marker m
+from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
 and a.symbol not like "+%"
 and a.symbol not like m.symbol + "%"
@@ -27,7 +27,7 @@ print "Markers which contain Alleles"
 print ""
 
 select distinct m.symbol "Symbol", m.chromosome "Chr", substring(m.name, 1, 40) "Name"
-from MRK_Marker m, MRK_Allele a
+from MRK_Marker m, ALL_Allele a
 where m._Species_key = 1
 and m._Marker_key = a._Marker_key
 order by m.symbol
@@ -48,7 +48,7 @@ go
 
 select m.symbol "Marker Symbol", m.allele "Allele Symbol"
 from #alleles m
-where not exists (select * from MRK_Allele a where
+where not exists (select * from ALL_Allele a where
 m._Marker_key = a._Marker_key
 and a.symbol like m.symbol + "%<" + m.allele + "%>")
 order by m.symbol
