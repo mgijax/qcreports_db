@@ -74,16 +74,12 @@ cmds = []
 #
 # select markers with GO annotations to IMP where inferredFrom is null
 #
-cmds.append('select m._Marker_key, m.symbol, ma.accID, goID = a.accID, term = substring(a.term,1,50), e._Refs_key, e.jnumID ' + \
+cmds.append('select m._Marker_key, m.symbol, goID = a.accID, term = substring(a.term,1,50), e._Refs_key, e.jnumID ' + \
 'into #m1 ' + \
-'from MRK_Marker m, MRK_Acc_View ma, VOC_Annot_View a, VOC_Evidence_View e ' + \
+'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e ' + \
 'where m._Species_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
 'and m._Marker_Status_key = 1 ' + \
-'and m._Marker_key = ma._Object_key ' + \
-'and ma.prefixPart = "MGI:" ' + \
-'and ma._LogicalDB_key = 1 ' + \
-'and ma.preferred = 1' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ' + \
 'and a._Annot_key = e._Annot_key ' + \
@@ -110,7 +106,7 @@ cmds.append('select distinct _Marker_key, _Refs_key, alleleID from #m2')
 #
 # select the markers which have associated alleles
 #
-cmds.append('select distinct _Marker_key, _Refs_key, symbol, accID, goID, term, jnumID from #m2 order by symbol')
+cmds.append('select distinct _Marker_key, _Refs_key, symbol, goID, term, jnumID from #m2 order by symbol')
 
 results = db.sql(cmds, 'auto')
 
