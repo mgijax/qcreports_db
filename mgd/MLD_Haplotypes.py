@@ -32,10 +32,6 @@ import reportlib
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-exptKey = None
-numLoci = 0
-printed = 0
-
 db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'Crosses Where # of Haplotypes Does Not Match # of Loci', os.environ['QCREPORTOUTPUTDIR'])
 fp.write('J#' + TAB + 'Expt Type' + TAB + 'Tag' + CRT * 2)
@@ -96,10 +92,6 @@ for exptKey in alleleLine.keys():
 	for a in alleleLine[exptKey]:
 	    row = string.splitfields(a, ' ')
 	    columns = len(row)
-
-	    print str(row)
-	    print str(numLoci)
-	    print "####"
 
 	    if columns == numLoci:
 	        continue
