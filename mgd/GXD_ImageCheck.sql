@@ -30,14 +30,3 @@ where p.paneLabel like "%,%" and p._Image_key = i._Image_key
 order by i.jnum
 go
 
-print ""
-print "GXD Image Pane Labels Without at least One Field Type Specified"
-print ""
-
-select distinct i.jnumID + ";" + i.figureLabel
-from IMG_Image_View i
-where not exists (select 1 from IMG_ImagePane p
-where i._Image_key = p._Image_key)
-order by i.jnum
-go
-
