@@ -50,7 +50,6 @@ import reportlib
 # Main
 #
 
-db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], title = "Molecular Segment with the Problem Sequence Note associated with more than one GenBank Seqid or associated with no GenBank ID", outputdir = os.environ['QCOUTPUTDIR'])
 
 cmds = []
@@ -83,8 +82,6 @@ cmds.append('select _Probe_key into #formgi from #probeseqs group by accID havin
 cmds.append('create index idx1 on #formgi(_Probe_key)')
 db.sql(cmds, None)
 
-##
-
 # Store Seq IDs for probes
 
 results = db.sql('select p._Probe_key, p.accID ' + \
@@ -112,4 +109,3 @@ for r in results:
 	string.join(sequences[r['_Probe_key']], ',') + reportlib.CRT)
 
 reportlib.finish_nonps(fp)
-db.useOneConnection(0)

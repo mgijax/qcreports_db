@@ -130,7 +130,6 @@ def writeRecordD(fp, r):
 # Main
 #
 
-db.useOneConnection(1)
 fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
@@ -142,7 +141,6 @@ for r in results:
 
 # select markers with GO Associations of evidence IEA only
 
-print 'query 1 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 	'into #markers ' + \
@@ -173,11 +171,9 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericP
 	'and e._EvidenceTerm_key != 115) ')
 cmds.append('create index idx1 on #markers(_Marker_key)')
 db.sql(cmds, None)
-print 'query 1 end...%s' % (mgi_utils.date())
 
 # orthologies
 
-print 'query 2 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct m._Marker_key ' + \
 	'from #markers m ' + \
 	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
@@ -202,11 +198,9 @@ results = db.sql('select distinct m._Marker_key ' + \
 hasHomology = {}
 for r in results:
 	hasHomology[r['_Marker_key']] = 1
-print 'query 2 end...%s' % (mgi_utils.date())
 
 ##
 
-print 'query 3 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select distinct m.*, r._Refs_key ' + \
 	'into #references1 ' + \
@@ -214,9 +208,7 @@ cmds.append('select distinct m.*, r._Refs_key ' + \
 	'where m._Marker_key = r._Marker_key ')
 cmds.append('create index index_refs_key on #references1(_Refs_key)')
 db.sql(cmds, None)
-print 'query 3 end...%s' % (mgi_utils.date())
 
-print 'query 4 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
 	'into #references ' + \
@@ -224,11 +216,9 @@ cmds.append('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
 	'where r._Refs_key = b._Refs_key')
 cmds.append('create index index_refs_key on #references(_Refs_key)')
 db.sql(cmds, None)
-print 'query 4 end...%s' % (mgi_utils.date())
 
 # select PubMed IDs for references
 
-print 'query 5 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct r._Refs_key, a.accID ' + \
 	'from #references r, ACC_Accession a ' + \
 	'where r._Refs_key = a._Object_key ' + \
@@ -238,10 +228,8 @@ results = db.sql('select distinct r._Refs_key, a.accID ' + \
 pubMedIDs = {}
 for r in results:
 	pubMedIDs[r['_Refs_key']] = r['accID']
-print 'query 5 end...%s' % (mgi_utils.date())
 
 # has reference been chosen for GXD
-print 'query 6 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct r._Refs_key ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
@@ -251,9 +239,7 @@ results = db.sql('select distinct r._Refs_key ' + \
 gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
-print 'query 6 end...%s' % (mgi_utils.date())
 
-print 'query 7 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references ' + \
 	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
@@ -262,17 +248,13 @@ results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = co
 	'order by symbol', 'auto')
 for r in results:
 	writeRecord(fpA, r)
-print 'query 7 end...%s' % (mgi_utils.date())
 
-print 'query 8 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references group by _Marker_key ' + \
 	'order by symbol', 'auto')
 for r in results:
 	writeRecord(fpB, r)
-print 'query 8 end...%s' % (mgi_utils.date())
 
-print 'query 9 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references ' + \
 	'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
@@ -281,9 +263,7 @@ results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = co
 	'order by symbol', 'auto')
 for r in results:
 	writeRecord(fpC, r)
-print 'query 9 end...%s' % (mgi_utils.date())
 
-print 'query 10 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
@@ -297,11 +277,9 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'order by numericPart', 'auto')
 for r in results:
 	writeRecordD(fpD, r)
-print 'query 10 end...%s' % (mgi_utils.date())
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
 reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
-db.useOneConnection(0)
 

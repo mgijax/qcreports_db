@@ -38,8 +38,6 @@ import reportlib
 # Main
 #
 
-db.useOneConnection(1)
-
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
@@ -120,6 +118,5 @@ for r in results:
 		rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
-db.useOneConnection(0)
 reportlib.finish_nonps(fp)
 

@@ -35,7 +35,6 @@ import reportlib
 # Main
 #
 
-db.useOneConnection(1)
 currentReport = 'MLCNomenclature-current.html'
 
 # remove current report link if it exists
@@ -120,5 +119,4 @@ reportlib.finish_nonps(fp, isHTML = 1)	# non-postscript file
 
 os.chdir(os.environ['QCOUTPUTDIR'])
 os.symlink(reportName + '.html', currentReport)
-db.useOneConnection(0)
 

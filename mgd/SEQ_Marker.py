@@ -48,14 +48,11 @@ import reportlib
 # Main
 #
 
-db.useOneConnection(1)
-
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
 # select all distinct sequences/markers, excluding certain providers
 # exclude Dots, TIGR Mouse Gene Index, NIA Mouse Gene Index
 
-print 'query 1 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select s._Sequence_key, s._Marker_key ' + \
 	'into #seqMarker1 ' + \
@@ -70,26 +67,20 @@ cmds.append('select distinct _Sequence_key, _Marker_key into #seqMarker from #se
 cmds.append('create index idx_key1 on #seqMarker(_Sequence_key)')
 cmds.append('create index idx_key2 on #seqMarker(_Marker_key)')
 db.sql(cmds, None)
-print 'query 1 end...%s' % (mgi_utils.date())
 
 # select unique sequences
-print 'query 2 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select distinct _Sequence_key into #uniqueSeq from #seqMarker')
 cmds.append('create index idx_key on #uniqueSeq(_Sequence_key)')
 db.sql(cmds, None)
-print 'query 2 end...%s' % (mgi_utils.date())
 
 # select unique markers
-print 'query 3 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select distinct _Marker_key into #uniqueMrk from #seqMarker')
 cmds.append('create index idx_key on #uniqueMrk(_Marker_key)')
 db.sql(cmds, None)
-print 'query 3 end...%s' % (mgi_utils.date())
 
 # select Seq IDs
-print 'query 4 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select a.accID, a._Object_key ' + \
 	'into #accSeq ' + \
@@ -99,10 +90,8 @@ cmds.append('select a.accID, a._Object_key ' + \
 	'and a.preferred = 1')
 cmds.append('create index idx_key on #accSeq(_Object_key)')
 db.sql(cmds, None)
-print 'query 4 end...%s' % (mgi_utils.date())
 
 # select marker MGI IDs
-print 'query 5 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select a.accID, a._Object_key ' + \
 	'into #accMrk ' + \
@@ -114,11 +103,9 @@ cmds.append('select a.accID, a._Object_key ' + \
 	'and a.preferred = 1')
 cmds.append('create index idx_key on #accMrk(_Object_key)')
 db.sql(cmds, None)
-print 'query 5 end...%s' % (mgi_utils.date())
 
 # select other marker attributes
 
-print 'query 6 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select markerID = a.accID, m._Marker_key, m.symbol, markerType = t.name ' + \
 	'into #markers ' + \
@@ -127,11 +114,9 @@ cmds.append('select markerID = a.accID, m._Marker_key, m.symbol, markerType = t.
 	'and m._Marker_Type_key = t._Marker_Type_key')
 cmds.append('create index idx_key on #markers(_Marker_key)')
 db.sql(cmds, None)
-print 'query 6 end...%s' % (mgi_utils.date())
 
 # select Sequence attributes
 
-print 'query 7 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select a.accID, _Sequence_key = a._Object_key, sq.length, sq.description, ' + \
 	'sq._SequenceType_key, sq._SequenceProvider_key ' + \
@@ -143,9 +128,7 @@ cmds.append('create index idx_key2 on #seqAttr(_SequenceType_key)')
 cmds.append('create index idx_key3 on #seqAttr(_SequenceProvider_key)')
 cmds.append('create index idx_key4 on #seqAttr(accID)')
 db.sql(cmds, None)
-print 'query 7 end...%s' % (mgi_utils.date())
 
-print 'query 8 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select s._Sequence_key, t.term ' + \
 	'into #seqType ' + \
@@ -177,13 +160,11 @@ cmds.append('select s._Sequence_key, cl.name ' + \
 	'and sa._Source_key = sm._Object_key ' + \
 	'and sm._Set_key = cl._Set_key ')
 db.sql(cmds, None)
-print 'query 8 end...%s' % (mgi_utils.date())
 
 #
 # This is what we'll process...
 #
 
-print 'query 9 begin...%s' % (mgi_utils.date())
 cmds = []
 
 # sequence type info
@@ -207,7 +188,6 @@ cmds.append('select ms._Sequence_key, m.markerID, m.symbol, m.markerType ' + \
 cmds.append('select * from #seqAttr order by accID')
 
 results = db.sql(cmds, 'auto')
-print 'query 9 end...%s' % (mgi_utils.date())
 
 seqType = {}
 for r in results[-6]:
@@ -270,7 +250,6 @@ for r in results[-1]:
         fp.write(reportlib.CRT)
 
 reportlib.finish_nonps(fp)
-db.useOneConnection(0)
 
 #print 'report done'
 #print mgi_utils.date()

@@ -23,7 +23,7 @@ and m._Marker_Status_key in (1,3)
 and m.name like 'DNA segment%'
 go
 
-create index idx_key on #markers(_Marker_key)
+create index idx1 on #markers(_Marker_key)
 go
 
 select m.*, a.accID
@@ -34,26 +34,39 @@ and a._LogicalDB_key = 9
 and a._Refs_key = 64047
 go
 
-create index idx_key on #sequences1(_Marker_key)
+create index idx1 on #sequences1(_Marker_key)
 go
 
-/* find pubmed ids by LocusLink ID */
+select s.*, o.name
+into #sequences2
+from #sequences1 s, MRK_Other o
+where s._Marker_key *= o._Marker_key
+go
 
-select s.*, refID = c.pubmedID
+create index idx1 on #sequences2(_Marker_key)
+go
+
+/* find pubmed ids by EntrezGene ID */
+
+select s.*, refID = c.pubMedID
 into #sequencesFinal
-from #sequences1 s, ACC_Accession a, radar..DP_LLCit c
+from #sequences2 s, ACC_Accession a, radar..DP_EntrezGene_PubMed c
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
-and a._LogicalDB_key = 24
-and a.accID = c.locusID
+and a._LogicalDB_key = 55
+and a.accID = c.geneID
 union
 select s.*, null
 from #sequences1 s, ACC_Accession a
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
-and a._LogicalDB_key = 24
-and not exists (select 1 from radar..DP_LLCit c
-where a.accID = c.locusID)
+and a._LogicalDB_key = 55
+and not exists (select 1 from radar..DP_EntrezGene_PubMed c
+where a.accID = c.geneID)
+go
+
+create index idx1 on #sequencesFinal(refID)
+create index idx2 on #sequencesFinal(_Marker_key)
 go
 
 /* exclude certain pubmed ids */

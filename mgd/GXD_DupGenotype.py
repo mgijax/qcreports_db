@@ -234,8 +234,6 @@ cmds.append('select p.geno1, p.geno2, p.strain, ' +
 #
 results = db.sql(cmds, 'auto')
 
-#print "found " + str(len(results[2])) + " records."
-
 #
 #  Now cycle through and create a distinct set of genotype pairs.
 #
@@ -271,9 +269,6 @@ for row in results[2]:
     value['numPairs'] = row['numPairs']
     value['strain'] = row['strain']
     genoDict[genoTuple] = value
-
-#print "Have " + str(len(genoDict)) + " genotype pairs"
-
 
 #
 #  Now cycle through and get all of the allele pairs for each genotype.

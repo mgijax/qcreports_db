@@ -22,7 +22,12 @@ and m1.symbol != m2.symbol
 and m1.symbol like '%Rik'
 go
 
-select h.*, mgiID = a1.accID, locusID = a2.accID
+create index idx1 on #homology(m_Marker_key)
+go
+create index idx2 on #homology(h_Marker_key)
+go
+
+select h.*, mgiID = a1.accID, geneID = a2.accID
 into #markers
 from #homology h, MRK_ACC_View a1, MRK_ACC_View a2
 where h.m_Marker_key = a1._Object_key
@@ -32,7 +37,7 @@ and a1.preferred = 1
 and h.h_Marker_key = a2._Object_key
 and a2._LogicalDB_key = 24
 union
-select h.*, mgiID = a1.accID, locusID = null
+select h.*, mgiID = a1.accID, geneID = null
 from #homology h, MRK_ACC_View a1
 where h.m_Marker_key = a1._Object_key
 and a1.prefixPart = "MGI:"
@@ -43,21 +48,23 @@ where h.h_Marker_key = a2._Object_key
 and a2._LogicalDB_key = 24)
 go
 
+create index idx1 on #markers(geneID)
+go
+create index idx2 on #markers(hsymbol)
+go
+
 select m.*, hstatus = "O"
 into #results
-from #markers m, radar..DP_LL l
-where m.locusID = l.locusID
-and m.hsymbol = l.osymbol
-union
-select m.*, hstatus = "I"
-from #markers m, radar..DP_LL l
-where m.locusID = l.locusID
-and m.hsymbol = l.isymbol
+from #markers m, radar..DP_EntrezGene_Info e
+where m.geneID = e.geneID and m.hsymbol = e.symbol
 union
 select m.*, hstatus = "?"
 from #markers m
-where not exists (select 1 from radar..DP_LL l
-where m.locusID = l.locusID and (m.hsymbol = l.osymbol or m.hsymbol = l.isymbol))
+where not exists (select 1 from radar..DP_EntrezGene_Info e
+where m.geneID = e.geneID and m.hsymbol = e.symbol)
+go
+
+create index idx1 on #results(modification_date)
 go
 
 set nocount off
@@ -74,7 +81,7 @@ select msymbol "MGI Symbol",
        hstatus "Human Status",
        mgiID "MGI ID", 
        mname "MGI Name",
-       locusID "LL ID",
+       geneID "EntrezGene ID",
        hname "Human Name"
 from #results
 order by modification_date, hstatus desc, msymbol

@@ -98,7 +98,6 @@ def writeRecord2(fp, r):
 # Main
 #
 
-db.useOneConnection(1)
 fpA = reportlib.init("MRK_GOGold_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 fpB = reportlib.init("MRK_GOGold_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 fpC = reportlib.init("MRK_GOGold_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
@@ -222,5 +221,4 @@ reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
 reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD)	# non-postscript file
-db.useOneConnection(0)
 

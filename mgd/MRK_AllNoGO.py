@@ -79,7 +79,6 @@ def writeRecord(fp, r):
 # Main
 #
 
-db.useOneConnection(1)
 fp = reportlib.init("MRK_AllNoGO", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
@@ -167,5 +166,4 @@ for r in results:
 	writeRecord(fp, r)
 
 reportlib.finish_nonps(fp, isHTML = 1)	# non-postscript file
-db.useOneConnection(0)
 

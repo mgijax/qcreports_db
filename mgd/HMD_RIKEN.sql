@@ -52,25 +52,27 @@ go
 
 select h.*, type = "O"
 into #results
-from #homology2 h, radar..DP_LL l
-where h.hsymbol = l.osymbol
-and l.taxID = 9606
+from #homology2 h, radar..DP_EntrezGene_Info e
+where h.hsymbol = e.symbol
+and e.taxID = 9606
 go
 
 insert into #results
 select h.*, type = "I"
-from #homology2 h, radar..DP_LL l
-where h.hsymbol = l.isymbol
-and l.taxID = 9606
+from #homology2 h, radar..DP_EntrezGene_Synonym es, radar..DP_EntrezGene_Info e
+where h.hsymbol = es.synonym
+and es.geneID = e.geneID
+and e.taxID = 9606
 go
 
 insert into #results
 select h.*, type = "?"
 from #homology2 h
-where not exists (select 1 from radar..DP_LL l
-where l.taxID = 9606 and h.hsymbol = l.osymbol)
-and not exists (select 1 from radar..DP_LL l
-where l.taxID = 9606 and h.hsymbol = l.isymbol)
+where not exists (select 1 from radar..DP_EntrezGene_Info e
+where e.taxID = 9606 and h.hsymbol = e.symbol)
+and not exists (select 1 from radar..DP_EntrezGene_Synonym es, radar..DP_EntrezGene_Info e
+where e.taxID = 9606 and e.geneID = es.geneID
+and h.hsymbol = es.synonym)
 go
 
 create index idx1 on #results(type)

@@ -41,7 +41,6 @@ TAB = reportlib.TAB
 # Main
 #
 
-db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('Mouse Genes with Sequence ID but no Human Orthology' + CRT)
@@ -107,5 +106,4 @@ fp.write('\n(%d rows affected)\n' % (rows))
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
-db.useOneConnection(0)
 

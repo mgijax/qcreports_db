@@ -14,6 +14,9 @@ and a._MGIType_key = 2
 and a._LogicalDB_key in (9,13,27,41))
 go
 
+create index idx1 on #mutants(_Marker_key)
+go
+
 /* select interim markers; exclude phenotypic mutants */
 select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date
 into #marker
@@ -21,6 +24,9 @@ from MRK_Marker m
 where m._Organism_key = 1
 and m._Marker_Status_key = 3
 and not exists (select 1 from #mutants t where m._Marker_key = t._Marker_key)
+go
+
+create index idx1 on #marker(_Marker_key)
 go
 
 select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date
@@ -46,21 +52,21 @@ and h2._Marker_key = m2._Marker_key
 and m2._Organism_key = 2)
 go
 
+create index idx1 on #homology(hsymbol)
+go
+
 select h.*, hstatus = "O"
 into #results
-from #homology h, radar..DP_LL l
-where h.hsymbol = l.osymbol
-and l.taxID = 9606
-union
-select h.*, hstatus = "I"
-from #homology h, radar..DP_LL l
-where h.hsymbol = l.isymbol
-and l.taxID = 9606
+from #homology h, radar..DP_EntrezGene_Info e
+where h.hsymbol = e.symbol and e.taxID = 9606
 union
 select h.*, hstatus = "?"
 from #homology h
-where not exists (select 1 from radar..DP_LL l
-where l.taxID = 9606 and (h.hsymbol = l.osymbol or h.hsymbol = l.isymbol))
+where not exists (select 1 from radar..DP_EntrezGene_Info e
+where h.hsymbol = e.symbol and e.taxID = 9606)
+go
+
+create index idx1 on #results(hstatus)
 go
 
 set nocount off
