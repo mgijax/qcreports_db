@@ -79,7 +79,7 @@ def genoTypeCompare( geno1, geno2 ):
 #
 #  Begin setting up report
 #
-fp = reportlib.init(sys.argv[0], 'Duplicate Genotypes', outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'References where GXD and Pheno differ in Genotype', outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
 cmds = []
 
