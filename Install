@@ -1,83 +1,23 @@
 #!/bin/csh
 
 #
-# installapp
+# To install this product in the appropriate directory
 #
-# Installs product "qcreports_db" in the appropriate directory
+# 1. cd to the parent of the installation directory (i.e. /usr/local/mgi)
+# 2. cvs export -r qcreports_db-#-# qcreports_db
+# 3. cd to the installation directory
+# 4. cp Configuration.default Configuration
+# 5. edit Configuration file
+# 6. run Install
 #
-
-if ( ! -e Configuration ) then
-	cp -r Configuration.default Configuration
-endif
 
 source Configuration
-
-if ( ! ${?QCREPORTINSTALLDIR} ) then
-	echo "Environment variable QCREPORTINSTALLDIR has not been defined."
-	echo "It should be set to the parent directory of the QC report DB applications." 
-	exit 1
-endif
-
-#
-# Make report output directory, if it does not exist
-#
-
-if ( ! -e $QCREPORTOUTPUTDIR ) then
-	mkdir $QCREPORTOUTPUTDIR
-endif
-
-if ( ! -e $QCARCHIVEDIR ) then
-	mkdir $QCARCHIVEDIR
-endif
-
-#
-# Make mgd directory, if it does not exist
-#
-
-if ( ! -e $QCMGD ) then
-	mkdir $QCMGD
-endif
-
-#
-# Make nomen directory, if it does not exist
-#
-
-if ( ! -e $QCNOMEN ) then
-	mkdir $QCNOMEN
-endif
-
-if ( ! -e $QCNOMENARCHIVE ) then
-	mkdir $QCNOMENARCHIVE
-endif
-
-#
-# Make gdb directory, if it does not exist
-#
-
-if ( ! -e $QCGDB ) then
-	mkdir $QCGDB
-endif
-
-#
-# Copy installation files to installation directory
-#
-
-foreach i (`ls Configuration *.sh *.html`)
-	cp -r $i $QCREPORTINSTALLDIR
-end
-
-foreach i (`ls mgd/*.sql mgd/*.py`)
-	cp -r $i $QCMGD
-end
-
-foreach i (`ls nomen/*.sql nomen/*.py`)
-	cp -r $i $QCNOMEN
-end
-
-foreach i (`ls gdb/*.sql gdb/*.py`)
-	cp -r $i $QCGDB
-end
 
 cd $QCREPORTINSTALLDIR
 sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
 mv -f qcr.html.new qcr.html
+
+chmod 444 Configuration* HISTORY *.html
+chmod 550 *.sh */*.py */*.sql Install
+chmod 755 output
+
