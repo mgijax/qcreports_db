@@ -15,9 +15,6 @@
 #       problem sequence), but to a discrepancy report. This tab-delimited report is for 
 #       MGI use only, and should contain the following fields: 
 #
-#	Also include those Molecular Segments which contain the Problem Note
-#	but do not contain any GenBank Sequence Identifier.
-#
 #       1. MGI ID for the Molecular Segment 
 #       2. GenBank Sequence Identifiers, comma delimited. 
 #
@@ -57,23 +54,23 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], pr
 
 cmds = []
 
-/* Select probes w/ problem note */
+# Select probes w/ problem note
 cmds.append('select _Probe_key ' + \
       'into #probes ' + \
       'from PRB_Notes ' + \
       'where note like "MGI curatorial staff have found evidence of artifact in the sequence of this molecular%"')
 
-/* Select probes w/ Seq IDs */
+# Select probes w/ Seq IDs
 cmds.append('select distinct p._Probe_key, a.accID ' + \
 'into #probeseqs ' + \
 'from #probes p, PRB_Acc_View a ' + \
 'where p._Probe_key = a._Object_key  ' + \
 'and a._LogicalDB_key = 9 ')
 
-/* Select probes with more than one Seq ID */
+# Select probes with more than one Seq ID
 cmds.append('select * into #formgi from #probeseqs group by accID having count(*) > 1')
 
-/* Select MGI Acc ID for probes with > 1 Seq ID and probes w/out Seq ID */
+# Select MGI Acc ID for probes with > 1 Seq ID
 cmds.append('select m.*, probeID = pa.accID ' + \
 'from #formgi m, PRB_Acc_View pa ' + \
 'where m._Probe_key = pa._Object_key ' + \
