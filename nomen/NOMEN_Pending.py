@@ -56,8 +56,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'n._Nomen_key, n.submittedBy, modDate = convert(char(10), n.modification_date, 101) ' + \
 'into #pending ' + \
 'from MRK_Marker m, MRK_Acc_View a, %s..MRK_Nomen n ' % (NOMENDB) + \
-'where m.symbol like "%-pending" ' + \
-'and m._Marker_Status_key = 1 ' + \
+'where m._Marker_Status_key = 3 ' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a._LogicalDB_key = 1 ' + \
