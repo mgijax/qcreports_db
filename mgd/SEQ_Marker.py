@@ -53,12 +53,18 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], pr
 cmds = []
 
 # select all distinct sequences/markers, excluding certain providers
-cmds.append('select distinct s._Sequence_key, s._Marker_key ' + \
-	'into #seqMarker ' + \
-	'from SEQ_Marker_Cache s, SEQ_Sequence ss, VOC_Term t ' + \
+# exclude Dots, TIGR Mouse Gene Index, NIA Mouse Gene Index
+
+cmds.append('select s._Sequence_key, s._Marker_key ' + \
+	'into #seqMarker1 ' + \
+	'from SEQ_Marker_Cache s, SEQ_Sequence ss ' + \
 	'where s._Sequence_key = ss._Sequence_key ' + \
-	'and ss._SequenceProvider_key = t._Term_key ' + \
-	'and t.term not in ("DoTS", "TIGR Mouse Gene Index", "NIA Mouse Gene Index")')
+	'and ss._SequenceProvider_key not in (316382, 316381, 316383)')
+
+cmds.append('create index idx_key1 on #seqMarker1(_Sequence_key)')
+cmds.append('create index idx_key2 on #seqMarker1(_Marker_key)')
+
+cmds.append('select distinct _Sequence_key, _Marker_key into #seqMarker from #seqMarker1')
 
 cmds.append('create index idx_key1 on #seqMarker(_Sequence_key)')
 cmds.append('create index idx_key2 on #seqMarker(_Marker_key)')
