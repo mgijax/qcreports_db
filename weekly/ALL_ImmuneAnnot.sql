@@ -1,4 +1,7 @@
 
+declare @currentdate varchar(10)
+select @currentdate = select convert(char(10), getdate(), 101)
+
 print ""
 print "Alleles with Immune System Annotations"
 print ""
