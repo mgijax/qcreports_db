@@ -63,6 +63,17 @@ where a._AnnotType_key = 1001
 and datepart(year, a.creation_date) = @year
 and datepart(month, a.creation_date) = @month
 and g._Genotype_key = a._Object_key
+union
+select total = count(g._Genotype_key), category = "Total Annotations", seq = 3
+from GXD_Genotype g, VOC_Annot a
+where a._AnnotType_key = 1001
+and g._Genotype_key = a._Object_key
+union
+select total = count(distinct ap._Marker_key), category = "Total Genes Annotated", seq = 4
+from GXD_Genotype g, GXD_AllelePair ap, VOC_Annot a
+where a._AnnotType_key = 1001
+and g._Genotype_key = a._Object_key
+and g._Genotype_key = ap._Genotype_key
 
 select total = count(distinct _Allele_key), category = "Total Allele", seq = 1
 into #c3
@@ -99,6 +110,7 @@ union
 select total = count(*), category = "everything else", seq = 5
 from ALL_Allele
 where _Allele_Type_key not in (2,3,15)
+
 set nocount off
 
 print ""
@@ -110,21 +122,18 @@ print "Current State (excluding wild types)"
 print ""
 
 select category, total from #c4 order by seq
-go
 
 print ""
 print "New Alleles Entered in Previous Month (excluding wild types)"
 print ""
 
 select category, total from #c1 order by seq
-go
 
 print ""
 print "Genotypes Associated with at least one Phenotype Term"
 print ""
 
 select category, total from #c2 order by seq
-go
 
 print ""
 print "Alleles with 'Associated Phenotype Controlled Terms' in Notes"
