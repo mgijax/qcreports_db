@@ -111,10 +111,11 @@ cmds.append('select distinct s._Object_key, s.mgiType, m.symbol ' + \
 'where s._MGIType_key = 2 ' + \
 'and s._Object_key = m._Marker_key ' + \
 'union ' + \
-'select distinct s._Object_key, s.mgiType, symbol = pm.symbol + ":" + pm.relationship ' + \
-'from #seqIDs s, PRB_Marker_View pm ' + \
+'select distinct s._Object_key, s.mgiType, symbol = m.symbol + ":" + pm.relationship ' + \
+'from #seqIDs s, PRB_Marker pm, MRK_Marker m ' + \
 'where s._MGIType_key = 3 ' + \
-'and s._Object_key = pm._Probe_key')
+'and s._Object_key = pm._Probe_key ' + \
+'and pm._Marker_key = m._Marker_key')
 
 # select each set of data
 

@@ -17,11 +17,13 @@ group by name
 having count(*) > 1
 go
 
-select m.*, p.DNAtype, s.organism, p.modification_date
+select m.symbol, p.name, p.DNAtype, organism = o.commonName, p.modification_date
 into #markers
-from #probe p, PRB_Marker_View m, PRB_Source_View s
-where p._Probe_key = m._Probe_key
+from #probe p, PRB_Marker pm, MRK_Marker m, PRB_Source s, MGI_Organism o
+where p._Probe_key = pm._Probe_key
+and pm._Marker_key = m._Marker_key
 and p._Source_key = s._Source_key
+and s._Organism_key = o._Organism_key
 go
 
 set nocount off
