@@ -13,6 +13,9 @@ setenv QCREPORTINSTALLDIR	/usr/local/mgi/qcreports_db
 # report output directory
 setenv QCREPORTOUTPUTDIR	/usr/local/mgi/qcreports_db/output
 
+# FTP report directory
+setenv FTPREPORTDIR		/net/kelso/ftp/pub/informatics/reports
+
 # SYBASE
 setenv SYBASE			/opt/sybase
 
