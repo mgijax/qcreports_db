@@ -59,21 +59,20 @@ for r in results:
 
 # read in all annotations w/ non-null inferred from value
 
-cmds = []
-cmds.append('select a._Term_key, a._Object_key, e.inferredFrom ' + \
+db.sql('select a._Term_key, a._Object_key, e.inferredFrom, evidenceCode = t.abbreviation ' + \
 	'into #annotations ' + \
-	'from VOC_Annot a, VOC_Evidence e ' + \
+	'from VOC_Annot a, VOC_Evidence e, VOC_Term t ' + \
 	'where a._AnnotType_key = 1000 ' + \
 	'and a._Annot_key = e._Annot_key ' + \
-	'and e.inferredFrom != null ')
-cmds.append('create nonclustered index idx1 on #annotations(_Term_key)')
-cmds.append('create nonclustered index idx2 on #annotations(_Object_key)')
-cmds.append('create nonclustered index idx3 on #annotations(inferredFrom)')
-db.sql(cmds, None)
+	'and e.inferredFrom != null ' + \
+	'and e._EvidenceTerm_key = t._Term_key', None)
+db.sql('create nonclustered index idx1 on #annotations(_Term_key)', None)
+db.sql('create nonclustered index idx2 on #annotations(_Object_key)', None)
+db.sql('create nonclustered index idx3 on #annotations(inferredFrom)', None)
 
 # retrieve GO acc ID, marker symbol
 
-results = db.sql('select e.inferredFrom, a.accID, m.symbol ' + \
+results = db.sql('select e.inferredFrom, a.accID, m.symbol, e.evidenceCode ' + \
 	'from #annotations e, ACC_Accession a, MRK_Marker m ' + \
 	'where e._Term_key = a._Object_key ' + \
 	'and a._MGIType_key = 13 ' + \
@@ -104,7 +103,7 @@ for r in results:
 	id = regsub.gsub('"', '', id)
 
 	if string.find(id, 'MGI:') >= 0:
-	    if id not in mgiLookup:
+	    if id not in mgiLookup and r['evidenceCode'] != 'IMP':
 		# it's not in our set, so query the database directly
 		results = db.sql(findID % (id), 'auto')
 		if len(results) == 0:
