@@ -14,12 +14,19 @@ DATABASE=$MGD
 
 ARCHIVE_DIR=$QCARCHIVEDIR/go
 
-GO_FISH="'J:56000'"
-SWISS_PROT="'J:60000'"
-INTERPRO="'J:72247'"
-ORTHOLOGY="'J:73065'"
-EC="'J:72245'"
-MLC="'J:72246'"
+#GO_FISH="'J:56000'"
+#SWISS_PROT="'J:60000'"
+#INTERPRO="'J:72247'"
+#ORTHOLOGY="'J:73065'"
+#EC="'J:72245'"
+#MLC="'J:72246'"
+
+GO_FISH=59154
+SWISS_PROT=61933
+INTERPRO=73199
+ORTHOLOGY=74017
+EC=73197
+MLC=73198
 
 MANUAL_NOT_IN_CLAUSE="($GO_FISH,$SWISS_PROT,$INTERPRO,$ORTHOLOGY,$EC,$MLC)"
 
@@ -36,7 +43,7 @@ setRefsClause()
 {
    if test "$1" != "$COUNT_ALL_REFERENCES"
    then
-      REFS_CLAUSE="and    e.jnumID         $1 $2"
+      REFS_CLAUSE="and    e._Refs_key         $1 $2"
    else
       REFS_CLAUSE=""
    fi
@@ -56,16 +63,12 @@ declare @annotations     int
 
 select @annotations   = count($1)
 from   VOC_Annot         a                                              
-      ,VOC_Evidence_View e
+      ,VOC_Evidence      e
       ,MRK_Marker        m                                                   
-      ,DAG_Node          n                                                     
-      ,DAG_DAG           d                                                      
 where  a._AnnotType_key  = 1000 --(GO/Marker)                           
 and    a._Object_key     = m._Marker_key                                   
 and    a._Annot_key      = e._Annot_key                                     
-and    a._Term_key       = n._Object_key                                     
 $REFS_CLAUSE
-and    d._DAG_Key        = n._DAG_Key                                         
 
 if "$1" = "$COUNT_DISTINCT_MARKERS"
    print "Total Number of Genes Annotated to:    %1!", @annotations
@@ -96,15 +99,15 @@ declare aliascursor cursor for
 select  d.name                                                        
        ,convert ( char(6), count($1))
 from    VOC_Annot         a                                             
-       ,VOC_Evidence_View e
+       ,VOC_Evidence      e
        ,MRK_Marker        m                                                  
        ,DAG_Node          n                                                    
        ,DAG_DAG           d                                                     
 where  a._AnnotType_key   = 1000 --(GO/Marker)                          
 and    a._Object_key      = m._Marker_key                                  
 and    a._Annot_key       = e._Annot_key                                    
-and    a._Term_key        = n._Object_key                                    
 $REFS_CLAUSE
+and    a._Term_key        = n._Object_key                                    
 and    d._DAG_Key         = n._DAG_Key                                        
 group  by  d.name                                                     
 go
