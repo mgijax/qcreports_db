@@ -1,14 +1,8 @@
-set nocount on
-go
-
 declare @startDate char(10)
 declare @endDate char(10)
 
 select @startDate = convert(char(10), dateadd(day, -3, getdate()), 101)
 select @endDate = convert(char(10), getdate(), 101)
-
-set nocount off
-go
 
 print ""
 print "Withdrawals Processed %1! - %2!", @startDate, @endDate
