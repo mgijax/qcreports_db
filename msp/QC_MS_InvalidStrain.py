@@ -32,8 +32,8 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-outputDir=sys.argv[1]
-jobStreamKey=sys.argv[2]
+outputDir = os.environ['OUTPUTDIR']
+jobStreamKey = os.environ['JOBSTREAM']
 
 #
 # Main

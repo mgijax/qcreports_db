@@ -32,9 +32,9 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-outputDir = sys.argv[1]
-jobStreamKey = sys.argv[2]
-mgdDB = sys.argv[3]
+outputDir = os.environ['OUTPUTDIR']
+jobStreamKey = os.environ['JOBSTREAM']
+mgdDB = os.environ['MGDDBNAME']
 
 #
 # Main
