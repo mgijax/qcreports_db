@@ -34,7 +34,7 @@ import db
 import mgi_utils
 import reportlib
 
-findID = 'select _Object_key from ACC_Accession where accID = "%s"'
+#findID = 'select _Object_key from ACC_Accession where accID = "%s"'
 
 #
 # Main
@@ -44,16 +44,36 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
-cmd = 'select a.accID, e.inferredFrom, m.symbol ' + \
-'from VOC_Annot_View a, VOC_Evidence e, MRK_Marker m ' + \
-'where e.inferredFrom != null ' + \
-'and e._Annot_key = a._Annot_key ' + \
-'and a._AnnotType_key = 1000 ' + \
-'and a._Object_key = m._Marker_key ' + \
-'order by e.inferredFrom'
-
+cmd = 'select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) ' + \
+	'union ' + \
+	'select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"'
 results = db.sql(cmd, 'auto')
+mgiLookup = []
 for r in results:
+    mgiLookup.append(r['accID'])
+
+cmds = []
+cmds.append('select a._Term_key, a._Object_key, e.inferredFrom ' + \
+	'into #annotations ' + \
+	'from VOC_Annot a, VOC_Evidence e ' + \
+	'where a._AnnotType_key = 1000 ' + \
+	'and a._Annot_key = e._Annot_key ' + \
+	'and e.inferredFrom != null ')
+
+cmds.append('create nonclustered index idx1 on #annotations(_Term_key)')
+cmds.append('create nonclustered index idx2 on #annotations(_Object_key)')
+cmds.append('create nonclustered index idx3 on #annotations(inferredFrom)')
+
+cmds.append('select e.inferredFrom, a.accID, m.symbol ' + \
+'from #annotations e, ACC_Accession a, MRK_Marker m ' + \
+'where e._Term_key = a._Object_key ' + \
+'and a._MGIType_key = 13 ' + \
+'and a.preferred = 1 ' + \
+'and e._Object_key = m._Marker_key ' + \
+'order by e.inferredFrom')
+
+results = db.sql(cmds, 'auto')
+for r in results[-1]:
     ids = r['inferredFrom']
 
     if string.find(ids, ', ') >= 0:
@@ -76,15 +96,13 @@ for r in results:
 	id = regsub.gsub('"', '', id)
 
 	if string.find(id, 'MGI:') >= 0:
-	    idResult = db.sql(findID % (id), 'auto')
-	    if len(idResult) == 0:
+	    if id not in mgiLookup:
 		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
 		rows = rows + 1
 
 	if string.find(id, 'INTERPRO:') >= 0:
 	    [prefixPart, idPart] = string.split(id, 'INTERPRO:')
-	    idResult = db.sql(findID % (idPart), 'auto')
-	    if len(idResult) == 0:
+	    if idPart not in mgiLookup:
 		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
 		rows = rows + 1
 
