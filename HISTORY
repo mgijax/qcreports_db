@@ -1,3 +1,11 @@
+TAG:  qcreports_db-24-0-2
+DATE: 10/12/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.1
+b) TR 6270/MRK_NomenNotInformative.sql
+
 TAG:  qcreports_db-24-0-1
 TAG:  qcreports_db-24-0-0
 DATE: 10/11/2004
