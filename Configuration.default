@@ -72,7 +72,7 @@ setenv PYTHONPATH       	/usr/local/mgi/lib/python
 setenv DBUTILITIESPATH		/usr/local/mgi/dbutils/mgidbutilities
 
 # PATH
-set path = ($DBUTILITIESPATH/bin $path $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
+set path = (. $path $DBUTILITIESPATH/bin $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
 
 # Database Server
 setenv DBSERVER PROD_MGI
