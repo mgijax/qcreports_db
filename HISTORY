@@ -1,3 +1,10 @@
+TAG:  qcreports_db-3-1-0-10
+DATE: 12/29/2004
+STAFF: dbm
+RELEASE: A
+CHANGES:
+a) Disable logging in QC reports for data loads
+
 TAG:  qcreports_db-3-1-0-9
 TAG:  qcreports_db-3-1-0-8
 TAG:  qcreports_db-3-1-0-7
