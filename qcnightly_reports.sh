@@ -15,11 +15,13 @@ umask 002
 foreach i (`ls $QCMGD/*.sql`)
 sql.sh $MGD $i
 end
-foreach i (`ls $QCMGD/*.py`)
-$i
-end
 
 foreach i (`ls $QCNOMEN/*.sql`)
 sql.sh $NOMEN $i
+end
+
+cd $QCMGD
+foreach i (`ls *.py`)
+$i
 end
 
