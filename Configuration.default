@@ -18,7 +18,10 @@ setenv QCARCHIVEDIR		$QCREPORTOUTPUTDIR/archive
 
 # private HUGO directories
 setenv HUGODIR1			l1:/usr/local/mgi/private/www/hugo
-setenv HUGODIR2			l1:/export/l1/hes
+setenv HUGOFTPDIR		/net/l1/export/l1/ftp/private/hugo
+
+# RIKEN FTP report directory
+setenv RIKENFTPDIR              /net/l1/export/l1/ftp/private/riken
 
 # mgd-specific reports directory
 setenv QCMGD			$QCREPORTINSTALLDIR/mgd
