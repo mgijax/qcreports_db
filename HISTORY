@@ -1,4 +1,11 @@
 TAG:  no tag
+DATE: 11/06/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) NOMEN_pending.py - convert from "-pending" to Marker Status "interim"
+
+TAG:  no tag
 DATE: 11/05/2003
 STAFF: lec
 RELEASE: A
