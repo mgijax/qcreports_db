@@ -7,7 +7,10 @@
 set nocount on
 go
 
-select type = "O", h.*
+select type = "O", 
+h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1, h.length1,
+h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
+h.maxidentity, h.avgidentity, h.lenmatchseq
 into #homology
 from tempdb..LLHomology h, tempdb..LL l
 where h.species1 = "Homo sapiens"
@@ -16,7 +19,10 @@ and h.symbol1 = h.symbol2
 and h.locusID1 = l.locusID
 and l.osymbol is not null
 union
-select type = "I",  h.*
+select type = "I",
+h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1, h.length1,
+h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
+h.maxidentity, h.avgidentity, h.lenmatchseq
 from tempdb..LLHomology h, tempdb..LL l
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"

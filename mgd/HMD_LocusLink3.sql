@@ -10,7 +10,9 @@ print "not, where we are reporting orthology regarding the same human gene but n
 print "mouse member appears in our homology class."
 print ""
 
-select distinct h.*
+select distinct h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1, h.length1,
+h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
+h.maxidentity, h.avgidentity, h.lenmatchseq
 from tempdb..LLHomology h, HMD_Homology_Marker hm1, MRK_Marker m1, HMD_Homology h1
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"

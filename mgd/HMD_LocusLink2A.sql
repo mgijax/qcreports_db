@@ -7,7 +7,9 @@
 set nocount on
 go
 
-select h.*
+select h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1, h.length1,
+h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
+h.maxidentity, h.avgidentity, h.lenmatchseq
 into #homology
 from tempdb..LLHomology h, tempdb..LL l
 where h.species1 = "Homo sapiens"
