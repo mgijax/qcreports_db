@@ -45,5 +45,6 @@ end
 
 foreach i (fantom2.mgi)
 rcp $i $RIKENFTPDIR
+rm -rf $i
 end
 
