@@ -120,7 +120,7 @@ def incomplete_cluster():
 		'and f1.final_mgiID in ("zilch", "zzilch") ' + \
 		'and f1.seq_quality = "zilch" ')
 
-	cmds.append('create unique index index_key on #incomplete_cluster(_Fantom2_key)')
+	cmds.append('create index index_key on #incomplete_cluster(_Fantom2_key)')
 
 	# results[5]
 	cmds.append('select f1.riken_cloneid, f1.riken_cluster ' + \
@@ -145,7 +145,7 @@ def invalid_finalmgiID():
 		'and not exists (select 1 from MGI_Fantom2 f2 ' + \
 		'where f1.final_mgiID = f2.riken_cloneid)')
 
-	cmds.append('create unique index index_key on #invalidmgiID(_Fantom2_key)')
+	cmds.append('create index index_key on #invalidmgiID(_Fantom2_key)')
 
 	# results[8]
 	cmds.append('select f1.riken_cloneid, f1.riken_cluster, f1.final_mgiID ' + \
@@ -169,7 +169,7 @@ def multiple_representative():
 		'and f1.final_mgiID not in ("zilch", "zzilch")')
 
 	cmds.append('select * into #mult_rep from #rep2 group by final_mgiID having count(*) > 1')
-	cmds.append('create unique index index_key on #mult_rep(_Fantom2_key)')
+	cmds.append('create index index_key on #mult_rep(_Fantom2_key)')
 
 	# results[12]
 	cmds.append('select * from #mult_rep order by final_mgiID')
@@ -197,7 +197,7 @@ def no_rep_clone():
 	cmds.append('delete from #curated where riken_cloneid = "zilch"')
 
 	cmds.append('select * into #singleton from #curated group by final_mgiID having count(*) = 1')
-	cmds.append('create unique index index_cluster on #singleton(riken_cloneid)')
+	cmds.append('create index index_cluster on #singleton(riken_cloneid)')
 
 	cmds.append('select c.* ' + \
 		'into #no_rep_clone ' + \
@@ -208,7 +208,7 @@ def no_rep_clone():
 		'and not exists (select 1 from #singleton s ' + \
 		'where c.riken_cloneid = s.riken_cloneid)')
 
-	cmds.append('create unique index index_key on #no_rep_clone(_Fantom2_key)')
+	cmds.append('create index index_key on #no_rep_clone(_Fantom2_key)')
 
 	# results[20]
 	cmds.append('select * from #no_rep_clone order by final_mgiID')
@@ -262,7 +262,7 @@ def rep_discrepency():
 		'where final_mgiID not like "MGI:%" ' + \
 		'and riken_cloneid != final_mgiID')
 
-	cmds.append('create unique index index_key on #rep_discr(_Fantom2_key)')
+	cmds.append('create index index_key on #rep_discr(_Fantom2_key)')
 
 	# results[30]
 	cmds.append('select * from #rep_discr order by final_mgiID')
