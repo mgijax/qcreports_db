@@ -131,9 +131,33 @@ def writeRecordD(fp, r):
 #
 
 fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpA.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 '# of refs' + TAB + \
+	 'has orthology?' + CRT*2)
+
 fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpB.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 '# of refs' + TAB + \
+	 'has orthology?' + CRT*2)
+
 fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpC.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 '# of refs' + TAB + \
+	 'has orthology?' + CRT*2)
+
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+fpD.write('jnum ID' + TAB + \
+	 'pubMed ID' + TAB + \
+	 'ref in GXD?' + TAB + \
+	 'mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + CRT*2)
 
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:

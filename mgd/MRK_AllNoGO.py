@@ -81,6 +81,14 @@ def writeRecord(fp, r):
 
 fp = reportlib.init("MRK_AllNoGO", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
+fp.write(CRT + 'jnumID' + TAB + \
+	 'pubMedID' + TAB + \
+	 'ref in GXD?' + TAB + \
+	 'mgi ID' + TAB + \
+	 'GO annotation?' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + CRT*2)
+
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:
 	url = r['url']
