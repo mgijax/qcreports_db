@@ -15,7 +15,7 @@ umask 002
 foreach i (`ls $QCMGD/*.sql`)
 sql.sh $MGD $i
 end
-foreach i (`ls *.py`)
+foreach i (`ls $QCMGD/*.py`)
 $i
 end
 
