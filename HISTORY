@@ -1,13 +1,10 @@
-TAG:  qcreports_db-3-1-1-18
-TAG:  qcreports_db-3-1-1-17
-TAG:  qcreports_db-3-1-1-16
-DATE: 03/18/2005
+TAG:  qcreports_db-3-1-1-19
+DATE: 03/29/2005
 STAFF: lec
 RELEASE: A
 CHANGES: 
-1) TR 6668; added GXD_FullCodeable.sql
-2) MGS changes
-3) TR 6635 (MRK_Synonym*)
+1) TR 6698; HMD_RIKEN.sql
+2) GXD_OrphanGenotype.sql
 
 TAG:  qcreports_db-mpr-BP
 DATE: 03/16/2005
