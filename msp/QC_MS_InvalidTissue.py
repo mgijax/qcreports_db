@@ -46,7 +46,7 @@ fp = reportlib.init(sys.argv[0],
 fp.write("  A row in this report represents a Tissue that could not be translated to a valid MGI Tissue.\n" + \
 "  This Tissue may need to be added to the Tissue bad name/good name list.\n" + 2*CRT)
 
-fp.write(string.ljust('Tissue', 55))
+fp.write(string.ljust('Tissue', 100))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
 fp.write(string.ljust('------', 55))
 fp.write(string.ljust('---------------------', 25) + CRT)
@@ -65,7 +65,7 @@ results = db.sql('select qc1.tissue, qc1.numberOfOccurrences ' + \
 
 rows = 0
 for r in results:
-    fp.write(string.ljust(r['tissue'], 55) + \
+    fp.write(string.ljust(r['tissue'], 100) + \
 	     string.ljust(str(r['numberOfOccurrences']), 25) + CRT)
     rows = rows + 1
 

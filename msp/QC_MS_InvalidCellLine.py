@@ -46,7 +46,7 @@ fp = reportlib.init(sys.argv[0],
 fp.write("  A row in this report represents a Cell Line that could not be translated to a valid MGI Cell Line.\n" + \
 "  This Cell Line may need to be added to the Cell Line bad name/good name list.\n" + 2*CRT)
 
-fp.write(string.ljust('Cell Line', 55))
+fp.write(string.ljust('Cell Line', 100))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
 fp.write(string.ljust('---------', 55))
 fp.write(string.ljust('---------------------', 25) + CRT)
@@ -65,7 +65,7 @@ results = db.sql('select qc1.cellLine, qc1.numberOfOccurrences ' + \
 
 rows = 0
 for r in results:
-    fp.write(string.ljust(r['cellLine'], 55) + \
+    fp.write(string.ljust(r['cellLine'], 100) + \
 	     string.ljust(str(r['numberOfOccurrences']), 25) + CRT)
     rows = rows + 1
 
