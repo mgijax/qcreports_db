@@ -43,18 +43,25 @@ fp.write('J#' + TAB + 'Expt Type' + TAB + 'Tag' + CRT * 2)
 # all experiments
 
 cmds = []
-cmds.append('select _Expt_key, alleleLine from MLD_MCDatalist ' + \
+cmds.append('select _Expt_key, alleleLine ' + \
 	'into #expts ' + \
+	'from MLD_MCDatalist ' + \
 	'where alleleLine not like "%par%" ' + \
 	'and alleleLine not like "%reco%" ' + \
 	'order by _Expt_key, sequenceNum')
 cmds.append('create index idx1 on #expts(_Expt_key)')
 db.sql(cmds, None)
 
+cmds = []
+cmds.append('select distinct _Expt_key into #uniqueexpts from #expts')
+cmds.append('create index idx1 on #uniqueexpts(_Expt_key)')
+db.sql(cmds, None)
+
 # experiment details to print
 
-results = db.sql('select _Expt_key, jnum, exptType, tag from #expts e, MLD_Expt_View ev ' + \
-			'where e._Expt_key = ev._Expt_key', 'auto')
+results = db.sql('select e._Expt_key, ev.jnum, ev.exptType, ev.tag ' + \
+	'from #uniqueexpts e, MLD_Expt_View ev ' + \
+	'where e._Expt_key = ev._Expt_key', 'auto')
 printRecs = {}
 for r in results:
     key = r['_Expt_key']
@@ -63,32 +70,43 @@ for r in results:
 
 # loci counts for each experiment
 
-results = db.sql('select e._Expt_key, loci = count(em.*) from #expts e, MLD_Expt_Marker em ' + \
-	'where e._Expt_key = em._Expt_key and matrixData = 1', 'auto')
-loci = []
+results = db.sql('select e._Expt_key, loci = count(em._Marker_key) ' + \
+	'from #uniqueexpts e, MLD_Expt_Marker em ' + \
+	'where e._Expt_key = em._Expt_key and matrixData = 1 ' + \
+	'group by e._Expt_key', 'auto')
+loci = {}
 for r in results:
     key = r['_Expt_key']
     value = r['loci']
     loci[key] = value
 
-results = db.sql('select _Expt_key, alleleLine from #expts', 'auto')
-
+results = db.sql('select _Expt_key, alleleLine from #expts order by _Expt_key', 'auto')
+alleleLine = {}
 for r in results:
-	row = string.splitfields(r['alleleLine'], ' ')
-	columns = len(row)
+    key = r['_Expt_key']
+    value = r['alleleLine']
+    if not alleleLine.has_key(key):
+	alleleLine[key] = []
+    alleleLine[key].append(value)
 
-	if exptKey != r['_Expt_key']:
-		exptKey = r['_Expt_key']
-		numLoci = loci[exptKey]
-		printed = 0
+for exptKey in alleleLine.keys():
 
-	if columns == numLoci:
-		continue
+	numLoci = loci[exptKey]
 
-	if printed == 0:
-		d = printRecs[exptKey]
-		fp.write(`d['jnum']` + TAB + d['exptType'] + TAB + `d['tag']` + CRT)
-		printed = 1
+	for a in alleleLine[exptKey]:
+	    row = string.splitfields(a, ' ')
+	    columns = len(row)
+
+	    print str(row)
+	    print str(numLoci)
+	    print "####"
+
+	    if columns == numLoci:
+	        continue
+
+	    d = printRecs[exptKey]
+	    fp.write(`d['jnum']` + TAB + d['exptType'] + TAB + `d['tag']` + CRT)
+	    break
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)

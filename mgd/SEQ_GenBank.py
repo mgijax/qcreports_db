@@ -42,6 +42,9 @@ import db
 import mgi_utils
 import reportlib
 
+markerType = 'Marker'
+molsegType = 'Molecular Segment'
+
 #
 # Main
 #
@@ -49,92 +52,123 @@ import reportlib
 db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
 
-# select all Seq IDs and the Objects associated with them
-# for Markers, only select Mouse
-
 print 'query 1 begin...%s' % (mgi_utils.date())
 cmds = []
-cmds.append('select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
-'into #seqIDs ' + \
-'from ACC_Accession a, ACC_MGIType m ' + \
-'where a._MGIType_key = 3 ' + \
-'and a._LogicalDB_key in (9,27) ' + \
-'and a._MGIType_key = m._MGIType_key ' + \
-'union ' + \
-'select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
-'from ACC_Accession a, ACC_MGIType m, MRK_Marker k ' + \
-'where a._MGIType_key = 2 ' + \
-'and a._LogicalDB_key in (9,27) ' + \
-'and a._MGIType_key = m._MGIType_key ' + \
-'and a._Object_key = k._Marker_key ' + \
-'and k._Organism_key = 1')
-
-cmds.append('create nonclustered index idx_accid on #seqIDs(accID)')
-cmds.append('create nonclustered index idx_object on #seqIDs(_Object_key)')
-cmds.append('create nonclustered index idx_type on #seqIDs(_MGIType_key)')
+cmds.append('select a.accID, a._Object_key ' + \
+	'into #mseqIDs ' + \
+	'from ACC_Accession a, MRK_Marker m ' + \
+	'where a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key in (9,27) ' + \
+	'and a._Object_key = m._Marker_key ' + \
+	'and m._Organism_key = 1')
+cmds.append('create index idx1 on #mseqIDs(accID)')
+cmds.append('create index idx2 on #mseqIDs(_Object_key)')
 db.sql(cmds, None)
 print 'query 1 end...%s' % (mgi_utils.date())
 
-# select MGI IDs for all Objects
-
 print 'query 2 begin...%s' % (mgi_utils.date())
 cmds = []
-cmds.append('select distinct s._Object_key, s.mgiType, a.accID ' +
-'into #mgiIDs ' + 
-'from #seqIDs s, ACC_Accession a ' + \
-'where s._MGIType_key = 2 ' + \
-'and s._Object_key = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_key = 1 ' + \
-'and a.prefixPart = "MGI:" ' + \
-'and a.preferred = 1 ' + \
-'union ' + \
-'select distinct s._Object_key, s.mgiType, a.accID ' +
-'from #seqIDs s, ACC_Accession a ' + \
-'where s._MGIType_key = 3 ' + \
-'and s._Object_key = a._Object_key ' + \
-'and a._MGIType_key = 3 ' + \
-'and a._LogicalDB_key = 1 ' + \
-'and a.prefixPart = "MGI:" ' + \
-'and a.preferred = 1 ')
+cmds.append('select accID, _Object_key ' + \
+	'into #pseqIDs ' + \
+	'from ACC_Accession ' + \
+	'where _MGIType_key = 3 ' + \
+	'and _LogicalDB_key in (9,27) ')
+cmds.append('create index idx1 on #pseqIDs(accID)')
+cmds.append('create index idx2 on #pseqIDs(_Object_key)')
 db.sql(cmds, None)
 print 'query 2 end...%s' % (mgi_utils.date())
 
-# select "names" (marker type for markers, name for molecular segments)
+#
+# select MGI IDs for all Objects
+# set of mgi ids keyed by mgi type/object key
+#
 
 print 'query 3 begin...%s' % (mgi_utils.date())
-cmds = []
-cmds.append('select distinct s._Object_key, s.mgiType, t.name ' +
-'into #names ' + 
-'from #seqIDs s, MRK_Marker m, MRK_Types t ' + \
-'where s._MGIType_key = 2 ' + \
-'and s._Object_key = m._Marker_key ' + \
-'and m._Marker_Type_key = t._Marker_Type_key ' + \
-'union ' + \
-'select distinct s._Object_key, s.mgiType, p.name ' +
-'from #seqIDs s, PRB_Probe p ' + \
-'where s._MGIType_key = 3 ' + \
-'and s._Object_key = p._Probe_key ')
-db.sql(cmds, None)
+mgiIDs = {}
+results = db.sql('select s._Object_key, a.accID ' +
+	'from #mseqIDs s, ACC_Accession a ' + \
+	'where s._Object_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "MGI:" ' + \
+	'and a.preferred = 1 ', 'auto')
+for r in results:
+    key = markerType + ':' + str(r['_Object_key'])
+    value = regsub.gsub('\n', '', r['accID'])
+    mgiIDs[key] = value
 print 'query 3 end...%s' % (mgi_utils.date())
 
-# select symbols (symbols for markers and associated marker symbols for molecular segments)
-
 print 'query 4 begin...%s' % (mgi_utils.date())
-cmds = []
-cmds.append('select distinct s._Object_key, s.mgiType, m.symbol ' + \
-'into #symbols ' + \
-'from #seqIDs s, MRK_Marker m ' + \
-'where s._MGIType_key = 2 ' + \
-'and s._Object_key = m._Marker_key ' + \
-'union ' + \
-'select distinct s._Object_key, s.mgiType, symbol = m.symbol + ":" + pm.relationship ' + \
-'from #seqIDs s, PRB_Marker pm, MRK_Marker m ' + \
-'where s._MGIType_key = 3 ' + \
-'and s._Object_key = pm._Probe_key ' + \
-'and pm._Marker_key = m._Marker_key')
-db.sql(cmds, None)
+results = db.sql('select s._Object_key, a.accID ' +
+	'from #pseqIDs s, ACC_Accession a ' + \
+	'where s._Object_key = a._Object_key ' + \
+	'and a._MGIType_key = 3 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "MGI:" ' + \
+	'and a.preferred = 1 ', 'auto')
+for r in results:
+    key = molsegType + ':' + str(r['_Object_key'])
+    value = regsub.gsub('\n', '', r['accID'])
+    mgiIDs[key] = value
 print 'query 4 end...%s' % (mgi_utils.date())
+
+#
+# select "names" (marker type for markers, name for molecular segments)
+# set of names keyed by mgi type/object key
+#
+
+print 'query 5 begin...%s' % (mgi_utils.date())
+names = {}
+results = db.sql('select s._Object_key, t.name ' +
+	'from #mseqIDs s, MRK_Marker m, MRK_Types t ' + \
+	'where s._Object_key = m._Marker_key ' + \
+	'and m._Marker_Type_key = t._Marker_Type_key', 'auto')
+for r in results:
+    key = markerType + ':' + str(r['_Object_key'])
+    value = r['name']
+    names[key] = value
+
+results = db.sql('select s._Object_key, p.name ' +
+	'from #pseqIDs s, PRB_Probe p ' + \
+	'where s._Object_key = p._Probe_key ', 'auto')
+for r in results:
+    key = molsegType + ':' + str(r['_Object_key'])
+    value = r['name']
+    names[key] = value
+print 'query 6 end...%s' % (mgi_utils.date())
+
+#
+# select symbols (symbols for markers and associated marker symbols for molecular segments)
+# set of symbols keyed by mgi type/object key
+#
+
+print 'query 7 begin...%s' % (mgi_utils.date())
+symbols = {}
+results = db.sql('select s._Object_key, m.symbol ' + \
+	'from #mseqIDs s, MRK_Marker m ' + \
+	'where s._Object_key = m._Marker_key ', 'auto')
+for r in results:
+    key = markerType + ':' + str(r['_Object_key'])
+    value = r['symbol']
+    if not symbols.has_key(key):
+	symbols[key] = []
+    symbols[key].append(value)
+
+results = db.sql('select s._Object_key, symbol = m.symbol + ":" + pm.relationship ' + \
+	'from #pseqIDs s, PRB_Marker pm, MRK_Marker m ' + \
+	'where s._Object_key = pm._Probe_key ' + \
+	'and pm._Marker_key = m._Marker_key', 'auto')
+for r in results:
+    key = molsegType + ':' + str(r['_Object_key'])
+    value = r['symbol']
+    if not symbols.has_key(key):
+	symbols[key] = []
+    symbols[key].append(value)
+print 'query 7 end...%s' % (mgi_utils.date())
+
+####
+#### process main data
+####
 
 # select each set of data
 
@@ -144,54 +178,28 @@ print 'query 4 end...%s' % (mgi_utils.date())
 # the mgi accession id, name and symbol for each object
 # using the other dictionaries.
 
-print 'query 5 begin...%s' % (mgi_utils.date())
-results = db.sql('select * from #seqIDs', 'auto')
+print 'query 8 begin...%s' % (mgi_utils.date())
 accIDs = {}
+results = db.sql('select distinct accID, _Object_key from #mseqIDs', 'auto')
 for r in results:
     key = regsub.gsub('\n', '', r['accID'])
-    value = r['mgiType'] + ':' + str(r['_Object_key'])
+    value = markerType + ':' + str(r['_Object_key'])
     if not accIDs.has_key(key):
 	accIDs[key] = []
     accIDs[key].append(value)
-print 'query 5 end...%s' % (mgi_utils.date())
-
-# set of mgi ids keyed by mgi type/object key
-
-print 'query 6 begin...%s' % (mgi_utils.date())
-results = db.sql('select * from #mgiIDs', 'auto')
-mgiIDs = {}
+results = db.sql('select distinct accID, _Object_key from #pseqIDs', 'auto')
 for r in results:
-    key = r['mgiType'] + ':' + str(r['_Object_key'])
-    value = regsub.gsub('\n', '', r['accID'])
-    mgiIDs[key] = value
-print 'query 6 end...%s' % (mgi_utils.date())
-
-# set of names keyed by mgi type/object key
-
-print 'query 7 begin...%s' % (mgi_utils.date())
-results = db.sql('select * from #names', 'auto')
-names = {}
-for r in results:
-    key = r['mgiType'] + ':' + str(r['_Object_key'])
-    value = r['name']
-    names[key] = value
-print 'query 7 end...%s' % (mgi_utils.date())
-
-# set of symbols keyed by mgi type/object key
-
-print 'query 8 begin...%s' % (mgi_utils.date())
-results = db.sql('select * from #symbols', 'auto')
-symbols = {}
-for r in results:
-    key = r['mgiType'] + ':' + str(r['_Object_key'])
-    value = r['symbol']
-    if not symbols.has_key(key):
-	symbols[key] = []
-    symbols[key].append(value)
+    key = regsub.gsub('\n', '', r['accID'])
+    value = molsegType + ':' + str(r['_Object_key'])
+    if not accIDs.has_key(key):
+	accIDs[key] = []
+    accIDs[key].append(value)
 print 'query 8 end...%s' % (mgi_utils.date())
 
 print 'query 9 begin...%s' % (mgi_utils.date())
-results = db.sql('select distinct accID from #seqIDs order by accID', 'auto')
+results = db.sql('select distinct accID from #mseqIDs ' + \
+	'union ' + \
+	'select distinct accID from #pseqIDs order by accID', 'auto')
 print 'query 9 end...%s' % (mgi_utils.date())
 
 # for each Sequence Accession ID
