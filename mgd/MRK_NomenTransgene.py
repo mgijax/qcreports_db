@@ -167,22 +167,27 @@ for r in results:
 
 	markerSymbol = r['symbol']
 	testSymbol = parseSymbol(markerSymbol)
-	[s1, s2] = string.splitfields(testSymbol, '/')
 
-	if isAllCaps(s1):
-		species1 = 2
-	else:
-		species1 = 1
+	try:
+		[s1, s2] = string.splitfields(testSymbol, '/')
 
-	if isAllCaps(s2):
-		species2 = 2
-	else:
-		species2 = 1
+		if isAllCaps(s1):
+			species1 = 2
+		else:
+			species1 = 1
 
-	if isCurrent(s1, species1) and isCurrent(s2, species2):
-		goodSymbols.append(markerSymbol)
-	else:
-		badSymbols.append(markerSymbol)
+		if isAllCaps(s2):
+			species2 = 2
+		else:
+			species2 = 1
+
+		if isCurrent(s1, species1) and isCurrent(s2, species2):
+			goodSymbols.append(markerSymbol)
+		else:
+			badSymbols.append(markerSymbol)
+
+	except:
+		pass
 
 for s in badSymbols:
 	fp.write(s + CRT)
