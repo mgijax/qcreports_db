@@ -39,12 +39,6 @@ if len(sys.argv) > 1:
 else:
 	currentDate = mgi_utils.date('%m/%d/%Y')
 
-results = db.sql('select convert(varchar(25), dateadd(day, -7, "%s"))' % (currentDate), 'auto')
-bdate = results[0]['']
-
-results = db.sql('select convert(varchar(25), dateadd(day, 0, "%s"))' % (currentDate), 'auto')
-edate = results[0]['']
-
 fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ["QCREPORTOUTPUTDIR"])
 
 cmd = 'select n.symbol, bdate = convert(char(10), n.broadcast_date, 101), n.statusNote, a.accID, ' + \
