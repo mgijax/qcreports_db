@@ -115,27 +115,6 @@ print ""
 print "Assays, Assay results and genes by source:"
 print ""
 
-/* 
-these are inefficient forms of query and converted to
-characteristic functions below which let me do the counts in a
-single pass AND let me display the results as columns instead of rows:
-   select source = "Electronic Submission Assays", count(*) 
-   from GXD_Assay where _Refs_key = @freemanRef
-   union all
-   select "Literature Assays", count(*)
-   from GXD_Assay where _Refs_key != @freemanRef
-
-   select source = "Electronic Submission Results", count(*) 
-   from GXD_Expression e, GXD_Assay a
-   where _Refs_key = @freemanRef
-   and e._Assay_key = a._Assay_key
-   union all
-   select "Literature Results", count(*)
-   from GXD_Expression e, GXD_Assay a
-   where _Refs_key != @freemanRef
-   and e._Assay_key = a._Assay_key
-*/
-
 /* Assays by Source */
 declare @distinctGenes int
 select @distinctGenes = count (distinct _Marker_key) from GXD_Assay
@@ -157,8 +136,7 @@ select "Assay Results",
 	/* sum ( if not eds 1 else 0 ) */
 	"Literature Curated" = SUM (abs(sign(_Refs_key-@freemanRef))),
 	"Total" = count(*)
-from GXD_Expression e, GXD_Assay a
-where e._Assay_key = a._Assay_key
+from GXD_Expression e
 
 union all
 

@@ -2,10 +2,9 @@ set nocount on
 go
 
 /* select all GXD Genotype annotations */
-select distinct e._Genotype_key, a._Refs_key
+select distinct e._Genotype_key, e._Refs_key
 into #gxd
-from GXD_Expression e, GXD_Assay a
-where e._Assay_key = a._Assay_key
+from GXD_Expression e
 go
 
 /* select all PhenoSlim/Genotype Reference annotations */
