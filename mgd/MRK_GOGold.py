@@ -99,9 +99,42 @@ def writeRecord2(fp, r):
 #
 
 fpA = reportlib.init("MRK_GOGold_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpA.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 'DAG abbreviation' + TAB + \
+	 'GO ID' + TAB + \
+	 'GO Term' + TAB + \
+	 'evidence codes' + CRT*2)
+
 fpB = reportlib.init("MRK_GOGold_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpB.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 'DAG abbreviation' + TAB + \
+	 'GO ID' + TAB + \
+	 'GO Term' + TAB + \
+	 'evidence codes' + CRT*2)
+
+
 fpC = reportlib.init("MRK_GOGold_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpC.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 'DAG abbreviation' + TAB + \
+	 'GO ID' + TAB + \
+	 'GO Term' + TAB + \
+	 'evidence codes' + CRT*2)
+
+
 fpD = reportlib.init("MRK_GOGold_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpD.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 'DAG abbreviation' + TAB + \
+	 'GO ID' + TAB + \
+	 'GO Term' + TAB + \
+	 'evidence codes' + CRT*2)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
 cmds = []
