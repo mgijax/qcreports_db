@@ -19,18 +19,54 @@ if ( ! ${?QCREPORTINSTALLDIR} ) then
 endif
 
 #
-# Copy installation files to installation directory
-#
-
-foreach i (`ls Configuration *.sh *.sql *.py`)
-	cp -r $i $QCREPORTINSTALLDIR
-end
-
-#
 # Make report output directory, if it does not exist
 #
 
 if ( ! -e $QCREPORTOUTPUTDIR ) then
 	mkdir $QCREPORTOUTPUTDIR
 endif
+
+#
+# Make mgd directory, if it does not exist
+#
+
+if ( ! -e $QCMGD ) then
+	mkdir $QCMGD
+endif
+
+#
+# Make nomen directory, if it does not exist
+#
+
+if ( ! -e $QCNOMEN ) then
+	mkdir $QCNOMEN
+endif
+
+#
+# Make gdb directory, if it does not exist
+#
+
+if ( ! -e $QCGDB ) then
+	mkdir $QCGDB
+endif
+
+#
+# Copy installation files to installation directory
+#
+
+foreach i (`ls Configuration *.sh`)
+	cp -r $i $QCREPORTINSTALLDIR
+end
+
+foreach i (`ls mgd/*.sql mgd/*.py`)
+	cp -r $i $QCMGD
+end
+
+foreach i (`ls nomen/*.sql nomen/*.py`)
+	cp -r $i $QCNOMEN
+end
+
+foreach i (`ls gdb/*.sql gdb/*.py`)
+	cp -r $i $QCGDB
+end
 
