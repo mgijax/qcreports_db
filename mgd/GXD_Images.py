@@ -77,4 +77,5 @@ for r in results:
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
 
+reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
