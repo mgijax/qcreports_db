@@ -39,6 +39,9 @@ go
 create index idx1 on #temp2(_Refs_key)
 go
 
+set nocount off
+go
+
 print ""
 print "All genes with 'unknown' annotations with new indexed literature"
 print "Indicator column indicates if reference is selected for GO and 'not used' for any GO annotation"
