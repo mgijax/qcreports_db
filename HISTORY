@@ -1,3 +1,11 @@
+TAG:  qcreports_db-21-0-3-mgi298-1
+DATE: 02/23/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 5591; GO reports
+b) MRK_NoSequence.py; HMD_MouseSeq1.py; HMD_MouseSeq2.sql
+
 TAG:  qcreports_db-21-0-3-mgi298_BP
 DATE: 02/11/2004
 STAFF: lec
