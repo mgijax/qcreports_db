@@ -1,3 +1,9 @@
+TAG: qcreports_db-1-0-22
+DATE: 05/18/2000
+STAFF: lec
+RELEASE: A
+CHANGES: removed MRK_Ref15839.sql MRK_RefMLC.sql MRK_RefNo15839.sql
+
 TAG: qcreports_db-1-0-21
 DATE: 05/18/2000
 STAFF: lec
