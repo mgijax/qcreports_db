@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #
-# Usage:  GDBreport.sh DSQUERY MGD
+# Usage:  GDBreport.sh <-f>
 #
 
 cd `dirname $0` && source Configuration
