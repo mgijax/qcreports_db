@@ -27,11 +27,35 @@ create clustered index idx_key on #markers(_Marker_key)
 go
 
 select m.*, a.accID
-into #sequences
+into #sequences1
 from #markers m, MRK_AccRef_View a
 where m._Marker_key = a._Object_key
 and a._LogicalDB_key = 9
 and a._Refs_key = 64047
+go
+
+select s.*, o.name
+into #sequences2
+from #sequences1 s, MRK_Other o
+where s._Marker_key *= o._Marker_key
+go
+
+create clustered index idx_key on #sequences2(_Marker_key)
+go
+
+select s.*, refID = c.pubmedID
+into #sequencesFinal
+from #sequences2 s, MRK_Acc_View a, tempdb..LLCit c
+where s._Marker_key = a._Object_key
+and a._LogicalDB_key = 24
+and a.accID = c.locusID
+union
+select s.*, null
+from #sequences2 s, MRK_Acc_View a
+where s._Marker_key = a._Object_key
+and a._LogicalDB_key = 24
+and not exists (select 1 from tempdb..LLCit c
+where a.accID = c.locusID)
 go
 
 set nocount off
@@ -47,9 +71,9 @@ print "where symbol has acquired a Sequence Accession ID from LocusLink"
 print "where symbol has no homology entry in MGI"
 print ""
 
-select m.symbol, m.accID, m.category
-from #sequences m
+select m.symbol, m.accID, m.category, m.refID
+from #sequencesFinal m
 where not exists (select 1 from HMD_Homology_Marker h where m._Marker_key = h._Marker_key)
-order by m.category
+order by m.category, m.symbol, m.accID, m.refID
 go
 

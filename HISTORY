@@ -1,9 +1,18 @@
+TAG:  qcreports_db-20-0-21
+DATE: 11/19/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 5333; GXD_MechDev.sql, GXD_GeneExprPatterns.sql,
+   GXD_DevBiol.sql, GXD_Development.sql
+
 TAG:  no tag
 DATE: 11/06/2003
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) NOMEN_pending.py - convert from "-pending" to Marker Status "interim"
+b) VOC_InvalidInferred.py - new for GO Annoations (TR 5311)
 
 TAG:  no tag
 DATE: 11/05/2003
