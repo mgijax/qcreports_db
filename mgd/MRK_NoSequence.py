@@ -10,7 +10,7 @@
 #	Genes with no nucleic or protein sequence assocations
 #
 #    		Gene Symbol
-#		Ortholog Species
+#		Ortholog Organism
 #		Ortholog LL ID
 #		GXD Refs (total # of GXD Indexes to the Gene)
 #		A&P Uses:  Y if the Gene has an MLC entry or Alleles
@@ -64,7 +64,7 @@ fp.write(string.ljust('Gene Symbol', 27) + \
  	 string.ljust('A&P Uses?', 12) + \
  	 string.ljust('Primary Ref', 12) + \
  	 string.ljust('Ortholog LL Id', 42) + \
-	 string.ljust('Orthology Species', 72) + \
+	 string.ljust('Orthology Organism', 72) + \
  	 CRT)
 
 fp.write('-' * 25 + '  ' + \
