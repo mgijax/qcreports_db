@@ -1,20 +1,28 @@
+set nocount on
+go
+
 select h._History_key, h.event_date, e._Expt_key, e._Refs_key, e.exptTYpe, e.tag
 into #m1
 from MRK_History h, MLD_Expt_Marker em, MLD_Expts e
-where datepart(mm, h.event_date) = $CURRENT_MONTH
-and datepart(yy, h.event_date) = $CURRENT_YEAR
-and h.note like "withdrawn%"
+where datepart(mm, h.event_date) = datepart(mm, getdate())
+and datepart(yy, h.event_date) = datepart(yy, getdate())
+and h._Marker_Event_key in (2,3,4,5)
 and h._Marker_key = em._Marker_key
 and em._Expt_key = e._Expt_key
 and e.exptType like 'TEXT%'
 go
 
-set nocount on
+declare @month integer
+declare @year integer
+select @month = datepart(mm, getdate())
+select @year = datepart(yy, getdate())
+
+set nocount off
 go
 
 print ""
 print "Symbols which have undergone withdrawals and appear in Text Experiments"
-print "Nomenclature Event Date: Month of $DATEHEADER"
+print "Nomenclature Event Date: %1!/%2!", @month, @year
 print ""
 
 select r.symbol "old symbol", r.current_symbol "new symbol", convert(char(10), m.event_date, 101) "event date", 
