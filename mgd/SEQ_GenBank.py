@@ -55,12 +55,12 @@ cmds = []
 cmds.append('select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
 'into #seqIDs ' + \
 'from PRB_Acc_View a, ACC_MGIType m ' + \
-'where a._LogicalDB_key = 9 ' + \
+'where a._LogicalDB_key in (9,27) ' + \
 'and a._MGIType_key = m._MGIType_key ' + \
 'union ' + \
 'select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
 'from MRK_Acc_View a, ACC_MGIType m, MRK_Marker k ' + \
-'where a._LogicalDB_key = 9 ' + \
+'where a._LogicalDB_key in (9,27) ' + \
 'and a._MGIType_key = m._MGIType_key ' + \
 'and a._Object_key = k._Marker_key ' + \
 'and k._Species_key = 1')
