@@ -33,9 +33,9 @@ foreach i (*.py)
 $i
 end
 
-strainAllele.sh
-strainChanges.sh
-goStats.sh
+./strainAllele.sh
+./strainChanges.sh
+./goStats.sh
 
 cd $QCREPORTOUTPUTDIR
 foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt)
