@@ -10,9 +10,9 @@
 
 cd `dirname $0` && source ./Configuration
 
-strainAllele.sh
-strainChanges.sh
-goStats.sh
+./strainAllele.sh
+./strainChanges.sh
+./goStats.sh
 
 foreach i ($QCMGD/*.sql)
 if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
