@@ -10,7 +10,7 @@ where i._Refs_key = b._Refs_key
 and b.journal = "Gene Expr Patterns"
 and i._Index_key =  s._Index_key
 and s._IndexAssay_key = a._Term_key
-and a.term in ("Northern", "Western", "RT-PCR", "RNAse prot", "Prot-sxn", "RNA-sxn", "Prot-WM", "RNA-WM", "Primer ex", "cDNA")
+and a.term in ("Northern", "Western", "RT-PCR", "RNAse prot", "Prot-sxn", "RNA-sxn", "Prot-WM", "RNA-WM", "Primer ex", "cDNA", "Knock in")
 and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)
 go
 
