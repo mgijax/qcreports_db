@@ -10,20 +10,27 @@ print "not reporting in our homology data, where we have neither the mouse nor t
 print "human member of the pair."
 print ""
 
+print "HUMAN AND MOUSE SYMBOLS ARE THE SAME"
+print ""
+
 select h.*
 from tempdb..LLHomology h
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"
+and h.symbol1 = h.symbol2
+and not exists (select 1 from MRK_Marker m
+where m._Species_key = 1
+and m.symbol = h.symbol2)
+union
+select h.*
+from tempdb..LLHomology h
+where h.species1 = "Homo sapiens"
+and h.species2 = "Mus musculus"
+and h.symbol1 = h.symbol2
 and 
-(
 not exists (select 1 from MRK_Marker m
 where m._Species_key = 2
 and m.symbol = h.symbol1)
-or
-not exists (select 1 from MRK_Marker m
-where m._Species_key = 1
-and m.symbol = h.symbol2)
-)
 order by h.symbol1
 go
 
