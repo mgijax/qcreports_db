@@ -46,18 +46,28 @@ db.set_sqlDatabase(os.environ['NOMEN'])
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
 
-cmd = 'select m._Nomen_key, m.symbol, m.name, m.statusNote, a.accID ' + \
+cmds = []
+
+cmds.append('select m._Nomen_key, m.symbol, m.name, m.statusNote, mgiID = a.accID ' + \
+'into #nomen ' + \
 'from MRK_Nomen m, ACC_Accession a ' + \
 'where m._Marker_Status_key = 3 ' + \
-'and m._Nomen_key *= a._Object_key ' + \
-'order by m.symbol'
+'and m.submittedBy != "riken_autoload" ' + \
+'and m._Nomen_key = a._Object_key ' + \
+'and a._LogicalDB_Key = 1 ')
 
-results = db.sql(cmd, 'auto')
+cmds.append('select n.*, a.accID ' + \
+'from #nomen n, ACC_Accession a ' + \
+'where n._Nomen_key *= a._Object_key ' + \
+'and a._LogicalDB_Key != 1 ' + \
+'order by n.symbol')
+
+results = db.sql(cmds, 'auto')
 
 prevNomen = ''
 accids = []
 
-for r in results:
+for r in results[1]:
 
 	if prevNomen != r['_Nomen_key']:
 
@@ -66,6 +76,7 @@ for r in results:
 		elif prevNomen != '':
 			fp.write(CRT)
 
+		fp.write(r['mgiID'] + TAB)
 		fp.write(r['symbol'] + TAB)
 		fp.write(r['name'] + TAB)
 
