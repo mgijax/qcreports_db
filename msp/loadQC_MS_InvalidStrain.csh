@@ -86,6 +86,9 @@ and ps._Strain_key = st._Strain_key
 and st.strain = "Not Resolved"
 go
 
+create index idx1 on #all(rawStrain)
+go
+
 select rawStrain, occurrences = count(rawStrain), seq = identity(10)
 into #allwithcounts
 from #all

@@ -84,6 +84,9 @@ and sa._Source_key = ps._Source_key
 and ps.name is null
 go
 
+create index idx1 on #all(rawLibrary)
+go
+
 select rawLibrary, occurrences = count(rawLibrary), seq = identity(10)
 into #allwithcounts
 from #all

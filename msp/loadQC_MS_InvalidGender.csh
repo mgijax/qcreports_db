@@ -84,7 +84,7 @@ and sa._Source_key = ps._Source_key
 and ps._Gender_key = 315169
 go
 
-create index idx1 on #all(rawCellLine)
+create index idx1 on #all(rawSex)
 go
 
 select rawSex, occurrences = count(rawSex), seq = identity(10)
