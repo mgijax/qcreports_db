@@ -47,12 +47,12 @@ go
 
 select m.*, hstatus = e.status
 into #results
-from #markers m, radar_2..DP_EntrezGene_Info e
+from #markers m, radar..DP_EntrezGene_Info e
 where m.geneID = e.geneID and m.hsymbol = e.symbol
 union
 select m.*, hstatus = "?"
 from #markers m
-where not exists (select 1 from radar_2..DP_EntrezGene_Info e
+where not exists (select 1 from radar..DP_EntrezGene_Info e
 where m.geneID = e.geneID and m.hsymbol = e.symbol)
 go
 
