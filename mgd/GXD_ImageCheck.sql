@@ -1,6 +1,6 @@
 
 print ""
-print "GXD Image Figure Labels Beginning 'Fig%' or ending '%.'"
+print "GXD Image Figure Labels Beginning 'Fig' or ending '.'"
 print ""
 
 select distinct i.jnumID + ";" + i.figureLabel
