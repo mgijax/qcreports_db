@@ -105,6 +105,132 @@ PAGE = reportlib.PAGE
 
 PUBMED = 29
 url = ''
+jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
+hasOrthology = {}
+pubMedIDs = {}
+gxd = []
+
+fpA = None
+fpB = None
+fpC = None
+fpD = None
+
+def reportOpen():
+    global fpA, fpB, fpC, fpD
+
+    fpA = reportlib.init("MRK_NoGO_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+    fpB = reportlib.init("MRK_NoGO_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+    fpC = reportlib.init("MRK_NoGO_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+    fpD = reportlib.init("MRK_NoGO_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+
+def reportClose():
+    global fpA, fpB, fpC, fpD
+
+    reportlib.finish_nonps(fpA)
+    reportlib.finish_nonps(fpB)
+    reportlib.finish_nonps(fpC)
+    reportlib.finish_nonps(fpD, isHTML = 1)
+
+def runQueries():
+
+    global hasOrthology, pubMedIDs, gxd
+
+    results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
+    for r in results:
+	    url = r['url']
+
+    db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
+	    'into #markers ' + \
+	    'from MRK_Marker m, ACC_Accession a ' + \
+	    'where m._Marker_Type_key = 1 ' + \
+	    'and m._Marker_Status_key in (1,3) ' + \
+	    'and m.name not like "%RIKEN%" ' + \
+	    'and m.name not like "%expressed%" ' + \
+	    'and m.name not like "EST %" ' + \
+	    'and m.name not like "gene model %" ' + \
+	    'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
+	    'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
+	    'and m.symbol not like "ORF%" ' + \
+	    'and m._Marker_key = a._Object_key ' + \
+	    'and a._MGIType_key = 2 ' + \
+	    'and a._LogicalDB_key = 1 ' + \
+	    'and a.prefixPart = "MGI:" ' + \
+	    'and a.preferred = 1 ' + \
+	    'and not exists (select 1 from  VOC_Annot a ' + \
+	    'where m._Marker_key = a._Object_key ' + \
+	    'and a._AnnotType_key = 1000 ) ', None)
+    db.sql('create index idx1 on #markers(_Marker_key)', None)
+
+    # orthologies
+
+    results = db.sql('select m._Marker_key ' + \
+	'from #markers m ' + \
+	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
+	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
+	'where hm1._Marker_key = m._Marker_key ' + \
+	'and hm1._Homology_key = h1._Homology_key ' + \
+	'and h1._Class_key = h2._Class_key ' + \
+	'and h2._Homology_key = hm2._Homology_key ' + \
+	'and hm2._Marker_key = m2._Marker_key ' + \
+	'and m2._Organism_key = 2) ', 'auto')
+    for r in results:
+	hasOrthology[r['_Marker_key']] = 1
+
+    results = db.sql('select m._Marker_key ' + \
+	'from #markers m ' + \
+	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
+	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
+	'where hm1._Marker_key = m._Marker_key ' + \
+	'and hm1._Homology_key = h1._Homology_key ' + \
+	'and h1._Class_key = h2._Class_key ' + \
+	'and h2._Homology_key = hm2._Homology_key ' + \
+	'and hm2._Marker_key = m2._Marker_key ' + \
+	'and m2._Organism_key = 40) ', 'auto')
+    for r in results:
+	hasOrthology[r['_Marker_key']] = 1
+
+    db.sql('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
+	'r._Refs_key, b.journal ' + \
+	'into #references1 ' + \
+	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
+	'where m._Marker_key = r._Marker_key ' + \
+	'and r._Refs_key = b._Refs_key', None)
+    db.sql('create index idx1 on #references1(_Refs_key)', None)
+
+    db.sql('select r.*, jnum = a.numericPart, jnumID = a.accID ' + \
+	'into #references ' + \
+	'from #references1 r, ACC_Accession a ' + \
+	'where r._Refs_key = a._Object_key ' + \
+	'and a._MGIType_key = 1 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "J:" ' + \
+	'and a.preferred = 1', None)
+    db.sql('create index idx1 on #references(_Refs_key)', None)
+    db.sql('create index idx2 on #references(_Marker_key)', None)
+    db.sql('create index idx3 on #references(symbol)', None)
+    db.sql('create index idx4 on #references(numericPart)', None)
+
+    # select PubMed IDs for references
+
+    results = db.sql('select distinct r._Refs_key, a.accID ' + \
+	'from #references r, ACC_Accession a ' + \
+	'where r._Refs_key = a._Object_key ' + \
+	'and a._MGIType_key = 1 ' + \
+	'and a._LogicalDB_key = %d ' % (PUBMED) + \
+	'and a.preferred = 1', 'auto')
+    for r in results:
+	pubMedIDs[r['_Refs_key']] = r['accID']
+
+    # has reference been chosen for GXD
+
+    results = db.sql('select distinct r._Refs_key ' + \
+	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'where r._Refs_key = ba._Refs_key ' + \
+	'and ba._DataSet_key = bd._DataSet_key ' + \
+	'and bd.dataSet = "Expression" ' + \
+	'and ba.isNeverUsed = 0', 'auto')
+    for r in results:
+	gxd.append(r['_Refs_key'])
 
 def writeRecord(fp, r):
 
@@ -120,7 +246,7 @@ def writeRecord(fp, r):
 
 def writeRecordD(fp, r):
 
-	fp.write(r['jnumID'] + TAB)
+	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
 	if pubMedIDs.has_key(r['_Refs_key']):
 		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
@@ -136,192 +262,74 @@ def writeRecordD(fp, r):
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
 
-#
-# Main
-#
+def reportA():
 
-fpA = reportlib.init("MRK_NoGO_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
-fpA.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 '# of refs' + TAB + \
-	 'has orthology?' + CRT*2)
+    fpA.write('mgi ID' + TAB + \
+	     'symbol' + TAB + \
+	     'name' + TAB + \
+	     '# of refs' + TAB + \
+	     'has orthology?' + CRT*2)
 
-fpB = reportlib.init("MRK_NoGO_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
-fpB.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 '# of refs' + TAB + \
-	 'has orthology?' + CRT*2)
-
-fpC = reportlib.init("MRK_NoGO_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
-fpC.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 '# of refs' + TAB + \
-	 'has orthology?' + CRT*2)
-
-fpD = reportlib.init("MRK_NoGO_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
-fpD.write('jnum ID' + TAB + \
-	 'pubMed ID' + TAB + \
-	 'ref in GXD?' + TAB + \
-	 'mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + CRT*2)
-
-results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
-for r in results:
-	url = r['url']
-
-cmds = []
-cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
-	'into #markers ' + \
-	'from MRK_Marker m, ACC_Accession a ' + \
-	'where m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m.name not like "%RIKEN%" ' + \
-	'and m.name not like "%expressed%" ' + \
-	'and m.name not like "EST %" ' + \
-	'and m.name not like "gene model %" ' + \
-	'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
-	'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
-	'and m.symbol not like "ORF%" ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and not exists (select 1 from  VOC_Annot a ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ) ')
-cmds.append('create index idx1 on #markers(_Marker_key)')
-db.sql(cmds, None)
-
-# orthologies
-
-hasOrthology = {}
-
-results = db.sql('select m._Marker_key ' + \
-	'from #markers m ' + \
-	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-	'where hm1._Marker_key = m._Marker_key ' + \
-	'and hm1._Homology_key = h1._Homology_key ' + \
-	'and h1._Class_key = h2._Class_key ' + \
-	'and h2._Homology_key = hm2._Homology_key ' + \
-	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 2) ', 'auto')
-for r in results:
-	hasOrthology[r['_Marker_key']] = 1
-
-results = db.sql('select m._Marker_key ' + \
-	'from #markers m ' + \
-	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-	'where hm1._Marker_key = m._Marker_key ' + \
-	'and hm1._Homology_key = h1._Homology_key ' + \
-	'and h1._Class_key = h2._Class_key ' + \
-	'and h2._Homology_key = hm2._Homology_key ' + \
-	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 40) ', 'auto')
-for r in results:
-	hasOrthology[r['_Marker_key']] = 1
-
-cmds = []
-cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
-	'r._Refs_key, b.journal ' + \
-	'into #references1 ' + \
-	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
-	'where m._Marker_key = r._Marker_key ' + \
-	'and r._Refs_key = b._Refs_key')
-cmds.append('create index idx1 on #references1(_Refs_key)')
-db.sql(cmds, None)
-
-cmds = []
-cmds.append('select r.*, jnum = a.numericPart, jnumID = a.accID ' + \
-	'into #references ' + \
-	'from #references1 r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "J:" ' + \
-	'and a.preferred = 1')
-cmds.append('create index idx1 on #references(_Refs_key)')
-cmds.append('create index idx2 on #references(_Marker_key)')
-cmds.append('create index idx3 on #references(symbol)')
-cmds.append('create index idx4 on #references(numericPart)')
-db.sql(cmds, None)
-
-# select PubMed IDs for references
-
-results = db.sql('select distinct r._Refs_key, a.accID ' + \
-	'from #references r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = %d ' % (PUBMED) + \
-	'and a.preferred = 1', 'auto')
-pubMedIDs = {}
-for r in results:
-	pubMedIDs[r['_Refs_key']] = r['accID']
-
-# has reference been chosen for GXD
-
-results = db.sql('select distinct r._Refs_key ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where r._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Expression" ' + \
-	'and ba.isNeverUsed = 0', 'auto')
-gxd = []
-for r in results:
-	gxd.append(r['_Refs_key'])
-
-# A
-
-results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+    results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references ' + \
 	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
 	'and journal != "Genbank Submission" ' + \
 	'group by _Marker_key ' + \
 	'order by symbol', 'auto')
-for r in results:
-	writeRecord(fpA, r)
-fpA.write('\n(%d rows affected)\n' % (len(results)))
+    for r in results:
+	    writeRecord(fpA, r)
 
-# B
+def reportB():
 
-results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+    fpB.write('mgi ID' + TAB + \
+	     'symbol' + TAB + \
+	     'name' + TAB + \
+	     '# of refs' + TAB + \
+	     'has orthology?' + CRT*2)
+
+    results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references group by _Marker_key ' + \
 	'order by symbol', 'auto')
-for r in results:
-	writeRecord(fpB, r)
-fpB.write('\n(%d rows affected)\n' % (len(results)))
+    for r in results:
+	    writeRecord(fpB, r)
 
-# C
+def reportC():
 
-cmds = []
-cmds.append('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1._Refs_key ' + \
+    fpC.write('mgi ID' + TAB + \
+	     'symbol' + TAB + \
+	     'name' + TAB + \
+	     '# of refs' + TAB + \
+	     'has orthology?' + CRT*2)
+
+    db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1._Refs_key ' + \
 	'into #refC ' + \
 	'from #references r1 ' + \
 	'where r1.jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-	'or r1.journal = "Genbank Submission"')
-cmds.append('create index idx1 on #refC(_Marker_key)')
-cmds.append('create index idx2 on #refC(symbol)')
-db.sql(cmds, None)
+	'or r1.journal = "Genbank Submission"', None)
+    db.sql('create index idx1 on #refC(_Marker_key)', None)
+    db.sql('create index idx2 on #refC(symbol)', None)
 
-results = db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, numRefs = count(r1._Refs_key) ' + \
+    results = db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, ' + \
+	'numRefs = count(r1._Refs_key) ' + \
 	'from #refC r1 ' + \
 	'where exists (select 1 from #references r2 where r1._Marker_key = r2._Marker_key ' + \
 	'and r2._Refs_key not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944)) ' + \
 	'group by r1._Marker_key ' + \
 	'order by r1.symbol', 'auto')
-for r in results:
+    for r in results:
 	writeRecord(fpC, r)
-fpC.write('\n(%d rows affected)\n' % (len(results)))
 
-# D
+def reportD():
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+    fpD.write('jnum ID' + TAB + \
+	     'pubMed ID' + TAB + \
+	     'ref in GXD?' + TAB + \
+	     'mgi ID' + TAB + \
+	     'symbol' + TAB + \
+	     'name' + CRT*2)
+
+    results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
+	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
@@ -332,11 +340,19 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'and e._Annot_key = a._Annot_key ' + \
 	'and a._AnnotType_key = 1000) ' + \
 	'order by numericPart', 'auto')
-for r in results:
-	writeRecordD(fpD, r)
-fpD.write('\n(%d rows affected)\n' % (len(results)))
+    for r in results:
+	    writeRecordD(fpD, r)
+    fpD.write('\n(%d rows affected)\n' % (len(results)))
 
-reportlib.finish_nonps(fpA)	# non-postscript file
-reportlib.finish_nonps(fpB)	# non-postscript file
-reportlib.finish_nonps(fpC)	# non-postscript file
-reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
+#
+# Main
+#
+
+reportOpen()
+runQueries()
+#reportA()
+#reportB()
+#reportC()
+reportD()
+reportClose()
+
