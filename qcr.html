@@ -23,7 +23,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#mlc">MLC</A>
 <LI><A HREF="#probes">Probes</A>
 <LI><A HREF="#mapping">Mapping</A>
-<LI><A HREF="#homology">Homology</A>
+<LI><A HREF="#orthology">Orthology</A>
 <LI><A HREF="#gxd">GXD</A>
 <LI><A HREF="#go">GO</A>
 <LI><A HREF="#nomenclature">Nomenclature</A>
@@ -31,21 +31,16 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#mgs">MGS</A>
 <LI><A HREF="#sequence">Sequence</A>
 <LI><A HREF="#dataloads">Data Loads</A>
-<LI><A HREF="#lists">Lists</A>
-<LI><A HREF="#other">Other</A>
-<LI><A HREF="ftp://ftp.informatics.jax.org/pub/reports/index.html">Public Reports</A>
+<LI><A HREF="#lists">Lists/Other</A>
+<LI><A HREF="ftp://devftp.informatics.jax.org/pub/reports/index.html">Public Reports</A>
 </UL>
 <HR>
 
 <A NAME="references"><B>References</B></A>
 <OL>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_NeedNLM1.sql.rpt">References Which Need NLM Updates</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_NeedNLM2.sql.rpt">References Which Need NLM Updates (MedLine Format)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_InPress.sql.rpt">References In Press/Submissions</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_NoAbstract.sql.rpt">References w/ Medline UI and No Abstract</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_Submission.sql.rpt">Potential Submission Matches</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_GBSubNoMarker.sql.rpt">GenBank Submission References with no Marker associations</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/BIB_GBSubMatch.sql.rpt">Markers w/ GenBank Submission References which match non-GenBank Submission References</A>
 </OL>
 
 <A NAME="markers"><B>Markers</B> </A>
@@ -53,13 +48,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_OffsetsMLDP.sql.rpt">Markers with No Offsets Modifed in Mapping w/in the last 3 days</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_Offsets.sql.rpt">Markers w/ MGD Offset but w/out CC Offset or Mapping Information</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_OffsetsUN.sql.rpt">Markers with Offsets but no Chromosome Assignment</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_Alias.sql.rpt">Aliases</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_NoReferences.sql.rpt">Markers w/out ANY References</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_References.sql.rpt">Markers w/out History References or History</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_WithdrawnAdditional.sql.rpt">Splits and Withdrawn Markers w/ Additional Info</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_Matrix.sql.rpt">UN/Syntenic Markers In MGD found in Mapping Panel Crosses</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_AccDup.sql.rpt">Duplicate Marker Accession Numbers (Sequence, SWISS-PROT)</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_UniGeneClusterDiscrep.sql.rpt">Clusters with Markers on different chromosomes</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_LowerSeq.rpt">Lowercase Gene Symbols which have GenBank IDS</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_AssigningRef.rpt">MGI Markers with Assigning Reference</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_MGC.sql.rpt">MGC IDs with Nomen Records Not Deleted or Broadcast</A>
@@ -71,9 +60,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="alleles"><B>Alleles</B> </A>
 <OL>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_Alleles.sql.rpt">Allele Anomalies</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ALL_NomenText.rpt">Symbols which have undergone withdrawals and appear in Allele Molecular Notes</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ALL_ESCellStrain.sql.rpt">ES Cell Line Strains Modified Last Month - Sorted by Modification Date</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ALL_ReservedNot23000.sql.rpt">Reserved Alleles w/ Primary Reference != J:23000</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_WithAllele_MLC.sql.rpt">Allele Withdrawals in Last 2 Months where either Old or New Gene has MLC record</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ALL_Progress.sql.current.rpt">Allele Progress Report</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/archive/alleles">Allele Progress Archive</A>
@@ -105,7 +92,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/PRB_NoMarkerSeq.sql.rpt">Molecular Segments with Encoding Markers and Sequence IDs and no corresponding Marker-Sequence ID association</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/PRB_MarkerSeq.sql.rpt">IMAGE Clone/Marker Sequence Anomalies</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MGI_ProblemSequence.rpt">Molecular Segment with the Problem Sequence Note associated with more than one GenBank Seqid or associated with no GenBank Seqid</A>
-<LI><A HREF="ftp://ftp.informatics.jax.org/pub/reports/MGI_ProblemSequence.rpt">Public Problem Sequence Report</A>
+<LI><A HREF="ftp://devftp.informatics.jax.org/pub/reports/MGI_ProblemSequence.rpt">Public Problem Sequence Report</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/PRB_RIKENMarkers.rpt">RIKEN Clones and MGI Markers</A>
 </OL>
 
@@ -121,27 +108,25 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_MappedNoRef.sql.rpt">Mapped Markers w/out a Mapping Reference</A>
 </OL>
 
-<A NAME="homology"><B>Homology</B></A>
+<A NAME="orthology"><B>Orthology</B></A>
 <OL>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_References2.sql.rpt">References selected for Homology only w/out Homology Data</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_References5.sql.rpt">References selected for Homology w/ no Homology Data with at least one reference-to-gene Association</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_SpeciesCount.sql.rpt">Counts of Mouse Homologies by Species</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_Duplicates.sql.rpt">Duplicate Homologies (by Class, Reference, Species)</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_ConservedUN.sql.rpt">Homologies w/ Conserved Map Location and Chromosome = UN</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_NoMouseSeq.sql.rpt">Mouse Markers in Homology w/ Nucleotide or Amino Acid Sequence Similarity Assay and Marker has no Seq ID</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_RIKEN.sql.rpt">Human/Mouse Homologies involving RIKEN Symbols</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_MouseSeq1.rpt">Mouse Genes with Sequence ID but no Human Homology</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_MouseSeq2.sql.rpt">Mouse Genes with no Sequence ID but with Human Homology</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_NoMouse.sql.rpt">Homology Records w/out Mouse Genes</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_References2.sql.rpt">References selected for Orthology only w/out Orthology Data</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_References5.sql.rpt">References selected for Orthology w/ no Orthology Data with at least one reference-to-gene Association</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_SpeciesCount.sql.rpt">Counts of Mouse Orthologies by Organism</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_Duplicates.sql.rpt">Duplicate Orthologies (by Class, Reference, Species)</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_ConservedUN.sql.rpt">Orthologies w/ Conserved Map Location and Chromosome = UN</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_NoMouseSeq.sql.rpt">Mouse Markers in Orthology w/ Nucleotide or Amino Acid Sequence Similarity Assay and Marker has no Seq ID</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_RIKEN.sql.rpt">Human/Mouse Orthologies involving RIKEN Symbols</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_MouseSeq1.rpt">Mouse Genes with Sequence ID but no Human Orthology</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_MouseSeq2.sql.rpt">Mouse Genes with no Sequence ID but with Human Orthology</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_NoMouse.sql.rpt">Orthology Records w/out Mouse Genes</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_LocusLink1.sql.rpt">HomoloGene Mouse/Human Orthologous Pairs where we have neither the mouse nor the human member of the pair. (HUMAN AND MOUSE SYMBOLS ARE THE SAME)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_LocusLink2A.sql.rpt">HomoloGene Mouse/Human Orthologous Pairs where we have neither the mouse nor the human member of the pair. (HUMAN AND MOUSE SYMBOLS ARE NOT THE SAME, HUMAN SYMBOLS ARE OFFICIAL)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_LocusLink2B.sql.rpt">HomoloGene Mouse/Human Orthologous Pairs where we have neither the mouse nor the human member of the pair. (HUMAN AND MOUSE SYMBOLS ARE NOT THE SAME, HUMAN SYMBOLS ARE INTERIM)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_LocusLink3.sql.rpt">HomoloGene Mouse/Human Orthologous Pairs where our Orthology contains Human but no Mouse member.</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_LocusLink4.sql.rpt">HomoloGene Mouse/Human Orthologous Pairs where our Orthology contains Mouse but no Human member.</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_GDBLocusLink.sql.rpt">Human Markers with > 1 GDB record ID in LocusLink</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_DupGDB.sql.rpt">Human Markers with > 1 GDB record ID</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_Singletons.sql.rpt">Mouse/Human Singletons</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_RatNoSeq.sql.rpt">Rat Genes with no Sequence ID but with Homology</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_RatNoSeq.sql.rpt">Rat Genes with no Sequence ID but with Orthology</A>
 </OL>
 
 <A NAME="gxd"><B>GXD</B></A>
@@ -164,7 +149,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_GenotypeRef.sql.rpt">References where GXD and Pheno differ in Genotype</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_WildType.sql.rpt">Genotypes where Allele 1 is "wild type"</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_GenotypeNA.sql.rpt">GXD Annotations to "Not Applicable" Genotype</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_DevImages.rpt">Development Papers Requiring Images</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_Images.rpt">Papers Requiring Images</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_DupGenotype.rpt">Duplicate Genotypes</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_ImageCheck.sql.rpt">GXD Image Check</A>
 </OL>
@@ -198,9 +183,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MLP_Nomenclature.sql.rpt">Strains Affected by recent Nomenclature changes</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/NOMEN_Broadcast.sql.rpt">Nomenclature Symbols Broadcast Within Last 3 Days</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/NOMEN_Pending.sql.rpt">Nomenclature In Progress Symbols</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/NOMEN_Duplicate.sql.rpt">Nomenclature Duplicate Symbols</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/NOMEN_Reserved.rpt">Nomenclature Reserved</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_Duplicates.sql.rpt">MGD Duplicate Markers</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_SymbolDiffs1.sql.rpt">MGD Mouse Symbols which differ from Orthologous Human Symbols #1; excludes RIKEN</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_SymbolDiffs2.sql.rpt">MGD Mouse Symbols which differ from Orthologous Human Symbols #2; excludes RIKEN</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/HMD_SymbolDiffs3.sql.rpt">MGD Mouse Symbols which differ from Orthologous Human Symbols #3; RIKEN only</A>
@@ -208,8 +191,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_InterimByRef.sql.rpt">Interim Markers (sorted by Reference)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_InterimByDate.sql.rpt">Interim Markers (sorted by Date)</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_NomenTransgene.rpt">Transgenes with nomenclature changes</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ALL_NomenTransgene.rpt">Transgene Alleles  with nomenclature changes</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_NomenRat.sql.rpt">Mouse Symbols with nomenclature changes which contain Rat homologs with unofficial nomenclature</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_ESTSynonyms.sql.rpt">EST IDs and Gm Markers as Synonyms</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MRK_NomenNotInformative.sql.rpt">MGI Markers with Uninformative Nomenclature #1</A>
@@ -238,6 +219,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/SEQ_GenBank.rpt">All Sequences with Marker/Molecular Segment (bobs)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/SEQ_Marker.rpt">Sequences Annotated to Mouse Markers (excludes TIGR, DoTS, NIA); tab-delimited</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ACC_GenBank.sql.rpt">All GenBank IDs in MGI Associated with a Molecular Segment or Mouse Gene</A>
 </OL>
 
 <A NAME="sequence"><B>Sequences</B></A>
@@ -277,22 +259,12 @@ be used at times to test reports for <I>future</I> public consumption.)
 </OL>
 
 
-<A NAME="lists"><B>Lists</B></A>
+<A NAME="lists"><B>Lists/Other</B></A>
 <OL>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MGI_Organism.sql.rpt">MGI Organisms</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MLD_Assays.sql.rpt">Mapping Assays</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MLD_Crosses.sql.rpt">Mapping Panels Displayed in Lookup List</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/PRB_Tissue.sql.rpt">Tissues (All)</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/PRB_CellLine.sql.rpt">Cell Lines</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/PRB_TissueCell.sql.rpt">Unique Tissue/Cell Lines Pairs</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ACC_GenBank.sql.rpt">All GenBank IDs in MGI Associated with a Molecular Segment or Mouse Gene</A>
-</OL>
-
-<A NAME="other"><B>Other</B></A>
-<OL>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ACC_ActualDB.sql.rpt">Logical/Actual DBs</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ACC_Accession.sql.rpt">Records missing MGI Accession Numbers</A>
-<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/MGI_InvalidAge.sql.rpt">Age values with invalid Age Min/Max</A>
+<LI><A HREF="/usrlocalmgi/live/qcreports_db/output/ACC_Accession.sql.rpt">Invalid LocusLink/RefSeq IDs</A>
 <LI><A HREF="/usrlocalmgi/live/qcreports_db/output/GXD_OrphanGenotype.sql.rpt">Orphan Genotypes</A>
 </OL>
 
