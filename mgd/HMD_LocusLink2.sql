@@ -12,7 +12,7 @@ into #homology
 from tempdb..LLHomology h, tempdb..LL l
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"
-and h.symbol1 = h.symbol2
+and h.symbol1 != h.symbol2
 and h.locusID1 = l.locusID
 and l.osymbol is not null
 union
@@ -20,7 +20,7 @@ select type = "I",  h.*
 from tempdb..LLHomology h, tempdb..LL l
 where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"
-and h.symbol1 = h.symbol2
+and h.symbol1 != h.symbol2
 and h.locusID1 = l.locusID
 and l.isymbol is not null
 go
@@ -40,20 +40,13 @@ print ""
 
 select h.*
 from #homology h
-where h.species1 = "Homo sapiens"
-and h.species2 = "Mus musculus"
-and h.symbol1 != h.symbol2
-and not exists (select 1 from MRK_Marker m
+where not exists (select 1 from MRK_Marker m
 where m._Species_key = 1
 and m.symbol = h.symbol2)
 union
 select h.*
 from #homology h
-where h.species1 = "Homo sapiens"
-and h.species2 = "Mus musculus"
-and h.symbol1 != h.symbol2
-and 
-not exists (select 1 from MRK_Marker m
+where not exists (select 1 from MRK_Marker m
 where m._Species_key = 2
 and m.symbol = h.symbol1)
 order by h.type desc, h.symbol1
