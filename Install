@@ -11,11 +11,17 @@
 # 6. run Install
 #
 
-source Configuration
+source ./Configuration
 
-cd $QCREPORTINSTALLDIR
+cd ${QCREPORTINSTALLDIR}
 sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
 mv -f qcr.html.new qcr.html
+cd ${QCMGD}
+set toEdit=`grep -l RADARDB *`
+foreach i ($toEdit)
+sed "s/radar/$RADARDB" $i > $i.new
+mv -f $i.new $i
+end
 
 chmod 444 Configuration* HISTORY *.html
 chmod 550 *.sh */*.py */*.sql Install
