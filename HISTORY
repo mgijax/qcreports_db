@@ -1,3 +1,4 @@
+TAG:  qcreports_db-3-1-1-7
 TAG:  qcreports_db-3-1-1-6
 DATE: 02/03/2005
 STAFF: lec
@@ -5,6 +6,7 @@ RELEASE: A
 CHANGES:
 a) TR 6440 (GXD_Stats.py)
 b) TR 6547 (nomenclature reports)
+c) TR 6551 (GO reports)
 
 TAG:  qcreports_db-3-1-1-5
 TAG:  qcreports_db-3-1-1-4
