@@ -49,7 +49,8 @@ cmd = 'select a.accID, e.inferredFrom, m.symbol ' + \
 'where e.inferredFrom != null ' + \
 'and e._Annot_key = a._Annot_key ' + \
 'and a._AnnotType_key = 1000 ' + \
-'and a._Object_key = m._Marker_key '
+'and a._Object_key = m._Marker_key ' + \
+'order by a.accID'
 
 results = db.sql(cmd, 'auto')
 for r in results:
