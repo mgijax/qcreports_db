@@ -94,6 +94,16 @@ and s._StageID_key = g._Term_key
 and g.term in ("E", "A")
 and s._IndexAssay_key = a._Term_key
 and a.term = "RNA-WM"
+union
+select distinct i._Refs_key
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
+where r._Refs_key = i._Refs_key
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term in ("E", "A")
+and s._IndexAssay_key = a._Term_key
+and a.term = "Knock in"
 go
 
 delete #refs
