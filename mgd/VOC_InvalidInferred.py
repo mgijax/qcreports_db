@@ -39,7 +39,7 @@ import reportlib
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
+fp.write('Invalid "Inferred From" Values in GO Annotations (MGI only)' + 2 * reportlib.CRT)
 rows = 0
 
 # use for Mol Segs...quicker than mgiLookup method due to number of Mol Segs
@@ -59,21 +59,21 @@ for r in results:
 
 # read in all annotations w/ non-null inferred from value
 
-cmds = []
-cmds.append('select a._Term_key, a._Object_key, e.inferredFrom ' + \
+db.sql('select a._Term_key, a._Object_key, e.inferredFrom, evidenceCode = t.abbreviation ' + \
 	'into #annotations ' + \
-	'from VOC_Annot a, VOC_Evidence e ' + \
+	'from VOC_Annot a, VOC_Evidence e, VOC_Term t ' + \
 	'where a._AnnotType_key = 1000 ' + \
 	'and a._Annot_key = e._Annot_key ' + \
-	'and e.inferredFrom != null ')
-cmds.append('create nonclustered index idx1 on #annotations(_Term_key)')
-cmds.append('create nonclustered index idx2 on #annotations(_Object_key)')
-cmds.append('create nonclustered index idx3 on #annotations(inferredFrom)')
-db.sql(cmds, None)
+	'and e.inferredFrom != null ' + \
+	'and e.inferredFrom not like "INTERPRO%" ' + \
+	'and e._EvidenceTerm_key = t._Term_key', None)
+db.sql('create nonclustered index idx1 on #annotations(_Term_key)', None)
+db.sql('create nonclustered index idx2 on #annotations(_Object_key)', None)
+db.sql('create nonclustered index idx3 on #annotations(inferredFrom)', None)
 
 # retrieve GO acc ID, marker symbol
 
-results = db.sql('select e.inferredFrom, a.accID, m.symbol ' + \
+results = db.sql('select e.inferredFrom, a.accID, m.symbol, e.evidenceCode ' + \
 	'from #annotations e, ACC_Accession a, MRK_Marker m ' + \
 	'where e._Term_key = a._Object_key ' + \
 	'and a._MGIType_key = 13 ' + \
@@ -105,16 +105,10 @@ for r in results:
 
 	if string.find(id, 'MGI:') >= 0:
 	    if id not in mgiLookup:
-		# it's not in our set, so query the database directly
-		results = db.sql(findID % (id), 'auto')
-		if len(results) == 0:
-		    	fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
-			rows = rows + 1
-
-	if string.find(id, 'INTERPRO:') >= 0:
-	    [prefixPart, idPart] = string.split(id, 'INTERPRO:')
-	    if idPart not in mgiLookup:
-		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
+		fp.write(id + reportlib.TAB + \
+			 r['accID'] + reportlib.TAB + \
+			 r['evidenceCode'] + reportlib.TAB + \
+			 r['symbol'] + reportlib.CRT)
 		rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
