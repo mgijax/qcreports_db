@@ -1,9 +1,10 @@
-TAG: qcreports_db-5-2-0
-DATE: 01/19/2001
+TAG: qcreports_db-5-2-0, -1
+DATE: 01/19/2001, 01/22/2001
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) TR 2193; MRK_Alleles.sql
+b) cleaned up "nocount"s
 
 TAG: qcreports_db-5-1-0, -1
 DATE: 01/17/2001, 01/19/2001
