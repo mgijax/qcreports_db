@@ -3,7 +3,8 @@ go
 
 select distinct 
        m_Marker_key = m1._Marker_key, msymbol = m1.symbol, mname = substring(m1.name, 1, 40), 
-       h_Marker_key = m2._Marker_key, hsymbol = m2.symbol, hname = substring(m2.name, 1, 40)
+       h_Marker_key = m2._Marker_key, hsymbol = m2.symbol, hname = substring(m2.name, 1, 40),
+       m2.modification_date
 into #homology
 from HMD_Homology r1, HMD_Homology_Marker h1,
      HMD_Homology r2, HMD_Homology_Marker h2,
@@ -61,6 +62,7 @@ go
 
 print ""
 print "MGD Mouse Symbols which differ from Orthologous Human Symbols"
+print "(sorted by modification date of human symbol, symbol type, mouse symbol)"
 print ""
 
 select msymbol "MGI Symbol", 
@@ -71,6 +73,6 @@ select msymbol "MGI Symbol",
        locusID "LL ID",
        hname "Human Name"
 from #results
-order by type desc, msymbol
+order by modification_date, type desc, msymbol
 go
 
