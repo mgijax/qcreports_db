@@ -54,7 +54,7 @@
 #
 #	J: of reference associated with the Marker, selected for GO but has not been used in annotation
 #	PubMed ID of reference (with HTML link to PubMed)	(TR 4698)
-#	Y/N (has the gene been selected for GXD)
+#	Y/N (has the reference been selected for GXD)
 #	MGI:ID
 #	symbol
 #	name
@@ -197,6 +197,7 @@ cmds.append('select distinct r._Refs_key, a.accID ' + \
 'and a.preferred = 1')
 
 # has reference been chosen for GXD
+
 cmds.append('select distinct r._Refs_key ' + \
 'from #references r ' + \
 'where r.dbs like "%Expression%" and r.dbs not like "%Expression*%"')

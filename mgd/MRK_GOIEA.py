@@ -51,7 +51,7 @@
 #		J:
 #		PubMed ID (with HTML link)
 #		MGI:ID
-#		Y/N (has gene been selected for GXD)
+#		Y/N (has reference been selected for GXD)
 #		symbol
 #		name
 #
