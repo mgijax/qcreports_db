@@ -80,12 +80,11 @@ into #c3
 from ALL_Note
 where note like "%Associated Phenotype Controlled Terms%"
 union
-select total = count(distinct a._Allele_key), category = "Total Allele for Previous Month", seq = 2
-from ALL_Allele a, ALL_Note al
-where datepart(year, a.creation_date) = @year
-and datepart(month, a.creation_date) = @month
-and a._Allele_key = al._Allele_key
-and al.note like "%Associated Phenotype Controlled Terms%"
+select total = count(distinct _Allele_key), category = "Total Allele for Previous Month", seq = 2
+from ALL_Note
+where datepart(year, creation_date) = @year
+and datepart(month, creation_date) = @month
+and note like "%Associated Phenotype Controlled Terms%"
 
 select total = count(*), category = "Total", seq = 1
 into #c4
