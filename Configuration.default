@@ -12,11 +12,20 @@ umask 002
 # install directory
 setenv QCREPORTINSTALLDIR	/usr/local/mgi/live/qcreports_db
 
+# report output main directory
+setenv QCREPORTDIR		/data/reports/qcreports_db
+
 # report output directory
-setenv QCREPORTOUTPUTDIR	$QCREPORTINSTALLDIR/output
+setenv QCREPORTOUTPUTDIR	${QCREPORTDIR}/output
 
 # archive output directory
-setenv QCARCHIVEDIR		$QCREPORTOUTPUTDIR/archive
+setenv QCARCHIVEDIR		${QCREPORTDIR}/archive
+
+# Alleles archive directory
+setenv QCALLELEARCHIVE          ${QCARCHIVEDIR}/alleles
+
+# nomen-specific reports directory
+setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
 
 # private HUGO directories
 setenv HUGOWEBDIR		gondor:/usr/local/mgi/private/www/hugo
@@ -25,20 +34,14 @@ setenv HUGOFTPDIR		gondor:/export/gondor/ftp/private/hes
 # RIKEN FTP report directory
 setenv RIKENFTPDIR              gondor:/export/gondor/ftp/private/riken
 
-# Alleles archive directory
-setenv QCALLELEARCHIVE          $QCARCHIVEDIR/alleles
-
 # mgd-specific reports directory
-setenv QCMGD			$QCREPORTINSTALLDIR/mgd
-
-# nomen-specific reports directory
-setenv QCNOMENARCHIVE		$QCARCHIVEDIR/nomen
+setenv QCMGD			${QCREPORTINSTALLDIR}/mgd
 
 # weekly reports directory
-setenv QCWEEKLY                 $QCREPORTINSTALLDIR/weekly
+setenv QCWEEKLY                 ${QCREPORTINSTALLDIR}/weekly
 
 # monthly reports directory
-setenv QCMONTHLY                $QCREPORTINSTALLDIR/monthly
+setenv QCMONTHLY                ${QCREPORTINSTALLDIR}/monthly
 
 # MLC index file
 setenv MLCINDEX			/usr/local/mgi/live/wi/www/images/mlc/index
