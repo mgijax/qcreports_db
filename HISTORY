@@ -1,3 +1,15 @@
+TAG:  qcreports_db-20-0-6
+DATE: 08/27/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 4708; nomen/NOMEN_Broadcast.sql
+b) TR 4708; mgd/HMD_Singletons.sql
+b) TR 4708; mgd/HMD_MouseSeq2.sql
+b) TR 4708; mgd/HMD_SymbolDiffs.sql
+b) TR 4708; mgd/MRK_DashPending.sql
+b) TR 4708; mgd/HMD_MouseSeq1.py
+
 TAG:  qcreports_db-20-0-5
 TAG:  qcreports_db-20-0-4
 DATE: 07/29/2003
