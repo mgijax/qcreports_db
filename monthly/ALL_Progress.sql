@@ -111,6 +111,13 @@ from ALL_Allele
 where _Allele_Type_key not in (2,3,15)
 and symbol not like '%<+>'
 
+select total = count(distinct a._Marker_key), category = "Total", seq = 1
+into #c5
+from ALL_Allele a, MRK_Marker m
+where a.symbol not like '%<+>'
+and a._Marker_key = m._Marker_key
+and m._Marker_Type_key = 1
+
 set nocount off
 
 print ""
@@ -140,5 +147,12 @@ print "Alleles with 'Associated Phenotype Controlled Terms' in Notes"
 print ""
 
 select category, total from #c3 order by seq
+go
+
+print ""
+print "Number of Genes with Alleles (excluding wild types)"
+print ""
+
+select category, total from #c5 order by seq
 go
 
