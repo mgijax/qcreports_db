@@ -1,3 +1,11 @@
+TAG:  qcreports_db-17-0-17
+DATE: 07/17/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 3877/HMD_LocusLink2A.sql, HMD_LocusLink2B.sql
+b) obsoleted HMD_LocusLink2.sql
+
 TAG:  qcreports_db-17-0-16
 DATE: 07/08/2002
 STAFF: lec
