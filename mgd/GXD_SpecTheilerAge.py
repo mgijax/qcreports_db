@@ -150,7 +150,7 @@ for r in results[-1]:
        	dpcMax = 19.9
 
     if (minAge < dpcMin or maxAge > dpcMax):
-       	fp.write(r['MGI'] + TAB + r['J'] + TAB + r['label'] + CRT)
+       	fp.write(r['MGI'] + TAB + r['J'] + TAB + mgi_utils.prvalue(r['label']) + CRT)
        	count = count + 1
 
 fp.write(CRT + 'Number of specimens: ' + str(count) + CRT)
