@@ -1,3 +1,9 @@
+TAG: qcreports_db-1-0-6
+DATE: 04/04/2000
+STAFF: lec
+RELEASE: A
+CHANGES: created separate directories for mgd, nomen, gdb reports
+
 TAG: qcreports_db-1-0-5
 DATE: 04/04/2000
 STAFF: lec
