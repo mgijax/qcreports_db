@@ -22,8 +22,9 @@ print ""
 
 select a.history "Old Marker", a.symbol "New Marker", b.accID "Withdrawal Reference", 
 a.event_date "Date Withdrawn"
-from #alleles a, BIB_Acc_View b
+from #alleles a, ACC_Accession b
 where a._Refs_key = b._Object_key
+and b._MGIType_key = 1
 and b.prefixPart = "J:"
 and b._LogicalDB_key = 1
 order by a.event_date desc

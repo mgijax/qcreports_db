@@ -27,8 +27,9 @@ print "Reference and Number of Markers Analyzed for Journal: Mech Dev"
 print ""
 
 select distinct a.accID, i.markerCount
-from #mcount i, BIB_Acc_View a
+from #mcount i, ACC_Accession a
 where i._Refs_key = a._Object_key
+and a._MGIType_key = 1
 and a.prefixPart = "J:"
 order by markerCount desc
 go
@@ -69,8 +70,9 @@ print "Mech Dev: Papers with New Genes"
 print ""
 
 select distinct a.accID, i.markerCount
-from #mcount i, BIB_Acc_View a
+from #mcount i, ACC_Accession a
 where i._Refs_key = a._Object_key
+and a._MGIType_key = 1
 and a.prefixPart = "J:"
 order by markerCount desc
 go

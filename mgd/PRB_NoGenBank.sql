@@ -28,7 +28,7 @@ from #probes p
 where not exists (select a.* from ACC_Accession a
 where p._Probe_key = a._Object_key
 and a._MGIType_key = 3
-and a.LogicalDB = 'Sequence DB')
+and a._LogicalDB_key = 9
 go
 
 /* From this list of Probes w/out Seq Acc IDs, */
@@ -43,7 +43,7 @@ and pm._Probe_key = p._Probe_key
 and p._Probe_key != n._Probe_key
 and p._Probe_key = a._Object_key
 and a._MGIType_key = 3
-and a.LogicalDB = 'Sequence DB'
+and a._LogicalDB_key = 9
 go
 
 /* Remove the Probes w/ Sequence Acc ID attached thru other Probes */

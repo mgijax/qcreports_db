@@ -21,12 +21,14 @@ print "(Matches are performed using First Author)"
 print ""
 
 select m.symbol, b1.accID "Submission J:", b2.accID "Non-Submission J:"
-from #references r, MRK_Marker m, BIB_Acc_View b1, BIB_Acc_View b2
+from #references r, MRK_Marker m, ACC_Accession b1, ACC_Accession b2
 where r._Marker_key = m._Marker_key
 and r.subRef = b1._Object_key
+and b1._MGIType_key = 1
 and b1.prefixPart = "J:"
 and b1._LogicalDB_key = 1
 and r.nonsubRef = b2._Object_key
+and b2._MGIType_key = 1
 and b2.prefixPart = "J:"
 and b2._LogicalDB_key = 1
 go
