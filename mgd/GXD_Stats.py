@@ -28,9 +28,6 @@ import reportlib
 import mgi_utils
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
-TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 startYear = 1998
 endYear = string.atoi(mgi_utils.date('%Y'))
@@ -59,10 +56,8 @@ def createDict(results, keyField, valueField):
     d = {}
     for r in results:
         key = r[keyField]
-
         value = r[valueField]
         if not d.has_key(key):
-            d[key] = ' '
             d[key] = value
     return d
 
@@ -228,23 +223,23 @@ def indexOnly():
     #
 
     fp.write(2*CRT + 'GXD Index Stats:' + 2*CRT)
-    fp.write(string.ljust('Year', 6) + SPACE)
-    fp.write(string.ljust('Index', 6) + SPACE)
-    fp.write(string.ljust('Refs', 6) + SPACE)
-    fp.write(string.ljust('Genes', 6) + CRT)
-    fp.write(string.ljust('-----', 6) + SPACE)
-    fp.write(string.ljust('-----', 6) + SPACE)
-    fp.write(string.ljust('-----', 6) + SPACE)
-    fp.write(string.ljust('-----', 6) + CRT)
+    fp.write(string.ljust('Year', 10))
+    fp.write(string.ljust('Index', 10))
+    fp.write(string.ljust('Refs', 10))
+    fp.write(string.ljust('Genes', 10) + CRT)
+    fp.write(string.ljust('-----', 10))
+    fp.write(string.ljust('-----', 10))
+    fp.write(string.ljust('-----', 10))
+    fp.write(string.ljust('-----', 10) + CRT)
 
     keys = indx.keys()
     keys.sort()
     for key in keys:
         if key > 0:
-            fp.write(string.ljust(str(key), 6) + SPACE)
-            fp.write(string.ljust(str(indx[key]), 6) + SPACE)
-            fp.write(string.ljust(str(refs[key]), 6) + SPACE)
-            fp.write(string.ljust(str(gens[key]), 6) + CRT)
+            fp.write(string.ljust(str(key), 10))
+            fp.write(string.ljust(str(indx[key]), 10))
+            fp.write(string.ljust(str(refs[key]), 10))
+            fp.write(string.ljust(str(gens[key]), 10) + CRT)
     fp.write(CRT)
 
     #
@@ -253,28 +248,28 @@ def indexOnly():
     #  First the header...
     #
     fp.write('Number of Assays in GXD Index by Assay Type' + 2*CRT)
-    fp.write(string.ljust('As of 12/31', 15) + SPACE)
-    fp.write(string.ljust('cDNA', 6) + SPACE)
-    fp.write(string.ljust('Knock', 6) + SPACE)
-    fp.write(string.ljust('North', 6) + SPACE)
-    fp.write(string.ljust('Prime', 6) + SPACE)
-    fp.write(string.ljust('Immuno', 6) + SPACE)
-    fp.write(string.ljust('RNA', 6) + SPACE)
-    fp.write(string.ljust('RNAse', 6) + SPACE)
-    fp.write(string.ljust('RTPCR', 6) + SPACE)
-    fp.write(string.ljust('S1nuc', 6) + SPACE)
-    fp.write(string.ljust('West', 6) + CRT)
-    fp.write(string.ljust('-----------', 15) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + SPACE)
-    fp.write(string.ljust('------', 6) + CRT)
+    fp.write(string.ljust('As of 12/31', 15))
+    fp.write(string.ljust('cDNA', 10))
+    fp.write(string.ljust('Knock', 10))
+    fp.write(string.ljust('North', 10))
+    fp.write(string.ljust('Prime', 10))
+    fp.write(string.ljust('Immuno', 10))
+    fp.write(string.ljust('RNA', 10))
+    fp.write(string.ljust('RNAse', 10))
+    fp.write(string.ljust('RTPCR', 10))
+    fp.write(string.ljust('S1nuc', 10))
+    fp.write(string.ljust('West', 10) + CRT)
+    fp.write(string.ljust('-----------', 15))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('------', 10) + CRT)
 
     #
     #  Cycle through the years in each of the assay dictionaries.
@@ -284,17 +279,17 @@ def indexOnly():
             #
             #  Add the year value column to the output.
             #
-	    fp.write(string.ljust(str(key), 15) + SPACE)
-            fp.write(string.ljust(str(cdna[key]), 6) + SPACE)
-            fp.write(string.ljust(str(knkin[key]), 6) + SPACE)
-            fp.write(string.ljust(str(nor[key]), 6) + SPACE)
-            fp.write(string.ljust(str(pri[key]), 6) + SPACE)
-            fp.write(string.ljust(str(prot[key]), 6) + SPACE)
-            fp.write(string.ljust(str(rna[key]), 6) + SPACE)
-            fp.write(string.ljust(str(rnase[key]), 6) + SPACE)
-            fp.write(string.ljust(str(rtpcr[key]), 6) + SPACE)
-            fp.write(string.ljust(str(s1nuc[key]), 6) + SPACE)
-            fp.write(string.ljust(str(west[key]), 6) + CRT)
+	    fp.write(string.ljust(str(key), 15))
+            fp.write(string.ljust(str(cdna[key]), 10))
+            fp.write(string.ljust(str(knkin[key]), 10))
+            fp.write(string.ljust(str(nor[key]), 10))
+            fp.write(string.ljust(str(pri[key]), 10))
+            fp.write(string.ljust(str(prot[key]), 10))
+            fp.write(string.ljust(str(rna[key]), 10))
+            fp.write(string.ljust(str(rnase[key]), 10))
+            fp.write(string.ljust(str(rtpcr[key]), 10))
+            fp.write(string.ljust(str(s1nuc[key]), 10))
+            fp.write(string.ljust(str(west[key]), 10) + CRT)
 
 def fullCoded():
 
@@ -567,16 +562,16 @@ def monthlyCounts():
     #
 
     fp.write(2*CRT + 'Gene and Result counts by monthly period:' + 2*CRT)
-    fp.write('Year' + TAB)
-    fp.write('Month' + TAB)
-    fp.write('Genes' + TAB)
-    fp.write('Results' + TAB)
-    fp.write('References' + CRT)
-    fp.write('----' + TAB)
-    fp.write('-----' + TAB)
-    fp.write('-----' + TAB)
-    fp.write('-------' + TAB)
-    fp.write('----------' + CRT)
+    fp.write(string.ljust('Year', 10))
+    fp.write(string.ljust('Month', 10))
+    fp.write(string.ljust('Genes', 10))
+    fp.write(string.ljust('Results', 10))
+    fp.write(string.ljust('References', 15) + CRT)
+    fp.write(string.ljust('----', 10))
+    fp.write(string.ljust('-----', 10))
+    fp.write(string.ljust('------', 10))
+    fp.write(string.ljust('-------', 10))
+    fp.write(string.ljust('----------', 15) + CRT)
 
     results = db.sql('select g.year, g.month, genes = avg(g.genes), results = sum(r.results), ref = avg (g.refs) ' + \
 	'from #assayGenes g, #periodCounts r ' + \
@@ -585,11 +580,11 @@ def monthlyCounts():
 	'group by g.year, g.month', 'auto')
 
     for r in results:
-	fp.write(str(r['year']) + TAB)
-	fp.write(str(r['month']) + TAB)
-	fp.write(str(r['genes']) + TAB)
-	fp.write(str(r['results']) + TAB)
-	fp.write(str(r['ref']) + CRT)
+	fp.write(string.ljust(str(r['year']), 10))
+	fp.write(string.ljust(str(r['month']), 10))
+	fp.write(string.ljust(str(r['genes']), 10))
+	fp.write(string.ljust(str(r['results']), 10))
+	fp.write(string.ljust(str(r['ref']), 15) + CRT)
 
     #
     # Total Results
@@ -672,5 +667,6 @@ fullCoded()
 mutantAlleles()
 withImages()
 monthlyCounts()
+reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 
