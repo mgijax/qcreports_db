@@ -35,9 +35,6 @@ setenv QCMGD			$QCREPORTINSTALLDIR/mgd
 setenv QCNOMEN			$QCREPORTINSTALLDIR/nomen
 setenv QCNOMENARCHIVE		$QCARCHIVEDIR/nomen
 
-# fantom-specific reports directory
-setenv QCFANTOM			$QCREPORTINSTALLDIR/fantom
-
 # gdb-specific reports directory
 setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 
