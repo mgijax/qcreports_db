@@ -3,20 +3,31 @@ go
 
 /* Select all references where Homology is selected */
 
-select c._Refs_key, c.jnum, c.title, r._Marker_key, m.symbol
-into #references
-from BIB_All_View c, MRK_Reference r, MRK_Marker m
+select c._Refs_key, c.jnum, c.title
+into #ref1
+from BIB_All_View c
 where c.dbs like '%Homology%' 
-and c.dbs not like '%Homology*%'
-and c._Refs_key = r._Refs_key
-and r._Marker_key = m._Marker_key
+order by c._Refs_key
+go
+
+create unique clustered index index_Refs_key on #ref1(_Refs_key) with sorted_data
+go
+
+select r.*, mr._Marker_key, m.symbol
+into #ref2
+from #ref1 r, MRK_Reference mr (index index_Refs_key), MRK_Marker m
+where r._Refs_key = mr._Refs_key
+and mr._Marker_key = m._Marker_key
+go
+
+create nonclustered index index_Refs_key on #ref2(_Refs_key)
 go
 
 /* Select those references which are associated with only one gene */
 
 select *
 into #onegene
-from #references
+from #ref2
 group by _Refs_key having count(*) = 1
 go
 
