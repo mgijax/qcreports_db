@@ -1,5 +1,5 @@
 print ""
-print "Nomenclature Pending Symbols"
+print "Nomenclature In Progress Symbols"
 print ""
 
 select n.symbol, n.chromosome, n.submittedBy, r.jnumID
