@@ -1,3 +1,10 @@
+TAG:  qcreports_db-20-0-20
+DATE: 10/31/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 5268 - MRK_DashPending.sql (now MRK_InterimByRef.sql, MRK_InterimByDate.sql)
+
 TAG:  qcreports_db-20-0-19
 TAG:  qcreports_db-20-0-18
 DATE: 10/30/2003
