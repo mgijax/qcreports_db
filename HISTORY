@@ -1,3 +1,10 @@
+TAG: qcreports_db-2-2-3
+DATE: 07/18/2000
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) put "drop table" at end of HMD_Potentials.py
+
 TAG: qcreports_db-2-2-1
 DATE: 07/18/2000
 STAFF: lec
