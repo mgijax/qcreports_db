@@ -37,7 +37,7 @@ if len(sys.argv) > 1:
 else:
 	currentDate = mgi_utils.date('%m/%d/%Y')
 
-fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ["QCREPORTOUTPUTDIR"])
+fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ["QCOUTPUTDIR"])
 
 cmd = 'select n.symbol, bdate = convert(char(10), n.broadcast_date, 101), n.statusNote, a.accID, ' + \
 'name = substring(n.name,1,50), n.humanSymbol ' + \

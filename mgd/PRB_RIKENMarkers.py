@@ -38,7 +38,7 @@ import reportlib
 #
 
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('RIKEN Clone ID' + reportlib.TAB)
 fp.write('R' + reportlib.TAB)
 fp.write('Marker ID' + reportlib.TAB)

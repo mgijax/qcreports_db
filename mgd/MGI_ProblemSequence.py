@@ -51,7 +51,7 @@ import reportlib
 #
 
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], title = "Molecular Segment with the Problem Sequence Note associated with more than one GenBank Seqid or associated with no GenBank ID", outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], title = "Molecular Segment with the Problem Sequence Note associated with more than one GenBank Seqid or associated with no GenBank ID", outputdir = os.environ['QCOUTPUTDIR'])
 
 cmds = []
 

@@ -42,7 +42,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Lowercase Gene Symbols which have GenBank IDs', os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Lowercase Gene Symbols which have GenBank IDs', os.environ['QCOUTPUTDIR'])
 
 fp.write('%-50s' % 'Symbol' + TAB)
 fp.write('%-30s' % 'GenBankID' + CRT)

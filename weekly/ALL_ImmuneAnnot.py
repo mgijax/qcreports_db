@@ -37,7 +37,7 @@ else:
 	currentDate = mgi_utils.date('%m/%d/%Y')
 
 fp = reportlib.init(sys.argv[0], title = 'Alleles with Immune System Annotations', \
-    outputdir = os.environ["QCREPORTOUTPUTDIR"], fileExt = '.' + os.environ['DATE'], isHTML = 1)
+    outputdir = os.environ["QCOUTPUTDIR"], fileExt = '.' + os.environ['DATE'], isHTML = 1)
 fp.write(' symbol' + reportlib.CRT)
 fp.write(' ' + '-' * 50 + reportlib.CRT)
 

@@ -52,7 +52,7 @@ PAGE = reportlib.PAGE
 #
 
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages and ages', os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
 cmds = []
 

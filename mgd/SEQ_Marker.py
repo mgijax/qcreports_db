@@ -50,7 +50,7 @@ import reportlib
 
 db.useOneConnection(1)
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
 # select all distinct sequences/markers, excluding certain providers
 # exclude Dots, TIGR Mouse Gene Index, NIA Mouse Gene Index
