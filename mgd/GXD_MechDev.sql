@@ -16,6 +16,8 @@ and (s.northern = 1
      or s.insitu_rna_section = 1
      or s.insitu_protein_mount = 1 
      or s.insitu_rna_mount = 1
+     or s. primer_extension = 1
+     or s.clones = 1
      )
 and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)
 go
