@@ -55,18 +55,16 @@ source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
 
 setenv LOG ${OUTPUTDIR}/$0.log
-rm -rf $LOG
-touch $LOG
+rm -rf ${LOG}
+touch ${LOG}
  
 date | tee ${LOG}
 
 # load QC tables which were not loaded during execution of the MSP
 
-./loadQC_MS_InvalidLibrary.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
-./loadQC_MS_InvalidStrain.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
-./loadQC_MS_InvalidTissue.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
-./loadQC_MS_InvalidCellLine.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
-./loadQC_MS_InvalidGender.csh ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
+foreach i (loadQC_MS_Invalid*.csh)
+./$i ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
+end
 
 # execute all reports
 
