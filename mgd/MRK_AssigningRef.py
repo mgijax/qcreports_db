@@ -34,24 +34,28 @@ import reportlib
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
-cmds = []
-
-cmds.append('select m._Marker_key, m.symbol, mgiID = a.accID, markerType = t.name ' + \
-     'into #markers ' + \
-     'from MRK_Marker m, ACC_Accession a, MRK_Types t ' + \
+db.sql('select m._Marker_key, m._Marker_Type_key, m.symbol, markerType = t.name ' + \
+     'into #markers1 ' + \
+     'from MRK_Marker m, MRK_Types t ' + \
      'where m._Organism_key = 1 ' + \
-     'and m._Marker_Status_key in (1,3)' + \
-     'and m._Marker_key = a._Object_key ' + \
+     'and m._Marker_Status_key in (1,3) ' + \
+     'and m._Marker_Type_key = t._Marker_Type_key', None)
+
+db.sql('create index idx1 on #markers1(_Marker_key)', None)
+
+db.sql('select m1._Marker_key, m1.symbol, mgiID = a.accID, m1.markerType ' + \
+     'into #markers2 ' + \
+     'from #markers1 m1, ACC_Accession a ' + \
+     'where m1._Marker_key = a._Object_key ' + \
      'and a._MGIType_key = 2 ' + \
      'and a.prefixPart = "MGI:" ' + \
      'and a._LogicalDB_key = 1 ' + \
-     'and a.preferred = 1 ' + \
-     'and m._Marker_Type_key = t._Marker_Type_key')
+     'and a.preferred = 1 ', None)
 
-cmds.append('create unique clustered index index_marker_key on #markers(_Marker_key)')
+db.sql('create index idx1 on #markers2(_Marker_key)', None)
 
-cmds.append('select m.*, a.accID ' + \
-	'from #markers m, MRK_History h, ACC_Accession a ' +
+results = db.sql('select m.*, a.accID ' + \
+	'from #markers2 m, MRK_History h, ACC_Accession a ' +
 	'where m._Marker_key = h._Marker_key ' + \
 	'and m._Marker_key = h._History_key ' + \
 	'and h._Marker_Event_key = 1 ' + \
@@ -59,11 +63,9 @@ cmds.append('select m.*, a.accID ' + \
 	'and a._MGIType_key = 1 ' + \
 	'and a.prefixPart = "J:" ' + \
         'and a._LogicalDB_key = 1 ' + \
-        'order by m.symbol')
+        'order by m.symbol', 'auto')
 
-results = db.sql(cmds, 'auto')
-
-for r in results[2]:
+for r in results:
 	fp.write(r['mgiID'] + reportlib.TAB + \
 	         r['symbol'] + reportlib.TAB + \
 		 r['accID'] + reportlib.TAB + \
