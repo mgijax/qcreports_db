@@ -33,6 +33,6 @@ h.creation_date "Homology Creation Date"
 from #homology h, HMD_Assay a, BIB_All_View b
 where h._Assay_key = a._Assay_key
 and h._Refs_key = b._Refs_key
-order by h.creation_date, h.symbol
+order by h.creation_date desc, h.symbol
 go
 
