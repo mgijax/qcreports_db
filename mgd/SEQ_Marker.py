@@ -75,8 +75,7 @@ cmds.append('select a.accID, a._Object_key ' + \
 	'from #uniqueseq s, ACC_Accession a ' + \
 	'where s._Sequence_key = a._Object_key ' + \
 	'and a._MGIType_key = 19 ' + \
-	'and a.preferred = 1 ' + \
-	'and a._LogicalDB_key not in (35, 36, 53)')
+	'and a.preferred = 1')
 
 cmds.append('create index idx_key on #accSeq(_Object_key)')
 
