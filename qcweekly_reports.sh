@@ -23,8 +23,6 @@ endif
 
 end
 
-exit 0
-
 cd weekly
 foreach i (*.py)
 $i
