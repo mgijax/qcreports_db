@@ -81,7 +81,7 @@ reportName = 'HMD_Potentials'
 fp = reportlib.init(reportName, 'GDB citations which match MGD w/ no Human Homology', os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 fp.write('%-10s %-50s %-20s %-15s %-20s\n\n' % ('J#', 'Citation', 'Mouse Symbol', 'Human Symbol', 'GDB Acc ID'))
 
-#processMedlineFile()
+processMedlineFile()
 
 cmd = 'select r.jnumID, r.short_citation, m.symbol, gdbsymbol = g.symbol, g.accid ' + \
       'from tempdb..gdbmedline g, BIB_All_View r, BIB_Acc_View a, MRK_Reference mr, MRK_Marker m ' + \
