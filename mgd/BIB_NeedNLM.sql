@@ -8,7 +8,7 @@ where NLMstatus = 'Y'
 and not exists
 (select a._Accession_key from BIB_Acc_View a
 where a._Object_key = r._Refs_key
-and a.LogicalDB = 'Medline')
+and a._LogicalDB_key in (7,29))
 go
 
 set nocount off
@@ -18,7 +18,7 @@ print ""
 print "References Which Need NLM Updates"
 print ""
 
-select substring(b.short_citation, 1, 75)
+select b.jnumID, substring(b.short_citation, 1, 75)
 from BIB_All_View b, #nlm n
 where n._Refs_key = b._Refs_key
 order by year, _primary
