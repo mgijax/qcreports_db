@@ -6,13 +6,13 @@
 #
 # Report:
 #       Tab-delimited file
-#       Standard Strains w/ Accession IDs (internal and external)
+#       All Strains
 #
 # Usage:
 #       PRB_Strain.py
 #
 # Used by:
-#       Those who wish official Strain Nomenclature.
+#       Internal Report
 #
 # Notes:
 #
