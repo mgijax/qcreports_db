@@ -84,6 +84,7 @@ and p.name not like 'IMAGE clone%'
 and p.name not like 'RPCI23 clone%'
 and p.name not like 'RPCI24 clone%'
 and p.name not like 'NIA clone%'
+and p.name not like 'RIKEN clone%'
 and p.name not like 'J%'
 and not exists (select m.* from PRB_Marker m where p._Probe_key = m._Probe_key)
 order by p.creation_date, p.name
