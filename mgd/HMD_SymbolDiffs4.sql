@@ -31,13 +31,13 @@ select h.*, geneID = a.accID
 into #markers
 from #homology h, MRK_ACC_View a
 where h.h_Marker_key = a._Object_key
-and a._LogicalDB_key = 24
+and a._LogicalDB_key = 55
 union
 select h.*, geneID = null
 from #homology h
 where not exists (select 1 from MRK_ACC_View a
 where h.h_Marker_key = a._Object_key
-and a._LogicalDB_key = 24)
+and a._LogicalDB_key = 55)
 go
 
 create index idx1 on #markers(geneID)

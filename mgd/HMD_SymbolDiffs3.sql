@@ -35,7 +35,7 @@ and a1.prefixPart = "MGI:"
 and a1._LogicalDB_key = 1
 and a1.preferred = 1
 and h.h_Marker_key = a2._Object_key
-and a2._LogicalDB_key = 24
+and a2._LogicalDB_key = 55
 union
 select h.*, mgiID = a1.accID, geneID = null
 from #homology h, MRK_ACC_View a1
@@ -45,7 +45,7 @@ and a1._LogicalDB_key = 1
 and a1.preferred = 1
 and not exists (select 1 from MRK_ACC_View a2
 where h.h_Marker_key = a2._Object_key
-and a2._LogicalDB_key = 24)
+and a2._LogicalDB_key = 55)
 go
 
 create index idx1 on #markers(geneID)
