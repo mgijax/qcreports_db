@@ -85,7 +85,8 @@ getAnnotationByOntology()
 
    setRefsClause "$2" $3
    
-   isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+
 use $DATABASE
 go
 
@@ -133,6 +134,38 @@ go
 END
 }
 
+getSummary()
+{
+
+echo "*********************************************************************" >> $REPORT
+echo "GO Ontology Summary - Number of GO Terms per Ontology"                 >> $REPORT
+echo ""                                                                      >> $REPORT
+
+isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+
+use $DATABASE
+go
+
+set nocount on
+go
+
+select substring(d.name,1,30) "ontology", count(n._Object_key) "number of terms"
+from DAG_DAG d, DAG_Node n
+where d._DAG_key in (1,2,3)
+and d._DAG_key = n._DAG_key
+group by d._DAG_key
+go
+
+set nocount off
+go
+
+END
+
+echo ""                                                                      >> $REPORT
+echo "*********************************************************************" >> $REPORT
+
+}
+
 getCounts()
 {
    echo "*********************************************************************" >> $REPORT
@@ -160,6 +193,7 @@ Date Generated:  `date`
 
 END
 
+getSummary
 getCounts "ALL"        $COUNT_ALL_REFERENCES ""
 getCounts "HAND"       "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE 
 getCounts "GO_FISH"    $EQUALS               $GO_FISH 
