@@ -1,3 +1,11 @@
+TAG:  qcreports_db-18-0-5
+DATE: 10/15/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 4135; added MRK_MGC.sql
+b) TR 4134; modified HMD_MouseSeq2.sql
+
 TAG:  qcreports_db-18-0-4
 DATE: 09/30/2002
 STAFF: lec
