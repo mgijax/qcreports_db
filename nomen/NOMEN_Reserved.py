@@ -52,7 +52,6 @@ cmds.append('select m._Nomen_key, m.symbol, m.name, m.statusNote, mgiID = a.accI
 'into #nomen ' + \
 'from MRK_Nomen m, ACC_Accession a ' + \
 'where m._Marker_Status_key = 3 ' + \
-'and m.submittedBy != "riken_autoload" ' + \
 'and m._Nomen_key = a._Object_key ' + \
 'and a._LogicalDB_Key = 1 ')
 
