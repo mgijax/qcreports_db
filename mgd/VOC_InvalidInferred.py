@@ -44,7 +44,7 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
-cmd = 'select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = "MGI:" ' + \
+cmd = 'select a.accID from ACC_Accession a where a._MGIType_key in (2, 3, 11) and a.prefixPart = "MGI:" ' + \
 	'union ' + \
 	'select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"'
 results = db.sql(cmd, 'auto')
