@@ -66,6 +66,15 @@ cmds.append('create index idx2 on #mseqIDs(_Object_key)')
 db.sql(cmds, None)
 print 'query 1 end...%s' % (mgi_utils.date())
 
+print 'query 1a begin...%s' % (mgi_utils.date())
+cmds = []
+cmds.append('select distinct _Object_key ' + \
+	'into #mobjects ' + \
+	'from #mseqIDs ')
+cmds.append('create index idx1 on #mobjects(_Object_key)')
+db.sql(cmds, None)
+print 'query 1a end...%s' % (mgi_utils.date())
+
 print 'query 2 begin...%s' % (mgi_utils.date())
 cmds = []
 cmds.append('select accID, _Object_key ' + \
@@ -78,6 +87,15 @@ cmds.append('create index idx2 on #pseqIDs(_Object_key)')
 db.sql(cmds, None)
 print 'query 2 end...%s' % (mgi_utils.date())
 
+print 'query 2a begin...%s' % (mgi_utils.date())
+cmds = []
+cmds.append('select distinct _Object_key ' + \
+	'into #pobjects ' + \
+	'from #pseqIDs ')
+cmds.append('create index idx1 on #pobjects(_Object_key)')
+db.sql(cmds, None)
+print 'query 2a end...%s' % (mgi_utils.date())
+
 #
 # select MGI IDs for all Objects
 # set of mgi ids keyed by mgi type/object key
@@ -85,8 +103,8 @@ print 'query 2 end...%s' % (mgi_utils.date())
 
 print 'query 3 begin...%s' % (mgi_utils.date())
 mgiIDs = {}
-results = db.sql('select distinct s._Object_key, a.accID ' +
-	'from #mseqIDs s, ACC_Accession a ' + \
+results = db.sql('select s._Object_key, a.accID ' +
+	'from #mobjects s, ACC_Accession a ' + \
 	'where s._Object_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_key = 1 ' + \
@@ -99,8 +117,8 @@ for r in results:
 print 'query 3 end...%s' % (mgi_utils.date())
 
 print 'query 4 begin...%s' % (mgi_utils.date())
-results = db.sql('select distinct s._Object_key, a.accID ' +
-	'from #pseqIDs s, ACC_Accession a ' + \
+results = db.sql('select s._Object_key, a.accID ' +
+	'from #pobjects s, ACC_Accession a ' + \
 	'where s._Object_key = a._Object_key ' + \
 	'and a._MGIType_key = 3 ' + \
 	'and a._LogicalDB_key = 1 ' + \
@@ -119,8 +137,8 @@ print 'query 4 end...%s' % (mgi_utils.date())
 
 print 'query 5 begin...%s' % (mgi_utils.date())
 names = {}
-results = db.sql('select distinct s._Object_key, t.name ' +
-	'from #mseqIDs s, MRK_Marker m, MRK_Types t ' + \
+results = db.sql('select s._Object_key, t.name ' +
+	'from #mobjects s, MRK_Marker m, MRK_Types t ' + \
 	'where s._Object_key = m._Marker_key ' + \
 	'and m._Marker_Type_key = t._Marker_Type_key', 'auto')
 for r in results:
@@ -130,8 +148,8 @@ for r in results:
 print 'query 5 end...%s' % (mgi_utils.date())
 
 print 'query 6 begin...%s' % (mgi_utils.date())
-results = db.sql('select distinct s._Object_key, p.name ' +
-	'from #pseqIDs s, PRB_Probe p ' + \
+results = db.sql('select s._Object_key, p.name ' +
+	'from #pobjects s, PRB_Probe p ' + \
 	'where s._Object_key = p._Probe_key ', 'auto')
 for r in results:
     key = molsegType + ':' + str(r['_Object_key'])
@@ -146,8 +164,8 @@ print 'query 6 end...%s' % (mgi_utils.date())
 
 print 'query 7 begin...%s' % (mgi_utils.date())
 symbols = {}
-results = db.sql('select distinct s._Object_key, m.symbol ' + \
-	'from #mseqIDs s, MRK_Marker m ' + \
+results = db.sql('select s._Object_key, m.symbol ' + \
+	'from #mobjects s, MRK_Marker m ' + \
 	'where s._Object_key = m._Marker_key ', 'auto')
 for r in results:
     key = markerType + ':' + str(r['_Object_key'])
@@ -158,8 +176,8 @@ for r in results:
 print 'query 7 end...%s' % (mgi_utils.date())
 
 print 'query 8 begin...%s' % (mgi_utils.date())
-results = db.sql('select distinct s._Object_key, symbol = m.symbol + ":" + pm.relationship ' + \
-	'from #pseqIDs s, PRB_Marker pm, MRK_Marker m ' + \
+results = db.sql('select s._Object_key, symbol = m.symbol + ":" + pm.relationship ' + \
+	'from #pobjects s, PRB_Marker pm, MRK_Marker m ' + \
 	'where s._Object_key = pm._Probe_key ' + \
 	'and pm._Marker_key = m._Marker_key', 'auto')
 for r in results:
@@ -184,14 +202,14 @@ print 'query 8 end...%s' % (mgi_utils.date())
 
 print 'query 9 begin...%s' % (mgi_utils.date())
 accIDs = {}
-results = db.sql('select distinct accID, _Object_key from #mseqIDs', 'auto')
+results = db.sql('select accID, _Object_key from #mseqIDs', 'auto')
 for r in results:
     key = regsub.gsub('\n', '', r['accID'])
     value = markerType + ':' + str(r['_Object_key'])
     if not accIDs.has_key(key):
 	accIDs[key] = []
     accIDs[key].append(value)
-results = db.sql('select distinct accID, _Object_key from #pseqIDs', 'auto')
+results = db.sql('select accID, _Object_key from #pseqIDs', 'auto')
 for r in results:
     key = regsub.gsub('\n', '', r['accID'])
     value = molsegType + ':' + str(r['_Object_key'])
