@@ -1,3 +1,10 @@
+TAG:  no tag
+DATE: 12/17/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) never added TR 5294 (HMD_SymbolDiffs) reports to CVS
+
 TAG:  qcreports_db-20-0-24
 DATE: 12/10/2003
 STAFF: dbm
