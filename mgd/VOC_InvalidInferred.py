@@ -44,7 +44,14 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
-results = db.sql('select distinct inferredFrom from VOC_Evidence where inferredFrom != null', 'auto')
+cmd = 'select a.accID, e.inferredFrom, m.symbol ' + \
+'from VOC_Annot_View a, VOC_Evidence e, MRK_Marker m ' + \
+'where e.inferredFrom != null ' + \
+'and e._Annot_key = a._Annot_key ' + \
+'and a._AnnotType_key = 1000 ' + \
+'and a._Object_key = m._Marker_key '
+
+results = db.sql(cmd, 'auto')
 for r in results:
     ids = r['inferredFrom']
 
@@ -70,14 +77,14 @@ for r in results:
 	if string.find(id, 'MGI:') >= 0:
 	    idResult = db.sql(findID % (id), 'auto')
 	    if len(idResult) == 0:
-		fp.write(id + reportlib.CRT)
+		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
 		rows = rows + 1
 
 	if string.find(id, 'INTERPRO:') >= 0:
 	    [prefixPart, idPart] = string.split(id, 'INTERPRO:')
 	    idResult = db.sql(findID % (idPart), 'auto')
 	    if len(idResult) == 0:
-		fp.write(id + reportlib.CRT)
+		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
 		rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
