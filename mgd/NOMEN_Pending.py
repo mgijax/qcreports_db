@@ -101,9 +101,12 @@ cmds.append('select p._Marker_key, a.accID from #pending p, ACC_Accession a ' + 
 # Get Synonyms
 #
 
-cmds.append('select p._Marker_key, o.name ' + \
-'from #pending p, MRK_Other o ' + \
-'where p._Marker_key = o._Marker_key ')
+cmds.append('select p._Marker_key, s.synonym ' + \
+'from #pending p, MGI_Synonym s, MGI_SynonymType st ' + \
+'where p._Marker_key = s._Object_key ' + \
+'and s._MGIType_key = 2 ' + \
+'and s._SynonymType_key = st._SynonymType_key ' + \
+'and st.synonymType = "exact"')
 
 #
 # Get Human Homologies
@@ -145,10 +148,10 @@ for r in results[2]:
 
 for r in results[3]:
 	if syns.has_key(r['_Marker_key']):
-		syns[r['_Marker_key']].append(r['name'])
+		syns[r['_Marker_key']].append(r['synonym'])
 	else:
 		syns[r['_Marker_key']] = []
-		syns[r['_Marker_key']].append(r['name'])
+		syns[r['_Marker_key']].append(r['synonym'])
 	
 for r in results[5]:
 	homologs[r['_Marker_key']] = r['hsymbol']

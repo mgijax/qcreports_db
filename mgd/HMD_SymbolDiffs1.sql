@@ -51,12 +51,23 @@ go
 create index idx1 on #markerswithids(m_Marker_key)
 go
 
-select m.*, synonym = substring(o.name,1,50)
+select m.*, synonym = substring(s.synonym,1,50)
 into #markers
-from #markerswithids m, MRK_Other o
-where m.m_Marker_key *= o._Marker_key
-and o.name not like "%Rik"
-and o.name not like "MGC:%"
+from #markerswithids m, MGI_Synonym s, MGI_SynonymType st
+where m.m_Marker_key = s._Object_key
+and s.synonym not like "%Rik"
+and s.synonym not like "MGC:%"
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact"
+union
+select m.*, null
+from #markerswithids m
+where not exists (select 1 from MGI_Synonym s, MGI_SynonymType st
+where m.m_Marker_key = s._Object_key
+and s.synonym not like "%Rik"
+and s.synonym not like "MGC:%"
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact")
 go
 
 create index idx1 on #markers(geneID)

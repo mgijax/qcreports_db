@@ -82,8 +82,6 @@ cmds.append('select _Probe_key into #formgi from #probeseqs group by accID havin
 cmds.append('create index idx1 on #formgi(_Probe_key)')
 db.sql(cmds, None)
 
-##
-
 # Store Seq IDs for probes
 
 results = db.sql('select p._Probe_key, p.accID ' + \

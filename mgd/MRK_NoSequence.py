@@ -135,7 +135,7 @@ for r in results:
 	organism[key].append(value)
 
 #
-# select ll id of orthologs
+# select eg id of orthologs
 #
 results = db.sql('select distinct o._Marker_key, a.accID ' + \
 	'from #orthologs o, ACC_Accession a ' + \
