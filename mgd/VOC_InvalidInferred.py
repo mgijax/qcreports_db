@@ -42,15 +42,17 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
-cmd = 'select a.accID from ACC_Accession a where a._MGIType_key in (2, 3, 11) and a.prefixPart = "MGI:" ' + \
-	'union ' + \
-	'select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"'
-results = db.sql(cmd, 'auto')
 mgiLookup = []
-for r in results:
-    mgiLookup.append(r['accID'])
-
 cmds = []
+
+# read in all MGI accession ids for Markers (2), Mol Segs (3), Alleles (11)
+# read in all InterPro ids (13)
+
+cmds.append('select a.accID from ACC_Accession a where a._MGIType_key in (2, 3, 11) and a.prefixPart = "MGI:" ')
+cmds.append('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"')
+
+# read in all annotations w/ non-null inferred from value
+
 cmds.append('select a._Term_key, a._Object_key, e.inferredFrom ' + \
 	'into #annotations ' + \
 	'from VOC_Annot a, VOC_Evidence e ' + \
@@ -62,6 +64,8 @@ cmds.append('create nonclustered index idx1 on #annotations(_Term_key)')
 cmds.append('create nonclustered index idx2 on #annotations(_Object_key)')
 cmds.append('create nonclustered index idx3 on #annotations(inferredFrom)')
 
+# retrieve GO acc ID, marker symbol
+
 cmds.append('select e.inferredFrom, a.accID, m.symbol ' + \
 'from #annotations e, ACC_Accession a, MRK_Marker m ' + \
 'where e._Term_key = a._Object_key ' + \
@@ -71,6 +75,12 @@ cmds.append('select e.inferredFrom, a.accID, m.symbol ' + \
 'order by e.inferredFrom')
 
 results = db.sql(cmds, 'auto')
+
+for r in results[0]:
+    mgiLookup.append(r['accID'])
+for r in results[1]:
+    mgiLookup.append(r['accID'])
+
 for r in results[-1]:
     ids = r['inferredFrom']
 
