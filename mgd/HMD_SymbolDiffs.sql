@@ -68,9 +68,9 @@ print "(sorted by modification date of human symbol, symbol status, mouse symbol
 print ""
 
 select msymbol "MGI Symbol", 
-       mstatus "Status",
+       mstatus "MGI Status",
        hsymbol "MGI Human Symbol", 
-       hstatus "Status",
+       hstatus "Human Status",
        mgiID "MGI ID", 
        mname "MGI Name",
        locusID "LL ID",
