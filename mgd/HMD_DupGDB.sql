@@ -4,7 +4,7 @@ go
 select distinct m._Marker_key, a.accID
 into #markers
 from MRK_Marker m, MRK_Acc_View a
-where m._Species_key = 2
+where m._Organism_key = 2
 and m._Marker_key = a._Object_key
 and a.prefixPart = "GDB:"
 and a._LogicalDB_key = 2

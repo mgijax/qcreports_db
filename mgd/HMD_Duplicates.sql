@@ -31,7 +31,7 @@ go
 drop table #homology
 go
 
-select distinct r._Class_key, m._Species_key, m.symbol
+select distinct r._Class_key, m._Organism_key, m.symbol
 into #homology
 from HMD_Homology r, HMD_Homology_Marker h, MRK_Marker m
 where r._Homology_key = h._Homology_key
@@ -41,7 +41,7 @@ go
 select distinct _Class_key
 into #duplicates
 from #homology
-group by _Class_key, _Species_key having count(*) > 1
+group by _Class_key, _Organism_key having count(*) > 1
 go
 
 set nocount off
