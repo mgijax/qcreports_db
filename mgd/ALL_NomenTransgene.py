@@ -92,11 +92,11 @@ def isAllCaps(symbol):
 
 	return ok
 
-def isCurrent(symbol, species = 1):
+def isCurrent(symbol, organism = 1):
 
 	ok = 0
 	results = db.sql('select symbol, _Marker_Status_key from MRK_Marker ' + \
-		'where _Organism_key = %d ' % (species) + \
+		'where _Organism_key = %d ' % (organism) + \
 		'and symbol = "%s"' % (symbol), 'auto')
 	for r in results:
 		if r['symbol'] == symbol and r['_Marker_Status_key'] in [-2,1,3]:
@@ -122,11 +122,11 @@ for r in results:
 		continue
 
 	if isAllCaps(testSymbol):
-		species = 2
+		organism = 2
 	else:
-		species = 1
+		organism = 1
 
-	if isCurrent(testSymbol, species):
+	if isCurrent(testSymbol, organism):
 		goodSymbols.append(markerSymbol)
 	else:
 		badSymbols.append(markerSymbol)
@@ -152,11 +152,11 @@ for r in results:
 		continue
 
 	if isAllCaps(s1):
-		species = 2
+		organism = 2
 	else:
-		species = 1
+		organism = 1
 
-	if isCurrent(s1, species):
+	if isCurrent(s1, organism):
 		goodSymbols.append(markerSymbol)
 	else:
 		badSymbols.append(markerSymbol)
@@ -182,16 +182,16 @@ for r in results:
 		s1 = testSymbol
 		
 	if isAllCaps(s1):
-		species1 = 2
+		organism1 = 2
 	else:
-		species1 = 1
+		organism1 = 1
 
 	if isAllCaps(s2):
-		species2 = 2
+		organism2 = 2
 	else:
-		species2 = 1
+		organism2 = 1
 
-	if isCurrent(s1, species1) and isCurrent(s2, species2):
+	if isCurrent(s1, organism1) and isCurrent(s2, organism2):
 		goodSymbols.append(markerSymbol)
 	else:
 		badSymbols.append(markerSymbol)

@@ -17,7 +17,7 @@ group by name
 having count(*) > 1
 go
 
-select m.*, p.DNAtype, s.species, p.modification_date
+select m.*, p.DNAtype, s.organism, p.modification_date
 into #markers
 from #probe p, PRB_Marker_View m, PRB_Source_View s
 where p._Probe_key = m._Probe_key
@@ -33,7 +33,7 @@ print ""
 
 select name = substring(name,1,25), symbol, modification_date
 from #markers
-group by name, symbol, DNAtype, species
+group by name, symbol, DNAtype, organism
 having count(*) > 1
 order by modification_date, name, symbol
 go

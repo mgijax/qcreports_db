@@ -95,7 +95,7 @@ cmds.append('select p._Marker_key, hmarkerkey = h.markerKey2, hsymbol = h.marker
 'into #homology ' + \
 'from #pending p, HMD_Homology_Pairs_View h ' + \
 'where p._Marker_key = h.markerkey1 ' + \
-'and h.specieskey2 = 2 ')
+'and h.organismkey2 = 2 ')
 
 cmds.append('select _Marker_key, hsymbol from #homology')
 

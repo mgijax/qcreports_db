@@ -13,6 +13,9 @@ go
 create index index_symbol on #markers (symbol)
 go
 
+create index index_acc on #markers (accID)
+go
+
 set nocount off
 go
 
