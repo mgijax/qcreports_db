@@ -5,79 +5,94 @@ go
 
 select distinct i._Refs_key
 into #refs
-from GXD_Index i, GXD_Index_Stages s, BIB_Refs b
+from GXD_Index i, GXD_Index_Stages s, BIB_Refs b, VOC_Term_GXDIndexAssay_View a
 where i._Refs_key = b._Refs_key
 and b.journal = "Mech Dev"
-and (s.northern = 1
-     or s.western = 1
-     or s.rt_pcr = 1
-     or s.rnase = 1
-     or s.insitu_protein_section = 1
-     or s.insitu_rna_section = 1
-     or s.insitu_protein_mount = 1 
-     or s.insitu_rna_mount = 1
-     or s. primer_extension = 1
-     or s.clones = 1
-     )
+and s._IndexAssay_key = a._Term_key
+and a.term in ("Northern", "Western", "RT-PCR", "RNAse prot", "Prot-sxn", "RNA-sxn", "Prot-WM", "RNA-WM", "Primer ex", "cDNA")
 and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)
 go
 
 select distinct i._Refs_key
 into #todelete
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id = 40
-and s.northern = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term = "E"
+and s._IndexAssay_key = a._Term_key
+and a.term = "Northern"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id = 40
-and s.western = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term = "E"
+and s._IndexAssay_key = a._Term_key
+and a.term = "Western"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id = 40
-and s.rt_pcr = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term = "E"
+and s._IndexAssay_key = a._Term_key
+and a.term = "RT-PCR"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id = 40
-and s.rnase = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term = "E"
+and s._IndexAssay_key = a._Term_key
+and a.term = "RNAse prot"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id in (40, 41)
-and s.insitu_protein_section = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term in ("E", "A")
+and s._IndexAssay_key = a._Term_key
+and a.term = "Prot-sxn"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id in (40, 41)
-and s.insitu_rna_section = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term in ("E", "A")
+and s._IndexAssay_key = a._Term_key
+and a.term = "RNA-sxn"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id in (40, 41)
-and s.insitu_protein_mount = 1 
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term in ("E", "A")
+and s._IndexAssay_key = a._Term_key
+and a.term = "Prot-WM"
 union
 select distinct i._Refs_key
-from #refs r, GXD_Index i, GXD_Index_Stages s
+from #refs r, GXD_Index i, GXD_Index_Stages s, 
+VOC_Term_GXDIndexStage_View g, VOC_Term_GXDIndexAssay_View a
 where r._Refs_key = i._Refs_key
-and i.index_id = s.index_id
-and s.stage_id in (40, 41)
-and s.insitu_rna_mount = 1
+and i._Index_key = s._Index_key
+and s._StageID_key = g._Term_key
+and g.term in ("E", "A")
+and s._IndexAssay_key = a._Term_key
+and a.term = "RNA-WM"
 go
 
 delete #refs
