@@ -10,10 +10,6 @@
 
 cd `dirname $0` && source Configuration
 
-setenv DATE `date '+%Y-%m-%d'`
-
-umask 002
-
 foreach i ($QCMONTHLY/*.sql)
 
 if ( $i == "$QCMONTHLY/ALL_Progress.sql" ) then

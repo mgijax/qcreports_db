@@ -7,6 +7,8 @@
 # env variables
 #
 
+umask 002
+
 # install directory
 setenv QCREPORTINSTALLDIR	/usr/local/mgi/qcreports_db
 
@@ -39,6 +41,9 @@ setenv QCFANTOM			$QCREPORTINSTALLDIR/fantom
 # gdb-specific reports directory
 setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 
+# weekly reports directory
+setenv QCWEEKLY                 $QCREPORTINSTALLDIR/weekly
+
 # monthly reports directory
 setenv QCMONTHLY                $QCREPORTINSTALLDIR/monthly
 
@@ -50,6 +55,9 @@ setenv EILOGFILES		/export/shire
 
 # EI Log Name
 setenv EILOGNAME		.ei-log
+
+# Date
+setenv DATE `date '+%Y-%m-%d'`
 
 # FTP 
 setenv FTPURL			ftp.informatics.jax.org
