@@ -1,9 +1,11 @@
+TAG:  qcreports_db-maint6300-2
 TAG:  qcreports_db-maint6300-1
 DATE: 12/21/2004
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) MGI 3.11 (TR 6300)
+b) HMD_RIKEN.sql; performance improvements
 
 TAG:  qcreports_db-maint6300-BP
 DATE: 12/21/2004
