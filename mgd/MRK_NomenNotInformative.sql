@@ -38,7 +38,7 @@ set nocount off
 go
 
 print ""
-print "MGI Marker with Uninformative Nomenclature"
+print "MGI Markers with Uninformative Nomenclature"
 print "where symbol is:"
 print "   a) GenBank Accession ID"
 print "   b) RIKEN symbol"
