@@ -57,7 +57,7 @@ title = 'Markers w/ GO Annotations where the Evidence Code = IMP, Inferred From 
         'and the Annotation Reference is associated with one or more Alleles\n'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
-fp.write(string.ljust('symbol', 27) + \
+fp.write(string.ljust('symbol', 52) + \
 	 string.ljust('goID', 32) + \
  	 string.ljust('term', 52) + \
  	 string.ljust('jnumID', 12) + \
