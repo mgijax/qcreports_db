@@ -5,7 +5,7 @@ print ""
 select m._Marker_key, m.symbol, m.chromosome
 from MRK_Marker m
 where m._Species_key = 1
-and m._Marker_Status_key = 1
+and m._Marker_Status_key in (1,3)
 and not exists (select a.* from MRK_Acc_View a
 where a.prefixPart = "MGI:"
 and a._LogicalDB_key = 1

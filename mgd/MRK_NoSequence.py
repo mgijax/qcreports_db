@@ -78,7 +78,7 @@ cmds.append('select m._Marker_key, m.symbol ' + \
 'from MRK_Marker m ' + \
 'where m._Species_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
-'and m._Marker_Status_key = 1 ' + \
+'and m._Marker_Status_key in (1,3) ' + \
 'and not exists (select 1 from MRK_Acc_View a ' + \
 'where m._Marker_key = a._Object_key ' + \
 'and a._LogicalDB_Key in (9, 13)) ')

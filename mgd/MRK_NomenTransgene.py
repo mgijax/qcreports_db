@@ -98,8 +98,7 @@ def isCurrent(symbol, species = 1):
 		'where _Species_key = %d ' % (species) + \
 		'and symbol = "%s"' % (symbol), 'auto')
 	for r in results:
-		if r['symbol'] == symbol and \
-		(r['_Marker_Status_key'] == 1 or r['_Marker_Status_key'] == -2):
+		if r['symbol'] == symbol and r['_Marker_Status_key'] in [-2,1,3]:
 			ok = 1
 
 	return ok

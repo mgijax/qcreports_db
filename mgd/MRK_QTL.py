@@ -54,7 +54,7 @@ cmds = []
 cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
 	  'into #markers ' + \
 	  'from MRK_Mouse_View m ' + \
-	  'where m._Marker_Status_key = 1 ' + \
+	  'where m._Marker_Status_key in (1,3) ' + \
 	  'and m._Marker_Type_key = 6 ' + \
 	  'and m.creation_date >= "03/01/2002" ' + \
 	  'and not exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a ' + \

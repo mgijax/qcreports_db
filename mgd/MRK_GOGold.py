@@ -111,7 +111,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
 'where m._Species_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
-'and m._Marker_Status_key = 1 ' + \
+'and m._Marker_Status_key in (1,3) ' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ' + \
 'and a._Annot_key = e._Annot_key ' + \
@@ -128,7 +128,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
 'where m._Species_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
-'and m._Marker_Status_key = 1 ' + \
+'and m._Marker_Status_key in (1,3) ' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ' + \
 'and a._Annot_key = e._Annot_key ' + \

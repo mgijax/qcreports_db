@@ -5,7 +5,7 @@ print ""
 select _Marker_key, _Species_key, symbol, chromosome, cytogeneticOffset
 into #dup
 from MRK_Marker
-where _Marker_Status_key = 1
+where _Marker_Status_key in (1,3)
 group by _Species_key, symbol, chromosome, cytogeneticOffset having count(*) > 1
 go
 
