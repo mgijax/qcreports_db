@@ -43,6 +43,21 @@
 #
 #    	Report in a tab delimited file with same columns as 1A
 #
+#	Report 2D
+#	Title = Gene Not RIKEN or 'expressed' or 'EST' with only GO Assocations w/ IEA evidence
+#               with references that are selected for GO but have not been used
+#
+#    	Report in a tab delimited/html file:
+#		J:
+#		PubMed ID (with HTML link)
+#		MGI:ID
+#		Y/N (has gene been selected for GXD)
+#		symbol
+#		name
+#
+#	Sort by:
+#		MGI:ID
+#
 # Usage:
 #       MRK_GOIEA.py
 #
@@ -63,6 +78,7 @@
  
 import sys 
 import os
+import regsub
 import db
 import reportlib
 
@@ -70,6 +86,9 @@ CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
+
+PUBMED = 29
+url = ''
 
 def writeRecord(fp, r):
 
@@ -83,6 +102,19 @@ def writeRecord(fp, r):
 	else:
 		fp.write('no' + CRT)
 
+def writeRecordD(fp, r):
+
+	fp.write(r['jnumID'] + TAB)
+
+	if pubMedIDs.has_key(r['_Refs_key']):
+		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
+		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
+	fp.write(TAB)
+
+	fp.write(r['mgiID'] + TAB + \
+	         r['symbol'] + TAB + \
+	         r['name'] + CRT)
+
 #
 # Main
 #
@@ -90,17 +122,26 @@ def writeRecord(fp, r):
 fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fpD = reportlib.init("MRK_GOIEA_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 
 cmds = []
 
-cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID ' + \
+cmds.append('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED))
+
+# select markers with GO Associations of evidence IEA only
+
+cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 'into #markers ' + \
-'from MRK_Mouse_View m ' + \
+'from MRK_Marker m, MRK_Acc_View a ' + \
 'where m._Marker_Type_key = 1 ' + \
 'and m._Marker_Status_key = 1 ' + \
 'and m.name not like "%RIKEN%" ' + \
 'and m.name not like "%expressed%" ' + \
 'and m.name not like "EST %" ' + \
+'and m._Marker_key = a._Object_key ' + \
+'and a._LogicalDB_key = 1 ' + \
+'and a.prefixPart = "MGI:" ' + \
+'and a.preferred = 1 ' + \
 'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
 'where m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ' + \
@@ -136,10 +177,21 @@ cmds.append('select distinct m._Marker_key ' + \
 
 cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
 
-cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.short_citation ' + \
+cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citation, b.dbs ' + \
 'into #references ' + \
-'from #markers m , MRK_Reference_View r ' + \
-'where m._Marker_key = r._Marker_key')
+'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
+'where m._Marker_key = r._Marker_key ' + \
+'and r._Refs_key = b._Refs_key')
+
+cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
+
+# select PubMed IDs for references
+
+cmds.append('select distinct r._Refs_key, a.accID ' + \
+'from #references r, BIB_Acc_View a ' + \
+'where r._Refs_key = a._Object_key ' + \
+'and a._LogicalDB_key = %d ' % (PUBMED) + \
+'and a.preferred = 1')
 
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
@@ -159,22 +211,43 @@ cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_
 'group by _Marker_key ' + \
 'order by symbol')
 
+cmds.append('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+'from #references r ' + \
+'where r.dbs like "%GO%" and r.dbs not like "%GO*%" ' + \
+'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
+'where r._Refs_key = e._Refs_key ' + \
+'and e._Annot_key = a._Annot_key ' + \
+'and a._AnnotType_key = 1000) ' + \
+'order by numericPart')
+
 results = db.sql(cmds, 'auto')
+
+for r in results[0]:
+	url = r['url']
 
 # Process homology info
 hasHomology = {}
-for r in results[1]:
+for r in results[2]:
 	hasHomology[r['_Marker_key']] = 1
 
-for r in results[-3]:
+pubMedIDs = {}
+for r in results[-5]:
+	pubMedIDs[r['_Refs_key']] = r['accID']
+
+for r in results[-4]:
 	writeRecord(fpA, r)
 
-for r in results[-2]:
+for r in results[-3]:
 	writeRecord(fpB, r)
 
-for r in results[-1]:
+for r in results[-2]:
 	writeRecord(fpC, r)
+
+for r in results[-1]:
+	writeRecordD(fpD, r)
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
+reportlib.finish_nonps(fpC)	# non-postscript file
+reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
 

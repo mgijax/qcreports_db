@@ -50,9 +50,11 @@
 #    		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
 #               where the marker has no 'GO' association.
 #
-#	Report in a tab delimited file with the following columns:
+#	Report in a tab delimited/html file with the following columns:
 #
 #	J: of reference associated with the Marker, selected for GO but has not been used in annotation
+#	PubMed ID of reference (with HTML link to PubMed)	(TR 4698)
+#	Y/N (has gene been selected for GXD)			(TR 4698)
 #	MGI:ID
 #	symbol
 #	name
@@ -70,6 +72,9 @@
 #
 # History:
 #
+# lec	04/11/2003
+#	- TR 4698; added PubMed ID to 1D
+#
 # lec	02/11/2003
 #	- TR 4491; added Report 1D
 #
@@ -80,6 +85,7 @@
  
 import sys 
 import os
+import regsub
 import db
 import reportlib
 
@@ -87,6 +93,9 @@ CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
+
+PUBMED = 29
+url = ''
 
 def writeRecord(fp, r):
 
@@ -102,8 +111,14 @@ def writeRecord(fp, r):
 
 def writeRecordD(fp, r):
 
-	fp.write(r['jnumID'] + TAB + \
-	         r['mgiID'] + TAB + \
+	fp.write(r['jnumID'] + TAB)
+
+	if pubMedIDs.has_key(r['_Refs_key']):
+		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
+		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
+	fp.write(TAB)
+
+	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
 
@@ -114,9 +129,11 @@ def writeRecordD(fp, r):
 fpA = reportlib.init("MRK_NoGO_A", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpB = reportlib.init("MRK_NoGO_B", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpC = reportlib.init("MRK_NoGO_C", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpD = reportlib.init("MRK_NoGO_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fpD = reportlib.init("MRK_NoGO_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 
 cmds = []
+
+cmds.append('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED))
 
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 'into #markers ' + \
@@ -164,6 +181,16 @@ cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citatio
 'where m._Marker_key = r._Marker_key ' + \
 'and r._Refs_key = b._Refs_key')
 
+cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
+
+# select PubMed IDs for references
+
+cmds.append('select distinct r._Refs_key, a.accID ' + \
+'from #references r, BIB_Acc_View a ' + \
+'where r._Refs_key = a._Object_key ' + \
+'and a._LogicalDB_key = %d ' % (PUBMED) + \
+'and a.preferred = 1')
+
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
 'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226) ' + \
@@ -182,7 +209,7 @@ cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_
 'group by _Marker_key ' + \
 'order by symbol')
 
-cmds.append('select distinct r._Marker_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+cmds.append('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
 'from #references r ' + \
 'where r.dbs like "%GO%" and r.dbs not like "%GO*%" ' + \
 'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
@@ -193,10 +220,17 @@ cmds.append('select distinct r._Marker_key, r.symbol, r.name, r.mgiID, r.jnumID,
 
 results = db.sql(cmds, 'auto')
 
+for r in results[0]:
+	url = r['url']
+
 # Process homology info
 hasHomology = {}
-for r in results[1]:
+for r in results[2]:
 	hasHomology[r['_Marker_key']] = 1
+
+pubMedIDs = {}
+for r in results[-5]:
+	pubMedIDs[r['_Refs_key']] = r['accID']
 
 for r in results[-4]:
 	writeRecord(fpA, r)
@@ -213,5 +247,5 @@ for r in results[-1]:
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
 reportlib.finish_nonps(fpC)	# non-postscript file
-reportlib.finish_nonps(fpD)	# non-postscript file
+reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
 
