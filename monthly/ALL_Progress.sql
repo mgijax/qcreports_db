@@ -76,7 +76,37 @@ and datepart(month, a.creation_date) = @month
 and a._Allele_key = al._Allele_key
 and al.note like "%Associated Phenotype Controlled Terms%"
 
+select total = count(*), category = "Total", seq = 1
+into #c4
+from ALL_Allele
+where symbol not like '%<+>'
+union
+select total = count(*), category = "transgene induced", seq = 2
+from ALL_Allele
+where _Allele_Type_key = 2
+and symbol not like '%<+>'
+union
+select total = count(*), category = "transgene induced (gene targeted)", seq = 3
+from ALL_Allele
+where _Allele_Type_key = 3
+and symbol not like '%<+>'
+union
+select total = count(*), category = "QTL", seq = 4
+from ALL_Allele
+where _Allele_Type_key = 15
+and symbol not like '%<+>'
+union
+select total = count(*), category = "everything else", seq = 5
+from ALL_Allele
+where _Allele_Type_key not in (2,3,15)
 set nocount off
+
+print ""
+print "Current State (excluding wild types)"
+print ""
+
+select category, total from #c4 order by seq
+go
 
 print ""
 print "New Alleles Entered in Previous Month (excluding wild types)"
