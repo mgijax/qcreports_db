@@ -44,6 +44,8 @@
 #	- created
 #
 
+cd `dirname $0`
+
 setenv RDRSCHEMADIR $1
 setenv MGDDBNAME $2
 setenv JOBSTREAM $3
