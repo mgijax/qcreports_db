@@ -35,6 +35,24 @@ go
 create nonclustered index idx_mkey on #markers(_Object_key)
 go
 
+select m.*, egID = a.accID
+into #final
+from #markers m, ACC_Accession a
+where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
+and a._LogicalDB_key = 55
+union
+select m.*, null
+from #markers m
+where not exists (select 1 from ACC_Accession a
+where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
+and a._LogicalDB_key = 55)
+go
+
+create nonclustered index idx_mkey on #final(_Object_key)
+go
+
 set nocount off
 go
 
@@ -42,8 +60,8 @@ print ""
 print "Markers Annotated to a Secondary Sequence Accession ID"
 print ""
 
-select distinct m.symbol, ma.accID
-from #markers ma, MRK_Marker m
+select distinct m.symbol, ma.accID, ma.egID
+from #final ma, MRK_Marker m
 where ma._Object_key = m._Marker_key
 order by m.symbol
 go
