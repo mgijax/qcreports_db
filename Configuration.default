@@ -39,34 +39,23 @@ setenv FTPURL			ftp.informatics.jax.org
 setenv SYBASE			/opt/sybase
 
 # PYTHON
-
 setenv PYTHONPATH       	/usr/local/mgi/lib/python
 
-# PATH
+# DBUTILITIESPATH
+setenv DBUTILITIESPATH		/usr/local/mgi/dbutils/mgidbutilities
 
-set path = ($path $SYBASE/bin)
+# PATH
+set path = ($DBUTILITIESPATH/bin $path $SYBASE/bin)
 
 # Database Server
-
-setenv DSQUERY MGD
+setenv DBSERVER MGD
 
 # MGD Database
-
 setenv MGD mgd
 
 # Nomen Database
-
 setenv NOMEN nomen
 
 # Strains Database
-
 setenv STRAINS strains
-
-# Public login
-
-setenv USER mgd_public
-
-# Password
-
-setenv PASSWORD mgdpub
 
