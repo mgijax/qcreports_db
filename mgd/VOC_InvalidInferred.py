@@ -41,7 +41,7 @@ findID = 'select _Object_key from ACC_Accession where accID = "%s"'
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fp.write('Invalid "Inferred From" Values in Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
+fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
 cmd = 'select a.accID, e.inferredFrom, m.symbol ' + \
