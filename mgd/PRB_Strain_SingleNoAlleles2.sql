@@ -5,12 +5,12 @@ select distinct s._Strain_key, strain = substring(s.strain,1,85), s.private,
 alleleSymbol = substring(strain, charindex("-", strain) + 1, char_length(s.strain)),
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
-from PRB_Strain s, MLP_StrainTypes st, MLP_StrainType t, PRB_Strain_Marker_View sm
+from PRB_Strain s, PRB_Strain_Type st, VOC_Term t, PRB_Strain_Marker_View sm
 where s.strain like '%>'
 and s.strain not like 'STOCK%'
 and s._Strain_key = st._Strain_key
-and st._StrainType_key = t._StrainType_key
-and t.strainType in ('mutant stock', 'mutant strain', 'targeted mutation')
+and st._StrainType_key = t._Term_key
+and t.term in ('mutant stock', 'mutant strain', 'targeted mutation')
 and s._Strain_key = sm._Strain_key
 go
 
