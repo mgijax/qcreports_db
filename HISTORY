@@ -1,3 +1,10 @@
+TAG:  qcreports_db-18-0-1
+DATE: 09/05/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 4048; removed Strain Type from PRB_StrainStd.sql, PRB_StrainNonStd.sql
+
 TAG:  qcreports_db-18-0-0
 DATE: 08/30/2002
 STAFF: lec
