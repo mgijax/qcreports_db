@@ -22,17 +22,25 @@ and m1.symbol != m2.symbol
 and m1.symbol not like '%Rik'
 go
 
-select h.*, locusID = a.accID
+create index idx1 on #homology(m_Marker_key)
+go
+create index idx2 on #homology(h_Marker_key)
+go
+
+select h.*, geneID = a.accID
 into #markerswithids
 from #homology h, MRK_ACC_View a
 where h.h_Marker_key = a._Object_key
 and a._LogicalDB_key = 24
 union
-select h.*, locusID = null
+select h.*, geneID = null
 from #homology h
 where not exists (select 1 from MRK_ACC_View a
 where h.h_Marker_key = a._Object_key
 and a._LogicalDB_key = 24)
+go
+
+create index idx1 on #markerswithids(m_Marker_key)
 go
 
 select m.*, synonym = substring(o.name, 1, 50)
@@ -43,21 +51,23 @@ and o.name not like "%Rik"
 and o.name not like "MGC:%"
 go
 
+create index idx1 on #markers(geneID)
+go
+create index idx2 on #markers(hsymbol)
+go
+
 select m.*, hstatus = "O"
 into #results
-from #markers m, radar..DP_LL l
-where m.locusID = l.locusID
-and m.hsymbol = l.osymbol
-union
-select m.*, hstatus = "I"
-from #markers m, radar..DP_LL l
-where m.locusID = l.locusID
-and m.hsymbol = l.isymbol
+from #markers m, radar..DP_EntrezGene_Info e
+where m.geneID = e.geneID and m.hsymbol = e.symbol
 union
 select m.*, hstatus = "?"
 from #markers m
-where not exists (select 1 from radar..DP_LL l
-where m.locusID = l.locusID and (m.hsymbol = l.osymbol or m.hsymbol = l.isymbol))
+where not exists (select 1 from radar..DP_EntrezGene_Info e
+where m.geneID = e.geneID and m.hsymbol = e.symbol)
+go
+
+create index idx1 on #results(hstatus)
 go
 
 set nocount off

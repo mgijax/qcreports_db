@@ -7,28 +7,15 @@
 set nocount on
 go
 
-select type = "O", 
-species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
+select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
 species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
 into #homology
-from radar..DP_LLHomology h1, radar..DP_LLHomology h2, radar..DP_LL l
+from radar..DP_LLHomology h1, radar..DP_LLHomology h2, radar..DP_EntrezGene_Info e
 where h1.taxID = 9606
 and h1.groupID = h2.groupID
 and h2.taxID = 10090
 and h1.symbol = h2.symbol
-and h1.geneID = l.locusID
-and l.osymbol is not null
-union
-select type = "I", 
-species1 = "human", h1.geneID, h1.symbol,
-species2 = "mouse", h2.geneID, h2.symbol
-from radar..DP_LLHomology h1, radar..DP_LLHomology h2, radar..DP_LL l
-where h1.taxID = 9606
-and h1.groupID = h2.groupID
-and h2.taxID = 10090
-and h1.symbol = h2.symbol
-and h1.geneID = l.locusID
-and l.osymbol is null
+and h1.geneID = e.geneID
 go
 
 set nocount off
@@ -47,6 +34,6 @@ select h.*
 from #homology h
 where not exists (select 1 from MRK_Marker m where m._Organism_key = 1 and m.symbol = h.symbol2)
 and not exists (select 1 from MRK_Marker m where m._Organism_key = 2 and m.symbol = h.symbol1)
-order by h.type desc, h.symbol1
+order by h.symbol1
 go
 
