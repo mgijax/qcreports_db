@@ -1,5 +1,11 @@
+TAG: qcreports_db-2-0-1
+DATE: 05/25/2000
+STAFF: lec
+RELEASE: A
+CHANGES: header change for HMD_SymbolDiffs.sql
+
 TAG: qcreports_db-2-0-0
-DATE: 05/24/2000
+DATE: 05/25/2000
 STAFF: lec
 RELEASE: A
 CHANGES: added HMD_References5.sql and HMD_SymbolDiffs.sql (TRs 1614 & 1616)
