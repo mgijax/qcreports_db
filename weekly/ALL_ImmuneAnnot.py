@@ -43,13 +43,15 @@ fp.write('' + '-' * 50 + reportlib.CRT)
 
 db.sql('select distinct a.symbol, a._Allele_key ' + \
 	'into #alleles ' + \
-	'from ALL_Allele a, GXD_AlleleGenotype g, VOC_AnnotHeader v, VOC_Term t ' + \
+	'from ALL_Allele a, GXD_AlleleGenotype g, VOC_Annot va, VOC_AnnotHeader v, VOC_Term t ' + \
 	'where a._Allele_key = g._Allele_key ' + \
+	'and g._Genotype_key = va._Object_key ' + \
+	'and va._AnnotType_key = 1002 ' + \
 	'and g._Genotype_key = v._Object_key ' + \
 	'and v._AnnotType_key = 1002 ' + \
 	'and v._Term_key = t._Term_key ' + \
 	'and t.term = "immune system phenotype" ' + \
-	'and v.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
+	'and va.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
 	'and dateadd(day, 1, "%s") ' % (currentDate), None)
 
 db.sql('create index idex1 on #alleles(_Allele_key)', None)
