@@ -28,6 +28,9 @@
 # dbm   8/6/2003
 #       - created
 #
+# dbm   11/4/2004
+#       - use new "Clone Collection" set
+#
 '''
  
 import sys 
@@ -156,8 +159,7 @@ cmd.append('select distinct ca._Clone_key, ca.accID ' + \
                  'ca.logicalDB = db.name and ' + \
                  'db._LogicalDB_key = sm._Object_key and ' + \
                  'sm._Set_key = s._Set_key and ' + \
-                 's._MGIType_key = 15 and ' + \
-                 's.name = "Clone Set" ' + \
+                 's.name = "Clone Collection (all)" ' + \
            'order by ca._Clone_key, ca.accID')
 
 cmd.append('select qc._Clone_key, qc.seqID "accID" ' + \
