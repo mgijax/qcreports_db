@@ -3,7 +3,7 @@ DATE: 07/24/2002
 STAFF: lec
 RELEASE: A
 CHANGES:
-a) TR 3916/ALL_Progress.sql
+a) TR 3916/ALL_Progress.sql, qcmonthly_reports.sh, output/archive/alleles, Configuration.default
 
 TAG:  qcreports_db-17-0-17
 DATE: 07/17/2002
