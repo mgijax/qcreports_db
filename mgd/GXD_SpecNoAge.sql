@@ -74,7 +74,7 @@ and a2.preferred = 1
 go
 
 print ""
-print "InSitu Specimens with Not Applicable, Not Specified or Embryonic"
+print "InSitu Specimens with Not Applicable, Not Specified"
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
@@ -93,7 +93,7 @@ and a2.preferred = 1
 go
 
 print ""
-print "Gel Lane Specimens with Not Applicable, Not Specified or Embryonic"
+print "Gel Lane Specimens with Not Applicable, Not Specified"
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
