@@ -74,12 +74,12 @@ where not exists
 where r._Result_key = s._Result_key)
 go
 
+set nocount off
+go
+
 print ""
 print "InSitu Results missing Structures"
 print ""
-
-set nocount on
-go
 
 select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
 from #imissingstructs r, GXD_Specimen s, GXD_Assay_View a
@@ -99,15 +99,37 @@ and not exists
 where g._GelLane_key = s._GelLane_key)
 go
 
+set nocount off
+go
+
 print ""
 print "Gel Results missing Structures"
 print ""
 
-set nocount on
-go
-
 select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
 from #gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
+where r._GelLane_key = s._GelLane_key
+and s._Assay_key = a._Assay_key
+go
+
+select g._GelLane_key
+into #gmissingbands
+from GXD_GelLane g
+where g._GelControl_key = 1
+and not exists
+(select 1 from GXD_GelBand b
+where g._GelLane_key = b._GelLane_key)
+go
+
+set nocount off
+go
+
+print ""
+print "Gel Results missing Bands"
+print ""
+
+select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
+from #gmissingbands r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 go
