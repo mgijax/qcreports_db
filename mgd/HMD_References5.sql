@@ -35,6 +35,6 @@ print ""
 select b.jnum
 from #nodata n, BIB_All_View b
 where n._Refs_key = b._Refs_key
-order by jnum 
+order by jnum desc
 go 
 
