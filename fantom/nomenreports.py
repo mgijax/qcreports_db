@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	07/25/2002
+#	- TR 3863; add gba_symbol to reports
+#
 # lec	07/03/2002
 #	- TR 3863
 #
@@ -60,7 +63,7 @@ def select_fantom(orderBy):
 	global cmds
 
 	cmds.append('select f._Fantom2_key, f.riken_cloneid, f.genbank_id, f.riken_cluster, ' + \
-		'c.gba_mgiID, f.final_mgiID, ' + \
+		'c.gba_mgiID, c.gba_symbol, f.final_mgiID, ' + \
 		'f.final_symbol1, f.final_name1, f.final_symbol2, f.final_name2, ' + \
 		'f.seq_note, f.seq_quality, f.nomen_event, f.modifiedBy ' + \
 		'from #fantom2 f1, MGI_Fantom2 f, MGI_Fantom2Cache c ' + \
@@ -90,6 +93,7 @@ def write_record(r):
 		r['genbank_id'] + TAB + \
 		`r['riken_cluster']` + TAB + \
 		r['gba_mgiID'] + TAB + \
+		r['gba_symbol'] + TAB + \
 		r['final_mgiID'] + TAB + \
 		r['final_symbol1'] + TAB + \
 		r['final_name1'] + TAB + \
