@@ -2,7 +2,7 @@ print ""
 print "Splits"
 print ""
 
-select distinct m.symbol, m.name
+select distinct m.symbol, substring(m.name, 1, 50) "name"
 from MRK_Marker m
 where m._Organism_key = 1
 and m._Marker_Status_key = 2
