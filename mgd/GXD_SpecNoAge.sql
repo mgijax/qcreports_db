@@ -16,14 +16,14 @@ go
 select s._Assay_key, specimenLabel = substring(s.specimenLabel, 1, 50)
 into #spec3
 from GXD_Specimen s
-where (s.age = 'Not Applicable' or s.age = 'Not Specified' or s.age = 'embryonic')
+where (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 go
 
 select s._Assay_key, laneLabel = substring(s.laneLabel, 1, 50)
 into #spec4
 from GXD_GelLane s
 where s._GelControl_key = 1
-and (s.age = 'Not Applicable' or s.age = 'Not Specified' or s.age = 'embryonic')
+and (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 go
 
 create index idx1 on #spec1(_Assay_key)
@@ -74,7 +74,7 @@ and a2.preferred = 1
 go
 
 print ""
-print "InSitu Specimens with Not Applicable, Not Specified or Embryonic"
+print "InSitu Specimens with Not Applicable, Not Specified"
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
@@ -93,7 +93,7 @@ and a2.preferred = 1
 go
 
 print ""
-print "Gel Lane Specimens with Not Applicable, Not Specified or Embryonic"
+print "Gel Lane Specimens with Not Applicable, Not Specified"
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
