@@ -23,7 +23,7 @@ and m._Marker_Status_key in (1,3)
 and m.name like 'DNA segment%'
 go
 
-create clustered index idx_key on #markers(_Marker_key)
+create index idx_key on #markers(_Marker_key)
 go
 
 select m.*, a.accID
@@ -34,13 +34,25 @@ and a._LogicalDB_key = 9
 and a._Refs_key = 64047
 go
 
-select s.*, o.name
-into #sequences2
-from #sequences1 s, MRK_Other o
-where s._Marker_key *= o._Marker_key
+create index idx_key on #sequences1(_Marker_key)
 go
 
-create clustered index idx_key on #sequences2(_Marker_key)
+select sq.*, s.synonym
+into #sequences2
+from #sequences1 sq, MGI_Synonym s, MGI_SynonymType st
+where sq._Marker_key = s._Object_key
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact"
+union
+select sq.*, null
+from #sequences1 sq
+where not exists (select 1 from MGI_Synonym s, MGI_SynonymType st
+where sq._Marker_key = s._Object_key
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact")
+go
+
+create index idx_key on #sequences2(_Marker_key)
 go
 
 /* find pubmed ids by LocusLink ID */

@@ -37,19 +37,31 @@ and a._LogicalDB_key = 9
 and a._Refs_key = 64047)
 go
 
-select s.*, synonym = substring(o.name,1,50), o.jnumID
+create index idx_key on #sequences1(_Marker_key)
+go
+
+select sq.*, s.synonym, jnumID = a.accID
 into #sequences2
-from #sequences1 s, MRK_Other_View o
-where s._Marker_key = o._Marker_key
+from #sequences1 sq, MGI_Synonym s, MGI_SynonymType st, ACC_Accession a
+where sq._Marker_key = s._Object_key
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact"
+and s._Refs_key != null
+and s._Refs_key = a._Object_key
+and a._MGIType_key = 1
+and a._LogicalDB_key = 1
+and a.prefixPart = "J:"
+and a.preferred = 1
 union
-select s.*, synonym = substring(o.name,1,50), jnumID = null
-from #sequences1 s, MRK_Other o
-where s._Marker_key = o._Marker_key
-and o._Refs_key is null
-union
-select s.*, synonym = null, jnumID = null
-from #sequences1 s
-where not exists (select 1 from MRK_Other o where s._Marker_key = o._Marker_key)
+select sq.*, null, null
+from #sequences1 sq
+where not exists (select 1 from MGI_Synonym s, MGI_SynonymType st
+where sq._Marker_key = s._Object_key
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact")
+go
+
+create index idx_key on #sequences2(_Marker_key)
 go
 
 set nocount off

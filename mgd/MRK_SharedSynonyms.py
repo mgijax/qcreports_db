@@ -47,6 +47,8 @@ PAGE = reportlib.PAGE
 # Main
 #
 
+db.useOneConnection(1)
+
 title = 'Markers with Shared Synonyms\n'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
@@ -56,28 +58,34 @@ fp.write(string.ljust('synonym', 50) + \
 fp.write('-' * 50 + '  ' + \
 	 '-' * 50 + CRT)
 
-cmds = []
+db.sql('select s._Object_key, s._MGIType_key, synonym = substring(s.synonym,1,50) ' + \
+	'into #synonyms1 ' + \
+	'from MGI_Synonym s, MGI_SynonymType st ' + 
+	'where s._MGIType_key = 2 ' + \
+	'and s._SynonymType_key = st._SynonymType_key ' + \
+	'and st._Organism_key = 1', None)
+db.sql('create index idx1 on #synonyms1(synonym)', None)
+db.sql('create index idx2 on #synonyms1(_Object_key)', None)
+db.sql('create index idx3 on #synonyms1(_MGIType_key)', None)
 
-cmds.append('select distinct name = substring(name,1,50) ' + \
-	'into #shared ' + \
-	'from MRK_Other ' + \
-	'group by name having count(*) > 1')
+db.sql('select synonym into #synonyms2 from #synonyms1 group by synonym having count(*) > 1', None)
+db.sql('create index idx1 on #synonyms2(synonym)', None)
 
-cmds.append('select distinct sym1 = m1.symbol, sym2 = m2.symbol, s.name ' + \
-	'from #shared s, MRK_Marker m1, MRK_Marker m2, MRK_Other o1, MRK_Other o2 ' + \
-	'where s.name = o1.name ' + \
-	'and s.name = o2.name ' + \
-	'and o1._Marker_key = m1._Marker_key ' + \
-	'and o2._Marker_key = m2._Marker_key ' + \
-	'and m1._Marker_key != m2._Marker_key ' + \
-	'order by s.name')
-
-results = db.sql(cmds, 'auto')
+results = db.sql('select distinct sym1 = m1.symbol, sym2 = m2.symbol, s.synonym ' + \
+	'from #synonyms1 s1, #synonyms1 s2, #synonyms2 s, MRK_Marker m1, MRK_Marker m2 ' + \
+	'where s.synonym = s1.synonym ' + \
+	'and s.synonym = s2.synonym ' + \
+	'and s1._MGIType_key = 2 ' + \
+	'and s2._MGIType_key = 2 ' + \
+	'and s1._Object_key != s2._Object_key ' + \
+	'and s1._Object_key = m1._Marker_key ' + \
+	'and s2._Object_key = m2._Marker_key ' + \
+	'order by s.synonym', 'auto')
 
 # store dictionary of synonyms
 syns = {}
-for r in results[1]:
-	key = r['name']
+for r in results:
+	key = r['synonym']
 	value1 = r['sym1']
 	value2 = r['sym2']
 
@@ -102,4 +110,5 @@ for s in synKeys:
 fp.write('\n(%d rows affected)\n' % (rows))
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
+db.useOneConnection(0)
 

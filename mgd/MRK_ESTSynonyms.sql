@@ -3,11 +3,12 @@ print ""
 print "EST IDs and Gm Markers as Synonyms"
 print ""
 
-select m.symbol, o.name "synonym"
-from MRK_Marker m, MRK_Other o
-where m._Marker_key = o._Marker_key
-and (o.name like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]"
-or o.name like "Gm%")
+select m.symbol, s.synonym
+from MRK_Marker m, MGI_Synonym s, MGI_SynonymType st
+where m._Marker_key = s._Object_key
+and s._SynonymType_key = st._SynonymType_key
+and st.synonymType = "exact"
+and (s.synonym like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" or s.synonym like "Gm%")
 order by m.symbol
 go
 
