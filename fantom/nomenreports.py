@@ -7,7 +7,7 @@
 # See TR for report specifications.
 #
 # Usage:
-#       ambiguousmerge1.py
+#       nomenreports.py
 #
 # Used by:
 #       Internal Fantom curators
@@ -55,7 +55,7 @@ def select_notes():
 		'and n.noteType = "C" ' + \
 		'order by n._Fantom2_key, n.sequenceNum')
 
-def select_records(orderBy):
+def select_fantom(orderBy):
 
 	global cmds
 
@@ -84,7 +84,7 @@ def process_cnotes(r):
 		cnotes[r['_Fantom2_key']] = []
 	cnotes[r['_Fantom2_key']].append(string.strip(r['note']))
 
-def process_records(r):
+def write_record(r):
 
 	fp.write(r['riken_cloneid'] + TAB + \
 		r['genbank_id'] + TAB + \
@@ -109,12 +109,12 @@ def process_records(r):
 
 	fp.write(r['modifiedBy'] + CRT)
 
-def do_all(extra = 0, orderBy = 'f.final_mgiID'):
+def process_report(extra = 0, orderBy = 'f.final_mgiID'):
 
 	cmds.append('create nonclustered index idx_key on #fantom2(_Fantom2_key)')
 
 	select_notes()
-	select_records(orderBy)
+	select_fantom(orderBy)
 
 	parsers = []
 	parsers.append(None)
@@ -125,11 +125,16 @@ def do_all(extra = 0, orderBy = 'f.final_mgiID'):
 
 	parsers.append(process_nnotes)
 	parsers.append(process_cnotes)
-	parsers.append(process_records)
+	parsers.append(write_record)
 	db.sql(cmds, parsers)
 	reportlib.finish_nonps(fp)
 
 def ambiguous_merge1():
+	'''
+	#
+	#  Nomen Event = "Merge" and Record-Associated (RA) MGI ID = Final MGI ID
+	#
+	'''
 
 	global cmds, fp
 
@@ -144,9 +149,14 @@ def ambiguous_merge1():
 		'and f._Fantom2_key = c._Fantom2_key ' + \
 		'and f.final_mgiID = c.gba_mgiID ')
 
-	do_all()
+	process_report()
 
 def ambiguous_merge2():
+	'''
+	#
+	#  Nomen Event = "Merge" and Final MGI ID = non-valid MGI ID
+	#
+	'''
 
 	global cmds, fp
 
@@ -167,9 +177,19 @@ def ambiguous_merge2():
         	'and not exists (select 1 from MRK_Acc_View a ' + \
         	'where f.final_mgiID = a.accID)')
 
-	do_all()
+	process_report()
 
 def ambiguous_merge3():
+	'''
+	#
+	#  All records with the same Final MGI ID
+	#  AND
+	#  All records have RA MGI ID = 'zilch'
+	#  AND
+	#  At least one record in the group has Nomen Event = 'Merge'
+	#
+	'''
+
 
 	global cmds, fp
 
@@ -198,9 +218,14 @@ def ambiguous_merge3():
         	'where f1.final_mgiID = f2.final_mgiID ' + \
         	'and f2.gba_mgiID != "zilch")')
 
-	do_all(extra = 3)
+	process_report(extra = 3)
 
 def ambiguous_rename():
+	'''
+	#
+	# Nomen Event = "Rename" and (Final Symbol 2 = "zilch" or Final Name 2 = "zilch")
+	#
+	'''
 
 	global cmds, fp
 
@@ -215,9 +240,16 @@ def ambiguous_rename():
         	'where f.nomen_event = "Rename" ' + \
         	'and (f.final_symbol2 = "zilch" or f.final_name2 = "zilch")')
 
-	do_all()
+	process_report()
 
 def nomen_merge():
+	'''
+	#
+	# RA MGI ID not equal to Final MGI ID
+	# AND
+	# RA MGI ID and Final MGI ID = valid MGI ID values
+	#
+	'''
 
 	global cmds, fp
 
@@ -237,9 +269,16 @@ def nomen_merge():
         	'and exists (select 1 from MRK_Acc_View a ' + \
         	'where c.gba_mgiID = a.accID)')
 
-	do_all()
+	process_report()
 
 def nomen_split_reassociate():
+	'''
+	#
+	# Nomen Event = "Split" or "Reassociated"
+	# OR
+	# (Final MGI ID = Riken Clone ID AND RA MGI ID is valid)
+	# 
+	'''
 
 	global cmds, fp
 
@@ -261,9 +300,14 @@ def nomen_split_reassociate():
         	'and exists (select 1 from MRK_Acc_View a ' + \
         	'where c.gba_mgiID = a.accID)')
 
-	do_all(orderBy = 'f.nomen_event, f.final_mgiID')
+	process_report(orderBy = 'f.nomen_event, f.final_mgiID')
 
 def nomen_rename():
+	'''
+	#
+	# Final Symbol 2 OR Final Name 2 != "zilch"
+	#
+	'''
 
 	global cmds, fp
 
@@ -276,9 +320,14 @@ def nomen_rename():
         	'from MGI_Fantom2 f ' + \
         	'where f.final_symbol2 != "zilch" or f.final_name2 != "zilch"')
 
-	do_all()
+	process_report()
 
 def nomen_probableortholog():
+	'''
+	#
+	# Curator Notes or Nomen Notes = "%Probable Ortholog%"
+	#
+	'''
 
 	global cmds, fp
 
@@ -293,9 +342,14 @@ def nomen_probableortholog():
 		'and n.noteType in ("C", "N") ' + \
 		'and n.note like "%Probable Ortholog%"')
 
-	do_all()
+	process_report()
 
 def nomen_possibleortholog():
+	'''
+	#
+	# Curator Notes or Nomen Notes = "%Possible Ortholog%"
+	#
+	'''
 
 	global cmds, fp
 
@@ -310,9 +364,14 @@ def nomen_possibleortholog():
 		'and n.noteType in ("C", "N") ' + \
 		'and n.note like "%Possible Ortholog%"')
 
-	do_all()
+	process_report()
 
 def nomen_probableparalog():
+	'''
+	#
+	# Curator Notes or Nomen Notes = "%Probable Paralog%"
+	#
+	'''
 
 	global cmds, fp
 
@@ -327,7 +386,7 @@ def nomen_probableparalog():
 		'and n.noteType in ("C", "N") ' + \
 		'and n.note like "%Probable Paralog%"')
 
-	do_all()
+	process_report()
 
 #
 # Main
@@ -339,14 +398,18 @@ fp = None
 db.set_sqlUser(os.environ['DBOUSER'])
 db.set_sqlPassword(string.strip(open(os.environ['DBOPASSWORDFILE'], 'r').readline()))
 
-#ambiguous_merge1()
-#ambiguous_merge2()
+# daily
+ambiguous_merge1()
+ambiguous_merge2()
 ambiguous_merge3()
-#ambiguous_rename()
-#nomen_merge()
-#nomen_split_reassociate()
-#nomen_rename()
-#nomen_probableortholog()
-#nomen_possibleortholog()
-#nomen_probableparalog()
+ambiguous_rename()
+
+# on demand
+if len(sys.argv) > 1 and sys.argv[1] == "nomen":
+	nomen_merge()
+	nomen_split_reassociate()
+	nomen_rename()
+	nomen_probableortholog()
+	nomen_possibleortholog()
+	nomen_probableparalog()
 
