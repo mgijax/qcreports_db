@@ -38,7 +38,7 @@ go
 
 create index idx1 on #markers(name)
 create index idx2 on #markers(symbol)
-create index idx2 on #markers(symbol)
+create index idx3 on #markers(modification_date)
 go
 
 set nocount off
@@ -52,7 +52,7 @@ select name = substring(name,1,25), symbol, modification_date
 from #markers
 group by name, symbol, DNAtype, organism
 having count(*) > 1
-order by modification_date, name, symbol
+order by name, symbol, modification_date desc
 go
 
 set nocount on
@@ -84,6 +84,9 @@ from #probe m, PRB_Probe p, MRK_Marker m1
 where m._Probe_key = p._Probe_key
 and m._Marker_key = m1._Marker_key
 order by p.name
+go
+
+set nocount on
 go
 
 drop table #probe

@@ -97,6 +97,7 @@ print ""
 select m.name, m.symbol, m.accID, m.jnumID, b.accID
 from #markers2 m, ACC_Accession a, ACC_AccessionReference r, BIB_ACC_View b
 where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
 and a._LogicalDB_key = 9
 and m.accID = a.accID
 and a._MGIType_key = 2
