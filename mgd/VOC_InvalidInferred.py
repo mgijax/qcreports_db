@@ -38,17 +38,23 @@ import reportlib
 # Main
 #
 
+db.useOneConnection(1)
+
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in GO Annotations (MGI and InterPro only)' + 2 * reportlib.CRT)
 rows = 0
 
+# use for Mol Segs...quicker than mgiLookup method due to number of Mol Segs
+
+findID = 'select _Object_key from ACC_Accession where accID = "%s"'
+
 mgiLookup = []
 cmds = []
 
-# read in all MGI accession ids for Markers (2), Mol Segs (3), Alleles (11)
+# read in all MGI accession ids for Markers (2), Alleles (11)
 # read in all InterPro ids (13)
 
-cmds.append('select a.accID from ACC_Accession a where a._MGIType_key in (2, 3, 11) and a.prefixPart = "MGI:" ')
+cmds.append('select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = "MGI:" ')
 cmds.append('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"')
 
 # read in all annotations w/ non-null inferred from value
@@ -105,8 +111,11 @@ for r in results[-1]:
 
 	if string.find(id, 'MGI:') >= 0:
 	    if id not in mgiLookup:
-		fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
-		rows = rows + 1
+		# it's not in our set, so query the database directly
+		results = db.sql(findID % (id), 'auto')
+		if len(results) == 0:
+		    	fp.write(id + reportlib.TAB + r['accID'] + reportlib.TAB + r['symbol'] + reportlib.CRT)
+			rows = rows + 1
 
 	if string.find(id, 'INTERPRO:') >= 0:
 	    [prefixPart, idPart] = string.split(id, 'INTERPRO:')
@@ -115,5 +124,6 @@ for r in results[-1]:
 		rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
+db.useOneConnection(0)
 reportlib.finish_nonps(fp)
 
