@@ -44,9 +44,9 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Lowercase Gene Symbols which have GenBank IDs', os.environ['QCREPORTOUTPUTDIR'])
 
-fp.write('%-25s' % 'Symbol' + TAB)
+fp.write('%-50s' % 'Symbol' + TAB)
 fp.write('%-30s' % 'GenBankID' + CRT)
-fp.write('%-25s' % '------' + TAB)
+fp.write('%-50s' % '------' + TAB)
 fp.write('%-30s' % '---------' + CRT)
 
 cmd = 'select m.symbol, a.accID ' + \
@@ -66,7 +66,7 @@ for r in results:
 			ok = 0
 
 	if ok:
-		fp.write('%-25s' % r['symbol'] + TAB)
+		fp.write('%-50s' % r['symbol'] + TAB)
 		fp.write('%-30s' % r['accID'] + CRT)
 
 reportlib.trailer(fp)

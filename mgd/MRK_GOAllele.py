@@ -63,7 +63,7 @@ fp.write(string.ljust('symbol', 27) + \
  	 string.ljust('jnumID', 12) + \
  	 'alleles' + CRT)
 
-fp.write('-' * 25 + '  ' + \
+fp.write('-' * 50 + '  ' + \
 	 '-' * 30 + '  ' + \
 	 '-' * 50 + '  ' + \
 	 '-' * 10 + '  ' + \

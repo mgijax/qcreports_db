@@ -39,7 +39,7 @@ else:
 fp = reportlib.init(sys.argv[0], title = 'Alleles with Immune System Annotations', \
     outputdir = os.environ["QCREPORTOUTPUTDIR"], fileExt = '.' + os.environ['DATE'], isHTML = 1)
 fp.write(' symbol' + reportlib.CRT)
-fp.write(' ' + '-' * 25 + reportlib.CRT)
+fp.write(' ' + '-' * 50 + reportlib.CRT)
 
 cmds = []
 cmds.append('select distinct a.symbol, a._Allele_key ' + \

@@ -67,7 +67,7 @@ fp.write(string.ljust('Gene Symbol', 27) + \
 	 string.ljust('Orthology Organism', 72) + \
  	 CRT)
 
-fp.write('-' * 25 + '  ' + \
+fp.write('-' * 50 + '  ' + \
 	 '-' * 10 + '  ' + \
 	 '-' * 10 + '  ' + \
 	 '-' * 10 + '  ' + \

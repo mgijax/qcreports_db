@@ -101,8 +101,8 @@ primaryID = {}
 for r in results[2]:
 	primaryID[r['_Marker_key']] = r['accID']
 
-fp.write('%-2s %-25s %-35s %-10s %-16s\n' % ('Ch', 'Symbol', 'Gene Name', 'J#', 'First Author'))
-fp.write('%-2s %-25s %-35s %-10s %-16s\n' % ('--', '------', '---------', '--', '------------'))
+fp.write('%-2s %-50s %-35s %-10s %-16s\n' % ('Ch', 'Symbol', 'Gene Name', 'J#', 'First Author'))
+fp.write('%-2s %-50s %-35s %-10s %-16s\n' % ('--', '------', '---------', '--', '------------'))
 
 rows = 0
 for r in results[3]:
@@ -112,7 +112,7 @@ for r in results[3]:
 
 	fp.write('%-2s ' % (r['chromosome']))
 
-	fp.write('%s%-25s%s ' % (reportlib.create_accession_anchor(primaryID[key]), symbol, reportlib.close_accession_anchor()))
+	fp.write('%s%-50s%s ' % (reportlib.create_accession_anchor(primaryID[key]), symbol, reportlib.close_accession_anchor()))
 	fp.write('%-35s ' % (r['name']))
 	fp.write('%s%-10s%s ' % (reportlib.create_accession_anchor(r['jnumID']), r['jnumID'], reportlib.close_accession_anchor()))
 	fp.write('%-20s ' % (r['author']))

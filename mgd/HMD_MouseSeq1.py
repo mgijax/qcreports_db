@@ -49,7 +49,7 @@ fp.write('(Excludes RIKEN genes, Expressed Sequence, EST, Hypothetical)' + 2*CRT
 fp.write('Symbol                     ')
 fp.write('Status      ')
 fp.write('Seq ID' + CRT)
-fp.write(25 * '-' + '  ')
+fp.write(50 * '-' + '  ')
 fp.write(10 * '-' + '  ')
 fp.write(30 * '-' + CRT)
 

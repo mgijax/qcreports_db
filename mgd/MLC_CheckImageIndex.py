@@ -16,7 +16,7 @@ import reportlib
 
 inputFile = open(os.environ['MLCINDEX'], 'r')
 fp = reportlib.init(sys.argv[0], 'MLC Image Index File Entries Which Contain Withdrawn Symbols', os.environ['QCREPORTOUTPUTDIR'])
-fp.write(string.ljust('MGD Withdrawn Symbol', 25) + reportlib.TAB + 'Image Entry\n\n')
+fp.write(string.ljust('MGD Withdrawn Symbol', 50) + reportlib.TAB + 'Image Entry\n\n')
 
 for line in inputFile.readlines():
 	tokens = string.splitfields(string.strip(line), '|')
@@ -27,7 +27,7 @@ for line in inputFile.readlines():
 
 	for r in results:
 		if r['symbol'] == tokens[0] and r['_Marker_Status_key'] == 2:
-			fp.write(string.ljust(r['symbol'], 25) + reportlib.TAB + \
+			fp.write(string.ljust(r['symbol'], 50) + reportlib.TAB + \
 				 tokens[1] + "|" + \
 				 tokens[2] + "|" + \
 				 tokens[3] + reportlib.CRT)
