@@ -14,7 +14,7 @@ go
 create index idx1 on #probes1(_Probe_key)
 go
 
-/* with _Source_key != Not Specified
+/* with _Source_key != Not Specified */
 
 select a._Sequence_key, p._Source_key, a.accID
 into #probes2

@@ -107,11 +107,11 @@ for r in results:
 		         r['markerID'] + reportlib.TAB + \
 		         "NULL" + reportlib.CRT)
 	else:
-	    for g in gbIDs[key]:
-		fp.write(r['accID'] + reportlib.TAB + \
-		         relationship + reportlib.TAB + \
-		         r['markerID'] + reportlib.TAB + \
-		         g + reportlib.CRT)
+#	    for g in gbIDs[key]:
+	    fp.write(r['accID'] + reportlib.TAB + \
+	         relationship + reportlib.TAB + \
+	         r['markerID'] + reportlib.TAB + \
+	         string.join(gbIDs[key], ',') + reportlib.CRT)
 
 reportlib.finish_nonps(fp)
 db.useOneConnection(0)
