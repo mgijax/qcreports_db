@@ -1,3 +1,10 @@
+TAG:  qcreports_db-20-0-24
+DATE: 12/10/2003
+STAFF: dbm
+RELEASE: A
+CHANGES:
+a) Include clone loader reports
+
 TAG:  qcreports_db-20-0-23
 DATE: 12/09/2003
 STAFF: lec
