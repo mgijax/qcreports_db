@@ -41,8 +41,9 @@ select distinct m.symbol, m.chromosome, label = 'MLC'
 from MRK_Marker m, MLC_Text_edit g
 where m._Marker_Status_key = 2 and m._Marker_key = g._Marker_key
 select distinct m.symbol, m.chromosome, label = 'GO'
-from MRK_Marker m, GO_MarkerGO g
-where m._Marker_Status_key = 2 and m._Marker_key = g._Marker_key
+from MRK_Marker m, VOC_Annot g
+where m._Marker_Status_key = 2 and m._Marker_key = g._Object_key
+and g._AnnotType_key = 1000
 order by m.chromosome, m.symbol
 go
 
