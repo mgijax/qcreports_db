@@ -2,9 +2,9 @@ set nocount on
 go
 
 declare @year integer
-select @year = 2002
+select @year = datepart(year, getdate())
 declare @month integer
-select @month = 2
+select @month = datepart(month, getdate())
 
 if @month = 1
 begin
