@@ -159,15 +159,15 @@ for r in results[-1]:
 	fp.write(TAB)
 
 	if syns.has_key(r['_Marker_key']):
-		fp.write(string.joinfields(syns[r['_Marker_key']], "|") + TAB)
+		fp.write(string.joinfields(syns[r['_Marker_key']], "|"))
 	fp.write(TAB)
 
 	if homologs.has_key(r['_Marker_key']):
-		fp.write(homologs[r['_Marker_key']] + TAB)
+		fp.write(homologs[r['_Marker_key']])
+	fp.write(TAB)
 
 	if humanaccids.has_key(r['_Marker_key']):
-		fp.write(string.joinfields(humanaccids[r['_Marker_key']], "|") + TAB)
-
+		fp.write(string.joinfields(humanaccids[r['_Marker_key']], "|"))
 	fp.write(TAB)
 
 	fp.write(CRT)
