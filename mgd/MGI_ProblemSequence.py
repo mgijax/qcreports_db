@@ -58,7 +58,7 @@ cmds = []
 cmds.append('select _Probe_key ' + \
       'into #probes ' + \
       'from PRB_Notes ' + \
-      'where note like "MGI curatorial staff have found evidence of artifact in the sequence of this molecular%"')
+      'where note like "%staff have found evidence of artifact in the sequence of this molecular%"')
 
 # Select probes w/ Seq IDs
 cmds.append('select distinct p._Probe_key, a.accID ' + \
@@ -75,14 +75,6 @@ cmds.append('select m.*, probeID = pa.accID ' + \
 'from #formgi m, PRB_Acc_View pa ' + \
 'where m._Probe_key = pa._Object_key ' + \
 'and pa.prefixPart = "MGI:" ' + \
-'union ' + \
-'select distinct p._Probe_key, null, probeID = pa.accID ' + \
-'from #probes p, PRB_Acc_View pa ' + \
-'where p._Probe_key = pa._Object_key ' + \
-'and pa.prefixPart = "MGI:" ' + \
-'and not exists (select 1 from PRB_Acc_View a ' + \
-'where p._Probe_key = a._Object_key  ' + \
-'and a._LogicalDB_key = 9) ' + \
 'order by m._Probe_key')
 
 results = db.sql(cmds, 'auto')
