@@ -139,17 +139,22 @@ for r in results:
 
 	markerSymbol = r['symbol']
 	testSymbol = parseSymbol(markerSymbol)
-	[s1, s2] = string.splitfields(testSymbol, '-')
 
-	if isAllCaps(s1):
-		species = 2
-	else:
-		species = 1
+	try:
+		[s1, s2] = string.splitfields(testSymbol, '-')
 
-	if isCurrent(s1, species):
-		goodSymbols.append(markerSymbol)
-	else:
-		badSymbols.append(markerSymbol)
+		if isAllCaps(s1):
+			species = 2
+		else:
+			species = 1
+	
+		if isCurrent(s1, species):
+			goodSymbols.append(markerSymbol)
+		else:
+			badSymbols.append(markerSymbol)
+
+	except:
+		pass
 
 cmd = 'select symbol from MRK_Marker where symbol like "Tg(%" ' + \
 	'and symbol not like "Tg(%-%)%" ' + \
