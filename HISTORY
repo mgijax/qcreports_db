@@ -1,3 +1,4 @@
+TAG:  qcreports_db-20-0-15
 TAG:  qcreports_db-20-0-14
 TAG:  qcreports_db-20-0-13
 DATE: 10/27/2003
@@ -5,6 +6,7 @@ STAFF: lec
 RELEASE: A
 CHANGES:
 a) removed link to RATMAP from Data Loads section
+b) added description to MLD_Chromosome.sql
 
 TAG:  qcreports_db-20-0-12
 DATE: 10/02/2003
