@@ -41,14 +41,14 @@
 #
 #  Assumes:  Nothing
 #
-#  Implementation:  Each python script in the directory is executed to
-#                   produce the reports.
+#  Implementation:  Each python script in the cloneload directory is
+#                   executed to produce the reports.
 #
 #  Notes:  None
 #
 ###########################################################################
 
-cd `dirname $0` && source ../Configuration
+cd `dirname $0` && source Configuration
 
 #
 #  Verify the argument(s) to the shell script.
@@ -65,9 +65,9 @@ else
 endif
 
 #
-#  Run each Python report found in the directory.
+#  Run each Python report found in the cloneload directory.
 #
-cd `dirname $0`
+cd `dirname $0`/cloneload
 
 foreach RPT (*.py)
     ${RPT} ${OUTPUTDIR} ${SERVER} ${RADAR} ${MGD} ${JOBKEY}
@@ -77,9 +77,6 @@ exit 0
 
 
 #  $Log$
-#  Revision 1.2  2003/11/21 18:24:58  dbm
-#  Converted to csh
-#
 #  Revision 1.1  2003/11/07 19:31:16  dbm
 #  Initial version
 #
