@@ -1,10 +1,18 @@
 set nocount on
 go
 
-select ecount = count(_Annot_key), _EvidenceTerm_key
-into #stats
-from VOC_Evidence
-group by _EvidenceTerm_key
+select e._Annot_key, e.evidenceCode
+into #goevidence
+from VOC_Annot a, VOC_Evidence_View e
+where a._AnnotType_key = 1000
+and a._Annot_key = e._Annot_key
+go
+
+select a._Object_key, e.evidenceCode
+into #gomarker
+from VOC_Annot a, VOC_Evidence_View e
+where a._AnnotType_key = 1000
+and a._Annot_key = e._Annot_key
 go
 
 set nocount off
@@ -14,8 +22,18 @@ print ""
 print "Total # of Annotations by GO Evidence Code"
 print ""
 
-select s.ecount "#", t.abbreviation "Evidence Code"
-from #stats s, VOC_Term t
-where s._EvidenceTerm_key = t._Term_key
+select count(_Annot_key) "# of Annotations", evidenceCode
+from #goevidence
+group by evidenceCode
 go
+
+print ""
+print "Number of Markers Per GO Evidence Code"
+print ""
+
+select count(_Object_key) "# of Markers", evidenceCode
+from #gomarker
+group by evidenceCode
+go
+
 
