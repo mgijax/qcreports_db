@@ -9,6 +9,7 @@
 #
 #       Tab-delimited file
 #       Sequences Annotated to Mouse Markers
+#	(excludes TIGR, DoTS, NIA Mouse Gene Index)
 #
 #	Sequence ID (primary)
 #	Sequence Type
@@ -51,7 +52,13 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], pr
 
 cmds = []
 
-cmds.append('select distinct _Sequence_key, _Marker_key into #seqmarker from SEQ_Marker_Cache')
+cmds.append('select distinct s._Sequence_key, s._Marker_key ' + \
+	'into #seqmarker ' + \
+	'from SEQ_Marker_Cache s, SEQ_Sequence ss, VOC_Term t ' + \
+	'where s._Sequence_key = ss._Sequence_key ' + \
+	'and ss._SequenceProvider_key = t._Term_key ' + \
+	'and t.term not in ("DoTS", "TIGR Mouse Gene Index", "NIA Mouse Gene Index")')
+
 cmds.append('create index idx_key1 on #seqmarker(_Sequence_key)')
 cmds.append('create index idx_key2 on #seqmarker(_Marker_key)')
 
@@ -68,7 +75,8 @@ cmds.append('select a.accID, a._Object_key ' + \
 	'from #uniqueseq s, ACC_Accession a ' + \
 	'where s._Sequence_key = a._Object_key ' + \
 	'and a._MGIType_key = 19 ' + \
-	'and a.preferred = 1')
+	'and a.preferred = 1 ' + \
+	'and a._LogicalDB_key not in (35, 36, 53)')
 
 cmds.append('create index idx_key on #accSeq(_Object_key)')
 
@@ -108,15 +116,17 @@ cmds.append('create index idx_key on #seqStrain(_Sequence_key)')
 
 # select Sequence attributes
 
-cmds.append('select a.accID, _Sequence_key = a._Object_key, sq.length, sq.description, seqType = t.term ' + \
+cmds.append('select a.accID, _Sequence_key = a._Object_key, sq.length, sq.description, ' + \
+	'seqType = t1.term, seqProvider = t2.term ' + \
 	'into #seqAttr ' + \
-	'from #accSeq a, SEQ_Sequence sq, VOC_Term t ' + \
+	'from #accSeq a, SEQ_Sequence sq, VOC_Term t1, VOC_Term t2 ' + \
 	'where a._Object_key = sq._Sequence_key ' + \
-	'and sq._SequenceType_key = t._Term_key ')
+	'and sq._SequenceType_key = t1._Term_key ' + \
+	'and sq._SequenceProvider_key = t2._Term_key')
 
 cmds.append('create index idx_key on #seqAttr(_Sequence_key)')
 
-cmds.append('select s._Sequence_key, s.accID, s.length, s.description, s.seqType, ps.strain ' + \
+cmds.append('select s._Sequence_key, s.accID, s.length, s.description, s.seqType, s.seqProvider, ps.strain ' + \
 	'into #sequences ' + \
 	'from #seqAttr s, #seqStrain ps ' + \
 	'where s._Sequence_key = ps._Sequence_key')
@@ -158,6 +168,7 @@ for r in results[-2]:
 for r in results[-1]:
 
     fp.write(r['accID'] + reportlib.TAB + \
+	r['seqProvider'] + reportlib.TAB + \
 	r['seqType'] + reportlib.TAB + \
 	mgi_utils.prvalue(r['length']) + reportlib.TAB + \
 	r['strain'] + reportlib.TAB + \
