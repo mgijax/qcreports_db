@@ -72,6 +72,9 @@
 #
 # History:
 #
+# lec	07/22/2004
+#	- TR 6053
+#
 # lec	02/23/2004
 #	- exclude Gene Model markers, DNA Segments (already excluded), Pseudogenes (already excluded),
 #	  genes whose symbol is a GenBank # (AFXXXXX, BCXXXXX, etc.),
@@ -190,10 +193,15 @@ cmds.append('select distinct m._Marker_key ' + \
 
 cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
 
-cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citation ' + \
+cmds.append('select distinct m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
+'r._Refs_key, jnum = a.numericPart, jnumID = a.accID, b.journal ' + \
 'into #references ' + \
-'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
+'from #markers m , MRK_Reference r, ACC_Accession a, BIB_Refs b ' + \
 'where m._Marker_key = r._Marker_key ' + \
+'and r._Refs_key = a._Object_key ' + \
+'and a._MGIType_key = 1 ' + \
+'and a._LogicalDB_key = 1 ' + \
+'and a.prefixPart = "J:" ' + \
 'and r._Refs_key = b._Refs_key')
 
 cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
@@ -216,23 +224,35 @@ cmds.append('select distinct r._Refs_key ' + \
 'and bd.dataSet = "Expression" ' + \
 'and ba.isNeverUsed = 0')
 
+# A
+
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
 'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-'and short_citation not like "%Genbank Submission%" ' + \
+'and journal != "Genbank Submission" ' + \
 'group by _Marker_key ' + \
 'order by symbol')
+
+# B
 
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references group by _Marker_key ' + \
 'order by symbol')
 
-cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-'from #references ' + \
-'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-'and short_citation not like "%Genbank Submission%" ' + \
-'group by _Marker_key ' + \
-'order by symbol')
+# C
+
+cmds.append('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1._Refs_key ' + \
+'into #refC ' + \
+'from #references r1 ' + \
+'where r1.jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
+'or r1.journal = "Genbank Submission"')
+
+cmds.append('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, numRefs = count(r1._Refs_key) ' + \
+'from #refC r1 ' + \
+'where exists (select 1 from #references r2 where r1._Marker_key = r2._Marker_key ' + \
+'and r2._Refs_key not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944)) ' + \
+'group by r1._Marker_key ' + \
+'order by r1.symbol')
 
 cmds.append('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
 'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
@@ -257,17 +277,17 @@ for r in results[2]:
 	hasHomology[r['_Marker_key']] = 1
 
 pubMedIDs = {}
-for r in results[-6]:
+for r in results[-7]:
 	pubMedIDs[r['_Refs_key']] = r['accID']
 
 gxd = []
-for r in results[-5]:
+for r in results[-6]:
 	gxd.append(r['_Refs_key'])
 
-for r in results[-4]:
+for r in results[-5]:
 	writeRecord(fpA, r)
 
-for r in results[-3]:
+for r in results[-4]:
 	writeRecord(fpB, r)
 
 for r in results[-2]:
