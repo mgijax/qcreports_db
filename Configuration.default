@@ -19,7 +19,7 @@ setenv QCREPORTOUTPUTDIR	$QCREPORTINSTALLDIR/output
 setenv QCARCHIVEDIR		$QCREPORTOUTPUTDIR/archive
 
 # private HUGO directories
-setenv HUGOWEBDIR		gondor:/usr/local/mgi/live/private/www/hugo
+setenv HUGOWEBDIR		gondor:/usr/local/mgi/private/www/hugo
 setenv HUGOFTPDIR		gondor:/export/gondor/ftp/private/hes
 
 # RIKEN FTP report directory
