@@ -13,6 +13,7 @@ cd `dirname $0` && source Configuration
 umask 002
 
 strainChanges.sh
+goStats.sh
 
 foreach i ($QCMGD/*.sql)
 reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
