@@ -100,7 +100,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID ' + \
 'and m._Marker_Status_key = 1 ' + \
 'and m.name not like "%RIKEN%" ' + \
 'and m.name not like "%expressed%" ' + \
-'and m.name not like "EST%" ' + \
+'and m.name not like "EST %" ' + \
 'and not exists (select 1 from  VOC_Annot a ' + \
 'where m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ) ')

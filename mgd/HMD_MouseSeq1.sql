@@ -9,7 +9,7 @@ where m._Species_key = 1
 and m._Marker_Type_key = 1
 and m.symbol not like "%Rik"
 and m.name not like "%expressed%"
-and m.name not like "EST%"
+and m.name not like "EST %"
 and m.name not like "%hypothetical%"
 and m._Marker_key = a._Object_key
 and a._LogicalDB_Key = 9
