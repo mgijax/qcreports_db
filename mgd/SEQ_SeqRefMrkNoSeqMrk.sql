@@ -177,7 +177,7 @@ print "    c.  the Sequence is associated with a Probe that has a NULL relations
 print "    d.  the Sequence is associated with a Probe that has no relationship with a Marker "
 print ""
 
-select s.accID, b.accID, p.accID
+select distinct s.accID, b.accID, p.accID
 from #refs2 r, ACC_Accession s, ACC_Accession b, ACC_Accession p
 where r._Refs_key = b._Object_key
 and b._MGIType_key = 1
