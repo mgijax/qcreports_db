@@ -19,7 +19,7 @@ mv -f qcr.html.new qcr.html
 cd ${QCMGD}
 set toEdit=`grep -l radar *`
 foreach i ($toEdit)
-sed "s/radar/$RADARDB/" $i > $i.new
+sed "s/radar/$RADARDB/g" $i > $i.new
 mv -f $i.new $i
 end
 
