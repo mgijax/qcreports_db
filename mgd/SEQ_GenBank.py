@@ -169,7 +169,7 @@ for r in results[-2]:
 for r in results[-1]:
 
     accID = r['accID']
-    fp.write(accID + reportlib.TAB)
+    fp.write(accID)
 
     # for each Object associated with the Sequence Accession ID
 
@@ -185,18 +185,17 @@ for r in results[-1]:
 	  # print out each Symbol in a separate tuple
 	  for mgiSymbol in symbols[mgiObject]:
 
- 	      fp.write(mgiName + '|' + \
+ 	      fp.write(reportlib.TAB + mgiName + '|' + \
 		       names[mgiObject] + '|' + \
 		       mgiIDs[mgiObject] + '|' + \
-		       mgiSymbol + reportlib.TAB)
+		       mgiSymbol)
 
 	# else, just print out the tuple with a blank Symbol
 
 	else:
-	    fp.write(mgiName + '|' + \
+	    fp.write(reportlib.TAB + mgiName + '|' + \
 		     names[mgiObject] + '|' + \
-		     mgiIDs[mgiObject] + '||' + \
-		     reportlib.TAB)
+		     mgiIDs[mgiObject] + '|')
 
     fp.write(reportlib.CRT)
 
