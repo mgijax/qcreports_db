@@ -422,11 +422,11 @@ db.set_sqlPassword(string.strip(open(os.environ['DBOPASSWORDFILE'], 'r').readlin
 
 cmds = []
 
-#incomplete_cluster_report()
-#invalid_finalmgiID_report()
-#multiple_representative_report()
-#no_rep_clone_report()
-#nonriken_rep_clone_report()
-#rep_discrepency_report()
-riken_report()
+incomplete_cluster_report()
+invalid_finalmgiID_report()
+multiple_representative_report()
+no_rep_clone_report()
+nonriken_rep_clone_report()
+rep_discrepency_report()
+#riken_report()
 
