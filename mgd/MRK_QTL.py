@@ -5,9 +5,8 @@
 # MRK_QTL.py 07/18/2003
 #
 # Report:
-#       Tab-delimited file of MGI Mouse Markers
-#	of type QTL that have been added since March 2002
-#	and with no PhenoSlim associations
+#       QTL Mouse Markers that have been added since March 2002
+#	and have no PhenoSlim associations
 #
 # Usage:
 #       MRK_QTL.py
@@ -63,6 +62,7 @@ cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
 	  'and g._Genotype_key = a._Object_key ' + \
 	  'and a._AnnotType_key = 1001)')
 
+# select all references for the set of markers
 cmds.append('select m._Marker_key, b.accID ' + \
 	'from #markers m, MRK_Reference r, BIB_Acc_View b ' + \
 	'where m._Marker_key = r._Marker_key ' + \
@@ -75,6 +75,7 @@ cmds.append('select * from #markers order by symbol')
 
 results = db.sql(cmds, 'auto')
 
+# references
 refs = {}
 for r in results[-2]:
     key = r['_Marker_key']
