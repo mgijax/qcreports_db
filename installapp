@@ -62,7 +62,7 @@ endif
 # Copy installation files to installation directory
 #
 
-foreach i (`ls Configuration *.sh`)
+foreach i (`ls Configuration *.sh *.html`)
 	cp -r $i $QCREPORTINSTALLDIR
 end
 
@@ -77,8 +77,4 @@ end
 foreach i (`ls gdb/*.sql gdb/*.py`)
 	cp -r $i $QCGDB
 end
-
-sed "s/QCHTMLSERVER/$QCHTMLSERVER/" qcr.html > qcr.html.install
-rm -f $QCHTML/qcr.html
-cp qcr.html.install $QCHTML/qcr.html
 
