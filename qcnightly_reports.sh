@@ -10,7 +10,7 @@
 
 cd `dirname $0` && source ./Configuration
 
-setenv LOG	${QCLOGSDIR}/$0.log
+setenv LOG	${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
