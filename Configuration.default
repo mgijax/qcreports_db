@@ -18,7 +18,7 @@ setenv SYBASE			/opt/sybase
 
 # PYTHON
 
-setenv PYTHONPATH       	/usr/local/lib/python1.4:/usr/local/etc/httpd/python
+setenv PYTHONPATH       	/usr/local/mgi/lib/python
 
 # PATH
 
