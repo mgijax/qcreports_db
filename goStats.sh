@@ -56,7 +56,7 @@ declare @annotations     int
 
 select @annotations   = count($1)
 from   VOC_Annot         a                                              
-      ,VOC_Evidence_View e                                                 
+      ,VOC_Evidence_View e
       ,MRK_Marker        m                                                   
       ,DAG_Node          n                                                     
       ,DAG_DAG           d                                                      
@@ -96,7 +96,7 @@ declare aliascursor cursor for
 select  d.name                                                        
        ,convert ( char(6), count($1))
 from    VOC_Annot         a                                             
-       ,VOC_Evidence_VIEW e                                                
+       ,VOC_Evidence_View e
        ,MRK_Marker        m                                                  
        ,DAG_Node          n                                                    
        ,DAG_DAG           d                                                     
