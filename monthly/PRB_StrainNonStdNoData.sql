@@ -40,6 +40,12 @@ print ""
 print "Non-Standard Strains with no JR# and no data attached"
 print ""
 
+select s.strain, a.accID, accType = "Other"
+from #strains s
+where not exists (select 1 from PRB_Strain_Acc_View a
+where s._Strain_key = a._Object_key
+and a._LogicalDB_key in (37, 38, 39, 40))
+union
 select s.strain, a.accID, accType = "EMMA"
 from #strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
