@@ -18,13 +18,13 @@ touch ${LOG}
 ./strainChanges.sh >>& ${LOG}
 ./goStats.sh >>& ${LOG}
 
-foreach i ($QCMGD/*.sql)
+foreach i (${QCMGD}/*.sql)
 echo $i, `date`
-if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
-	mv -f $QCOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
-	rm -rf $QCOUTPUTDIR/`basename $i`.current.rpt
-	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.${DATE}.rpt $DSQUERY $MGD
-	ln -s $QCOUTPUTDIR/`basename $i`.${DATE}.rpt $QCOUTPUTDIR/`basename $i`.current.rpt
+if ( $i == "${QCMGD}/MRK_MarkerClip.sql" ) then
+	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCALLELEARCHIVE}
+	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
+	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${DSQUERY} ${MGD}
+	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
 else
 	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
 endif
