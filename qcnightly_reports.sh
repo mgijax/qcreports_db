@@ -22,12 +22,18 @@ foreach i ($QCNOMEN/*.sql)
 reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $NOMEN
 end
 
+
 cd $QCMGD
 foreach i (*.py)
 $i
 end
 
 cd $QCNOMEN
+foreach i (*.py)
+$i
+end
+
+cd $QCFANTOM
 foreach i (*.py)
 $i
 end

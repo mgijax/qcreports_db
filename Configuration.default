@@ -27,6 +27,9 @@ setenv QCMGD			$QCREPORTINSTALLDIR/mgd
 setenv QCNOMEN			$QCREPORTINSTALLDIR/nomen
 setenv QCNOMENARCHIVE		$QCARCHIVEDIR/nomen
 
+# fantom-specific reports directory
+setenv QCFANTOM			$QCREPORTINSTALLDIR/fantom
+
 # gdb-specific reports directory
 setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 
@@ -62,4 +65,10 @@ setenv MGD mgd
 
 # Nomen Database
 setenv NOMEN nomen
+
+# DBO User
+setenv DBOUSER  mgd_dbo
+
+# DBO Password
+setenv DBOPASSWORDFILE  /usr/local/mgi/dbutils/mgidbutilities/.mgd_dbo_password
 
