@@ -2,9 +2,9 @@ set nocount on
 go
 
 declare @year integer
-select @year = datepart(year, getdate())
+select @year = 2002
 declare @month integer
-select @month = datepart(month, getdate())
+select @month = 2
 
 if @month = 1
 begin
@@ -100,6 +100,10 @@ select total = count(*), category = "everything else", seq = 5
 from ALL_Allele
 where _Allele_Type_key not in (2,3,15)
 set nocount off
+
+print ""
+print "For Month %1!/%2!", @month, @year
+print ""
 
 print ""
 print "Current State (excluding wild types)"
