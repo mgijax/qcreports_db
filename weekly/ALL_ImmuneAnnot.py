@@ -36,50 +36,38 @@ if len(sys.argv) > 2:
 else:
 	currentDate = mgi_utils.date('%m/%d/%Y')
 
-fp = reportlib.init(sys.argv[0], title = 'Alleles with Immune System Annotations', \
+fp = reportlib.init(sys.argv[0], title = 'Alleles of Genotype Annotations with Header Term: immune system', \
     outputdir = os.environ["QCOUTPUTDIR"], fileExt = '.' + os.environ['DATE'], isHTML = 1)
-fp.write(' symbol' + reportlib.CRT)
-fp.write(' ' + '-' * 50 + reportlib.CRT)
+fp.write('symbol' + reportlib.CRT)
+fp.write('' + '-' * 50 + reportlib.CRT)
 
-cmds = []
-cmds.append('select distinct a.symbol, a._Allele_key ' + \
-'into #alleles ' + \
-'from ALL_Allele a, MGI_Note n, MGI_NoteChunk nc, MGI_NoteType nt ' + \
-'where a._Allele_key = n._Object_key ' + \
-'and n._MGIType_key = 11 ' + 
-'and n._NoteType_key = nt._NoteType_key ' + 
-'and nt.noteType = "General" ' + \
-'and n._Note_key = nc._Note_key ' + \
-'and nc.note like "%immune system:%" ' + \
-'and nc.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
-'and dateadd(day, 1, "%s") ' % (currentDate) + \
-'union ' + \
-'select distinct a.symbol, a._Allele_key ' + \
-'from ALL_Allele a, GXD_AlleleGenotype g, VOC_Annot_View v ' + \
-'where a._Allele_key = g._Allele_key ' + \
-'and g._Genotype_key = v._Object_key ' + \
-'and v._AnnotType_key = 1002 ' + \
-'and v.term like "%immune system:%" ' + \
-'and v.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
-'and dateadd(day, 1, "%s") ' % (currentDate))
+db.sql('select distinct a.symbol, a._Allele_key ' + \
+	'into #alleles ' + \
+	'from ALL_Allele a, GXD_AlleleGenotype g, VOC_AnnotHeader v, VOC_Term t ' + \
+	'where a._Allele_key = g._Allele_key ' + \
+	'and g._Genotype_key = v._Object_key ' + \
+	'and v._AnnotType_key = 1002 ' + \
+	'and v._Term_key = t._Term_key ' + \
+	'and t.term = "immune system phenotype" ' + \
+	'and v.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
+	'and dateadd(day, 1, "%s") ' % (currentDate), None)
 
-cmds.append('select a.symbol, l.accID ' + \
-'from #alleles a, ALL_Acc_View l ' + \
-'where a._Allele_key = l._Object_key ' + \
-'and l._LogicalDB_key = 1 ' + \
-'and l.prefixPart = "MGI:" ' + \
-'and l.preferred = 1 ' + \
-'order by a.symbol')
+db.sql('create index idex1 on #alleles(_Allele_key)', None)
 
-results = db.sql(cmds, 'auto')
+results = db.sql('select a.symbol, l.accID ' + \
+	'from #alleles a, ACC_Accession l ' + \
+	'where a._Allele_key = l._Object_key ' + \
+	'and l._MGIType_key = 11 ' + \
+	'and l._LogicalDB_key = 1 ' + \
+	'and l.prefixPart = "MGI:" ' + \
+	'and l.preferred = 1 ' + \
+	'order by a.symbol', 'auto')
 
-for r in results[-1]:
-
-	fp.write(' %s' % (reportlib.create_accession_anchor(r['accID'])) + \
-	    r['symbol'] + '%s' % (reportlib.close_accession_anchor()) + reportlib.CRT)
+for r in results:
+	fp.write(r['symbol'] + reportlib.CRT)
 
 fp.write(reportlib.CRT + '(%d rows affected)' % (len(results)) + reportlib.CRT)
 
 reportlib.trailer(fp)
-reportlib.finish_nonps(fp, isHTML = 1)	# non-postscript file
+reportlib.finish_nonps(fp)	# non-postscript file
 
