@@ -286,6 +286,7 @@ results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = co
 	'order by symbol', 'auto')
 for r in results:
 	writeRecord(fpA, r)
+fpA.write('\n(%d rows affected)\n' % (len(results)))
 
 # B
 
@@ -294,6 +295,7 @@ results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = co
 	'order by symbol', 'auto')
 for r in results:
 	writeRecord(fpB, r)
+fpB.write('\n(%d rows affected)\n' % (len(results)))
 
 # C
 
@@ -315,6 +317,7 @@ results = db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, 
 	'order by r1.symbol', 'auto')
 for r in results:
 	writeRecord(fpC, r)
+fpC.write('\n(%d rows affected)\n' % (len(results)))
 
 # D
 
@@ -331,6 +334,7 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'order by numericPart', 'auto')
 for r in results:
 	writeRecordD(fpD, r)
+fpD.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file

@@ -74,7 +74,12 @@ for r in results:
 	accids[key] = []
     accids[key].append(value)
 
-fp.write('MGI id/reserved symbol/name/details/other acc ids/reserved date' + 2*CRT)
+fp.write('MGI ID' + TAB)
+fp.write('Symbol' + TAB)
+fp.write('Name' + TAB)
+fp.write('Details' + TAB)
+fp.write('other acc ids' + TAB)
+fp.write('Reserved Date' + 2*CRT)
 
 results = db.sql('select * from #nomen order by symbol', 'auto')
 for r in results:
