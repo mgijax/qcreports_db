@@ -24,8 +24,8 @@ mv -f $i.new $i
 end
 
 cd ${QCINSTALLDIR}
-chmod 444 Configuration* HISTORY *.html
-chmod 550 *.sh */*.py */*.sql Install
+chmod 644 Configuration.* HISTORY *.html
+chmod 750 *.sh */*.py */*.sql Install
 
 mkdir ${QCREPORTDIR}
 mkdir ${QCOUTPUTDIR}
