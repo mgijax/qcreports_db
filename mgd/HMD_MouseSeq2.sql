@@ -1,12 +1,11 @@
 print ""
-print "Mouse Markers with no Sequence ID but with Human Homology"
-print "(Excludes DNA Segments)"
+print "Mouse Genes with no Sequence ID but with Human Homology"
 print ""
 
 select distinct m.symbol "Symbol"
 from MRK_Marker m
 where m._Species_key = 1
-and m._Marker_Type_key != 2
+and m._Marker_Type_key = 1
 and exists (select 1 
 from HMD_Homology h1, HMD_Homology_Marker hm1, HMD_Homology h2, HMD_Homology_Marker hm2,
 MRK_Marker m2
