@@ -117,6 +117,27 @@ from ALL_Allele a, MRK_Marker m
 where a.symbol not like '%<+>'
 and a._Marker_key = m._Marker_key
 and m._Marker_Type_key = 1
+union
+select total = count(distinct a._Marker_key), category = "genes w/ transgene induced (gene targeted)", seq = 2
+from ALL_Allele a, MRK_Marker m
+where a._Allele_Type_key = 3
+and a._Marker_key = m._Marker_key
+and m._Marker_Type_key = 1
+union
+select total = count(distinct a._Marker_key), category = "genes w/ transgene induced (gene trapped)", seq = 3
+from ALL_Allele a, MRK_Marker m
+where a._Allele_Type_key = 4
+and a._Marker_key = m._Marker_key
+and m._Marker_Type_key = 1
+union
+select total = count(distinct m._Marker_key), category = "genes w/ both (gene targeted) & (gene trapped)", seq = 4
+from ALL_Allele a1, ALL_Allele a2, MRK_Marker m
+where a1._Allele_Type_key = 3
+and a1._Marker_key = m._Marker_key
+and a2._Allele_Type_key = 4
+and a2._Marker_key = m._Marker_key
+and a1._Marker_key = a2._Marker_key
+and m._Marker_Type_key = 1
 
 set nocount off
 
