@@ -16,8 +16,9 @@ setenv QCREPORTOUTPUTDIR	$QCREPORTINSTALLDIR/output
 # archive output directory
 setenv QCARCHIVEDIR		$QCREPORTOUTPUTDIR/archive
 
-# private HUGO directory
-setenv HUGODIR			l1:/usr/local/mgi/private/www/hugo
+# private HUGO directories
+setenv HUGODIR1			l1:/usr/local/mgi/private/www/hugo
+setenv HUGODIR2			l1:/export/l1/hes
 
 # mgd-specific reports directory
 setenv QCMGD			$QCREPORTINSTALLDIR/mgd

@@ -31,9 +31,11 @@ $i
 end
 
 #
-# Copy Nomen Reserved Report to private HUGO directory
+# Copy Nomen Reserved Report to private HUGO directories
 #
 
-rcp $QCREPORTOUTPUTDIR/NOMEN_Reserved.rpt $HUGODIR
-rcp $QCREPORTOUTPUTDIR/NOMEN_Pending.rpt $HUGODIR
+rcp $QCREPORTOUTPUTDIR/NOMEN_Reserved.rpt $HUGODIR1
+rcp $QCREPORTOUTPUTDIR/NOMEN_Pending.rpt $HUGODIR1
+rcp $QCREPORTOUTPUTDIR/NOMEN_Reserved.rpt $HUGODIR2
+rcp $QCREPORTOUTPUTDIR/NOMEN_Pending.rpt $HUGODIR2
 
