@@ -15,6 +15,7 @@ union
 select m._Marker_key, m.symbol, m.chromosome, o.offset
 from MRK_Marker m, MRK_Offset o
 where m.chromosome != "UN"
+and m._Marker_Type_key != 3
 and m._Marker_key = o._Marker_key
 and o.source = 0
 and o.offset = -1.0
