@@ -14,11 +14,17 @@ and name not like 'NIA clone%'
 and name not like 'RIKEN clone%'
 go
 
+create index idx1 on #preprobe(_Probe_key)
+go
+
 select *
 into #probe
 from #preprobe
 group by name
 having count(*) > 1
+go
+
+create index idx1 on #probe(_Probe_key)
 go
 
 select m.symbol, p.name, p.DNAtype, organism = o.commonName, p.modification_date
@@ -28,6 +34,11 @@ where p._Probe_key = pm._Probe_key
 and pm._Marker_key = m._Marker_key
 and p._Source_key = s._Source_key
 and s._Organism_key = o._Organism_key
+go
+
+create index idx1 on #markers(name)
+create index idx2 on #markers(symbol)
+create index idx3 on #markers(modification_date)
 go
 
 set nocount off
@@ -41,7 +52,7 @@ select name = substring(name,1,25), symbol, modification_date
 from #markers
 group by name, symbol, DNAtype, organism
 having count(*) > 1
-order by modification_date, name, symbol
+order by name, symbol, modification_date desc
 go
 
 set nocount on
@@ -50,8 +61,15 @@ go
 drop table #probe
 go
 
-select * into #probe from PRB_Marker group by _Probe_key, _Marker_key 
+select _Probe_key, _Marker_key
+into #probe 
+from PRB_Marker 
+group by _Probe_key, _Marker_key 
 having count(*) > 1
+go
+
+create index idx1 on #probe(_Probe_key)
+create index idx2 on #probe(_Marker_key)
 go
 
 set nocount off
@@ -68,14 +86,14 @@ and m._Marker_key = m1._Marker_key
 order by p.name
 go
 
+set nocount on
+go
+
 drop table #probe
 go
 
-print ""
-print "Probes - No Markers (excluding IMAGE, RPCI, NIA, RIKEN clones)"
-print ""
-
 select p.name, p.creation_date, p._Probe_key
+into #probe
 from PRB_Probe p, VOC_Term t
 where p._SegmentType_key = t._Term_key
 and t.term != "primer"
@@ -86,7 +104,18 @@ and p.name not like 'RPCI24 clone%'
 and p.name not like 'NIA clone%'
 and p.name not like 'RIKEN clone%'
 and p.name not like 'J%'
-and not exists (select m.* from PRB_Marker m where p._Probe_key = m._Probe_key)
+go
+
+create index idx1 on #probe(_Probe_key)
+go
+
+print ""
+print "Probes - No Markers (excluding IMAGE, RPCI, NIA, RIKEN clones)"
+print ""
+
+select p.name, p.creation_date, p._Probe_key
+from #probe p
+where not exists (select m.* from PRB_Marker m where p._Probe_key = m._Probe_key)
 order by p.creation_date, p.name
 go
 

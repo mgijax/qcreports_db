@@ -32,45 +32,75 @@ import reportlib
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-exptKey = None
-numLoci = 0
-printed = 0
-
+db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'Crosses Where # of Haplotypes Does Not Match # of Loci', os.environ['QCREPORTOUTPUTDIR'])
 fp.write('J#' + TAB + 'Expt Type' + TAB + 'Tag' + CRT * 2)
 
-command = 'select _Expt_key, alleleLine from MLD_MCDatalist ' + \
+# all experiments
+
+cmds = []
+cmds.append('select _Expt_key, alleleLine ' + \
+	'into #expts ' + \
+	'from MLD_MCDatalist ' + \
 	'where alleleLine not like "%par%" ' + \
 	'and alleleLine not like "%reco%" ' + \
-	'order by _Expt_key, sequenceNum'
-results = db.sql(command, 'auto')
+	'order by _Expt_key, sequenceNum')
+cmds.append('create index idx1 on #expts(_Expt_key)')
+db.sql(cmds, None)
 
+cmds = []
+cmds.append('select distinct _Expt_key into #uniqueexpts from #expts')
+cmds.append('create index idx1 on #uniqueexpts(_Expt_key)')
+db.sql(cmds, None)
+
+# experiment details to print
+
+results = db.sql('select e._Expt_key, ev.jnum, ev.exptType, ev.tag ' + \
+	'from #uniqueexpts e, MLD_Expt_View ev ' + \
+	'where e._Expt_key = ev._Expt_key', 'auto')
+printRecs = {}
 for r in results:
-	row = string.splitfields(r['alleleLine'], ' ')
-	columns = len(row)
+    key = r['_Expt_key']
+    value = r
+    printRecs[key] = r
 
-	if exptKey != r['_Expt_key']:
-		exptKey = r['_Expt_key']
-		numLoci = 0
-		printed = 0
+# loci counts for each experiment
 
-		cmd = 'select loci = count(*) from MLD_Expt_Marker ' + \
-			'where _Expt_key = %d and matrixData = 1' % exptKey
-		lociList = db.sql(cmd, 'auto')
-		for l in lociList:
-			numLoci = l['loci']
+results = db.sql('select e._Expt_key, loci = count(em._Marker_key) ' + \
+	'from #uniqueexpts e, MLD_Expt_Marker em ' + \
+	'where e._Expt_key = em._Expt_key and matrixData = 1 ' + \
+	'group by e._Expt_key', 'auto')
+loci = {}
+for r in results:
+    key = r['_Expt_key']
+    value = r['loci']
+    loci[key] = value
 
-	if columns == numLoci:
-		continue
+results = db.sql('select _Expt_key, alleleLine from #expts order by _Expt_key', 'auto')
+alleleLine = {}
+for r in results:
+    key = r['_Expt_key']
+    value = r['alleleLine']
+    if not alleleLine.has_key(key):
+	alleleLine[key] = []
+    alleleLine[key].append(value)
 
-	if printed == 0:
-		cmd = 'select jnum, exptType, tag from MLD_Expt_View ' + \
-			'where _Expt_key = %d' % exptKey
-		detailList = db.sql(cmd, 'auto')
-		for d in detailList:
-			fp.write(`d['jnum']` + TAB + d['exptType'] + TAB + `d['tag']` + CRT)
-			printed = 1
+for exptKey in alleleLine.keys():
+
+	numLoci = loci[exptKey]
+
+	for a in alleleLine[exptKey]:
+	    row = string.splitfields(a, ' ')
+	    columns = len(row)
+
+	    if columns == numLoci:
+	        continue
+
+	    d = printRecs[exptKey]
+	    fp.write(`d['jnum']` + TAB + d['exptType'] + TAB + `d['tag']` + CRT)
+	    break
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
+db.useOneConnection(0)
 

@@ -79,89 +79,93 @@ def writeRecord(fp, r):
 # Main
 #
 
+db.useOneConnection(1)
 fp = reportlib.init("MRK_AllNoGO", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 
-cmds = []
+results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
+for r in results:
+	url = r['url']
 
-cmds.append('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED))
+##
+
+cmds = []
 
 # select all genes
 
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
-'into #markers ' + \
-'from MRK_Marker m, ACC_Accession a ' + \
-'where m._Marker_Type_key = 1 ' + \
-'and m._Marker_Status_key in (1,3) ' + \
-'and m._Marker_key = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_key = 1 ' + \
-'and a.prefixPart = "MGI:" ' + \
-'and a.preferred = 1')
+	'into #markers ' + \
+	'from MRK_Marker m, ACC_Accession a ' + \
+	'where m._Marker_Type_key = 1 ' + \
+	'and m._Marker_Status_key in (1,3) ' + \
+	'and m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "MGI:" ' + \
+	'and a.preferred = 1')
 
 cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
+db.sql(cmds, None)
+
+##
+
+cmds = []
 
 # select all genes with references selected for GO
 
 cmds.append('select distinct m.*, r._Refs_key, r.jnumID ' + \
-'into #references ' + \
-'from #markers m , MRK_Reference_View r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-'where m._Marker_key = r._Marker_key ' + \
-'and r._Refs_key = b._Refs_key ' + \
-'and b._Refs_key = ba._Refs_key ' + \
-'and ba._DataSet_key = bd._DataSet_key ' + \
-'and bd.dataSet = "Gene Ontology" ' + \
-'and ba.isNeverUsed = 0')
+	'into #references ' + \
+	'from #markers m , MRK_Reference_View r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'where m._Marker_key = r._Marker_key ' + \
+	'and r._Refs_key = b._Refs_key ' + \
+	'and b._Refs_key = ba._Refs_key ' + \
+	'and ba._DataSet_key = bd._DataSet_key ' + \
+	'and bd.dataSet = "Gene Ontology" ' + \
+	'and ba.isNeverUsed = 0')
 
 cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
+db.sql(cmds, None)
 
 # select PubMed IDs for references
 
-cmds.append('select distinct r._Refs_key, a.accID ' + \
-'from #references r, ACC_Accession a ' + \
-'where r._Refs_key = a._Object_key ' + \
-'and a._MGIType_key = 1 ' + \
-'and a._LogicalDB_key = %d ' % (PUBMED) + \
-'and a.preferred = 1')
+results = db.sql('select distinct r._Refs_key, a.accID ' + \
+	'from #references r, ACC_Accession a ' + \
+	'where r._Refs_key = a._Object_key ' + \
+	'and a._MGIType_key = 1 ' + \
+	'and a._LogicalDB_key = %d ' % (PUBMED) + \
+	'and a.preferred = 1', 'auto')
+pubMedIDs = {}
+for r in results:
+	pubMedIDs[r['_Refs_key']] = r['accID']
 
 # has reference been selected for GXD
 
-cmds.append('select distinct r._Refs_key ' + \
-'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-'where r._Refs_key = ba._Refs_key ' + \
-'and ba._DataSet_key = bd._DataSet_key ' + \
-'and bd.dataSet = "Expression" ' + \
-'and ba.isNeverUsed = 0')
+results = db.sql('select distinct r._Refs_key ' + \
+	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'where r._Refs_key = ba._Refs_key ' + \
+	'and ba._DataSet_key = bd._DataSet_key ' + \
+	'and bd.dataSet = "Expression" ' + \
+	'and ba.isNeverUsed = 0', 'auto')
+gxd = []
+for r in results:
+	gxd.append(r['_Refs_key'])
 
 # does marker have GO annotations
 
-cmds.append('select distinct r._Marker_key ' + \
-'from #references r, VOC_Annot a ' + \
-'where a._AnnotType_key = 1000 ' + \
-'and r._Marker_key = a._Object_key')
-
-cmds.append('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
-'from #references r ' + \
-'order by r.numericPart')
-
-results = db.sql(cmds, 'auto')
-
-for r in results[0]:
-	url = r['url']
-
-pubMedIDs = {}
-for r in results[-4]:
-	pubMedIDs[r['_Refs_key']] = r['accID']
-
-gxd = []
-for r in results[-3]:
-	gxd.append(r['_Refs_key'])
-
+results = db.sql('select distinct r._Marker_key ' + \
+	'from #references r, VOC_Annot a ' + \
+	'where a._AnnotType_key = 1000 ' + \
+	'and r._Marker_key = a._Object_key', 'auto')
 annotations = []
-for r in results[-2]:
+for r in results:
 	annotations.append(r['_Marker_key'])
 
-for r in results[-1]:
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+	'from #references r ' + \
+	'order by r.numericPart', 'auto')
+
+for r in results:
 	writeRecord(fp, r)
 
 reportlib.finish_nonps(fp, isHTML = 1)	# non-postscript file
+db.useOneConnection(0)
 

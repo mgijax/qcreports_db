@@ -129,156 +129,151 @@ def writeRecordD(fp, r):
 # Main
 #
 
+db.useOneConnection(1)
 fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 
-cmds = []
-
-cmds.append('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED))
+results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
+for r in results:
+	url = r['url']
 
 # select markers with GO Associations of evidence IEA only
 
+cmds = []
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
-'into #markers ' + \
-'from MRK_Marker m, ACC_Accession a ' + \
-'where m._Marker_Type_key = 1 ' + \
-'and m._Marker_Status_key in (1,3) ' + \
-'and m.name not like "%RIKEN%" ' + \
-'and m.name not like "%expressed%" ' + \
-'and m.name not like "EST %" ' + \
-'and m.name not like "gene model %" ' + \
-'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
-'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
-'and m.symbol not like "ORF%" ' + \
-'and m._Marker_key = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_key = 1 ' + \
-'and a.prefixPart = "MGI:" ' + \
-'and a.preferred = 1 ' + \
-'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-'where m._Marker_key = a._Object_key ' + \
-'and a._AnnotType_key = 1000 ' + \
-'and a._Annot_key = e._Annot_key ' + \
-'and e._EvidenceTerm_key = 115) ' + \
-'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-'where m._Marker_key = a._Object_key ' + \
-'and a._AnnotType_key = 1000 ' + \
-'and a._Annot_key = e._Annot_key ' + \
-'and e._EvidenceTerm_key != 115) ')
+	'into #markers ' + \
+	'from MRK_Marker m, ACC_Accession a ' + \
+	'where m._Marker_Type_key = 1 ' + \
+	'and m._Marker_Status_key in (1,3) ' + \
+	'and m.name not like "%RIKEN%" ' + \
+	'and m.name not like "%expressed%" ' + \
+	'and m.name not like "EST %" ' + \
+	'and m.name not like "gene model %" ' + \
+	'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
+	'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
+	'and m.symbol not like "ORF%" ' + \
+	'and m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "MGI:" ' + \
+	'and a.preferred = 1 ' + \
+	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
+	'where m._Marker_key = a._Object_key ' + \
+	'and a._AnnotType_key = 1000 ' + \
+	'and a._Annot_key = e._Annot_key ' + \
+	'and e._EvidenceTerm_key = 115) ' + \
+	'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
+	'where m._Marker_key = a._Object_key ' + \
+	'and a._AnnotType_key = 1000 ' + \
+	'and a._Annot_key = e._Annot_key ' + \
+	'and e._EvidenceTerm_key != 115) ')
+cmds.append('create index idx1 on #markers(_Marker_key)')
+db.sql(cmds, None)
 
-cmds.append('select distinct m._Marker_key ' + \
-'from #markers m ' + \
-'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-'where hm1._Marker_key = m._Marker_key ' + \
-'and hm1._Homology_key = h1._Homology_key ' + \
-'and h1._Class_key = h2._Class_key ' + \
-'and h2._Homology_key = hm2._Homology_key ' + \
-'and hm2._Marker_key = m2._Marker_key ' + \
-'and m2._Organism_key = 2) ' + \
-'union ' + \
-'select distinct m._Marker_key ' + \
-'from #markers m ' + \
-'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-'where hm1._Marker_key = m._Marker_key ' + \
-'and hm1._Homology_key = h1._Homology_key ' + \
-'and h1._Class_key = h2._Class_key ' + \
-'and h2._Homology_key = hm2._Homology_key ' + \
-'and hm2._Marker_key = m2._Marker_key ' + \
-'and m2._Organism_key = 40) ')
+# orthologies
 
-cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
+results = db.sql('select distinct m._Marker_key ' + \
+	'from #markers m ' + \
+	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
+	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
+	'where hm1._Marker_key = m._Marker_key ' + \
+	'and hm1._Homology_key = h1._Homology_key ' + \
+	'and h1._Class_key = h2._Class_key ' + \
+	'and h2._Homology_key = hm2._Homology_key ' + \
+	'and hm2._Marker_key = m2._Marker_key ' + \
+	'and m2._Organism_key = 2) ' + \
+	'union ' + \
+	'select distinct m._Marker_key ' + \
+	'from #markers m ' + \
+	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
+	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
+	'where hm1._Marker_key = m._Marker_key ' + \
+	'and hm1._Homology_key = h1._Homology_key ' + \
+	'and h1._Class_key = h2._Class_key ' + \
+	'and h2._Homology_key = hm2._Homology_key ' + \
+	'and hm2._Marker_key = m2._Marker_key ' + \
+	'and m2._Organism_key = 40) ', 'auto')
+hasHomology = {}
+for r in results:
+	hasHomology[r['_Marker_key']] = 1
 
+##
+
+cmds = []
 cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citation ' + \
-'into #references ' + \
-'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
-'where m._Marker_key = r._Marker_key ' + \
-'and r._Refs_key = b._Refs_key')
-
+	'into #references ' + \
+	'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
+	'where m._Marker_key = r._Marker_key ' + \
+	'and r._Refs_key = b._Refs_key')
 cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
+db.sql(cmds, None)
 
 # select PubMed IDs for references
 
-cmds.append('select distinct r._Refs_key, a.accID ' + \
-'from #references r, ACC_Accession a ' + \
-'where r._Refs_key = a._Object_key ' + \
-'and a._MGIType_key = 1 ' + \
-'and a._LogicalDB_key = %d ' % (PUBMED) + \
-'and a.preferred = 1')
-
-# has reference been chosen for GXD
-cmds.append('select distinct r._Refs_key ' + \
-'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-'where r._Refs_key = ba._Refs_key ' + \
-'and ba._DataSet_key = bd._DataSet_key ' + \
-'and bd.dataSet = "Expression" ' + \
-'and ba.isNeverUsed = 0')
-
-cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-'from #references ' + \
-'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-'and short_citation not like "%Genbank Submission%" ' + \
-'group by _Marker_key ' + \
-'order by symbol')
-
-cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-'from #references group by _Marker_key ' + \
-'order by symbol')
-
-cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-'from #references ' + \
-'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-'and short_citation not like "%Genbank Submission%" ' + \
-'group by _Marker_key ' + \
-'order by symbol')
-
-cmds.append('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
-'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-'where r._Refs_key = ba._Refs_key ' + \
-'and ba._DataSet_key = bd._DataSet_key ' + \
-'and bd.dataSet = "Gene Ontology" ' + \
-'and ba.isNeverUsed = 0 ' + \
-'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
-'where r._Refs_key = e._Refs_key ' + \
-'and e._Annot_key = a._Annot_key ' + \
-'and a._AnnotType_key = 1000) ' + \
-'order by numericPart')
-
-results = db.sql(cmds, 'auto')
-
-for r in results[0]:
-	url = r['url']
-
-# Process homology info
-hasHomology = {}
-for r in results[2]:
-	hasHomology[r['_Marker_key']] = 1
-
+results = db.sql('select distinct r._Refs_key, a.accID ' + \
+	'from #references r, ACC_Accession a ' + \
+	'where r._Refs_key = a._Object_key ' + \
+	'and a._MGIType_key = 1 ' + \
+	'and a._LogicalDB_key = %d ' % (PUBMED) + \
+	'and a.preferred = 1', 'auto')
 pubMedIDs = {}
-for r in results[-6]:
+for r in results:
 	pubMedIDs[r['_Refs_key']] = r['accID']
 
+# has reference been chosen for GXD
+results = db.sql('select distinct r._Refs_key ' + \
+	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'where r._Refs_key = ba._Refs_key ' + \
+	'and ba._DataSet_key = bd._DataSet_key ' + \
+	'and bd.dataSet = "Expression" ' + \
+	'and ba.isNeverUsed = 0', 'auto')
 gxd = []
-for r in results[-5]:
+for r in results:
 	gxd.append(r['_Refs_key'])
 
-for r in results[-4]:
+results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+	'from #references ' + \
+	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
+	'and short_citation not like "%Genbank Submission%" ' + \
+	'group by _Marker_key ' + \
+	'order by symbol', 'auto')
+for r in results:
 	writeRecord(fpA, r)
 
-for r in results[-3]:
+results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+	'from #references group by _Marker_key ' + \
+	'order by symbol', 'auto')
+for r in results:
 	writeRecord(fpB, r)
 
-for r in results[-2]:
+results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+	'from #references ' + \
+	'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
+	'and short_citation not like "%Genbank Submission%" ' + \
+	'group by _Marker_key ' + \
+	'order by symbol', 'auto')
+for r in results:
 	writeRecord(fpC, r)
 
-for r in results[-1]:
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'where r._Refs_key = ba._Refs_key ' + \
+	'and ba._DataSet_key = bd._DataSet_key ' + \
+	'and bd.dataSet = "Gene Ontology" ' + \
+	'and ba.isNeverUsed = 0 ' + \
+	'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
+	'where r._Refs_key = e._Refs_key ' + \
+	'and e._Annot_key = a._Annot_key ' + \
+	'and a._AnnotType_key = 1000) ' + \
+	'order by numericPart', 'auto')
+for r in results:
 	writeRecordD(fpD, r)
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
 reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
+db.useOneConnection(0)
 

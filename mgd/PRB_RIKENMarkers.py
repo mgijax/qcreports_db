@@ -31,72 +31,87 @@ import sys
 import os
 import string
 import db
-import mgi_utils
 import reportlib
 
 #
 # Main
 #
 
+db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-
-cmds = []
-
-# Get all RIKEN Clones w/ Marker relationships
-cmds.append('select distinct pm._Probe_key, pm._Marker_key, pm.relationship ' + \
-'into #riken ' + \
-'from PRB_Probe p, PRB_Marker pm ' + \
-'where p.name like "RIKEN%" ' + \
-'and p._Probe_key = pm._Probe_key')
-
-# Get DDBJ IDs
-cmds.append('select r.*, ddbjID = a.accID ' + \
-'into #final ' + \
-'from #riken r, ACC_Accession a ' + \
-'where r._Probe_key = a._Object_key ' + \
-'and a._MGIType_key = 3 ' + \
-'and a._LogicalDB_Key = 9 ' + \
-'union ' + \
-'select r.*, NULL ' + \
-'from #riken r ' + \
-'where not exists (select 1 from ACC_Accession a ' + \
-'where r._Probe_key = a._Object_key ' + \
-'and a._MGIType_key = 3 ' + \
-'and a._LogicalDB_Key = 9)')
-
-cmds.append('select a1.accID, markerID = a2.accID, f.ddbjID, f.relationship ' + \
-'from #final f, ACC_Accession a1, ACC_Accession a2 ' + \
-'where f._Probe_key = a1._Object_key ' + \
-'and a1._MGIType_key = 3 ' + \
-'and a1._LogicalDB_Key = 26 ' + \
-'and f._Marker_key = a2._Object_key ' + \
-'and a2._MGIType_key = 2 ' + \
-'and a2.prefixPart = "MGI:" ' + \
-'and a2._LogicalDB_key = 1 ' + \
-'and a2.preferred = 1 ' + \
-'order by f.relationship, a1.accID')
-
-results = db.sql(cmds, 'auto')
-
 fp.write('RIKEN Clone ID' + reportlib.TAB)
 fp.write('R' + reportlib.TAB)
 fp.write('Marker ID' + reportlib.TAB)
-fp.write('DDBJ ID' + reportlib.CRT)
+fp.write('GenBank ID' + reportlib.CRT)
 
-for r in results[-1]:
-	fp.write(r['accID'] + reportlib.TAB)
+# Get all RIKEN Clones w/ Marker relationships
+
+cmds = []
+cmds.append('select pm._Probe_key, pm._Marker_key, pm.relationship ' + \
+	'into #riken ' + \
+	'from PRB_Probe p, PRB_Marker pm ' + \
+	'where p.name like "RIKEN%" ' + \
+	'and p._Probe_key = pm._Probe_key')
+cmds.append('create index idx1 on #riken(_Probe_key)')
+cmds.append('create index idx2 on #riken(relationship)')
+db.sql(cmds, None)
+
+# Get GenBank IDs
+results = db.sql('select r._Probe_key, a.accID ' + \
+	'from #riken r, ACC_Accession a ' + \
+	'where r._Probe_key = a._Object_key ' + \
+	'and a._MGIType_key = 3 ' + \
+	'and a._LogicalDB_Key = 9 ', 'auto')
+gbIDs = {}
+for r in results:
+    key = r['_Probe_key']
+    value = r['accID']
+    if not gbIDs.has_key(key):
+	gbIDs[key] = []
+    gbIDs[key].append(value)
+
+# Get RIKEN Ids (26) and Marker Ids
+
+cmds = []
+cmds.append('select r._Probe_key, r.relationship, a1.accID, markerID = a2.accID ' + \
+	'into #riken2 ' + \
+	'from #riken r, ACC_Accession a1, ACC_Accession a2 ' + \
+	'where r._Probe_key = a1._Object_key ' + \
+	'and a1._MGIType_key = 3 ' + \
+	'and a1._LogicalDB_Key = 26 ' + \
+	'and r._Marker_key = a2._Object_key ' + \
+	'and a2._MGIType_key = 2 ' + \
+	'and a2.prefixPart = "MGI:" ' + \
+	'and a2._LogicalDB_key = 1 ' + \
+	'and a2.preferred = 1 ')
+cmds.append('create index idx1 on #riken2(relationship)')
+cmds.append('create index idx2 on #riken2(accID)')
+db.sql(cmds, None)
+
+# Process results
+
+results = db.sql('select _Probe_key, relationship, accID, markerID from #riken2 order by relationship, accID', 'auto')
+
+for r in results:
+
+	key = r['_Probe_key']
 
 	if r['relationship'] == None:
-		fp.write("NULL" + reportlib.TAB)
+	    relationship = "NULL"
 	else:
-		fp.write(r['relationship'] + reportlib.TAB)
+	    relationship = r['relationship']
 
-	fp.write(r['markerID'] + reportlib.TAB)
-
-	if r['ddbjID'] == None:
-		fp.write("NULL" + reportlib.CRT)
+	if not gbIDs.has_key(key):
+		fp.write(r['accID'] + reportlib.TAB + \
+		         r['relationship'] + reportlib.TAB + \
+		         r['markerID'] + reportlib.TAB + \
+		         "NULL" + reportlib.CRT)
 	else:
-		fp.write(mgi_utils.prvalue(r['ddbjID']) + reportlib.CRT)
+#	    for g in gbIDs[key]:
+	    fp.write(r['accID'] + reportlib.TAB + \
+	         relationship + reportlib.TAB + \
+	         r['markerID'] + reportlib.TAB + \
+	         string.join(gbIDs[key], ',') + reportlib.CRT)
 
 reportlib.finish_nonps(fp)
-
+db.useOneConnection(0)

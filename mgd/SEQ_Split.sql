@@ -4,9 +4,8 @@ go
 
 select s._Sequence_key
 into #split1
-from SEQ_Sequence s, VOC_Term t
-where s._SequenceStatus_key = t._Term_key
-and t.term = "SPLIT"
+from SEQ_Sequence s
+where s._SequenceStatus_key = 316344
 go
 
 select a.accID

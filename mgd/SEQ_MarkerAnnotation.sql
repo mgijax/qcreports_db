@@ -15,8 +15,6 @@ and sa.preferred = 0
 go
 
 create nonclustered index idx_mkey on #markers1(_Object_key)
-go
-
 create nonclustered index idx_skey on #markers1(sequenceKey)
 go
 

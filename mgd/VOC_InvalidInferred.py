@@ -48,46 +48,42 @@ rows = 0
 
 findID = 'select _Object_key from ACC_Accession where accID = "%s"'
 
-mgiLookup = []
-cmds = []
-
 # read in all MGI accession ids for Markers (2), Alleles (11)
 # read in all InterPro ids (13)
 
-cmds.append('select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = "MGI:" ')
-cmds.append('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"')
+mgiLookup = []
+results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = "MGI:" ', 'auto')
+for r in results:
+    mgiLookup.append(r['accID'])
+results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart = "IPR"', 'auto')
+for r in results:
+    mgiLookup.append(r['accID'])
 
 # read in all annotations w/ non-null inferred from value
 
+cmds = []
 cmds.append('select a._Term_key, a._Object_key, e.inferredFrom ' + \
 	'into #annotations ' + \
 	'from VOC_Annot a, VOC_Evidence e ' + \
 	'where a._AnnotType_key = 1000 ' + \
 	'and a._Annot_key = e._Annot_key ' + \
 	'and e.inferredFrom != null ')
-
 cmds.append('create nonclustered index idx1 on #annotations(_Term_key)')
 cmds.append('create nonclustered index idx2 on #annotations(_Object_key)')
 cmds.append('create nonclustered index idx3 on #annotations(inferredFrom)')
+db.sql(cmds, None)
 
 # retrieve GO acc ID, marker symbol
 
-cmds.append('select e.inferredFrom, a.accID, m.symbol ' + \
-'from #annotations e, ACC_Accession a, MRK_Marker m ' + \
-'where e._Term_key = a._Object_key ' + \
-'and a._MGIType_key = 13 ' + \
-'and a.preferred = 1 ' + \
-'and e._Object_key = m._Marker_key ' + \
-'order by e.inferredFrom')
+results = db.sql('select e.inferredFrom, a.accID, m.symbol ' + \
+	'from #annotations e, ACC_Accession a, MRK_Marker m ' + \
+	'where e._Term_key = a._Object_key ' + \
+	'and a._MGIType_key = 13 ' + \
+	'and a.preferred = 1 ' + \
+	'and e._Object_key = m._Marker_key ' + \
+	'order by e.inferredFrom', 'auto')
 
-results = db.sql(cmds, 'auto')
-
-for r in results[0]:
-    mgiLookup.append(r['accID'])
-for r in results[1]:
-    mgiLookup.append(r['accID'])
-
-for r in results[-1]:
+for r in results:
     ids = r['inferredFrom']
 
     if string.find(ids, ', ') >= 0:

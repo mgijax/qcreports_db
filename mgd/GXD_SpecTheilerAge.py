@@ -51,6 +51,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
+db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages and ages', os.environ['QCREPORTOUTPUTDIR'])
 
 cmds = []
@@ -96,7 +97,12 @@ cmds.append('select s._Assay_key, s.age, label = s.specimenLabel, t.stage, t.dpc
 	  'and not exists (select 1 from GXD_StructureName sn ' + \
 	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))')
 
-cmds.append('select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, a1.accID "MGI", a2.accID "J"' + \
+cmds.append('create index idx1 on #temp(_Assay_key)')
+db.sql(cmds, None)
+
+##
+
+results = db.sql('select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, a1.accID "MGI", a2.accID "J"' + \
     'from #temp t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 ' + \
     'where t._Assay_key = a._Assay_key and ' + \
 	  'a._Assay_key = a1._Object_key and ' + \
@@ -107,14 +113,12 @@ cmds.append('select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, a1.acc
           'a._Refs_key = a2._Object_key and ' + \
           'a2._MGIType_key = 1 and ' + \
           'a2._LogicalDB_key = 1 and ' + \
-          'a2.prefixPart = "J:" ' + \
-    'order by a1.accID')
-
-results = db.sql(cmds, 'auto')
+          'a2.prefixPart = "J:" and ' + \
+	  'a2.preferred = 1' + \
+    'order by a1.accID', 'auto')
 
 count = 0
-
-for r in results[-1]:
+for r in results:
 
     stage = r['stage']
 
@@ -156,3 +160,4 @@ for r in results[-1]:
 fp.write(CRT + 'Number of specimens: ' + str(count) + CRT)
 
 reportlib.finish_nonps(fp)
+db.useOneConnection(0)

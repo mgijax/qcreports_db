@@ -3,7 +3,7 @@ go
 
 /* Select Probes/Markers which hybridize to only one Marker, excluding Amplifies */
 
-select * 
+select _Probe_key, _Marker_key
 into #markers
 from PRB_Marker
 where relationship != 'A'
@@ -11,24 +11,34 @@ group by _Probe_key
 having count(*) = 1
 go
 
+create index idx1 on #markers(_Probe_key)
+go
+
 /* Select Probes where Sequence presented in paper */
 
-select p.*
+select p._Probe_key, p._Marker_key
 into #probes
 from #markers p, PRB_Reference pr
 where p._Probe_key = pr._Probe_key
 and pr.hasSequence = 1
 go
 
+create index idx1 on #probes(_Probe_key)
+go
+
 /* Select all of those Probes where no Sequence Acc ID exists */
 
-select p.*
+select p._Probe_key, p._Marker_key
 into #noaccs
 from #probes p
 where not exists (select a.* from ACC_Accession a
 where p._Probe_key = a._Object_key
 and a._MGIType_key = 3
 and a._LogicalDB_key = 9)
+go
+
+create index idx1 on #noaccs(_Probe_key)
+create index idx2 on #noaccs(_Marker_key)
 go
 
 /* From this list of Probes w/out Seq Acc IDs, */
@@ -44,6 +54,9 @@ and p._Probe_key != n._Probe_key
 and p._Probe_key = a._Object_key
 and a._MGIType_key = 3
 and a._LogicalDB_key = 9
+go
+
+create index idx1 on #remove(_Probe_key)
 go
 
 /* Remove the Probes w/ Sequence Acc ID attached thru other Probes */
@@ -65,6 +78,10 @@ and p._Probe_key = pm._Probe_key
 and pm._Marker_key = m._Marker_key
 go
  
+create index idx1 on #summary(_Refs_key)
+create index idx2 on #summary(chromosome)
+go
+
 set nocount off
 go
 
