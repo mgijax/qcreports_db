@@ -24,9 +24,10 @@ go
 
 print ""
 print "Homology Records w/out Mouse Genes"
+print "(The mouse symbol is listed if it is the same as one of the other species)"
 print ""
 
-select distinct h._Class_key, h.symbol, m.symbol, h.species, h.jnumID
+select distinct h._Class_key, h.symbol, m.symbol "mouse symbol", h.species, h.jnumID
 from #homology h, MRK_Marker m
 where h.symbol not like '*%'
 and h.symbol *= m.symbol
