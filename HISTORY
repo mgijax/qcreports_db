@@ -4,6 +4,7 @@ STAFF: lec
 RELEASE: A
 CHANGES:
 a) TR 3763; MRK_GOGold.py
+b) TR 3769; PRB_StrainTrans.sql
 
 TAG:  qcreports_db-17-0-10
 DATE: 05/28/2002
