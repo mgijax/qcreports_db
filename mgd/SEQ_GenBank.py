@@ -46,13 +46,13 @@ import reportlib
 # Main
 #
 
+db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
-
-cmds = []
 
 # select all Seq IDs and the Objects associated with them
 # for Markers, only select Mouse
 
+cmds = []
 cmds.append('select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
 'into #seqIDs ' + \
 'from ACC_Accession a, ACC_MGIType m ' + \
@@ -71,9 +71,11 @@ cmds.append('select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m
 cmds.append('create nonclustered index idx_accid on #seqIDs(accID)')
 cmds.append('create nonclustered index idx_object on #seqIDs(_Object_key)')
 cmds.append('create nonclustered index idx_type on #seqIDs(_MGIType_key)')
+db.sql(cmds, None)
 
 # select MGI IDs for all Objects
 
+cmds = []
 cmds.append('select distinct s._Object_key, s.mgiType, a.accID ' +
 'into #mgiIDs ' + 
 'from #seqIDs s, ACC_Accession a ' + \
@@ -92,9 +94,11 @@ cmds.append('select distinct s._Object_key, s.mgiType, a.accID ' +
 'and a._LogicalDB_key = 1 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a.preferred = 1 ')
+db.sql(cmds, None)
 
 # select "names" (marker type for markers, name for molecular segments)
 
+cmds = []
 cmds.append('select distinct s._Object_key, s.mgiType, t.name ' +
 'into #names ' + 
 'from #seqIDs s, MRK_Marker m, MRK_Types t ' + \
@@ -106,9 +110,11 @@ cmds.append('select distinct s._Object_key, s.mgiType, t.name ' +
 'from #seqIDs s, PRB_Probe p ' + \
 'where s._MGIType_key = 3 ' + \
 'and s._Object_key = p._Probe_key ')
+db.sql(cmds, None)
 
 # select symbols (symbols for markers and associated marker symbols for molecular segments)
 
+cmds = []
 cmds.append('select distinct s._Object_key, s.mgiType, m.symbol ' + \
 'into #symbols ' + \
 'from #seqIDs s, MRK_Marker m ' + \
@@ -120,16 +126,9 @@ cmds.append('select distinct s._Object_key, s.mgiType, m.symbol ' + \
 'where s._MGIType_key = 3 ' + \
 'and s._Object_key = pm._Probe_key ' + \
 'and pm._Marker_key = m._Marker_key')
+db.sql(cmds, None)
 
 # select each set of data
-
-cmds.append('select * from #seqIDs')
-cmds.append('select * from #mgiIDs')
-cmds.append('select * from #names')
-cmds.append('select * from #symbols')
-cmds.append('select distinct accID from #seqIDs order by accID')
-
-results = db.sql(cmds, 'auto')
 
 # set of sequence accession ids keyed by accession id
 # for each sequence accession id, store the list of objects
@@ -137,8 +136,9 @@ results = db.sql(cmds, 'auto')
 # the mgi accession id, name and symbol for each object
 # using the other dictionaries.
 
+results = db.sql('select * from #seqIDs', 'auto')
 accIDs = {}
-for r in results[-5]:
+for r in results:
     key = regsub.gsub('\n', '', r['accID'])
     value = r['mgiType'] + ':' + str(r['_Object_key'])
     if not accIDs.has_key(key):
@@ -147,33 +147,38 @@ for r in results[-5]:
 
 # set of mgi ids keyed by mgi type/object key
 
+results = db.sql('select * from #mgiIDs', 'auto')
 mgiIDs = {}
-for r in results[-4]:
+for r in results:
     key = r['mgiType'] + ':' + str(r['_Object_key'])
     value = regsub.gsub('\n', '', r['accID'])
     mgiIDs[key] = value
 
 # set of names keyed by mgi type/object key
 
+results = db.sql('select * from #names', 'auto')
 names = {}
-for r in results[-3]:
+for r in results:
     key = r['mgiType'] + ':' + str(r['_Object_key'])
     value = r['name']
     names[key] = value
 
 # set of symbols keyed by mgi type/object key
 
+results = db.sql('select * from #symbols', 'auto')
 symbols = {}
-for r in results[-2]:
+for r in results:
     key = r['mgiType'] + ':' + str(r['_Object_key'])
     value = r['symbol']
     if not symbols.has_key(key):
 	symbols[key] = []
     symbols[key].append(value)
 
+results = db.sql('select distinct accID from #seqIDs order by accID', 'auto')
+
 # for each Sequence Accession ID
 
-for r in results[-1]:
+for r in results:
 
     accID = regsub.gsub('\n', '', r['accID'])
     fp.write(accID)
@@ -217,4 +222,5 @@ for r in results[-1]:
     fp.write(reportlib.CRT)
 
 reportlib.finish_nonps(fp)
+db.useOneConnection(0)
 

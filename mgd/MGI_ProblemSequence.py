@@ -109,7 +109,7 @@ results = db.sql('select m._Probe_key, probeID = pa.accID ' + \
 
 for r in results:
     fp.write(r['probeID'] + reportlib.TAB + \
-	string.join(sequences[r['_Probe_key']], ',') + CRT)
+	string.join(sequences[r['_Probe_key']], ',') + reportlib.CRT)
 
 reportlib.finish_nonps(fp)
 db.useOneConnection(0)
