@@ -52,8 +52,8 @@ set nocount off
 go
 
 print ""
-print "Interim Markers with Human Homologies"
-print "(sorted by human symbol status, date)"
+print "Interim Markers"
+print "(sorted by human symbol status (if applicable) and date)"
 print ""
 
 select msymbol "Mouse Symbol", hstatus "Status", hsymbol "Human Symbol", name "Mouse Name", creation_date
