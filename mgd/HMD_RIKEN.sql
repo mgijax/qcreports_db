@@ -37,20 +37,20 @@ go
 
 select h.*, type = "O"
 into #results
-from #homology2 h, radar_2..DP_LL l
+from #homology2 h, radar..DP_LL l
 where h.hsymbol = l.osymbol
 and l.taxID = 9606
 union
 select h.*, type = "I"
-from #homology2 h, radar_2..DP_LL l
+from #homology2 h, radar..DP_LL l
 where h.hsymbol = l.isymbol
 and l.taxID = 9606
 union
 select h.*, type = "?"
 from #homology2 h
-where not exists (select 1 from radar_2..DP_LL l
+where not exists (select 1 from radar..DP_LL l
 where l.taxID = 9606 and h.hsymbol = l.osymbol)
-and not exists (select 1 from radar_2..DP_LL l
+and not exists (select 1 from radar..DP_LL l
 where l.taxID = 9606 and h.hsymbol = l.isymbol)
 go
 
