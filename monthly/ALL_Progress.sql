@@ -23,18 +23,18 @@ where datepart(year, creation_date) = @year
 and datepart(month, creation_date) = @month
 and symbol not like '%<+>'
 union
-select total = count(*), category = "transgene induced", seq = 2
+select total = count(*), category = "transgenic (all types)", seq = 2
 from ALL_Allele
 where datepart(year, creation_date) = @year
 and datepart(month, creation_date) = @month
-and _Allele_Type_key = 2
+and _Allele_Type_key in (22,23,24)
 and symbol not like '%<+>'
 union
-select total = count(*), category = "transgene induced (gene targeted)", seq = 3
+select total = count(*), category = "targeted (all types)", seq = 3
 from ALL_Allele
 where datepart(year, creation_date) = @year
 and datepart(month, creation_date) = @month
-and _Allele_Type_key = 3
+and _Allele_Type_key in (17,18,19,20,21)
 and symbol not like '%<+>'
 union
 select total = count(*), category = "QTL", seq = 4
@@ -48,7 +48,7 @@ select total = count(*), category = "everything else", seq = 5
 from ALL_Allele
 where datepart(year, creation_date) = @year
 and datepart(month, creation_date) = @month
-and _Allele_Type_key not in (2,3,15)
+and _Allele_Type_key not in (15,17,18,19,20,21,22,23,24)
 and symbol not like '%<+>'
 
 select total = count(distinct g._Genotype_key), category = "Total Genotype", seq = 1
@@ -91,14 +91,14 @@ into #c4
 from ALL_Allele
 where symbol not like '%<+>'
 union
-select total = count(*), category = "transgene induced", seq = 2
+select total = count(*), category = "transgenic (all types)", seq = 2
 from ALL_Allele
-where _Allele_Type_key = 2
+where _Allele_Type_key in (22,23,24)
 and symbol not like '%<+>'
 union
-select total = count(*), category = "transgene induced (gene targeted)", seq = 3
+select total = count(*), category = "targeted (all types)", seq = 3
 from ALL_Allele
-where _Allele_Type_key = 3
+where _Allele_Type_key in (17,18,19,20,21)
 and symbol not like '%<+>'
 union
 select total = count(*), category = "QTL", seq = 4
@@ -108,7 +108,7 @@ and symbol not like '%<+>'
 union
 select total = count(*), category = "everything else", seq = 5
 from ALL_Allele
-where _Allele_Type_key not in (2,3,15)
+where _Allele_Type_key not in (15,17,18,19,20,21,22,23,24)
 and symbol not like '%<+>'
 
 select total = count(distinct a._Marker_key), category = "Total", seq = 1
@@ -118,21 +118,21 @@ where a.symbol not like '%<+>'
 and a._Marker_key = m._Marker_key
 and m._Marker_Type_key = 1
 union
-select total = count(distinct a._Marker_key), category = "genes w/ transgene induced (gene targeted)", seq = 2
+select total = count(distinct a._Marker_key), cagegory = "genes w/ targeted (all types)", seq = 2
 from ALL_Allele a, MRK_Marker m
-where a._Allele_Type_key = 3
+where _Allele_Type_key in (17,18,19,20,21)
 and a._Marker_key = m._Marker_key
 and m._Marker_Type_key = 1
 union
-select total = count(distinct a._Marker_key), category = "genes w/ transgene induced (gene trapped)", seq = 3
+select total = count(distinct a._Marker_key), category = "genes w/ gene trapped", seq = 3
 from ALL_Allele a, MRK_Marker m
 where a._Allele_Type_key = 4
 and a._Marker_key = m._Marker_key
 and m._Marker_Type_key = 1
 union
-select total = count(distinct m._Marker_key), category = "genes w/ both (gene targeted) & (gene trapped)", seq = 4
+select total = count(distinct m._Marker_key), category = "genes w/ both (targeted) & (gene trapped)", seq = 4
 from ALL_Allele a1, ALL_Allele a2, MRK_Marker m
-where a1._Allele_Type_key = 3
+where a1._Allele_Type_key in (17,18,19,20,21)
 and a1._Marker_key = m._Marker_key
 and a2._Allele_Type_key = 4
 and a2._Marker_key = m._Marker_key
