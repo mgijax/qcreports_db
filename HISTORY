@@ -1,3 +1,11 @@
+TAG:  qcreports_db-23-0-14
+DATE: 09/16/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.01
+b) TR 6205; GXD_DevImages.py replaced with GXD_Images.py
+
 TAG:  qcreports_db-23-0-13
 DATE: 09/09/2004
 STAFF: lec
