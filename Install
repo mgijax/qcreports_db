@@ -26,7 +26,6 @@ end
 cd ${QCREPORTINSTALLDIR}
 chmod 444 Configuration* HISTORY *.html
 chmod 550 *.sh */*.py */*.sql Install
-chmod 775 output
 
 mkdir ${QCREPORTDIR}
 mkdir ${QCOUTPUTDIR}
