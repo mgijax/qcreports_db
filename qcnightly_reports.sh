@@ -10,6 +10,10 @@
 
 cd `dirname $0` && source ./Configuration
 
+strainAllele.sh
+strainChanges.sh
+goStats.sh
+
 foreach i ($QCMGD/*.sql)
 if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
 	mv -f $QCREPORTOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
@@ -39,10 +43,6 @@ cd $QCFANTOM
 foreach i (*.py)
 $i
 end
-
-./strainAllele.sh
-./strainChanges.sh
-./goStats.sh
 
 cd $QCREPORTOUTPUTDIR
 foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt)
