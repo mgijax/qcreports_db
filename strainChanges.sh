@@ -26,7 +26,7 @@ Strain Names Which Have Been Changed
 
 END
 
-foreach i ($EILOGFILES/$EILOGNAME)
+foreach i ($EILOGFILES/*/$EILOGNAME)
 echo $i >> $OUTPUTFILE
 egrep "STRAIN NAME MODIFIED" $i >> $OUTPUTFILE
 end
