@@ -16,11 +16,12 @@ print "GXD Assay Probe/Marker Pairs No Longer Found in Master Probe Table"
 print ""
 
 select a.accID "Assay", pb.name "Probe", m.symbol "Marker"
-from #probe p, PRB_Probe pb, MRK_Marker m, GXD_Assay_Acc_View a
+from #probe p, PRB_Probe pb, MRK_Marker m, ACC_Accession a
 where p._Probe_key = pb._Probe_key
 and p._Marker_key = m._Marker_key
 and p._Assay_key = a._Object_key
-and not exists (select pm.* from PRB_Marker pm
+and a._MGIType_key = 8
+and not exists (select 1 from PRB_Marker pm
                 where p._Probe_key = pm._Probe_key
                 and p._Marker_key = pm._Marker_key)
 go

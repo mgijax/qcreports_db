@@ -13,7 +13,7 @@ into #refs2
 from #refs1 r, ACC_Accession a
 where r._Refs_key = a._Object_key
 and a._MGIType_key = 1
-and a.LogicalDB = 'Medline'
+and a._LogicalDB_key = 7
 go
 
 select r.*

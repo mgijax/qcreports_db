@@ -54,15 +54,17 @@ select jr = null, substring(s.strain,1,125) "strain", n.dataExists "data attache
 from PRB_Strain s, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
-and not exists (select 1 from PRB_Strain_Acc_View a
+and not exists (select 1 from ACC_Accession a
 where a._Object_key = s._Strain_key
+and a._MGIType_key = 10
 and a._LogicalDB_key = 22)
 union
 select jr = a.accID, substring(s.strain,1,125), n.dataExists
-from PRB_Strain s, PRB_Strain_Acc_View a, #strains n
+from PRB_Strain s, ACC_Accession a, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
 and a._Object_key = s._Strain_key
+and a._MGIType_key = 10
 and a._LogicalDB_key = 22
 order by s.strain
 go
