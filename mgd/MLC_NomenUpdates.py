@@ -37,11 +37,11 @@ import reportlib
 currentReport = 'MLCNomenclature-current.html'
 
 # remove current report link if it exists
-if os.path.isfile('%s/%s' % (os.environ['QCREPORTDIR'], currentReport)):
-	os.remove('%s/%s' % (os.environ['QCREPORTDIR'], currentReport))
+if os.path.isfile('%s/%s' % (os.environ['QCREPORTOUTPUTDIR'], currentReport)):
+	os.remove('%s/%s' % (os.environ['QCREPORTOUTPUTDIR'], currentReport))
 
 # move existing Nomen reports to the archive
-os.system('mv %s/MLCNomenclature-*.html %s/archive/nomen' % (os.environ['QCREPORTDIR'], os.environ['QCREPORTDIR']))
+os.system('mv %s/MLCNomenclature-*.html %s/archive/nomen' % (os.environ['QCREPORTOUTPUTDIR'], os.environ['QCREPORTOUTPUTDIR']))
 
 reportName = 'MLCNomenclature-' + mgi_utils.date('%Y-%m-%d')
 
@@ -54,7 +54,7 @@ results = db.sql('select convert(varchar(25), dateadd(day, 0, "%s"))' % (current
 edate = results[0]['']
 
 title = 'Updates to MLC Mouse Nomenclature from %s to %s' % (bdate, edate)
-fp = reportlib.init(reportName, title, os.environ['QCREPORTDIR'], isHTML = 1)
+fp = reportlib.init(reportName, title, os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 
 fp.write('J:23000 generally indicates gene family nomenclature revision event.\n\n')
 
@@ -119,6 +119,6 @@ reportlib.finish_nonps(fp, isHTML = 1)	# non-postscript file
 
 # re-create a symbolic link between the new file and the current file
 
-os.chdir(os.environ['QCREPORTDIR'])
+os.chdir(os.environ['QCREPORTOUTPUTDIR'])
 os.symlink(reportName + '.html', currentReport)
 
