@@ -1,3 +1,15 @@
+TAG:  qcreports_db-23-0-13
+DATE: 09/09/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.01
+b) TR 6146/goStats.sh
+c) TR 6098/changes to MRK_GOUnknown.sql
+d) MRK_NomenTransgene.py; fix error
+e) SEQ_Marker.py; performance improvements
+f) TR 6158; split HMD_SymbolDiffs
+
 TAG:  qcreports_db-23-0-12
 DATE: 08/25/2004
 STAFF: lec
