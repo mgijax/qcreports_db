@@ -1,3 +1,10 @@
+TAG:  qcreports_db-23-0-13-patch301-02
+DATE: 10/12/2004
+STAFF: dbm
+RELEASE: A
+CHANGES:
+a) included MRK_NomenNotInformative.sql
+
 TAG:  qcreports_db-23-0-13-patch301-01
 DATE: 10/11/2004
 STAFF: dbm
