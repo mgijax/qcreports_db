@@ -11,6 +11,7 @@ and name not like 'IMAGE clone%'
 and name not like 'RPCI23 clone%'
 and name not like 'RPCI24 clone%'
 and name not like 'NIA clone%'
+and name not like 'RIKEN clone%'
 go
 
 select *
@@ -71,7 +72,7 @@ drop table #probe
 go
 
 print ""
-print "Probes - No Markers (excluding IMAGE, RPCI, NIA clones)"
+print "Probes - No Markers (excluding IMAGE, RPCI, NIA, RIKEN clones)"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
