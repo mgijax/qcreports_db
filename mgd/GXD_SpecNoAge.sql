@@ -36,7 +36,7 @@ set nocount off
 go
 
 print ""
-print "InSitu Specimens with incorrect 'postnatal' entry""
+print "InSitu Specimens with incorrect 'postnatal' entry"
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
@@ -55,7 +55,7 @@ and a2.preferred = 1
 go
 
 print ""
-print "Gel Lane Specimens with incorrect 'postnatal' entry""
+print "Gel Lane Specimens with incorrect 'postnatal' entry"
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
