@@ -170,13 +170,13 @@ cmds.append('select ms._Sequence_key, m.markerID, m.symbol, m.markerType ' + \
 # sorted sequence info
 cmds.append('select * from #seqAttr order by accID')
 
-print 'results executing'
-print mgi_utils.date()
+#print 'results executing'
+#print mgi_utils.date()
 
 results = db.sql(cmds, 'auto')
 
-print 'results done'
-print mgi_utils.date()
+#print 'results done'
+#print mgi_utils.date()
 
 seqType = {}
 for r in results[-6]:
@@ -240,6 +240,6 @@ for r in results[-1]:
 
 reportlib.finish_nonps(fp)
 
-print 'report done'
-print mgi_utils.date()
+#print 'report done'
+#print mgi_utils.date()
 
