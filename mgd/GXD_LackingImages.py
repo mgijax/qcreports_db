@@ -38,7 +38,7 @@ journals = ['Dev Biol', 'Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Bio
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Fully Coded Papers Lacking Images', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(TAB + 'Journals Checked:' + CRT)
 for j in journals:
