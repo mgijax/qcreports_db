@@ -15,16 +15,16 @@ where a._Object_key = r._Refs_key
 and a._LogicalDB_key in (7,29))
 go
 
-select r.year, r._primary, finalOutputLine = outputLine1 + " " + substring(r.pgs, 1, charindex("-", r.pgs) - 1)  + " [PG]"
+select r._Refs_key, r.year, r._primary, finalOutputLine = outputLine1 + " " + substring(r.pgs, 1, charindex("-", r.pgs) - 1)  + " [PG]"
 into #orderedrefs
 from #refs r
 where r.pgs like "%-%"
 union
-select r.year, r._primary, finalOutputLine = outputLine1 + " " + r.pgs + " [PG]"
+select r._Refs_key, r.year, r._primary, finalOutputLine = outputLine1 + " " + r.pgs + " [PG]"
 from #refs r
 where r.pgs not like "%-%"
 union
-select r.year, r._primary, finalOutputLine = outputLine1
+select r._Refs_key, r.year, r._primary, finalOutputLine = outputLine1
 from #refs r
 where r.pgs is null
 order by r.year, r._primary
