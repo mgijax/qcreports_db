@@ -1,3 +1,9 @@
+TAG: qcreports_db-1-0-18
+DATE: 04/24/2000
+STAFF: lec
+RELEASE: A
+CHANGES: added MRK_LowerSeq.py to qcr.html
+
 TAG: qcreports_db-1-0-17
 DATE: 04/19/2000
 STAFF: lec
