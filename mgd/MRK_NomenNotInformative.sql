@@ -75,7 +75,7 @@ print "where symbol is:"
 print "   a) GenBank Accession ID"
 print "   b) RIKEN symbol"
 print "   c) DNA segment"
-print "where symbol has acquired a Sequence Accession ID from LocusLink"
+print "where symbol has acquired a Sequence Accession ID from EntrezGene"
 print "where symbol has no homology entry in MGI"
 print ""
 

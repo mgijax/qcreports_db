@@ -53,7 +53,7 @@ go
 create index idx2 on #markers(hsymbol)
 go
 
-select m.*, hstatus = "O"
+select m.*, hstatus = e.status
 into #results
 from #markers m, radar..DP_EntrezGene_Info e
 where m.geneID = e.geneID and m.hsymbol = e.symbol

@@ -55,7 +55,7 @@ go
 create index idx1 on #homology(hsymbol)
 go
 
-select h.*, hstatus = "O"
+select h.*, hstatus = e.status
 into #results
 from #homology h, radar..DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606

@@ -26,7 +26,7 @@ go
 create clustered index idx_key on #markers(_Marker_key)
 go
 
-/* symbol has acquired a Sequence Accession ID from LocusLink */
+/* symbol has acquired a Sequence Accession ID from EntrezGene */
 
 select m.*
 into #sequences1
@@ -73,7 +73,7 @@ print "where symbol is:"
 print "   a) GenBank Accession ID"
 print "   b) RIKEN symbol"
 print "   c) DNA segment"
-print "where symbol has acquired a Sequence Accession ID from LocusLink"
+print "where symbol has acquired a Sequence Accession ID from EntrezGene"
 print "where symbol has no homology entry in MGI"
 print ""
 
