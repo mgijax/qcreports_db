@@ -1,4 +1,5 @@
 TAG:  qcreports_db-18-0-14
+TAG:  qcreports_db-18-0-15
 DATE: 02/11/2003
 STAFF: lec
 RELEASE: A
@@ -7,6 +8,7 @@ a) TR 4443 (MRK_NoSequence.py)
 b) TR 4491 (MRK_NoGo.py; added report D)
 c) TR 4494 (BIB_NeedNLM.sql)
 d) TR 4505 (GXD_MechDev.sql, GXD_GeneExprPatterns.sql)
+e) TR 4481 (GXD_SpecTheilerAge.py)
 
 TAG:  qcreports_db-18-0-13
 DATE: 01/13/2003
