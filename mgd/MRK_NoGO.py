@@ -101,7 +101,9 @@ cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID ' + \
 'and m.name not like "%RIKEN%" ' + \
 'and m.name not like "%expressed%" ' + \
 'and m.name not like "EST%" ' + \
-'and not exists (select 1 from GO_MarkerGO g where m._Marker_key = g._Marker_key)')
+'and not exists (select 1 from  VOC_Annot a ' + \
+'where m._Marker_key = a._Object_key ' + \
+'and a._AnnotType_key = 1000 ) ')
 
 cmds.append('select distinct m._Marker_key ' + \
 'from #markers m ' + \

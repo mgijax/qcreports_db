@@ -2,7 +2,7 @@
 
 '''
 #
-# MRK_NoGOIEA.py 01/08/2002
+# MRK_GOIEA.py 01/08/2002
 #
 # Report:
 #       TR 3269 - Report 1
@@ -101,14 +101,16 @@ cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID ' + \
 'and m.name not like "%RIKEN%" ' + \
 'and m.name not like "%expressed%" ' + \
 'and m.name not like "EST%" ' + \
-'and exists (select 1 from GO_MarkerGO g, GO_DataEvidence e ' + \
-'where m._Marker_key = g._Marker_key ' + \
-'and g._MarkerGO_key = e._MarkerGO_key ' + \
-'and e._Evidence_key = 9) ' + \
-'and not exists (select 1 from GO_MarkerGO g, GO_DataEvidence e ' + \
-'where m._Marker_key = g._Marker_key ' + \
-'and g._MarkerGO_key = e._MarkerGO_key ' + \
-'and e._Evidence_key != 9) ')
+'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
+'where m._Marker_key = a._Object_key ' + \
+'and a._AnnotType_key = 1000 ' + \
+'and a._Annot_key = e._Annot_key ' + \
+'and e._EvidenceTerm_key = 115) ' + \
+'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
+'where m._Marker_key = a._Object_key ' + \
+'and a._AnnotType_key = 1000 ' + \
+'and a._Annot_key = e._Annot_key ' + \
+'and e._EvidenceTerm_key != 115) ')
 
 cmds.append('select distinct m._Marker_key ' + \
 'from #markers m ' + \
