@@ -1,9 +1,10 @@
-TAG: qcreports_db-16-0-2
+TAG: qcreports_db-16-0-2, qcreports_db-16-0-3
 DATE: 01/31/2002
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) added strainChanges.sh
+b) added TR 3321 to MRK_RatNoGO.sql
 
 TAG: qcreports_db-16-0-1
 DATE: 01/30/2002
