@@ -78,3 +78,6 @@ foreach i (`ls gdb/*.sql gdb/*.py`)
 	cp -r $i $QCGDB
 end
 
+cd $QCREPORTINSTALLDIR
+sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
+mv -f qcr.html.new qcr.html
