@@ -276,7 +276,7 @@ def nomen_split_reassociate():
 	#
 	# Nomen Event = "Split" or "Reassociated"
 	# OR
-	# (Final MGI ID = Riken Clone ID AND RA MGI ID is valid)
+	# (Final MGI ID = Riken Clone ID (!= zilch, zzilch, MGI:) AND RA MGI ID is valid)
 	# 
 	'''
 
@@ -296,6 +296,8 @@ def nomen_split_reassociate():
         	'from MGI_Fantom2 f, MGI_Fantom2Cache c ' + \
 		'where f._Fantom2_key = c._Fantom2_key ' + \
 		'and f.final_mgiID = f.riken_cloneid ' + \
+		'and f.riken_cloneid not in ("zilch", "zzilch") ' + \
+		'and f.riken_cloneid not like "MGI:%" ' + \
 		'and c.gba_mgiID like "MGI:%" ' + \
         	'and exists (select 1 from MRK_Acc_View a ' + \
         	'where c.gba_mgiID = a.accID)')
