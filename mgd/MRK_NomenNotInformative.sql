@@ -37,20 +37,11 @@ go
 create index idx1 on #sequences1(_Marker_key)
 go
 
-select s.*, o.name
-into #sequences2
-from #sequences1 s, MRK_Other o
-where s._Marker_key *= o._Marker_key
-go
-
-create index idx1 on #sequences2(_Marker_key)
-go
-
 /* find pubmed ids by EntrezGene ID */
 
 select s.*, refID = c.pubMedID
 into #sequencesFinal
-from #sequences2 s, ACC_Accession a, radar..DP_EntrezGene_PubMed c
+from #sequences1 s, ACC_Accession a, radar..DP_EntrezGene_PubMed c
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 55
