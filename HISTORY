@@ -1,3 +1,11 @@
+TAG:  no tag
+DATE: 11/05/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 5264 - GXD_MechDev.sql, GXD_GeneExprPatterns.sql
+b) MGI_InvalidAge.sql
+
 TAG:  qcreports_db-20-0-20
 DATE: 10/31/2003
 STAFF: lec
