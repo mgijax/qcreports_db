@@ -17,9 +17,6 @@
 # Usage:
 #       MLC_TransferStats.py
 #
-# Generated from:
-#       Editing Interface, MLC Report form
-#
 # Notes:
 #
 # History:
@@ -36,6 +33,16 @@ import reportlib
 
 CRT = reportlib.CRT
 
+def printResults(results, title):
+
+	fp.write('MLC %s needing transfer to Production:(%d)' % (title, len(results)) + CRT)
+	fp.write(15*'-' + CRT)
+
+	for r in results:
+		fp.write(r['symbol'] + CRT)
+
+	fp.write(2*CRT)
+
 ### MAIN ####
 
 fp = reportlib.init('MLC_TransferStats', 'MLC Transfer Statistics Report', os.environ['QCREPORTOUTPUTDIR'])
@@ -45,80 +52,32 @@ cmd = 'select m.symbol ' + \
       'where t._Marker_key = m._Marker_key ' + \
       'and not exists (select t2._Marker_key ' + \
                        'from MLC_Text t2 ' + \
-                       'where t2._Marker_key = t._Marker_key)'
+                       'where t2._Marker_key = t._Marker_key) ' + \
+      'order by m.symbol'
 
-mkadds = db.sql(cmd, 'auto')
+printResults(db.sql(cmd, 'auto'), 'Adds')
 
 cmd = 'select m.symbol ' + \
       'from MLC_Text t, MRK_Marker m ' + \
       'where t._Marker_key = m._Marker_key ' + \
       'and not exists (select t2._Marker_key ' + \
                        'from MLC_Text_edit t2 ' + \
-                       'where t2._Marker_key = t._Marker_key)'
-mkdeletes = db.sql(cmd, 'auto')
+                       'where t2._Marker_key = t._Marker_key) ' + \
+      'order by m.symbol'
+
+printResults(db.sql(cmd, 'auto'), 'Updates')
+
+# Updates excluding Adds
 
 cmd = 'select m.symbol ' + \
       'from MLC_Text_edit te, MRK_Marker m, MLC_Text t ' + \
       'where te._Marker_key = m._Marker_key ' + \
       'and te._Marker_key = t._Marker_key ' + \
-      'and te.modification_date > ' + \
-      '    t.modification_date' 
-mkupdates = db.sql(cmd, 'auto')
+      'and te.creation_date != te.modification_date ' + \
+      'and te.modification_date > t.modification_date ' + \
+      'order by m.symbol'
 
-indent=2 
-
-class Paragraph:
-	def __init__(self, title, results):
-		'''
-		# title is the subheading to be printed for this paragraph,
-		# results is the result of db.sql(cmd,'auto') 
-		'''
-		self.title = title
-		self.results = results
-	def getTitle(self):
-		return self.title
-	def getResults(self):
-		return self.results
-
-
-addsymbols    = []
-for row in mkadds:
-	addsymbols.append(row['symbol'])
-addsymbols.sort()
-
-# updates are detected by modification date.  Adds will show up
-# here as well, so we will exclude them.
-
-updatesymbols = []
-for row in mkupdates:
-	symbol = row['symbol']
-	try: 
-		addsymbols.index(symbol)
-	except:
-		updatesymbols.append(symbol)
-updatesymbols.sort()
-
-deletesymbols = []
-for row in mkdeletes:
-	deletesymbols.append(row['symbol'])
-deletesymbols.sort()
-
-paragraphs = [Paragraph('MLC Adds needing transfer to Production:', 
-                         addsymbols),
-              Paragraph('MLC Updates needing transfer to Production:', 
-                         updatesymbols),
-              Paragraph('MLC Deletes needing transfer to Production:', 
-                         deletesymbols)]
-
-for paragraph in paragraphs:
-	fp.write(paragraph.getTitle())
-	fp.write('(' + `len(paragraph.getResults())` + ')' + 2*CRT)
-	fp.write(15*'-' + CRT)
-
-	for symbol in paragraph.getResults():
-		fp.write(indent*' ' + symbol + CRT) 
-
-	fp.write(2*CRT)
+printResults(db.sql(cmd, 'auto'), 'Deletes')
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
