@@ -32,7 +32,8 @@ go
 drop table #expts
 go
 
-select distinct e.exptType, e._Refs_key, echr = e.chromosome, mchr = m.chromosome, m.symbol, g.description
+select distinct e.exptType, e._Refs_key, echr = e.chromosome, mchr = m.chromosome, m.symbol,
+description = substring(g.description, 1, 25)
 into #expts
 from MLD_Expts e, MLD_Expt_Marker g, MRK_Marker m
 where e._Expt_key = g._Expt_key
