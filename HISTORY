@@ -1,3 +1,10 @@
+TAG:  qcreports_db-18-0-13
+DATE: 01/13/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) add goStats.sh to qcnightly_reports.sh
+
 TAG:  qcreports_db-18-0-12
 DATE: 01/03/2003
 STAFF: lec
