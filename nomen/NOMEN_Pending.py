@@ -169,7 +169,6 @@ for r in results[-1]:
 
 	if humanaccids.has_key(r['_Marker_key']):
 		fp.write(string.joinfields(humanaccids[r['_Marker_key']], "|"))
-	fp.write(TAB)
 
 	fp.write(CRT)
 
