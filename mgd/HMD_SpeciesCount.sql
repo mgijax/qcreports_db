@@ -5,7 +5,7 @@ select distinct m1._Organism_key, r1._Class_key
 into #organism
 from HMD_Homology r1, HMD_Homology_Marker h1, 
 HMD_Homology r2, HMD_Homology_Marker h2, MRK_Marker m1, MRK_Marker m2
-where m1._Organism_key > 1
+where m1._Organism_key != 1
 and m1._Marker_key = h1._Marker_key 
 and h1._Homology_key = r1._Homology_key 
 and r1._Class_key = r2._Class_key 
