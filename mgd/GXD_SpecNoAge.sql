@@ -9,8 +9,7 @@ and s._Assay_key = a._Assay_key
 go
 
 print ""
-print "Gel Lane Specimens with Adult Specimens annotated to embryonic structures"
-print "(excludes stage 28)"
+print "Gel Lane Specimens with NULL Age Value (when there should be one)"
 print ""
 
 select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
