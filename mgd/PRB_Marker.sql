@@ -65,7 +65,7 @@ drop table #probe
 go
 
 print ""
-print "Probes - No Markers (excluding I.M.A.G.E. clones/Ko load)"
+print "Probes - No Markers (excluding I.M.A.G.E. clones)"
 print ""
 
 select p.name 
@@ -73,7 +73,6 @@ from PRB_Probe p
 where p.DNAtype != "primer"
 and p._Source_key != 30040
 and p.name != 'I.M.A.G.E. clone'
-and p.name not like 'J%'
 and not exists (select m.* from PRB_Marker m where p._Probe_key = m._Probe_key)
 order by p.name
 go
