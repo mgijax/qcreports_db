@@ -202,7 +202,7 @@ for r in results:
 cmds = []
 cmds.append('select * into #m4 from #m2 group by _Marker_key, goID having count(*) > 1')
 cmds.append('create index idx1 on #m4(_Marker_key)')
-cmds.append('create index idx1 on #m4(symbol)')
+cmds.append('create index idx2 on #m4(symbol)')
 db.sql(cmds, None)
 
 # select distinct marker, GO ID, evidence code from set 2 annotations

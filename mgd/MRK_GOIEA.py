@@ -169,7 +169,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericP
 	'and a._AnnotType_key = 1000 ' + \
 	'and a._Annot_key = e._Annot_key ' + \
 	'and e._EvidenceTerm_key != 115) ')
-cmds.append('create index idx1 on #markers(_Makrer_key)')
+cmds.append('create index idx1 on #markers(_Marker_key)')
 db.sql(cmds, None)
 
 # orthologies
