@@ -111,6 +111,11 @@ def writeRecordD(fp, r):
 		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
 	fp.write(TAB)
 
+	if r['_Refs_key'] in gxd:
+		fp.write('Y' + TAB)
+	else:
+		fp.write('N' + TAB)
+
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
@@ -193,6 +198,11 @@ cmds.append('select distinct r._Refs_key, a.accID ' + \
 'and a._LogicalDB_key = %d ' % (PUBMED) + \
 'and a.preferred = 1')
 
+# has reference been chosen for GXD
+cmds.append('select distinct r._Refs_key ' + \
+'from #references r ' + \
+'where r.dbs like "%Expression%" and r.dbs not like "%Expression*%"')
+
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
 'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226) ' + \
@@ -231,8 +241,12 @@ for r in results[2]:
 	hasHomology[r['_Marker_key']] = 1
 
 pubMedIDs = {}
-for r in results[-5]:
+for r in results[-6]:
 	pubMedIDs[r['_Refs_key']] = r['accID']
+
+gxd = []
+for r in results[-5]:
+	gxd.append(r['_Refs_key'])
 
 for r in results[-4]:
 	writeRecord(fpA, r)

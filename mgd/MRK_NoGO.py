@@ -54,7 +54,7 @@
 #
 #	J: of reference associated with the Marker, selected for GO but has not been used in annotation
 #	PubMed ID of reference (with HTML link to PubMed)	(TR 4698)
-#	Y/N (has gene been selected for GXD)			(TR 4698)
+#	Y/N (has the gene been selected for GXD)
 #	MGI:ID
 #	symbol
 #	name
@@ -117,6 +117,11 @@ def writeRecordD(fp, r):
 		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
 		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
 	fp.write(TAB)
+
+	if r['_Refs_key'] in gxd:
+		fp.write('Y' + TAB)
+	else:
+		fp.write('N' + TAB)
 
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
@@ -191,6 +196,11 @@ cmds.append('select distinct r._Refs_key, a.accID ' + \
 'and a._LogicalDB_key = %d ' % (PUBMED) + \
 'and a.preferred = 1')
 
+# has reference been chosen for GXD
+cmds.append('select distinct r._Refs_key ' + \
+'from #references r ' + \
+'where r.dbs like "%Expression%" and r.dbs not like "%Expression*%"')
+
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
 'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226) ' + \
@@ -229,8 +239,12 @@ for r in results[2]:
 	hasHomology[r['_Marker_key']] = 1
 
 pubMedIDs = {}
-for r in results[-5]:
+for r in results[-6]:
 	pubMedIDs[r['_Refs_key']] = r['accID']
+
+gxd = []
+for r in results[-5]:
+	gxd.append(r['_Refs_key'])
 
 for r in results[-4]:
 	writeRecord(fpA, r)
