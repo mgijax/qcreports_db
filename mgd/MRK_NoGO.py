@@ -43,6 +43,20 @@
 #
 #    	Report in a tab delimited file with same columns as 1A
 #
+#	TR 4491
+#	Report 1D
+#	Title = Genes Not RIKEN or 'expressed' or 'EST' with no GO associations
+#    	Select markers of type 'gene'
+#    		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
+#               where the marker has no 'GO' association.
+#
+#	Report in a tab delimited file with the following columns:
+#
+#	J: of reference associated with the Marker, selected for GO but has not been used in annotation
+#	MGI:ID
+#	symbol
+#	name
+#
 # Usage:
 #       MRK_NoGO.py
 #
@@ -55,6 +69,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	02/11/2003
+#	- TR 4491; added Report 1D
 #
 # lec	01/08/2002
 #	- created
@@ -73,15 +90,22 @@ PAGE = reportlib.PAGE
 
 def writeRecord(fp, r):
 
-	fp.write(r['mgiID'] + TAB)
-	fp.write(r['symbol'] + TAB)
-	fp.write(r['name'] + TAB)
-	fp.write(`r['numRefs']` + TAB)
+	fp.write(r['mgiID'] + TAB + \
+	         r['symbol'] + TAB + \
+	         r['name'] + TAB + \
+	         `r['numRefs']` + TAB)
 
 	if hasHomology.has_key(r['_Marker_key']):
 		fp.write('yes' + CRT)
 	else:
 		fp.write('no' + CRT)
+
+def writeRecordD(fp, r):
+
+	fp.write(r['jnumID'] + TAB + \
+	         r['mgiID'] + TAB + \
+	         r['symbol'] + TAB + \
+	         r['name'] + CRT)
 
 #
 # Main
@@ -90,17 +114,22 @@ def writeRecord(fp, r):
 fpA = reportlib.init("MRK_NoGO_A", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpB = reportlib.init("MRK_NoGO_B", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 fpC = reportlib.init("MRK_NoGO_C", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fpD = reportlib.init("MRK_NoGO_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
 cmds = []
 
-cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID ' + \
+cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 'into #markers ' + \
-'from MRK_Mouse_View m ' + \
+'from MRK_Marker m, MRK_Acc_View a ' + \
 'where m._Marker_Type_key = 1 ' + \
 'and m._Marker_Status_key = 1 ' + \
 'and m.name not like "%RIKEN%" ' + \
 'and m.name not like "%expressed%" ' + \
 'and m.name not like "EST %" ' + \
+'and m._Marker_key = a._Object_key ' + \
+'and a._LogicalDB_key = 1 ' + \
+'and a.prefixPart = "MGI:" ' + \
+'and a.preferred = 1 ' + \
 'and not exists (select 1 from  VOC_Annot a ' + \
 'where m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ) ')
@@ -129,10 +158,11 @@ cmds.append('select distinct m._Marker_key ' + \
 
 cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
 
-cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.short_citation ' + \
+cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citation, b.dbs ' + \
 'into #references ' + \
-'from #markers m , MRK_Reference_View r ' + \
-'where m._Marker_key = r._Marker_key')
+'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
+'where m._Marker_key = r._Marker_key ' + \
+'and r._Refs_key = b._Refs_key')
 
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
@@ -152,6 +182,11 @@ cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_
 'group by _Marker_key ' + \
 'order by symbol')
 
+cmds.append('select distinct _Marker_key, symbol, name, mgiID, jnumID, numericPart ' + \
+'from #references ' + \
+'where dbs like "%GO%" and dbs not like "%GO*%" ' + \
+'order by numericPart')
+
 results = db.sql(cmds, 'auto')
 
 # Process homology info
@@ -159,15 +194,20 @@ hasHomology = {}
 for r in results[1]:
 	hasHomology[r['_Marker_key']] = 1
 
-for r in results[-3]:
+for r in results[-4]:
 	writeRecord(fpA, r)
 
-for r in results[-2]:
+for r in results[-3]:
 	writeRecord(fpB, r)
 
-for r in results[-1]:
+for r in results[-2]:
 	writeRecord(fpC, r)
+
+for r in results[-1]:
+	writeRecordD(fpD, r)
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
+reportlib.finish_nonps(fpC)	# non-postscript file
+reportlib.finish_nonps(fpD)	# non-postscript file
 
