@@ -49,6 +49,8 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+discrepType = ['Missing IMAGE ID','MGI ID Discrep','IMAGE ID Discrep']
+
 #
 # Main
 #
@@ -63,31 +65,49 @@ db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)
 
 cmd = []
-cmd.append('select q.mgiID "qcMGIID", q.imageID "qcIMAGEID", ' + \
+cmd.append('select 1 "discrepNum", q.cloneNum, ' + \
+                  'q.mgiID "qcMGIID", q.imageID "qcIMAGEID", ' + \
                   'i.mgiID "refMGIID", i.imageID "refIMAGEID", ' + \
-                  'q.cloneNum, w.accID, w.logicalDB ' + \
+                  'w.accID, w.logicalDB ' + \
            'from radar_release..QC_cDNALoad_MGI_IMAGE_Discrep q, ' + \
                 'radar_release..IMG_MGI_IMAGE i, ' + \
                 'radar_release..WRK_cDNA_Clones w ' + \
            'where q.mgiID = i.mgiID and ' + \
+                 'q.imageID is null and ' + \
                  'q.cloneNum = w.cloneNum and ' + \
                  'q._JobStream_key = ' + jobKey + ' and ' + \
                  'w.original = 1 ' + \
            'union ' + \
-           'select q.mgiID "qcMGIID", q.imageID "qcIMAGEID", ' + \
+           'select 2 "discrepNum", q.cloneNum, ' + \
+                  'q.mgiID "qcMGIID", q.imageID "qcIMAGEID", ' + \
                   'i.mgiID "refMGIID", i.imageID "refIMAGEID", ' + \
-                  'q.cloneNum, w.accID, w.logicalDB ' + \
+                  'w.accID, w.logicalDB ' + \
            'from radar_release..QC_cDNALoad_MGI_IMAGE_Discrep q, ' + \
                 'radar_release..IMG_MGI_IMAGE i, ' + \
                 'radar_release..WRK_cDNA_Clones w ' + \
-           'where q.imageID = i.imageID and ' + \
+           'where q.mgiID <> i.mgiID and ' + \
+                 'q.imageID = i.imageID and ' + \
                  'q.cloneNum = w.cloneNum and ' + \
                  'q._JobStream_key = ' + jobKey + ' and ' + \
                  'w.original = 1 ' + \
-           'order by q.cloneNum')
+           'union ' + \
+           'select 3 "discrepNum", q.cloneNum, ' + \
+                  'q.mgiID "qcMGIID", q.imageID "qcIMAGEID", ' + \
+                  'i.mgiID "refMGIID", i.imageID "refIMAGEID", ' + \
+                  'w.accID, w.logicalDB ' + \
+           'from radar_release..QC_cDNALoad_MGI_IMAGE_Discrep q, ' + \
+                'radar_release..IMG_MGI_IMAGE i, ' + \
+                'radar_release..WRK_cDNA_Clones w ' + \
+           'where q.mgiID = i.mgiID and ' + \
+                 'q.imageID <> i.imageID and ' + \
+                 'q.cloneNum = w.cloneNum and ' + \
+                 'q._JobStream_key = ' + jobKey + ' and ' + \
+                 'w.original = 1 ' + \
+           'order by discrepNum, q.cloneNum')
 
 results = db.sql(cmd, 'auto')
 
+oldDiscrepNum = 0
 oldQCMGIID = ""
 oldQCIMAGEID = ""
 
@@ -96,6 +116,7 @@ cloneIDs = ""
 mgiIDs = ""
 
 for r in results[0]:
+    discrepNum = r['discrepNum']
     qcMGIID = r['qcMGIID']
     qcIMAGEID = r['qcIMAGEID']
     refMGIID = r['refMGIID']
@@ -108,11 +129,14 @@ for r in results[0]:
     if (qcIMAGEID == None):
         qcIMAGEID = ""
 
-    if (qcMGIID != oldQCMGIID or qcIMAGEID != oldQCIMAGEID):
-        if (oldQCMGIID != ""):
-            fp.write(oldQCMGIID + TAB + oldQCIMAGEID + TAB + \
+    if (discrepNum != oldDiscrepNum or
+        qcMGIID != oldQCMGIID or qcIMAGEID != oldQCIMAGEID):
+        if (oldDiscrepNum != 0):
+            fp.write(discrepType[oldDiscrepNum - 1] + TAB + \
+                     oldQCMGIID + TAB + oldQCIMAGEID + TAB + \
                      oldRefMGIID + TAB + oldRefIMAGEID + TAB + \
                      seqIDs + TAB + cloneIDs + TAB + mgiIDs + CRT)
+        oldDiscrepNum = discrepNum
         oldQCMGIID = qcMGIID
         oldQCIMAGEID = qcIMAGEID
         oldRefMGIID = refMGIID
@@ -139,8 +163,9 @@ for r in results[0]:
         else:
             cloneIDs = cloneIDs + "," + accID
 
-if (oldQCMGIID != ""):
-    fp.write(oldQCMGIID + TAB + oldQCIMAGEID + TAB + \
+if (oldDiscrepNum != 0):
+    fp.write(discrepType[oldDiscrepNum - 1] + TAB + \
+             oldQCMGIID + TAB + oldQCIMAGEID + TAB + \
              oldRefMGIID + TAB + oldRefIMAGEID + TAB + \
              seqIDs + TAB + cloneIDs + TAB + mgiIDs + CRT)
 
