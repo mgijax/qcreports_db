@@ -42,6 +42,8 @@ PAGE = reportlib.PAGE
 # Main
 #
 
+db.set_sqlDatabase(os.environ['NOMEN'])
+
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
 
 cmd = 'select m._Nomen_key, m.symbol, m.name, m.statusNote, a.accID ' + \
