@@ -51,15 +51,16 @@ cmds = []
 #
 
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
-'n._Nomen_key, n.createdBy, modDate = convert(char(10), n.modification_date, 101) ' + \
+'n._Nomen_key, createdBy = u.login, modDate = convert(char(10), n.modification_date, 101) ' + \
 'into #pending ' + \
-'from MRK_Marker m, MRK_Acc_View a, NOM_Marker n ' + \
+'from MRK_Marker m, MRK_Acc_View a, NOM_Marker n, MGI_User u ' + \
 'where m._Marker_Status_key = 3 ' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.preferred = 1' + \
-'and m.symbol *= n.symbol')
+'and m.symbol *= n.symbol ' + \
+'and n._CreatedBy_key = u._User_key')
 
 #
 # Get PubMed IDs of primary reference
