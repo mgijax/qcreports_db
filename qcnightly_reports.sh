@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #
-# qcnightly_reports.sh 07/21/99
+# qcnightly_reports.sh
 #
 # Script to generate nightly qc reports.
 #

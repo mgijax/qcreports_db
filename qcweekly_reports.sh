@@ -1,7 +1,7 @@
 #!/bin/csh
 
 #
-# qcweekly_reports.sh 07/21/99
+# qcweekly_reports.sh
 #
 # Script to generate weekly qc reports.
 #
