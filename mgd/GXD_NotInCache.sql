@@ -96,6 +96,8 @@ from GXD_Specimen r
 where not exists
 (select 1 from GXD_InSituResult s
 where r._Specimen_key = s._Specimen_key)
+and not exists
+(select 1 from #missing m where r._Assay_key = m._Assay_key)
 go
 
 set nocount off
