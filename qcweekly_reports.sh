@@ -12,12 +12,6 @@ cd `dirname $0` && source Configuration
 
 umask 002
 
-set RPTS="MRK_NomenUpdates.py"
-
-foreach i ("$RPTS")
-$i
-end
-
 # GDB report
 GDBreport.sh -f
 
