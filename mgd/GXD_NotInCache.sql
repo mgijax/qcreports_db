@@ -63,3 +63,27 @@ and s._Specimen_key = r._Specimen_key
 and r._Result_key = rs._Result_key)
 go
 
+set nocount on
+go
+
+select r._Result_key, r._Specimen_key
+into #missingstructs
+from GXD_InSituResult r
+where not exists
+(select 1 from GXD_ISResultStructure s
+where r._Result_key = s._Result_key)
+go
+
+print ""
+print "InSitu Results missing Structures"
+print ""
+
+set nocount on
+go
+
+select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
+from #missingstructs r, GXD_Specimen s, GXD_Assay_View a
+where r._Specimen_key = s._Specimen_key
+and s._Assay_key = a._Assay_key
+go
+
