@@ -70,6 +70,8 @@ for r in results:
 	gbIDs[key] = []
     gbIDs[key].append(value)
 
+# Get RIKEN Ids (26) and Marker Ids
+
 cmds = []
 cmds.append('select r._Probe_key, r.relationship, a1.accID, markerID = a2.accID ' + \
 	'into #riken2 ' + \
@@ -83,12 +85,12 @@ cmds.append('select r._Probe_key, r.relationship, a1.accID, markerID = a2.accID 
 	'and a2._LogicalDB_key = 1 ' + \
 	'and a2.preferred = 1 ')
 cmds.append('create index idx1 on #riken2(relationship)')
-cmds.append('create index idx2 on #riken2(accID)')')
+cmds.append('create index idx2 on #riken2(accID)')
 db.sql(cmds, None)
 
-results = db.sql('select _Probe_key, relationship, accID, markerID ' + \
-	'from #riken2 ' + \
-	'order by relationship, accID', 'auto')
+# Process results
+
+results = db.sql('select _Probe_key, relationship, accID, markerID from #riken2 order by relationship, accID', 'auto')
 
 for r in results:
 
@@ -107,7 +109,7 @@ for r in results:
 	else:
 	    for g in gbIDs[key]:
 		fp.write(r['accID'] + reportlib.TAB + \
-		         r['relationship'] + reportlib.TAB + \
+		         relationship + reportlib.TAB + \
 		         r['markerID'] + reportlib.TAB + \
 		         g + reportlib.CRT)
 
