@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-6-0
+DATE: 04/04/2001
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 1918; added HUGODIR to Configuration.default
+b) copy Nomen_Reserved.rpt to HUGODIR
+
 TAG: qcreports_db-5-5-0, qcreports_db-5-5-1
 DATE: 03/28/2001
 STAFF: lec
