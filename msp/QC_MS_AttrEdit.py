@@ -7,7 +7,7 @@
 #       from QC_MS_AttrEdit.
 #
 # Usage:
-#       QC_MS_AttrEdit.py OutputDir JobKey MGDDBinstance
+#       QC_MS_AttrEdit.py
 #
 # Notes:
 #
@@ -36,10 +36,6 @@ PAGE = reportlib.PAGE
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
 mgdDB = os.environ['MGDDBNAME']
-
-#
-# Main
-#
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Source Attribute Discrepency (Job Stream %s)' % (jobStreamKey), 

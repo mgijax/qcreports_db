@@ -7,7 +7,7 @@
 #       from QC_MS_InvalidGender.
 #
 # Usage:
-#       QC_MS_InvalidGender.py OutputDir JobKey
+#       QC_MS_InvalidGender.py
 #
 # Notes:
 #
@@ -35,10 +35,6 @@ PAGE = reportlib.PAGE
 
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
-
-#
-# Main
-#
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Invalid Genders (Job Stream %s)' % (jobStreamKey), 

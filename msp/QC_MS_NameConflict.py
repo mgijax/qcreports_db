@@ -7,7 +7,7 @@
 #       from QC_MS_NameConflict.
 #
 # Usage:
-#       QC_MS_NameConflict.py OutputDir JobKey MGDDBinstance
+#       QC_MS_NameConflict.py
 #
 # Notes:
 #
@@ -35,10 +35,6 @@ PAGE = reportlib.PAGE
 
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
-
-#
-# Main
-#
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Library Conflicts (Job Stream %s)' % (jobStreamKey), 

@@ -7,7 +7,7 @@
 #       from QC_MS_ChangedLibrary
 #
 # Usage:
-#       QC_MS_ChangedLibrary.py OutputDir JobKey
+#       QC_MS_ChangedLibrary.py
 #
 # Notes:
 #
@@ -37,10 +37,6 @@ PAGE = reportlib.PAGE
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
 mgdDB = os.environ['MGDDBNAME']
-
-#
-# Main
-#
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Changed Library (Job Stream %s)' % (jobStreamKey), 

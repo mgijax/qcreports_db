@@ -7,7 +7,7 @@
 #       from QC_MS_UnresolvedOrganism.
 #
 # Usage:
-#       QC_MS_UnresolvedOrganism.py OutputDir JobKey
+#       QC_MS_UnresolvedOrganism.py
 #
 # Notes:
 #
@@ -35,10 +35,6 @@ PAGE = reportlib.PAGE
 
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
-
-#
-# Main
-#
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Unresolved Organisms (Job Stream %s)' % (jobStreamKey), 
