@@ -54,7 +54,7 @@ setenv OUTPUTDIR $4
 source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
 
-setenv LOG ${QCREPORTOUTPUTDIR}/$0.log
+setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf $LOG
 touch $LOG
  
