@@ -182,9 +182,13 @@ cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_
 'group by _Marker_key ' + \
 'order by symbol')
 
-cmds.append('select distinct _Marker_key, symbol, name, mgiID, jnumID, numericPart ' + \
-'from #references ' + \
-'where dbs like "%GO%" and dbs not like "%GO*%" ' + \
+cmds.append('select distinct r._Marker_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+'from #references r ' + \
+'where r.dbs like "%GO%" and r.dbs not like "%GO*%" ' + \
+'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
+'where r._Refs_key = e._Refs_key ' + \
+'and e._Annot_key = a._Annot_key ' + \
+'and a._AnnotType_key = 1000) ' + \
 'order by numericPart')
 
 results = db.sql(cmds, 'auto')
