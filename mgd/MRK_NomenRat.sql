@@ -14,6 +14,7 @@ go
 
 print ""
 print "Mouse Symbols with nomenclature changes which contain Rat homologs with unofficial nomenclature"
+print "(meaning the Rat symbol has no LocusLink ID)"
 print ""
 
 select distinct m.current_symbol "New Mouse Symbol", m2.symbol "Rat Symbol"
@@ -25,8 +26,10 @@ and h1._Class_key = h2._Class_key
 and h2._Homology_key = hm2._Homology_key
 and hm2._Marker_key = m2._Marker_key
 and m2._Species_key = 40
-and m2.symbol like '*%'
-and m2.symbol != "*" + m.current_symbol + "*"
+and m2.symbol != m.current_symbol
+and not exists (select 1 from MRK_Acc_View ma 
+where m2._Marker_key = ma._Object_key
+and ma._LogicalDB_key = 24)
 order by m.current_symbol
 go
 
