@@ -53,11 +53,11 @@ go
 
 print ""
 print "-pending Markers with Human Homologies"
-print "(sorted by human symbol type, creation date, mouse symbol)"
+print "(sorted by human symbol type, mouse symbol)"
 print ""
 
 select msymbol "Mouse Symbol", type "Type", hsymbol "Human Symbol", name "Mouse Name", creation_date
 from #results
-order by type desc, creation_date, msymbol
+order by type desc, msymbol
 go
 
