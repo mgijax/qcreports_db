@@ -25,3 +25,8 @@ foreach i (`ls *.py`)
 $i
 end
 
+cd $QCNOMEN
+foreach i (`ls *.py`)
+$i
+end
+
