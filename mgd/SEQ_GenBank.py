@@ -17,6 +17,7 @@
 #		object "name" (Marker Type or MS Name)
 #		object MGI ID
 #		object symbol (for MS, the symbol of the Marker with the E, P or H relationship)
+#		if Molecular Segment, relationship (E, P, H, N if null)
 #
 # Usage:
 #       SEQ_GenBank.py
