@@ -18,7 +18,7 @@ setenv QCARCHIVEDIR		$QCREPORTOUTPUTDIR/archive
 
 # private HUGO directories
 setenv HUGOWEBDIR		l1:/usr/local/mgi/private/www/hugo
-setenv HUGOFTPDIR		/net/l1/export/l1/ftp/private/hugo
+setenv HUGOFTPDIR		/net/l1/export/l1/ftp/private/hes
 
 # RIKEN FTP report directory
 setenv RIKENFTPDIR              /net/l1/export/l1/ftp/private/riken
