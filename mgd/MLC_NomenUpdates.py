@@ -41,7 +41,7 @@ if os.path.isfile('%s/%s' % (os.environ['QCREPORTOUTPUTDIR'], currentReport)):
 	os.remove('%s/%s' % (os.environ['QCREPORTOUTPUTDIR'], currentReport))
 
 # move existing Nomen reports to the archive
-os.system('mv %s/MLCNomenclature-*.html %s/archive/nomen' % (os.environ['QCREPORTOUTPUTDIR'], os.environ['QCREPORTOUTPUTDIR']))
+os.system('mv %s/MLCNomenclature-*.html %s' % (os.environ['QCREPORTOUTPUTDIR'], os.environ['QCNOMENARCHIVE']))
 
 reportName = 'MLCNomenclature-' + mgi_utils.date('%Y-%m-%d')
 
