@@ -22,7 +22,7 @@ setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 setenv QCLOGSDIR           	${QCREPORTDIR}/logs
 
 # archive output directory
-setenv QCARCHIVEDIR		${QCREPORTDIR}/archive
+setenv QCARCHIVEDIR		${QCOUTPUTDIR}/archive
 
 # Alleles archive directory
 setenv QCALLELEARCHIVE          ${QCARCHIVEDIR}/alleles
