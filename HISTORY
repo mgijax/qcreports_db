@@ -63,6 +63,84 @@ CHANGES:
 a) MGI 3.1
 b) HMD_RIKEN.sql; performance improvements
 
+TAG:  qcreports_db-maint6300-12
+DATE: 01/21/2005
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) GXD_SpecNoAge.sql
+
+TAG:  qcreports_db-maint6300-11
+TAG:  qcreports_db-maint6300-10
+TAG:  qcreports_db-maint6300-9
+DATE: 01/20/2005
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) GXD_SpecNoAge.sql
+
+TAG:  qcreports_db-maint6300-8
+TAG:  qcreports_db-maint6300-7
+DATE: 01/12/2005
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) TR 6469
+c) TR 6465
+
+TAG:  qcreports_db-maint6300-6
+DATE: 01/05/2005
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) TR 5939
+
+TAG:  qcreports_db-maint6300-5
+TAG:  qcreports_db-maint6300-4
+TAG:  qcreports_db-maint6300-3
+TAG:  qcreports_db-maint6300-2
+TAG:  qcreports_db-maint6300-1
+DATE: 12/21/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) HMD_RIKEN.sql; performance improvements
+
+TAG:  qcreports_db-3-1-0-7
+TAG:  qcreports_db-3-1-0-6
+DATE: 12/23/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.1
+b) new reportlib.py
+
+TAG:  qcreports_db-3-1-0-6
+TAG:  qcreports_db-3-1-0-5
+TAG:  qcreports_db-3-1-0-4
+TAG:  qcreports_db-3-1-0-3
+DATE: 12/22/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.1
+b) TR 6436; conversion to EntrezGene
+c) move "output" directory to /data/reports
+d) TR 6439; BIB_NoAbstract.sql
+
+TAG:  qcreports_db-tr3007-BP
+DATE: 12/22/2004
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MGI 3.11 (TR 6300)
+b) Install
+
 TAG:  qcreports_db-maint6300-BP
 DATE: 12/21/2004
 STAFF: lec
