@@ -13,7 +13,7 @@ print ""
 
 select history "Old Symbol", symbol "New Symbol", markerName "New Name"
 from MRK_History_View
-where _Marker_Event_key = 2
+where _Marker_Event_key in (2,3,4,5)
 and event_date between @startDate and @endDate
 order by symbol
 go
