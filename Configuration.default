@@ -19,7 +19,7 @@ setenv QCREPORTDIR		/data/reports/qcreports_db
 setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 
 # report log directory
-setenv QCLOGDIR           	${QCREPORTDIR}/logs
+setenv QCLOGSDIR           	${QCREPORTDIR}/logs
 
 # archive output directory
 setenv QCARCHIVEDIR		${QCREPORTDIR}/archive
