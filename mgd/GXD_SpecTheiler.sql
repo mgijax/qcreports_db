@@ -3,21 +3,13 @@ go
 
 select distinct i._Specimen_key, t.stage
 into #temp1
-from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t
-where i._Result_key = r._Result_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
-and t.stage != 28
-union
-select distinct i._Specimen_key, t.stage
 from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t,
 GXD_StructureName sn
 where i._Result_key = r._Result_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
-and t.stage = 28
 and s._StructureName_key = sn._StructureName_key
-and (sn.structure = "placenta" or sn.structure = "decidua")
+and not (t.stage = 28 and (sn.structure = "placenta" or sn.structure = "decidua"))
 go
 
 select distinct _Specimen_key 
@@ -29,13 +21,15 @@ go
 
 select distinct i._GelLane_key, t.stage
 into #temp3
-from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t
+from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t,
+GXD_StructureName sn
 where i.age not like "%-%"
 and i.age not like "%,%"
 and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
-and t.stage != 28
+and s._StructureName_key = sn._StructureName_key
+and not (t.stage = 28 and (sn.structure = "placenta" or sn.structure = "decidua"))
 go
 
 select distinct _GelLane_key 
@@ -50,7 +44,7 @@ go
 
 print ""
 print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes stage 28)"
+print "(excludes TS28:placenta and TS28:decidua)"
 print ""
 
 select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
@@ -61,7 +55,7 @@ go
 
 print ""
 print "Gel Lane Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes stage 28)"
+print "(excludes TS28:placenta and TS28:deciduastage 28)"
 print ""
 
 select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
