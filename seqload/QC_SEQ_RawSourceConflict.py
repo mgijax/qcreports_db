@@ -60,26 +60,26 @@ fp.write(string.ljust('-------------', 35))
 fp.write(string.ljust('------------------', 35))
 fp.write(CRT)
 
-results = db.sql('select seqID = a.accID, attrName = "Library", ' + \
-	    'newRaw = qc.RawLibrary, oldRaw = s.rawLibrary, oldResolved = ps.name ' + \
+results = db.sql('select seqID = a.accID, qc.attrName, ' + \
+	    'newRaw = qc.incomingValue, oldRaw = s.rawLibrary, oldResolved = ps.name ' + \
 	    'from QC_SEQ_RawSourceConflict qc, %s..ACC_Accession a, %s..SEQ_Sequence s, ' % (mgdDB, mgdDB) + \
 	    '%s..SEQ_Source_Assoc sa, %s..PRB_Source ps ' % (mgdDB, mgdDB) + \
             'where qc._JobStream_key = %s ' % (jobStreamKey) + \
-	    'and qc.RawLibrary is not null ' + \
 	    'and qc._Sequence_key = a._Object_key ' + \
+	    'and attrName = "library" ' + \
 	    'and a._MGIType_key = 19 ' + \
 	    'and a.preferred = 1 ' + \
 	    'and qc._Sequence_key = s._Sequence_key ' + \
 	    'and s._Sequence_key = sa._Sequence_key ' + \
 	    'and sa._Source_key = ps._Source_key ' + \
 	    'union ' + \
-            'select seqID = a.accID, attrName = "Organism", ' + \
-	    'newRaw = qc.RawOrganism, oldRaw = s.rawOrganism, oldResolved = o.commonName ' + \
+            'select seqID = a.accID, qc.attrName, ' + \
+	    'newRaw = qc.incomingValue, oldRaw = s.rawOrganism, oldResolved = o.commonName ' + \
 	    'from QC_SEQ_RawSourceConflict qc, %s..ACC_Accession a, %s..SEQ_Sequence s, ' % (mgdDB, mgdDB) + \
 	    '%s..SEQ_Source_Assoc sa, %s..PRB_Source ps, %s..MGI_Organism o ' % (mgdDB, mgdDB, mgdDB) + \
             'where qc._JobStream_key = %s ' % (jobStreamKey) + \
-	    'and qc.RawOrganism is not null ' + \
 	    'and qc._Sequence_key = a._Object_key ' + \
+	    'and attrName = "organism" ' + \
 	    'and a._MGIType_key = 19 ' + \
 	    'and a.preferred = 1 ' + \
 	    'and qc._Sequence_key = s._Sequence_key ' + \
@@ -90,11 +90,26 @@ results = db.sql('select seqID = a.accID, attrName = "Library", ' + \
 
 rows = 0
 for r in results:
+    print r['seqID']
+    print r['attrName']
+    print r['newRaw']
+    print r['oldRaw']
+    print r['oldResolved']
+    print ""
+    newRaw = r['newRaw']
+    if newRaw == None:
+	newRaw = "NULL"
+    oldRaw = r['oldRaw']
+    if oldRaw == None:
+	oldRaw = "NULL"
+    oldResolved = r['oldResolved']
+    if oldResolved == None:
+        oldResolved = "NULL"
     fp.write(string.ljust(r['seqID'], 25) + \
              string.ljust(r['attrName'], 25) + \
-             string.ljust(r['newRaw'], 35) + \
-             string.ljust(r['oldRaw'], 35) + \
-             string.ljust(r['oldResolved'], 35) + \
+             string.ljust(newRaw, 35) + \
+             string.ljust(oldRaw, 35) + \
+             string.ljust(oldResolved, 35) + \
 	     CRT)
     rows = rows + 1
 
