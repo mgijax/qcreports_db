@@ -1,8 +1,10 @@
+TAG:  qcreports_db-mpr-15
 TAG:  qcreports_db-mpr-14
 DATE: 03/29/2005
 STAFF: lec
 RELEASE: A
 CHANGES: MPR
+1) TR 6698; HMD_RIKEN.sql
 
 TAG:  qcreports_db-mpr-13
 TAG:  qcreports_db-mpr-12

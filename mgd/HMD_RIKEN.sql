@@ -50,7 +50,7 @@ go
 create index idx1 on #homology2(hsymbol)
 go
 
-select h.*, type = "O"
+select h.*, e.status
 into #results
 from #homology2 h, radar..DP_EntrezGene_Info e
 where h.hsymbol = e.symbol
@@ -58,15 +58,7 @@ and e.taxID = 9606
 go
 
 insert into #results
-select h.*, type = "I"
-from #homology2 h, radar..DP_EntrezGene_Synonym es, radar..DP_EntrezGene_Info e
-where h.hsymbol = es.synonym
-and es.geneID = e.geneID
-and e.taxID = 9606
-go
-
-insert into #results
-select h.*, type = "?"
+select h.*, status = "?"
 from #homology2 h
 where not exists (select 1 from radar..DP_EntrezGene_Info e
 where e.taxID = 9606 and h.hsymbol = e.symbol)
@@ -75,7 +67,7 @@ where e.taxID = 9606 and e.geneID = es.geneID
 and h.hsymbol = es.synonym)
 go
 
-create index idx1 on #results(type)
+create index idx1 on #results(status)
 create index idx2 on #results(sequenceNum)
 create index idx3 on #results(hsymbol)
 go
@@ -89,8 +81,8 @@ print ""
 
 select
 accID "Mouse MGI Acc ID", msymbol "Mouse Symbol", mchr "Mouse Chr", 
-type "Type", hsymbol "Human Symbol", hchr "Human Chr"
+status "Type", hsymbol "Human Symbol", hchr "Human Chr"
 from #results
-order by type desc, sequenceNum, hsymbol
+order by status desc, sequenceNum, hsymbol
 go
 
