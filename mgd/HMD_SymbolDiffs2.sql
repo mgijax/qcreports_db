@@ -2,9 +2,9 @@ set nocount on
 go
 
 select distinct 
-       m_Marker_key = m1._Marker_key, msymbol = m1.symbol, mname = substring(m1.name, 1, 40), 
+       m_Marker_key = m1._Marker_key, msymbol = substring(m1.symbol,1,30), mname = substring(m1.name, 1, 40), 
        mstatus = substring(upper(ms.status), 1, 1),
-       h_Marker_key = m2._Marker_key, hsymbol = m2.symbol, hname = substring(m2.name, 1, 40),
+       h_Marker_key = m2._Marker_key, hsymbol = substring(m2.symbol,1,30), hname = substring(m2.name, 1, 40),
        m2.modification_date
 into #homology
 from HMD_Homology r1, HMD_Homology_Marker h1,
