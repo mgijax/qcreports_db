@@ -82,13 +82,19 @@ into #diffAlleles
 from #shareRef s, #sameCount c
 where s.genoGXD = c.genoGXD
 and s.genoAP = c.genoAP
-and exists (select 1 from GXD_AlleleGenotype a1, GXD_AlleleGenotype a2
+and (
+exists (select 1 from GXD_AllelePair a1, GXD_AllelePair a2
 where s.genoGXD = a1._Genotype_key
 and s.genoAP = a2._Genotype_key
-and a1._Allele_key != a2._Allele_key)
+and a1._Allele_key_1 != a2._Allele_key_1)
+or exists (select 1 from GXD_AllelePair a1, GXD_AllelePair a2
+where s.genoGXD = a1._Genotype_key
+and s.genoAP = a2._Genotype_key
+and a1._Allele_key_2 != a2._Allele_key_2)
+)
 go
 
-/* select those that have the same strain names */
+/* select those that have the same alleles and the same strain names */
 select s.*
 into #sameStrain
 from #sameCount s, GXD_Genotype g1, PRB_Strain s1, GXD_Genotype g2, PRB_Strain s2
@@ -97,11 +103,11 @@ and s.genoAP = g2._Genotype_key
 and g1._Strain_key = s1._Strain_key
 and g2._Strain_key = s2._Strain_key
 and s1.strain = s2.strain
-and not exists (select 1 from #diffAlleles a
-where s.genoGXD = a.genoGXD
-and s.genoAP = a.genoAP)
+and not exists (select 1 from #diffAlleles a where s.genoGXD = a.genoGXD and s.genoAP = a.genoAP)
 go
 
+/* select those that have the same alleles and where there is not already */
+/* another GXD/AP genotype that does match */
 select jnum = a.accID, gxdStrain = s1.strain, apStrain = s2.strain, s.genoGXD
 into #toPrint1
 from #sameCount s, GXD_Genotype g1, PRB_Strain s1, GXD_Genotype g2, PRB_Strain s2, ACC_Accession a
