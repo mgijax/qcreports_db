@@ -48,10 +48,10 @@ fp.write(TAB + 'J#' + TAB + 'short_citation' + CRT)
 fp.write(TAB + '--' + TAB + '--------------' + CRT)
 
 db.sql('select distinct r._Refs_key, r.journal into #refs ' + \
-	'from BIB_Refs r, GXD_Index i ' + \
+	'from BIB_Refs r, GXD_Assay a ' + \
 	'where r.journal in ("' + string.join(journals, '","') + '") ' + \
-	'and r._Refs_key = i._Refs_key ' + \
-	'and not exists (select 1 from GXD_Assay a where r._Refs_key = a._Refs_key)', None)
+	'and r._Refs_key = a._Refs_key ' + \
+	'and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)', None)
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
 results = db.sql('select b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
