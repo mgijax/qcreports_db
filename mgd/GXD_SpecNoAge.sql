@@ -4,13 +4,13 @@ go
 select s._Assay_key, specimenLabel = substring(s.specimenLabel, 1, 50)
 into #spec1
 from GXD_Specimen s
-where (s.age like '%day' or s.age like '%week' or s.age like '%month' or s.age like '%year')
+where s.age like 'postnatal [0-9]%'
 go
 
 select s._Assay_key, laneLabel = substring(s.laneLabel, 1, 50)
 into #spec2
 from GXD_GelLane s
-where (s.age like '%day' or s.age like '%week' or s.age like '%month' or s.age like '%year')
+where s.age like 'postnatal [0-9]%'
 go
 
 select s._Assay_key, specimenLabel = substring(s.specimenLabel, 1, 50)
@@ -36,7 +36,7 @@ set nocount off
 go
 
 print ""
-print "InSitu Specimens with NULL Age Value (when there should be one)"
+print "InSitu Specimens with incorrect 'postnatal' entry""
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
@@ -55,7 +55,7 @@ and a2.preferred = 1
 go
 
 print ""
-print "Gel Lane Specimens with NULL Age Value (when there should be one)"
+print "Gel Lane Specimens with incorrect 'postnatal' entry""
 print ""
 
 select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
