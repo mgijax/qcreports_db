@@ -116,7 +116,7 @@ db.sql(cmds, None)
 # select orthologs
 #
 cmds = []
-cmds.append('select distinct m._Marker_key, orthologKey = m2._Marker_key, s.commonName ' + \
+cmds.append('select distinct m._Marker_key, orthologyKey = m2._Marker_key, s.commonName ' + \
 	'into #orthologs ' + \
 	'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MGI_Organism s ' + \
 	'where m._Marker_key = hm1._Marker_key ' + \
@@ -141,7 +141,7 @@ for r in results:
 #
 results = db.sql('select distinct o._Marker_key, a.accID ' + \
 	'from #orthologs o, ACC_Accession a ' + \
-	'where o.orthologKey = a._Object_key ' + \
+	'where o.orthologyKey = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_key = 24', 'auto')
 llids = {}

@@ -112,7 +112,7 @@ def writeRecord(fp, r):
 	         r['name'] + TAB + \
 	         `r['numRefs']` + TAB)
 
-	if hasHomology.has_key(r['_Marker_key']):
+	if hasOrthology.has_key(r['_Marker_key']):
 		fp.write('yes' + CRT)
 	else:
 		fp.write('no' + CRT)
@@ -170,12 +170,14 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericP
 	'and not exists (select 1 from  VOC_Annot a ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._AnnotType_key = 1000 ) ')
-cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
+cmds.append('create index idx1 on #markers(_Marker_key)')
 db.sql(cmds, None)
 
 # orthologies
 
-results = db.sql('select distinct m._Marker_key ' + \
+hasOrthology = {}
+
+results = db.sql('select m._Marker_key ' + \
 	'from #markers m ' + \
 	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
 	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
@@ -184,9 +186,11 @@ results = db.sql('select distinct m._Marker_key ' + \
 	'and h1._Class_key = h2._Class_key ' + \
 	'and h2._Homology_key = hm2._Homology_key ' + \
 	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 2) ' + \
-	'union ' + \
-	'select distinct m._Marker_key ' + \
+	'and m2._Organism_key = 2) ', 'auto')
+for r in results:
+	hasOrthology[r['_Marker_key']] = 1
+
+results = db.sql('select m._Marker_key ' + \
 	'from #markers m ' + \
 	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
 	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
@@ -196,12 +200,11 @@ results = db.sql('select distinct m._Marker_key ' + \
 	'and h2._Homology_key = hm2._Homology_key ' + \
 	'and hm2._Marker_key = m2._Marker_key ' + \
 	'and m2._Organism_key = 40) ', 'auto')
-hasHomology = {}
 for r in results:
-	hasHomology[r['_Marker_key']] = 1
+	hasOrthology[r['_Marker_key']] = 1
 
 cmds = []
-cmds.append('select distinct m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
+cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
 	'r._Refs_key, jnum = a.numericPart, jnumID = a.accID, b.journal ' + \
 	'into #references ' + \
 	'from #markers m , MRK_Reference r, ACC_Accession a, BIB_Refs b ' + \
@@ -211,10 +214,10 @@ cmds.append('select distinct m._Marker_key, m.symbol, m.name, m.mgiID, m.numeric
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "J:" ' + \
 	'and r._Refs_key = b._Refs_key')
-cmds.append('create nonclustered index idx1 on #references(_Refs_key)')
-cmds.append('create nonclustered index idx2 on #references(_Marker_key)')
-cmds.append('create nonclustered index idx3 on #references(symbol)')
-cmds.append('create nonclustered index idx4 on #references(numericPart)')
+cmds.append('create index idx1 on #references(_Refs_key)')
+cmds.append('create index idx2 on #references(_Marker_key)')
+cmds.append('create index idx3 on #references(symbol)')
+cmds.append('create index idx4 on #references(numericPart)')
 db.sql(cmds, None)
 
 # select PubMed IDs for references
