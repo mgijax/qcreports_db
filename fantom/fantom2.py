@@ -30,6 +30,9 @@
 #
 # History:
 #
+# lec	05/21/2002
+#	- TR 3701/Better RefSeq
+#
 # lec	04/29/2002
 #	- TR 3638, 3639
 #
@@ -40,6 +43,7 @@ import os
 import string
 import db
 import reportlib
+import mgi_utils
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
@@ -356,7 +360,7 @@ def rep_discrepency_report():
 
 	for r in results[30]:
 		fp.write(r['riken_cloneid'] + TAB + \
-			r['riken_cluster'] + TAB + \
+			`r['riken_cluster']` + TAB + \
 			r['seq_note'] + TAB + \
 			r['final_mgiID'] + CRT)
 	
@@ -388,7 +392,7 @@ def riken_report():
 			fp.write(r['seq_note'])
 		fp.write(TAB)
 
-		if string.find(notes[r['_Fantom2_key']], 'Better RefSeq:UG') != -1:
+		if string.find(notes[r['_Fantom2_key']], 'Better RefSeq') != -1:
 			fp.write(notes[r['_Fantom2_key']])
 		fp.write(TAB)
 
