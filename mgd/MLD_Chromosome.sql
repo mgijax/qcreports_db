@@ -32,7 +32,7 @@ go
 drop table #expts
 go
 
-select distinct e.exptType, e._Refs_key, echr = e.chromosome, mchr = m.chromosome, m.symbol
+select distinct e.exptType, e._Refs_key, echr = e.chromosome, mchr = m.chromosome, m.symbol, g.description
 into #expts
 from MLD_Expts e, MLD_Expt_Marker g, MRK_Marker m
 where e._Expt_key = g._Expt_key
@@ -48,7 +48,7 @@ print "Mapping - Experiment Invalid Chromosome Vs. Marker List Chromosome"
 print ""
 
 select exptType = substring(e.exptType, 1, 30), b.jnum, substring(b.short_citation, 1, 25),
-e.echr "Mapping Chr", e.symbol, e.mchr "Marker Chr"
+e.echr "Mapping Chr", e.symbol, e.mchr "Marker Chr", e.description
 from #expts e, BIB_All_View b
 where e._Refs_key = b._Refs_key
 order by e.exptType, b.short_citation
