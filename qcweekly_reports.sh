@@ -18,3 +18,6 @@ foreach i ("$RPTS")
 $i
 end
 
+# GDB report
+GDBreport.sh -f
+
