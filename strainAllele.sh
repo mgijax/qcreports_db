@@ -1,9 +1,5 @@
 #!/bin/csh -f
 
-
-# $Header$
-# $Name$
-
 #
 # Program: strainAllele.sh
 #
