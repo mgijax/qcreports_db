@@ -1,3 +1,10 @@
+TAG:  qcreports_db-18-0-4
+DATE: 09/30/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 4117; removed PRB_StrainSynonym.sql
+
 TAG:  qcreports_db-18-0-3
 DATE: 09/23/2002
 STAFF: lec
