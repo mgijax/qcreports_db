@@ -32,9 +32,6 @@ def processMedlineFile():
 
 	inFile = open('%s/Gene.medlineid.tab' % (os.environ['QCREPORTOUTPUTDIR']), 'r')
 
-	cmd = 'drop table tempdb..gdbmedline'
-	db.sql(cmd, None)
-
 	cmd = 'create table tempdb..gdbmedline (' + \
 		'accid varchar(30) not null,' + \
 		'symbol varchar(30) not null,' + \
@@ -107,6 +104,9 @@ for r in results:
 	fp.write(reportlib.close_accession_anchor())
 	fp.write(' %-50s %-20s %-15s %-20s\n' 
 		% (r['short_citation'], r['symbol'], r['gdbsymbol'], r['accid']))
+
+cmd = 'drop table tempdb..gdbmedline'
+db.sql(cmd, None)
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp, isHTML = 1)
