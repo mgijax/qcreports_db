@@ -2,28 +2,32 @@
 set nocount on
 go
 
-select s._Sequence_key, spc._Probe_key, smc._Marker_key, pm._Refs_key
+select spc._Sequence_key, spc._Probe_key, smc._Marker_key, pm._Refs_key
 into #autoE1
-from SEQ_Sequence s, SEQ_Probe_Cache spc, SEQ_Marker_Cache smc, PRB_Marker pm  
-where s._Sequence_key = spc._Sequence_key 
-and s._Sequence_key = smc._Sequence_key 
+from SEQ_Probe_Cache spc, SEQ_Marker_Cache smc, PRB_Marker pm  
+where spc._Sequence_key = smc._Sequence_key 
 and spc._Probe_key = pm._Probe_key 
 and smc._Marker_key = pm._Marker_key 
 and pm.relationship = 'H'
 go
 
-select distinct c._Probe_key
-into #excluded
-from SEQ_Probe_Cache c, SEQ_Sequence s, VOC_Term t
-where c._Sequence_key = s._Sequence_key
-and s._SequenceQuality_key = t._Term_key
-and t.term = "Low"
+create index idx1 on #autoE1(_Probe_key)
+create index idx2 on #autoE1(_Marker_key)
+create index idx3 on #autoE1(_Refs_key)
+create index idx4 on #autoE1(_Sequence_key)
 go
 
-delete #autoE1
-where _Probe_key in
-(select _Probe_key
- from #excluded)
+select distinct c._Probe_key
+into #excluded
+from SEQ_Probe_Cache c, SEQ_Sequence s
+where c._Sequence_key = s._Sequence_key
+and s._SequenceQuality_key = 316340
+go
+
+create index idx1 on #excluded(_Probe_key)
+go
+
+delete #autoE1 where _Probe_key in (select _Probe_key from #excluded)
 go
 
 set nocount off
@@ -37,8 +41,8 @@ print "eligible for an auto-E, but cannot participate in the auto-E load"
 print "because it has a manually curated 'H' associations."
 print ""
 
-select distinct seqID = sa.accID, jNum = b.accID, SegmentID = pa.accID, 
-SegmentName = p.name, MarkerID = ma.accID, markerSymbol = m.symbol
+select seqID = sa.accID, jNum = b.accID, SegmentID = pa.accID, 
+	SegmentName = p.name, MarkerID = ma.accID, markerSymbol = m.symbol
 from #autoE1 s, ACC_Accession sa, ACC_Accession b, ACC_Accession ma,
 MRK_Marker m, ACC_Accession pa, PRB_Probe p
 where s._Sequence_key = sa._Object_key 
