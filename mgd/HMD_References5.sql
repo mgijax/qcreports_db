@@ -6,8 +6,11 @@ go
 select r._Refs_key
 into #references
 from BIB_Refs r
-where r.dbs like '%Homology%' 
-and r.dbs not like '%Homology*%'
+where exists (select 1 from BIB_DataSet_Assoc ba, BIB_DataSet bd
+where r._Refs_key = ba._Refs_key
+and ba._DataSet_key = bd._DataSet_key
+and bd.dataSet = 'Homology'
+and ba.isNeverUsed = 0)
 order by r._Refs_key
 go
 

@@ -6,10 +6,16 @@ go
 select c._Refs_key, c.jnum, c.title
 into #references
 from BIB_All_View c 
-where c.dbs like '%Homology%' 
-and c.dbs like '%Probes%'
-and c.dbs not like '%Homology*%'
-and c.dbs not like '%Probes*%'
+where exists (select 1 from BIB_DataSet_Assoc ba, BIB_DataSet bd
+where c._Refs_key = ba._Refs_key
+and ba._DataSet_key = bd._DataSet_key
+and bd.dataSet = 'Homology'
+and ba.isNeverUsed = 0)
+and exists (select 1 from BIB_DataSet_Assoc ba, BIB_DataSet bd
+where c._Refs_key = ba._Refs_key
+and ba._DataSet_key = bd._DataSet_key
+and bd.dataSet = 'Molecular Segments'
+and ba.isNeverUsed = 0)
 go
 
 select * 

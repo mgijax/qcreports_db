@@ -102,12 +102,15 @@ cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)
 
 # select all genes with references selected for GO
 
-cmds.append('select distinct m.*, r._Refs_key, r.jnumID, b.dbs ' + \
+cmds.append('select distinct m.*, r._Refs_key, r.jnumID ' + \
 'into #references ' + \
-'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
+'from #markers m , MRK_Reference_View r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 'where m._Marker_key = r._Marker_key ' + \
 'and r._Refs_key = b._Refs_key ' + \
-'and b.dbs like "%GO%" and b.dbs not like "%GO*%"')
+'and b._Refs_key = ba._Refs_key ' + \
+'and ba._DataSet_key = bd._DataSet_key ' + \
+'and bd.dataSet = "Gene Ontology" ' + \
+'and ba.isNeverUsed = 0')
 
 cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
 
@@ -123,8 +126,11 @@ cmds.append('select distinct r._Refs_key, a.accID ' + \
 # has reference been selected for GXD
 
 cmds.append('select distinct r._Refs_key ' + \
-'from #references r ' + \
-'where r.dbs like "%Expression%" and r.dbs not like "%Expression*%"')
+'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+'where r._Refs_key = ba._Refs_key ' + \
+'and ba._DataSet_key = bd._DataSet_key ' + \
+'and bd.dataSet = "Expression" ' + \
+'and ba.isNeverUsed = 0')
 
 # does marker have GO annotations
 

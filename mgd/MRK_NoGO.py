@@ -190,7 +190,7 @@ cmds.append('select distinct m._Marker_key ' + \
 
 cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
 
-cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citation, b.dbs ' + \
+cmds.append('select distinct m.*, r._Refs_key, r.jnum, r.jnumID, r.short_citation ' + \
 'into #references ' + \
 'from #markers m , MRK_Reference_View r, BIB_Refs b ' + \
 'where m._Marker_key = r._Marker_key ' + \
@@ -210,8 +210,11 @@ cmds.append('select distinct r._Refs_key, a.accID ' + \
 # has reference been chosen for GXD
 
 cmds.append('select distinct r._Refs_key ' + \
-'from #references r ' + \
-'where r.dbs like "%Expression%" and r.dbs not like "%Expression*%"')
+'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+'where r._Refs_key = ba._Refs_key ' + \
+'and ba._DataSet_key = bd._DataSet_key ' + \
+'and bd.dataSet = "Expression" ' + \
+'and ba.isNeverUsed = 0')
 
 cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 'from #references ' + \
@@ -232,8 +235,11 @@ cmds.append('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_
 'order by symbol')
 
 cmds.append('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
-'from #references r ' + \
-'where r.dbs like "%GO%" and r.dbs not like "%GO*%" ' + \
+'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+'where r._Refs_key = ba._Refs_key ' + \
+'and ba._DataSet_key = bd._DataSet_key ' + \
+'and bd.dataSet = "Gene Ontology" ' + \
+'and ba.isNeverUsed = 0 ' + \
 'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
 'where r._Refs_key = e._Refs_key ' + \
 'and e._Annot_key = a._Annot_key ' + \
