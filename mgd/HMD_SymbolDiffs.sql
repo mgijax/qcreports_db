@@ -4,7 +4,7 @@ print ""
 
 select distinct 
 	m1.symbol "MGI Symbol", 
-	m2.symbol "Official Human Symbol", 
+	m2.symbol "MGI Human Symbol", 
 	a1.accID "MGI ID", 
 	substring(m1.name, 1, 40) "MGI Name",
 	l.locusID "LL ID",
