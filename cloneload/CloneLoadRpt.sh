@@ -77,6 +77,9 @@ exit 0
 
 
 #  $Log$
+#  Revision 1.1  2004/07/09 13:46:36  dbm
+#  Moved from parent directory
+#
 #  Revision 1.2  2003/11/21 18:24:58  dbm
 #  Converted to csh
 #
