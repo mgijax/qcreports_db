@@ -1,9 +1,10 @@
-TAG: qcreports_db-17-0-8
+TAG: qcreports_db-17-0-8, qcreports_db-17-0-9
 DATE: 05/03/2002
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) added goStats.sh/TR 2212
+b) put header and trailer into report
 
 TAG: qcreports_db-17-0-7
 DATE: 05/02/2002

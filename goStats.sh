@@ -146,6 +146,15 @@ echo "GO Stats Being Generated..."
 
 rm -f $REPORT
 
+cat > $REPORT <<END
+The Jackson Laboratory - Mouse Genome Informatics - Mouse Genome Database (MGD)
+Copyright 1996, 1999, 2000 The Jackson Laboratory
+All Rights Reserved
+Date Generated:  `date`
+(SERVER=$SERVER;DATABASE=$DATABASE)
+
+END
+
 getCounts "ALL"        $COUNT_ALL_REFERENCES ""
 getCounts "HAND"       "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE 
 getCounts "GO_FISH"    $EQUALS               $GO_FISH 
@@ -154,6 +163,8 @@ getCounts "INTERPRO"   $EQUALS               $INTERPRO
 getCounts "ORTHOLOGY"  $EQUALS               $ORTHOLOGY  
 getCounts "EC"         $EQUALS               $EC
 getCounts "MLC"        $EQUALS               $MLC
+
+cat /usr/local/mgi/dbutils/mgidbutilities/text/copyrightnotice >> $REPORT
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
