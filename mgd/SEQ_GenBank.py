@@ -202,8 +202,6 @@ for r in results[-1]:
 		           symbol + '|' + \
 			   rel)
 	      else:
-		  print mgiSymbol
-		  print mgiObject
  	          fp.write(reportlib.TAB + mgiName + '|' + \
 		           names[mgiObject] + '|' + \
 		           mgiIDs[mgiObject] + '|' + \
