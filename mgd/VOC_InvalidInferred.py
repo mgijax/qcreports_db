@@ -34,8 +34,6 @@ import db
 import mgi_utils
 import reportlib
 
-#findID = 'select _Object_key from ACC_Accession where accID = "%s"'
-
 #
 # Main
 #
