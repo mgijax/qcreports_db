@@ -1,3 +1,12 @@
+TAG: qcreports_db-6-0-0
+DATE: 04/13/2001
+STAFF: lec
+RELEASE: A
+CHANGES:
+TR 2495
+a) modified MRK_Alleles.sql
+b) removed MRK_AllelesAll.sql MRK_AllelesByDate.sql
+
 TAG: qcreports_db-5-7-0, -1
 DATE: 04/06/2001
 STAFF: lec
