@@ -63,7 +63,7 @@ where not exists
 where m._Marker_key = a._Object_key
 and a._LogicalDB_key = 9
 and m.accID = a.accID)
-order by m.symbol
+order by m.name
 go
 
 print ""
@@ -79,6 +79,6 @@ and m.accID = a.accID
 and m._Refs_key != a._Refs_key
 and a._Refs_key = b._Object_key
 and b.prefixPart = "J:"
-order by m.symbol
+order by m.name
 go
 
