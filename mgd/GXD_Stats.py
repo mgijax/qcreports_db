@@ -592,12 +592,12 @@ def monthlyCounts():
 	fp.write(str(r['ref']) + CRT)
 
     #
-    # Total Result
+    # Total Results
     #
 
     results = db.sql('select sum(results) from #periodCounts', 'auto')
     for r in results:
-	fp.write(CRT + 'Total Result: ' + str(r['']) + CRT)
+	fp.write(CRT + 'Total Results: ' + str(r['']) + CRT)
 
     #
     # Assays and results by Assay Type and month/year
@@ -635,8 +635,8 @@ def monthlyCounts():
     for r in results:
 
 	if len(prevAssay) > 0 and prevAssay != r['assayType']:
-	    fp.write(CRT + 'Total Assay: ' + str(asummary[prevAssay]) + CRT)
-	    fp.write('Total Result: ' + str(rsummary[prevAssay]) + CRT)
+	    fp.write(CRT + 'Total Assays: ' + str(asummary[prevAssay]) + CRT)
+	    fp.write('Total Results: ' + str(rsummary[prevAssay]) + CRT)
 	    prevAssay = r['assayType']
             fp.write(2*CRT + string.ljust('Assay Type', 30))
             fp.write(string.ljust('Year', 10))
@@ -656,8 +656,8 @@ def monthlyCounts():
 	fp.write(string.ljust(str(r['results']), 10) + CRT)
 	prevAssay = r['assayType']
 
-    fp.write(CRT + 'Total Assay: ' + str(asummary[prevAssay]) + CRT)
-    fp.write('Total Result: ' + str(rsummary[prevAssay]) + CRT)
+    fp.write(CRT + 'Total Assays: ' + str(asummary[prevAssay]) + CRT)
+    fp.write('Total Results: ' + str(rsummary[prevAssay]) + CRT)
 
 ########
 #      #

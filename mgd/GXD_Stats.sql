@@ -1,7 +1,8 @@
 set nocount on
 go
 
-/* Number of IMAGE cDNAs and ESTs*/
+/* cDNAs */
+
 print ""
 print "IMAGE cDNAs and ESTs:"
 
