@@ -25,5 +25,6 @@ a.event_date "Date Withdrawn"
 from #alleles a, BIB_Acc_View b
 where a._Refs_key = b._Object_key
 and b.prefixPart = "J:"
+and b._LogicalDB_key = 1
 order by a.event_date desc
 go

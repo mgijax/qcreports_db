@@ -21,6 +21,7 @@ into #markers2
 from #markers1 m, MRK_Acc_View a
 where m._Marker_key = a._Object_key
 and a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a.preferred = 1
 go
 

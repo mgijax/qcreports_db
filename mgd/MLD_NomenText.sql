@@ -35,6 +35,7 @@ and m._Refs_key = b._Refs_key
 and m._Expt_key = a._Object_key
 and a._MGIType_key = 4
 and a.prefixPart= "MGI:"
+and a._LogicalDB_key = 1
 order by m.event_date desc
 go
 

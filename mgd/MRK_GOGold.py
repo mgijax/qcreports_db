@@ -145,6 +145,7 @@ cmds.append('select distinct m._Marker_key, ma.accID ' + \
 'from #m1 m, MRK_Acc_View ma ' + \
 'where m._Marker_key = ma._Object_key ' + \
 'and ma.prefixPart = "MGI:" ' + \
+'and ma._LogicalDB_key = 1 ' + \
 'and ma.preferred = 1 ')
 
 cmds.append('select * from #m1')

@@ -44,6 +44,7 @@ cmds.append('select m._Marker_key, m.symbol, mgiID = a.accID, markerType = t.nam
      'and m._Marker_key = a._Object_key ' + \
      'and a._MGIType_key = 2 ' + \
      'and a.prefixPart = "MGI:" ' + \
+     'and a._LogicalDB_key = 1 ' + \
      'and a.preferred = 1 ' + \
      'and m._Marker_Type_key = t._Marker_Type_key')
 
@@ -57,6 +58,7 @@ cmds.append('select m.*, a.accID ' + \
 	'and h._Refs_key = a._Object_key ' + \
 	'and a._MGIType_key = 1 ' + \
 	'and a.prefixPart = "J:" ' + \
+        'and a._LogicalDB_key = 1 ' + \
         'order by m.symbol')
 
 results = db.sql(cmds, 'auto')

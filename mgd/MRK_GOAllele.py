@@ -82,6 +82,7 @@ cmds.append('select m._Marker_key, m.symbol, ma.accID, goID = a.accID, term = su
 'and m._Marker_Status_key = 1 ' + \
 'and m._Marker_key = ma._Object_key ' + \
 'and ma.prefixPart = "MGI:" ' + \
+'and ma._LogicalDB_key = 1 ' + \
 'and ma.preferred = 1' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a._AnnotType_key = 1000 ' + \

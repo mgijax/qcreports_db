@@ -60,6 +60,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'and m._Marker_Status_key = 1 ' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a.prefixPart = "MGI:" ' + \
+'and a._LogicalDB_key = 1 ' + \
 'and a.preferred = 1' + \
 'and m.symbol *= n.symbol')
 

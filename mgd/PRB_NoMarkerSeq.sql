@@ -40,6 +40,7 @@ and a._LogicalDB_key = 9
 and a._Accession_key = ar._Accession_key
 and ar._Refs_key = b._Object_key
 and b.prefixPart = "J:"
+and b._LogicalDB_key = 1
 go
 
 set nocount off

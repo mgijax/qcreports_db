@@ -41,7 +41,7 @@ cmds = []
 # Retrieve MGI Accession number
 
 cmds.append('select distinct a._Object_key, a.accID from PRB_Strain_Acc_View a ' + \
-	'where a._LogicalDB_key = 1 and a.prefixPart = "MGI:" and a.preferred = 1')
+	'where a._LogicalDB_key = 1 and a.prefixPart = "MGI:" and a._LogicalDB_key = 1 and a.preferred = 1')
 
 # External Accession IDs
 

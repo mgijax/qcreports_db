@@ -72,6 +72,7 @@ cmds.append('select a1.accID, markerID = a2.accID, f.ddbjID, f.relationship ' + 
 'and f._Marker_key = a2._Object_key ' + \
 'and a2._MGIType_key = 2 ' + \
 'and a2.prefixPart = "MGI:" ' + \
+'and a2._LogicalDB_key = 1 ' + \
 'and a2.preferred = 1 ' + \
 'order by f.relationship, a1.accID')
 

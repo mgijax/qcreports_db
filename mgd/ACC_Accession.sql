@@ -8,6 +8,7 @@ where m._Species_key = 1
 and m._Marker_Status_key = 1
 and not exists (select a.* from MRK_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Marker_key)
 go
 
@@ -30,6 +31,7 @@ from BIB_Refs m
 where 
 not exists (select a.* from BIB_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Refs_key)
 go
 
@@ -42,6 +44,7 @@ from BIB_Refs m
 where 
 not exists (select a.* from BIB_Acc_View a
 where a.prefixPart = "J:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Refs_key)
 go
 
@@ -64,6 +67,7 @@ from MLD_Expts m
 where 
 not exists (select a.* from MLD_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Expt_key)
 go
 
@@ -86,6 +90,7 @@ from PRB_Probe m
 where 
 not exists (select a.* from PRB_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Probe_key)
 go
 
@@ -107,6 +112,7 @@ from GXD_Antigen m
 where 
 not exists (select a.* from GXD_Antigen_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Antigen_key)
 go
 
@@ -129,6 +135,7 @@ from GXD_Antibody m
 where 
 not exists (select a.* from GXD_Antibody_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Antibody_key)
 go
 
@@ -151,6 +158,7 @@ from GXD_Assay m
 where 
 not exists (select a.* from GXD_Assay_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Assay_key)
 go
 
@@ -173,6 +181,7 @@ from IMG_Image m
 where 
 not exists (select a.* from IMG_Image_Acc_View a
 where a.prefixPart = "MGI:"
+and a._LogicalDB_key = 1
 and a._Object_key = m._Image_key)
 go
 

@@ -7,6 +7,7 @@ from MRK_Marker m, MRK_Acc_View a
 where m._Species_key = 2
 and m._Marker_key = a._Object_key
 and a.prefixPart = "GDB:"
+and a._LogicalDB_key = 2
 go
 
 create index index_symbol on #markers (symbol)
