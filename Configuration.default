@@ -1,0 +1,50 @@
+#!/bin/csh
+
+#
+# Configuration.default
+#
+# Source this file from any csh script to set the
+# env variables
+#
+
+# install directory
+setenv QCREPORTINSTALLDIR	/usr/local/mgi/qcreports_db
+
+# report output directory
+setenv QCREPORTOUTPUTDIR	/usr/local/mgi/qcreports_db/output
+
+# SYBASE
+setenv SYBASE			/opt/sybase
+
+# PYTHON
+
+setenv PYTHONPATH       	/usr/local/lib/python1.4:/usr/local/etc/httpd/python
+
+# PATH
+
+set path = ($path $SYBASE/bin)
+
+# Database Server
+
+setenv DSQUERY MGD_DEV
+
+# MGD Database
+
+setenv MGD mgd_release
+
+# Nomen Database
+
+setenv NOMEN nomen_dev
+
+# Strains Database
+
+setenv STRAINS strains_dev
+
+# Public login
+
+setenv USER mgd_public
+
+# Password
+
+setenv PASSWORD mgdpub
+
