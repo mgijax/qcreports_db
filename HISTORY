@@ -1,3 +1,10 @@
+TAG:  qcreports_db-18-0-16
+DATE: 02/19/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 3928 (goStats.sh; added Fantom2 category)
+
 TAG:  qcreports_db-18-0-14
 TAG:  qcreports_db-18-0-15
 DATE: 02/11/2003
@@ -9,6 +16,7 @@ b) TR 4491 (MRK_NoGo.py; added report D)
 c) TR 4494 (BIB_NeedNLM.sql)
 d) TR 4505 (GXD_MechDev.sql, GXD_GeneExprPatterns.sql)
 e) TR 4481 (GXD_SpecTheilerAge.py)
+f) TR 4519 (MRK_DashPending.sql)
 
 TAG:  qcreports_db-18-0-13
 DATE: 01/13/2003
