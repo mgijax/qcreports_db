@@ -2,7 +2,7 @@ print ""
 print "Mouse Genes that have Rat Homologs but no GO associations"
 print ""
 
-select distinct a.accID, m1.symbol, m1.name
+select distinct a.accID, m1.symbol, name = substring(m1.name, 1, 100)
 from MRK_Acc_View a, MRK_Marker m1, HMD_Homology_Marker hm1, HMD_Homology h1,
 HMD_Homology_Marker hm2, HMD_Homology h2, MRK_marker m2
 where m1._Species_key = 1
@@ -18,5 +18,5 @@ where m1._Marker_key = g._Marker_key)
 and m1._Marker_key = a._Object_key
 and a.prefixPart = "MGI:"
 and a.preferred = 1
-order by a.accID
+order by m1.symbol
 go
