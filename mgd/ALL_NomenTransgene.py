@@ -137,8 +137,12 @@ for r in results:
 
 	markerSymbol = r['symbol']
 	testSymbol = parseSymbol(markerSymbol)
-	[s1, s2] = string.splitfields(testSymbol, '-')
 
+	try:
+		[s1, s2] = string.splitfields(testSymbol, '-')
+	except:
+		s1 = testSymbol
+		
 	if isAllCaps(s1):
 		species = 2
 	else:
@@ -160,8 +164,12 @@ for r in results:
 
 	markerSymbol = r['symbol']
 	testSymbol = parseSymbol(markerSymbol)
-	[s1, s2] = string.splitfields(testSymbol, '/')
 
+	try:
+		[s1, s2] = string.splitfields(testSymbol, '/')
+	except:
+		s1 = testSymbol
+		
 	if isAllCaps(s1):
 		species1 = 2
 	else:
