@@ -19,7 +19,7 @@ and hm2._Marker_key = m2._Marker_key
 and m2._Species_key = 2
 and not exists (select 1 from MRK_ACC_View a
 where m._Marker_key = a._Object_key
-and a._LogicalDB_Key = 9)
+and a._LogicalDB_Key in (9, 27))
 go
 
 set nocount off

@@ -67,7 +67,7 @@ cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'and m._Marker_Status_key = s._Marker_Status_key ' + \
 	'and exists (select 1 from MRK_ACC_View a ' + \
 	'where m._Marker_key = a._Object_key ' + \
-	'and a._LogicalDB_Key = 9) ' + \
+	'and a._LogicalDB_Key in (9, 27)) ' + \
 	'and not exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
 	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
 	'where hm1._Marker_key = m._Marker_key ' + \
