@@ -37,18 +37,20 @@ else:
 	currentDate = mgi_utils.date('%m/%d/%Y')
 
 fp = reportlib.init(sys.argv[0], title = 'Alleles with Immune System Annotations', \
-    outputdir = os.environ["QCREPORTOUTPUTDIR"], fileExt = '.' + os.environ['DATE'] + '.rpt')
+    outputdir = os.environ["QCREPORTOUTPUTDIR"], fileExt = '.' + os.environ['DATE'], isHTML = 1)
 fp.write(' symbol' + reportlib.CRT)
 fp.write(' ' + '-' * 25 + reportlib.CRT)
 
-cmd = 'select distinct a.symbol ' + \
+cmds = []
+cmds.append('select distinct a.symbol, a._Allele_key ' + \
+'into #alleles ' + \
 'from ALL_Allele a, ALL_Note_General_View n ' + \
 'where a._Allele_key = n._Allele_key ' + \
 'and n.note like "%immune system:%" ' + \
 'and n.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
 'and dateadd(day, 1, "%s") ' % (currentDate) + \
 'union ' + \
-'select distinct a.symbol ' + \
+'select distinct a.symbol, a._Allele_key ' + \
 'from ALL_Allele a, GXD_AlleleGenotype g, VOC_Annot_View v ' + \
 'where a._Allele_key = g._Allele_key ' + \
 'and g._Genotype_key = v._Object_key ' + \
@@ -57,24 +59,32 @@ cmd = 'select distinct a.symbol ' + \
 'and v.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
 'and dateadd(day, 1, "%s") ' % (currentDate) + \
 'union ' + \
-'select distinct a.symbol ' + \
+'select distinct a.symbol, a._Allele_key ' + \
 'from ALL_Allele a, GXD_AlleleGenotype g, VOC_Annot_View v ' + \
 'where a._Allele_key = g._Allele_key ' + \
 'and g._Genotype_key = v._Object_key ' + \
 'and v._AnnotType_key = 1002 ' + \
 'and v.term like "%immune system:%" ' + \
 'and v.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
-'and dateadd(day, 1, "%s") ' % (currentDate) + \
-'order by a.symbol'
+'and dateadd(day, 1, "%s") ' % (currentDate))
 
-results = db.sql(cmd, 'auto')
+cmds.append('select a.symbol, l.accID ' + \
+'from #alleles a, ALL_Acc_View l ' + \
+'where a._Allele_key = l._Object_key ' + \
+'and l._LogicalDB_key = 1 ' + \
+'and l.prefixPart = "MGI:" ' + \
+'and l.preferred = 1 ' + \
+'order by a.symbol')
 
-for r in results:
+results = db.sql(cmds, 'auto')
 
-	fp.write(' ' + r['symbol'] + reportlib.CRT)
+for r in results[-1]:
+
+	fp.write(' %s' % (reportlib.create_accession_anchor(r['accID'])) + \
+	    r['symbol'] + '%s' % (reportlib.close_accession_anchor()) + reportlib.CRT)
 
 fp.write(reportlib.CRT + '(%d rows affected)' % (len(results)) + reportlib.CRT)
 
 reportlib.trailer(fp)
-reportlib.finish_nonps(fp)	# non-postscript file
+reportlib.finish_nonps(fp, isHTML = 1)	# non-postscript file
 

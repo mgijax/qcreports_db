@@ -24,11 +24,11 @@ cd `dirname $0` && source Configuration
 cd weekly
 foreach i (*.py)
 if ( $i == "ALL_ImmuneAnnot.py" ) then
-        echo "$QCREPORTOUTPUTDIR/`basename $i py`[0-9]*.rpt"
-	mv -f $QCREPORTOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
-	rm -rf $QCREPORTOUTPUTDIR/`basename $i py`current.rpt
+        echo "$QCREPORTOUTPUTDIR/`basename $i py`[0-9]*.html"
+	mv -f $QCREPORTOUTPUTDIR/`basename $i py`[0-9]*.html $QCALLELEARCHIVE
+	rm -rf $QCREPORTOUTPUTDIR/`basename $i py`current.html
 	$i
-	ln -s $QCREPORTOUTPUTDIR/`basename $i py`${DATE}.rpt $QCREPORTOUTPUTDIR/`basename $i py`current.rpt
+	ln -s $QCREPORTOUTPUTDIR/`basename $i py`${DATE}.html $QCREPORTOUTPUTDIR/`basename $i py`current.html
 else
 	$i
 endif
