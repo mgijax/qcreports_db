@@ -660,7 +660,7 @@ def monthlyCounts():
 #      #
 ########
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 0)
 cdnas()
 indexOnly()
 fullCoded()
