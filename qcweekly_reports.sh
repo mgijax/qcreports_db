@@ -8,7 +8,7 @@
 # Usage: qcweekly_reports.sh
 #
 
-cd `dirname $0` && source Configuration
+cd `dirname $0` && source ./Configuration
 
 #foreach i ($QCWEEKLY/*.sql)
 #if ( $i == "$QCWEEKLY/ALL_ImmuneAnnot.sql" ) then

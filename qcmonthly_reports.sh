@@ -8,7 +8,7 @@
 # Usage: qcmonthly_reports.sh
 #
 
-cd `dirname $0` && source Configuration
+cd `dirname $0` && source ./Configuration
 
 foreach i ($QCMONTHLY/*.sql)
 

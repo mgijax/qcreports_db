@@ -8,7 +8,7 @@
 # Usage: qcnightly_reports.sh
 #
 
-cd `dirname $0` && source Configuration
+cd `dirname $0` && source ./Configuration
 
 foreach i ($QCMGD/*.sql)
 reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
