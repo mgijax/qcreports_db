@@ -2,7 +2,7 @@ TAG: qcreports_db-2-1-2
 DATE: 06/27/2000
 STAFF: lec
 RELEASE: A
-CHANGES: added DEPENDENCIES
+CHANGES: added DEPENDENCIES; modified MRK_Duplicates.sql
 
 TAG: qcreports_db-2-1-1
 DATE: 06/21/2000
