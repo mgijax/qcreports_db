@@ -22,7 +22,6 @@ foreach i ($QCNOMEN/*.sql)
 reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $NOMEN
 end
 
-
 cd $QCMGD
 foreach i (*.py)
 $i
@@ -38,12 +37,13 @@ foreach i (*.py)
 $i
 end
 
-#
-# Copy Nomen Reserved Report to private HUGO directories
-#
+cd $QCREPORTOUTPUTDIR
+foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt)
+rcp $i $HUGOWEBDIR
+rcp $i $HUGOFTPDIR
+end
 
-rcp $QCREPORTOUTPUTDIR/NOMEN_Reserved.rpt $HUGODIR1
-rcp $QCREPORTOUTPUTDIR/NOMEN_Pending.rpt $HUGODIR1
-rcp $QCREPORTOUTPUTDIR/NOMEN_Reserved.rpt $HUGODIR2
-rcp $QCREPORTOUTPUTDIR/NOMEN_Pending.rpt $HUGODIR2
+foreach i (fantom2.mgi)
+rcp $i $RIKENFTPDIR
+end
 
