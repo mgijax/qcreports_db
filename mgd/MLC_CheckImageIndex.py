@@ -14,7 +14,7 @@ import reportlib
 # Main Routine
 #
 
-inputFile = open('/usr/local/mgi/wi/prod/www/images/mlc/index', 'r')
+inputFile = open(os.environ['MLCINDEX'], 'r')
 fp = reportlib.init(sys.argv[0], 'MLC Image Index File Entries Which Contain Withdrawn Symbols', os.environ['QCREPORTOUTPUTDIR'])
 fp.write(string.ljust('MGD Withdrawn Symbol', 25) + reportlib.TAB + 'Image Entry\n\n')
 
