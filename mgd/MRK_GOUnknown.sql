@@ -56,6 +56,7 @@ from #temp2 t, BIB_DataSet_Assoc a, BIB_DataSet d
 where t._Refs_key = a._Refs_key
 and a._DataSet_key = d._DataSet_key
 and d.abbreviation = 'GO'
+and a.isNeverUsed = 0
 and not exists (select 1 from VOC_Annot va, VOC_Evidence e
 where va._AnnotType_key = 1000
 and va._Annot_key = e._Annot_key
