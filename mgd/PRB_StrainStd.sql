@@ -4,6 +4,12 @@ go
 select s._Strain_key, dataExists = "y"
 into #strains
 from PRB_Strain s
+where 1 = 2
+go
+
+insert into #strains
+select s._Strain_key, dataExists = "y"
+from PRB_Strain s
 where s.standard = 1
 and 
 (
