@@ -50,23 +50,24 @@ fp.write("  A row in this report represents a discrepency between the Clone Libr
 "  than one Library, the Sequence and those Libraries will appear on this report." + 2*CRT)
 
 fp.write(string.ljust('Sequence ID', 16))
-fp.write(string.ljust('Library Name 1', 35))
-fp.write(string.ljust('Library Name 2', 35))
+fp.write(string.ljust('Library Name 1', 45))
+fp.write(string.ljust('Library Name 2', 45))
 fp.write(CRT)
 fp.write(string.ljust('-----------', 16))
-fp.write(string.ljust('--------------', 35))
-fp.write(string.ljust('--------------', 35))
+fp.write(string.ljust('--------------', 45))
+fp.write(string.ljust('--------------', 45))
 fp.write(CRT)
 
 results = db.sql('select qc.accID, qc.libName1, libName2 ' + \
 	    'from QC_MS_NameConflict qc ' + \
-            'where qc._JobStream_key = %s ' % (jobStreamKey), 'auto')
+            'where qc._JobStream_key = %s ' % (jobStreamKey) + \
+	    'order by qc.accID', 'auto')
 
 rows = 0
 for r in results:
     fp.write(string.ljust(r['accID'], 16) + \
-             string.ljust(r['libName1'], 35) + \
-             string.ljust(r['libName2'], 35) + \
+             string.ljust(r['libName1'], 45) + \
+             string.ljust(r['libName2'], 45) + \
 	     CRT)
     rows = rows + 1
 
