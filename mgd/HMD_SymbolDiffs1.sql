@@ -19,6 +19,7 @@ and r2._Homology_key = h2._Homology_key
 and h2._Marker_key = m2._Marker_key 
 and m2._Organism_key = 2 
 and m1.symbol != m2.symbol
+and m1.symbol not like '%Rik'
 go
 
 select h.*, mgiID = a1.accID, locusID = a2.accID
@@ -71,7 +72,8 @@ set nocount off
 go
 
 print ""
-print "MGD Mouse Symbols which differ from Orthologous Human Symbols"
+print "MGI Mouse Symbols which differ from Orthologous Human Symbols"
+print "Excludes RIKEN Symbols"
 print "(sorted by modification date of human symbol, symbol status, mouse symbol)"
 print ""
 

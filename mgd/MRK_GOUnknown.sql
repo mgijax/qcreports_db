@@ -33,7 +33,7 @@ and ma.preferred = 1
 and t._Refs_key = ba._Object_key 
 and ba._MGIType_key = 1 
 and ba._LogicalDB_key = 29
-and ba.accID not in ('11217851', '12466851')
+and ba.accID not in ('11217851', '12466851', '14621295', '11125038')
 go
 
 create index idx1 on #temp2(_Refs_key)
@@ -45,7 +45,7 @@ go
 print ""
 print "All genes with 'unknown' annotations with new indexed literature"
 print "Indicator column indicates if reference is selected for GO and 'not used' for any GO annotation"
-print "(excludes FANTOM papers 11217851 and 12466851)"
+print "(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038)"
 print ""
 
 /* set indicator if reference is selected for GO and 'not used' for any GO annotation */
