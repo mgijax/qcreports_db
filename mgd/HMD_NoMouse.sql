@@ -12,6 +12,13 @@ and hm._Marker_key = m._Marker_key
 and m._Species_key = 1)
 go
 
+select distinct h._Class_key, h.symbol, h.species, h.jnumID, h._Species_key
+into #homology
+from #class c, HMD_Homology_View h
+where c._Class_key = h._Class_key
+order by c._Class_key
+go
+
 set nocount off
 go
 
@@ -19,9 +26,17 @@ print ""
 print "Homology Records w/out Mouse Genes"
 print ""
 
-select distinct h._Class_key, h.symbol, h.species, h.jnumID
-from #class c, HMD_Homology_View h
-where c._Class_key = h._Class_key
-order by c._Class_key
+select distinct h._Class_key, h.symbol, m.symbol, h.species, h.jnumID
+from #homology h, MRK_Marker m
+where h.symbol not like '*%'
+and h.symbol *= m.symbol
+and m._Species_key = 1
+union
+select distinct h._Class_key, h.symbol, m.symbol, h.species, h.jnumID
+from #homology h, MRK_Marker m
+where h.symbol like '*%'
+and substring(h.symbol, 2, char_length(h.symbol) - 2) *= m.symbol
+and m._Species_key = 1
+order by h._Class_key
 go
 
