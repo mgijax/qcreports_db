@@ -41,12 +41,13 @@ print ""
 print "Mouse/Human Singletons"
 print ""
 
-select m1.symbol "Mouse Symbol", m1.chromosome, m1.cytogeneticOffset, o.offset,
+select m1.symbol "Mouse Symbol", substring(ms.status,1,10) "Status", m1.chromosome, m1.cytogeneticOffset, o.offset,
 m2.symbol "Human Symbol", m2.chromosome, m2.cytogeneticOffset, h.accID
-from #singles s, #homologies h, MRK_Marker m1, MRK_Marker m2, MRK_Offset o
+from #singles s, #homologies h, MRK_Marker m1, MRK_Marker m2, MRK_Status ms, MRK_Offset o
 where s.mouseMarker = h.mouseMarker
 and s.humanMarker = h.humanMarker
 and s.mouseMarker = m1._Marker_key
+and m1._Marker_Status_key = ms._Marker_Status_key
 and m1._Marker_key = o._Marker_key
 and o.source = 0
 and s.humanMarker = m2._Marker_key

@@ -5,7 +5,7 @@ select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date
 into #marker
 from MRK_Marker m
 where m._Species_key = 1
-and m.symbol like '%-pending'
+and m._Marker_Status_key = 3
 go
 
 select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date
@@ -31,18 +31,18 @@ and h2._Marker_key = m2._Marker_key
 and m2._Species_key = 2)
 go
 
-select h.*, type = "O"
+select h.*, hstatus = "O"
 into #results
 from #homology h, tempdb..LL l
 where h.hsymbol = l.osymbol
 and l.taxID = 9606
 union
-select h.*, type = "I"
+select h.*, hstatus = "I"
 from #homology h, tempdb..LL l
 where h.hsymbol = l.isymbol
 and l.taxID = 9606
 union
-select h.*, type = "?"
+select h.*, hstatus = "?"
 from #homology h
 where not exists (select 1 from tempdb..LL l
 where l.taxID = 9606 and (h.hsymbol = l.osymbol or h.hsymbol = l.isymbol))
@@ -53,11 +53,11 @@ go
 
 print ""
 print "-pending Markers with Human Homologies"
-print "(sorted by human symbol type, mouse symbol)"
+print "(sorted by human symbol status, mouse symbol)"
 print ""
 
-select msymbol "Mouse Symbol", type "Type", hsymbol "Human Symbol", name "Mouse Name", creation_date
+select msymbol "Mouse Symbol", hstatus "Status", hsymbol "Human Symbol", name "Mouse Name", creation_date
 from #results
-order by type desc, msymbol
+order by hstatus desc, msymbol
 go
 

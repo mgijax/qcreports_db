@@ -47,21 +47,24 @@ fp.write('Mouse Genes with Sequence ID but no Human Homology' + CRT)
 fp.write('(Excludes RIKEN genes, Expressed Sequence, EST, Hypothetical)' + 2*CRT)
 
 fp.write('Symbol                     ')
+fp.write('Status      ')
 fp.write('Seq ID' + CRT)
 fp.write(25 * '-' + '  ')
+fp.write(10 * '-' + '  ')
 fp.write(30 * '-' + CRT)
 
 cmds = []
 
-cmds.append('select distinct m._Marker_key, m.symbol ' + \
+cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'into #markers ' + \
-	'from MRK_Marker m ' + \
+	'from MRK_Marker m, MRK_Status s ' + \
 	'where m._Species_key = 1 ' + \
 	'and m._Marker_Type_key = 1 ' + \
 	'and m.symbol not like "%Rik" ' + \
 	'and m.name not like "%expressed%" ' + \
 	'and m.name not like "EST %" ' + \
 	'and m.name not like "%hypothetical%" ' + \
+	'and m._Marker_Status_key = s._Marker_Status_key ' + \
 	'and exists (select 1 from MRK_ACC_View a ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._LogicalDB_Key = 9) ' + \
@@ -94,6 +97,7 @@ for r in results[-2]:
 for r in results[-1]:
 
 	fp.write(string.ljust(r['symbol'], 27) + \
+	        string.ljust(r['status'], 12) + \
 		string.joinfields(seqIDs[r['_Marker_key']], ',') + CRT)
 
 rows = len(results[-1])

@@ -3,13 +3,15 @@ go
 
 select distinct 
        m_Marker_key = m1._Marker_key, msymbol = m1.symbol, mname = substring(m1.name, 1, 40), 
+       mstatus = substring(upper(ms.status), 1, 1),
        h_Marker_key = m2._Marker_key, hsymbol = m2.symbol, hname = substring(m2.name, 1, 40),
        m2.modification_date
 into #homology
 from HMD_Homology r1, HMD_Homology_Marker h1,
      HMD_Homology r2, HMD_Homology_Marker h2,
-     MRK_Marker m1, MRK_Marker m2
+     MRK_Marker m1, MRK_Marker m2, MRK_Status ms
 where m1._Species_key = 1 
+and m1._Marker_Status_key = ms._Marker_Status_key
 and m1._Marker_key = h1._Marker_key 
 and h1._Homology_key = r1._Homology_key 
 and r1._Class_key = r2._Class_key 
@@ -40,18 +42,18 @@ where h.h_Marker_key = a2._Object_key
 and a2._LogicalDB_key = 24)
 go
 
-select m.*, type = "O"
+select m.*, hstatus = "O"
 into #results
 from #markers m, tempdb..LL l
 where m.locusID = l.locusID
 and m.hsymbol = l.osymbol
 union
-select m.*, type = "I"
+select m.*, hstatus = "I"
 from #markers m, tempdb..LL l
 where m.locusID = l.locusID
 and m.hsymbol = l.isymbol
 union
-select m.*, type = "?"
+select m.*, hstatus = "?"
 from #markers m
 where not exists (select 1 from tempdb..LL l
 where m.locusID = l.locusID and (m.hsymbol = l.osymbol or m.hsymbol = l.isymbol))
@@ -62,12 +64,13 @@ go
 
 print ""
 print "MGD Mouse Symbols which differ from Orthologous Human Symbols"
-print "(sorted by modification date of human symbol, symbol type, mouse symbol)"
+print "(sorted by modification date of human symbol, symbol status, mouse symbol)"
 print ""
 
 select msymbol "MGI Symbol", 
+       mstatus "Status",
        hsymbol "MGI Human Symbol", 
-       type "Type",
+       hstatus "Status",
        mgiID "MGI ID", 
        mname "MGI Name",
        locusID "LL ID",
