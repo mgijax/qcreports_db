@@ -34,7 +34,7 @@ print "    Molecular Segments and Markers Eligible for Auto-E"
 print ""
 print "A row in this report represents a Molecular Segment/Marker pair that is"
 print "eligible for an auto-E, but cannot participate in the auto-E load"
-print "because they have manually curated 'H' associations."
+print "because it has a manually curated 'H' associations."
 print ""
 
 select distinct seqID = sa.accID, jNum = b.accID, SegmentID = pa.accID, 
