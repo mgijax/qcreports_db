@@ -59,8 +59,20 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.preferred = 1' + \
-'and m.symbol *= n.symbol ' + \
-'and n._CreatedBy_key = u._User_key')
+'and m.symbol = n.symbol ' + \
+'and n._CreatedBy_key = u._User_key ' + \
+'union ' + \
+'select m._Marker_key, m.symbol, m.name, mgiID = a.accID, NULL, NULL, NULL ' + \
+'from MRK_Marker m, MRK_Acc_View a ' + \
+'where m._Marker_Status_key = 3 ' + \
+'and m._Marker_key = a._Object_key ' + \
+'and a.prefixPart = "MGI:" ' + \
+'and a._LogicalDB_key = 1 ' + \
+'and a.preferred = 1' + \
+'and not exists (select 1 from NOM_Marker n, MGI_User u ' + \
+'where m.symbol = n.symbol ' + \
+'and n._CreatedBy_key = u._User_key)')
+
 
 #
 # Get PubMed IDs of primary reference
