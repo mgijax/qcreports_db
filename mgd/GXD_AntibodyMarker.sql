@@ -5,6 +5,7 @@ select a._Assay_key, a._Marker_key, p._Antibody_key
 into #antibody
 from GXD_Assay a, GXD_AntibodyPrep p
 where a._AntibodyPrep_key = p._AntibodyPrep_key
+and a._AssayType_key != 9
 go
 
 set nocount off
