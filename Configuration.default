@@ -28,6 +28,7 @@ setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 
 # qcr.html index directory
 setenv QCHTML			/usr/local/etc/httpd/internal/docs
+setenv QCHTMLSERVER		prodwww
 
 # MLC index file
 setenv MLCINDEX			/usr/local/mgi/wi/prod/www/images/mlc/index
