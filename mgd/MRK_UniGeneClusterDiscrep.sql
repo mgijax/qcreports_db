@@ -1,3 +1,6 @@
+set nocount on
+go
+
 select accID, _Object_key
 into #ug
 from ACC_Accession
@@ -10,6 +13,9 @@ from #ug u, MRK_Marker m
 where u._Object_key = m._Marker_key
 group by accID
 having count(distinct chromosome)>1
+
+set nocount off
+go
 
 print ""
 print "NOTE:"
