@@ -75,3 +75,8 @@ setenv DBOUSER  mgd_dbo
 # DBO Password
 setenv DBOPASSWORDFILE  /usr/local/mgi/dbutils/mgidbutilities/.mgd_dbo_password
 
+# Public User
+setenv PUBUSER  mgd_public
+
+# DBO Password
+setenv PUBPASSWORDFILE  /usr/local/mgi/dbutils/mgidbutilities/.mgd_public_password
