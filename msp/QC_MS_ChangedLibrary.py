@@ -23,6 +23,7 @@ import sys
 import db
 import string
 import reportlib
+import mgi_utils
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -55,6 +56,7 @@ fp.write(string.ljust('New Source key', 25))
 fp.write(string.ljust('New Raw Name', 50))
 fp.write(string.ljust('New Resolved Name', 50))
 fp.write(string.ljust('Found Method', 25))
+fp.write(CRT)
 fp.write(string.ljust('---------------', 30))
 fp.write(string.ljust('--------------', 25))
 fp.write(string.ljust('------------', 50))
@@ -70,7 +72,7 @@ fp.write(CRT)
 #
 
 results = db.sql('select qc1.oldSource_key, qc1.oldRawName, qc1.oldResolvedName, ' + \
-	   'qc1.newSourceKey, qc1.newRawName, qc1.newResolvedName, qc1.foundMethod, ' + \
+	   'qc1.newSource_key, qc1.newRawName, qc1.newResolvedName, qc1.foundMethod, ' + \
 	   'a.accID ' + \
 	   'from QC_MS_ChangedLibrary qc1, %s..ACC_Accession a ' % (mgdDB) + \
            'where qc1._JobStream_key = %s ' % (jobStreamKey) + \
@@ -85,13 +87,13 @@ results = db.sql('select qc1.oldSource_key, qc1.oldRawName, qc1.oldResolvedName,
 rows = 0
 for r in results:
     fp.write(string.ljust(r['accID'], 30) + \
-	     string.ljust(str(r['oldSourceKey']), 25) + \
+	     string.ljust(mgi_utils.prvalue(r['oldSource_key']), 25) + \
 	     string.ljust(r['oldRawName'], 50) + \
 	     string.ljust(r['oldResolvedName'], 50) + \
-	     string.ljust(str(r['newSourceKey']), 25) + \
-	     string.ljust(r['newRawName'], 50) + \
-	     string.ljust(r['newResolvedName'], 50) + \
-	     string.ljust(r['foundMethod'], 25) + \
+	     string.ljust(mgi_utils.prvalue(r['newSource_key']), 25) + \
+	     string.ljust(mgi_utils.prvalue(r['newRawName']), 50) + \
+	     string.ljust(mgi_utils.prvalue(r['newResolvedName']), 50) + \
+	     string.ljust(mgi_utils.prvalue(r['foundMethod']), 25) + \
 	     CRT)
     rows = rows + 1
 
