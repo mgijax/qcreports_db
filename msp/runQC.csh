@@ -63,7 +63,7 @@ endif
 source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
 
-setenv LOG ${OUTPUTDIR}/$0.log
+setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
  
