@@ -1,22 +1,37 @@
 set nocount on
 go
 
-select distinct mkey = m1._Marker_key, msymbol = m1.symbol, mchr = m1.chromosome,
-hsymbol = m2.symbol, hchr = m2.chromosome + m2.cytogeneticOffset, c.sequenceNum
+select mkey = m._Marker_key, msymbol = m.symbol, mchr = m.chromosome
+into #markers
+from MRK_Marker m
+where m._Organism_key = 1
+and m.symbol like '%Rik'
+go
+
+create index idx1 on #markers(mkey)
+go
+
+select hkey = m._Marker_key, hsymbol = m.symbol, hchr = m.chromosome + m.cytogeneticOffset, c.sequenceNum
+into #hmarkers
+from MRK_Marker m, MRK_Chromosome c
+where m._Organism_key = 2
+and m._Organism_key = c._Organism_key
+and m.chromosome = c.chromosome
+go
+
+create index idx1 on #hmarkers(hkey)
+go
+
+select distinct m1.mkey, m1.msymbol, m1.mchr, m2.hsymbol, m2.hchr, m2.sequenceNum
 into #homology1
-from HMD_Homology r1, HMD_Homology_Marker h1, 
-HMD_Homology r2, HMD_Homology_Marker h2, 
-MRK_Marker m1, MRK_Marker m2, MRK_Chromosome c
-where m1._Organism_key = 1 
-and m1.symbol like '%Rik'
-and m1._Marker_key = h1._Marker_key 
+from #markers m1, #hmarkers m2, 
+HMD_Homology r1, HMD_Homology_Marker h1, 
+HMD_Homology r2, HMD_Homology_Marker h2
+where m1.mkey = h1._Marker_key 
 and h1._Homology_key = r1._Homology_key 
 and r1._Class_key = r2._Class_key 
 and r2._Homology_key = h2._Homology_key 
-and h2._Marker_key = m2._Marker_key 
-and m2._Organism_key = 2 
-and m2._Organism_key = c._Organism_key 
-and m2.chromosome = c.chromosome 
+and h2._Marker_key = m2.hkey
 go
 
 create index idx1 on #homology1(mKey)
@@ -40,12 +55,16 @@ into #results
 from #homology2 h, radar..DP_LL l
 where h.hsymbol = l.osymbol
 and l.taxID = 9606
-union
+go
+
+insert into #results
 select h.*, type = "I"
 from #homology2 h, radar..DP_LL l
 where h.hsymbol = l.isymbol
 and l.taxID = 9606
-union
+go
+
+insert into #results
 select h.*, type = "?"
 from #homology2 h
 where not exists (select 1 from radar..DP_LL l
