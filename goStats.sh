@@ -136,7 +136,7 @@ go
 END
 }
 
-getSummary()
+getSummary1()
 {
 
 echo "*********************************************************************" >> $REPORT
@@ -155,6 +155,39 @@ select substring(d.name,1,30) "ontology", count(n._Object_key) "number of terms"
 from DAG_DAG d, DAG_Node n
 where d._DAG_key in (1,2,3)
 and d._DAG_key = n._DAG_key
+group by d._DAG_key
+go
+
+set nocount off
+go
+
+END
+
+echo ""                                                                      >> $REPORT
+echo "*********************************************************************" >> $REPORT
+
+}
+
+getSummary2()
+{
+
+echo "*********************************************************************" >> $REPORT
+echo "GO Ontology Summary - Number of GO Terms per Ontology Used in MGI"     >> $REPORT
+echo ""                                                                      >> $REPORT
+
+isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+
+use $DATABASE
+go
+
+set nocount on
+go
+
+select substring(d.name,1,30) "ontology", count(n._Object_key) "number of terms"
+from DAG_DAG d, DAG_Node n
+where d._DAG_key in (1,2,3)
+and d._DAG_key = n._DAG_key
+and exists (select 1 from VOC_Annot a where n._Object_key = a._Term_key)
 group by d._DAG_key
 go
 
@@ -195,7 +228,8 @@ Date Generated:  `date`
 
 END
 
-getSummary
+getSummary1
+getSummary2
 getCounts "ALL"        $COUNT_ALL_REFERENCES ""
 getCounts "HAND"       "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE 
 getCounts "GO_FISH"    $EQUALS               $GO_FISH 
