@@ -1,3 +1,11 @@
+TAG: qcreports_db-8-0-0
+DATE: 07/26/2001
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 2271 - MRK_NomenRat.sql
+b) TR 2242 - MRK_NomenChrAberr.py, MRK_NomenTransgene.py, ALL_NomenTransgene.py
+
 TAG: qcreports_db-7-0-0, qcreports_db-7-0-1, qcreports_db-7-0-2
 DATE: 07/11/2001
 STAFF: lec
