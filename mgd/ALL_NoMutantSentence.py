@@ -36,7 +36,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Genes w/Phenotypic Alleles and No Mutant Sentence', os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Genes w/Phenotypic Alleles and No Mutant Sentence', os.environ['QCOUTPUTDIR'])
 
 cmd = 'select ac.accID, m.symbol ' + \
       'from ACC_Accession ac, MRK_Marker m ' + \

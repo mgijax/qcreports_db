@@ -131,10 +131,10 @@ def writeRecordD(fp, r):
 #
 
 db.useOneConnection(1)
-fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpD = reportlib.init("MRK_GOIEA_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
+fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpD = reportlib.init("MRK_GOIEA_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:

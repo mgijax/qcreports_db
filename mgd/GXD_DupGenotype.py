@@ -163,7 +163,7 @@ def formatOutput( genoTypeSet ):
 #
 fp = None
 
-fp = reportlib.init(sys.argv[0], 'Duplicate Genotypes', os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Duplicate Genotypes', os.environ['QCOUTPUTDIR'])
 
 cmds = []
 

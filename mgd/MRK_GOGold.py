@@ -99,10 +99,10 @@ def writeRecord2(fp, r):
 #
 
 db.useOneConnection(1)
-fpA = reportlib.init("MRK_GOGold_A", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpB = reportlib.init("MRK_GOGold_B", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpC = reportlib.init("MRK_GOGold_C", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
-fpD = reportlib.init("MRK_GOGold_D", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fpA = reportlib.init("MRK_GOGold_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpB = reportlib.init("MRK_GOGold_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpC = reportlib.init("MRK_GOGold_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpD = reportlib.init("MRK_GOGold_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
 cmds = []

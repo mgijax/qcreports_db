@@ -50,7 +50,7 @@ molsegType = 'Molecular Segment'
 #
 
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
 print 'query 1 begin...%s' % (mgi_utils.date())
 cmds = []

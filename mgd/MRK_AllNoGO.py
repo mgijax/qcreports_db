@@ -80,7 +80,7 @@ def writeRecord(fp, r):
 #
 
 db.useOneConnection(1)
-fp = reportlib.init("MRK_AllNoGO", printHeading = 0, outputdir = os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
+fp = reportlib.init("MRK_AllNoGO", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:

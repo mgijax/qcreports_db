@@ -59,7 +59,7 @@ PAGE = reportlib.PAGE
 db.useOneConnection(1)
 
 title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq), excluding Mutant Phenotypes'
-fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(string.ljust('Gene Symbol', 27) + \
  	 string.ljust('GXD Refs', 12) + \

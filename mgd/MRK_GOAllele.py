@@ -55,7 +55,7 @@ PAGE = reportlib.PAGE
 
 title = 'Markers w/ GO Annotations where the Evidence Code = IMP, Inferred From = NULL\n' + \
         'and the Annotation Reference is associated with one or more Alleles\n'
-fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(string.ljust('symbol', 52) + \
 	 string.ljust('goID', 32) + \

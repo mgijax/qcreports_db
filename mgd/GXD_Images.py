@@ -44,7 +44,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Papers Requiring Images (Development, Dev Dyn, PLoS, BMC)', outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Papers Requiring Images (Development, Dev Dyn, PLoS, BMC)', outputdir = os.environ['QCOUTPUTDIR'])
 
 cmd = 'select b.jnumID ' + \
       'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \

@@ -33,7 +33,7 @@ CRT = reportlib.CRT
 TAB = reportlib.TAB
 
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], 'Crosses Where # of Haplotypes Does Not Match # of Loci', os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Crosses Where # of Haplotypes Does Not Match # of Loci', os.environ['QCOUTPUTDIR'])
 fp.write('J#' + TAB + 'Expt Type' + TAB + 'Tag' + CRT * 2)
 
 # all experiments

@@ -13,7 +13,7 @@
 
 source ./Configuration
 
-cd ${QCREPORTINSTALLDIR}
+cd ${QCINSTALLDIR}
 sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
 mv -f qcr.html.new qcr.html
 cd ${QCMGD}
@@ -23,8 +23,13 @@ sed "s/radar/$RADARDB/g" $i > $i.new
 mv -f $i.new $i
 end
 
-cd ${QCREPORTINSTALLDIR}
-chmod 444 Configuration* HISTORY *.html
-chmod 550 *.sh */*.py */*.sql Install
-chmod 775 output
+cd ${QCINSTALLDIR}
+chmod 644 Configuration.* HISTORY *.html
+chmod 750 *.sh */*.py */*.sql Install
 
+mkdir ${QCREPORTDIR}
+mkdir ${QCOUTPUTDIR}
+mkdir ${QCLOGSDIR}
+mkdir ${QCARCHIVEDIR}
+mkdir ${QCALLELEARCHIVE}
+mkdir ${QCNOMENARCHIVE}

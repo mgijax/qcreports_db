@@ -28,7 +28,7 @@ import string
 import db
 import reportlib
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('QTL Markers added to MGI since March 2002 with no PhenoSlim annotations')
 fp.write(reportlib.CRT*2)

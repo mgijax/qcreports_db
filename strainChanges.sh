@@ -13,7 +13,7 @@ cd `dirname $0` && source ./Configuration
 
 umask 002
 
-setenv OUTPUTFILE	${QCREPORTOUTPUTDIR}/PRB_Strain_NameChanges.rpt
+setenv OUTPUTFILE	${QCOUTPUTDIR}/PRB_Strain_NameChanges.rpt
 
 cat > $OUTPUTFILE <<END
 The Jackson Laboratory - Mouse Genome Informatics - Mouse Genome Database (MGD)

@@ -47,7 +47,7 @@
 
 cd `dirname $0` && source ./Configuration
 
-setenv LOG ${QCREPORTOUTPUTDIR}/`basename $0 sh`log
+setenv LOG ${QCOUTPUTDIR}/`basename $0 sh`log
 rm -rf $LOG
 touch $LOG
  

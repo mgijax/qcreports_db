@@ -42,7 +42,7 @@ TAB = reportlib.TAB
 #
 
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('Mouse Genes with Sequence ID but no Human Orthology' + CRT)
 fp.write('(Excludes RIKEN genes, Expressed Sequence, EST, Hypothetical)' + 2*CRT)
