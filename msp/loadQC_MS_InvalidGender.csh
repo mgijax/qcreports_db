@@ -73,23 +73,24 @@ select @startDate = convert(char(10), start_date, 101)
 from APP_JobStream
 where _JobStream_key = ${JOBSTREAM}
 
-select s.rawGender
+select s.rawSex
 into #all
-from ${MGDDBNAME}..SEQ_Sequence s, ${MGDDBNAME}..SEQ_Source_Assoc sa, 
-${MGDDBNAME}..PRB_Source ps, ${MGDDBNAME}..VOC_Term st
+from ${MGDDBNAME}..SEQ_Sequence s, ${MGDDBNAME}..SEQ_Source_Assoc sa, ${MGDDBNAME}..PRB_Source ps
 where convert(char(10), s.modification_date, 101) >= @startDate
-and s.rawGender is not null
-and s.rawGender != "Not Loaded"
+and s.rawSex is not null
+and s.rawSex != "Not Loaded"
 and s._Sequence_key = sa._Sequence_key
 and sa._Source_key = ps._Source_key
-and ps._Gender_key = st._Term_key
-and st.term = "Not Resolved"
+and ps._Gender_key = 315169
 go
 
-select rawGender, occurrences = count(rawGender), seq = identity(10)
+create index idx1 on #all(rawSex)
+go
+
+select rawSex, occurrences = count(rawSex), seq = identity(10)
 into #allwithcounts
 from #all
-group by rawGender
+group by rawSex
 go
 
 declare @maxKey integer
@@ -98,7 +99,7 @@ if @maxKey is null
     select @maxKey = 1
 
 insert into QC_MS_InvalidGender
-select @maxKey + seq, ${JOBSTREAM}, rawGender, occurrences, getdate()
+select @maxKey + seq, ${JOBSTREAM}, rawSex, occurrences, getdate()
 from #allwithcounts
 go
 

@@ -86,6 +86,9 @@ and ps._Tissue_key = st._Tissue_key
 and st.tissue = "Not Resolved"
 go
 
+create index idx1 on #all(rawTissue)
+go
+
 select rawTissue, occurrences = count(rawTissue), seq = identity(10)
 into #allwithcounts
 from #all
