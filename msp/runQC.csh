@@ -78,7 +78,7 @@ end
 # execute all reports
 
 foreach i (*.py)
-./$i ${OUTPUTDIR} ${JOBSTREAM} ${MGDDBNAME}
+./$i
 end
 
 date | tee -a ${LOG}
