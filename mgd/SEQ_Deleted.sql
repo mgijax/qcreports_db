@@ -11,8 +11,9 @@ go
 
 select a.accID
 into #deleted2
-from #deleted1 d, SEQ_Sequence_Acc_View a
+from #deleted1 d, ACC_Accession a
 where d._Sequence_key = a._Object_key
+and a._MGIType_key = 19
 go
 
 set nocount off
@@ -34,6 +35,7 @@ and ma._MGIType_key = 2
 and ma._Object_key = m._Marker_key 
 and m._Marker_key = ma2._Object_key 
 and ma2._MGIType_key = 2
+and ma2._LogicalDB_key = 1
 and ma2.prefixPart = 'MGI:'
 and ma2.accID != ma.accID
 union
@@ -44,6 +46,7 @@ and pa._MGIType_key = 3
 and pa._Object_key = p._Probe_key
 and p._Probe_key = pa2._Object_key
 and pa2._MGIType_key = 3
+and pa2._LogicalDB_key = 1
 and pa2.prefixPart = 'MGI:'
 and pa2.accID != pa.accID
 go

@@ -22,10 +22,11 @@ print "Genotype Annotations to Obsolete MP Terms"
 print ""
 
 select g.accID "Genotype ID", o.accID "MP ID", substring(o.term , 1, 100) "Term"
-from #obsolete o, VOC_Annot a, GXD_Genotype_Acc_View g
+from #obsolete o, VOC_Annot a, ACC_Accession g
 where a._AnnotType_key = 1002 
 and a._Term_key = o._Object_key 
 and a._Object_key = g._Object_key 
+and g._MGIType_key = 12
 and g._LogicalDB_key = 1 
 and g.prefixPart = "MGI:" 
 and g.preferred = 1

@@ -11,8 +11,9 @@ print "to a Marker."
 print ""
 
 select seqID = sa.accID
-from SEQ_Sequence s, SEQ_Sequence_Acc_View sa
+from SEQ_Sequence s, ACC_Accession sa
 where s._Sequence_key = sa._Object_key
+and sa._MGIType_key = 19
 and sa.preferred = 1
 and s.modification_date >
 (select max(annotation_date) from SEQ_Marker_Cache smc

@@ -11,8 +11,9 @@ go
 
 select a.accID
 into #split2
-from #split1 s, SEQ_Sequence_Acc_View a
+from #split1 s, ACC_Accession a
 where s._Sequence_key = a._Object_key
+and a._MGIType_key = 19
 and a.preferred = 1
 go
 

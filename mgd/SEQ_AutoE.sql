@@ -37,20 +37,29 @@ print "eligible for an auto-E, but cannot participate in the auto-E load"
 print "because they have manually curated 'H' associations."
 print ""
 
-select distinct seqID = sa.accID, jNum = b.jnumID, SegmentID = pa.accID, 
+select distinct seqID = sa.accID, jNum = b.accID, SegmentID = pa.accID, 
 SegmentName = p.name, MarkerID = ma.accID, markerSymbol = m.symbol
-from #autoE1 s, SEQ_Sequence_Acc_View sa, BIB_View b, MRK_ACC_View ma,
-MRK_Marker m, PRB_ACC_View pa, PRB_Probe p
+from #autoE1 s, ACC_Accession sa, ACC_Accession b, ACC_Accession ma,
+MRK_Marker m, ACC_Accession pa, PRB_Probe p
 where s._Sequence_key = sa._Object_key 
+and sa._MGIType_key = 19
 and sa.preferred = 1 
 and sa._LogicalDB_key = 9
-and s._Refs_key = b._Refs_key 
+and s._Refs_key = b._Object_key 
+and b._MGIType_key = 1
+and b._LogicalDB_key = 1
+and b.prefixPart = 'J:'
+and b.preferred = 1
 and s._Marker_key = m._Marker_key
 and m._Marker_key = ma._Object_key
+and ma._LogicalDB_key = 1
+and ma._MGIType_key = 2
 and ma.prefixPart = 'MGI:'
 and ma.preferred = 1
 and s._Probe_key = p._Probe_key
 and p._Probe_key = pa._Object_key
+and pa._MGIType_key = 3
+and pa._LogicalDB_key = 1
 and pa.prefixPart = 'MGI:'
 and pa.preferred = 1
 order by sa.accID
