@@ -38,8 +38,7 @@ union
 select h.*, type = "?"
 from #homology h
 where not exists (select 1 from tempdb..LL l
-where h.hsymbol = l.osymbol
-or h.hsymbol = l.isymbol)
+where l.taxID = 9606 and (h.hsymbol = l.osymbol or h.hsymbol = l.isymbol))
 go
 
 set nocount off
