@@ -45,7 +45,7 @@ and i.index_id = s.index_id
 and s.stage_id in (40,41)
 go
 
-select r.*, i._Marker_key
+select distinct r._Refs_key, i._Marker_key
 into #markers
 from #refs r, GXD_Index i
 where r._Refs_key = i._Refs_key
