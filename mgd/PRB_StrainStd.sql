@@ -44,20 +44,18 @@ print ""
 print "Standard Strains"
 print ""
 
-select jr = null, substring(t.strainType,1,30) "straintype", substring(s.strain,1,125) "strain", n.dataExists "data attached"
-from PRB_Strain s, MLP_StrainTypes_View t, #strains n
+select jr = null, substring(s.strain,1,125) "strain", n.dataExists "data attached"
+from PRB_Strain s, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
-and s._Strain_key *= t._Strain_key
 and not exists (select 1 from PRB_Strain_Acc_View a
 where a._Object_key = s._Strain_key
 and a._LogicalDB_key = 22)
 union
-select jr = a.accID, substring(t.strainType,1,30), substring(s.strain,1,125), n.dataExists
-from PRB_Strain s, MLP_StrainTypes_View t, PRB_Strain_Acc_View a, #strains n
+select jr = a.accID, substring(s.strain,1,125), n.dataExists
+from PRB_Strain s, PRB_Strain_Acc_View a, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
-and s._Strain_key *= t._Strain_key
 and a._Object_key = s._Strain_key
 and a._LogicalDB_key = 22
 order by s.strain
