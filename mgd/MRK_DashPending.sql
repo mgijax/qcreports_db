@@ -52,7 +52,7 @@ set nocount off
 go
 
 print ""
-print "-pending Markers with Human Homologies"
+print "Interim Markers with Human Homologies"
 print "(sorted by human symbol status, mouse symbol)"
 print ""
 
