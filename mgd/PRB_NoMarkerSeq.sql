@@ -33,12 +33,13 @@ go
 
 select distinct p.name, p.symbol, p._Marker_key, a.accID, ar._Refs_key, jnumID = b.accID
 into #markers
-from #probes2 p, ACC_Accession a, ACC_AccessionReference ar, BIB_Acc_View b 
+from #probes2 p, ACC_Accession a, ACC_AccessionReference ar, ACC_Accession b 
 where p._Probe_key = a._Object_key 
 and a._MGIType_key = 3
 and a._LogicalDB_key = 9 
 and a._Accession_key = ar._Accession_key
 and ar._Refs_key = b._Object_key
+and b._MGIType_key = 1
 and b.prefixPart = "J:"
 and b._LogicalDB_key = 1
 go

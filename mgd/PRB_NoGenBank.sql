@@ -28,7 +28,7 @@ from #probes p
 where not exists (select a.* from ACC_Accession a
 where p._Probe_key = a._Object_key
 and a._MGIType_key = 3
-and a._LogicalDB_key = 9
+and a._LogicalDB_key = 9)
 go
 
 /* From this list of Probes w/out Seq Acc IDs, */
