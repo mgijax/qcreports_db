@@ -8,7 +8,7 @@ where a._AnnotType_key = 1000
 and a._Annot_key = e._Annot_key
 go
 
-select a._Object_key, e.evidenceCode
+select distinct a._Object_key, e.evidenceCode
 into #gomarker
 from VOC_Annot a, VOC_Evidence_View e
 where a._AnnotType_key = 1000
