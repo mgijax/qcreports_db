@@ -1,3 +1,9 @@
+TAG: qcreports_db-1-0-4
+DATE: 04/03/2000
+STAFF: lec
+RELEASE: A
+CHANGES: replaced mgdlib with db
+
 TAG: qcreports_db-1-0-3
 DATE: 03/29/2000
 STAFF: lec
