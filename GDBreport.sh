@@ -28,6 +28,6 @@ endif
 # Execute report of potentail mouse/human homologies
 #
 
-cd $QCREPORTINSTALLDIR
+cd $QCGDB
 HMD_Potentials.py
 
