@@ -28,3 +28,9 @@ chmod 444 Configuration* HISTORY *.html
 chmod 550 *.sh */*.py */*.sql Install
 chmod 775 output
 
+mkdir ${QCREPORTDIR}
+mkdir ${QCOUTPUTDIR}
+mkdir ${QCLOGSDIR}
+mkdir ${QCARCHIVEDIR}
+mkdir ${QCALLELEARCHIVE}
+mkdir ${QCNOMENARCHIVE}

@@ -17,12 +17,12 @@ cd `dirname $0` && source ./Configuration
 foreach i ($QCMGD/*.sql)
 echo $i, `date`
 if ( $i == "$QCMGD/MRK_MarkerClip.sql" ) then
-	mv -f $QCREPORTOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
-	rm -rf $QCREPORTOUTPUTDIR/`basename $i`.current.rpt
-	reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.${DATE}.rpt $DSQUERY $MGD
-	ln -s $QCREPORTOUTPUTDIR/`basename $i`.${DATE}.rpt $QCREPORTOUTPUTDIR/`basename $i`.current.rpt
+	mv -f $QCOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
+	rm -rf $QCOUTPUTDIR/`basename $i`.current.rpt
+	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.${DATE}.rpt $DSQUERY $MGD
+	ln -s $QCOUTPUTDIR/`basename $i`.${DATE}.rpt $QCOUTPUTDIR/`basename $i`.current.rpt
 else
-	reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
 endif
 echo $i, `date`
 end
@@ -34,7 +34,7 @@ $i
 echo $i, `date`
 end
 
-cd $QCREPORTOUTPUTDIR
+cd $QCOUTPUTDIR
 foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt HMD_SymbolDiffs2.sql.rpt)
 rcp $i $HUGOWEBDIR
 rcp $i $HUGOFTPDIR

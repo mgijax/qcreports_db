@@ -37,40 +37,22 @@ go
 create index idx_key on #sequences1(_Marker_key)
 go
 
-select sq.*, s.synonym
-into #sequences2
-from #sequences1 sq, MGI_Synonym s, MGI_SynonymType st
-where sq._Marker_key = s._Object_key
-and s._SynonymType_key = st._SynonymType_key
-and st.synonymType = "exact"
-union
-select sq.*, null
-from #sequences1 sq
-where not exists (select 1 from MGI_Synonym s, MGI_SynonymType st
-where sq._Marker_key = s._Object_key
-and s._SynonymType_key = st._SynonymType_key
-and st.synonymType = "exact")
-go
-
-create index idx_key on #sequences2(_Marker_key)
-go
-
 /* find pubmed ids by LocusLink ID */
 
 select s.*, refID = c.pubmedID
 into #sequencesFinal
-from #sequences2 s, ACC_Accession a, radar..DP_LLCit c
+from #sequences1 s, ACC_Accession a, radar_1..DP_LLCit c
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 24
 and a.accID = c.locusID
 union
 select s.*, null
-from #sequences2 s, ACC_Accession a
+from #sequences1 s, ACC_Accession a
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 24
-and not exists (select 1 from radar..DP_LLCit c
+and not exists (select 1 from radar_1..DP_LLCit c
 where a.accID = c.locusID)
 go
 
