@@ -77,8 +77,7 @@ for r in results:
 fp.write('MGI ID' + TAB)
 fp.write('Symbol' + TAB)
 fp.write('Name' + TAB)
-fp.write('Details' + TAB)
-fp.write('other acc ids' + TAB)
+fp.write('Details' + TAB + TAB)
 fp.write('Reserved Date' + 2*CRT)
 
 results = db.sql('select * from #nomen order by symbol', 'auto')
