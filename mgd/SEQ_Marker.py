@@ -52,38 +52,39 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'], pr
 
 cmds = []
 
+# select all distinct sequences/markers, excluding certain providers
 cmds.append('select distinct s._Sequence_key, s._Marker_key ' + \
-	'into #seqmarker ' + \
+	'into #seqMarker ' + \
 	'from SEQ_Marker_Cache s, SEQ_Sequence ss, VOC_Term t ' + \
 	'where s._Sequence_key = ss._Sequence_key ' + \
 	'and ss._SequenceProvider_key = t._Term_key ' + \
 	'and t.term not in ("DoTS", "TIGR Mouse Gene Index", "NIA Mouse Gene Index")')
 
-cmds.append('create index idx_key1 on #seqmarker(_Sequence_key)')
-cmds.append('create index idx_key2 on #seqmarker(_Marker_key)')
+cmds.append('create index idx_key1 on #seqMarker(_Sequence_key)')
+cmds.append('create index idx_key2 on #seqMarker(_Marker_key)')
 
-cmds.append('select distinct _Sequence_key into #uniqueseq from #seqmarker')
-cmds.append('create index idx_key on #uniqueseq(_Sequence_key)')
+# select unique sequences
+cmds.append('select distinct _Sequence_key into #uniqueSeq from #seqMarker')
+cmds.append('create index idx_key on #uniqueSeq(_Sequence_key)')
 
-cmds.append('select distinct _Marker_key into #uniquemrk from #seqmarker')
-cmds.append('create index idx_key on #uniquemrk(_Marker_key)')
+# select unique markers
+cmds.append('select distinct _Marker_key into #uniqueMrk from #seqMarker')
+cmds.append('create index idx_key on #uniqueMrk(_Marker_key)')
 
 # select Seq IDs
-
 cmds.append('select a.accID, a._Object_key ' + \
 	'into #accSeq ' + \
-	'from #uniqueseq s, ACC_Accession a ' + \
+	'from #uniqueSeq s, ACC_Accession a ' + \
 	'where s._Sequence_key = a._Object_key ' + \
 	'and a._MGIType_key = 19 ' + \
 	'and a.preferred = 1')
 
 cmds.append('create index idx_key on #accSeq(_Object_key)')
 
-# select MGI IDs
-
+# select marker MGI IDs
 cmds.append('select a.accID, a._Object_key ' + \
 	'into #accMrk ' + \
-	'from #uniquemrk s, ACC_Accession a ' + \
+	'from #uniqueMrk s, ACC_Accession a ' + \
 	'where s._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_key = 1 ' + \
@@ -113,6 +114,7 @@ cmds.append('select a.accID, _Sequence_key = a._Object_key, sq.length, sq.descri
 cmds.append('create index idx_key1 on #seqAttr(_Sequence_key)')
 cmds.append('create index idx_key2 on #seqAttr(_SequenceType_key)')
 cmds.append('create index idx_key3 on #seqAttr(_SequenceProvider_key)')
+cmds.append('create index idx_key4 on #seqAttr(accID)')
 
 cmds.append('select s._Sequence_key, t.term ' + \
 	'into #seqType ' + \
@@ -130,7 +132,7 @@ cmds.append('create index idx_key on #seqProvider(_Sequence_key)')
 
 cmds.append('select s._Sequence_key, ps.strain ' + \
 	'into #seqStrain ' + \
-	'from #uniqueseq s, SEQ_Source_Assoc sa, PRB_Source ss, PRB_Strain ps ' + \
+	'from #uniqueSeq s, SEQ_Source_Assoc sa, PRB_Source ss, PRB_Strain ps ' + \
 	'where s._Sequence_key = sa._Sequence_key ' + \
 	'and sa._Source_key = ss._Source_key ' + \
 	'and ss._Strain_key = ps._Strain_key')
@@ -160,63 +162,75 @@ cmds.append('select _Sequence_key, strain from #seqStrain')
 # clone set info
 cmds.append('select _Sequence_key, name from #seqCloneSet')
 
-# sequence info with cross-reference to marker
-cmds.append('select s.*, ms._Marker_key, m.markerID, m.symbol, m.markerType ' + \
-	'from #seqAttr s, #seqmarker ms, #markers m ' + \
-	'where s._Sequence_key = ms._Sequence_key ' + \
-	'and ms._Marker_key = m._Marker_key ' + \
-	'order by s.accID')
+# marker info
+cmds.append('select ms._Sequence_key, m.markerID, m.symbol, m.markerType ' + \
+	'from #seqMarker ms, #markers m ' + \
+	'where ms._Marker_key = m._Marker_key ')
+
+# sorted sequence info
+cmds.append('select * from #seqAttr order by accID')
 
 results = db.sql(cmds, 'auto')
 
 seqType = {}
+for r in results[-6]:
+	key = r['_Sequence_key']
+	value = r['term']
+	seqType[key] = value
+	
+seqProvider = {}
 for r in results[-5]:
 	key = r['_Sequence_key']
 	value = r['term']
-	if not seqType.has_key(key):
-		seqType[key] = []
-	seqType[key].append(value)
-	
-seqProvider = {}
-for r in results[-4]:
-	key = r['_Sequence_key']
-	value = r['term']
-	if not seqProvider.has_key(key):
-		seqProvider[key] = []
-	seqProvider[key].append(value)
+	seqProvider[key] = value
 	
 seqStrain = {}
-for r in results[-3]:
+for r in results[-4]:
 	key = r['_Sequence_key']
 	value = r['strain']
-	if not seqStrain.has_key(key):
-		seqStrain[key] = []
-	seqStrain[key].append(value)
+	seqStrain[key] = value
 	
 cloneSet = {}
-for r in results[-2]:
+for r in results[-3]:
 	key = r['_Sequence_key']
 	value = r['name']
 	if not cloneSet.has_key(key):
 		cloneSet[key] = []
 	cloneSet[key].append(value)
 	
+seqMarker = {}
+for r in results[-2]:
+	key = r['_Sequence_key']
+	value = []
+	value.append(r['markerID'])
+	value.append(r['symbol'])
+	value.append(r['markerType'])
+	if not seqMarker.has_key(key):
+		seqMarker[key] = []
+	seqMarker[key].append(value)
+	
 for r in results[-1]:
 
-    fp.write(r['accID'] + reportlib.TAB + \
-	seqProvider[r['_Sequence_key']] + reportlib.TAB + \
-	seqType[r['_Sequence_key']] + reportlib.TAB + \
-	mgi_utils.prvalue(r['length']) + reportlib.TAB + \
-	seqStrain[r['_Sequence_key']] + reportlib.TAB + \
-	mgi_utils.prvalue(r['description']) + reportlib.TAB)
+    key = r['_Sequence_key']
 
-    if cloneSet.has_key(r['_Sequence_key']):
-	fp.write(string.join(cloneSet[r['_Sequence_key']], ','))
+    markers = seqMarker[r['_Sequence_key']]
 
-    fp.write(reportlib.TAB + \
-        r['markerID'] + reportlib.TAB + \
-	r['symbol'] + reportlib.TAB + \
-	r['markerType'] + reportlib.CRT)
+    for m in markers:
+
+        fp.write(r['accID'] + reportlib.TAB + \
+	    seqProvider[key] + reportlib.TAB + \
+	    seqType[key] + reportlib.TAB + \
+	    mgi_utils.prvalue(r['length']) + reportlib.TAB + \
+	    seqStrain[key] + reportlib.TAB + \
+	    mgi_utils.prvalue(r['description']) + reportlib.TAB)
+
+        if cloneSet.has_key(r['_Sequence_key']):
+	    fp.write(string.join(cloneSet[r['_Sequence_key']], ','))
+
+	for f in m:
+          fp.write(reportlib.TAB + f)
+    
+        fp.write(reportlib.CRT)
 
 reportlib.finish_nonps(fp)
 
