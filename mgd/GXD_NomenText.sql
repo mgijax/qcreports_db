@@ -10,6 +10,9 @@ and h._Marker_Event_key in (2,3,4,5)
 and h._History_key = r._Marker_key
 go
 
+create nonclustered index index_symbol on #markers(symbol)
+go
+
 set nocount off
 go
 
