@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-4-0
+DATE: 11/02/2000
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) NOMEN_Reserved.py; exclude RIKEN symbols
+
 TAG: qcreports_db-4-3-0
 DATE: 10/25/2000
 STAFF: lec
