@@ -201,7 +201,7 @@ print ""
 
 select _Accession_key, accID, prefixPart, numericPart, creation_date
 from ACC_Accession
-where _LogicalDB_key = 24 and prefixPart is not null
+where _LogicalDB_key = 24 and prefixPart is not null and prefixPart != "LOC"
 go
 
 print ""
