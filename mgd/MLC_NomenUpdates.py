@@ -103,12 +103,12 @@ for r in results[1]:
 	fp.write('%-2s ' % (r['chr']))
 
 	if r['mgiID'] != "None":
-		fp.write('<A HREF="http://prodwww.informatics.jax.org/searches/accession_report.cgi?id=%s">%-25s</A> ' % (r['mgiID'], r['symbol']))
+		fp.write('%s%-10s%s ' % (reportlib.create_accession_anchor(r['mgiID']), r['symbol'], reportlib.close_accession_anchor()))
 	else:
 		fp.write('%-25s ' % (r['symbol']))
 		
 	fp.write('%-25s ' % (r['name']))
-	fp.write('<A HREF="http://prodwww.informatics.jax.org/searches/accession_report.cgi?id=%s">%-6s</A> ' % (r['jnumID'], r['jnum']))
+	fp.write('%s%-10s%s ' % (reportlib.create_accession_anchor(r['jnumID']), r['jnum'], reportlib.close_accession_anchor()))
 	fp.write('%-16s\n' % (r['author']))
 	rows = rows + 1
 
