@@ -1,17 +1,14 @@
 set nocount on
 go
 
-select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date, h.jnum
+select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date
 into #marker
-from MRK_Marker m, MRK_History_Ref_View h
+from MRK_Marker m
 where m._Species_key = 1
 and m._Marker_Status_key = 3
-and m._Marker_key = h._Marker_key
-and m._Marker_key = h._History_key
-and h._Marker_Event_key = 1
 go
 
-select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date, m.jnum
+select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date
 into #homology
 from #marker m, HMD_Homology r1, HMD_Homology_Marker h1,
 HMD_Homology r2, HMD_Homology_Marker h2, MRK_Marker m2
@@ -22,7 +19,7 @@ and r2._Homology_key = h2._Homology_key
 and h2._Marker_key = m2._Marker_key
 and m2._Species_key = 2
 union
-select distinct m.symbol, null, m.name, m.creation_date, m.jnum
+select distinct m.symbol, null, m.name, m.creation_date
 from #marker m
 where not exists (select 1 from HMD_Homology r1, HMD_Homology_Marker h1,
 HMD_Homology r2, HMD_Homology_Marker h2, MRK_Marker m2
@@ -59,7 +56,7 @@ print "Interim Markers with Human Homologies"
 print "(sorted by human symbol status, date)"
 print ""
 
-select msymbol "Mouse Symbol", hstatus "Status", hsymbol "Human Symbol", name "Mouse Name", jnum, creation_date
+select msymbol "Mouse Symbol", hstatus "Status", hsymbol "Human Symbol", name "Mouse Name", creation_date
 from #results
 order by hstatus desc, creation_date
 go
