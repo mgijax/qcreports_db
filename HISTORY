@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-5-0
+DATE: 11/08/2000
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 2067; BIB_GBSubNoMarker.sql
+b) TR 2069; BIB_GBSubMatch.sql
+
 TAG: qcreports_db-4-4-0
 DATE: 11/02/2000
 STAFF: lec
