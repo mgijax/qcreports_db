@@ -31,14 +31,15 @@ go
 /* Retrieve unique Sequence Accession ID/Reference (J:) pairs */
 /* for each Marker by using its associated Probe */
 
-select distinct p.name, p.symbol, p._Marker_key, a.accID
+select distinct p.name, p.symbol, p._Marker_key, a.accID, ar._Refs_key, jnumID = b.accID
 into #markers
-from tempdb..probes2 p, ACC_Accession a, ACC_AccessionReference ar 
+from tempdb..probes2 p, ACC_Accession a, ACC_AccessionReference ar, BIB_Acc_View b 
 where p._Probe_key = a._Object_key 
 and a._MGIType_key = 3
 and a._LogicalDB_key = 9 
-and a._Accession_key = ar._Accession_key 
-order by p._Marker_key, a.accID
+and a._Accession_key = ar._Accession_key
+and ar._Refs_key = b._Object_key
+and b.prefixPart = "J:"
 go
 
 drop table tempdb..probes1
@@ -58,8 +59,26 @@ print ""
 select m.name, m.symbol, m.accID
 from #markers m
 where not exists
-(select a.* from MRK_AccRef_View a
+(select 1 from MRK_AccRef_View a
 where m._Marker_key = a._Object_key
-and a._LogicalDB_key = 9)
+and a._LogicalDB_key = 9
+and m.accID = a.accID)
+order by m.symbol
+go
+
+print ""
+print "Molecular Segments with Encoding Markers and Sequence IDs"
+print "and corresponding Marker-Sequence ID association w/ a different Reference"
+print ""
+
+select m.name, m.symbol, m.accID, m.jnumID "Molecular Ref", b.accID "Marker Ref"
+from #markers m, MRK_AccRef_View a, BIB_Acc_View b
+where m._Marker_key = a._Object_key
+and a._LogicalDB_key = 9
+and m.accID = a.accID
+and m._Refs_key != a._Refs_key
+and a._Refs_key = b._Object_key
+and b.prefixPart = "J:"
+order by m.symbol
 go
 
