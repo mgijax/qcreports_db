@@ -64,42 +64,17 @@ and datepart(year, a.creation_date) = @year
 and datepart(month, a.creation_date) = @month
 and g._Genotype_key = a._Object_key
 
-select total = count(distinct al._Allele_key), category = "Total Allele"
+select total = count(distinct _Allele_key), category = "Total Allele", seq = 1
 into #c3
-from GXD_Genotype g, GXD_AllelePair ap, ALL_Note al
-where g._Genotype_key = ap._Genotype_key
-and ap._Allele_key_1 = al._Allele_key
-and ap._Allele_key_2 is null
+from ALL_Note
+where note like "%Associated Phenotype Controlled Terms%"
+union
+select total = count(distinct a._Allele_key), category = "Total Allele for Previous Month", seq = 2
+from ALL_Allele a, ALL_Note al
+where datepart(year, a.creation_date) = @year
+and datepart(month, a.creation_date) = @month
+and a._Allele_key = al._Allele_key
 and al.note like "%Associated Phenotype Controlled Terms%"
-union
-select total = count(distinct al1._Allele_key) + count(distinct al2._Allele_key), category = "Total Allele"
-from GXD_Genotype g, GXD_AllelePair ap, ALL_Note al1, ALL_Note al2
-where g._Genotype_key = ap._Genotype_key
-and ap._Allele_key_1 != ap._Allele_key_2
-and ap._Allele_key_1 = al1._Allele_key
-and ap._Allele_key_2 = al2._Allele_key
-and (al1.note like "%Associated Phenotype Controlled Terms%"
-or al2.note like "%Associated Phenotype Controlled Terms%")
-union
-select total = count(distinct al._Allele_key), category = "Total Allele for Previous Month"
-from GXD_Genotype g, GXD_AllelePair ap, ALL_Note al
-where datepart(year, g.creation_date) = @year
-and datepart(month, g.creation_date) = @month
-and g._Genotype_key = ap._Genotype_key
-and ap._Allele_key_1 = al._Allele_key
-and ap._Allele_key_2 is null
-and al.note like "%Associated Phenotype Controlled Terms%"
-union
-select total = count(distinct al1._Allele_key) + count(distinct al2._Allele_key), category = "Total Allele for Previous Month"
-from GXD_Genotype g, GXD_AllelePair ap, ALL_Note al1, ALL_Note al2
-where datepart(year, g.creation_date) = @year
-and datepart(month, g.creation_date) = @month
-and g._Genotype_key = ap._Genotype_key
-and ap._Allele_key_1 != ap._Allele_key_2
-and ap._Allele_key_1 = al1._Allele_key
-and ap._Allele_key_2 = al2._Allele_key
-and (al1.note like "%Associated Phenotype Controlled Terms%"
-or al2.note like "%Associated Phenotype Controlled Terms%")
 
 set nocount off
 
@@ -121,6 +96,6 @@ print ""
 print "Alleles with 'Associated Phenotype Controlled Terms' in Notes"
 print ""
 
-select category, sum(total) from #c3 group by category
+select category, total from #c3 order by seq
 go
 
