@@ -59,7 +59,7 @@ cmds.append('select _Strain_key, symbol from PRB_Strain_Marker_View')
 
 # Retrieve synonyms
 
-cmds.append('select _Strain_key, synonym from PRB_Strain_Synonym')
+cmds.append('select _Object_key, synonym from MGI_Synonym_Strain_View')
 
 # Retrieve all Strains
 
@@ -90,11 +90,11 @@ for r in results[2]:
 		markers[r['_Strain_key']].append(r['symbol'])
 
 for r in results[3]:
-	if syns.has_key(r['_Strain_key']):
-		syns[r['_Strain_key']].append(r['synonym'])
+	if syns.has_key(r['_Object_key']):
+		syns[r['_Object_key']].append(r['synonym'])
 	else:
-		syns[r['_Strain_key']] = []
-		syns[r['_Strain_key']].append(r['synonym'])
+		syns[r['_Object_key']] = []
+		syns[r['_Object_key']].append(r['synonym'])
 
 for r in results[4]:
 	if mgiIDs.has_key(r['_Strain_key']):
