@@ -3,11 +3,11 @@ print "MGD Mouse Symbols which differ from Orthologous Human Symbols"
 print ""
 
 select distinct 
-	a1.accID "MGI ID", 
 	m1.symbol "MGI Symbol", 
+	m2.symbol "Official Human Symbol", 
+	a1.accID "MGI ID", 
 	substring(m1.name, 1, 40) "MGI Name",
 	l.locusID "LL ID",
-	m2.symbol "Official Human Symbol", 
 	substring(m2.name, 1, 40) "Human Name"
 
 from HMD_Homology r1, HMD_Homology_Marker h1,
