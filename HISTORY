@@ -1,3 +1,10 @@
+TAG: qcreports_db-17-0-7
+DATE: 05/02/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) remove fantom.mgi after copying to FTP directory
+
 TAG: qcreports_db-17-0-5, qcreports_db-17-0-6
 DATE: 04/30/2002
 STAFF: lec
