@@ -1,3 +1,10 @@
+TAG:  qcreports_db-23-0-13-patch301-01
+DATE: 10/11/2004
+STAFF: dbm
+RELEASE: A
+CHANGES:
+a) fixes for gbcdnaload
+
 TAG:  qcreports_db-23-0-13
 DATE: 09/09/2004
 STAFF: lec
