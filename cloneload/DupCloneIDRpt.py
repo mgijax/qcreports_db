@@ -103,7 +103,8 @@ def writeClone(cloneID,cloneName,accList):
 #
 # Main
 #
-fp = reportlib.init(outputfile='DuplicateCloneID.rpt', outputdir=outputDir)
+fp = reportlib.init(outputfile='DuplicateCloneID.rpt', outputdir=outputDir,
+                    sqlLogging = 0)
 
 fp.write('SERVER=' + server + '  DATABASE=' + radarDB + ',' + mgdDB + 2*CRT)
 

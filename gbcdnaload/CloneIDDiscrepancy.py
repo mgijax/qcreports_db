@@ -47,7 +47,7 @@ radarDB=sys.argv[3]
 jobKey=sys.argv[4]
  
 fp = reportlib.init(outputfile='CloneIDDiscrepancy.rpt', outputdir=outputDir,
-                    printHeading = 0)
+                    printHeading = 0, sqlLogging = 0)
 
 db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)

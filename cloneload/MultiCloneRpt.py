@@ -105,7 +105,8 @@ jobKey=sys.argv[5]
 
 reportWidth = 147;
 
-fp = reportlib.init(outputfile='Many_MGI_Clones.rpt', outputdir=outputDir)
+fp = reportlib.init(outputfile='Many_MGI_Clones.rpt', outputdir=outputDir,
+                    sqlLogging = 0)
 
 fp.write('SERVER=' + server + '  DATABASE=' + radarDB + ',' + mgdDB + 2*CRT)
 

@@ -113,7 +113,8 @@ jobKey=sys.argv[5]
 
 reportWidth = 171;
 
-fp = reportlib.init(outputfile='GBSeq_Only.rpt', outputdir=outputDir)
+fp = reportlib.init(outputfile='GBSeq_Only.rpt', outputdir=outputDir,
+                    sqlLogging = 0)
 
 fp.write('SERVER=' + server + '  DATABASE=' + radarDB + ',' + mgdDB + 2*CRT)
 
