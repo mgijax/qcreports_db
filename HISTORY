@@ -1,3 +1,4 @@
+TAG:  qcreports_db-3-1-0-6
 TAG:  qcreports_db-3-1-0-5
 TAG:  qcreports_db-3-1-0-4
 TAG:  qcreports_db-3-1-0-3
@@ -8,6 +9,7 @@ CHANGES:
 a) MGI 3.1
 b) TR 6436; conversion to EntrezGene
 c) move "output" directory to /data/reports
+d) TR 6439; BIB_NoAbstract.sql
 
 TAG:  qcreports_db-tr3007-BP
 DATE: 12/22/2004
