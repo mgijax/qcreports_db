@@ -38,37 +38,42 @@ PAGE = reportlib.PAGE
 # Main
 #
 
+db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], '"Development" Papers Requiring Images', outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
-cmd = 'select b.jnumID ' + \
-      'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \
-           'IMG_Image i, IMG_ImagePane p ' + \
+cmds = []
+cmds.append('select a._Refs_key ' + \
+      'into #assays ' + \
+      'from GXD_Assay a, BIB_Refs b, IMG_Image i, IMG_ImagePane p ' + \
       'where a._ImagePane_key = p._ImagePane_key and ' + \
             'p._Image_key = i._Image_key and ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
             'b.journal = "Development" and ' + \
-            'a._AssayType_key not in (1, 5, 7) and ' + \
-            'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ' + \
+            'a._AssayType_key not in (1, 5, 7) ' + \
       'union ' + \
-      'select b.jnumID ' + \
-      'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \
-           'GXD_Specimen g, GXD_ISResultImage_View r ' + \
+      'select a._Refs_key ' + \
+      'from GXD_Assay a, BIB_Refs b, GXD_Specimen g, GXD_ISResultImage_View r ' + \
       'where g._Assay_key = a._Assay_key and ' + \
             'g._Specimen_key = r._Specimen_key and ' + \
             'r.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-            'b.journal = "Development" and ' + \
-            'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ' + \
-      'order by b.jnumID'
+            'b.journal = "Development"')
 
-results = db.sql(cmd, 'auto')
+cmds.append('create index idx1 on #assays(_Refs_key)')
+db.sql(cmds, None)
+
+results = db.sql('select a.accID from #assays y, ACC_Accession a ' + \
+	'where y._Refs_key = a._Object_key ' + \
+	'and a._MGIType_key = 1 ' + \
+	'and a.prefixPart = "J:" ' + \
+	'and a.preferred = 1 ' + \
+	'order by a.accID', 'auto')
 
 for r in results:
-	fp.write(r['jnumID'] + CRT)
+	fp.write(r['accID'] + CRT)
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
 
 reportlib.finish_nonps(fp)
+db.useOneConnection(0)

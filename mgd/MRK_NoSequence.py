@@ -56,6 +56,8 @@ PAGE = reportlib.PAGE
 # Main
 #
 
+db.useOneConnection(1)
+
 title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq), excluding Mutant Phenotypes'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
@@ -74,142 +76,132 @@ fp.write('-' * 50 + '  ' + \
 	 '-' * 40 + '  ' + \
 	 '-' * 70 + '  ' + CRT)
 
-cmds = []
-
 #
 # select phenotypic mutant genes
 #
+cmds = []
 cmds.append('select distinct m._Marker_key ' + \
-'into #mutants ' + \
-'from MRK_Marker m, ALL_ALlele a ' + \
-'where m._Organism_key = 1 ' + \
-'and m._Marker_Type_key = 1 ' + \
-'and m._Marker_key = a._Marker_key ' + \
-'and m.symbol = a.symbol ' + \
-'and not exists (select 1 from ACC_Accession a ' + \
-'where m._Marker_key = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_Key in (9, 13, 27, 41)) ')
+	'into #mutants ' + \
+	'from MRK_Marker m, ALL_ALlele a ' + \
+	'where m._Organism_key = 1 ' + \
+	'and m._Marker_Type_key = 1 ' + \
+	'and m._Marker_key = a._Marker_key ' + \
+	'and m.symbol = a.symbol ' + \
+	'and not exists (select 1 from ACC_Accession a ' + \
+	'where m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_Key in (9, 13, 27, 41)) ')
+cmds.append('create index idx1 on #mutants(_Marker_key)')
+db.sql(cmds, None)
 
 #
 # select Genes with no sequences
 #
+cmds = []
 cmds.append('select m._Marker_key, m.symbol ' + \
-'into #markers ' + \
-'from MRK_Marker m ' + \
-'where m._Organism_key = 1 ' + \
-'and m._Marker_Type_key = 1 ' + \
-'and m._Marker_Status_key in (1,3) ' + \
-'and not exists (select 1 from ACC_Accession a ' + \
-'where m._Marker_key = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_Key in (9, 13, 27, 41)) ' + \
-'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)')
-
-cmds.append('create nonclustered index idx_marker_key on #markers(_Marker_key)')
+	'into #markers ' + \
+	'from MRK_Marker m ' + \
+	'where m._Organism_key = 1 ' + \
+	'and m._Marker_Type_key = 1 ' + \
+	'and m._Marker_Status_key in (1,3) ' + \
+	'and not exists (select 1 from ACC_Accession a ' + \
+	'where m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_Key in (9, 13, 27, 41)) ' + \
+	'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)')
+cmds.append('create index idx1 on #markers(_Marker_key)')
+db.sql(cmds, None)
 
 #
 # select orthologs
 #
+cmds = []
 cmds.append('select distinct m._Marker_key, orthologKey = m2._Marker_key, s.commonName ' + \
-'into #orthologs ' + \
-'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MGI_Organism s ' + \
-'where m._Marker_key = hm1._Marker_key ' + \
-'and hm1._Homology_key = hm2._Homology_key ' + \
-'and hm2._Marker_key = m2._Marker_key ' + \
-'and m2._Organism_key != 1 ' + \
-'and m2._Organism_key = s._Organism_key')
+	'into #orthologs ' + \
+	'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MGI_Organism s ' + \
+	'where m._Marker_key = hm1._Marker_key ' + \
+	'and hm1._Homology_key = hm2._Homology_key ' + \
+	'and hm2._Marker_key = m2._Marker_key ' + \
+	'and m2._Organism_key != 1 ' + \
+	'and m2._Organism_key = s._Organism_key')
+cmds.append('create index idx1 on #orthologs(orthologyKey)')
+db.sql(cmds, None)
 
-cmds.append('select * from #orthologs')
-
-#
-# select ll id of orthologs
-#
-cmds.append('select distinct o._Marker_key, a.accID ' + \
-'from #orthologs o, ACC_Accession a ' + \
-'where o.orthologKey = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_key = 24')
-
-#
-# select number of GXD index references for each marker
-#
-cmds.append('select m._Marker_key, gxd = count(i._Refs_key) ' + \
-'from #markers m, GXD_Index i ' + \
-'where m._Marker_key = i._Marker_key ' + \
-'group by m._Marker_key')
-
-#
-# select whether there is MLC entry or Allele
-# (excluding wild type allele)
-#
-
-cmds.append('select distinct m._Marker_key ' + \
-'from #markers m ' + \
-'where exists (select 1 from MLC_Text t where m._Marker_key = t._Marker_key) ' + \
-'or exists (select 1 from ALL_Allele a where m._Marker_key = a._Marker_key ' + \
-'and a.symbol not like "%<+>")')
-
-#
-# select primary references
-#
-
-cmds.append('select distinct m._Marker_key, b.accID ' + \
-'from #markers m, MRK_History h, ACC_Accession b ' + \
-'where m._Marker_key = h._Marker_key ' + \
-'and h._Marker_key = h._History_key ' + \
-'and h._Marker_Event_key = 1 ' + \
-'and h._Refs_key = b._Object_key ' + \
-'and b._MGIType_key = 1 ' + \
-'and b._LogicalDB_key = 1 ' + \
-'and b.prefixPart = "J:"')
-
-cmds.append('select * from #markers order by symbol')
-
-results = db.sql(cmds, 'auto')
-
-# store dictionary of orthologs
+results = db.sql('select * from #orthologs', 'auto')
 organism = {}
-for r in results[4]:
+for r in results:
 	key = r['_Marker_key']
 	value = r['commonName']
 	if not organism.has_key(key):
 		organism[key] = []
 	organism[key].append(value)
 
-# store dictionary of orthologs/ll ids
+#
+# select ll id of orthologs
+#
+results = db.sql('select distinct o._Marker_key, a.accID ' + \
+	'from #orthologs o, ACC_Accession a ' + \
+	'where o.orthologKey = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key = 24', 'auto')
 llids = {}
-for r in results[5]:
+for r in results:
 	key = r['_Marker_key']
 	value = r['accID']
 	if not llids.has_key(key):
 		llids[key] = []
 	llids[key].append(value)
 
-# store dictionary of gxd references
+#
+# select number of GXD index references for each marker
+#
+results = db.sql('select m._Marker_key, gxd = count(i._Refs_key) ' + \
+	'from #markers m, GXD_Index i ' + \
+	'where m._Marker_key = i._Marker_key ' + \
+	'group by m._Marker_key', 'auto')
 gxd = {}
-for r in results[6]:
+for r in results:
 	key = r['_Marker_key']
 	value = str(r['gxd'])
 	gxd[key] = value
 
-# store list of AP use values
+#
+# select whether there is MLC entry or Allele
+# (excluding wild type allele)
+#
+
+results = db.sql('select distinct m._Marker_key ' + \
+	'from #markers m ' + \
+	'where exists (select 1 from MLC_Text t where m._Marker_key = t._Marker_key) ' + \
+	'or exists (select 1 from ALL_Allele a where m._Marker_key = a._Marker_key ' + \
+	'and a.symbol not like "%<+>")', 'auto')
 ap = []
-for r in results[7]:
+for r in results:
 	key = r['_Marker_key']
 	ap.append(key)
 
-# store dictionary of primary references
+#
+# select primary references
+#
+
+results = db.sql('select distinct m._Marker_key, b.accID ' + \
+	'from #markers m, MRK_History h, ACC_Accession b ' + \
+	'where m._Marker_key = h._Marker_key ' + \
+	'and h._Marker_key = h._History_key ' + \
+	'and h._Marker_Event_key = 1 ' + \
+	'and h._Refs_key = b._Object_key ' + \
+	'and b._MGIType_key = 1 ' + \
+	'and b._LogicalDB_key = 1 ' + \
+	'and b.prefixPart = "J:"', 'auto')
 ref = {}
-for r in results[8]:
+for r in results:
 	key = r['_Marker_key']
 	value = r['accID']
 	ref[key] = value
 
-rows = 0
-for r in results[-1]:
+results = db.sql('select * from #markers order by symbol', 'auto')
+for r in results:
 	key = r['_Marker_key']
-
 	fp.write(string.ljust(r['symbol'], 27))
 
 	if gxd.has_key(key):
@@ -238,9 +230,9 @@ for r in results[-1]:
 		fp.write(string.ljust(' ' * 70, 72))
 
 	fp.write(CRT)
-	rows = rows + 1
 
-fp.write('\n(%d rows affected)\n' % (rows))
+fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
+db.useOneConnection(0)
 

@@ -7,6 +7,9 @@ from PRB_Probe p
 where not exists (select r.* from PRB_Reference r where p._Probe_key = r._Probe_key)
 go
 
+create index idx1 on #probes(_Probe_key)
+go
+
 set nocount off
 go
 

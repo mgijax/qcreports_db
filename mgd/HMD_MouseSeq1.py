@@ -6,7 +6,7 @@
 #
 # Report:
 #       Tab-delimited file (originally an SQL report)
-#	Mouse Genes with Sequence ID but no Human Homology
+#	Mouse Genes with Sequence ID but no Human Orthology
 #	Excludes RIKEN genes, Expressed Sequence, EST, Hypothetical
 #
 #	symbol
@@ -41,9 +41,10 @@ TAB = reportlib.TAB
 # Main
 #
 
+db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
-fp.write('Mouse Genes with Sequence ID but no Human Homology' + CRT)
+fp.write('Mouse Genes with Sequence ID but no Human Orthology' + CRT)
 fp.write('(Excludes RIKEN genes, Expressed Sequence, EST, Hypothetical)' + 2*CRT)
 
 fp.write('Symbol                     ')
@@ -65,8 +66,9 @@ cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'and m.name not like "EST %" ' + \
 	'and m.name not like "%hypothetical%" ' + \
 	'and m._Marker_Status_key = s._Marker_Status_key ' + \
-	'and exists (select 1 from MRK_ACC_View a ' + \
+	'and exists (select 1 from ACC_Accession a ' + \
 	'where m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_Key in (9, 27)) ' + \
 	'and not exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
 	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
@@ -77,32 +79,33 @@ cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'and hm2._Marker_key = m2._Marker_key ' + \
 	'and m2._Organism_key = 2)')
 
-cmds.append('select m._Marker_key, a.accID ' + 
-	'from #markers m, MRK_ACC_View a ' + \
+cmds.append('create index idx1 on #markers(_Marker_key)')
+cmds.append('create index idx2 on #markers(symbol)')
+db.sql(cmds, None)
+
+results = db.sql('select m._Marker_key, a.accID ' + 
+	'from #markers m, ACC_Accession a ' + \
 	'where m._Marker_key = a._Object_key ' + \
-	'and a._LogicalDB_Key in (9, 27)')
-
-cmds.append('select * from #markers order by symbol')
-
-results = db.sql(cmds, 'auto')
-
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_Key in (9, 27)', 'auto')
 seqIDs = {}
-for r in results[-2]:
+for r in results:
 	if seqIDs.has_key(r['_Marker_key']):
 		seqIDs[r['_Marker_key']].append(r['accID'])
 	else:
 		seqIDs[r['_Marker_key']] = []
 		seqIDs[r['_Marker_key']].append(r['accID'])
-	
-for r in results[-1]:
 
+results = db.sql('select * from #markers order by symbol', 'auto')
+for r in results:
 	fp.write(string.ljust(r['symbol'], 27) + \
 	        string.ljust(r['status'], 12) + \
 		string.joinfields(seqIDs[r['_Marker_key']], ',') + CRT)
 
-rows = len(results[-1])
+rows = len(results)
 fp.write('\n(%d rows affected)\n' % (rows))
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
+db.useOneConnection(0)
 
