@@ -12,8 +12,7 @@ and sa.preferred = 1
 and exists (select 1 from  MRK_Reference mr
 where ra._Refs_key = mr._Refs_key)
 and not exists (select 1 from SEQ_Marker_Cache smc
-                where ra._Object_key = smc._Sequence_key
-                and ra._Refs_key = smc._Refs_key)
+                where ra._Object_key = smc._Sequence_key)
 group by ra._Refs_key
 go
 
@@ -25,9 +24,9 @@ print "    Sequence References Associated with Markers but no Sequence/Marker"
 print ""
 print "A row in this report represents a Sequence Reference that is associated"
 print "with a Marker but the Sequence itself is not associated with any"
-print "Marker via the Reference.  All that is displayed is the reference and "
-print "the number of sequences it is associated with.  Only displays "
-print "references with less than 500 sequences."
+print "Marker.  All that is displayed is the reference and the number of "
+print "sequences it is associated with.  Only displays references with less"
+print "than 500 sequences."
 print ""
 
 select jNumber = b.jnumID, numberOfSequences = r.num_seqs
