@@ -44,7 +44,7 @@ setenv QCMONTHLY                $QCREPORTINSTALLDIR/monthly
 setenv MLCINDEX			/usr/local/mgi/wi/prod/www/images/mlc/index
 
 # EI Log files
-setenv EILOGFILES		/export/shire
+setenv EILOGFILES		/net/orodruin/vol/home
 
 # EI Log Name
 setenv EILOGNAME		.ei-log
