@@ -27,6 +27,9 @@
 # dbm   8/6/2003
 #       - created
 #
+# dbm   11/4/2004
+#       - use new "Clone Collection" set
+#
 '''
  
 import sys 
@@ -161,8 +164,7 @@ cmd.append('select ca._Clone_key, ca.accID ' + \
                  'ca.logicalDB = db.name and ' + \
                  'db._LogicalDB_key = sm._Object_key and ' + \
                  'sm._Set_key = s._Set_key and ' + \
-                 's._MGIType_key = 15 and ' + \
-                 's.name = "Clone Set" ' + \
+                 's.name = "Clone Collection (all)" ' + \
            'order by ca._Clone_key, ca.accID')
 
 cmd.append('select ca._Clone_key, ca.accID ' + \
@@ -174,10 +176,7 @@ cmd.append('select ca._Clone_key, ca.accID ' + \
            'where qc._JobStream_key = ' + jobKey + ' and ' + \
                  'qc._Clone_key = ca._Clone_key and ' + \
                  'ca.logicalDB = db.name and ' + \
-                 'db._LogicalDB_key = sm._Object_key and ' + \
-                 'sm._Set_key = s._Set_key and ' + \
-                 's._MGIType_key = 15 and ' + \
-                 's.name = "Sequence" ' + \
+                 'db._LogicalDB_key = 9 ' + \
            'order by ca._Clone_key, ca.accID')
 
 results = db.sql(cmd, 'auto')
