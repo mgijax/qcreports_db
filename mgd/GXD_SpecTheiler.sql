@@ -20,7 +20,8 @@ go
 select distinct i._GelLane_key, t.stage
 into #temp3
 from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t
-where i._GelLane_key = r._GelLane_key
+where i.age not like "%-%"
+and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and t.stage != 28
