@@ -10,7 +10,7 @@ go
 select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
 species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
 into #homology
-from radar_release..DP_HomoloGene h1, radar_release..DP_HomoloGene h2, radar_release..DP_EntrezGene_Info e
+from radar..DP_HomoloGene h1, radar..DP_HomoloGene h2, radar..DP_EntrezGene_Info e
 where h1.taxID = 9606
 and h1.groupID = h2.groupID
 and h2.taxID = 10090
