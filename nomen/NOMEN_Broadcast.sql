@@ -14,10 +14,10 @@ print ""
 print "Nomenclature Symbols Broadcast Within Last 3 Days"
 print ""
 
-select v.symbol, v.chromosome, v.submittedBy, v.broadcastBy, r.jnumID
+select v.symbol, v.chromosome, v.submittedBy, v.broadcastBy, r.jnumID, convert(char(10), v.broadcast_date, 101)
 from #nomen n, MRK_Nomen_View v, MRK_Nomen_Reference_View r
 where n._Nomen_key = v._Nomen_key
 and v._Nomen_key = r._Nomen_key
 and r.isPrimary = 1
-order by v.broadcast_date, v.broadcastBy, v.submittedBy
+order by v.broadcastBy, v.broadcastDate, v.submittedBy
 go
