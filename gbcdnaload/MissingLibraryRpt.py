@@ -11,7 +11,6 @@
 #       1) 1 or more sequence IDs (comma separated if more than one)
 #       2) Raw clone library name
 #       3) 1 or more clone IDs (comma separated if more than one)
-#       4) 0 or more MGI IDs (comma separated if more than one)
 #
 #       This report assumes that the GenBank EST cDNA clone load has been
 #       run and the data for the report has been populated in the
@@ -54,7 +53,7 @@ db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)
 
 cmd = []
-cmd.append('select seqIDList, rawLibrary, cloneIDList, mgiIDList ' + \
+cmd.append('select seqIDList, rawLibrary, cloneIDList ' + \
            'from QC_cDNALoad_Library_Missing ' + \
            'where _JobStream_key = ' + jobKey + ' ' + \
            'order by _QCRecord_key')
@@ -62,10 +61,7 @@ cmd.append('select seqIDList, rawLibrary, cloneIDList, mgiIDList ' + \
 results = db.sql(cmd, 'auto')
 
 for r in results[0]:
-    mgiIDList = r['mgiIDList']
-    if (mgiIDList == None):
-        mgiIDList = ""
     fp.write(r['seqIDList'] + TAB + r['rawLibrary'] + TAB + \
-             r['cloneIDList'] + TAB + mgiIDList + CRT)
+             r['cloneIDList'] + CRT)
 
 reportlib.finish_nonps(fp)
