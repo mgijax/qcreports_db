@@ -77,6 +77,10 @@ badSymbols = []
 
 def parseSymbol(symbol):
 
+	# too complicated; just ignore it
+	if string.count(symbol, '(') > 1:
+	    return symbol
+
         [p1, p2] = string.splitfields(symbol, '(')
         [p3, p4] = string.splitfields(p2, ')')
         testSymbol = p3
