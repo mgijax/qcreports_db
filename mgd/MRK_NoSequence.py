@@ -109,9 +109,9 @@ cmds.append('create nonclustered index idx_marker_key on #markers(_Marker_key)')
 #
 # select orthologs
 #
-cmds.append('select distinct m._Marker_key, orthologKey = m2._Marker_key, s.name ' + \
+cmds.append('select distinct m._Marker_key, orthologKey = m2._Marker_key, s.commonName ' + \
 'into #orthologs ' + \
-'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MRK_Species s ' + \
+'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MGI_Organism s ' + \
 'where m._Marker_key = hm1._Marker_key ' + \
 'and hm1._Homology_key = hm2._Homology_key ' + \
 'and hm2._Marker_key = m2._Marker_key ' + \
@@ -165,13 +165,13 @@ cmds.append('select * from #markers order by symbol')
 results = db.sql(cmds, 'auto')
 
 # store dictionary of orthologs
-species = {}
+organism = {}
 for r in results[4]:
 	key = r['_Marker_key']
-	value = r['name']
-	if not species.has_key(key):
-		species[key] = []
-	species[key].append(value)
+	value = r['commonName']
+	if not organism.has_key(key):
+		organism[key] = []
+	organism[key].append(value)
 
 # store dictionary of orthologs/ll ids
 llids = {}
@@ -228,8 +228,8 @@ for r in results[-1]:
 	else:
 		fp.write(string.ljust(' ' * 40, 42))
 
-	if species.has_key(key):
-		fp.write(string.ljust(string.join(species[key], ';'), 72))
+	if organism.has_key(key):
+		fp.write(string.ljust(string.join(organism[key], ';'), 72))
 	else:
 		fp.write(string.ljust(' ' * 70, 72))
 

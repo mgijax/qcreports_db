@@ -1,8 +1,8 @@
 set nocount on
 go
 
-select m1._Organism_key, speciesCount = count(distinct r1._Class_key) 
-into #species
+select m1._Organism_key, organismCount = count(distinct r1._Class_key) 
+into #organism
 from HMD_Homology r1, HMD_Homology_Marker h1, 
 HMD_Homology r2, HMD_Homology_Marker h2, MRK_Marker m1, MRK_Marker m2
 where m1._Organism_key > 1
@@ -22,9 +22,9 @@ print ""
 print "Counts of Mouse Homologies by Species"
 print ""
 
-select p.name, s.speciesCount
-from #species s, MRK_Species p
+select p.commonName, s.organismCount
+from #organism s, MGI_Organism p
 where s._Organism_key = p._Organism_key
-order by s.speciesCount
+order by s.organismCount
 go
 

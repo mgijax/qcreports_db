@@ -9,8 +9,8 @@ where _Marker_Status_key in (1,3)
 group by _Organism_key, symbol, chromosome, cytogeneticOffset having count(*) > 1
 go
 
-select d._Marker_key, s.species, d.symbol, d.chromosome, d.cytogeneticOffset 
-from #dup d, MRK_Species s
+select d._Marker_key, s.commonName, d.symbol, d.chromosome, d.cytogeneticOffset 
+from #dup d, MGI_Organism s
 where d._Organism_key = s._Organism_key
 go
 
