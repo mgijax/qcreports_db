@@ -33,7 +33,7 @@ set nocount off
 go
 
 print ""
-print "Mouse Markers in Homology w/ Nucleotide or Amino Acid Sequence Similarity Assay"
+print "Mouse Markers in Orthology w/ Nucleotide or Amino Acid Sequence Similarity Assay"
 print "and Marker has no Seq ID"
 print ""
 

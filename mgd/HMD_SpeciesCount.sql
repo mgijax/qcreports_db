@@ -24,7 +24,7 @@ set nocount off
 go
 
 print ""
-print "Counts of Mouse Homologies by Organism"
+print "Counts of Mouse Orthologies by Organism"
 print ""
 
 select p.commonName, s.organismCount

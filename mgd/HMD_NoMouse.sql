@@ -23,7 +23,7 @@ set nocount off
 go
 
 print ""
-print "Homology Records w/out Mouse Genes"
+print "Orthology Records w/out Mouse Genes"
 print "(The mouse symbol is listed if it is the same as one of the other organism)"
 print ""
 

@@ -7,7 +7,7 @@
 print ""
 print "The mouse/human orthologous pairs that HomoloGene is reporting that we are"
 print "not, where we are reporting orthology regarding the same human gene but no"
-print "mouse member appears in our homology class."
+print "mouse member appears in our orthology class."
 print ""
 
 select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,

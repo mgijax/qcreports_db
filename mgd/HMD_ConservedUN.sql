@@ -1,5 +1,5 @@
 print ""
-print "Homologies w/ Conserved Map Location and Chromosome = UN"
+print "Orthologies w/ Conserved Map Location and Chromosome = UN"
 print ""
 
 select h.symbol, h.commonName, h.jnum

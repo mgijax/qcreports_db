@@ -63,7 +63,7 @@ set nocount off
 go
 
 print ""
-print "Mouse/Human Homologies involving RIKEN Symbols"
+print "Mouse/Human Orthologies involving RIKEN Symbols"
 print ""
 
 select

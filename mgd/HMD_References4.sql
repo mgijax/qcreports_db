@@ -28,7 +28,7 @@ set nocount off
 go
 
 print "" 
-print "References selected for Homology and Probes w/out Homology Data, w/ Probe Data"
+print "References selected for Orthology and Probes w/out Orthology Data, w/ Probe Data"
 print "(excludes NEVER USED)"
 print "" 
  
@@ -39,7 +39,7 @@ order by c.jnum
 go 
   
 print "" 
-print "References selected for Homology and Probes w/out Homology Data, w/out Probe Data"
+print "References selected for Orthology and Probes w/out Orthology Data, w/out Probe Data"
 print "(excludes NEVER USED)"
 print "" 
  

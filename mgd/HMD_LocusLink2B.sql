@@ -24,7 +24,7 @@ go
 
 print ""
 print "The mouse/human orthologous pairs that HomoloGene is reporting that we are"
-print "not reporting in our homology data, where we have neither the mouse nor the"
+print "not reporting in our orthology data, where we have neither the mouse nor the"
 print "INTERIM human member of the pair."
 print ""
 

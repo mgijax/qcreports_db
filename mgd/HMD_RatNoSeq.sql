@@ -25,7 +25,7 @@ set nocount off
 go
 
 print ""
-print "Rat Genes with no GenBank or RefSeq Sequence ID but with Homology"
+print "Rat Genes with no GenBank or RefSeq Sequence ID but with Orthology"
 print "using either Amino Acid or Nucleotide Sequence Comparison Assays"
 print "(sorted by creation date, symbol)"
 print ""

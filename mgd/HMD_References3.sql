@@ -32,7 +32,7 @@ set nocount off
 go
 
 print "" 
-print "References selected for Homology and MLC only w/out Homology Data - J# < 40000" 
+print "References selected for Orthology and MLC only w/out Orthology Data - J# < 40000" 
 print "(excludes NEVER USED)"
 print "" 
  
@@ -43,7 +43,7 @@ order by c.jnum
 go 
   
 print "" 
-print "References selected for Homology and MLC only w/out Homology Data - #J >= 40000" 
+print "References selected for Orthology and MLC only w/out Orthology Data - #J >= 40000" 
 print "(excludes NEVER USED)"
 print "" 
  

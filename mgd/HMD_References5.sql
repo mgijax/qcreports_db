@@ -31,7 +31,7 @@ set nocount off
 go
 
 print "" 
-print "References selected for Homology w/ no Homology Data"
+print "References selected for Orthology w/ no Orthology Data"
 print "With at least one reference-to-gene Association"
 print "(excludes NEVER USED References)"
 print "" 

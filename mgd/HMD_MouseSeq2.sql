@@ -26,11 +26,11 @@ set nocount off
 go
 
 print ""
-print "Mouse Genes with no Sequence ID but with Human Homology"
+print "Mouse Genes with no Sequence ID but with Human Orthology"
 print ""
 
 select distinct h.symbol "Symbol", substring(h.status,1,10) "Status", a.abbrev "Assay", b.jnumID "J#", 
-h.creation_date "Homology Creation Date"
+h.creation_date "Orthology Creation Date"
 from #homology h, HMD_Assay a, BIB_All_View b
 where h._Assay_key = a._Assay_key
 and h._Refs_key = b._Refs_key

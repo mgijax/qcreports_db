@@ -16,7 +16,7 @@ set nocount off
 go
 
 print ""
-print "Duplicate Homologies By Class"
+print "Duplicate Orthologies By Class"
 print ""
 
 select v._Marker_key, v.symbol, substring(v.commonName,1,25), v.jnum, v._Class_key
@@ -48,7 +48,7 @@ set nocount off
 go
 
 print ""
-print "Duplicate Homologies By Organism"
+print "Duplicate Orthologies By Organism"
 print ""
 
 select distinct h.symbol, substring(h.commonName,1,25), h.jnum, h._Class_key 
