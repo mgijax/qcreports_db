@@ -47,7 +47,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-title = 'Markers w/ Shared Synonyms\n'
+title = 'Markers with Shared Synonyms\n'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
 fp.write(string.ljust('synonym', 50) + \
