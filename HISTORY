@@ -1,3 +1,9 @@
+TAG: qcreports_db-1-0-13
+DATE: 04/13/2000
+STAFF: lec
+RELEASE: A
+CHANGES: fixed MLC_NomenUpdate.py
+
 TAG: qcreports_db-1-0-12
 DATE: 04/13/2000
 STAFF: lec
