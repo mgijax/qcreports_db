@@ -1,3 +1,17 @@
+TAG:  no tag
+DATE: 12/01/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 5359; MRK_NomenNotInformative2.sql
+
+TAG:  no tag
+DATE: 11/25/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) SEQ_GenBank.py ; removed newlines from accids
+
 TAG:  qcreports_db-20-0-22
 TAG:  qcreports_db-20-0-21
 DATE: 11/20/2003
