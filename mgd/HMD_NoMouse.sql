@@ -12,7 +12,7 @@ and hm._Marker_key = m._Marker_key
 and m._Organism_key = 1)
 go
 
-select distinct h._Class_key, h.symbol1, organism = h.commonName, h.jnumID, h._Organism_key
+select distinct h._Class_key, h.symbol, organism = h.commonName, h.jnumID, h._Organism_key
 into #homology
 from #class c, HMD_Homology_View h
 where c._Class_key = h._Class_key
