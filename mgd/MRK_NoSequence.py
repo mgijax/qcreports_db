@@ -30,6 +30,9 @@
 #
 # History:
 #
+# lec	02/23/2004
+#	- include XM (RefSeq)
+#
 # lec	01/29/2004
 #	- exclude phenotypic mutants (TR 5139)
 #
@@ -53,7 +56,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-title = 'Genes with no Sequence Data'
+title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq)'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
 fp.write(string.ljust('Gene Symbol', 27) + \
@@ -98,7 +101,7 @@ cmds.append('select m._Marker_key, m.symbol ' + \
 'and m._Marker_Status_key in (1,3) ' + \
 'and not exists (select 1 from MRK_Acc_View a ' + \
 'where m._Marker_key = a._Object_key ' + \
-'and a._LogicalDB_Key in (9, 13)) ' + \
+'and a._LogicalDB_Key in (9, 13, 27, 41)) ' + \
 'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)')
 
 cmds.append('create nonclustered index idx_marker_key on #markers(_Marker_key)')
