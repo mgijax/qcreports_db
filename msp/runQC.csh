@@ -70,7 +70,8 @@ date | tee ${LOG}
 
 # execute all reports
 
-foreach i (*.py)
+#foreach i (*.py)
+foreach i (*Invalid*.py)
 ./$i ${OUTPUTDIR} ${JOBSTREAM} ${MGDDBNAME}
 end
 
