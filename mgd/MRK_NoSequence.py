@@ -141,14 +141,14 @@ results = db.sql('select distinct o._Marker_key, a.accID ' + \
 	'from #orthologs o, ACC_Accession a ' + \
 	'where o.orthologyKey = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 24', 'auto')
-llids = {}
+	'and a._LogicalDB_key = 55', 'auto')
+egids = {}
 for r in results:
 	key = r['_Marker_key']
 	value = r['accID']
-	if not llids.has_key(key):
-		llids[key] = []
-	llids[key].append(value)
+	if not egids.has_key(key):
+		egids[key] = []
+	egids[key].append(value)
 
 #
 # select number of GXD index references for each marker
@@ -217,8 +217,8 @@ for r in results:
 	else:
 		fp.write(string.ljust(' ' * 10, 12))
 
-	if llids.has_key(key):
-		fp.write(string.ljust(string.join(llids[key], ';'), 42))
+	if egids.has_key(key):
+		fp.write(string.ljust(string.join(egids[key], ';'), 42))
 	else:
 		fp.write(string.ljust(' ' * 40, 42))
 

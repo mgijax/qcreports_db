@@ -14,7 +14,7 @@ go
 
 print ""
 print "Mouse Symbols with nomenclature changes which contain Rat homologs with unofficial nomenclature"
-print "(meaning the Rat symbol has no LocusLink ID)"
+print "(meaning the Rat symbol has no EntrezGene ID)"
 print ""
 
 select distinct m.current_symbol "New Mouse Symbol", m2.symbol "Rat Symbol"
@@ -30,7 +30,7 @@ and m2.symbol != m.current_symbol
 and not exists (select 1 from ACC_Accession ma 
 where m2._Marker_key = ma._Object_key
 and ma._MGIType_key = 2
-and ma._LogicalDB_key = 24)
+and ma._LogicalDB_key = 55)
 order by m.current_symbol
 go
 
