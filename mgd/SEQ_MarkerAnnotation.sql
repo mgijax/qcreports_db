@@ -6,12 +6,12 @@ go
 
 select ma._Object_key, ma.accID, sequenceKey = sa._Object_key
 into #markers1
-from ACC_Accession ma, ACC_Accession sa
-where ma._MGIType_key = 2
-and ma.accID = sa.accID
-and sa._MGIType_key = 19
-and ma._LogicalDB_key = sa._LogicalDB_key
+from ACC_Accession sa, ACC_Accession ma
+where sa._MGIType_key = 19
 and sa.preferred = 0
+and sa.accID = ma.accID
+and ma._MGIType_key = 2
+and ma._LogicalDB_key = sa._LogicalDB_key
 go
 
 create nonclustered index idx_mkey on #markers1(_Object_key)
