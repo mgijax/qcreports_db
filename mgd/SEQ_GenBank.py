@@ -36,6 +36,7 @@
 import sys
 import os
 import string
+import regsub
 import db
 import mgi_utils
 import reportlib
@@ -132,7 +133,7 @@ results = db.sql(cmds, 'auto')
 
 accIDs = {}
 for r in results[-5]:
-    key = r['accID']
+    key = regsub.gsub('\n', '', r['accID'])
     value = r['mgiType'] + ':' + str(r['_Object_key'])
     if not accIDs.has_key(key):
 	accIDs[key] = []
@@ -143,7 +144,7 @@ for r in results[-5]:
 mgiIDs = {}
 for r in results[-4]:
     key = r['mgiType'] + ':' + str(r['_Object_key'])
-    value = r['accID']
+    value = regsub.gsub('\n', '', r['accID'])
     mgiIDs[key] = value
 
 # set of names keyed by mgi type/object key
@@ -168,7 +169,7 @@ for r in results[-2]:
 
 for r in results[-1]:
 
-    accID = r['accID']
+    accID = regsub.gsub('\n', '', r['accID'])
     fp.write(accID)
 
     # for each Object associated with the Sequence Accession ID
