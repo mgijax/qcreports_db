@@ -1,3 +1,10 @@
+TAG:  qcreports_db-19-0-10
+DATE: 05/15/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) fixed qcnightly_reports.sh
+
 TAG:  qcreports_db-19-0-9
 DATE: 05/14/2003
 STAFF: lec
