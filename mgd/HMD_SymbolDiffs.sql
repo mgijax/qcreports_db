@@ -76,6 +76,6 @@ select msymbol "MGI Symbol",
        locusID "LL ID",
        hname "Human Name"
 from #results
-order by modification_date, type desc, msymbol
+order by modification_date, hstatus desc, msymbol
 go
 
