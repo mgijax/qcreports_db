@@ -31,12 +31,13 @@ import reportlib
 # Main
 #
 
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
 	currentDate = sys.argv[2]
 else:
 	currentDate = mgi_utils.date('%m/%d/%Y')
 
-fp = reportlib.init(sys.argv[0], title = 'Alleles with Immune System Annotations', outputdir = os.environ["QCREPORTOUTPUTDIR"])
+fp = reportlib.init(sys.argv[0], title = 'Alleles with Immune System Annotations', \
+    outputdir = os.environ["QCREPORTOUTPUTDIR"], fileExt = '.' + os.environ['DATE'] + '.rpt')
 fp.write(' symbol' + reportlib.CRT)
 fp.write(' ' + '-' * 25 + reportlib.CRT)
 
