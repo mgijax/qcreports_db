@@ -72,7 +72,6 @@ cmds.append('select accID, _Object_key ' + \
 	'into #pseqIDs ' + \
 	'from ACC_Accession ' + \
 	'where _MGIType_key = 3 ' + \
-	'and _Object_key = 10603 ' + \
 	'and _LogicalDB_key in (9,27) ')
 cmds.append('create index idx1 on #pseqIDs(accID)')
 cmds.append('create index idx2 on #pseqIDs(_Object_key)')
