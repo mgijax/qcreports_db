@@ -102,7 +102,31 @@ cmds.append('select markerID = a.accID, m._Marker_key, m.symbol, markerType = t.
 
 cmds.append('create index idx_key on #markers(_Marker_key)')
 
-# select Sequence strain
+# select Sequence attributes
+
+cmds.append('select a.accID, _Sequence_key = a._Object_key, sq.length, sq.description, ' + \
+	'sq._SequenceType_key, sq._SequenceProvider_key ' + \
+	'into #seqAttr ' + \
+	'from #accSeq a, SEQ_Sequence sq ' + \
+	'where a._Object_key = sq._Sequence_key ')
+
+cmds.append('create index idx_key1 on #seqAttr(_Sequence_key)')
+cmds.append('create index idx_key2 on #seqAttr(_SequenceType_key)')
+cmds.append('create index idx_key3 on #seqAttr(_SequenceProvider_key)')
+
+cmds.append('select s._Sequence_key, t.term ' + \
+	'into #seqType ' + \
+	'from #seqAttr s, VOC_Term t ' + \
+	'where s._SequenceType_key = t._Term_key ')
+
+cmds.append('create index idx_key on #seqType(_Sequence_key)')
+
+cmds.append('select s._Sequence_key, t.term ' + \
+	'into #seqProvider ' + \
+	'from #seqAttr s, VOC_Term t ' + \
+	'where s._SequenceProvider_key = t._Term_key ')
+
+cmds.append('create index idx_key on #seqProvider(_Sequence_key)')
 
 cmds.append('select s._Sequence_key, ps.strain ' + \
 	'into #seqStrain ' + \
@@ -112,25 +136,6 @@ cmds.append('select s._Sequence_key, ps.strain ' + \
 	'and ss._Strain_key = ps._Strain_key')
 
 cmds.append('create index idx_key on #seqStrain(_Sequence_key)')
-
-# select Sequence attributes
-
-cmds.append('select a.accID, _Sequence_key = a._Object_key, sq.length, sq.description, ' + \
-	'seqType = t1.term, seqProvider = t2.term ' + \
-	'into #seqAttr ' + \
-	'from #accSeq a, SEQ_Sequence sq, VOC_Term t1, VOC_Term t2 ' + \
-	'where a._Object_key = sq._Sequence_key ' + \
-	'and sq._SequenceType_key = t1._Term_key ' + \
-	'and sq._SequenceProvider_key = t2._Term_key')
-
-cmds.append('create index idx_key on #seqAttr(_Sequence_key)')
-
-cmds.append('select s._Sequence_key, s.accID, s.length, s.description, s.seqType, s.seqProvider, ps.strain ' + \
-	'into #sequences ' + \
-	'from #seqAttr s, #seqStrain ps ' + \
-	'where s._Sequence_key = ps._Sequence_key')
-
-cmds.append('create index idx_key on #sequences(_Sequence_key)')
 
 cmds.append('select s._Sequence_key, cl.name ' + \
 	'into #seqCloneSet ' + \
@@ -143,19 +148,51 @@ cmds.append('select s._Sequence_key, cl.name ' + \
 # This is what we'll process...
 #
 
-# clone set info
+# sequence type info
+cmds.append('select _Sequence_key, term from #seqType')
 
+# sequence provider info
+cmds.append('select _Sequence_key, term from #seqProvider')
+
+# sequence strain info
+cmds.append('select _Sequence_key, strain from #seqStrain')
+
+# clone set info
 cmds.append('select _Sequence_key, name from #seqCloneSet')
 
 # sequence info with cross-reference to marker
 cmds.append('select s.*, ms._Marker_key, m.markerID, m.symbol, m.markerType ' + \
-	'from #sequences s, #seqmarker ms, #markers m ' + \
+	'from #seqAttr s, #seqmarker ms, #markers m ' + \
 	'where s._Sequence_key = ms._Sequence_key ' + \
 	'and ms._Marker_key = m._Marker_key ' + \
 	'order by s.accID')
 
 results = db.sql(cmds, 'auto')
 
+seqType = {}
+for r in results[-5]:
+	key = r['_Sequence_key']
+	value = r['term']
+	if not seqType.has_key(key):
+		seqType[key] = []
+	seqType[key].append(value)
+	
+seqProvider = {}
+for r in results[-4]:
+	key = r['_Sequence_key']
+	value = r['term']
+	if not seqProvider.has_key(key):
+		seqProvider[key] = []
+	seqProvider[key].append(value)
+	
+seqStrain = {}
+for r in results[-3]:
+	key = r['_Sequence_key']
+	value = r['strain']
+	if not seqStrain.has_key(key):
+		seqStrain[key] = []
+	seqStrain[key].append(value)
+	
 cloneSet = {}
 for r in results[-2]:
 	key = r['_Sequence_key']
@@ -167,10 +204,10 @@ for r in results[-2]:
 for r in results[-1]:
 
     fp.write(r['accID'] + reportlib.TAB + \
-	r['seqProvider'] + reportlib.TAB + \
-	r['seqType'] + reportlib.TAB + \
+	seqProvider[r['_Sequence_key']] + reportlib.TAB + \
+	seqType[r['_Sequence_key']] + reportlib.TAB + \
 	mgi_utils.prvalue(r['length']) + reportlib.TAB + \
-	r['strain'] + reportlib.TAB + \
+	seqStrain[r['_Sequence_key']] + reportlib.TAB + \
 	mgi_utils.prvalue(r['description']) + reportlib.TAB)
 
     if cloneSet.has_key(r['_Sequence_key']):
