@@ -10,9 +10,6 @@
 
 cd `dirname $0` && source Configuration
 
-strainChanges.sh
-goStats.sh
-
 foreach i ($QCMGD/*.sql)
 reportisql.csh $i $QCREPORTOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
 end
@@ -35,6 +32,10 @@ cd $QCFANTOM
 foreach i (*.py)
 $i
 end
+
+strainAllele.sh
+strainChanges.sh
+goStats.sh
 
 cd $QCREPORTOUTPUTDIR
 foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt)
