@@ -51,14 +51,14 @@ import reportlib
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
 # select all distinct sequences/markers, excluding certain providers
-# exclude Dots, TIGR Mouse Gene Index, NIA Mouse Gene Index
+# exclude RefSeq, Dots, TIGR Mouse Gene Index, NIA Mouse Gene Index
 
 cmds = []
 cmds.append('select s._Sequence_key, s._Marker_key ' + \
 	'into #seqMarker1 ' + \
 	'from SEQ_Marker_Cache s, SEQ_Sequence ss ' + \
 	'where s._Sequence_key = ss._Sequence_key ' + \
-	'and ss._SequenceProvider_key not in (316382, 316381, 316383)')
+	'and ss._SequenceProvider_key not in (316372, 316382, 316381, 316383)')
 
 cmds.append('create index idx_key1 on #seqMarker1(_Sequence_key)')
 cmds.append('create index idx_key2 on #seqMarker1(_Marker_key)')
