@@ -25,6 +25,8 @@ print ""
 
 select "Distinct UniGene IDs"=count(*) from #ugc
 
+print ""
+
 select #ugc.accID, chromosome, symbol
 from #ugc, #ug, MRK_Marker m
 where #ugc.accID = #ug.accID
