@@ -1,9 +1,10 @@
-TAG: qcreports_db-13-0-1
+TAG: qcreports_db-13-0-1, qcreports_db-13-0-2
 DATE: 11/02/2001
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) minor tweaks
+b) removed HMD_Potential
 
 TAG: qcreports_db-13-0-0
 DATE: 11/01/2001
