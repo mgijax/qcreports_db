@@ -12,13 +12,12 @@ order by m.symbol
 go
 
 print ""
-print "Markers which contain Alleles which do not match the Marker Symbol (excluding wild type alleles)"
+print "Markers which contain Alleles which do not match the Marker Symbol"
 print ""
 
 select m.symbol "Marker", a.symbol "Allele"
 from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
-and a.symbol not like "+%"
 and a.symbol not like m.symbol + "%"
 go
 
