@@ -14,7 +14,7 @@ setenv QCREPORTINSTALLDIR	/usr/local/mgi/qcreports_db
 setenv QCREPORTOUTPUTDIR	/usr/local/mgi/qcreports_db/output
 
 # FTP report directory
-setenv FTPREPORTDIR		/net/kelso/ftp/pub/informatics/reports
+setenv FTPREPORTDIR		/net/l1/ftp/pub/informatics/reports
 
 # SYBASE
 setenv SYBASE			/opt/sybase
@@ -29,19 +29,19 @@ set path = ($path $SYBASE/bin)
 
 # Database Server
 
-setenv DSQUERY MGD_DEV
+setenv DSQUERY MGD
 
 # MGD Database
 
-setenv MGD mgd_release
+setenv MGD mgd
 
 # Nomen Database
 
-setenv NOMEN nomen_dev
+setenv NOMEN nomen
 
 # Strains Database
 
-setenv STRAINS strains_dev
+setenv STRAINS strains
 
 # Public login
 
