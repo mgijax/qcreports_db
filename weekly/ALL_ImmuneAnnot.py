@@ -44,19 +44,14 @@ fp.write(' ' + '-' * 50 + reportlib.CRT)
 cmds = []
 cmds.append('select distinct a.symbol, a._Allele_key ' + \
 'into #alleles ' + \
-'from ALL_Allele a, ALL_Note_General_View n ' + \
-'where a._Allele_key = n._Allele_key ' + \
-'and n.note like "%immune system:%" ' + \
-'and n.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
-'and dateadd(day, 1, "%s") ' % (currentDate) + \
-'union ' + \
-'select distinct a.symbol, a._Allele_key ' + \
-'from ALL_Allele a, GXD_AlleleGenotype g, VOC_Annot_View v ' + \
-'where a._Allele_key = g._Allele_key ' + \
-'and g._Genotype_key = v._Object_key ' + \
-'and v._AnnotType_key = 1001 ' + \
-'and v.term like "%immune system:%" ' + \
-'and v.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
+'from ALL_Allele a, MGI_Note n, MGI_NoteChunk nc, MGI_NoteType nt ' + \
+'where a._Allele_key = n._Object_key ' + \
+'and n._MGIType_key = 11 ' + 
+'and n._NoteType_key = nt._NoteType_key ' + 
+'and nt.noteType = "General" ' + \
+'and n._Note_key = nc._Note_key ' + \
+'and nc.note like "%immune system:%" ' + \
+'and nc.creation_date between dateadd(day, -7, "%s") ' % (currentDate) + \
 'and dateadd(day, 1, "%s") ' % (currentDate) + \
 'union ' + \
 'select distinct a.symbol, a._Allele_key ' + \

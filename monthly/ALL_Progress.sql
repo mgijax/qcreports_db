@@ -87,14 +87,6 @@ from MGI_Note n, MGI_NoteChunk nc
 where n._MGIType_key = 11
 and n._Note_key = nc._Note_key
 and nc.note like "%Associated Phenotype Controlled Terms%"
-union
-select total = count(distinct n._Object_key), category = "Total Allele for Previous Month", seq = 2
-from MGI_Note n, MGI_NoteChunk nc
-where n._MGIType_key = 11
-and n._Note_key = nc._Note_key
-and datepart(year, n.creation_date) = @year
-and datepart(month, n.creation_date) = @month
-and nc.note like "%Associated Phenotype Controlled Terms%"
 
 select total = count(*), category = "Total", seq = 1
 into #c4
