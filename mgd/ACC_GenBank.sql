@@ -1,6 +1,5 @@
 print ""
-print "All GenBank IDs in MGI"
-print "(excludes GenBank IDs attached to non-Mouse Markers)"
+print "All GenBank IDs in MGI associated with a Molecular Segment or Mouse Gene"
 print ""
 
 select distinct a.accID
