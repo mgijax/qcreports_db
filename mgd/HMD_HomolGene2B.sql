@@ -34,8 +34,11 @@ print "Mouse symbols are RIKEN"
 print ""
 
 select h.*
-from #homology h
+from #homology h, radar..DP_EntrezGene_Info e
 where h.symbol2 like "%Rik" 
+and h.symbol1 = e.symbol
+and e.taxID = 9606
+and e.status = "I"
 and not exists (select 1 from MRK_Marker m where m._Organism_key = 1 and m.symbol = h.symbol2)
 and not exists (select 1 from MRK_Marker m where m._Organism_key = 2 and m.symbol = h.symbol1)
 order by h.symbol1
@@ -48,8 +51,11 @@ print "Mouse symbols are non-RIKEN"
 print ""
 
 select h.*
-from #homology h
+from #homology h, radar..DP_EntrezGene_Info e
 where h.symbol2 not like "%Rik"
+and h.symbol1 = e.symbol
+and e.taxID = 9606
+and e.status = "I"
 and not exists (select 1 from MRK_Marker m where m._Organism_key = 1 and m.symbol = h.symbol2)
 and not exists (select 1 from MRK_Marker m where m._Organism_key = 2 and m.symbol = h.symbol1)
 order by h.symbol1
