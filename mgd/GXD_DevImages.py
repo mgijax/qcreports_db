@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	09/16/2004
+#	- TR 6205; added Dev Dyn
+#
 # lec	03/05/2004
 #	- converted to QC (TR 5636)
 #
@@ -38,7 +41,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], '"Development" Papers Requiring Images', outputdir = os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Papers Requiring Images (Development, Dev Dyn)', outputdir = os.environ['QCREPORTOUTPUTDIR'])
 
 cmd = 'select b.jnumID ' + \
       'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \
@@ -47,7 +50,7 @@ cmd = 'select b.jnumID ' + \
             'p._Image_key = i._Image_key and ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-            'b.journal = "Development" and ' + \
+            'b.journal in ("Development", "Dev Dyn") and ' + \
             'a._AssayType_key not in (1, 5, 7) and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
@@ -59,7 +62,7 @@ cmd = 'select b.jnumID ' + \
             'g._Specimen_key = r._Specimen_key and ' + \
             'r.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-            'b.journal = "Development" and ' + \
+            'b.journal in ("Development", "Dev Dyn") and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'order by b.jnumID'
