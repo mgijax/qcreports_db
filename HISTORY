@@ -1,3 +1,10 @@
+TAG:  qcreports_db-20-0-17
+DATE: 10/28/2003
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) MRK_NomenRat.sql; change per TR 4342 (RGD/LocusLink)
+
 TAG:  qcreports_db-20-0-16
 DATE: 10/28/2003
 STAFF: lec
