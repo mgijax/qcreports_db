@@ -8,6 +8,9 @@ where p._SegmentType_key = t._Term_key
 and t.term != "primer"
 and _Source_key != 30040
 and name not like 'IMAGE clone%'
+and name not like 'RPCI23 clone%'
+and name not like 'RPCI24 clone%'
+and name not like 'NIA clone%'
 go
 
 select *
@@ -68,7 +71,7 @@ drop table #probe
 go
 
 print ""
-print "Probes - No Markers (excluding IMAGE clones)"
+print "Probes - No Markers (excluding IMAGE, RPCI, NIA clones)"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
@@ -77,6 +80,9 @@ where p._SegmentType_key = t._Term_key
 and t.term != "primer"
 and p._Source_key != 30040
 and p.name not like 'IMAGE clone%'
+and p.name not like 'RPCI23 clone%'
+and p.name not like 'RPCI24 clone%'
+and p.name not like 'NIA clone%'
 and p.name not like 'J%'
 and not exists (select m.* from PRB_Marker m where p._Probe_key = m._Probe_key)
 order by p.creation_date, p.name
