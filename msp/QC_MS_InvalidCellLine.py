@@ -49,7 +49,7 @@ fp.write("  A row in this report represents a Cell Line that could not be transl
 
 fp.write(string.ljust('Cell Line', 100))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('---------', 55))
+fp.write(string.ljust('---------', 100))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #

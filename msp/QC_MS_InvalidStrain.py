@@ -49,7 +49,7 @@ fp.write("  A row in this report represents a Strain that could not be translate
 
 fp.write(string.ljust('Strain', 100))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('------', 55))
+fp.write(string.ljust('------', 100))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #

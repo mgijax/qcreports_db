@@ -49,7 +49,7 @@ fp.write("  A row in this report represents a Library that could not be translat
 
 fp.write(string.ljust('Library', 100))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('-------', 55))
+fp.write(string.ljust('-------', 100))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #
