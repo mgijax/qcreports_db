@@ -56,8 +56,6 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-db.useOneConnection(1)
-
 title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq), excluding Mutant Phenotypes'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
@@ -234,5 +232,4 @@ for r in results:
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
-db.useOneConnection(0)
 

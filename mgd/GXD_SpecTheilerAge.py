@@ -51,7 +51,6 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
 cmds = []
@@ -160,4 +159,3 @@ for r in results:
 fp.write(CRT + 'Number of specimens: ' + str(count) + CRT)
 
 reportlib.finish_nonps(fp)
-db.useOneConnection(0)

@@ -10,9 +10,13 @@
 
 cd `dirname $0` && source ./Configuration
 
-./strainAllele.sh
-./strainChanges.sh
-./goStats.sh
+setenv LOG	${QCLOGSDIR}/$0.log
+rm -rf ${LOG}
+touch ${LOG}
+
+./strainAllele.sh >>& ${LOG}
+./strainChanges.sh >>& ${LOG}
+./goStats.sh >>& ${LOG}
 
 foreach i ($QCMGD/*.sql)
 echo $i, `date`
@@ -30,7 +34,7 @@ end
 cd $QCMGD
 foreach i (*.py)
 echo $i, `date`
-$i
+$i >>& ${LOG}
 echo $i, `date`
 end
 
