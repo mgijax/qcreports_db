@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select a._Assay_key, a._Refs_key, specimenLabel = s.substring(specimenLabel, 1, 50)
+select a._Assay_key, a._Refs_key, specimenLabel = substring(specimenLabel, 1, 50)
 into #knockin
 from GXD_Assay a, GXD_Specimen s
 where a._AssayType_key = 9
