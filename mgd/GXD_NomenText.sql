@@ -13,6 +13,25 @@ go
 create nonclustered index index_symbol on #markers(symbol)
 go
 
+select m.*, i.index_id
+into #index
+from #markers m, GXD_Index i
+where i.comments like '% ' + m.symbol + ' %'
+go
+
+select m.*, a._Assay_key
+into #assay
+from #markers m, GXD_AssayNote a
+where a.assayNote like '% ' + m.symbol + ' %'
+go
+
+select m.*, s._Assay_key
+into #results
+from #markers m, GXD_InSituResult n, GXD_Specimen s
+where n.resultNote like '% ' + m.symbol + ' %'
+and n._Specimen_key = s._Specimen_key
+go
+
 set nocount off
 go
 
@@ -27,10 +46,10 @@ print "Nomenclature Event Date as of: %1!/%2!", @month, @year
 print ""
 
 select i.symbol "Marker Symbol", i.jnumID "J:",
-convert(char(10), m.event_date, 101) "Event Date"
-from #markers m, GXD_Index_View i
-where i.comments like '% ' + m.symbol + ' %'
-order by m.event_date desc
+convert(char(10), x.event_date, 101) "Event Date"
+from #index x, GXD_Index_View i
+where x.index_id = i.index_id
+order by x.event_date desc
 go
 
 declare @month integer
@@ -43,12 +62,11 @@ print "Symbols which have undergone withdrawals and appear in GXD Assay Notes"
 print "Nomenclature Event Date: %1!/%2!", @month, @year
 print ""
 
-select m.symbol "Marker Symbol", a.mgiID "Assay MGI ID",
-convert(char(10), m.event_date, 101) "Event Date"
-from #markers m, GXD_Assay_View a, GXD_AssayNote n
-where n.assayNote like '% ' + m.symbol + ' %'
-and n._Assay_key = a._Assay_key
-order by m.event_date desc
+select x.symbol "Marker Symbol", a.mgiID "Assay MGI ID",
+convert(char(10), x.event_date, 101) "Event Date"
+from #assay x, GXD_Assay_View a
+where x._Assay_key = a._Assay_key
+order by x.event_date desc
 go
 
 declare @month integer
@@ -61,12 +79,10 @@ print "Symbols which have undergone withdrawals and appear in GXD Result Notes"
 print "Nomenclature Event Date: %1!/%2!", @month, @year
 print ""
 
-select m.symbol "Marker Symbol", a.mgiID "Assay MGI ID",
-convert(char(10), m.event_date, 101) "Event Date"
-from #markers m, GXD_Assay_View a, GXD_InSituResult n, GXD_Specimen s
-where n.resultNote like '% ' + m.symbol + ' %'
-and n._Specimen_key = s._Specimen_key
-and s._Assay_key = a._Assay_key
-order by m.event_date desc
+select x.symbol "Marker Symbol", a.mgiID "Assay MGI ID",
+convert(char(10), x.event_date, 101) "Event Date"
+from #results x, GXD_Assay_View a
+where x._Assay_key = a._Assay_key
+order by x.event_date desc
 go
 
