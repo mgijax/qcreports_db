@@ -54,6 +54,6 @@ print ""
 select distinct h.symbol, substring(h.commonName,1,25), h.jnum, h._Class_key 
 from HMD_Homology_View h, #duplicates d
 where d._Class_key = h._Class_key
-order by h._Class_key, h.species
+order by h._Class_key, h.commonName
 go
 

@@ -14,25 +14,22 @@ select @ref = _Object_key
 from ACC_Accession a
 where accID = "J:57656"			/* WashU/dbEST load reference */
 
-select "IMAGE cDNAs", count(*) 
-from PRB_Probe
-where name = "I.M.A.G.E. clone" and DNAType = "cDNA"
+select "IMAGE cDNAs", count(p._Probe_key) 
+from PRB_Probe p, VOC_Term v
+where p.name = "I.M.A.G.E. clone" 
+and p._SegmentType_key = v._Term_key
+and v.term = "cDNA"
 
 union all
 /* Count EST accession IDs associated with these clones */
-/* 
-	the commented-out SQL is to further restrict the count to ESTs
-	from the dbEST/WashU EST load.
-*/
-select "ESTs", count(*)
-from ACC_Accession a, PRB_Probe p  /*, ACC_AccessionReference ar */
-where _LogicalDB_key = @washUdb
-and _MGIType_key = 3 and a._Object_key = p._Probe_key
-and name = "I.M.A.G.E. clone" and DNAType = "cDNA"
-/* 
-	and ar._Accession_key = a._Accession_key
-	and ar._Refs_key = @ref
-*/
+select "ESTs", count(distinct a.accID)
+from ACC_Accession a, PRB_Probe p, VOC_Term t
+where a._LogicalDB_key = @washUdb
+and a._MGIType_key = 3 
+and a._Object_key = p._Probe_key
+and p.name = "I.M.A.G.E. clone" 
+and p._SegmentType_key = t._Term_key
+and t.term = "cDNA"
 
 union all
 select "Putative Genes", count(distinct _Marker_key)
@@ -43,10 +40,11 @@ where relationship = 'P'
 union all
 select "cDNAs with Putative Relationships",
 count (distinct pm._Probe_key)
-from PRB_Marker pm, PRB_Probe p
+from PRB_Marker pm, PRB_Probe p, VOC_Term t
 where relationship = "P"
 and p._Probe_key = pm._Probe_key
-and p.DNAType = "cDNA"
+and p._SegmentType_key = t._Term_key
+and t.term = "cDNA"
 go
 
 
