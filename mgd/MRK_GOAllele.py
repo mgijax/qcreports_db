@@ -93,9 +93,10 @@ cmds.append('create nonclustered index idx_refs_key on #m1(_Refs_key)')
 #
 cmds.append('select m.*, alleleID = a.accID ' + \
 'into #m2 ' + \
-'from #m1 m, ALL_Reference r, ALL_Acc_View a ' + \
+'from #m1 m, ALL_Reference r, ACC_Accession a ' + \
 'where m._Refs_key = r._Refs_key ' + \
 'and r._Allele_key = a._Object_key ' + \
+'and a._MGIType_key = 11 ' + \
 'and a.preferred = 1')
 
 #

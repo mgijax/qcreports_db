@@ -63,8 +63,9 @@ cmds.append('select _Probe_key ' + \
 # Select probes w/ Seq IDs
 cmds.append('select distinct p._Probe_key, a.accID ' + \
 'into #probeseqs ' + \
-'from #probes p, PRB_Acc_View a ' + \
+'from #probes p, ACC_Accession a ' + \
 'where p._Probe_key = a._Object_key  ' + \
+'and a._MGIType_key = 3 ' + \
 'and a._LogicalDB_key = 9 ')
 
 # Select probes with more than one Seq ID
@@ -72,8 +73,9 @@ cmds.append('select * into #formgi from #probeseqs group by accID having count(*
 
 # Select MGI Acc ID for probes with > 1 Seq ID
 cmds.append('select m.*, probeID = pa.accID ' + \
-'from #formgi m, PRB_Acc_View pa ' + \
+'from #formgi m, ACC_Accession pa ' + \
 'where m._Probe_key = pa._Object_key ' + \
+'and pa._MGIType_key = 3 ' + \
 'and pa.prefixPart = "MGI:" ' + \
 'order by m._Probe_key')
 

@@ -64,9 +64,10 @@ cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
 
 # select all references for the set of markers
 cmds.append('select m._Marker_key, b.accID ' + \
-	'from #markers m, MRK_Reference r, BIB_Acc_View b ' + \
+	'from #markers m, MRK_Reference r, ACC_Accession b ' + \
 	'where m._Marker_key = r._Marker_key ' + \
 	'and r._Refs_key = b._Object_key ' + \
+	'and b._MGIType_key = 1 ' + \
 	'and b._LogicalDB_key = 1 ' + \
 	'and b.prefixPart = "J:" ' + \
 	'and b.preferred = 1 ')

@@ -85,8 +85,9 @@ cmd.append('create nonclustered index idx_key on #markers(_Marker_key)')
 
 # get primary MGI ids (2)
 cmd.append('select distinct m._Marker_key, a.accID ' + \
-'from #markers m, MRK_Acc_View a ' + \
+'from #markers m, ACC_Accession a ' + \
 'where m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.preferred = 1')

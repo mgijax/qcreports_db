@@ -86,8 +86,9 @@ cmds.append('select distinct m._Marker_key ' + \
 'and m._Marker_Type_key = 1 ' + \
 'and m._Marker_key = a._Marker_key ' + \
 'and m.symbol = a.symbol ' + \
-'and not exists (select 1 from MRK_Acc_View a ' + \
+'and not exists (select 1 from ACC_Accession a ' + \
 'where m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a._LogicalDB_Key in (9, 13, 27, 41)) ')
 
 #
@@ -99,8 +100,9 @@ cmds.append('select m._Marker_key, m.symbol ' + \
 'where m._Organism_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
 'and m._Marker_Status_key in (1,3) ' + \
-'and not exists (select 1 from MRK_Acc_View a ' + \
+'and not exists (select 1 from ACC_Accession a ' + \
 'where m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a._LogicalDB_Key in (9, 13, 27, 41)) ' + \
 'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)')
 
@@ -124,8 +126,9 @@ cmds.append('select * from #orthologs')
 # select ll id of orthologs
 #
 cmds.append('select distinct o._Marker_key, a.accID ' + \
-'from #orthologs o, MRK_Acc_View a ' + \
+'from #orthologs o, ACC_Accession a ' + \
 'where o.orthologKey = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a._LogicalDB_key = 24')
 
 #
@@ -152,11 +155,12 @@ cmds.append('select distinct m._Marker_key ' + \
 #
 
 cmds.append('select distinct m._Marker_key, b.accID ' + \
-'from #markers m, MRK_History h, BIB_Acc_View b ' + \
+'from #markers m, MRK_History h, ACC_Accession b ' + \
 'where m._Marker_key = h._Marker_key ' + \
 'and h._Marker_key = h._History_key ' + \
 'and h._Marker_Event_key = 1 ' + \
 'and h._Refs_key = b._Object_key ' + \
+'and b._MGIType_key = 1 ' + \
 'and b._LogicalDB_key = 1 ' + \
 'and b.prefixPart = "J:"')
 

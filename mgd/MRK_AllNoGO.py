@@ -89,10 +89,11 @@ cmds.append('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED)
 
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 'into #markers ' + \
-'from MRK_Marker m, MRK_Acc_View a ' + \
+'from MRK_Marker m, ACC_Accession a ' + \
 'where m._Marker_Type_key = 1 ' + \
 'and m._Marker_Status_key in (1,3) ' + \
 'and m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a.preferred = 1')
@@ -113,8 +114,9 @@ cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)'
 # select PubMed IDs for references
 
 cmds.append('select distinct r._Refs_key, a.accID ' + \
-'from #references r, BIB_Acc_View a ' + \
+'from #references r, ACC_Accession a ' + \
 'where r._Refs_key = a._Object_key ' + \
+'and a._MGIType_key = 1 ' + \
 'and a._LogicalDB_key = %d ' % (PUBMED) + \
 'and a.preferred = 1')
 

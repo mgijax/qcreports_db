@@ -55,13 +55,15 @@ cmds = []
 
 cmds.append('select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
 'into #seqIDs ' + \
-'from PRB_Acc_View a, ACC_MGIType m ' + \
-'where a._LogicalDB_key in (9,27) ' + \
+'from ACC_Accession a, ACC_MGIType m ' + \
+'where a._MGIType_key = 3 ' + \
+'and a._LogicalDB_key in (9,27) ' + \
 'and a._MGIType_key = m._MGIType_key ' + \
 'union ' + \
 'select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m.name ' + \
-'from MRK_Acc_View a, ACC_MGIType m, MRK_Marker k ' + \
-'where a._LogicalDB_key in (9,27) ' + \
+'from ACC_Accession a, ACC_MGIType m, MRK_Marker k ' + \
+'where a._MGIType_key = 2 ' + \
+'and a._LogicalDB_key in (9,27) ' + \
 'and a._MGIType_key = m._MGIType_key ' + \
 'and a._Object_key = k._Marker_key ' + \
 'and k._Organism_key = 1')
@@ -74,17 +76,19 @@ cmds.append('create nonclustered index idx_type on #seqIDs(_MGIType_key)')
 
 cmds.append('select distinct s._Object_key, s.mgiType, a.accID ' +
 'into #mgiIDs ' + 
-'from #seqIDs s, MRK_Acc_View a ' + \
+'from #seqIDs s, ACC_Accession a ' + \
 'where s._MGIType_key = 2 ' + \
 'and s._Object_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a.preferred = 1 ' + \
 'union ' + \
 'select distinct s._Object_key, s.mgiType, a.accID ' +
-'from #seqIDs s, PRB_Acc_View a ' + \
+'from #seqIDs s, ACC_Accession a ' + \
 'where s._MGIType_key = 3 ' + \
 'and s._Object_key = a._Object_key ' + \
+'and a._MGIType_key = 3 ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a.preferred = 1 ')

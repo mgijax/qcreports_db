@@ -48,14 +48,16 @@ cmds = []
 
 cmds.append('select m._Nomen_key, m.symbol, m.name, m.statusNote, mgiID = a.accID ' + \
 'into #nomen ' + \
-'from NOM_Marker_View m, NOM_Acc_View a ' + \
+'from NOM_Marker_View m, ACC_Accession a ' + \
 'where m.status = "Reserved" ' + \
 'and m._Nomen_key = a._Object_key ' + \
+'and a._MGIType_key = 21 ' + \
 'and a._LogicalDB_Key = 1 ')
 
 cmds.append('select n._Nomen_key, a.accID ' + \
-'from #nomen n, NOM_Acc_View a ' + \
+'from #nomen n, ACC_Accession a ' + \
 'where n._Nomen_key = a._Object_key ' + \
+'and a._MGIType_key = 21 ' + \
 'and a._LogicalDB_Key != 1 ')
 
 cmds.append('select * from #nomen order by symbol')

@@ -142,8 +142,9 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 # select MGI accession ids for mouse genes from set 1
 # this will also suffice for set 2 which is a subset of set 1
 cmds.append('select distinct m._Marker_key, ma.accID ' + \
-'from #m1 m, MRK_Acc_View ma ' + \
+'from #m1 m, ACC_Accession ma ' + \
 'where m._Marker_key = ma._Object_key ' + \
+'and ma._MGIType_key = 2 ' + \
 'and ma.prefixPart = "MGI:" ' + \
 'and ma._LogicalDB_key = 1 ' + \
 'and ma.preferred = 1 ')

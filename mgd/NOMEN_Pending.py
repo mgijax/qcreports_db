@@ -53,9 +53,10 @@ cmds = []
 cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'n._Nomen_key, createdBy = u.login, modDate = convert(char(10), n.modification_date, 101) ' + \
 'into #pending ' + \
-'from MRK_Marker m, MRK_Acc_View a, NOM_Marker n, MGI_User u ' + \
+'from MRK_Marker m, ACC_Accession a, NOM_Marker n, MGI_User u ' + \
 'where m._Marker_Status_key = 3 ' + \
 'and m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.preferred = 1' + \
@@ -63,9 +64,10 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'and n._CreatedBy_key = u._User_key ' + \
 'union ' + \
 'select m._Marker_key, m.symbol, m.name, mgiID = a.accID, NULL, NULL, NULL ' + \
-'from MRK_Marker m, MRK_Acc_View a ' + \
+'from MRK_Marker m, ACC_Accession a ' + \
 'where m._Marker_Status_key = 3 ' + \
 'and m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a.prefixPart = "MGI:" ' + \
 'and a._LogicalDB_key = 1 ' + \
 'and a.preferred = 1' + \
@@ -79,18 +81,21 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 #
 
 cmds.append('select p._Marker_key, a.accID ' + \
-'from #pending p, BIB_Acc_View a, MGI_Reference_Nomen_View r ' + \
+'from #pending p, ACC_Accession a, MGI_Reference_Nomen_View r ' + \
 'where p._Nomen_key = r._Object_key ' + \
 'and r.assocType = "Primary" ' + \
 'and r._Refs_key = a._Object_key ' + \
+'and a._MGIType_key = 1 ' + \
 'and a._LogicalDB_Key = 29 ')
 
 #
 # Get Seq ID
 #
 
-cmds.append('select p._Marker_key, a.accID from #pending p, MRK_Acc_View a ' + \
-'where p._Marker_key = a._Object_key and a._LogicalDB_Key = 9 ')
+cmds.append('select p._Marker_key, a.accID from #pending p, ACC_Accession a ' + \
+'where p._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
+'and a._LogicalDB_Key = 9 ')
 
 #
 # Get Synonyms
@@ -116,8 +121,10 @@ cmds.append('select _Marker_key, hsymbol from #homology')
 # Get Human Seq IDs
 #
 
-cmds.append('select h._Marker_key, a.accID from #homology h, MRK_Acc_View a ' + \
-'where h.hmarkerkey = a._Object_key and a._LogicalDB_Key = 9 ')
+cmds.append('select h._Marker_key, a.accID from #homology h, ACC_Accession a ' + \
+'where h.hmarkerkey = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
+'and a._LogicalDB_Key = 9 ')
 
 cmds.append('select * from #pending order by symbol')
 

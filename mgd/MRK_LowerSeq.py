@@ -50,9 +50,10 @@ fp.write('%-25s' % '------' + TAB)
 fp.write('%-30s' % '---------' + CRT)
 
 cmd = 'select m.symbol, a.accID ' + \
-'from MRK_Marker m, MRK_Acc_View a ' + \
+'from MRK_Marker m, ACC_Accession a ' + \
 'where m._Organism_key = 1 ' + \
 'and m._Marker_key = a._Object_key ' + \
+'and a._MGIType_key = 2 ' + \
 'and a._LogicalDB_key = 9 ' + \
 'order by m.symbol'
 
