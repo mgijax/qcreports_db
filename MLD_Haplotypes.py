@@ -26,7 +26,7 @@ import sys
 import os
 import string
 import posix
-import mgdlib
+import db
 import reportlib
 
 CRT = reportlib.CRT
@@ -43,7 +43,7 @@ command = 'select _Expt_key, alleleLine from MLD_MCDatalist ' + \
 	'where alleleLine not like "%par%" ' + \
 	'and alleleLine not like "%reco%" ' + \
 	'order by _Expt_key, sequenceNum'
-results = mgdlib.sql(command, 'auto')
+results = db.sql(command, 'auto')
 
 for r in results:
 	row = string.splitfields(r['alleleLine'], ' ')
@@ -56,7 +56,7 @@ for r in results:
 
 		cmd = 'select loci = count(*) from MLD_Expt_Marker ' + \
 			'where _Expt_key = %d and matrixData = 1' % exptKey
-		lociList = mgdlib.sql(cmd, 'auto')
+		lociList = db.sql(cmd, 'auto')
 		for l in lociList:
 			numLoci = l['loci']
 
@@ -66,10 +66,11 @@ for r in results:
 	if printed == 0:
 		cmd = 'select jnum, exptType, tag from MLD_Expt_View ' + \
 			'where _Expt_key = %d' % exptKey
-		detailList = mgdlib.sql(cmd, 'auto')
+		detailList = db.sql(cmd, 'auto')
 		for d in detailList:
 			fp.write(`d['jnum']` + TAB + d['exptType'] + TAB + `d['tag']` + CRT)
 			printed = 1
 
+reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

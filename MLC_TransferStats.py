@@ -31,7 +31,7 @@
 import sys
 import os
 import string
-import mgdlib
+import db
 import reportlib
 
 CRT = reportlib.CRT
@@ -47,7 +47,7 @@ cmd = 'select m.symbol ' + \
                        'from MLC_Text t2 ' + \
                        'where t2._Marker_key = t._Marker_key)'
 
-mkadds = mgdlib.sql(cmd, 'auto')
+mkadds = db.sql(cmd, 'auto')
 
 cmd = 'select m.symbol ' + \
       'from MLC_Text t, MRK_Marker m ' + \
@@ -55,7 +55,7 @@ cmd = 'select m.symbol ' + \
       'and not exists (select t2._Marker_key ' + \
                        'from MLC_Text_edit t2 ' + \
                        'where t2._Marker_key = t._Marker_key)'
-mkdeletes = mgdlib.sql(cmd, 'auto')
+mkdeletes = db.sql(cmd, 'auto')
 
 cmd = 'select m.symbol ' + \
       'from MLC_Text_edit te, MRK_Marker m, MLC_Text t ' + \
@@ -63,7 +63,7 @@ cmd = 'select m.symbol ' + \
       'and te._Marker_key = t._Marker_key ' + \
       'and te.modification_date > ' + \
       '    t.modification_date' 
-mkupdates = mgdlib.sql(cmd, 'auto')
+mkupdates = db.sql(cmd, 'auto')
 
 indent=2 
 
@@ -71,7 +71,7 @@ class Paragraph:
 	def __init__(self, title, results):
 		'''
 		# title is the subheading to be printed for this paragraph,
-		# results is the result of mgdlib.sql(cmd,'auto') 
+		# results is the result of db.sql(cmd,'auto') 
 		'''
 		self.title = title
 		self.results = results
@@ -120,4 +120,5 @@ for paragraph in paragraphs:
 
 	fp.write(2*CRT)
 
+reportlib.trailer(fp)
 reportlib.finish_nonps(fp)

@@ -17,7 +17,7 @@
 
 import sys
 import os 
-import mgdlib
+import db
 import string
 import regex
 import reportlib
@@ -32,7 +32,7 @@ cmd = 'create table tempdb..gdbmedline (' + \
 	'accid varchar(30) not null,' + \
 	'symbol varchar(30) not null,' + \
 	'medline varchar(30) not null)\n'
-mgdlib.sql(cmd, None)
+db.sql(cmd, None)
 
 for line in inFile.readlines():
 
@@ -53,18 +53,18 @@ for line in inFile.readlines():
 
 				cmd = 'insert into tempdb..gdbmedline ' + \
 					'values ("%s", "%s", "%s")' % (accid, symbol, medline)
-				mgdlib.sql(cmd, None)
+				db.sql(cmd, None)
 
 inFile.close()
 
 cmd = 'create index index_accid on tempdb..gdbmedline (accid)'
-mgdlib.sql(cmd, None)
+db.sql(cmd, None)
 
 cmd = 'create index index_symbol on tempdb..gdbmedline (symbol)'
-mgdlib.sql(cmd, None)
+db.sql(cmd, None)
 
 cmd = 'create index index_medline on tempdb..gdbmedline (medline)'
-mgdlib.sql(cmd, None)
+db.sql(cmd, None)
 
 cmd = 'select r.jnumID, r.short_citation, m.symbol, gdbsymbol = g.symbol, g.accid ' + \
       'from tempdb..gdbmedline g, BIB_All_View r, BIB_Acc_View a, MRK_Reference mr, MRK_Marker m ' + \
@@ -83,14 +83,14 @@ cmd = 'select r.jnumID, r.short_citation, m.symbol, gdbsymbol = g.symbol, g.acci
       ' h2._Marker_key = m2._Marker_key and ' + \
       ' m2._Species_key = 2)'
 
-results = mgdlib.sql(cmd, 'auto')
+results = db.sql(cmd, 'auto')
 for r in results:
 	fp.write('%-10s %-50s %-20s %-15s %-20s\n'
 		% (r['jnumID'], r['short_citation'],
 		   r['symbol'], r['gdbsymbol'], r['accid']))
 
 cmd = 'drop table tempdb..gdbmedline'
-mgdlib.sql(cmd, None)
+db.sql(cmd, None)
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)

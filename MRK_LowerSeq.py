@@ -14,7 +14,7 @@
 #       template.py
 #
 # Notes:
-#	- all reports use mgdlib default of public login
+#	- all reports use db default of public login
 #	- all reports use server/database default of environment
 #	- use lowercase for all SQL commands (i.e. select not SELECT)
 #	- all public SQL reports require the header and footer
@@ -29,9 +29,8 @@
  
 import sys 
 import os
-import regex
 import string
-import mgdlib
+import db
 import reportlib
 
 CRT = reportlib.CRT
@@ -57,7 +56,7 @@ cmd = 'select m.symbol, a.accID ' + \
 'and a._LogicalDB_key = 9 ' + \
 'order by m.symbol'
 
-results = mgdlib.sql(cmd, 'auto')
+results = db.sql(cmd, 'auto')
 
 for r in results:
 	ok = 1
@@ -71,4 +70,3 @@ for r in results:
 
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
-

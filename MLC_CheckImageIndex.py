@@ -7,7 +7,7 @@
 import sys
 import os
 import string
-import mgdlib
+import db
 import reportlib
 
 #
@@ -23,7 +23,7 @@ for line in inputFile.readlines():
 
 	cmd = 'select _Marker_key, _Marker_Status_key, symbol from MRK_Marker ' + \
 	      'where symbol = "' + tokens[0] + '"'
-	results = mgdlib.sql(cmd, 'auto')
+	results = db.sql(cmd, 'auto')
 
 	for r in results:
 		if r['symbol'] == tokens[0] and r['_Marker_Status_key'] == 2:
@@ -33,5 +33,6 @@ for line in inputFile.readlines():
 				 tokens[3] + reportlib.CRT)
 
 inputFile.close()
+reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

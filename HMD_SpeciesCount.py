@@ -26,7 +26,7 @@
 import sys
 import os
 import string
-import mgdlib
+import db
 import reportlib
 
 CRT = reportlib.CRT
@@ -35,7 +35,7 @@ fp = reportlib.init(sys.argv[0], 'Counts of Mouse Homologies by Species', os.env
 
 speciesResults = []
 
-species = mgdlib.sql('select _Species_key, name from MRK_Species where _Species_key > 1', 'auto')
+species = db.sql('select _Species_key, name from MRK_Species where _Species_key > 1', 'auto')
 
 for s in species:
 
@@ -50,7 +50,7 @@ for s in species:
 	      'and h2._Marker_key = m2._Marker_key ' + \
 	      'and m2._Species_key = 1'
 
-	results = mgdlib.sql(cmd, 'auto')
+	results = db.sql(cmd, 'auto')
 
 	for r in results:
 		speciesResults.append(tuple([r[''], s['name'], s['_Species_key']]))
