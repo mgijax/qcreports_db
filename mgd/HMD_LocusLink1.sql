@@ -11,7 +11,7 @@ select type = "O",
 species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
 species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
 into #homology
-from radar_release..DP_LLHomology h1, radar_release..DP_LLHomology h2, radar_release..DP_LL l
+from radar..DP_LLHomology h1, radar..DP_LLHomology h2, radar..DP_LL l
 where h1.taxID = 9606
 and h1.groupID = h2.groupID
 and h2.taxID = 10090
@@ -22,7 +22,7 @@ union
 select type = "I", 
 species1 = "human", h1.geneID, h1.symbol,
 species2 = "mouse", h2.geneID, h2.symbol
-from radar_release..DP_LLHomology h1, radar_release..DP_LLHomology h2, radar_release..DP_LL l
+from radar..DP_LLHomology h1, radar..DP_LLHomology h2, radar..DP_LL l
 where h1.taxID = 9606
 and h1.groupID = h2.groupID
 and h2.taxID = 10090

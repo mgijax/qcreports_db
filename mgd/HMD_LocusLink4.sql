@@ -12,7 +12,7 @@ print ""
 
 select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
 species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
-from radar_release..DP_LLHomology h1, radar_release..DP_LLHomology h2,
+from radar..DP_LLHomology h1, radar..DP_LLHomology h2,
 HMD_Homology_Marker hm1, MRK_Marker m1, HMD_Homology h3
 where h1.taxID = 9606
 and h1.groupID = h2.groupID
