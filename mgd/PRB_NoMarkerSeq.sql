@@ -65,15 +65,16 @@ print "Molecular Segments with Encoding Markers and Sequence IDs"
 print "and corresponding Marker-Sequence ID association w/ a different Reference"
 print ""
 
-select m.name, m.symbol, m.accID, m.jnumID, b._Refs_key
-from #markers m, ACC_Accession a, ACC_AccessionReference r, BIB_Refs b
+select m.name, m.symbol, m.accID, m.jnumID, b.accID
+from #markers m, ACC_Accession a, ACC_AccessionReference r, BIB_ACC_View b
 where m._Marker_key = a._Object_key
 and a._LogicalDB_key = 9
 and m.accID = a.accID
 and a._MGIType_key = 2
 and a._Accession_key = r._Accession_key
 and m._Refs_key != r._Refs_key
-and r._Refs_key = b._Refs_key
+and r._Refs_key = b._Object_key
+and b.prefixPart = "J:"
 order by m.name
 go
 
