@@ -70,77 +70,17 @@ union all
 
 /* # Gene-Reference associations */
 select "Index entries", count(*)
-from GXD_Index i
-go
-
-/* Counts of genes in GXD_Index by their assay type in GXD_Index_Stages */
-select index_id, type = convert(varchar(25),"")
-into #GXDIndexTypes
-from GXD_Index_Stages where 1 = 2
-go
-
-insert into #GXDIndexTypes
-select distinct index_id, "insitu_protein_section"
-from GXD_Index_Stages
-where insitu_protein_section = 1
-
-insert into #GXDIndexTypes
-select distinct index_id, "insitu_rna_section"
-from GXD_Index_Stages
-where insitu_rna_section = 1
-
-insert into #GXDIndexTypes
-select distinct index_id, "insitu_protein_mount"
-from GXD_Index_Stages
-where insitu_protein_mount = 1
-
-insert into #GXDIndexTypes
-select distinct index_id, "insitu_rna_mount"
-from GXD_Index_Stages
-where insitu_rna_mount = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "northern"
-from GXD_Index_Stages
-where northern = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "western"
-from GXD_Index_Stages
-where western = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "rt_pcr"
-from GXD_Index_Stages
-where rt_pcr = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "clones"
-from GXD_Index_Stages
-where clones = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "rnase"
-from GXD_Index_Stages
-where rnase = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "nuclease"
-from GXD_Index_Stages
-where nuclease = 1
-	   
-insert into #GXDIndexTypes
-select distinct index_id, "primer_extension"
-from GXD_Index_Stages
-where primer_extension = 1
+from GXD_Index
 go
 
 print ""
 print "Genes in GXD-Index by their assay type:"
-select "Assay Type" = type, "Genes" = count(distinct _Marker_key)
-from GXD_Index i, #GXDIndexTypes t
-where i.index_id = t.index_id
-group by t.type
+select "Assay Type" = substring(v.term, 1, 35), "Genes" = count(distinct _Marker_key)
+from GXD_Index i, GXD_Index_Stages s, VOC_Term_GXDIndexAssay_View v
+where i._Index_key = s._Index_key
+and s._IndexAssay_key = v._Term_key
+group by v.term
+order by v.term
 go	   
 
 /* GXD Assay counts: */
