@@ -7,6 +7,9 @@ declare @endDate char(10)
 select @startDate = convert(char(10), dateadd(day, -3, getdate()), 101)
 select @endDate = convert(char(10), getdate(), 101)
 
+set nocount off
+go
+
 print ""
 print "Withdrawals Processed %1! - %2!", @startDate, @endDate
 print ""
@@ -16,8 +19,5 @@ from MRK_History_View
 where _Marker_Event_key in (2,3,4,5)
 and event_date between @startDate and @endDate
 order by symbol
-go
-
-set nocount off
 go
 

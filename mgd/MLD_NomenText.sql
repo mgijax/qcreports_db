@@ -12,13 +12,13 @@ and em._Expt_key = e._Expt_key
 and e.exptType like 'TEXT%'
 go
 
+set nocount off
+go
+
 declare @month integer
 declare @year integer
 select @month = datepart(mm, getdate())
 select @year = datepart(yy, getdate())
-
-set nocount off
-go
 
 print ""
 print "Symbols which have undergone withdrawals and appear in Text Experiments"

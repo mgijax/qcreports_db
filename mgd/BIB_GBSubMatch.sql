@@ -12,6 +12,9 @@ and r2._Refs_key = m2._Refs_key
 and m1._Marker_key = m2._Marker_key
 go
 
+set nocount off
+go
+
 print ""
 print "Markers w/ GenBank Submission References which match non-GenBank Submission References"
 print "(Matches are performed using First Author)"
