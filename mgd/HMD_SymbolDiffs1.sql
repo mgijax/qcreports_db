@@ -70,11 +70,6 @@ and s._SynonymType_key = st._SynonymType_key
 and st.synonymType = "exact")
 go
 
-create index idx1 on #markers(locusID)
-go
-create index idx2 on #markers(hsymbol)
-go
-
 create index idx1 on #markers(geneID)
 go
 create index idx2 on #markers(hsymbol)
@@ -89,9 +84,6 @@ select m.*, hstatus = "?"
 from #markers m
 where not exists (select 1 from radar..DP_EntrezGene_Info e
 where m.geneID = e.geneID and m.hsymbol = e.symbol)
-go
-
-create index idx1 on #results(modification_date)
 go
 
 create index idx1 on #results(modification_date)
