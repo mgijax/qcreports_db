@@ -1,3 +1,4 @@
+TAG:  qcreports_db-maint6300-8
 TAG:  qcreports_db-maint6300-7
 DATE: 01/12/2005
 STAFF: lec
@@ -5,6 +6,7 @@ RELEASE: A
 CHANGES:
 a) MGI 3.11 (TR 6300)
 b) TR 6469
+c) TR 6465
 
 TAG:  qcreports_db-maint6300-6
 DATE: 01/05/2005
