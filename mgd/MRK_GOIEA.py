@@ -8,9 +8,9 @@
 #       TR 3269 - Report 1
 #
 #	Report 2A
-#	Title = Genes Not RIKEN or 'expressed' with only GO Associations w/ IEA evidence
+#	Title = Genes Not RIKEN or 'expressed' or 'EST' with only GO Associations w/ IEA evidence
 #	Select markers of type 'gene' 
-#		where 'current' name does not contain 'RIKEN' or 'expressed'
+#		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
 #               where the marker has 'GO' association w/ IEA only
 #               where the reference count exludes J:23000, J:57747, J:63103, J:57656, J:51368, 
 #               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
@@ -25,17 +25,17 @@
 #    		human or rat ortholog?    'yes'
 #
 #    	Report 2B
-#	Title = Genes Not RIKEN or 'expressed' with only GO Associations w/ IEA evidence
+#	Title = Genes Not RIKEN or 'expressed' or 'EST' with only GO Associations w/ IEA evidence
 #    	Select markers of type 'gene'
-#    		where 'current' name does not contain 'RIKEN' or 'expressed'
+#    		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
 #               where the marker has 'GO' association w/ IEA only
 #
 #    	Report in a tab delimited file with same columns as 1A
 #
 #	Report 2C
-#	Title = Genes Not RIKEN or 'expressed' with only GO Associations w/ IEA evidence
+#	Title = Genes Not RIKEN or 'expressed' or 'EST' with only GO Associations w/ IEA evidence
 #	Select markers of type 'gene' 
-#		where 'current' name does not contain 'RIKEN' or 'expressed'
+#		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
 #               where the marker has 'GO' association w/ IEA only
 #               where the reference count includes J:23000, J:57747, J:63103, J:57656, J:51368, 
 #               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
@@ -100,6 +100,7 @@ cmds.append('select m._Marker_key, m.symbol, m.name, m.mgiID ' + \
 'and m._Marker_Status_key = 1 ' + \
 'and m.name not like "%RIKEN%" ' + \
 'and m.name not like "%expressed%" ' + \
+'and m.name not like "EST%" ' + \
 'and exists (select 1 from GO_MarkerGO g, GO_DataEvidence e ' + \
 'where m._Marker_key = g._Marker_key ' + \
 'and g._MarkerGO_key = e._MarkerGO_key ' + \
