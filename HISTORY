@@ -1,3 +1,9 @@
+TAG: qcreports_db-2-1-1
+DATE: 06/21/2000
+STAFF: lec
+RELEASE: A
+CHANGES: use FTPURL env to set FTP dir in qcr.html
+
 TAG: qcreports_db-2-1-0
 DATE: 06/21/2000
 STAFF: lec
