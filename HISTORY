@@ -1,11 +1,11 @@
 TAG:  qcreports_db-20-0-21
-DATE: 11/19/2003
+DATE: 11/20/2003
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) TR 5333; GXD_MechDev.sql, GXD_GeneExprPatterns.sql,
    GXD_DevBiol.sql, GXD_Development.sql
-
+b) TR 5294; HMD_SymbolDiffs1.sql, HMD_SymbolDiffs2.sql, MRK_NomenNotInformative.sql
 TAG:  no tag
 DATE: 11/06/2003
 STAFF: lec
