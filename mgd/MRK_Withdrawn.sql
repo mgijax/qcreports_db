@@ -1,18 +1,20 @@
 set nocount on
 go
 
-declare @processDate varchar(10)
+declare @startDate char(10)
+declare @endDate char(10)
 
-select @processDate = convert(char(10), dateadd(day, -4, getdate()), 101)
+select @startDate = convert(char(10), dateadd(day, -3, getdate()), 101)
+select @endDate = convert(char(10), getdate(), 101)
 
 print ""
-print "Withdrawals Processed %1!", @processDate
+print "Withdrawals Processed %1! - %2!", @startDate, @endDate
 print ""
 
 select symbol "New Symbol", name "New Name", history "Old Symbol"
 from MRK_History_View
 where _Marker_Event_key = 2
-and convert(char(10), event_date, 101) = @processDate
+and event_date between @startDate and @endDate
 order by symbol
 go
 
