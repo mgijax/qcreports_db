@@ -12,16 +12,14 @@ cd `dirname $0` && source Configuration
 
 umask 002
 
-cd $QCMGD
-foreach i (`ls *.sql`)
+foreach i (`ls $QCMGD/*.sql`)
 sql.sh $MGD $i
 end
 foreach i (`ls *.py`)
 $i
 end
 
-cd $QCNOMEN
-foreach i (`ls *.sql`)
+foreach i (`ls $QCNOMEN/*.sql`)
 sql.sh $NOMEN $i
 end
 
