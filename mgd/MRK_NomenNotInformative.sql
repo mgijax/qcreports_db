@@ -28,10 +28,12 @@ go
 
 select m.*, a.accID
 into #sequences1
-from #markers m, MRK_AccRef_View a
+from #markers m, ACC_Accession a, ACC_AccessionReference r
 where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
 and a._LogicalDB_key = 9
-and a._Refs_key = 64047
+and a._Accession_key = r._Accession_key
+and r._Refs_key = 64047
 go
 
 create index idx1 on #sequences1(_Marker_key)
