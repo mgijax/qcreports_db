@@ -4,7 +4,7 @@ go
 select a._Assay_key, a._Refs_key, s.specimenLabel
 into #knockin
 from GXD_Assay a, GXD_Specimen s
-where a._Assay_key = 9
+where a._AssayType_key = 9
 and a._Assay_key = s._Assay_key
 and not exists (select 1 from GXD_AlleleGenotype g
 where s._Genotype_key = g._Genotype_key
