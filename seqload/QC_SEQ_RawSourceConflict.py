@@ -90,12 +90,6 @@ results = db.sql('select seqID = a.accID, qc.attrName, ' + \
 
 rows = 0
 for r in results:
-    print r['seqID']
-    print r['attrName']
-    print r['newRaw']
-    print r['oldRaw']
-    print r['oldResolved']
-    print ""
     newRaw = r['newRaw']
     if newRaw == None:
 	newRaw = "NULL"
