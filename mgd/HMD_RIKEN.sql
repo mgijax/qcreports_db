@@ -1,13 +1,10 @@
-print ""
-print "Mouse/Human Homologies involving RIKEN Symbols"
-print ""
+set nocount on
+go
 
-select distinct 
-a.accID "Mouse MGI Acc ID",
-m2.symbol "Mouse Symbol",
-m2.chromosome "Mouse Chr", 
-m1.symbol "Human Symbol", 
-m1.chromosome + m1.cytogeneticOffset "Human Chr"
+select distinct a.accID, msymbol = m2.symbol, mchr = m2.chromosome,
+hsymbol = m1.symbol, hchr = m1.chromosome + m1.cytogeneticOffset,
+c.sequenceNum
+into #homology
 from HMD_Homology r1, HMD_Homology_Marker h1, 
 HMD_Homology r2, HMD_Homology_Marker h2, 
 MRK_Marker m1, MRK_Marker m2, MRK_Chromosome c, ACC_Accession a 
@@ -25,6 +22,37 @@ and a.prefixPart = "MGI:"
 and a.preferred = 1 
 and m1._Species_key = c._Species_key 
 and m1.chromosome = c.chromosome 
-order by c.sequenceNum, m2.symbol
+go
+
+select h.*, type = "O"
+into #results
+from #homology h, tempdb..LL l
+where h.hsymbol = l.osymbol
+and l.taxID = 9606
+union
+select h.*, type = "I"
+from #homology h, tempdb..LL l
+where h.hsymbol = l.isymbol
+and l.taxID = 9606
+union
+select h.*, type = "?"
+from #homology h
+where not exists (select 1 from tempdb..LL l
+where h.hsymbol = l.osymbol
+or h.hsymbol = l.isymbol)
+go
+
+set nocount off
+go
+
+print ""
+print "Mouse/Human Homologies involving RIKEN Symbols"
+print ""
+
+select
+accID "Mouse MGI Acc ID", msymbol "Mouse Symbol", mchr "Mouse Chr", 
+type "Type", hsymbol "Human Symbol", hchr "Human Chr"
+from #results
+order by type desc, sequenceNum, hsymbol
 go
 
