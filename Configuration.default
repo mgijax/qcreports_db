@@ -34,9 +34,6 @@ setenv QCMGD			$QCREPORTINSTALLDIR/mgd
 # nomen-specific reports directory
 setenv QCNOMENARCHIVE		$QCARCHIVEDIR/nomen
 
-# gdb-specific reports directory
-setenv QCGDB			$QCREPORTINSTALLDIR/gdb
-
 # weekly reports directory
 setenv QCWEEKLY                 $QCREPORTINSTALLDIR/weekly
 
