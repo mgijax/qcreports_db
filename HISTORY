@@ -1,9 +1,11 @@
+TAG:  qcreports_db-20-0-5
 TAG:  qcreports_db-20-0-4
 DATE: 07/29/2003
 STAFF: lec
 RELEASE: A
 CHANGES:
 a) remove Fantom reports
+b) GXD_AntibodyMarker.sql
 
 TAG:  qcreports_db-20-0-3
 DATE: 07/28/2003
@@ -11,6 +13,7 @@ STAFF: lec
 RELEASE: A
 CHANGES:
 a) GXD_ProbeMarker.sql
+b) GXD_ProbeReference.sql
 
 TAG:  qcreports_db-20-0-2
 TAG:  qcreports_db-20-0-1
