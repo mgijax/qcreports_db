@@ -32,8 +32,6 @@ import reportlib
 # Main
 #
 
-nomenDB = os.environ['NOMEN']
-
 if len(sys.argv) > 1:
 	currentDate = sys.argv[2]
 else:
@@ -43,8 +41,8 @@ fp = reportlib.init(sys.argv[0], printHeading = 0, outputdir = os.environ["QCREP
 
 cmd = 'select n.symbol, bdate = convert(char(10), n.broadcast_date, 101), n.statusNote, a.accID, ' + \
 'name = substring(n.name,1,50), n.humanSymbol ' + \
-'from %s..MRK_Nomen n, %s..ACC_Accession a ' % (nomenDB, nomenDB) + \
-'where n._Marker_Status_key in (5,7) ' + \
+'from NOM_Marker n, NOM_Acc_View a ' + \
+'where n._NomenStatus_key in (5,7) ' + \
 'and n.statusNote like "%reserved%" ' + \
 'and n.broadcast_date between dateadd(day, -7, "%s") ' % (currentDate) + \
 'and dateadd(day, 1, "%s") ' % (currentDate) + \
