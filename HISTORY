@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-2-0
+DATE: 10/10/2000
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 2003; modify PRB_NoMarkerSeq.sql
+b) TR 2004; new GXD_NotGene.sql
+
 TAG: qcreports_db-4-1-1
 DATE: 09/22/2000
 STAFF: lec
