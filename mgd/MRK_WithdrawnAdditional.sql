@@ -38,7 +38,7 @@ select distinct m.symbol, m.chromosome, label = 'Alleles'
 from MRK_Marker m, ALL_Allele g
 where m._Marker_Status_key = 2 and m._Marker_key = g._Marker_key
 select distinct m.symbol, m.chromosome, label = 'MLC'
-from MRK_Marker m, MLC_Text_edit g
+from MRK_Marker m, MLC_Text g
 where m._Marker_Status_key = 2 and m._Marker_key = g._Marker_key
 select distinct m.symbol, m.chromosome, label = 'GO'
 from MRK_Marker m, VOC_Annot g
