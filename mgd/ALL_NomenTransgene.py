@@ -75,10 +75,13 @@ badSymbols = []
 
 def parseSymbol(symbol):
 
-        [p1, p2] = string.splitfields(symbol, '(')
-        [p3, p4] = string.splitfields(p2, ')')
-        testSymbol = p3
-	return testSymbol
+	try:
+        	[p1, p2] = string.splitfields(symbol, '(')
+        	[p3, p4] = string.splitfields(p2, ')')
+        	testSymbol = p3
+		return testSymbol
+	except:
+		return ''
 
 def isAllCaps(symbol):
 
@@ -116,6 +119,9 @@ for r in results:
 	markerSymbol = r['symbol']
 	testSymbol = parseSymbol(markerSymbol)
 
+	if len(testSymbol) == 0:
+		continue
+
 	if isAllCaps(testSymbol):
 		species = 2
 	else:
@@ -143,6 +149,9 @@ for r in results:
 	except:
 		s1 = testSymbol
 		
+	if len(testSymbol) == 0:
+		continue
+
 	if isAllCaps(s1):
 		species = 2
 	else:
@@ -164,6 +173,9 @@ for r in results:
 
 	markerSymbol = r['symbol']
 	testSymbol = parseSymbol(markerSymbol)
+
+	if len(testSymbol) == 0:
+		continue
 
 	try:
 		[s1, s2] = string.splitfields(testSymbol, '/')
