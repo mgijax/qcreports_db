@@ -48,7 +48,7 @@ set nocount off
 go
 
 print ""
-print "Duplicate Homologies By Species"
+print "Duplicate Homologies By Organism"
 print ""
 
 select distinct h.symbol, substring(h.commonName,1,25), h.jnum, h._Class_key 

@@ -96,7 +96,7 @@ def isCurrent(symbol, species = 1):
 
 	ok = 0
 	results = db.sql('select symbol, _Marker_Status_key from MRK_Marker ' + \
-		'where _Species_key = %d ' % (species) + \
+		'where _Organism_key = %d ' % (species) + \
 		'and symbol = "%s"' % (symbol), 'auto')
 	for r in results:
 		if r['symbol'] == symbol and r['_Marker_Status_key'] in [-2,1,3]:

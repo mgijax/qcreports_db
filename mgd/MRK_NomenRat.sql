@@ -25,7 +25,7 @@ and hm1._Homology_key = h1._Homology_key
 and h1._Class_key = h2._Class_key
 and h2._Homology_key = hm2._Homology_key
 and hm2._Marker_key = m2._Marker_key
-and m2._Species_key = 40
+and m2._Organism_key = 40
 and m2.symbol != m.current_symbol
 and not exists (select 1 from MRK_Acc_View ma 
 where m2._Marker_key = ma._Object_key

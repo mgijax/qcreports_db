@@ -17,7 +17,7 @@ go
 select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date, h.jnum
 into #marker
 from MRK_Marker m, MRK_History_Ref_View h
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key = 3
 and m._Marker_key = h._Marker_key
 and m._Marker_key = h._History_key
@@ -34,7 +34,7 @@ and h1._Homology_key = r1._Homology_key
 and r1._Class_key = r2._Class_key
 and r2._Homology_key = h2._Homology_key
 and h2._Marker_key = m2._Marker_key
-and m2._Species_key = 2
+and m2._Organism_key = 2
 union
 select distinct m.symbol, null, m.name, m.creation_date, m.jnum
 from #marker m
@@ -45,7 +45,7 @@ and h1._Homology_key = r1._Homology_key
 and r1._Class_key = r2._Class_key
 and r2._Homology_key = h2._Homology_key
 and h2._Marker_key = m2._Marker_key
-and m2._Species_key = 2)
+and m2._Organism_key = 2)
 go
 
 select h.*, hstatus = "O"

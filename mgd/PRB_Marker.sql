@@ -1,10 +1,11 @@
 set nocount on
 go
 
-select _Probe_key, name, DNAtype, _Source_key, modification_date
+select p._Probe_key, p.name, DNAtype = t.term, p._Source_key, p.modification_date
 into #preprobe
-from PRB_Probe
-where DNAtype != "primer"
+from PRB_Probe p, VOC_Term t
+where p._SegmentType_key = t._Term_key
+and t.term != "primer"
 and _Source_key != 30040
 and name != 'I.M.A.G.E. clone'
 go
@@ -69,8 +70,9 @@ print "Probes - No Markers (excluding I.M.A.G.E. clones)"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
-from PRB_Probe p 
-where p.DNAtype != "primer"
+from PRB_Probe p, VOC_Term t
+where p._SegmentType_key = t._Term_key
+and t.term != "primer"
 and p._Source_key != 30040
 and p.name != 'I.M.A.G.E. clone'
 and p.name not like 'J%'

@@ -174,7 +174,7 @@ cmds.append('select distinct m._Marker_key ' + \
 'and h1._Class_key = h2._Class_key ' + \
 'and h2._Homology_key = hm2._Homology_key ' + \
 'and hm2._Marker_key = m2._Marker_key ' + \
-'and m2._Species_key = 2) ' + \
+'and m2._Organism_key = 2) ' + \
 'union ' + \
 'select distinct m._Marker_key ' + \
 'from #markers m ' + \
@@ -185,7 +185,7 @@ cmds.append('select distinct m._Marker_key ' + \
 'and h1._Class_key = h2._Class_key ' + \
 'and h2._Homology_key = hm2._Homology_key ' + \
 'and hm2._Marker_key = m2._Marker_key ' + \
-'and m2._Species_key = 40) ')
+'and m2._Organism_key = 40) ')
 
 cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
 

@@ -6,7 +6,7 @@ into #homology
 from MRK_Marker m, MRK_Status s, HMD_Homology h1, HMD_Homology_Marker hm1, 
 HMD_Homology h2, HMD_Homology_Marker hm2,
 HMD_Homology_Assay ha, MRK_Marker m2
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Type_key = 1
 and m._Marker_Status_key = s._Marker_Status_key
 and hm1._Marker_key = m._Marker_key
@@ -16,7 +16,7 @@ and h2._Homology_key = hm2._Homology_key
 and hm1._Homology_key = ha._Homology_key
 and ha._Assay_key in (4,5)
 and hm2._Marker_key = m2._Marker_key
-and m2._Species_key = 2
+and m2._Organism_key = 2
 and not exists (select 1 from MRK_ACC_View a
 where m._Marker_key = a._Object_key
 and a._LogicalDB_Key in (9, 27))

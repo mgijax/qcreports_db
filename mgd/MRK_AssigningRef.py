@@ -39,7 +39,7 @@ cmds = []
 cmds.append('select m._Marker_key, m.symbol, mgiID = a.accID, markerType = t.name ' + \
      'into #markers ' + \
      'from MRK_Marker m, ACC_Accession a, MRK_Types t ' + \
-     'where m._Species_key = 1 ' + \
+     'where m._Organism_key = 1 ' + \
      'and m._Marker_Status_key in (1,3)' + \
      'and m._Marker_key = a._Object_key ' + \
      'and a._MGIType_key = 2 ' + \

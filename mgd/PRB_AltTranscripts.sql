@@ -5,7 +5,7 @@ select distinct mm.symbol, pb._Probe_key, probe_name = (convert(varchar (20), pb
 into #csnr
 from PRB_Reference pr, PRB_Source ps, PRB_Probe pb, PRB_Notes pn, MRK_Marker mm, PRB_Marker pm
 where pn.note like "%alternat%"
-and ps._ProbeSpecies_key = 1
+and ps._Organism_key = 1
 and pm.relationship = "E"
 and pn._Probe_key = pb._Probe_key
 and pb._Probe_key = pr._Probe_key

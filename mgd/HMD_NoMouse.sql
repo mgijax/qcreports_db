@@ -9,10 +9,10 @@ from HMD_Homology h, HMD_Homology_Marker hm, MRK_Marker m
 where hc._Class_key = h._Class_key
 and h._Homology_key = hm._Homology_key
 and hm._Marker_key = m._Marker_key
-and m._Species_key = 1)
+and m._Organism_key = 1)
 go
 
-select distinct h._Class_key, h.symbol, h.species, h.jnumID, h._Species_key
+select distinct h._Class_key, h.symbol, h.species, h.jnumID, h._Organism_key
 into #homology
 from #class c, HMD_Homology_View h
 where c._Class_key = h._Class_key
@@ -31,13 +31,13 @@ select distinct h._Class_key, h.symbol, m.symbol "mouse symbol", h.species, h.jn
 from #homology h, MRK_Marker m
 where h.symbol not like '*%'
 and h.symbol *= m.symbol
-and m._Species_key = 1
+and m._Organism_key = 1
 union
 select distinct h._Class_key, h.symbol, m.symbol, h.species, h.jnumID
 from #homology h, MRK_Marker m
 where h.symbol like '*%'
 and substring(h.symbol, 2, char_length(h.symbol) - 2) *= m.symbol
-and m._Species_key = 1
+and m._Organism_key = 1
 order by h._Class_key
 go
 

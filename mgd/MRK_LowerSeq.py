@@ -51,7 +51,7 @@ fp.write('%-30s' % '---------' + CRT)
 
 cmd = 'select m.symbol, a.accID ' + \
 'from MRK_Marker m, MRK_Acc_View a ' + \
-'where m._Species_key = 1 ' + \
+'where m._Organism_key = 1 ' + \
 'and m._Marker_key = a._Object_key ' + \
 'and a._LogicalDB_key = 9 ' + \
 'order by m.symbol'

@@ -5,13 +5,13 @@ select distinct mouseMarker = m._Marker_key, mouseChr = m.chromosome,
        humanMarker = m2._Marker_key, humanChr = m2.chromosome
 into #all
 from MRK_Marker m, HMD_Homology h1, HMD_Homology_Marker hm1, HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2
-where m._Species_key = 1
+where m._Organism_key = 1
 and hm1._Marker_key = m._Marker_key
 and hm1._Homology_key = h1._Homology_key
 and h1._Class_key = h2._Class_key
 and h2._Homology_key = hm2._Homology_key
 and hm2._Marker_key = m2._Marker_key
-and m2._Species_key = 2
+and m2._Organism_key = 2
 go
 
 select * 

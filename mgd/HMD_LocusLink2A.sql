@@ -38,14 +38,14 @@ select h.*
 from #homology h
 where h.symbol2 like "%Rik"
 and not exists (select 1 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m.symbol = h.symbol2)
 union
 select h.*
 from #homology h
 where h.symbol2 like "%Rik"
 and not exists (select 1 from MRK_Marker m
-where m._Species_key = 2
+where m._Organism_key = 2
 and m.symbol = h.symbol1)
 order by h.symbol1
 go
@@ -60,14 +60,14 @@ select h.*
 from #homology h
 where h.symbol2 not like "%Rik"
 and not exists (select 1 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m.symbol = h.symbol2)
 union
 select h.*
 from #homology h
 where h.symbol2 not like "%Rik"
 and not exists (select 1 from MRK_Marker m
-where m._Species_key = 2
+where m._Organism_key = 2
 and m.symbol = h.symbol1)
 order by h.symbol1
 go

@@ -49,7 +49,7 @@ where h.species1 = "Homo sapiens"
 and h.species2 = "Mus musculus"
 and h.symbol1 = h.symbol2
 and not exists (select 1 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m.symbol = h.symbol2)
 union
 select h.*
@@ -59,7 +59,7 @@ and h.species2 = "Mus musculus"
 and h.symbol1 = h.symbol2
 and 
 not exists (select 1 from MRK_Marker m
-where m._Species_key = 2
+where m._Organism_key = 2
 and m.symbol = h.symbol1)
 order by h.type desc, h.symbol1
 go

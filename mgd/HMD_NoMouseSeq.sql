@@ -22,7 +22,7 @@ and h._Homology_key = m._Homology_key
 and h._Homology_key = a._Homology_key
 and a._Assay_key in (4,5)
 and m._Marker_key = mm._Marker_key
-and mm._Species_key = 1
+and mm._Organism_key = 1
 and not exists (select 1 from MRK_Acc_View a
 where m._Marker_key = a._Object_key
 and a._LogicalDB_key = 9)

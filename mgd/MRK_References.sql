@@ -7,13 +7,13 @@ go
 select distinct m._Marker_key, m.symbol
 into #markers
 from MRK_Marker m, MRK_Reference r
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m._Marker_key = r._Marker_key
 union
 select distinct m._Marker_key, m.symbol
 from MRK_Marker m, MLC_Reference r
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m._Marker_key = r._Marker_key
 go

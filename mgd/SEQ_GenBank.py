@@ -64,7 +64,7 @@ cmds.append('select distinct a.accID, a._Object_key, a._MGIType_key, mgiType = m
 'where a._LogicalDB_key in (9,27) ' + \
 'and a._MGIType_key = m._MGIType_key ' + \
 'and a._Object_key = k._Marker_key ' + \
-'and k._Species_key = 1')
+'and k._Organism_key = 1')
 
 cmds.append('create nonclustered index idx_accid on #seqIDs(accID)')
 cmds.append('create nonclustered index idx_object on #seqIDs(_Object_key)')

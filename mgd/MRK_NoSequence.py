@@ -82,7 +82,7 @@ cmds = []
 cmds.append('select distinct m._Marker_key ' + \
 'into #mutants ' + \
 'from MRK_Marker m, ALL_ALlele a ' + \
-'where m._Species_key = 1 ' + \
+'where m._Organism_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
 'and m._Marker_key = a._Marker_key ' + \
 'and m.symbol = a.symbol ' + \
@@ -96,7 +96,7 @@ cmds.append('select distinct m._Marker_key ' + \
 cmds.append('select m._Marker_key, m.symbol ' + \
 'into #markers ' + \
 'from MRK_Marker m ' + \
-'where m._Species_key = 1 ' + \
+'where m._Organism_key = 1 ' + \
 'and m._Marker_Type_key = 1 ' + \
 'and m._Marker_Status_key in (1,3) ' + \
 'and not exists (select 1 from MRK_Acc_View a ' + \
@@ -115,8 +115,8 @@ cmds.append('select distinct m._Marker_key, orthologKey = m2._Marker_key, s.name
 'where m._Marker_key = hm1._Marker_key ' + \
 'and hm1._Homology_key = hm2._Homology_key ' + \
 'and hm2._Marker_key = m2._Marker_key ' + \
-'and m2._Species_key != 1 ' + \
-'and m2._Species_key = s._Species_key')
+'and m2._Organism_key != 1 ' + \
+'and m2._Organism_key = s._Organism_key')
 
 cmds.append('select * from #orthologs')
 

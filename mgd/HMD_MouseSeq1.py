@@ -58,7 +58,7 @@ cmds = []
 cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'into #markers ' + \
 	'from MRK_Marker m, MRK_Status s ' + \
-	'where m._Species_key = 1 ' + \
+	'where m._Organism_key = 1 ' + \
 	'and m._Marker_Type_key = 1 ' + \
 	'and m.symbol not like "%Rik" ' + \
 	'and m.name not like "%expressed%" ' + \
@@ -75,7 +75,7 @@ cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'and h1._Class_key = h2._Class_key ' + \
 	'and h2._Homology_key = hm2._Homology_key ' + \
 	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Species_key = 2)')
+	'and m2._Organism_key = 2)')
 
 cmds.append('select m._Marker_key, a.accID ' + 
 	'from #markers m, MRK_ACC_View a ' + \

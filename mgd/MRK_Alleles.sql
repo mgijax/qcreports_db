@@ -5,7 +5,7 @@ print ""
 select distinct m.symbol "Symbol", m.chromosome "Chr", a.symbol "Allele",
 substring(a.name, 1, 40) "Name"
 from MRK_Marker m, ALL_Allele a
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_key = a._Marker_key
 and a.name = 'allele name in progress'
 order by m.symbol

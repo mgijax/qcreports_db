@@ -4,7 +4,7 @@ print ""
 
 select distinct m.symbol, m.name
 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key = 2
 and m.name like 'withdrawn, = %,%'
 order by m.chromosome, m.symbol

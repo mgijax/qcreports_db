@@ -8,7 +8,7 @@ select distinct p._Probe_key, p.name, pm._Marker_key, m.symbol
 into #probes1
 from PRB_Probe p, PRB_Source s, PRB_Marker pm, MRK_Marker m 
 where p._Source_key = s._Source_key 
-and s._ProbeSpecies_key = 1
+and s._Organism_key = 1
 and p._Probe_key = pm._Probe_key 
 and pm.relationship = "E" 
 and pm._Marker_key = m._Marker_key

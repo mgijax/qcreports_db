@@ -5,7 +5,7 @@ select distinct m.symbol, m.chromosome, mo.offset, e.exptType,
 modDate = convert(char(10), e.modification_date, 101), g._Refs_key
 into #markers
 from MRK_Marker m, MRK_Offset mo, MLD_Marker g, MLD_Expts e
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m._Marker_key = mo._Marker_key
 and mo.source = 0

@@ -5,7 +5,7 @@ go
 select m._Marker_key, m.symbol, name = substring(m.name,1,100)
 into #markers1
 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Type_key = 1
 and m._Marker_Status_key in (1,3)
 and not exists (select 1 from VOC_Annot g
@@ -43,7 +43,7 @@ and hm1._Homology_key = h1._Homology_key
 and h1._Class_key = h2._Class_key
 and h2._Homology_key = hm2._Homology_key
 and hm2._Marker_key = m2._Marker_key
-and m2._Species_key = 40
+and m2._Organism_key = 40
 order by m.symbol
 go
 
@@ -59,11 +59,11 @@ and hm1._Homology_key = h1._Homology_key
 and h1._Class_key = h2._Class_key
 and h2._Homology_key = hm2._Homology_key
 and hm2._Marker_key = m2._Marker_key
-and m2._Species_key = 2
+and m2._Organism_key = 2
 and not exists (select 1 from HMD_Homology_Marker hm3, HMD_Homology h3, MRK_Marker m3
 where h1._Class_key = h3._Class_key
 and h3._Homology_key = hm3._Homology_key
 and hm3._Marker_key = m3._Marker_key
-and m3._Species_key not in (1,2))
+and m3._Organism_key not in (1,2))
 order by m.symbol
 go

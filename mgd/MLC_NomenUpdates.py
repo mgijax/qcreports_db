@@ -72,13 +72,13 @@ cmd.append('select distinct h._Marker_key, m.symbol, name = substring(m.name,1,3
 'b.jnumID, author = substring(b._primary,1,16) ' + \
 'into #markers ' + \
 'from MRK_Marker m, MLC_Text mlc, MRK_History h, MRK_Chromosome c, BIB_All_View b ' + \
-'where m._Species_key = 1 ' + \
+'where m._Organism_key = 1 ' + \
 'and m._Marker_key = h._History_key ' + \
 'and h.event_date between dateadd(day, -7, "%s") ' % (currentDate) + \
 'and dateadd(day, 1, "%s") ' % (currentDate) + \
 'and h._Marker_key = mlc._Marker_key ' + \
 'and m.chromosome = c.chromosome ' + \
-'and m._Species_key = c._Species_key ' + \
+'and m._Organism_key = c._Organism_key ' + \
 'and h._Refs_key = b._Refs_key ')
 
 cmd.append('create nonclustered index idx_key on #markers(_Marker_key)')

@@ -4,21 +4,21 @@ go
 select m._Marker_key, m.symbol, category = 'a'
 into #markers
 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and (m.symbol like '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
 or m.symbol like '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]')
 union
 select m._Marker_key, m.symbol, category = 'b'
 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m.symbol like '%Rik'
 and m.name like 'RIKEN%'
 union
 select m._Marker_key, m.symbol, category = 'c'
 from MRK_Marker m
-where m._Species_key = 1
+where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m.name like 'DNA segment%'
 go

@@ -5,7 +5,7 @@ select m._Marker_key
 into #markers
 from MRK_Marker m
 where m._Marker_Status_key in (1,3)
-and m._Species_key = 1
+and m._Organism_key = 1
 and m.chromosome not in ("MT", "UN")
 and m._Marker_Type_key != 3
 and not exists (select 1 from MLD_Marker e where m._Marker_key = e._Marker_key)
@@ -32,7 +32,7 @@ print ""
 select m.symbol, m.chromosome, substring(t.name, 1, 20)
 from #markers me, MRK_Marker m, MRK_Chromosome c, MRK_Types t
 where me._Marker_key = m._Marker_key
-and m._Species_key = c._Species_key
+and m._Organism_key = c._Organism_key
 and m.chromosome = c.chromosome
 and m._Marker_Type_key = t._Marker_Type_key
 and not exists (select 1 from #exclude e
@@ -51,7 +51,7 @@ select m.symbol, m.chromosome, substring(t.name, 1, 20), h.jnumID
 from #markers me, MRK_Marker m, MRK_Chromosome c, MRK_Types t, MRK_History_Ref_View h
 where me._Marker_key = m._Marker_key
 and m._Marker_Type_key = t._Marker_Type_key
-and m._Species_key = c._Species_key
+and m._Organism_key = c._Organism_key
 and m.chromosome = c.chromosome
 and m._Marker_Key = h._Marker_key
 and h._Marker_Event_key = 1
