@@ -11,7 +11,7 @@ print ""
 print "Withdrawals Processed %1! - %2!", @startDate, @endDate
 print ""
 
-select symbol "New Symbol", name "New Name", history "Old Symbol"
+select history "Old Symbol", symbol "New Symbol", markerName "New Name"
 from MRK_History_View
 where _Marker_Event_key = 2
 and event_date between @startDate and @endDate
