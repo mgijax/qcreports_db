@@ -42,7 +42,7 @@ mgdDB = sys.argv[3]
 
 fp = reportlib.init(sys.argv[0],  
 		    'Sequence Loader - Defunct MGI Sequence/Reference Associations (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Sequence/Reference association that\n" + \
 "  is no longer in the Sequence provider record." + 2*CRT)

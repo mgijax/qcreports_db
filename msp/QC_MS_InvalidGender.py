@@ -38,7 +38,7 @@ jobStreamKey = os.environ['JOBSTREAM']
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Invalid Genders (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Gender that could not be translated to a valid MGI Gender.\n" + \
 "  This Gender may need to be added to the Gender bad name/good name list.\n" + 2*CRT)

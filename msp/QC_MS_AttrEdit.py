@@ -39,7 +39,7 @@ mgdDB = os.environ['MGDDBNAME']
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Source Attribute Discrepency (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Sequence's Anonymous Molecular Source attribute\n" + \
 "  that has been curator-edited in MGI and whose incoming (new) value is not equal to\n" + \

@@ -41,7 +41,7 @@ mgdDB = sys.argv[3]
 
 fp = reportlib.init(sys.argv[0],  
 		    'Sequence Loader - Merged Sequences (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Sequence that is designated as Merged\n" + \
 "  by the Sequence provider." + 2*CRT)

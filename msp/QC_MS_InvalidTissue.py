@@ -38,7 +38,7 @@ jobStreamKey = os.environ['JOBSTREAM']
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Invalid Tissues (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Tissue that could not be translated to a valid MGI Tissue.\n" + \
 "  This Tissue may need to be added to the Tissue bad name/good name list.\n" + 2*CRT)

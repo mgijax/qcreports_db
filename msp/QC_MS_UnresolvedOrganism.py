@@ -38,7 +38,7 @@ jobStreamKey = os.environ['JOBSTREAM']
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Unresolved Organisms (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Sequence whose Organism could not be resolved to a valid MGI Organism.\n" + 2*CRT)
 

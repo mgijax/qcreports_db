@@ -38,7 +38,7 @@ jobStreamKey = os.environ['JOBSTREAM']
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Invalid Libraries (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Library that could not be translated to a valid MGI Library.\n" + \
 "  This Library may need to be added to the Library bad name/good name list.\n" + 2*CRT)

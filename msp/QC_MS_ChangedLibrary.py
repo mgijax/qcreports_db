@@ -40,7 +40,7 @@ mgdDB = os.environ['MGDDBNAME']
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Changed Library (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Sequence whose Library value has changed since it was last processed in MGI.\n" + 2*CRT)
 

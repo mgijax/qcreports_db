@@ -42,7 +42,7 @@ mgdDB = sys.argv[3]
 
 fp = reportlib.init(sys.argv[0],  
 		    'Sequence Loader - Sequence Raw Source Attribute Discrepencies (Job Stream %s)' % (jobStreamKey), 
-		    outputdir = outputDir)
+		    outputdir = outputDir, sqlLogging = 0)
 
 fp.write("  A row in this report represents a Sequence Raw Source Attribute (Library or \n" + \
 "  Organism only) where its new raw value differs from its old raw value." + 2*CRT)
