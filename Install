@@ -19,5 +19,5 @@ mv -f qcr.html.new qcr.html
 
 chmod 444 Configuration* HISTORY *.html
 chmod 550 *.sh */*.py */*.sql Install
-chmod 755 output
+chmod 775 output
 
