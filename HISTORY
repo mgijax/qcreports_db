@@ -1,3 +1,12 @@
+TAG: qcreports_db-17-0-5
+DATE: 04/30/2002
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 3638/3639 - fantom/fantom2.py
+b) added RIKENFTPDIR
+c) changed MGIFEEDFTPDIR value
+
 TAG: qcreports_db-17-0-4
 DATE: 04/29/2002
 STAFF: lec
