@@ -3,7 +3,7 @@ go
 
 /* Number of IMAGE cDNAs and ESTs*/
 print ""
-print "I.M.A.G.E. cDNAs and ESTs:"
+print "IMAGE cDNAs and ESTs:"
 
 declare @washUdb int, @ref int
 select @washUdb = _LogicalDB_key
@@ -16,7 +16,7 @@ where accID = "J:57656"			/* WashU/dbEST load reference */
 
 select "IMAGE cDNAs", count(p._Probe_key) 
 from PRB_Probe p, VOC_Term v
-where p.name = "I.M.A.G.E. clone" 
+where p.name like "IMAGE clone%" 
 and p._SegmentType_key = v._Term_key
 and v.term = "cDNA"
 
@@ -27,7 +27,7 @@ from ACC_Accession a, PRB_Probe p, VOC_Term t
 where a._LogicalDB_key = @washUdb
 and a._MGIType_key = 3 
 and a._Object_key = p._Probe_key
-and p.name = "I.M.A.G.E. clone" 
+and p.name like "IMAGE clone%" 
 and p._SegmentType_key = t._Term_key
 and t.term = "cDNA"
 

@@ -4,7 +4,7 @@ go
 select p._Probe_key, p.name, pm._Marker_key, caccID = pa.accID, maccID = ma.accID
 into #clone
 from PRB_Probe p, PRB_Marker pm, ACC_Accession pa, ACC_Accession ma
-where p.name = 'I.M.A.G.E. clone'
+where p.name like 'IMAGE clone%'
 and p._Probe_key = pm._Probe_key
 and pm.relationship = "E"
 and p._Probe_key = pa._Object_key
@@ -23,7 +23,7 @@ set nocount off
 go
 
 print ""
-print "I.M.A.G.E. Clones with Seq IDs which do not exist for encoding Markers"
+print "IMAGE Clones with Seq IDs which do not exist for encoding Markers"
 print ""
 
 select distinct c.caccID "Clone", c.maccID "Marker", a.accID
@@ -59,7 +59,7 @@ go
 select p._Probe_key, pm._Marker_key, a.accID
 into #clone
 from PRB_Probe p, PRB_Marker pm, ACC_Accession a, ACC_Accession ma
-where p.name = 'I.M.A.G.E. clone'
+where p.name like 'IMAGE clone%'
 and p._Probe_key = pm._Probe_key
 and pm.relationship != "E"
 and p._Probe_key = a._Object_key
@@ -75,7 +75,7 @@ set nocount off
 go
 
 print ""
-print "I.M.A.G.E. Clones with Seq IDs which exist for non-encoding Markers"
+print "IMAGE Clones with Seq IDs which exist for non-encoding Markers"
 print ""
 
 select distinct ca.accID "Clone", ma.accID "Marker", c.accID

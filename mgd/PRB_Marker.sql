@@ -7,7 +7,7 @@ from PRB_Probe p, VOC_Term t
 where p._SegmentType_key = t._Term_key
 and t.term != "primer"
 and _Source_key != 30040
-and name != 'I.M.A.G.E. clone'
+and name not like 'IMAGE clone%'
 go
 
 select *
@@ -68,7 +68,7 @@ drop table #probe
 go
 
 print ""
-print "Probes - No Markers (excluding I.M.A.G.E. clones)"
+print "Probes - No Markers (excluding IMAGE clones)"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
@@ -76,7 +76,7 @@ from PRB_Probe p, VOC_Term t
 where p._SegmentType_key = t._Term_key
 and t.term != "primer"
 and p._Source_key != 30040
-and p.name != 'I.M.A.G.E. clone'
+and p.name not like 'IMAGE clone%'
 and p.name not like 'J%'
 and not exists (select m.* from PRB_Marker m where p._Probe_key = m._Probe_key)
 order by p.creation_date, p.name
