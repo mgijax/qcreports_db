@@ -95,6 +95,7 @@ PAGE = reportlib.PAGE
 
 PUBMED = 29
 url = ''
+jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
 
 def writeRecord(fp, r):
 
@@ -110,7 +111,7 @@ def writeRecord(fp, r):
 
 def writeRecordD(fp, r):
 
-	fp.write(r['jnumID'] + TAB)
+	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
 	if pubMedIDs.has_key(r['_Refs_key']):
 		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
@@ -288,7 +289,8 @@ results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = co
 for r in results:
 	writeRecord(fpC, r)
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
+	'r.jnumID, r.jnum, r.numericPart ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
@@ -301,6 +303,7 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'order by numericPart', 'auto')
 for r in results:
 	writeRecordD(fpD, r)
+fpD.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file

@@ -350,9 +350,9 @@ def reportD():
 
 reportOpen()
 runQueries()
-#reportA()
-#reportB()
-#reportC()
+reportA()
+reportB()
+reportC()
 reportD()
 reportClose()
 
