@@ -90,6 +90,30 @@ go
 set nocount on
 go
 
+select r._Specimen_key
+into #imissingresults
+from GXD_Specimen r
+where not exists
+(select 1 from GXD_InSituResult s
+where r._Specimen_key = s._Specimen_key)
+go
+
+set nocount off
+go
+
+print ""
+print "InSitu Specimens missing Results"
+print ""
+
+select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
+from #imissingresults r, GXD_Specimen s, GXD_Assay_View a
+where r._Specimen_key = s._Specimen_key
+and s._Assay_key = a._Assay_key
+go
+
+set nocount on
+go
+
 select g._GelLane_key
 into #gmissingstructs
 from GXD_GelLane g
