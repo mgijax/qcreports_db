@@ -43,9 +43,12 @@ fp = reportlib.init(sys.argv[0],
 		    'Molecular Source Processer - Invalid Libraries (Job Stream %s)' % (jobStreamKey), 
 		    outputdir = outputDir)
 
-fp.write(string.ljust('Library Name ', 55))
+fp.write("  A row in this report represents a Library that could not be translated to a valid MGI Library.\n" + \
+"  This Library may need to be added to the Library bad name/good name list.\n" + 2*CRT)
+
+fp.write(string.ljust('Library', 55))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('------------ ', 55))
+fp.write(string.ljust('-------', 55))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #

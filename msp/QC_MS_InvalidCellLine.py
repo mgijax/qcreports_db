@@ -43,9 +43,12 @@ fp = reportlib.init(sys.argv[0],
 		    'Molecular Source Processer - Invalid CellLines (Job Stream %s)' % (jobStreamKey), 
 		    outputdir = outputDir)
 
-fp.write(string.ljust('CellLine Name', 55))
+fp.write("  A row in this report represents a Cell Line that could not be translated to a valid MGI Cell Line.\n" + \
+"  This Cell Line may need to be added to the Cell Line bad name/good name list.\n" + 2*CRT)
+
+fp.write(string.ljust('Cell Line', 55))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('----------- ', 55))
+fp.write(string.ljust('---------', 55))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #

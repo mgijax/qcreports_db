@@ -43,9 +43,12 @@ fp = reportlib.init(sys.argv[0],
 		    'Molecular Source Processer - Invalid Tissues (Job Stream %s)' % (jobStreamKey), 
 		    outputdir = outputDir)
 
-fp.write(string.ljust('Tissue Name', 55))
+fp.write("  A row in this report represents a Tissue that could not be translated to a valid MGI Tissue.\n" + \
+"  This Tissue may need to be added to the Tissue bad name/good name list.\n" + 2*CRT)
+
+fp.write(string.ljust('Tissue', 55))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('----------- ', 55))
+fp.write(string.ljust('------', 55))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #

@@ -43,9 +43,12 @@ fp = reportlib.init(sys.argv[0],
 		    'Molecular Source Processer - Invalid Strains (Job Stream %s)' % (jobStreamKey), 
 		    outputdir = outputDir)
 
-fp.write(string.ljust('Strain Name', 55))
+fp.write("  A row in this report represents a Strain that could not be translated to a valid MGI Strain.\n" + \
+"  This Strain may need to be added to the Strain bad name/good name list.\n" + 2*CRT)
+
+fp.write(string.ljust('Strain', 55))
 fp.write(string.ljust('Number of Occurrences', 25) + CRT)
-fp.write(string.ljust('----------- ', 55))
+fp.write(string.ljust('------', 55))
 fp.write(string.ljust('---------------------', 25) + CRT)
 
 #
