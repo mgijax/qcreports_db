@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/csh
 #
 #  $Header$
 #  $Name$
@@ -48,35 +48,38 @@
 #
 ###########################################################################
 
+cd `dirname $0` && source Configuration
+
 #
 #  Verify the argument(s) to the shell script.
 #
-if [ $# -ne 5 ]
-then
+if  ( ${#argv} != 5 ) then
     echo "Usage: $0  OutputDir  Server  RADAR  MGD  JobKey"
     exit 1
 else
-    OUTPUTDIR=$1
-    SERVER=$2
-    RADAR=$3
-    MGD=$4
-    JOBKEY=$5
-fi
+    setenv OUTPUTDIR $1
+    setenv SERVER $2
+    setenv RADAR $3
+    setenv MGD $4
+    setenv JOBKEY $5
+endif
 
 #
 #  Run each Python report found in the cloneload directory.
 #
 cd `dirname $0`/cloneload
 
-for RPT in *.py
-do
+foreach RPT (*.py)
     ${RPT} ${OUTPUTDIR} ${SERVER} ${RADAR} ${MGD} ${JOBKEY}
-done
+end
 
 exit 0
 
 
 #  $Log$
+#  Revision 1.1  2003/11/07 19:31:16  dbm
+#  Initial version
+#
 #
 ###########################################################################
 #
