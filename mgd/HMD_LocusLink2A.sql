@@ -1,21 +1,21 @@
 /* TR 2920 */
-/* Comparison of orthologous relationships between MGD and LocusLink */
-/* Uses the LL file homol_seq_pairs which is downloaded from their */
+/* Comparison of orthologous relationships between MGD and HomoloGene */
+/* Uses the HomologGene file homologene.data which is downloaded from their */
 /* ftp site using the locuslinkload product */
 /* This file is dumped into radar..DP_LLHomology */
 
 set nocount on
 go
 
-select h.species1, h.locusID1, symbol1 = substring(h.symbol1, 1, 25), h.refSeq1, h.length1,
-h.species2, h.locusID2, symbol2 = substring(h.symbol2, 1, 25), h.refSeq2, h.length2,
-h.maxidentity, h.avgidentity, h.lenmatchseq
+select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
+species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
 into #homology
-from radar..DP_LLHomology h, radar..DP_LL l
-where h.species1 = "Homo sapiens"
-and h.species2 = "Mus musculus"
-and h.symbol1 != h.symbol2
-and h.locusID1 = l.locusID
+from radar_release..DP_LLHomology h1, radar_release..DP_LLHomology h2, radar_release..DP_LL l
+where h1.taxID = 9606
+and h1.groupID = h2.groupID
+and h2.taxID = 10090
+and h1.symbol != h2.symbol
+and h1.geneID = l.locusID
 and l.osymbol is not null
 go
 
@@ -23,7 +23,7 @@ set nocount off
 go
 
 print ""
-print "The mouse/human orthologous pairs that LocusLink is reporting that we are"
+print "The mouse/human orthologous pairs that HomoloGene is reporting that we are"
 print "not reporting in our homology data, where we have neither the mouse nor the"
 print "OFFICIAL human member of the pair."
 print ""
@@ -37,16 +37,8 @@ print ""
 select h.*
 from #homology h
 where h.symbol2 like "%Rik"
-and not exists (select 1 from MRK_Marker m
-where m._Organism_key = 1
-and m.symbol = h.symbol2)
-union
-select h.*
-from #homology h
-where h.symbol2 like "%Rik"
-and not exists (select 1 from MRK_Marker m
-where m._Organism_key = 2
-and m.symbol = h.symbol1)
+and not exists (select 1 from MRK_Marker m where m._Organism_key = 1 and m.symbol = h.symbol2)
+and not exists (select 1 from MRK_Marker m where m._Organism_key = 2 and m.symbol = h.symbol1)
 order by h.symbol1
 go
 
@@ -59,16 +51,8 @@ print ""
 select h.*
 from #homology h
 where h.symbol2 not like "%Rik"
-and not exists (select 1 from MRK_Marker m
-where m._Organism_key = 1
-and m.symbol = h.symbol2)
-union
-select h.*
-from #homology h
-where h.symbol2 not like "%Rik"
-and not exists (select 1 from MRK_Marker m
-where m._Organism_key = 2
-and m.symbol = h.symbol1)
+and not exists (select 1 from MRK_Marker m where m._Organism_key = 1 and m.symbol = h.symbol2)
+and not exists (select 1 from MRK_Marker m where m._Organism_key = 2 and m.symbol = h.symbol1)
 order by h.symbol1
 go
 
