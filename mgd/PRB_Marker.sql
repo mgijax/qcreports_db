@@ -18,7 +18,7 @@ go
 
 select m.*, p.DNAtype, s.species, p.modification_date
 into #markers
-from #probe p, PRB_Marker_View m, PRB_Source s
+from #probe p, PRB_Marker_View m, PRB_Source_View s
 where p._Probe_key = m._Probe_key
 and p._Source_key = s._Source_key
 go
