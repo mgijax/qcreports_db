@@ -11,7 +11,7 @@ where NLMstatus = 'Y'
 and not exists
 (select a._Accession_key from BIB_Acc_View a
 where a._Object_key = r._Refs_key
-and a._LogicalDB_key = 29)
+and a._LogicalDB_key = in (7,29))
 order by r.year, r._primary
 go
 
