@@ -34,6 +34,8 @@ import db
 import mgi_utils
 import reportlib
 
+findID = 'select _Object_key from ACC_Accession where accID = "%s"'
+
 #
 # Main
 #
@@ -66,14 +68,14 @@ for r in results:
 	id = regsub.gsub('"', '', id)
 
 	if string.find(id, 'MGI:') >= 0:
-	    idResult = db.sql('select _Object_key from ACC_Accession where accID = "%s"' % (id), 'auto')
+	    idResult = db.sql(findID % (id), 'auto')
 	    if len(idResult) == 0:
 		fp.write(id + reportlib.CRT)
 		rows = rows + 1
 
 	if string.find(id, 'INTERPRO:') >= 0:
 	    [prefixPart, idPart] = string.split(id, 'INTERPRO:')
-	    idResult = db.sql('select _Object_key from ACC_Accession where accID = "%s"' % (idPart), 'auto')
+	    idResult = db.sql(findID % (idPart), 'auto')
 	    if len(idResult) == 0:
 		fp.write(id + reportlib.CRT)
 		rows = rows + 1
