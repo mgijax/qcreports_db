@@ -1,9 +1,14 @@
+TAG:  qcreports_db-3-1-1-14
+DATE: 03/09/2005
+STAFF: lec
+RELEASE: A
+CHANGES: TR 6647, qcr.html
+
 TAG:  qcreports_db-3-1-1-13
 DATE: 02/22/2005
 STAFF: sc
 RELEASE: A
-CHANGES: qcr.html - corrected sequence loads links
-              removed lucy load
+CHANGES: qcr.html - corrected sequence loads links, removed lucy load
 
 TAG:  qcreports_db-3-1-1-12
 DATE: 02/18/2005
