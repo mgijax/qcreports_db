@@ -27,13 +27,13 @@ print "A row in this report represents a Sequence Reference that is associated"
 print "with a Marker but the Sequence itself is not associated with any"
 print "Marker via the Reference.  All that is displayed is the reference and "
 print "the number of sequences it is associated with.  Only displays "
-print "references with greater than 500 sequences."
+print "references with less than 500 sequences."
 print ""
 
 select jNumber = b.jnumID, numberOfSequences = r.num_seqs
 from #refs r, BIB_View b
 where r._Refs_key = b._Refs_key 
-and r.num_seqs >= 500
+and r.num_seqs < 500
 order by r.num_seqs DESC, b.jnumID
 go
 
