@@ -14,6 +14,12 @@
 #
 # This will reveal potential mouse/human homologies.
 #
+#
+# History
+#
+# 07/18/2000 - lec
+#	- TR 1801; add HTML links to J#
+#
 
 import sys
 import os 
@@ -22,49 +28,60 @@ import string
 import regex
 import reportlib
 
-inFile = open('%s/Gene.medlineid.tab' % (os.environ['QCREPORTOUTPUTDIR']), 'r')
+def processMedlineFile():
+
+	inFile = open('%s/Gene.medlineid.tab' % (os.environ['QCREPORTOUTPUTDIR']), 'r')
+
+	cmd = 'drop table tempdb..gdbmedline'
+	db.sql(cmd, None)
+
+	cmd = 'create table tempdb..gdbmedline (' + \
+		'accid varchar(30) not null,' + \
+		'symbol varchar(30) not null,' + \
+		'medline varchar(30) not null)\n'
+	db.sql(cmd, None)
+
+	for line in inFile.readlines():
+
+		if string.find(line, 'GDB') >= 0:
+			tokens = string.splitfields(string.strip(line), '\t')
+
+			accid = tokens[0]
+			symbol = tokens[1]
+
+			if len(tokens) < 3:
+				continue
+
+			refs = string.splitfields(tokens[2], ';')
+
+			for r in refs:
+				if regex.match('[0-9]', r) > 0:
+					medline = r
+
+					cmd = 'insert into tempdb..gdbmedline ' + \
+						'values ("%s", "%s", "%s")' % (accid, symbol, medline)
+					db.sql(cmd, None)
+
+	inFile.close()
+
+	cmd = 'create index index_accid on tempdb..gdbmedline (accid)'
+	db.sql(cmd, None)
+
+	cmd = 'create index index_symbol on tempdb..gdbmedline (symbol)'
+	db.sql(cmd, None)
+
+	cmd = 'create index index_medline on tempdb..gdbmedline (medline)'
+	db.sql(cmd, None)
+
+#
+# Main
+#
 
 reportName = 'HMD_Potentials'
-fp = reportlib.init(reportName, 'GDB citations which match MGD w/ no Human Homology', os.environ['QCREPORTOUTPUTDIR'])
+fp = reportlib.init(reportName, 'GDB citations which match MGD w/ no Human Homology', os.environ['QCREPORTOUTPUTDIR'], isHTML = 1)
 fp.write('%-10s %-50s %-20s %-15s %-20s\n\n' % ('J#', 'Citation', 'Mouse Symbol', 'Human Symbol', 'GDB Acc ID'))
 
-cmd = 'create table tempdb..gdbmedline (' + \
-	'accid varchar(30) not null,' + \
-	'symbol varchar(30) not null,' + \
-	'medline varchar(30) not null)\n'
-db.sql(cmd, None)
-
-for line in inFile.readlines():
-
-	if string.find(line, 'GDB') >= 0:
-		tokens = string.splitfields(string.strip(line), '\t')
-
-		accid = tokens[0]
-		symbol = tokens[1]
-
-		if len(tokens) < 3:
-			continue
-
-		refs = string.splitfields(tokens[2], ';')
-
-		for r in refs:
-			if regex.match('[0-9]', r) > 0:
-				medline = r
-
-				cmd = 'insert into tempdb..gdbmedline ' + \
-					'values ("%s", "%s", "%s")' % (accid, symbol, medline)
-				db.sql(cmd, None)
-
-inFile.close()
-
-cmd = 'create index index_accid on tempdb..gdbmedline (accid)'
-db.sql(cmd, None)
-
-cmd = 'create index index_symbol on tempdb..gdbmedline (symbol)'
-db.sql(cmd, None)
-
-cmd = 'create index index_medline on tempdb..gdbmedline (medline)'
-db.sql(cmd, None)
+#processMedlineFile()
 
 cmd = 'select r.jnumID, r.short_citation, m.symbol, gdbsymbol = g.symbol, g.accid ' + \
       'from tempdb..gdbmedline g, BIB_All_View r, BIB_Acc_View a, MRK_Reference mr, MRK_Marker m ' + \
@@ -85,13 +102,12 @@ cmd = 'select r.jnumID, r.short_citation, m.symbol, gdbsymbol = g.symbol, g.acci
 
 results = db.sql(cmd, 'auto')
 for r in results:
-	fp.write('%-10s %-50s %-20s %-15s %-20s\n'
-		% (r['jnumID'], r['short_citation'],
-		   r['symbol'], r['gdbsymbol'], r['accid']))
-
-cmd = 'drop table tempdb..gdbmedline'
-db.sql(cmd, None)
+	fp.write(reportlib.create_accession_anchor(r['jnumID']))
+	fp.write('%-10s' % (r['jnumID']))
+	fp.write(reportlib.close_accession_anchor())
+	fp.write(' %-50s %-20s %-15s %-20s\n' 
+		% (r['short_citation'], r['symbol'], r['gdbsymbol'], r['accid']))
 
 reportlib.trailer(fp)
-reportlib.finish_nonps(fp)
+reportlib.finish_nonps(fp, isHTML = 1)
 
