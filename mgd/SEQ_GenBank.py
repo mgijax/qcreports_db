@@ -72,6 +72,7 @@ cmds.append('select accID, _Object_key ' + \
 	'into #pseqIDs ' + \
 	'from ACC_Accession ' + \
 	'where _MGIType_key = 3 ' + \
+	'and _Object_key = 10603 ' + \
 	'and _LogicalDB_key in (9,27) ')
 cmds.append('create index idx1 on #pseqIDs(accID)')
 cmds.append('create index idx2 on #pseqIDs(_Object_key)')
@@ -85,7 +86,7 @@ print 'query 2 end...%s' % (mgi_utils.date())
 
 print 'query 3 begin...%s' % (mgi_utils.date())
 mgiIDs = {}
-results = db.sql('select s._Object_key, a.accID ' +
+results = db.sql('select distinct s._Object_key, a.accID ' +
 	'from #mseqIDs s, ACC_Accession a ' + \
 	'where s._Object_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
@@ -99,7 +100,7 @@ for r in results:
 print 'query 3 end...%s' % (mgi_utils.date())
 
 print 'query 4 begin...%s' % (mgi_utils.date())
-results = db.sql('select s._Object_key, a.accID ' +
+results = db.sql('select distinct s._Object_key, a.accID ' +
 	'from #pseqIDs s, ACC_Accession a ' + \
 	'where s._Object_key = a._Object_key ' + \
 	'and a._MGIType_key = 3 ' + \
@@ -119,7 +120,7 @@ print 'query 4 end...%s' % (mgi_utils.date())
 
 print 'query 5 begin...%s' % (mgi_utils.date())
 names = {}
-results = db.sql('select s._Object_key, t.name ' +
+results = db.sql('select distinct s._Object_key, t.name ' +
 	'from #mseqIDs s, MRK_Marker m, MRK_Types t ' + \
 	'where s._Object_key = m._Marker_key ' + \
 	'and m._Marker_Type_key = t._Marker_Type_key', 'auto')
@@ -127,8 +128,10 @@ for r in results:
     key = markerType + ':' + str(r['_Object_key'])
     value = r['name']
     names[key] = value
+print 'query 5 end...%s' % (mgi_utils.date())
 
-results = db.sql('select s._Object_key, p.name ' +
+print 'query 6 begin...%s' % (mgi_utils.date())
+results = db.sql('select distinct s._Object_key, p.name ' +
 	'from #pseqIDs s, PRB_Probe p ' + \
 	'where s._Object_key = p._Probe_key ', 'auto')
 for r in results:
@@ -144,7 +147,7 @@ print 'query 6 end...%s' % (mgi_utils.date())
 
 print 'query 7 begin...%s' % (mgi_utils.date())
 symbols = {}
-results = db.sql('select s._Object_key, m.symbol ' + \
+results = db.sql('select distinct s._Object_key, m.symbol ' + \
 	'from #mseqIDs s, MRK_Marker m ' + \
 	'where s._Object_key = m._Marker_key ', 'auto')
 for r in results:
@@ -153,8 +156,10 @@ for r in results:
     if not symbols.has_key(key):
 	symbols[key] = []
     symbols[key].append(value)
+print 'query 7 end...%s' % (mgi_utils.date())
 
-results = db.sql('select s._Object_key, symbol = m.symbol + ":" + pm.relationship ' + \
+print 'query 8 begin...%s' % (mgi_utils.date())
+results = db.sql('select distinct s._Object_key, symbol = m.symbol + ":" + pm.relationship ' + \
 	'from #pseqIDs s, PRB_Marker pm, MRK_Marker m ' + \
 	'where s._Object_key = pm._Probe_key ' + \
 	'and pm._Marker_key = m._Marker_key', 'auto')
@@ -164,7 +169,7 @@ for r in results:
     if not symbols.has_key(key):
 	symbols[key] = []
     symbols[key].append(value)
-print 'query 7 end...%s' % (mgi_utils.date())
+print 'query 8 end...%s' % (mgi_utils.date())
 
 ####
 #### process main data
@@ -178,7 +183,7 @@ print 'query 7 end...%s' % (mgi_utils.date())
 # the mgi accession id, name and symbol for each object
 # using the other dictionaries.
 
-print 'query 8 begin...%s' % (mgi_utils.date())
+print 'query 9 begin...%s' % (mgi_utils.date())
 accIDs = {}
 results = db.sql('select distinct accID, _Object_key from #mseqIDs', 'auto')
 for r in results:
@@ -194,13 +199,13 @@ for r in results:
     if not accIDs.has_key(key):
 	accIDs[key] = []
     accIDs[key].append(value)
-print 'query 8 end...%s' % (mgi_utils.date())
+print 'query 9 end...%s' % (mgi_utils.date())
 
-print 'query 9 begin...%s' % (mgi_utils.date())
+print 'query 10 begin...%s' % (mgi_utils.date())
 results = db.sql('select distinct accID from #mseqIDs ' + \
 	'union ' + \
 	'select distinct accID from #pseqIDs order by accID', 'auto')
-print 'query 9 end...%s' % (mgi_utils.date())
+print 'query 10 end...%s' % (mgi_utils.date())
 
 # for each Sequence Accession ID
 
