@@ -12,7 +12,7 @@ set nocount off
 go
 
 print ""
-print "GXD Assays missing from GXD Expression Cache Table"
+print "GXD Assays entirely missing from GXD Expression Cache Table"
 print "(and therefore not visible in Web interface)"
 print ""
 
@@ -22,7 +22,7 @@ where m._Assay_key = v._Assay_key
 go
 
 print ""
-print "Gel GXD Assays missing from GXD Expression Cache Table"
+print "Gel GXD Assays entirely missing from GXD Expression Cache Table"
 print "(due to missing Gel Lane Structures)"
 print ""
 
@@ -35,7 +35,7 @@ where a._Assay_key = gl._Assay_key)
 go
 
 print ""
-print "InSitu GXD Assays missing from GXD Expression Cache Table"
+print "InSitu GXD Assays entirely missing from GXD Expression Cache Table"
 print "(due to missing Specimen Results)"
 print ""
 
@@ -49,8 +49,8 @@ and s._Specimen_key = r._Specimen_key)
 go
 
 print ""
-print "InSitu GXD Assays missing from GXD Expression Cache Table"
-print "(due to missing Specimen Result Structures)"
+print "InSitu GXD Assays entirely missing from GXD Expression Cache Table"
+print "(due to missing Specimen Results or Results Structures)"
 print ""
 
 select a.mgiID, a.jnumID, a.assayType
@@ -67,7 +67,7 @@ set nocount on
 go
 
 select r._Result_key, r._Specimen_key
-into #missingstructs
+into #imissingstructs
 from GXD_InSituResult r
 where not exists
 (select 1 from GXD_ISResultStructure s
@@ -82,8 +82,33 @@ set nocount on
 go
 
 select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
-from #missingstructs r, GXD_Specimen s, GXD_Assay_View a
+from #imissingstructs r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
+and s._Assay_key = a._Assay_key
+go
+
+set nocount on
+go
+
+select g._GelLane_key
+into #gmissingstructs
+from GXD_GelLane g
+where g._GelControl_key = 1
+and not exists
+(select 1 from GXD_GelLaneStructure s
+where g._GelLane_key = s._GelLane_key)
+go
+
+print ""
+print "Gel Results missing Structures"
+print ""
+
+set nocount on
+go
+
+select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
+from #gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
+where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 go
 
