@@ -5,6 +5,8 @@ RELEASE: A
 CHANGES:
 a) TR 2920; LocusLink Homology Reports
 b) TR 2943; Problem Sequence Discrepency Report
+c) TR 2959; HMD_RIKEN.sql
+d) TR 2961; MRK_DashPending.sql
 
 TAG: qcreports_db-11-0-0
 DATE: 09/05/2001
