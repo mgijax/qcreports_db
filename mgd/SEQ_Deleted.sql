@@ -28,18 +28,22 @@ print "Molecular Segments."
 print ""
 
 select seqID = d.accID, mgiID = ma2.accID, name = m.symbol
-from #deleted2 d, MRK_Acc_View ma, MRK_Acc_View ma2, MRK_Marker m
+from #deleted2 d, ACC_Accession ma, ACC_Accession ma2, MRK_Marker m
 where d.accID = ma.accID
+and ma._MGIType_key = 2
 and ma._Object_key = m._Marker_key 
 and m._Marker_key = ma2._Object_key 
+and ma2._MGIType_key = 2
 and ma2.prefixPart = 'MGI:'
 and ma2.accID != ma.accID
 union
 select d.accID, mgiID = pa2.accID, p.name
-from #deleted2 d, PRB_Acc_View pa, PRB_Acc_View pa2, PRB_Probe p
+from #deleted2 d, ACC_Accession pa, ACC_Accession pa2, PRB_Probe p
 where d.accID = pa.accID
+and pa._MGIType_key = 3
 and pa._Object_key = p._Probe_key
 and p._Probe_key = pa2._Object_key
+and pa2._MGIType_key = 3
 and pa2.prefixPart = 'MGI:'
 and pa2.accID != pa.accID
 go

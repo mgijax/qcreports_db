@@ -25,8 +25,9 @@ go
 select p.*
 into #noaccs
 from #probes p
-where not exists (select a.* from PRB_Acc_View a
+where not exists (select a.* from ACC_Accession a
 where p._Probe_key = a._Object_key
+and a._MGIType_key = 3
 and a.LogicalDB = 'Sequence DB')
 go
 
@@ -36,11 +37,12 @@ go
 
 select distinct n._Probe_key
 into #remove
-from #noaccs n, PRB_Marker pm, PRB_Probe p, PRB_Acc_View a
+from #noaccs n, PRB_Marker pm, PRB_Probe p, ACC_Accession a
 where n._Marker_key = pm._Marker_key
 and pm._Probe_key = p._Probe_key
 and p._Probe_key != n._Probe_key
 and p._Probe_key = a._Object_key
+and a._MGIType_key = 3
 and a.LogicalDB = 'Sequence DB'
 go
 

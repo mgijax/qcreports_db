@@ -18,8 +18,9 @@ go
 
 select m.*, a.accID
 into #markers2
-from #markers1 m, MRK_Acc_View a
+from #markers1 m, ACC_Accession a
 where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
 and a.prefixPart = "MGI:"
 and a._LogicalDB_key = 1
 and a.preferred = 1

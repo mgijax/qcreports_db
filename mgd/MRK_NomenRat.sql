@@ -27,8 +27,9 @@ and h2._Homology_key = hm2._Homology_key
 and hm2._Marker_key = m2._Marker_key
 and m2._Organism_key = 40
 and m2.symbol != m.current_symbol
-and not exists (select 1 from MRK_Acc_View ma 
+and not exists (select 1 from ACC_Accession ma 
 where m2._Marker_key = ma._Object_key
+and ma._MGIType_key = 2
 and ma._LogicalDB_key = 24)
 order by m.current_symbol
 go
