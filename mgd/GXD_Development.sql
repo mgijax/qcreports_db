@@ -7,7 +7,7 @@ select distinct i._Refs_key, i._Marker_key
 into #markers
 from GXD_Index i, BIB_Refs b, VOC_Term_GXDIndexPriority_View a
 where i._Refs_key = b._Refs_key
-and b.journal = "Gene Expr Patterns"
+and b.journal = "Development"
 and i._Priority_key =  a._Term_key
 and a.term = "High"
 and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)
@@ -23,7 +23,7 @@ set nocount off
 go
 
 print ""
-print "Reference and Number of Markers Analyzed for Journal: Gene Expr Patterns"
+print "Reference and Number of Markers Analyzed for Journal: Development"
 print ""
 
 select distinct a.accID, i.markerCount
@@ -48,7 +48,7 @@ select distinct i._Refs_key, i._Marker_key
 into #markers
 from GXD_Index i, BIB_Refs b, VOC_Term_GXDIndexPriority_View a
 where i._Refs_key = b._Refs_key
-and b.journal = "Gene Expr Patterns"
+and b.journal = "Development"
 and i._Priority_key =  a._Term_key
 and a.term = "High"
 and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)
@@ -65,7 +65,7 @@ set nocount off
 go
 
 print ""
-print "Gene Expr Patterns: Papers with New Genes"
+print "Development: Papers with New Genes"
 print ""
 
 select distinct a.accID, i.markerCount
