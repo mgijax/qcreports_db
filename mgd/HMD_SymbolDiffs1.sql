@@ -93,8 +93,7 @@ set nocount off
 go
 
 print ""
-print "MGI Mouse Symbols which differ from Orthologous Human Symbols"
-print "Excludes RIKEN Symbols"
+print "MGI Symbols differing from Human Ortholog Symbols, excludes RIKEN (#1)"
 print "(sorted by modification date of human symbol, symbol status, mouse symbol)"
 print ""
 
