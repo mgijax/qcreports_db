@@ -207,7 +207,7 @@ getCounts "MLC"        $EQUALS               $MLC
 getCounts "FANTOM2"    $EQUALS               $FANTOM2
 getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
 
-cat /usr/local/mgi/dbutils/mgidbutilities/text/copyrightnotice >> $REPORT
+cat ${DBUTILITIESPATH}/text/copyrightnotice >> $REPORT
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
