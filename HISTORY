@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-5-0
+DATE: 03/2712001
+STAFF: lec
+RELEASE: A
+CHANGES:
+a) TR 2440; Added PRB_StrainStd.sql
+
 TAG: qcreports_db-5-4-0
 DATE: 02/28/2001
 STAFF: sc
