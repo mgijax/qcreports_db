@@ -5,6 +5,7 @@ select m._Marker_key, m.symbol, name = substring(m.name,1,50), m.creation_date
 into #marker
 from MRK_Marker m
 where m.symbol like '%-pending'
+and m._Marker_Status_key = 1
 go
 
 set nocount off
