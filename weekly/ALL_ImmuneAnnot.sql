@@ -20,3 +20,5 @@ where a._Allele_key = v._Object_key
 and v._AnnotType_key = 1002
 and v.term like '%immune system:%'
 order by a.symbol
+go
+
