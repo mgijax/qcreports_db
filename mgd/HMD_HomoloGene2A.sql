@@ -2,7 +2,7 @@
 /* Comparison of orthologous relationships between MGD and HomoloGene */
 /* Uses the HomologGene file homologene.data which is downloaded from their */
 /* ftp site using the locuslinkload product */
-/* This file is dumped into radar..DP_HomoloGene */
+/* This file is dumped into radar_2..DP_HomoloGene */
 
 set nocount on
 go
@@ -10,7 +10,7 @@ go
 select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
 species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
 into #homology
-from radar..DP_HomoloGene h1, radar..DP_HomoloGene h2, radar..DP_EntrezGene_Info e
+from radar_2..DP_HomoloGene h1, radar_2..DP_HomoloGene h2, radar_2..DP_EntrezGene_Info e
 where h1.taxID = 9606
 and h1.groupID = h2.groupID
 and h2.taxID = 10090
@@ -34,7 +34,7 @@ print "Mouse symbols are RIKEN"
 print ""
 
 select h.*
-from #homology h, radar..DP_EntrezGene_Info e
+from #homology h, radar_2..DP_EntrezGene_Info e
 where h.symbol2 like "%Rik" 
 and h.symbol1 = e.symbol
 and e.taxID = 9606
@@ -51,7 +51,7 @@ print "Mouse symbols are non-RIKEN"
 print ""
 
 select h.*
-from #homology h, radar..DP_EntrezGene_Info e
+from #homology h, radar_2..DP_EntrezGene_Info e
 where h.symbol2 not like "%Rik"
 and h.symbol1 = e.symbol
 and e.taxID = 9606
