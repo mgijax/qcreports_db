@@ -75,10 +75,12 @@ setenv DBUTILITIESPATH		/usr/local/mgi/dbutils/mgidbutilities
 set path = ($DBUTILITIESPATH/bin $path $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
 
 # Database Server
-setenv DSQUERY PROD_MGI
+setenv DBSERVER PROD_MGI
+setenv DSQUERY ${DBSERVER}
 
 # MGD Database
-setenv MGD mgd
+setenv DBNAME mgd
+setenv MGD ${DBNAME}
 
 # Nomen Database
 setenv NOMEN nomen
