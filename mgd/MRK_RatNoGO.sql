@@ -13,7 +13,7 @@ where g._AnnotType_key = 1000
 and m._Marker_key = g._Object_key)
 go
 
-create unique clustered index index_marker_key on #markers1(_Marker_key)
+create index index_marker_key on #markers1(_Marker_key)
 go
 
 select m.*, a.accID
@@ -26,7 +26,7 @@ and a._LogicalDB_key = 1
 and a.preferred = 1
 go
 
-create unique clustered index index_marker_key on #markers2(_Marker_key)
+create index index_marker_key on #markers2(_Marker_key)
 go
 
 set nocount off

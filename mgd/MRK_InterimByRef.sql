@@ -29,7 +29,7 @@ and h._Marker_Event_key = 1
 and not exists (select 1 from #mutants t where m._Marker_key = t._Marker_key)
 go
 
-create index idx1 on #markers(_Marker_key)
+create index idx1 on #marker(_Marker_key)
 go
 
 select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date, m.jnum
