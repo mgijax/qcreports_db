@@ -29,6 +29,9 @@ setenv QCGDB			$QCREPORTINSTALLDIR/gdb
 # qcr.html index directory
 setenv QCHTML			/usr/local/etc/httpd/internal/docs
 
+# FTP 
+setenv FTPURL			ftp.informatics.jax.org
+
 # SYBASE
 setenv SYBASE			/opt/sybase
 
