@@ -17,7 +17,7 @@ cd ${QCREPORTINSTALLDIR}
 sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
 mv -f qcr.html.new qcr.html
 cd ${QCMGD}
-set toEdit=`grep -l RADARDB *`
+set toEdit=`grep -l radar *`
 foreach i ($toEdit)
 sed "s/radar/$RADARDB" $i > $i.new
 mv -f $i.new $i
