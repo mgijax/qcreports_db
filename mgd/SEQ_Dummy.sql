@@ -23,7 +23,7 @@ create index idx1 on #probedummy(_Probe_key)
 create index idx2 on #probedummy(_Sequence_key)
 go
 
-set count on
+set nocount off
 go
 
 print ""
