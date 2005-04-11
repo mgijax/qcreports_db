@@ -32,6 +32,7 @@
  
 import sys
 import os
+import string
 import db
 import reportlib
 
@@ -40,11 +41,20 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Mech Dev', 'PLoS Biol', 
+'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
+'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
+'BMC Ophthalmol']
+
 #
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Papers Requiring Images (Development, Dev Dyn, PLoS, BMC)', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
+fp.write(TAB + 'Journals Checked:' + CRT)
+for j in journals:
+    fp.write(2*TAB + j + CRT)
+fp.write(CRT)
 
 cmd = 'select b.jnumID ' + \
       'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \
@@ -53,7 +63,7 @@ cmd = 'select b.jnumID ' + \
             'p._Image_key = i._Image_key and ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-            '(b.journal in ("Development", "Dev Dyn") or journal like "PLos%" or journal like "BMC%") and ' + \
+	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
             'a._AssayType_key not in (1, 5, 7) and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
@@ -65,7 +75,7 @@ cmd = 'select b.jnumID ' + \
             'g._Specimen_key = r._Specimen_key and ' + \
             'r.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-            '(b.journal in ("Development", "Dev Dyn") or journal like "PLos%" or journal like "BMC%") and ' + \
+	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'order by b.jnumID'
