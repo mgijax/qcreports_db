@@ -1,3 +1,11 @@
+TAG:  qcreports_db-mpr-19
+DATE: 04/11/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) TR 6718, 6719, 6720, 6724
+(GXD_FullCode.py, GXD_FullCodeable.py, GXD_Images,py, GXD_SameStructure.py)
+
 TAG:  qcreports_db-mpr-18
 TAG:  qcreports_db-mpr-17
 TAG:  qcreports_db-mpr-16
