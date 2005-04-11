@@ -33,16 +33,13 @@ PAGE = reportlib.PAGE
 
 journals = ['Dev Biol', 'Dev Dyn', 'Development', 'Mech Dev', 'Gene Expr Patterns']
 
-#
-# Main
-#
+natureJournals = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Genet', 'Nat Immunol', 'Nat Med', 'Nat Neurosci', 'Nat Struct Biol', 'Nat Biotechnol', 'Biotechnology', 'Nat Rev Cancer', 'Nat Rev Genet', 'Nat Rev Immunol', 'Nat Rev Mol Cell Bio', 'Nat Rev Neurosci']
 
-for j in journals:
+def processJournal(jList, fileName, journalTitle):
 
-    fileName = 'GXD_' + regsub.gsub(' ', '', j)
     fp = reportlib.init(fileName, outputdir = os.environ['QCOUTPUTDIR'])
 
-    fp.write('Reference and Number of Markers Analyzed for Journal: %s' % (j) + 2*CRT)
+    fp.write('Reference and Number of Markers Analyzed for Journal: %s' % (journalTitle) + 2*CRT)
     fp.write(string.ljust('accID', 30))
     fp.write(SPACE)
     fp.write(string.ljust('markerCount', 12))
@@ -60,7 +57,7 @@ for j in journals:
            'into #markers1 ' + \
            'from GXD_Index i, BIB_Refs b, VOC_Term_GXDIndexPriority_View a ' + \
            'where i._Refs_key = b._Refs_key ' + \
-           'and b.journal = "%s" ' % (j) + \
+	   'and b.journal in ("' + string.join(jList, '","') + '") ' + \
            'and i._Priority_key =  a._Term_key ' + \
            'and a.term = "High" ' + \
            'and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)', None)
@@ -89,7 +86,7 @@ for j in journals:
     #
 
     fp.write(CRT)
-    fp.write('%s:  Papers with New Genes' % (j) + 2*CRT)
+    fp.write('%s:  Papers with New Genes' % (journalTitle) + 2*CRT)
     fp.write(string.ljust('accID', 30))
     fp.write(SPACE)
     fp.write(string.ljust('markerCount', 12))
@@ -107,7 +104,7 @@ for j in journals:
            'into #markers2 ' + \
            'from GXD_Index i, BIB_Refs b, VOC_Term_GXDIndexPriority_View a ' + \
            'where i._Refs_key = b._Refs_key ' + \
-           'and b.journal = "%s" ' % (j) + \
+	   'and b.journal in ("' + string.join(jList, '","') + '") ' + \
            'and i._Priority_key =  a._Term_key ' + \
            'and a.term = "High" ' + \
            'and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key) ' + \
@@ -134,4 +131,17 @@ for j in journals:
 
     reportlib.trailer(fp)
     reportlib.finish_nonps(fp)
+
+#
+# Main
+#
+
+for j in journals:
+    jList = []
+    jList.append(j)
+    fileName = 'GXD_' + regsub.gsub(' ', '', j)
+    processJournal(jList, fileName, j)
+
+fileName = 'GXD_Nature'
+processJournal(natureJournals, fileName, 'Nature')
 
