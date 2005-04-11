@@ -143,5 +143,5 @@ for j in journals:
     processJournal(jList, fileName, j)
 
 fileName = 'GXD_Nature'
-processJournal(natureJournals, fileName, 'Nature')
+processJournal(natureJournals, fileName, 'Nature family')
 
