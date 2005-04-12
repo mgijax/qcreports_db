@@ -1,9 +1,11 @@
+TAG:  qcreports_db-3-1-1-25
 TAG:  qcreports_db-3-1-1-24
 DATE: 04/12/2005
 STAFF: lec
 RELEASE: A
 CHANGES: 
 1) TR 6581; MRK_MultCoordinate.sql
+2) TR 6728; SEQ_RepTransGenomic.py
 
 TAG:  qcreports_db-3-1-1-23
 DATE: 04/11/2005
