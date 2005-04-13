@@ -87,10 +87,11 @@ db.sql('create index idx2 on #dupspecimens (_Structure_key)', None)
 
 db.sql('select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, gsn.structure ' + \
     'into #specimens ' + \
-    'from #dupspecimens ss, GXD_Specimen gs, GXD_Assay ga, GXD_StructureName gsn ' + \
+    'from #dupspecimens ss, GXD_Specimen gs, GXD_Assay ga, GXD_Structure s, GXD_StructureName gsn ' + \
     'where ss._Specimen_key= gs._Specimen_key ' + \
     'and gs._Assay_key = ga._Assay_key ' + \
-    'and ss._Structure_key = gsn._Structure_key', None)
+    'and ss._Structure_key = s._Structure_key ' + \
+    'and s._StructureName_key = gsn._StructureName_key', None)
 
 # get the all gel/structure pairs
 
@@ -115,10 +116,11 @@ db.sql('create index idx2 on #dupgels (_Structure_key)', None)
 
 db.sql('select distinct ss.*, gs.laneLabel, ga._Refs_key, gs._Assay_key, gsn.structure ' + \
     'into #gels ' + \
-    'from #dupgels ss, GXD_GelLane gs, GXD_Assay ga, GXD_StructureName gsn ' + \
+    'from #dupgels ss, GXD_GelLane gs, GXD_Assay ga, GXD_Structure s, GXD_StructureName gsn ' + \
     'where ss._GelLane_key= gs._GelLane_key ' + \
     'and gs._Assay_key = ga._Assay_key ' + \
-    'and ss._Structure_key = gsn._Structure_key', None)
+    'and ss._Structure_key = s._Structure_key ' + \
+    'and s._StructureName_key = gsn._StructureName_key', None)
 
 # get the MGI and Jnum ids
 
