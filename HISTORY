@@ -1,3 +1,10 @@
+TAG:  qcreports_db-3-2-0-1
+DATE: 04/22/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) MPR merge
+
 TAG:  qcreports_db-3-1-1-25
 TAG:  qcreports_db-3-1-1-24
 DATE: 04/12/2005
@@ -49,6 +56,80 @@ RELEASE: A
 CHANGES: 
 1) TR 6698; HMD_RIKEN.sql
 2) GXD_OrphanGenotype.sql
+
+TAG:  qcreports_db-mpr-22
+DATE: 04/22/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) remove MLC from GO Stats per Harold
+
+TAG:  qcreports_db-mpr-21
+TAG:  qcreports_db-mpr-20
+DATE: 04/12/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) TR 6581; MRK_MultCoordinates.sql
+2) TR 6728; SEQ_RepTransGenomic.py
+
+TAG:  qcreports_db-mpr-19
+DATE: 04/11/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) TR 6718, 6719, 6720, 6724
+(GXD_FullCode.py, GXD_FullCodeable.py, GXD_Images,py, GXD_SameStructure.py)
+
+TAG:  qcreports_db-mpr-18
+TAG:  qcreports_db-mpr-17
+TAG:  qcreports_db-mpr-16
+DATE: 04/07/2005
+STAFF: lec
+RELEASE: A
+CHANGES: MPR
+1) MPR
+
+TAG:  qcreports_db-mpr-15
+TAG:  qcreports_db-mpr-14
+DATE: 03/29/2005
+STAFF: lec
+RELEASE: A
+CHANGES: MPR
+1) TR 6698; HMD_RIKEN.sql
+
+TAG:  qcreports_db-mpr-13
+TAG:  qcreports_db-mpr-12
+TAG:  qcreports_db-mpr-11
+TAG:  qcreports_db-mpr-10
+DATE: 03/28/2005
+STAFF: lec
+RELEASE: A
+CHANGES: MPR
+
+TAG:  qcreports_db-mpr-9
+DATE: 03/23/2005
+STAFF: lec
+RELEASE: A
+CHANGES: MPR
+
+TAG:  qcreports_db-mpr-8
+TAG:  qcreports_db-mpr-7
+TAG:  qcreports_db-mpr-6
+TAG:  qcreports_db-mpr-5
+DATE: 03/22/2005
+STAFF: lec
+RELEASE: A
+CHANGES: MPR
+
+TAG:  qcreports_db-mpr-4
+TAG:  qcreports_db-mpr-3
+TAG:  qcreports_db-mpr-2
+TAG:  qcreports_db-mpr-1
+DATE: 03/16/2005
+STAFF: lec
+RELEASE: A
+CHANGES: MPR
 
 TAG:  qcreports_db-mpr-BP
 DATE: 03/16/2005

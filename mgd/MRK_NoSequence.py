@@ -80,7 +80,7 @@ fp.write('-' * 50 + '  ' + \
 cmds = []
 cmds.append('select distinct m._Marker_key ' + \
 	'into #mutants ' + \
-	'from MRK_Marker m, ALL_ALlele a ' + \
+	'from MRK_Marker m, ALL_Allele a ' + \
 	'where m._Organism_key = 1 ' + \
 	'and m._Marker_Type_key = 1 ' + \
 	'and m._Marker_key = a._Marker_key ' + \

@@ -6,7 +6,7 @@
 #
 # Report:
 #       QTL Mouse Markers that have been added since March 2002
-#	and have no PhenoSlim associations
+#	and have no MP associations
 #
 # Usage:
 #       MRK_QTL.py
@@ -30,7 +30,7 @@ import reportlib
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('QTL Markers added to MGI since March 2002 with no PhenoSlim annotations')
+fp.write('QTL Markers added to MGI since March 2002 with no MP annotations')
 fp.write(reportlib.CRT*2)
 
 fp.write(string.ljust('MGI ID', 30))
@@ -50,7 +50,7 @@ fp.write(reportlib.CRT)
 cmds = []
 
 # select all QTLs created since March 2002
-# and not phenoslim annotations
+# and not MP annotations
 cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
 	  'into #markers ' + \
 	  'from MRK_Mouse_View m ' + \
@@ -60,7 +60,7 @@ cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
 	  'and not exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a ' + \
 	  'where m._Marker_key = g._Marker_key ' + \
 	  'and g._Genotype_key = a._Object_key ' + \
-	  'and a._AnnotType_key = 1001)')
+	  'and a._AnnotType_key = 1002)')
 
 # select all references for the set of markers
 cmds.append('select m._Marker_key, b.accID ' + \

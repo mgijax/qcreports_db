@@ -7,11 +7,11 @@ into #gxd
 from GXD_Expression e
 go
 
-/* select all PhenoSlim/Genotype Reference annotations */
+/* select all MPm/Genotype Reference annotations */
 select distinct a._Object_key, e._Refs_key
 into #ap
 from VOC_Annot a, VOC_Evidence e
-where a._AnnotType_key = 1001
+where a._AnnotType_key = 1002
 and a._Annot_key = e._Annot_key
 go
 
