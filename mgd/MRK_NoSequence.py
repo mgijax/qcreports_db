@@ -77,8 +77,7 @@ fp.write('-' * 50 + '  ' + \
 #
 # select phenotypic mutant genes
 #
-cmds = []
-cmds.append('select distinct m._Marker_key ' + \
+db.sql('select distinct m._Marker_key ' + \
 	'into #mutants ' + \
 	'from MRK_Marker m, ALL_Allele a ' + \
 	'where m._Organism_key = 1 ' + \
@@ -88,15 +87,13 @@ cmds.append('select distinct m._Marker_key ' + \
 	'and not exists (select 1 from ACC_Accession a ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_Key in (9, 13, 27, 41)) ')
-cmds.append('create index idx1 on #mutants(_Marker_key)')
-db.sql(cmds, None)
+	'and a._LogicalDB_Key in (9, 13, 27, 41)) ', None)
+db.sql('create index idx1 on #mutants(_Marker_key)', None)
 
 #
 # select Genes with no sequences
 #
-cmds = []
-cmds.append('select m._Marker_key, m.symbol ' + \
+db.sql('select m._Marker_key, m.symbol ' + \
 	'into #markers ' + \
 	'from MRK_Marker m ' + \
 	'where m._Organism_key = 1 ' + \
@@ -106,24 +103,21 @@ cmds.append('select m._Marker_key, m.symbol ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_Key in (9, 13, 27, 41)) ' + \
-	'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)')
-cmds.append('create index idx1 on #markers(_Marker_key)')
-db.sql(cmds, None)
+	'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)', None)
+db.sql('create index idx1 on #markers(_Marker_key)', None)
 
 #
 # select orthologs
 #
-cmds = []
-cmds.append('select distinct m._Marker_key, orthologyKey = m2._Marker_key, s.commonName ' + \
+db.sql('select distinct m._Marker_key, orthologyKey = m2._Marker_key, s.commonName ' + \
 	'into #orthologs ' + \
 	'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MGI_Organism s ' + \
 	'where m._Marker_key = hm1._Marker_key ' + \
 	'and hm1._Homology_key = hm2._Homology_key ' + \
 	'and hm2._Marker_key = m2._Marker_key ' + \
 	'and m2._Organism_key != 1 ' + \
-	'and m2._Organism_key = s._Organism_key')
-cmds.append('create index idx1 on #orthologs(orthologyKey)')
-db.sql(cmds, None)
+	'and m2._Organism_key = s._Organism_key', None)
+db.sql('create index idx1 on #orthologs(orthologyKey)', None)
 
 results = db.sql('select * from #orthologs', 'auto')
 organism = {}

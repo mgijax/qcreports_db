@@ -37,20 +37,16 @@ fp.write('J#' + TAB + 'Expt Type' + TAB + 'Tag' + CRT * 2)
 
 # all experiments
 
-cmds = []
-cmds.append('select _Expt_key, alleleLine ' + \
+db.sql('select _Expt_key, alleleLine ' + \
 	'into #expts ' + \
 	'from MLD_MCDatalist ' + \
 	'where alleleLine not like "%par%" ' + \
 	'and alleleLine not like "%reco%" ' + \
-	'order by _Expt_key, sequenceNum')
-cmds.append('create index idx1 on #expts(_Expt_key)')
-db.sql(cmds, None)
+	'order by _Expt_key, sequenceNum', None)
+db.sql('create index idx1 on #expts(_Expt_key)', None)
 
-cmds = []
-cmds.append('select distinct _Expt_key into #uniqueexpts from #expts')
-cmds.append('create index idx1 on #uniqueexpts(_Expt_key)')
-db.sql(cmds, None)
+db.sql('select distinct _Expt_key into #uniqueexpts from #expts', None)
+db.sql('create index idx1 on #uniqueexpts(_Expt_key)', None)
 
 # experiment details to print
 

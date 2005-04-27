@@ -137,8 +137,7 @@ fpD.write('mgi ID' + TAB + \
 	 'evidence codes' + CRT*2)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
-cmds = []
-cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
+db.sql('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
 	'into #m1 ' + \
 	'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
 	'where m._Organism_key = 1 ' + \
@@ -152,13 +151,11 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 	'and vd._DAG_key = n._DAG_key ' + \
 	'and a._Term_key = n._Object_key ' + \
 	'and n._DAG_key = d._DAG_key '
-	'order by m.symbol')
-cmds.append('create index idx1 on #m1(_Marker_key)')
-db.sql(cmds, None)
+	'order by m.symbol', None)
+db.sql('create index idx1 on #m1(_Marker_key)', None)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI
-cmds = []
-cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
+db.sql('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
 	'into #m2 ' + \
 	'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
 	'where m._Organism_key = 1 ' + \
@@ -172,9 +169,8 @@ cmds.append('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.e
 	'and vd._DAG_key = n._DAG_key ' + \
 	'and a._Term_key = n._Object_key ' + \
 	'and n._DAG_key = d._DAG_key '
-	'order by m.symbol')
-cmds.append('create index idx1 on #m2(_Marker_key)')
-db.sql(cmds, None)
+	'order by m.symbol', None)
+db.sql('create index idx1 on #m2(_Marker_key)', None)
 
 # select MGI accession ids for mouse genes from set 1
 # this will also suffice for set 2 which is a subset of set 1
@@ -205,11 +201,9 @@ for r in results:
 ## Report C
 
 # select all records from set 1 which have multiple annotations to the same GO term
-cmds = []
-cmds.append('select * into #m3 from #m1 group by _Marker_key, goID having count(*) > 1')
-cmds.append('create index idx1 on #m3(_Marker_key)')
-cmds.append('create index idx2 on #m3(symbol)')
-db.sql(cmds, None)
+db.sql('select * into #m3 from #m1 group by _Marker_key, goID having count(*) > 1', None)
+db.sql('create index idx1 on #m3(_Marker_key)', None)
+db.sql('create index idx2 on #m3(symbol)', None)
 
 # select distinct marker, GO ID, evidence code from set 1 annotations
 # we're doing this because for a given marker/go ID we only want to print
@@ -231,11 +225,9 @@ for r in results:
 ## Report D
 
 # select all records from set 2 which have multiple annotations to the same GO term
-cmds = []
-cmds.append('select * into #m4 from #m2 group by _Marker_key, goID having count(*) > 1')
-cmds.append('create index idx1 on #m4(_Marker_key)')
-cmds.append('create index idx2 on #m4(symbol)')
-db.sql(cmds, None)
+db.sql('select * into #m4 from #m2 group by _Marker_key, goID having count(*) > 1', None)
+db.sql('create index idx1 on #m4(_Marker_key)', None)
+db.sql('create index idx2 on #m4(symbol)', None)
 
 # select distinct marker, GO ID, evidence code from set 2 annotations
 results = db.sql('select distinct _Marker_key, goID, evidenceCode from #m4', 'auto')

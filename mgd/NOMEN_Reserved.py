@@ -47,8 +47,6 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
-cmds = []
-
 db.sql('select m._Nomen_key, m.symbol, m.name, m.statusNote, mgiID = a.accID, ' + \
 	'cdate = convert(char(10), m.creation_date, 101) ' + \
 	'into #nomen ' + \

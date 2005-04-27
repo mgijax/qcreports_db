@@ -95,11 +95,9 @@ for r in results:
 
 ##
 
-cmds = []
-
 # select all genes
 
-cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
+db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 	'into #markers ' + \
 	'from MRK_Marker m, ACC_Accession a ' + \
 	'where m._Marker_Type_key = 1 ' + \
@@ -108,18 +106,14 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericP
 	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1')
-
-cmds.append('create nonclustered index index_marker_key on #markers(_Marker_key)')
-db.sql(cmds, None)
+	'and a.preferred = 1', None)
+db.sql('create nonclustered index index_marker_key on #markers(_Marker_key)', None)
 
 ##
 
-cmds = []
-
 # select all genes with references selected for GO
 
-cmds.append('select distinct m.*, r._Refs_key, r.jnumID ' + \
+db.sql('select distinct m.*, r._Refs_key, r.jnumID ' + \
 	'into #references ' + \
 	'from #markers m , MRK_Reference_View r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where m._Marker_key = r._Marker_key ' + \
@@ -127,10 +121,8 @@ cmds.append('select distinct m.*, r._Refs_key, r.jnumID ' + \
 	'and b._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Gene Ontology" ' + \
-	'and ba.isNeverUsed = 0')
-
-cmds.append('create nonclustered index index_refs_key on #references(_Refs_key)')
-db.sql(cmds, None)
+	'and ba.isNeverUsed = 0', None)
+db.sql('create nonclustered index index_refs_key on #references(_Refs_key)', None)
 
 # select PubMed IDs for references
 

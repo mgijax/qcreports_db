@@ -53,9 +53,7 @@ fp.write(50 * '-' + '  ')
 fp.write(10 * '-' + '  ')
 fp.write(30 * '-' + CRT)
 
-cmds = []
-
-cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
+db.sql('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'into #markers ' + \
 	'from MRK_Marker m, MRK_Status s ' + \
 	'where m._Organism_key = 1 ' + \
@@ -76,11 +74,9 @@ cmds.append('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'and h1._Class_key = h2._Class_key ' + \
 	'and h2._Homology_key = hm2._Homology_key ' + \
 	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 2)')
-
-cmds.append('create index idx1 on #markers(_Marker_key)')
-cmds.append('create index idx2 on #markers(symbol)')
-db.sql(cmds, None)
+	'and m2._Organism_key = 2)', None)
+db.sql('create index idx1 on #markers(_Marker_key)', None)
+db.sql('create index idx2 on #markers(symbol)', None)
 
 results = db.sql('select m._Marker_key, a.accID ' + 
 	'from #markers m, ACC_Accession a ' + \

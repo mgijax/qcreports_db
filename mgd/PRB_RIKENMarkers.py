@@ -46,15 +46,13 @@ fp.write('GenBank ID' + reportlib.CRT)
 
 # Get all RIKEN Clones w/ Marker relationships
 
-cmds = []
-cmds.append('select pm._Probe_key, pm._Marker_key, pm.relationship ' + \
+db.sql('select pm._Probe_key, pm._Marker_key, pm.relationship ' + \
 	'into #riken ' + \
 	'from PRB_Probe p, PRB_Marker pm ' + \
 	'where p.name like "RIKEN%" ' + \
-	'and p._Probe_key = pm._Probe_key')
-cmds.append('create index idx1 on #riken(_Probe_key)')
-cmds.append('create index idx2 on #riken(relationship)')
-db.sql(cmds, None)
+	'and p._Probe_key = pm._Probe_key', None)
+db.sql('create index idx1 on #riken(_Probe_key)', None)
+db.sql('create index idx2 on #riken(relationship)', None)
 
 # Get GenBank IDs
 results = db.sql('select r._Probe_key, a.accID ' + \
@@ -72,8 +70,7 @@ for r in results:
 
 # Get RIKEN Ids (26) and Marker Ids
 
-cmds = []
-cmds.append('select r._Probe_key, r.relationship, a1.accID, markerID = a2.accID ' + \
+db.sql('select r._Probe_key, r.relationship, a1.accID, markerID = a2.accID ' + \
 	'into #riken2 ' + \
 	'from #riken r, ACC_Accession a1, ACC_Accession a2 ' + \
 	'where r._Probe_key = a1._Object_key ' + \
@@ -83,10 +80,9 @@ cmds.append('select r._Probe_key, r.relationship, a1.accID, markerID = a2.accID 
 	'and a2._MGIType_key = 2 ' + \
 	'and a2.prefixPart = "MGI:" ' + \
 	'and a2._LogicalDB_key = 1 ' + \
-	'and a2.preferred = 1 ')
-cmds.append('create index idx1 on #riken2(relationship)')
-cmds.append('create index idx2 on #riken2(accID)')
-db.sql(cmds, None)
+	'and a2.preferred = 1 ', None)
+db.sql('create index idx1 on #riken2(relationship)', None)
+db.sql('create index idx2 on #riken2(accID)', None)
 
 # Process results
 

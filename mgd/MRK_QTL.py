@@ -47,11 +47,9 @@ fp.write(reportlib.SPACE)
 fp.write(string.ljust('-------------------', 25))
 fp.write(reportlib.CRT)
 
-cmds = []
-
 # select all QTLs created since March 2002
 # and not MP annotations
-cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
+db.sql('select m._Marker_key, m.symbol, m.mgiID ' + \
 	  'into #markers ' + \
 	  'from MRK_Mouse_View m ' + \
 	  'where m._Marker_Status_key in (1,3) ' + \
@@ -60,42 +58,36 @@ cmds.append('select m._Marker_key, m.symbol, m.mgiID ' + \
 	  'and not exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a ' + \
 	  'where m._Marker_key = g._Marker_key ' + \
 	  'and g._Genotype_key = a._Object_key ' + \
-	  'and a._AnnotType_key = 1002)')
+	  'and a._AnnotType_key = 1002)', None)
+db.sql('create index idx1 on #markers(_Marker_key)', None)
 
 # select all references for the set of markers
-cmds.append('select m._Marker_key, b.accID ' + \
+results = db.sql('select m._Marker_key, b.accID ' + \
 	'from #markers m, MRK_Reference r, ACC_Accession b ' + \
 	'where m._Marker_key = r._Marker_key ' + \
 	'and r._Refs_key = b._Object_key ' + \
 	'and b._MGIType_key = 1 ' + \
 	'and b._LogicalDB_key = 1 ' + \
 	'and b.prefixPart = "J:" ' + \
-	'and b.preferred = 1 ')
-
-cmds.append('select * from #markers order by symbol')
-
-results = db.sql(cmds, 'auto')
-
-# references
+	'and b.preferred = 1 ', 'auto')
 refs = {}
-for r in results[-2]:
+for r in results:
     key = r['_Marker_key']
     value = r['accID']
     if not refs.has_key(key):
 	refs[key] = []
     refs[key].append(value)
 
-rows = 0
-for r in results[-1]:
+results = db.sql('select * from #markers order by symbol', 'auto')
+for r in results:
     fp.write(string.ljust(r['mgiID'], 30))
     fp.write(reportlib.SPACE)
     fp.write(string.ljust(r['symbol'], 50))
     fp.write(reportlib.SPACE)
     fp.write(string.ljust(string.join(refs[r['_Marker_key']], ','), 25))
     fp.write(reportlib.CRT)
-    rows = rows + 1
 
-fp.write('\n(%d rows affected)\n' % (rows))
+fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

@@ -166,8 +166,7 @@ for r in results:
 
 # select markers with GO Associations of evidence IEA only
 
-cmds = []
-cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
+db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 	'into #markers ' + \
 	'from MRK_Marker m, ACC_Accession a ' + \
 	'where m._Marker_Type_key = 1 ' + \
@@ -193,9 +192,8 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericP
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._AnnotType_key = 1000 ' + \
 	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key != 115) ')
-cmds.append('create index idx1 on #markers(_Marker_key)')
-db.sql(cmds, None)
+	'and e._EvidenceTerm_key != 115) ', None)
+db.sql('create index idx1 on #markers(_Marker_key)', None)
 
 # orthologies
 
@@ -226,21 +224,17 @@ for r in results:
 
 ##
 
-cmds = []
-cmds.append('select distinct m.*, r._Refs_key ' + \
+db.sql('select distinct m.*, r._Refs_key ' + \
 	'into #references1 ' + \
 	'from #markers m , MRK_Reference r ' + \
-	'where m._Marker_key = r._Marker_key ')
-cmds.append('create index index_refs_key on #references1(_Refs_key)')
-db.sql(cmds, None)
+	'where m._Marker_key = r._Marker_key ', None)
+db.sql('create index index_refs_key on #references1(_Refs_key)', None)
 
-cmds = []
-cmds.append('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
+db.sql('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
 	'into #references ' + \
 	'from #references1 r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key')
-cmds.append('create index index_refs_key on #references(_Refs_key)')
-db.sql(cmds, None)
+	'where r._Refs_key = b._Refs_key', None)
+db.sql('create index index_refs_key on #references(_Refs_key)', None)
 
 # select PubMed IDs for references
 

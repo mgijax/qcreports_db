@@ -51,41 +51,29 @@ molsegType = 'Molecular Segment'
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
-cmds = []
-cmds.append('select a.accID, a._Object_key ' + \
+db.sql('select a.accID, a._Object_key ' + \
 	'into #mseqIDs ' + \
 	'from ACC_Accession a, MRK_Marker m ' + \
 	'where a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_key in (9,27) ' + \
 	'and a._Object_key = m._Marker_key ' + \
-	'and m._Organism_key = 1')
-cmds.append('create index idx1 on #mseqIDs(accID)')
-cmds.append('create index idx2 on #mseqIDs(_Object_key)')
-db.sql(cmds, None)
+	'and m._Organism_key = 1', None)
+db.sql('create index idx1 on #mseqIDs(accID)', None)
+db.sql('create index idx2 on #mseqIDs(_Object_key)', None)
 
-cmds = []
-cmds.append('select distinct _Object_key ' + \
-	'into #mobjects ' + \
-	'from #mseqIDs ')
-cmds.append('create index idx1 on #mobjects(_Object_key)')
-db.sql(cmds, None)
+db.sql('select distinct _Object_key into #mobjects from #mseqIDs ', None)
+db.sql('create index idx1 on #mobjects(_Object_key)', None)
 
-cmds = []
-cmds.append('select accID, _Object_key ' + \
+db.sql('select accID, _Object_key ' + \
 	'into #pseqIDs ' + \
 	'from ACC_Accession ' + \
 	'where _MGIType_key = 3 ' + \
-	'and _LogicalDB_key in (9,27) ')
-cmds.append('create index idx1 on #pseqIDs(accID)')
-cmds.append('create index idx2 on #pseqIDs(_Object_key)')
-db.sql(cmds, None)
+	'and _LogicalDB_key in (9,27) ', None)
+db.sql('create index idx1 on #pseqIDs(accID)', None)
+db.sql('create index idx2 on #pseqIDs(_Object_key)', None)
 
-cmds = []
-cmds.append('select distinct _Object_key ' + \
-	'into #pobjects ' + \
-	'from #pseqIDs ')
-cmds.append('create index idx1 on #pobjects(_Object_key)')
-db.sql(cmds, None)
+db.sql('select distinct _Object_key into #pobjects from #pseqIDs', None)
+db.sql('create index idx1 on #pobjects(_Object_key)', None)
 
 #
 # select MGI IDs for all Objects

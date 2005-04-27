@@ -53,9 +53,7 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
-cmds = []
-
-cmds.append('select s._Assay_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
+db.sql('select s._Assay_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
     'into #temp ' + \
     'from GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
     'where s._Specimen_key = r._Specimen_key and ' + \
@@ -94,10 +92,9 @@ cmds.append('select s._Assay_key, s.age, label = s.specimenLabel, t.stage, t.dpc
 	  'and g.age not like "%-%" ' + \
 	  'and t.stage = 28 ' + \
 	  'and not exists (select 1 from GXD_StructureName sn ' + \
-	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))')
+	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))', None)
 
-cmds.append('create index idx1 on #temp(_Assay_key)')
-db.sql(cmds, None)
+db.sql('create index idx1 on #temp(_Assay_key)', None)
 
 ##
 

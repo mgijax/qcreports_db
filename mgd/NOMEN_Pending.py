@@ -44,13 +44,11 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
 
-cmds = []
-
 #
 # Get -pending symbols
 #
 
-cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
+db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'n._Nomen_key, createdBy = u.login, modDate = convert(char(10), n.modification_date, 101) ' + \
 'into #pending ' + \
 'from MRK_Marker m, ACC_Accession a, NOM_Marker n, MGI_User u ' + \
@@ -73,97 +71,88 @@ cmds.append('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, ' + \
 'and a.preferred = 1' + \
 'and not exists (select 1 from NOM_Marker n, MGI_User u ' + \
 'where m.symbol = n.symbol ' + \
-'and n._CreatedBy_key = u._User_key)')
-
+'and n._CreatedBy_key = u._User_key)', None)
+db.sql('create index idx1 on #pending(_Marker_key)', None)
 
 #
 # Get PubMed IDs of primary reference
 #
 
-cmds.append('select p._Marker_key, a.accID ' + \
-'from #pending p, ACC_Accession a, MGI_Reference_Nomen_View r ' + \
-'where p._Nomen_key = r._Object_key ' + \
-'and r.assocType = "Primary" ' + \
-'and r._Refs_key = a._Object_key ' + \
-'and a._MGIType_key = 1 ' + \
-'and a._LogicalDB_Key = 29 ')
+pubmedids = {}
+results = db.sql('select p._Marker_key, a.accID ' + \
+	'from #pending p, ACC_Accession a, MGI_Reference_Nomen_View r ' + \
+	'where p._Nomen_key = r._Object_key ' + \
+	'and r.assocType = "Primary" ' + \
+	'and r._Refs_key = a._Object_key ' + \
+	'and a._MGIType_key = 1 ' + \
+	'and a._LogicalDB_Key = 29 ', 'auto')
+for r in results:
+	pubmedids[r['_Marker_key']] = r['accID']
 
 #
 # Get Seq ID
 #
 
-cmds.append('select p._Marker_key, a.accID from #pending p, ACC_Accession a ' + \
-'where p._Marker_key = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_Key = 9 ')
+accids = {}
+results = db.sql('select p._Marker_key, a.accID from #pending p, ACC_Accession a ' + \
+	'where p._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_Key = 9 ', 'auto')
+for r in results:
+	accids[r['_Marker_key']] = r['accID']
 
 #
 # Get Synonyms
 #
 
-cmds.append('select p._Marker_key, s.synonym ' + \
-'from #pending p, MGI_Synonym s, MGI_SynonymType st ' + \
-'where p._Marker_key = s._Object_key ' + \
-'and s._MGIType_key = 2 ' + \
-'and s._SynonymType_key = st._SynonymType_key ' + \
-'and st.synonymType = "exact"')
-
-#
-# Get Human Homologies
-#
-
-cmds.append('select p._Marker_key, hmarkerkey = h.markerKey2, hsymbol = h.marker2 ' + \
-'into #homology ' + \
-'from #pending p, HMD_Homology_Pairs_View h ' + \
-'where p._Marker_key = h.markerkey1 ' + \
-'and h.organismkey2 = 2 ')
-
-cmds.append('select _Marker_key, hsymbol from #homology')
-
-#
-# Get Human Seq IDs
-#
-
-cmds.append('select h._Marker_key, a.accID from #homology h, ACC_Accession a ' + \
-'where h.hmarkerkey = a._Object_key ' + \
-'and a._MGIType_key = 2 ' + \
-'and a._LogicalDB_Key = 9 ')
-
-cmds.append('select * from #pending order by symbol')
-
-results = db.sql(cmds, 'auto')
-
-prevNomen = ''
-accids = {}
-pubmedids = {}
 syns = {}
-homologs = {}
-humanaccids = {}
-
-for r in results[1]:
-	pubmedids[r['_Marker_key']] = r['accID']
-
-for r in results[2]:
-	accids[r['_Marker_key']] = r['accID']
-
-for r in results[3]:
+results = db.sql('select p._Marker_key, s.synonym ' + \
+	'from #pending p, MGI_Synonym s, MGI_SynonymType st ' + \
+	'where p._Marker_key = s._Object_key ' + \
+	'and s._MGIType_key = 2 ' + \
+	'and s._SynonymType_key = st._SynonymType_key ' + \
+	'and st.synonymType = "exact"', 'auto')
+for r in results:
 	if syns.has_key(r['_Marker_key']):
 		syns[r['_Marker_key']].append(r['synonym'])
 	else:
 		syns[r['_Marker_key']] = []
 		syns[r['_Marker_key']].append(r['synonym'])
-	
-for r in results[5]:
+
+#
+# Get Human Homologies
+#
+
+db.sql('select p._Marker_key, hmarkerkey = h.markerKey2, hsymbol = h.marker2 ' + \
+	'into #homology ' + \
+	'from #pending p, HMD_Homology_Pairs_View h ' + \
+	'where p._Marker_key = h.markerkey1 ' + \
+	'and h.organismkey2 = 2 ', None)
+
+homologs = {}
+results = db.sql('select _Marker_key, hsymbol from #homology', 'auto')
+for r in results:
 	homologs[r['_Marker_key']] = r['hsymbol']
 
-for r in results[6]:
+#
+# Get Human Seq IDs
+#
+
+humanaccids = {}
+results = db.sql('select h._Marker_key, a.accID from #homology h, ACC_Accession a ' + \
+	'where h.hmarkerkey = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_Key = 9 ', 'auto')
+for r in results:
 	if humanaccids.has_key(r['_Marker_key']):
 		humanaccids[r['_Marker_key']].append(r['accID'])
 	else:
 		humanaccids[r['_Marker_key']] = []
 		humanaccids[r['_Marker_key']].append(r['accID'])
 
-for r in results[-1]:
+results = db.sql('select * from #pending order by symbol', 'auto')
+
+for r in results:
 
 	fp.write(r['mgiID'] + TAB)
 	fp.write(r['symbol'] + TAB)

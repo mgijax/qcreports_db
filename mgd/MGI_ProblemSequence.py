@@ -52,24 +52,18 @@ import reportlib
 
 fp = reportlib.init(sys.argv[0], title = "Molecular Segment with the Problem Sequence Note associated with more than one GenBank Seqid or associated with no GenBank ID", outputdir = os.environ['QCOUTPUTDIR'])
 
-cmds = []
-
 # Select probes w/ problem note
-cmds.append('select _Probe_key ' + \
+db.sql('select _Probe_key ' + \
       'into #probes ' + \
       'from PRB_Notes ' + \
-      'where note like "%staff have found evidence of artifact in the sequence of this molecular%"')
-
-cmds.append('create index idx1 on #probes(_Probe_key)')
-db.sql(cmds, None)
+      'where note like "%staff have found evidence of artifact in the sequence of this molecular%"', None)
+db.sql('create index idx1 on #probes(_Probe_key)', None)
 
 ##
 
-cmds = []
-
 # Select probes w/ Seq IDs
 
-cmds.append('select distinct p._Probe_key, a.accID ' + \
+db.sql('select distinct p._Probe_key, a.accID ' + \
 	'into #probeseqs ' + \
 	'from #probes p, ACC_Accession a ' + \
 	'where p._Probe_key = a._Object_key  ' + \
@@ -78,9 +72,8 @@ cmds.append('select distinct p._Probe_key, a.accID ' + \
 
 # Select probes with more than one Seq ID
 
-cmds.append('select _Probe_key into #formgi from #probeseqs group by accID having count(*) > 1')
-cmds.append('create index idx1 on #formgi(_Probe_key)')
-db.sql(cmds, None)
+db.sql('select _Probe_key into #formgi from #probeseqs group by accID having count(*) > 1', None)
+db.sql('create index idx1 on #formgi(_Probe_key)', None)
 
 # Store Seq IDs for probes
 
