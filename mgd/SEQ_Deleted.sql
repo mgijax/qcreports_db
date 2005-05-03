@@ -32,6 +32,7 @@ and ma._Object_key = ma2._Object_key
 and ma2._MGIType_key = 2
 and ma2._LogicalDB_key = 1
 and ma2.prefixPart = 'MGI:'
+and ma2.preferred = 1
 and ma._Object_key = m._Marker_key 
 go
 
@@ -48,6 +49,7 @@ and pa._Object_key = pa2._Object_key
 and pa2._MGIType_key = 3
 and pa2._LogicalDB_key = 1
 and pa2.prefixPart = 'MGI:'
+and pa2.preferred = 1
 and pa._Object_key = p._Probe_key
 go
 
@@ -61,9 +63,7 @@ print ""
 print "    Deleted Sequences with MGI Associations"
 print ""
 print "A row in this report represents a Sequence that is designated as Deleted"
-print "by the Sequence provider but that cannot be deleted from MGI by the"
-print "automated process because it contains associations to Marker and/or"
-print "Molecular Segments."
+print "by the Sequence provider and contains associations to Marker and/or Molecular Segment."
 print ""
 
 select seqID, mgiID, name from #mdeleted
