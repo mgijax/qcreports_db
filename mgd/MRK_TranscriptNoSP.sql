@@ -129,7 +129,7 @@ print ""
 print "MGI genes that have Transcript Sequences but no SwissProt association"
 print ""
 
-select f.accID, f.symbol, f.chromosome, f.rnas, f.rnaseq "Refseq or Longest RNA"
+select f.accID, f.symbol, f.chromosome, convert(char(5), f.rnas) "rnas", f.rnaseq "Refseq or Longest RNA"
 from #final2 f
 order by f.sequenceNum
 go
