@@ -1,3 +1,11 @@
+TAG:  qcreports_db-3-2-0-5
+DATE: 05/10/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) TR 6774 (GXD_Stats.py)
+2) TR 6413 (MRK_TranscriptNoSP.sql)
+
 TAG:  qcreports_db-3-2-0-4
 DATE: 05/05/2005
 STAFF: lec
