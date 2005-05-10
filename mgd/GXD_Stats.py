@@ -440,6 +440,29 @@ def withImages():
     for r in results:
         fp.write('Number of full coded papers with Images:  ' + str(r['acount']) + CRT)
 
+    db.sql('select distinct ip._ImagePane_key ' + \
+	   'into #imagepanes ' + \
+	   'from IMG_ImagePane ip, IMG_Image i, GXD_Assay a ' + \
+	   'where ip._Image_key = i._Image_key ' + \
+	   'and xDim != null ' + \
+	   'and yDim != null ' + \
+	   'and ip._ImagePane_key = a._ImagePane_key ' + \
+	   'union  ' + \
+	   'select distinct ip._ImagePane_key ' + \
+	   'from IMG_ImagePane ip, IMG_Image i, GXD_InSituResultImage isri, GXD_InSituResult isr,  ' + \
+	   'GXD_Specimen s, GXD_Assay a ' + \
+	   'where ip._Image_key = i._Image_key ' + \
+	   'and xDim != null ' + \
+	   'and yDim != null ' + \
+	   'and ip._ImagePane_key = isri._ImagePane_key ' + \
+	   'and isri._Result_key = isr._Result_key ' + \
+	   'and isr._Specimen_key = s._Specimen_key ' + \
+	   'and s._Assay_key = a._Assay_key', None)
+
+    results = db.sql('select acount = count(distinct _ImagePane_key) from #imagepanes', 'auto')
+    for r in results:
+        fp.write('Number of Image Panes:  ' + str(r['acount']) + CRT)
+
 def monthlyCounts():
 
     #
