@@ -83,44 +83,71 @@ db.set_sqlDatabase(mgdDB)
 cmd = []
 cmd.append('select q._QCRecord_key, ' + \
                   'q.tgtAccID "tgtAccID", db1.name "tgtLogicalDB", ' + \
-                  'a1.accID "tgtMGIID", m1.name "tgtMGIType", ' + \
+                  'm1.name "tgtMGIType", ' + \
                   'q.accID "accID", db2.name "logicalDB", ' + \
-                  'a2.accID "mgiID", m2.name "mgiType", ' + \
+                  'm2.name "mgiType", ' + \
                   'q.message ' + \
            'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
-                'ACC_Accession a1, ' + \
-                'ACC_Accession a2, ' + \
                 'ACC_LogicalDB db1, ' + \
                 'ACC_LogicalDB db2, ' + \
                 'ACC_MGIType m1, ' + \
                 'ACC_MGIType m2 ' + \
            'where q._TgtLogicalDB_key = db1._LogicalDB_key and ' + \
-                 'q._TgtMGIType_key = a1._MGIType_key and ' + \
-                 'q._TgtObject_key = a1._Object_key and ' + \
-                 'a1._LogicalDB_key = 1 and ' + \
-                 'a1.preferred = 1 and ' + \
                  'q._TgtMGIType_key = m1._MGIType_key and ' + \
                  'q._LogicalDB_key = db2._LogicalDB_key and ' + \
-                 'q._MGIType_key = a2._MGIType_key and ' + \
-                 'q._Object_key = a2._Object_key and ' + \
-                 'a2._LogicalDB_key = 1 and ' + \
-                 'a2.preferred = 1 and ' + \
                  'q._MGIType_key = m2._MGIType_key and ' + \
                  'q._JobStream_key = ' + jobKey + ' ' + \
            'order by q.tgtAccID, db1.name')
 
+cmd.append('select q._QCRecord_key, a.accID "mgiID" ' + \
+           'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
+                'ACC_Accession a ' + \
+           'where q._TgtMGIType_key = a._MGIType_key and ' + \
+                 'q._TgtObject_key = a._Object_key and ' + \
+                 'a._LogicalDB_key = 1 and ' + \
+                 'a.preferred = 1 and ' + \
+                 'q._JobStream_key = ' + jobKey)
+
+cmd.append('select q._QCRecord_key, a.accID "mgiID" ' + \
+           'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
+                'ACC_Accession a ' + \
+           'where q._MGIType_key = a._MGIType_key and ' + \
+                 'q._Object_key = a._Object_key and ' + \
+                 'a._LogicalDB_key = 1 and ' + \
+                 'a.preferred = 1 and ' + \
+                 'q._JobStream_key = ' + jobKey)
+
 results = db.sql(cmd, 'auto')
 
+tgtObjs = {}
+for r in results[1]:
+    tgtObjs[r['_QCRecord_key']] = r['mgiID']
+
+assocObjs = {}
+for r in results[2]:
+    assocObjs[r['_QCRecord_key']] = r['mgiID']
+
 for r in results[0]:
+    key = r['_QCRecord_key']
     tgtAccID = r['tgtAccID']
     tgtLogicalDB = r['tgtLogicalDB']
-    tgtMGIID = r['tgtMGIID']
     tgtMGIType = r['tgtMGIType']
     accID = r['accID']
     logicalDB = r['logicalDB']
-    mgiID = r['mgiID']
     mgiType = r['mgiType']
     message = r['message']
+
+#    tgtMGIID = tgtObjs.get(key,' ')
+#    mgiID = assocObjs.get(key,' ')
+
+    if tgtObjs.has_key(key):
+        tgtMGIID = tgtObjs[key]
+    else:
+        tgtMGIID = ' '
+    if assocObjs.has_key(key):
+        mgiID = assocObjs[key]
+    else:
+        mgiID = ' '
 
     fp.write("%-20s %-20s %-20s %-20s %-20s %-20s %-20s %-20s %-60s" %
             (tgtAccID, tgtLogicalDB, tgtMGIID, tgtMGIType,
