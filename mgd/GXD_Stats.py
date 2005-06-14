@@ -665,6 +665,9 @@ def monthlyCounts():
     prevAssay = ''
     for r in results:
 
+	if r['assayType'] == 'Protein histochemistry':
+	    continue
+
 	if len(prevAssay) > 0 and prevAssay != r['assayType']:
 	    fp.write(CRT + 'Total Assays: ' + str(asummary[prevAssay]) + CRT)
 	    fp.write('Total Results: ' + str(rsummary[prevAssay]) + CRT)
