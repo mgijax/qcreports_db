@@ -465,6 +465,8 @@ def withImages():
 
 def monthlyCounts():
 
+    # exclude counts for assay type 'protein histochemistry'
+
     #
     # Gene and Result counts by monthly period from startYear to endYear
     #
@@ -476,6 +478,7 @@ def monthlyCounts():
 	'refs  = count (distinct a._Refs_key)' + \
     	'into #assayGenes ' + \
         'from GXD_Assay a ' + \
+	'where a._AssayType_key != 7 ' + \
         'group by datepart(year, a.creation_date), datepart(month, a.creation_date)', None)
 
     db.sql('create index idx1 on #assayGenes(year)', None)
@@ -490,6 +493,7 @@ def monthlyCounts():
 	'assays = count(*) ' + \
 	'into #assays ' + \
 	'from GXD_Assay a ' + \
+	'where a._AssayType_key != 7 ' + \
 	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
 
     db.sql('create index idx1 on #assays(year)', None)
@@ -523,7 +527,8 @@ def monthlyCounts():
 	'results = count(*) ' + \
 	'into #insituresults ' + \
 	'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure rs ' + \
-	'where a._Assay_key = s._Assay_key ' + \
+	'where a._AssayType_key != 7 ' + \
+	'and a._Assay_key = s._Assay_key ' + \
 	'and s._Specimen_key = r._Specimen_key ' + \
 	'and r._Result_key = rs._Result_key ' + \
 	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
@@ -546,7 +551,7 @@ def monthlyCounts():
     db.sql('select p.year, p.month, t._AssayType_key, assayType = substring(t.assayType,1,25), ' + \
 	'assays = 0, results = 0 ' + \
 	'into #periodCounts ' +  \
-	'from #periods p, GXD_AssayType t where t._AssayType_key > 0', None)
+	'from #periods p, GXD_AssayType t where t._AssayType_key > 0 and t._AssayType_key != 7', None)
 
     # update the Assay count
 
@@ -664,9 +669,6 @@ def monthlyCounts():
 
     prevAssay = ''
     for r in results:
-
-	if r['assayType'] == 'Protein histochemistry':
-	    continue
 
 	if len(prevAssay) > 0 and prevAssay != r['assayType']:
 	    fp.write(CRT + 'Total Assays: ' + str(asummary[prevAssay]) + CRT)
