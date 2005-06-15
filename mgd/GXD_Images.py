@@ -64,7 +64,7 @@ cmd = 'select b.jnumID ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
 	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
-            'a._AssayType_key not in (1, 5, 7) and ' + \
+            'a._AssayType_key not in (1, 5) and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'union ' + \
