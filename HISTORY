@@ -1,9 +1,11 @@
+TAG:  qcreports_db-3-2-0-9
 TAG:  qcreports_db-3-2-0-8
 DATE: 06/28/2005
 STAFF: lec
 RELEASE: A
 CHANGES: 
 1) TR 6946; removed GXD_SpecMissingAllele.sql
+2) TR 6947
 
 TAG:  qcreports_db-BP-omim
 DATE: 06/28/2005
