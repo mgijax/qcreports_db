@@ -1,3 +1,11 @@
+TAG:  qcreports_db-3-2-2-1
+DATE: 07/01/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) fixd GXD_DupGenotype.py
+2) TR 6947
+
 TAG:  qcreports_db-3-2-0-9
 TAG:  qcreports_db-3-2-0-8
 DATE: 06/28/2005
