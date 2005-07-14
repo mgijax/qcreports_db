@@ -46,6 +46,7 @@ fp.write(string.ljust('-------------  ', 20))
 fp.write(SPACE)
 fp.write(CRT)
 
+#
 # exclude any paper that contains an index stage E or A for the following assay:
 # 	in situ protein (section)
 #	in situ RNA (section)
@@ -59,25 +60,39 @@ fp.write(CRT)
 #	RT-PCR
 #	RNase protection
 #	nuclease S1
-# 
-# exclude any paper that has the following assay:
-# 	cDNA clones 
-#	primer extension
 
 db.sql('select distinct gi._Refs_key ' + \
-	'into #refsexcluded ' + \
+	'into #recsexcluded ' + \
 	'from GXD_Index gi, GXD_Index_Stages gs ' + \
 	'where gi._Index_key = gs._Index_key ' + \
 	'and ((gs._IndexAssay_key in (74717, 74718, 74719, 74720, 74721) and gs._StageID_key in (74769, 74770)) ' + \
-	'or  (gs._IndexAssay_key in (74722, 74723, 74724, 74726, 74727) and gs._StageID_key = 74769) ' + \
-	'or  (gs._IndexAssay_key in (74725, 74728)))', None)
+	'or  (gs._IndexAssay_key in (74722, 74723, 74724, 74726, 74727) and gs._StageID_key = 74769)) ', None)
 
-db.sql('create index idx1 on #refsexcluded(_Refs_key)', None)
+# 
+# exclude any paper that *only* has the following assay:
+# 	cDNA clones 
+#	primer extension
+
+db.sql('insert into #recsexcluded ' + \
+	'select distinct gi._Refs_key ' + \
+	'from GXD_Index gi, GXD_Index_Stages gs  ' + \
+	'where gi._Index_key = gs._Index_key ' + \
+	'and gs._IndexAssay_key in (74725, 74728) ' + \
+	'and not exists (select 1 from GXD_Index_Stages gs2 ' + \
+	'where gi._Index_key = gs2._Index_key ' + \
+	'and gs2._IndexAssay_key not in (74725, 74728))', None)
+
+db.sql('create index idx1 on #recsexcluded(_Refs_key)', None)
+
+#
+# markers/papers where the paper is not excluded and
+# the marker does not have *any* coded papers.
+#
 
 db.sql('select distinct g._Marker_key, g._Refs_key ' + \
 	'into #refscodeable ' + \
 	'from GXD_Index g ' + \
-	'where not exists (select 1 from #refsexcluded r where r._Refs_key = g._Refs_key) ' + \
+	'where not exists (select 1 from #recsexcluded r where r._Refs_key = g._Refs_key) ' + \
 	'and not exists (select 1 from GXD_Assay a where a._Marker_key = g._Marker_key) ', None)
 
 db.sql('create index idx1 on #refscodeable(_Marker_key)', None)
@@ -94,6 +109,10 @@ db.sql('select g._Marker_key, ref_count = count(*) ' + \
 
 db.sql('create index idx1 on #refsall(_Marker_key)', None)
 
+#
+# resolve jnum
+#
+
 results = db.sql('select distinct r._Marker_key, a.accID from #refscodeable r, ACC_Accession a ' + \
 	'where r._Refs_key = a._Object_key ' + \
 	'and a._MGIType_key = 1 ' + \
@@ -108,6 +127,10 @@ for r in results:
 	jnums[key] = []
     jnums[key].append(value)
 
+#
+# process results
+#
+
 results = db.sql('select a._Marker_key, m.symbol, a.ref_count ' + \
 	'from #refsall a, MRK_Marker m ' + \
 	'where a._Marker_key = m._Marker_key ' + \
@@ -119,7 +142,7 @@ for r in results:
     fp.write(SPACE)
     fp.write(string.ljust(str(r['ref_count']), 20))
     fp.write(SPACE)
-    fp.write(string.join(jnums[r['_Marker_key']], ','))
+    fp.write(string.join(jnums[r['_Marker_key']], ' '))
     fp.write(CRT)
 	
 fp.write('\n(%d rows affected)\n' % (len(results)))
