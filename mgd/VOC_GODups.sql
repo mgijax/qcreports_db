@@ -16,7 +16,7 @@ group by _Term_key, _Object_key, isNot, _EvidenceTerm_key, _Refs_key
 having count(*) > 1
 go
 
-select nocount off
+set nocount off
 go
 
 print ""
