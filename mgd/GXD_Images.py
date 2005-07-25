@@ -56,8 +56,9 @@ for j in journals:
     fp.write(2*TAB + j + CRT)
 fp.write(CRT)
 
-cmd = 'select b.jnumID ' + \
-      'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \
+db.sql('select distinct a._Refs_key ' + \
+      'into #refs ' + \
+      'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
            'IMG_Image i, IMG_ImagePane p ' + \
       'where a._ImagePane_key = p._ImagePane_key and ' + \
             'p._Image_key = i._Image_key and ' + \
@@ -68,8 +69,8 @@ cmd = 'select b.jnumID ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'union ' + \
-      'select b.jnumID ' + \
-      'from GXD_Assay a, BIB_All_View b, ACC_Accession ac, ' + \
+      'select distinct a._Refs_key ' + \
+      'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
            'GXD_Specimen g, GXD_ISResultImage_View r ' + \
       'where g._Assay_key = a._Assay_key and ' + \
             'g._Specimen_key = r._Specimen_key and ' + \
@@ -77,13 +78,16 @@ cmd = 'select b.jnumID ' + \
             'a._Refs_key = b._Refs_key and ' + \
 	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
             'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ' + \
-      'order by b.jnumID'
+            'ac._MGIType_key = 8 ', None)
 
-results = db.sql(cmd, 'auto')
+db.sql('create index idx1 on #refs(_Refs_key)', None)
+
+results = db.sql('select b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
+	'where r._Refs_key = b._Refs_key ' + \
+        'order by b.jnumID', 'auto')
 
 for r in results:
-	fp.write(r['jnumID'] + CRT)
+	fp.write(r['jnumID'] + TAB + r['short_citation'] + CRT)
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
 
