@@ -39,7 +39,7 @@ echo $i, `date`
 end
 
 cd $QCOUTPUTDIR
-foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt HMD_SymbolDiffs2.sql.rpt)
+foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt HMD_SymbolDiffs2.rpt)
 rcp $i $HUGOWEBDIR
 rcp $i $HUGOFTPDIR
 end
