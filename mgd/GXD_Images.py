@@ -55,6 +55,8 @@ fp.write(TAB + 'Journals Checked:' + CRT)
 for j in journals:
     fp.write(2*TAB + j + CRT)
 fp.write(CRT)
+fp.write(TAB + 'J#' + TAB + 'short_citation' + CRT)
+fp.write(TAB + '--' + TAB + '--------------' + CRT)
 
 db.sql('select distinct a._Refs_key ' + \
       'into #refs ' + \
@@ -87,7 +89,7 @@ results = db.sql('select b.jnumID, b.short_citation from #refs r, BIB_All_View b
         'order by b.jnumID', 'auto')
 
 for r in results:
-	fp.write(r['jnumID'] + TAB + r['short_citation'] + CRT)
+	fp.write(TAB + r['jnumID'] + TAB + r['short_citation'] + CRT)
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
 
