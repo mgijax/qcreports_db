@@ -55,8 +55,12 @@ fp.write(TAB + 'Journals Checked:' + CRT)
 for j in journals:
     fp.write(2*TAB + j + CRT)
 fp.write(CRT)
-fp.write(TAB + 'J#' + TAB + 'short_citation' + CRT)
-fp.write(TAB + '--' + TAB + '--------------' + CRT)
+fp.write(TAB + string.ljust('J#', 12))
+fp.write(string.ljust('short_citation', 75))
+fp.write(string.ljust('figure labels', 50) + CRT)
+fp.write(TAB + string.ljust('--', 12))
+fp.write(string.ljust('--------------', 75))
+fp.write(string.ljust('-------------', 50) + CRT)
 
 db.sql('select distinct a._Refs_key ' + \
       'into #refs ' + \
@@ -84,12 +88,25 @@ db.sql('select distinct a._Refs_key ' + \
 
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
-results = db.sql('select b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
+results = db.sql('select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel) ' + \
+	'from #refs r, IMG_Image i ' + \
+	'where r._Refs_key = i._Refs_key', 'auto')
+fLabels = {}
+for r in results:
+    key = r['_Refs_key']
+    value = r['figureLabel']
+    if not fLabels.has_key(key):
+	fLabels[key] = []
+    fLabels[key].append(value)
+
+results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
 	'where r._Refs_key = b._Refs_key ' + \
         'order by b.jnumID', 'auto')
 
 for r in results:
-	fp.write(TAB + r['jnumID'] + TAB + r['short_citation'] + CRT)
+    fp.write(TAB + string.ljust(r['jnumID'], 12))
+    fp.write(string.ljust(r['short_citation'], 75))
+    fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
 
