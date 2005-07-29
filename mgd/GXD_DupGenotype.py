@@ -142,8 +142,11 @@ def formatOutput( genoTypeSet ):
     #
     alleles = genoTypeSet['geno1']['alleles']
     for allelepair in alleles:
-        cmd = 'select symbol from ALL_Allele where _Allele_key ' +\
-              'in (' + str(allelepair[0]) + ', ' + str(allelepair[1]) + ')'
+        cmd = 'select symbol from ALL_Allele where _Allele_key in ('
+	
+	if allelepair[0] != None:
+	    cmd = cmd + str(allelepair[0]) + ','
+	cmd = cmd + str(allelepair[1]) + ')'
         results = db.sql(cmd, 'auto')
 
         output = output + head
@@ -194,8 +197,7 @@ cmds.append('select g1._Genotype_key as geno1, ' +
             'where ap._Genotype_key = g2._Genotype_key)')
 
 #
-#  Now add entries that have the allele pairs transposed, but still
-#  match.
+#  Now add entries that have the allele pairs transposed, but still match.
 #
 cmds.append('insert #pairs ' +
             'select g1._Genotype_key as geno1, ' +
@@ -217,7 +219,6 @@ cmds.append('insert #pairs ' +
             '(select count(distinct _AllelePair_key) ' +
             'from GXD_AllelePair ap ' +
             'where ap._Genotype_key = g2._Genotype_key)')
-
 
 #
 #  We now pull the genotype pair, associated strain, and a count of the number
@@ -280,12 +281,8 @@ for key in genoDict.keys():
     geno1Alleles = geno1['alleles']
     geno2Alleles = geno2['alleles']
     cmds = []
-    cmds.append('select _Allele_key_1, _Allele_key_2 ' +
-                'from GXD_AllelePair ' +
-                'where _GenoType_key = ' + str(geno1['key']))
-    cmds.append('select _Allele_key_1, _Allele_key_2 ' +
-                'from GXD_AllelePair ' +
-                'where _GenoType_key = ' + str(geno2['key']))
+    cmds.append('select _Allele_key_1, _Allele_key_2 from GXD_AllelePair where _GenoType_key = ' + str(geno1['key']))
+    cmds.append('select _Allele_key_1, _Allele_key_2 from GXD_AllelePair where _GenoType_key = ' + str(geno2['key']))
     results = db.sql(cmds, 'auto')
 
     #
@@ -312,8 +309,7 @@ for key in genoDict.keys():
 rows = 0
 for key in genoDict.keys():
     genotypeSet = genoDict[key]
-    if (genoTypeCompare(genotypeSet['geno1'], genotypeSet['geno2'],
-                        genotypeSet['numPairs'])):
+    if (genoTypeCompare(genotypeSet['geno1'], genotypeSet['geno2'], genotypeSet['numPairs'])):
         fp.write(formatOutput(genotypeSet))
 	rows = rows + 1
     else:
