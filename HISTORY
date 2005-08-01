@@ -1,9 +1,11 @@
+TAG:  qcreports_db-3-2-2-6
 TAG:  qcreports_db-3-2-2-5
 DATE: 08/01/2005
 STAFF: lec
 RELEASE: A
 CHANGES: 
 1) TR 6942/GO_gp2protein.py
+2) added VOC_MPDups.sql
 
 TAG:  qcreports_db-3-2-2-4
 DATE: 07/29/2005
