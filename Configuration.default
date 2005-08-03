@@ -37,6 +37,9 @@ setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 setenv HUGOWEBDIR		gondor:/usr/local/mgi/private/www/hugo
 setenv HUGOFTPDIR		gondor:/export/gondor/ftp/private/hes
 
+# HUGO FASTA NOMEN DB File
+setenv HUGOFASTANOMENFASTA      hobbiton:/data/seqdbs/blast/gb/gbmusnomen
+
 # RIKEN FTP report directory
 setenv RIKENFTPDIR              gondor:/export/gondor/ftp/private/riken
 
