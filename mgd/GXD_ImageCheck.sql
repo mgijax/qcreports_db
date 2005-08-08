@@ -11,12 +11,13 @@ order by i.jnum
 go
 
 print ""
-print "GXD Images with Copyright containing '*'"
+print "GXD Images with Copyright containing '*' or '(||)'"
 print ""
 
 select distinct i.jnumID + ";" + i.figureLabel
 from IMG_Image_View i
 where i.copyrightNote like "%*%"
+or i.copyrightNote like "%(||)%"
 order by i.jnum
 go
 
