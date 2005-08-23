@@ -1,3 +1,9 @@
+TAG:  qcreports_db-3-3-0-1
+DATE: 08/23/2005
+STAFF: lec
+RELEASE: A
+1) OMIM branch merge
+
 TAG:  qcreports_db-3-2-2-11
 DATE: 08/11/2005
 STAFF: mbw
@@ -84,6 +90,13 @@ RELEASE: A
 CHANGES: 
 1) TR 6946; removed GXD_SpecMissingAllele.sql
 2) TR 6947
+
+TAG:  qcreports_db-omim-1
+DATE: 08/09/2005
+STAFF: lec
+RELEASE: A
+CHANGES: 
+1) OMIM
 
 TAG:  qcreports_db-BP-omim
 DATE: 06/28/2005

@@ -55,9 +55,8 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 
 db.sql('select s._Sequence_key, s._Marker_key ' + \
 	'into #seqMarker1 ' + \
-	'from SEQ_Marker_Cache s, SEQ_Sequence ss ' + \
-	'where s._Sequence_key = ss._Sequence_key ' + \
-	'and ss._SequenceProvider_key not in (316372, 316382, 316381, 316383)', None)
+	'from SEQ_Marker_Cache s ' + \
+	'where s._SequenceProvider_key not in (316372, 316382, 316381, 316383)', None)
 
 db.sql('create index idx_key1 on #seqMarker1(_Sequence_key)', None)
 db.sql('create index idx_key2 on #seqMarker1(_Marker_key)', None)
