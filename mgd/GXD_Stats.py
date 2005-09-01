@@ -310,7 +310,7 @@ def fullCoded():
     #  J:91257 Gray 37841 results in 2769 assays
 
     # _Refs_key for all electronic references
-    electronic = "(46734,81462,81463,86101,92242)"
+    electronic = "(46734,81462,81463,86101,92242,10070)"
 
     db.sql('select _Assay_key, _Refs_key, _Marker_key, source = "E" into #gxd ' + \
 	'from GXD_Expression where _Refs_key in %s' % (electronic), None)
