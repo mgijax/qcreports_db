@@ -5,7 +5,8 @@ go
 select s._Sequence_key, s._Marker_key, c.provider
 into #coord
 from SEQ_Marker_Cache s, SEQ_Coord_Cache c
-where s._Sequence_key = c._Sequence_key
+where s._Organism_key = 1
+and s._Sequence_key = c._Sequence_key
 and c.provider in ('NCBI Gene Model', 'Ensembl Gene Model')
 go
 
