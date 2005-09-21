@@ -114,12 +114,12 @@ def runQueries(includeRiken):
 
     db.sql('select h.*, hstatus = e.status ' + \
 	'into #results ' + \
-        'from #homology h, radar_2..DP_EntrezGene_Info e ' + \
+        'from #homology h, radar..DP_EntrezGene_Info e ' + \
         'where h.hsymbol = e.symbol and e.taxID = 9606 ' + \
         'union ' + \
         'select h.*, hstatus = "?" ' + \
         'from #homology h ' + \
-        'where not exists (select 1 from radar_2..DP_EntrezGene_Info e ' + \
+        'where not exists (select 1 from radar..DP_EntrezGene_Info e ' + \
         'where h.hsymbol = e.symbol and e.taxID = 9606) ', None)
 
 def report1(fp, includeRiken = 0):
