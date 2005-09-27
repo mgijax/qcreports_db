@@ -32,7 +32,7 @@ set nocount off
 go
 
 print ""
-print "Private Strains Referenced By Other Database Objects"
+print "Private Strains Referenced by other Database Objects"
 print ""
 
 select a.accID, s.strain, mgiObject = 'Sequence'
