@@ -1,8 +1,10 @@
+TAG:  qcreports_db-3-3-0-3
 TAG:  qcreports_db-3-3-0-2
 DATE: 09/27/2005
 STAFF: lec
 CHANGES:
 1) goStats.sh; added Fantom3
+2) added PRB_Strain_PrivateRef.sql
 
 TAG:  qcreports_db-pirsfload-BP
 DATE: 09/17/2005
