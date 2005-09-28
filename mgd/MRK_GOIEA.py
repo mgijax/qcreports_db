@@ -55,8 +55,33 @@
 #		symbol
 #		name
 #
+#	Report 2E (TR 7125)
+#	Title = Genes that have OMIM annotations and either no GO annotations or only IEA GO annotations
+#    	Select markers of type 'gene'
+#               where the marker has 'OMIM' associations
+#               where the marker has 'GO' association w/ IEA only or no GO annotations
+#
+#       Report in a tab delimited file with the following columns:
+#
+#    		MGI:ID
+#    		symbol
+#    		GO ("no" if no GO, "yes" if IEA)
 #	Sort by:
-#		MGI:ID
+#		symbol
+#
+#	Report 2F (TR 7125)
+#	Title = Genes that have Alleles and either no GO annotations or only IEA GO annotations
+#    	Select markers of type 'gene'
+#               where the marker has Alleles
+#               where the marker has 'GO' association w/ IEA only or no GO annotations
+#
+#       Report in a tab delimited file with the following columns:
+#
+#    		MGI:ID
+#    		symbol
+#    		GO ("no" if no GO, "yes" if IEA)
+#	Sort by:
+#		symbol
 #
 # Usage:
 #       MRK_GOIEA.py
@@ -70,6 +95,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	09/28/2005
+#	- TR 7125; added Report 2E
 #
 # lec	02/23/2004
 #	- exclude Gene Model markers, DNA Segments (already excluded), Pseudogenes (already excluded),
@@ -127,6 +155,12 @@ def writeRecordD(fp, r):
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
 
+def writeRecordEF(fp, r):
+
+	fp.write(r['mgiID'] + TAB + \
+	         r['symbol'] + TAB + \
+		 r['isGO'] + CRT)
+
 #
 # Main
 #
@@ -160,11 +194,21 @@ fpD.write('jnum ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + CRT*2)
 
+fpE = reportlib.init("MRK_GOIEA_E", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpE.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'GO?' + CRT*2)
+
+fpF = reportlib.init("MRK_GOIEA_F", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpF.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'GO?' + CRT*2)
+
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:
 	url = r['url']
 
-# select markers with GO Associations of evidence IEA only
+# select non-RIKEN, non-EST, non-ORF genes with GO Associations of evidence IEA only
 
 db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 	'into #markers ' + \
@@ -299,8 +343,83 @@ for r in results:
 	writeRecordD(fpD, r)
 fpD.write('\n(%d rows affected)\n' % (len(results)))
 
+#
+# report 2E
+#
+
+# select genes with OMIM Associations
+
+db.sql('select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart ' + \
+	'into #omimmarkers ' + \
+	'from MRK_Marker m, ACC_Accession a ' + \
+	'where m._Marker_Type_key = 1 ' + \
+	'and m._Marker_Status_key in (1,3) ' + \
+	'and m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "MGI:" ' + \
+	'and a.preferred = 1 ' + \
+	'and exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a ' + \
+	'where m._Marker_key = g._Marker_key ' + \
+	'and g._Genotype_key = a._Object_key ' + \
+	'and a._AnnotType_key = 1005) ', None)
+db.sql('create index idx1 on #omimmarkers(_Marker_key)', None)
+
+#
+# select markers with OMIM annotations and either only IEA GO annotations or no GO annotations
+#
+
+results = db.sql('select o.*, isGO = "yes" ' + \
+	'from #omimmarkers o, #markers m ' + \
+	'where o._Marker_key = m._Marker_key ' + \
+	'union ' + \
+	'select o.*, isGO = "no" ' + \
+	'from #omimmarkers o ' + \
+	'where not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
+	'order by o.symbol', 'auto')
+for r in results:
+    writeRecordEF(fpE, r)
+fpE.write('\n(%d rows affected)\n' % (len(results)))
+
+#
+# report 2F
+#
+
+# select genes with Alleles
+
+db.sql('select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart ' + \
+	'into #allelemarkers ' + \
+	'from MRK_Marker m, ACC_Accession a ' + \
+	'where m._Marker_Type_key = 1 ' + \
+	'and m._Marker_Status_key in (1,3) ' + \
+	'and m._Marker_key = a._Object_key ' + \
+	'and a._MGIType_key = 2 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.prefixPart = "MGI:" ' + \
+	'and a.preferred = 1 ' + \
+	'and exists (select 1 from ALL_Allele a where m._Marker_key = a._Marker_key and a.isWildType = 0)', None)
+db.sql('create index idx1 on #allelemarkers(_Marker_key)', None)
+
+#
+# select markers with Alleles and either only IEA GO annotations or no GO annotations
+#
+
+results = db.sql('select o.*, isGO = "yes" ' + \
+	'from #allelemarkers o, #markers m ' + \
+	'where o._Marker_key = m._Marker_key ' + \
+	'union ' + \
+	'select o.*, isGO = "no" ' + \
+	'from #allelemarkers o ' + \
+	'where not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
+	'order by o.symbol', 'auto')
+for r in results:
+    writeRecordEF(fpF, r)
+fpF.write('\n(%d rows affected)\n' % (len(results)))
+
 reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
 reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
+reportlib.finish_nonps(fpE)	# non-postscript file
+reportlib.finish_nonps(fpF)	# non-postscript file
 
