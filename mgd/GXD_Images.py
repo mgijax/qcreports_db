@@ -41,7 +41,8 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Mech Dev', 'PLoS Biol', 
+journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain Res Gene Expr Patterns', 'Mech Dev', 'PLoS Biol', 
+'PLoS Genet', 'PLoS Med',
 'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
 'BMC Ophthalmol']
