@@ -4,7 +4,8 @@ go
 select c._Marker_key, s._Sequence_key, c._CreatedBy_key, c.annotation_date
 into #markerdummy
 from SEQ_Marker_Cache c, SEQ_Sequence s
-where c._Sequence_key = s._Sequence_key
+where c._Organism_key = 1
+and c._Sequence_key = s._Sequence_key
 and s._SequenceStatus_key = 316345
 go
 

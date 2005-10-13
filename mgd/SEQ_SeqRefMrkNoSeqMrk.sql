@@ -29,7 +29,7 @@ and sa._LogicalDB_key = 9
 and sa.preferred = 1
 and not exists (select 1 from #exclude e where ra._Refs_key = e._Object_key)
 and exists (select 1 from MRK_Reference mr where ra._Refs_key = mr._Refs_key)
-and not exists (select 1 from SEQ_Marker_Cache mc where ra._Object_key = mc._Sequence_key)
+and not exists (select 1 from SEQ_Marker_Cache mc where ra._Object_key = mc._Sequence_key and mc._Organism_key = 1)
 go
 
 create index idx1 on #refs1(_Refs_key)
@@ -109,7 +109,7 @@ select r._Refs_key, mr._Marker_key
 into #refs6
 from #refs5 r, MRK_Reference mr
 where r._Refs_key = mr._Refs_key
-and not exists (select 1 from SEQ_Marker_Cache mc where mr._Marker_key = mc._Marker_key)
+and not exists (select 1 from SEQ_Marker_Cache mc where mr._Marker_key = mc._Marker_key and mc._Organism_key = 1)
 go
 
 create index idx1 on #refs6(_Refs_key)

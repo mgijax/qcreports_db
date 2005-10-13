@@ -1,3 +1,4 @@
+TAG:  qcreports_db-3-4-0-1
 TAG:  qcreports_db-3-4-0-0
 DATE: 10/13/2005
 STAFF: sc
@@ -24,6 +25,24 @@ STAFF: lec
 CHANGES:
 1) goStats.sh; added Fantom3
 2) added PRB_Strain_PrivateRef.sql
+
+TAG:  qcreports_db-pirsfload-3
+DATE: 10/06/2005
+STAFF: mbw
+CHANGES:
+1) added new nomen report; pirsfload
+
+TAG:  qcreports_db-pirsfload-2
+DATE: 10/06/2005
+STAFF: lec
+CHANGES:
+1) TR 7160; GXD_FullCode.py; GXD_Images.py
+
+TAG:  qcreports_db-pirsfload-1
+DATE: 09/30/2005
+STAFF: mbw
+CHANGES:
+1) pirsfload dev build
 
 TAG:  qcreports_db-pirsfload-BP
 DATE: 09/17/2005

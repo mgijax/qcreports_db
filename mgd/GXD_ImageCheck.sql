@@ -11,7 +11,7 @@ order by i.jnum
 go
 
 print ""
-print "GXD Images with Copyright containing '*' or '(||)'"
+print "GXD Images with Copyright containing '(||)'"
 print ""
 
 select distinct i.jnumID + ";" + i.figureLabel
@@ -20,7 +20,7 @@ where i._Image_key = n._Object_key
 and n._MGIType_key = 12
 and n._NoteType_key = 1023
 and n._Note_key = nc._Note_key
-and (nc.note like "%*%" or nc.note like "%(||)%")
+and nc.note like "%(||)%"
 order by i.jnum
 go
 

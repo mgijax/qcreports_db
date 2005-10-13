@@ -13,10 +13,12 @@ and m._Marker_Type_key = 1
 and m._Marker_Status_key  in (1,3)
 and exists (select 1 from SEQ_Marker_Cache sc
 	where m._Marker_key = sc._Marker_key
-	and sc._Qualifier_key = 615420)
+	and sc._Qualifier_key = 615420
+	and sc._Organism_key = 1)
 and not exists (select 1 from SEQ_Marker_Cache sc
 	where m._Marker_key = sc._Marker_key
-	and sc._Qualifier_key = 615421)
+	and sc._Qualifier_key = 615421
+	and sc._Organism_key = 1)
 go
 
 create index idx1 on #markers(_Marker_key)

@@ -24,7 +24,8 @@ go
 select c._Sequence_key
 into #accs2
 from SEQ_Marker_Cache c, VOC_Term t
-where c._SequenceProvider_key = t._Term_key
+where c._Organism_key = 1 
+and c._SequenceProvider_key = t._Term_key
 and t.term like 'Genbank%'
 go
 
