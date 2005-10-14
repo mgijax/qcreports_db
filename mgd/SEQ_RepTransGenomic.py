@@ -88,13 +88,10 @@ db.sql('create index idx1 on #markers(_Marker_key)', None)
 #
 
 transcript = {}
-results = db.sql('select m._Marker_key, a.accID, c._SequenceProvider_key ' + \
-	'from #markers m, SEQ_Marker_Cache c, ACC_Accession a ' + \
+results = db.sql('select m._Marker_key, c.accID, c._SequenceProvider_key ' + \
+	'from #markers m, SEQ_Marker_Cache c ' + \
 	'where m._Marker_key = c._Marker_key ' + \
-	'and c._Qualifier_key = 615420 ' + \
-	'and c._Sequence_key = a._Object_key ' + \
-	'and a._MGIType_key = 19 ' + \
-	'and a.preferred = 1 ', 'auto')
+	'and c._Qualifier_key = 615420 ', 'auto')
 for r in results:
     key = r['_Marker_key']
     value = r
@@ -105,15 +102,12 @@ for r in results:
 #
 
 coordinate = {}
-results = db.sql('select m._Marker_key, a.accID, c._SequenceProvider_key, ' + \
+results = db.sql('select m._Marker_key, c.accID, c._SequenceProvider_key, ' + \
 	'startC = convert(int, d.startCoordinate), ' + \
 	'endC = convert(int, d.endCoordinate) ' + \
-	'from #markers m, SEQ_Marker_Cache c, SEQ_Coord_Cache d, ACC_Accession a ' + \
+	'from #markers m, SEQ_Marker_Cache c, SEQ_Coord_Cache d ' + \
 	'where m._Marker_key = c._Marker_key ' + \
 	'and c._Qualifier_key = 615419 ' + \
-	'and c._Sequence_key = a._Object_key ' + \
-	'and a._MGIType_key = 19 ' + \
-	'and a.preferred = 1 ' + \
 	'and c._Sequence_key = d._Sequence_key', 'auto')
 for r in results:
     key = r['_Marker_key']

@@ -21,7 +21,7 @@ go
 
 /* GenBank IDs annotated to Mouse Genes */
 
-select c._Sequence_key
+select c._Sequence_key, c.accID
 into #accs2
 from SEQ_Marker_Cache c, VOC_Term t
 where c._Organism_key = 1 
@@ -30,19 +30,10 @@ and t.term like 'Genbank%'
 go
 
 create index idx1 on #accs2(_Sequence_key)
+create index idx2 on #accs2(accID)
 go
 
-select distinct _Sequence_key into #accs3 from #accs2
-go
-
-create index idx1 on #accs3(_Sequence_key)
-go
-
-select a.accID
-into #maccs
-from #accs3 a2, ACC_Accession a
-where a2._Sequence_key = a._Object_key
-and a._MGIType_key = 19
+select distinct _Sequence_key, accID into #maccs from #accs2
 go
 
 create index idx1 on #maccs(accID)

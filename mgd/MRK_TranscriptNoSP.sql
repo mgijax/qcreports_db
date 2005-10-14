@@ -65,14 +65,11 @@ create index idx1 on #rnalength2(_Marker_key)
 create index idx2 on #rnalength2(_Sequence_key)
 go
 
-select r._Marker_key, rnalongest = a.accID
+select r._Marker_key, rnalongest = sc.accID
 into #rnalongest
-from #rnalength2 r, SEQ_Sequence s, ACC_Accession a
-where r._Sequence_key = s._Sequence_key
-and s._Sequence_key = a._Object_key
-and a._MGIType_key = 19
-and a._LogicalDB_key in (9, 27)
-and a.preferred = 1
+from #rnalength2 r, SEQ_Marker_Cache sc
+where r._Sequence_key = sc._Sequence_key
+and sc._LogicalDB_key in (9, 27)
 go
 
 create index idx1 on #rnalongest(_Marker_key)
@@ -80,15 +77,12 @@ go
 
 /* NM annotated to each Marker */
 
-select m._Marker_key, rnaseq = a.accID
+select m._Marker_key, rnaseq = sc.accID
 into #nms
-from #markers m, SEQ_Marker_Cache sc, ACC_Accession a
+from #markers m, SEQ_Marker_Cache sc
 where m._Marker_key = sc._Marker_key
 and sc._SequenceType_key = 316346
-and sc._Sequence_key = a._Object_key
-and a._MGIType_key = 19
-and a.prefixPart = "NM_"
-and a.preferred = 1
+and sc.accID like "NM_%"
 go
 
 create index idx1 on #nms(_Marker_key)
