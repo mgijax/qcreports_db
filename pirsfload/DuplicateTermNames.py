@@ -48,20 +48,20 @@ cmds = []
 
 cmds = "select v.term " + \
    "into #WRK_dupterms " + \
-   "from voc_term v, acc_accession a " + \
-   "where v._vocab_key = 49 " + \
-   "and a._object_key = v._term_key " + \
-   "and a._logicaldb_key = 78 " + \
+   "from VOC_Term v, ACC_Accession a " + \
+   "where v._Vocab_key = 49 " + \
+   "and a._Object_key = v._Term_key " + \
+   "and a._LogicalDB_key = 78 " + \
    "group by v.term " + \
    "having count(a.accid) > 1"
 
 results = db.sql(cmds, 'auto')
 
-cmds = "select v.term, a.accid " + \
-   "from voc_term v, #WRK_dupterms d, acc_accession a " + \
+cmds = "select v.term, a.accID " + \
+   "from VOC_Term v, #WRK_dupterms d, ACC_Accession a " + \
    "where v.term = d.term " + \
-   "and v._term_key = a ._object_key " + \
-   "and a._logicaldb_key = 78 " + \
+   "and v._Term_key = a ._Object_key " + \
+   "and a._LogicalDB_key = 78 " + \
    "order by v.term"
 
 results = db.sql(cmds, 'auto')
