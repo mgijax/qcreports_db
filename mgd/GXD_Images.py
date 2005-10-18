@@ -5,8 +5,8 @@
 # GXD_Images.py
 #
 # Report:
-#       Produce a report of all J numbers from the journal Development
-#	or Dev Dyn that are included in the GXD database but do not have images
+#       Produce a report of all J numbers from the journals listed
+#	that are cross-referenced to Assays but do not have images
 #       attached to them.
 #
 # Usage:
@@ -15,6 +15,9 @@
 # Notes:
 #
 # History:
+#
+# lec	10/18/2005
+#	- remove restriction on Assay Type per Connie
 #
 # lec	12/17/2004
 #	- TR 6424; added journals beginning "PLoS%" and "BMC%"
@@ -72,7 +75,6 @@ db.sql('select distinct a._Refs_key ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
 	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
-            'a._AssayType_key not in (1, 5) and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'union ' + \
