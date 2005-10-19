@@ -70,7 +70,7 @@ for r in results:
     fLabels[key].append(value)
 
 results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key order by r.journal, b.jnumID', 'auto')
+	'where r._Refs_key = b._Refs_key order by b.jnumID', 'auto')
 for r in results:
     fp.write(TAB + string.ljust(r['jnumID'], 12))
     fp.write(string.ljust(r['short_citation'], 75))
