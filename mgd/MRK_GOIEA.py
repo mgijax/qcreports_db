@@ -96,6 +96,10 @@
 #
 # History:
 #
+# lec	10/26/2005
+#	- TR 7190; exclude from Report 2F any Marker that has at most one Allele and
+#	  that Allele has reference J:94338.
+#
 # lec	09/28/2005
 #	- TR 7125; added Report 2E
 #
@@ -402,15 +406,26 @@ db.sql('create index idx1 on #allelemarkers(_Marker_key)', None)
 
 #
 # select markers with Alleles and either only IEA GO annotations or no GO annotations
+# exclude Markers with at most one Allele and that Allele has reference J:94338
 #
+
+db.sql('select _Allele_key, _Marker_key into #oneAllele from ALL_Allele group by _Marker_key having count(*) = 1', None)
+db.sql('create index idx1 on #oneAllele(_Allele_key)', None)
+db.sql('select a._Marker_key into #excludeMarker from #oneAllele a, MGI_Reference_Assoc r  ' + \
+	'where a._Allele_key = r._Object_key ' + \
+	'and r._MGIType_key = 11 ' + \
+	'and r._Refs_key = 95329', None)
+db.sql('create index idx1 on #excludeMarker(_Marker_key)', None)
 
 results = db.sql('select o.*, isGO = "yes" ' + \
 	'from #allelemarkers o, #markers m ' + \
 	'where o._Marker_key = m._Marker_key ' + \
+	'and not exists (select 1 from #excludeMarker e where o._Marker_key = e._Marker_key) ' + \
 	'union ' + \
 	'select o.*, isGO = "no" ' + \
 	'from #allelemarkers o ' + \
-	'where not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
+	'where not exists (select 1 from #excludeMarker e where o._Marker_key = e._Marker_key) ' + \
+	'and not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
 	'order by o.symbol', 'auto')
 for r in results:
     writeRecordEF(fpF, r)
