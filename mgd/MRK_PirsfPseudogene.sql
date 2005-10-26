@@ -1,17 +1,18 @@
 print ""
-print "Markers of Type 'Pseudogene' mapped to PIRSF superfamilies"
+print "Markers of type pseudogene mapped to PIRSF superfamilies"
 print ""
 
-select acc1.accID, symbol = substring(m.symbol,1,25), acc2.accID, term = substring(t.term,1,50)
-from MRK_Marker m, ACC_Accession acc1, ACC_Accession acc2, VOC_Annot a, VOC_Term t
-where a._AnnotType_key = 1007
-and acc1._Object_key = a._Object_key
-and acc1._MGIType_key = 2
-and acc1._LogicalDB_key = 1
+select mt.name, acc1.accid, m.symbol, acc2.accid, t.term
+from mrk_marker m, mrk_types mt, acc_accession acc1, acc_accession acc2, voc_annot a, voc_term t
+where a._annottype_key = 1007
+and acc1._object_key = a._object_key
+and acc1._mgitype_key = 2
+and acc1._logicaldb_key = 1
 and acc1.preferred = 1
-and m._Marker_key = a._Object_key
-and m._Marker_Type_key = 7
-and acc2._Object_key = a._Term_key
-and acc2._MGIType_key = 13
-and t._Term_key = a._Term_key
+and m._marker_key = a._object_key
+and mt._marker_type_key = m._marker_type_key
+and m._marker_type_key = 7
+and acc2._object_key = a._term_key
+and acc2._mgitype_key = 13
+and t._term_key = a._term_key
 go
