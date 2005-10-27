@@ -10,9 +10,9 @@
 
 cd `dirname $0` && source ./Configuration
 
-setenv LOG	${QCLOGSDIR}/`basename $0`.log
-rm -rf ${LOG}
-touch ${LOG}
+#setenv LOG	${QCLOGSDIR}/`basename $0`.log
+#rm -rf ${LOG}
+#touch ${LOG}
 
 foreach i ($QCMONTHLY/*.sql)
 
