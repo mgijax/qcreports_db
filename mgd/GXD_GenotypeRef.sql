@@ -85,10 +85,12 @@ and (
 exists (select 1 from GXD_AllelePair a1, GXD_AllelePair a2
 where s.genoGXD = a1._Genotype_key
 and s.genoAP = a2._Genotype_key
+and a1.sequenceNum = a2.sequenceNum
 and a1._Allele_key_1 != a2._Allele_key_1)
 or exists (select 1 from GXD_AllelePair a1, GXD_AllelePair a2
 where s.genoGXD = a1._Genotype_key
 and s.genoAP = a2._Genotype_key
+and a1.sequenceNum = a2.sequenceNum
 and a1._Allele_key_2 != a2._Allele_key_2)
 )
 go
