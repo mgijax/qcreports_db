@@ -29,7 +29,7 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-fp = reportlib.init(sys.argv[0], 'Genes that have not been full coded that have full codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Markers that have not been full coded that have full codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(string.ljust('symbol', 35))
 fp.write(SPACE)
