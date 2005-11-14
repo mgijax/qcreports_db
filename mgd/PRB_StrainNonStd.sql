@@ -51,29 +51,60 @@ set nocount off
 go
 
 print ""
-print "Non Standard Strains (excluding F1 and F2)"
+print "Non Standard Strains (excluding F1 and F2): data attached = yes"
 print ""
 
-select jr = null, substring(s.strain,1,125) "strain", n.dataExists "data attached"
-from PRB_Strain s, #strains n
-where s.standard = 0
-and s.strain not like '%)F1%'
-and s.strain not like '%)F2%'
-and s._Strain_key = n._Strain_key
-and not exists (select 1 from ACC_Accession a
-where a._Object_key = s._Strain_key
-and a._MGIType_key = 10
-and a._LogicalDB_key = 22)
-union
-select jr = a.accID, substring(s.strain,1,125), n.dataExists
+select a.accID "external id", substring(s.strain,1,125) "strain"
 from PRB_Strain s, ACC_Accession a, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
 and s.strain not like '%)F2%'
 and s._Strain_key = n._Strain_key
+and n.dataExists = 'y'
 and a._Object_key = s._Strain_key
 and a._MGIType_key = 10
-and a._LogicalDB_key = 22
+and a._LogicalDB_key != 1
+union
+select null, substring(s.strain,1,125)
+from PRB_Strain s, #strains n
+where s.standard = 0
+and s.strain not like '%)F1%'
+and s.strain not like '%)F2%'
+and s._Strain_key = n._Strain_key
+and n.dataExists = 'y'
+and not exists (select 1 from ACC_Accession a
+where a._Object_key = s._Strain_key
+and a._MGIType_key = 10
+and a._LogicalDB_key != 1)
+order by s.strain
+go
+
+print ""
+print "Non Standard Strains (excluding F1 and F2): data attached = yes"
+print ""
+
+select a.accID "external id", substring(s.strain,1,125) "strain"
+from PRB_Strain s, ACC_Accession a, #strains n
+where s.standard = 0
+and s.strain not like '%)F1%'
+and s.strain not like '%)F2%'
+and s._Strain_key = n._Strain_key
+and n.dataExists = 'n'
+and a._Object_key = s._Strain_key
+and a._MGIType_key = 10
+and a._LogicalDB_key != 1
+union
+select null, substring(s.strain,1,125)
+from PRB_Strain s, #strains n
+where s.standard = 0
+and s.strain not like '%)F1%'
+and s.strain not like '%)F2%'
+and s._Strain_key = n._Strain_key
+and n.dataExists = 'n'
+and not exists (select 1 from ACC_Accession a
+where a._Object_key = s._Strain_key
+and a._MGIType_key = 10
+and a._LogicalDB_key != 1)
 order by s.strain
 go
 
