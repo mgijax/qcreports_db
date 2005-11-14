@@ -1,16 +1,14 @@
 set nocount on
 go
 
-select s._Strain_key, dataExists = "y"
+select s._Strain_key, mgiID = a.accID, dataExists = "y"
 into #strains
-from PRB_Strain s
-where 1 = 2
-go
-
-insert into #strains
-select s._Strain_key, dataExists = "y"
-from PRB_Strain s
+from PRB_Strain s, ACC_Accession a
 where s.standard = 1
+and s._Strain_key = a._Object_key
+and a._MGIType_key = 10
+and a._LogicalDB_key = 1
+and a.preferred = 1
 and 
 (
 exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)
@@ -24,10 +22,16 @@ or exists (select 1 from CRS_Cross a where s._Strain_key = a._maleStrain_key)
 or exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
 or exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 )
-union
-select s._Strain_key, dataExists = "n"
-from PRB_Strain s
+go
+
+insert into #strains
+select s._Strain_key, mgiID = a.accID, dataExists = "n"
+from PRB_Strain s, ACC_Accession a
 where s.standard = 1
+and s._Strain_key = a._Object_key
+and a._MGIType_key = 10
+and a._LogicalDB_key = 1
+and a.preferred = 1
 and not exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)
 and not exists (select 1 from ALL_CellLine a where s._Strain_key = a._Strain_key)
 and not exists (select 1 from GXD_Genotype a where s._Strain_key = a._Strain_key)
@@ -50,22 +54,22 @@ print ""
 print "Standard Strains"
 print ""
 
-select jr = null, substring(s.strain,1,125) "strain", n.dataExists "data attached"
+select n.dataExists "data attached", a.accID "external id", n.mgiID "MGI id", substring(s.strain,1,80) "strain"
+from PRB_Strain s, ACC_Accession a, #strains n
+where s.standard = 1
+and s._Strain_key = n._Strain_key
+and a._Object_key = s._Strain_key
+and a._MGIType_key = 10
+and a._LogicalDB_key != 1
+union
+select n.dataExists "data attached", null, n.mgiID "MGI id", substring(s.strain,1,80) "strain"
 from PRB_Strain s, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
 and not exists (select 1 from ACC_Accession a
 where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
-and a._LogicalDB_key = 22)
-union
-select jr = a.accID, substring(s.strain,1,125), n.dataExists
-from PRB_Strain s, ACC_Accession a, #strains n
-where s.standard = 1
-and s._Strain_key = n._Strain_key
-and a._Object_key = s._Strain_key
-and a._MGIType_key = 10
-and a._LogicalDB_key = 22
+and a._LogicalDB_key != 1)
 order by s.strain
 go
 
