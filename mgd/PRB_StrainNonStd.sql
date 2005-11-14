@@ -80,7 +80,7 @@ order by s.strain
 go
 
 print ""
-print "Non Standard Strains (excluding F1 and F2): data attached = yes"
+print "Non Standard Strains (excluding F1 and F2): data attached = no"
 print ""
 
 select a.accID "external id", substring(s.strain,1,125) "strain"
