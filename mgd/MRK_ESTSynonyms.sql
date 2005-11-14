@@ -3,7 +3,7 @@ print ""
 print "EST IDs and Gm Markers as Synonyms"
 print ""
 
-select m.symbol, s.synonym
+select m.symbol, synonym = substring(s.synonym, 1, 75)
 from MRK_Marker m, MGI_Synonym s, MGI_SynonymType st
 where m._Marker_key = s._Object_key
 and s._SynonymType_key = st._SynonymType_key
