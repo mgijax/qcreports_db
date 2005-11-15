@@ -241,17 +241,21 @@ def allelesnomp():
     fp.write(2*CRT + '#########################' + 2*CRT)
     fp.write('Alleles with NO MP Terms, but with other annotations' + 2*CRT)
 
-    other1 = db.sql('select count(distinct n._Object_key) ' + \
+    db.sql('select n._Object_key into #other1 ' + \
 	'from MGI_Note n, MGI_NoteChunk nc ' + \
 	'where n._MGIType_key = 11 ' + \
 	'and n._Note_key = nc._Note_key ' + \
-	'and nc.note like "%Associated Phenotype Controlled Terms%" ', 'auto')[0]['']
+	'and nc.note like "%Associated Phenotype Controlled Terms%" ', None)
 
-    other2 = db.sql('select count(distinct n._Object_key) ' + \
+    other1 = db.sql('select count(distinct _Object_key) from #other1', 'auto')[0]['']
+
+    db.sql('select n._Object_key into #other2 ' + \
 	'from MGI_Note n, MGI_NoteChunk nc ' + \
 	'where n._MGIType_key = 11 ' + \
 	'and n._Note_key = nc._Note_key ' + \
-	'and nc.note like "%J:%" ', 'auto')[0]['']
+	'and nc.note like "%J:%" ', None)
+
+    other2 = db.sql('select count(distinct _Object_key) from #other2', 'auto')[0]['']
 
     fp.write(string.ljust('"Associated Phenotype Controlled Terms" in Notes:', 60))
     fp.write(string.rjust(str(other1), 10) + CRT)
@@ -306,7 +310,8 @@ def omim():
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
+	fileExt = '.' + os.environ['DATE'] + '.rpt')
 
 fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
 toDate = db.sql('select convert(char(10), dateadd(day, 1, "%s"), 101) ' % (currentDate), 'auto')[0]['']

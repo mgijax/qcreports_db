@@ -15,15 +15,6 @@ rm -rf ${LOG}
 touch ${LOG}
 
 foreach i ($QCMONTHLY/*.sql)
-
-if ( $i == "$QCMONTHLY/ALL_Progress.sql" ) then
-	mv -f $QCOUTPUTDIR/`basename $i`.[0-9]*.rpt $QCALLELEARCHIVE
-	rm -rf $QCOUTPUTDIR/`basename $i`.current.rpt
-	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.${DATE}.rpt $DSQUERY $MGD
-	ln -s $QCOUTPUTDIR/`basename $i`.${DATE}.rpt $QCOUTPUTDIR/`basename $i`.current.rpt
-else
 	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
-endif
-
 end
 
