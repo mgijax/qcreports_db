@@ -30,13 +30,14 @@ print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is *not* in MGD"
 print ""
 
-select a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
-from #singles s, ACC_Accession a
+select externalDB = substring(l.name, 1, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+from #singles s, ACC_Accession a, ACC_LogicalDB l
 where s._Allele_key is null
 and s.private = 1
 and s._Strain_key = a._Object_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1
+and a._LogicalDB_key = l._LogicalDB_key
 and not exists (select 1 from ALL_Allele a
 where s._Marker_key = a._Marker_key
 and s.alleleSymbol = a.symbol)
@@ -50,13 +51,14 @@ print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is *not* in MGD"
 print ""
 
-select a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
-from #singles s, ACC_Accession a
+select externalDB = substring(l.name, 1, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+from #singles s, ACC_Accession a, ACC_LogicalDB l
 where s._Allele_key is null
 and s.private = 0
 and s._Strain_key = a._Object_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1
+and a._LogicalDB_key = l._LogicalDB_key
 and not exists (select 1 from ALL_Allele a
 where s._Marker_key = a._Marker_key
 and s.alleleSymbol = a.symbol)
