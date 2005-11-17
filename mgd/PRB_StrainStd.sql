@@ -54,15 +54,16 @@ print ""
 print "Standard Strains"
 print ""
 
-select n.dataExists "data attached", a.accID "external id", n.mgiID "MGI id", substring(s.strain,1,80) "strain"
-from PRB_Strain s, ACC_Accession a, #strains n
+select n.dataExists "data attached", substring(l.name,1,20) "external db", a.accID "external id", n.mgiID "MGI id", substring(s.strain,1,80) "strain"
+from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
 and a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1
+and a._LogicalDB_key = l._LogicalDB_key
 union
-select n.dataExists "data attached", null, n.mgiID "MGI id", substring(s.strain,1,80) "strain"
+select n.dataExists "data attached", null, null, n.mgiID "MGI id", substring(s.strain,1,80) "strain"
 from PRB_Strain s, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
