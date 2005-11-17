@@ -30,7 +30,7 @@ print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is *not* in MGD"
 print ""
 
-select externalDB = substring(l.name, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+select externalDB = substring(l.name, 1, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
 from #singles s, ACC_Accession a, ACC_LogicalDB l
 where s._Allele_key is null
 and s.private = 1
@@ -51,7 +51,7 @@ print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is *not* in MGD"
 print ""
 
-select externalDB = substring(l.name, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+select externalDB = substring(l.name, 1, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
 from #singles s, ACC_Accession a, ACC_LogicalDB l
 where s._Allele_key is null
 and s.private = 0
