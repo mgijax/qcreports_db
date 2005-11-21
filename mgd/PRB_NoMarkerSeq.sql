@@ -2,7 +2,7 @@ set nocount on
 go
 
 /* Select all Probes of Source 'mouse, laboratory' which contain */
-/* at least one encoding gene */
+/* at least one non-autoE encoding gene */
 
 select p._Probe_key, pm._Marker_key
 into #probes1

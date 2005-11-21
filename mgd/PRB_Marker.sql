@@ -48,7 +48,7 @@ and p.name not like 'RPCI24 clone%'
 and p.name not like 'NIA clone%'
 and p.name not like 'RIKEN clone%'
 and p.name not like 'J%'
-and datepart(year, creation_date) >= 2002
+and datepart(year, p.creation_date) >= 2002
 go
 
 create index idx1 on #probe(_Probe_key)
@@ -59,7 +59,7 @@ go
 
 print ""
 print "Probes - No Markers (excluding MGC, IMAGE, RPCI, NIA, RIKEN clones)"
-print "where probe record is created in 2002 or later"
+print "where probe record was created in 2002 or later"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
