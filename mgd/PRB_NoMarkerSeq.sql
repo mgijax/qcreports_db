@@ -28,7 +28,9 @@ create index idx1 on #probes2(_Probe_key)
 create index idx2 on #probes2(_Marker_key)
 go
 
-select distinct p._Probe_key, p._Marker_key, pp.name, m.symbol
+/* resolve probe name and marker symbol */
+
+select p._Probe_key, p._Marker_key, pp.name, m.symbol
 into #probes3
 from #probes2 p, PRB_Probe pp, MRK_Marker m
 where p._Probe_key = pp._Probe_key
@@ -41,33 +43,56 @@ go
 /* Retrieve unique Sequence Accession ID/Reference (J:) pairs */
 /* for each Marker by using its associated Probe */
 
-select p.name, p.symbol, p._Marker_key, a.accID, ar._Refs_key, jnumID = b.accID
+select p.name, p.symbol, p._Probe_key, p._Marker_key, a.accID, r._Refs_key
 into #markers1
-from #probes3 p, ACC_Accession a, ACC_AccessionReference ar, ACC_Accession b
+from #probes3 p, ACC_Accession a, ACC_AccessionReference r
 where p._Probe_key = a._Object_key 
 and a._MGIType_key = 3
 and a._LogicalDB_key = 9 
-and a._Accession_key = ar._Accession_key
-and ar._Refs_key = b._Object_key
-and b._MGIType_key = 1
-and b.prefixPart = "J:"
-and b._LogicalDB_key = 1
+and a._Accession_key = r._Accession_key
 go
 
-create index idx1 on #markers1(name)
-create index idx2 on #markers1(symbol)
-create index idx3 on #markers1(accID)
-create index idx4 on #markers1(jnumID)
+create index idx1 on #markers1(_Marker_key)
+create index idx2 on #markers1(_Probe_key)
+create index idx3 on #markers1(_Refs_key)
 go
 
-select distinct p.name, p.symbol, p._Marker_key, p.accID, p._Refs_key, p.jnumID
+
+/* Retrieve Markers that have a Sequence association via the Accession table */
+
+select m.*
 into #markers2
-from #markers1 p
+from #markers1 m
+where exists
+(select 1 from ACC_Accession a
+where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
+and a._LogicalDB_key = 9
+and m.accID = a.accID)
 go
 
-create index idx1 on #markers2(name)
-create index idx2 on #markers2(_Marker_key)
+create index idx1 on #markers2(_Marker_key)
+create index idx2 on #markers2(_Probe_key)
 create index idx3 on #markers2(_Refs_key)
+create index idx4 on #markers2(name)
+go
+
+/* Retrieve the Marker/Sequence association and compare the references */
+
+select m.*, refs2 = r._Refs_key
+into #markers3
+from #markers2 m, ACC_Accession a, ACC_AccessionReference r
+where m._Marker_key = a._Object_key
+and a._MGIType_key = 2
+and a._LogicalDB_key = 9
+and m.accID = a.accID
+and a._Accession_key = r._Accession_key
+and m._Refs_key != r._Refs_key
+go
+
+create index idx1 on #markers3(_Refs_key)
+create index idx2 on #markers3(refs2)
+create index idx3 on #markers3(name)
 go
 
 set nocount off
@@ -79,13 +104,8 @@ print "and no corresponding Marker-Sequence ID association"
 print ""
 
 select m.name, m.symbol, m.accID
-from #markers2 m
-where not exists
-(select 1 from ACC_Accession a
-where m._Marker_key = a._Object_key
-and a._MGIType_key = 2
-and a._LogicalDB_key = 9
-and m.accID = a.accID)
+from #markers1 m
+where not exists (select 1 from #markers2 mm where m._Marker_key = mm._Marker_key and m._Probe_key = mm._Probe_key)
 order by m.name
 go
 
@@ -94,17 +114,14 @@ print "Molecular Segments with Encoding Markers and Sequence IDs"
 print "and corresponding Marker-Sequence ID association w/ a different Reference"
 print ""
 
-select m.name, m.symbol, m.accID, m.jnumID, b.accID
-from #markers2 m, ACC_Accession a, ACC_AccessionReference r, BIB_ACC_View b
-where m._Marker_key = a._Object_key
-and a._MGIType_key = 2
-and a._LogicalDB_key = 9
-and m.accID = a.accID
-and a._MGIType_key = 2
-and a._Accession_key = r._Accession_key
-and m._Refs_key != r._Refs_key
-and r._Refs_key = b._Object_key
-and b.prefixPart = "J:"
+select m.name, m.symbol, m.accID, b1.accID, b2.accID
+from #markers3 m, ACC_Accession b1, ACC_Accession b2
+where m._Refs_key = b1._Object_key
+and b1._LogicalDB_key = 1
+and b1.prefixPart = "J:"
+and m.refs2 = b2._Object_key
+and b2._LogicalDB_key = 1
+and b2.prefixPart = "J:"
 order by m.name
 go
 
