@@ -6,6 +6,7 @@ select m.symbol "Marker", a.symbol "Allele"
 from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
 and a.symbol not like m.symbol + "%"
+and a.symbol != "+"
 go
 
 set nocount on
