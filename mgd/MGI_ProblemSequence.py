@@ -68,7 +68,7 @@ db.sql('select distinct p._Probe_key, a.accID ' + \
 	'from #probes p, ACC_Accession a ' + \
 	'where p._Probe_key = a._Object_key  ' + \
 	'and a._MGIType_key = 3 ' + \
-	'and a._LogicalDB_key = 9 ')
+	'and a._LogicalDB_key = 9 ', None)
 
 # Select probes with more than one Seq ID
 
@@ -100,5 +100,7 @@ results = db.sql('select m._Probe_key, probeID = pa.accID ' + \
 for r in results:
     fp.write(r['probeID'] + reportlib.TAB + \
 	string.join(sequences[r['_Probe_key']], ',') + reportlib.CRT)
+
+fp.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fp)
