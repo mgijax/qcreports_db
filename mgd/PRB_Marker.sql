@@ -111,6 +111,9 @@ go
 create index idx1 on #probe(_Probe_key)
 go
 
+set nocount off
+go
+
 print ""
 print "Probes - No Markers (excluding MGC, IMAGE, RPCI, NIA, RIKEN clones)"
 print ""
