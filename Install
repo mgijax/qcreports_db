@@ -27,9 +27,27 @@ cd ${QCINSTALLDIR}
 chmod 644 Configuration.* HISTORY *.html
 chmod 755 *.sh */*.py */*.sql Install
 
-mkdir ${QCREPORTDIR}
-mkdir ${QCOUTPUTDIR}
-mkdir ${QCLOGSDIR}
-mkdir ${QCARCHIVEDIR}
-mkdir ${QCALLELEARCHIVE}
-mkdir ${QCNOMENARCHIVE}
+if ( ! -d ${QCREPORTDIR} ) then
+	mkdir ${QCREPORTDIR}
+endif
+
+if ( ! -d ${QCOUTPUTDIR} ) then
+	mkdir ${QCOUTPUTDIR}
+endif
+
+if ( ! -d ${QCLOGSDIR} ) then
+	mkdir ${QCLOGSDIR}
+endif
+
+if ( ! -d ${QCARCHIVEDIR} ) then
+	mkdir ${QCARCHIVEDIR}
+endif
+
+if ( ! -d ${QCALLELEARCHIVE} ) then
+	mkdir ${QCALLELEARCHIVE}
+endif
+
+if ( ! -d ${QCNOMENARCHIVE} ) then
+	mkdir ${QCNOMENARCHIVE}
+endif
+
