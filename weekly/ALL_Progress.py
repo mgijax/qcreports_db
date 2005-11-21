@@ -40,7 +40,13 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-currentDate = mgi_utils.date('%m/%d/%Y')
+transgenicKeys = '847128,847127,847126,847129'
+targetedKeys = '847118,847117,847116,847120,847119'
+trappedKeys = '847121'
+qtlKeys = '847130'
+spontKeys = '847115'
+chemicalKeys = '847122'
+otherKeys = '847124,847123,847131,847132,847125'
 
 def alleleCounts():
 
@@ -62,29 +68,29 @@ def alleleCounts():
     total = db.sql('select count(*) from #alleles', 'auto')[0]['']
     totalM = db.sql('select count(*) from #amonthly', 'auto')[0]['']
 
-    transgenic = db.sql('select count(*) from #alleles where _Allele_Type_key in (847128,847127,847126,847129)', 'auto')[0]['']
-    transgenicM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847128,847127,847126,847129)', 'auto')[0]['']
+    transgenic = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (transgenicKeys), 'auto')[0]['']
+    transgenicM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (transgenicKeys), 'auto')[0]['']
 
-    targeted = db.sql('select count(*) from #alleles where _Allele_Type_key in (847116,847120,847119)', 'auto')[0]['']
-    targetedM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847116,847120,847119)', 'auto')[0]['']
+    targeted = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+    targetedM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
 
-    trapped = db.sql('select count(*) from #alleles where _Allele_Type_key in (847121)', 'auto')[0]['']
-    trappedM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847121)', 'auto')[0]['']
+    trapped = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    trappedM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
 
-    qtl = db.sql('select count(*) from #alleles where _Allele_Type_key in (847130)', 'auto')[0]['']
-    qtlM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847130)', 'auto')[0]['']
+    qtl = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (qtlKeys), 'auto')[0]['']
+    qtlM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (qtlKeys), 'auto')[0]['']
 
-    spont = db.sql('select count(*) from #alleles where _Allele_Type_key in (847115)', 'auto')[0]['']
-    spontM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847115)', 'auto')[0]['']
+    spont = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (spontKeys), 'auto')[0]['']
+    spontM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (spontKeys), 'auto')[0]['']
 
-    chemical = db.sql('select count(*) from #alleles where _Allele_Type_key in (847122)', 'auto')[0]['']
-    chemicalM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847122)', 'auto')[0]['']
+    chemical = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (chemicalKeys), 'auto')[0]['']
+    chemicalM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (chemicalKeys), 'auto')[0]['']
 
-    other = db.sql('select count(*) from #alleles where _Allele_Type_key in (847124,847123,847131,847132,847125)', 'auto')[0]['']
-    otherM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (847124,847123,847131,847132,847125)', 'auto')[0]['']
+    other = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (otherKeys), 'auto')[0]['']
+    otherM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (otherKeys), 'auto')[0]['']
 
-    nonqtl = db.sql('select count(*) from #alleles where _Allele_Type_key not in (847130)', 'auto')[0]['']
-    nonqtlM = db.sql('select count(*) from #amonthly where _Allele_Type_key not in (847130)', 'auto')[0]['']
+    nonqtl = db.sql('select count(*) from #alleles where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['']
+    nonqtlM = db.sql('select count(*) from #amonthly where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['']
 
     fp.write(string.ljust('Transgeneic (all types)', 35))
     fp.write(string.rjust(str(transgenic), 15))
@@ -267,9 +273,22 @@ def genesalleles():
     fp.write(2*CRT + '#########################' + 2*CRT)
     fp.write('Number of Genes with Alleles (excluding wild type)' + 2*CRT)
 
-    genes = db.sql('select count(distinct _Marker_key) from #alleles', 'auto')[0]['']
-    targeted = db.sql('select count(distinct _Marker_key) from #alleles where _Allele_Type_key in (847116,847120,847119)', 'auto')[0]['']
-    trapped = db.sql('select count(distinct _Marker_key) from #alleles where _Allele_Type_key in (847121)', 'auto')[0]['']
+    # markers of type gene only
+
+    db.sql('select distinct a._Marker_key, a._Allele_Type_key into #genes ' + \
+	'from #alleles a, MRK_Marker m ' + \
+	'where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1', None)
+
+    genes = db.sql('select count(distinct _Marker_key) from #genes', 'auto')[0]['']
+    targeted = db.sql('select count(distinct _Marker_key) from #genes where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+    trapped = db.sql('select count(distinct _Marker_key) from #genes where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+
+    # markers that have both targeted and trapped alleles
+
+    bothTargTrapped = db.sql('select count(distinct g1._Marker_key) from #genes g1, #genes g2 ' + \
+	'where g1._Allele_Type_key in (%s) ' % (targetedKeys) + \
+	'and g1._Marker_key = g2._Marker_key ' + \
+	'and g2._Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
 
     fp.write(string.ljust('Total Genes with Alleles:', 60))
     fp.write(string.rjust(str(genes), 10) + CRT)
@@ -278,7 +297,7 @@ def genesalleles():
     fp.write(string.ljust('Genes with gene trapped alleles:', 60))
     fp.write(string.rjust(str(trapped), 10) + CRT)
     fp.write(string.ljust('Genes with both targeted and gene trapped alleles:', 60))
-    fp.write(string.rjust(str(trapped + targeted), 10) + CRT)
+    fp.write(string.rjust(str(bothTargTrapped), 10) + CRT)
 
 def vocab():
 
@@ -313,6 +332,7 @@ def omim():
 fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
 	fileExt = '.' + os.environ['DATE'] + '.rpt')
 
+currentDate = mgi_utils.date('%m/%d/%Y')
 fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
 toDate = db.sql('select convert(char(10), dateadd(day, 1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
 
