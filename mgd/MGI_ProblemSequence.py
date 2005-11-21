@@ -101,4 +101,6 @@ for r in results:
     fp.write(r['probeID'] + reportlib.TAB + \
 	string.join(sequences[r['_Probe_key']], ',') + reportlib.CRT)
 
+fp.write('\n(%d rows affected)\n' % (len(results)))
+
 reportlib.finish_nonps(fp)
