@@ -11,6 +11,7 @@ where p._Source_key = s._Source_key
 and s._Organism_key = 1
 and p._Probe_key = pm._Probe_key 
 and pm.relationship = "E"
+and pm._Refs_key != 86302
 go
 
 create index idx1 on #probes1(_Probe_key)
