@@ -68,7 +68,7 @@ db.sql('select distinct p._Probe_key, a.accID ' + \
 	'from #probes p, ACC_Accession a ' + \
 	'where p._Probe_key = a._Object_key  ' + \
 	'and a._MGIType_key = 3 ' + \
-	'and a._LogicalDB_key = 9 ')
+	'and a._LogicalDB_key = 9 ', None)
 
 # Select probes with more than one Seq ID
 
