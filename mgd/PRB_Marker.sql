@@ -7,6 +7,7 @@ from PRB_Probe p, VOC_Term t
 where p._SegmentType_key = t._Term_key
 and t.term != "primer"
 and _Source_key != 30040
+and name not like 'MGC clone%'
 and name not like 'IMAGE clone%'
 and name not like 'RPCI23 clone%'
 and name not like 'RPCI24 clone%'
@@ -98,6 +99,7 @@ from PRB_Probe p, VOC_Term t
 where p._SegmentType_key = t._Term_key
 and t.term != "primer"
 and p._Source_key != 30040
+and p.name not like 'MGC clone%'
 and p.name not like 'IMAGE clone%'
 and p.name not like 'RPCI23 clone%'
 and p.name not like 'RPCI24 clone%'
@@ -110,7 +112,7 @@ create index idx1 on #probe(_Probe_key)
 go
 
 print ""
-print "Probes - No Markers (excluding IMAGE, RPCI, NIA, RIKEN clones)"
+print "Probes - No Markers (excluding MGC, IMAGE, RPCI, NIA, RIKEN clones)"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
