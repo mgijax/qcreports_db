@@ -78,24 +78,6 @@ create index idx3 on #markers2(_Refs_key)
 create index idx4 on #markers2(name)
 go
 
-/* Retrieve the Marker/Sequence association and compare the references */
-
-select m.*, refs2 = r._Refs_key
-into #markers3
-from #markers2 m, ACC_Accession a, ACC_AccessionReference r
-where m._Marker_key = a._Object_key
-and a._MGIType_key = 2
-and a._LogicalDB_key = 9
-and m.accID = a.accID
-and a._Accession_key = r._Accession_key
-and m._Refs_key != r._Refs_key
-go
-
-create index idx1 on #markers3(_Refs_key)
-create index idx2 on #markers3(refs2)
-create index idx3 on #markers3(name)
-go
-
 set nocount off
 go
 
@@ -107,22 +89,6 @@ print ""
 select m.name, m.symbol, m.accID
 from #markers1 m
 where not exists (select 1 from #markers2 mm where m._Marker_key = mm._Marker_key and m._Probe_key = mm._Probe_key)
-order by m.name
-go
-
-print ""
-print "Molecular Segments with Encoding Markers and Sequence IDs"
-print "and corresponding Marker-Sequence ID association w/ a different Reference"
-print ""
-
-select m.name, m.symbol, m.accID, b1.accID, b2.accID
-from #markers3 m, ACC_Accession b1, ACC_Accession b2
-where m._Refs_key = b1._Object_key
-and b1._LogicalDB_key = 1
-and b1.prefixPart = "J:"
-and m.refs2 = b2._Object_key
-and b2._LogicalDB_key = 1
-and b2.prefixPart = "J:"
 order by m.name
 go
 

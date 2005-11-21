@@ -1,9 +1,6 @@
 set nocount on
 go
 
-drop table #probe
-go
-
 select _Probe_key, _Marker_key
 into #probe 
 from PRB_Marker 
