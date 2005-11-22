@@ -5,7 +5,8 @@ print ""
 select m.symbol "Marker", a.symbol "Allele"
 from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
-and a.symbol not like m.symbol + "%"
+and a.symbol != "+"
+and a.symbol not like "%" + m.symbol + "%"
 go
 
 set nocount on
@@ -14,6 +15,7 @@ go
 select _Allele_key
 into #duplicates
 from ALL_Allele
+where symbol != "+"
 group by symbol having count(*) > 1
 go
 
