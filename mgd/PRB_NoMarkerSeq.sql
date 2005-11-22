@@ -41,21 +41,20 @@ go
 create index idx1 on #probes3(_Probe_key)
 go
 
-/* Retrieve unique Sequence Accession ID/Reference (J:) pairs */
+/* Retrieve unique Sequence Accession ID pairs */
 /* for each Marker by using its associated Probe */
 
-select p.name, p.symbol, p._Probe_key, p._Marker_key, a.accID, r._Refs_key
+select p.name, p.symbol, p._Probe_key, p._Marker_key, a.accID
 into #markers1
-from #probes3 p, ACC_Accession a, ACC_AccessionReference r
+from #probes3 p, ACC_Accession a
 where p._Probe_key = a._Object_key 
 and a._MGIType_key = 3
 and a._LogicalDB_key = 9 
-and a._Accession_key = r._Accession_key
 go
 
 create index idx1 on #markers1(_Marker_key)
 create index idx2 on #markers1(_Probe_key)
-create index idx3 on #markers1(_Refs_key)
+create index idx3 on #markers1(accID)
 go
 
 
@@ -74,8 +73,7 @@ go
 
 create index idx1 on #markers2(_Marker_key)
 create index idx2 on #markers2(_Probe_key)
-create index idx3 on #markers2(_Refs_key)
-create index idx4 on #markers2(name)
+create index idx3 on #markers2(name)
 go
 
 set nocount off
