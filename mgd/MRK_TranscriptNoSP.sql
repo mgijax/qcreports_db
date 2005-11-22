@@ -39,37 +39,47 @@ go
 
 /* longest RNA sequences annotated to each Marker */
 
-select m._Marker_key, maxLength = max(s.length)
-into #rnalength1
+select m._Marker_key, s.length, s._Sequence_key
+into #rnalength0
 from #markers m, SEQ_Marker_Cache sc, SEQ_Sequence s
 where m._Marker_key = sc._Marker_key
 and sc._SequenceType_key = 316346
 and sc._Sequence_key = s._Sequence_key
-group by m._Marker_key
+go
+
+create index idx1 on #rnalength0(_Marker_key)
+go
+
+select _Marker_key, maxLength = max(length)
+into #rnalength1
+from #rnalength0
+group by _Marker_key
 go
 
 create index idx1 on #rnalength1(_Marker_key)
 create index idx2 on #rnalength1(maxLength)
 go
 
-select r.*, sc._Sequence_key
+/* resolve the sequence key of the longest RNA sequence */
+
+select r1.*, r0._Sequence_key
 into #rnalength2
-from #rnalength1 r, SEQ_Marker_Cache sc, SEQ_Sequence s
-where r._Marker_key = sc._Marker_key
-and sc._Sequence_key = s._Sequence_key
-and r.maxLength = s.length
-order by r._Marker_key
+from #rnalength0 r0, #rnalength1 r1
+where r0._Marker_key = r1._Marker_key
+and r0.length = r1.maxLength
+order by r1._Marker_key
 go
 
 create index idx1 on #rnalength2(_Marker_key)
 create index idx2 on #rnalength2(_Sequence_key)
 go
 
+/* resolve the accession id of the longest RNA sequence */
+
 select r._Marker_key, rnalongest = a.accID
 into #rnalongest
-from #rnalength2 r, SEQ_Sequence s, ACC_Accession a
-where r._Sequence_key = s._Sequence_key
-and s._Sequence_key = a._Object_key
+from #rnalength2 r, ACC_Accession a
+where r._Sequence_key = a._Object_key
 and a._MGIType_key = 19
 and a._LogicalDB_key in (9, 27)
 and a.preferred = 1
