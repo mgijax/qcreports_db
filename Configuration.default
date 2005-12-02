@@ -53,9 +53,6 @@ setenv QCWEEKLY                 ${QCINSTALLDIR}/weekly
 # monthly reports directory
 setenv QCMONTHLY                ${QCINSTALLDIR}/monthly
 
-# MLC index file
-setenv MLCINDEX			/usr/local/mgi/live/wi/www/images/mlc/index
-
 # EI Log files
 setenv EILOGFILES		/net/orodruin/vol/home
 
