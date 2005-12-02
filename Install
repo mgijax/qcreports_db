@@ -14,12 +14,12 @@
 source ./Configuration
 
 cd ${QCINSTALLDIR}
-sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
+sed "s/ftp.informatics.jax.org/${FTPURL}/" qcr.html > qcr.html.new
 mv -f qcr.html.new qcr.html
 cd ${QCMGD}
 set toEdit=`grep -l radar *`
 foreach i ($toEdit)
-sed "s/radar/$RADARDB/g" $i > $i.new
+sed "s/radar/${RADAR_DBNAME}/g" $i > $i.new
 mv -f $i.new $i
 end
 

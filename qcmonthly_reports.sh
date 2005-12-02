@@ -15,6 +15,6 @@ rm -rf ${LOG}
 touch ${LOG}
 
 foreach i ($QCMONTHLY/*.sql)
-	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt ${MGD_DBSERVER} ${MGD_DBNAME} ${RADAR_DBNAME}
 end
 

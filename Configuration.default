@@ -34,7 +34,7 @@ setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
 setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 
 # private HUGO directories
-setenv HUGOWEBDIR		gondor:/usr/local/mgi/private/www/hugo
+setenv HUGOWEBDIR		/usr/local/mgi/private/www/hugo
 setenv HUGOFTPDIR		gondor:/export/gondor/ftp/private/hes
 
 # FASTA NOMEN DB File
@@ -65,35 +65,12 @@ setenv DATE `date '+%Y-%m-%d'`
 # FTP 
 setenv FTPURL			ftp.informatics.jax.org
 
-# SYBASE
-setenv SYBASE			/opt/sybase/12.5
+# MGD Schema
+setenv MGD_DBSCHEMADIR		/usr/local/mgi/live/dbutils/mgd/mgddbschema
 
-# PYTHON
-setenv PYTHONPATH       	/usr/local/mgi/live/lib/python
+# RADAR Schema
+setenv RADAR_DBSCHEMADIR	/usr/local/mgi/live/dbutils/radar/radardbschema
 
-# DBUTILITIESPATH
-setenv DBUTILITIESPATH		/usr/local/mgi/live/dbutils/mgidbutilities
+source ${RADAR_DBSCHEMADIR}/Configuration
+source ${MGD_DBSCHEMADIR}/Configuration
 
-# PATH
-set path = (. $path $DBUTILITIESPATH/bin $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
-
-# Database Server
-setenv DBSERVER PROD_MGI
-setenv DSQUERY ${DBSERVER}
-
-# MGD Database
-setenv DBNAME mgd
-setenv MGD ${DBNAME}
-setenv RADARDB radar
-
-# DBO User
-setenv DBOUSER  mgd_dbo
-
-# DBO Password
-setenv DBOPASSWORDFILE  /usr/local/mgi/live/dbutils/mgidbutilities/.mgd_dbo_password
-
-# Public User
-setenv PUBUSER  mgd_public
-
-# DBO Password
-setenv PUBPASSWORDFILE  /usr/local/mgi/live/dbutils/mgidbutilities/.mgd_public_password
