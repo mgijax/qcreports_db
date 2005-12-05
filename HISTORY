@@ -1,3 +1,10 @@
+TAG:  qcreports_db-3-4-0-8
+DATE: 12/05/2005
+STAFF: lec
+CHANGES:
+1) GXD_ProbeAntibody.sql
+2) ALL_AssocPheno.py
+
 TAG:  qcreports_db-3-4-0-7
 DATE: 11/22/2005
 STAFF: lec
