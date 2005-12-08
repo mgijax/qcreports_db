@@ -105,7 +105,7 @@ go
 
 /* references with marker associations where the marker has no sequence annotations */
 
-select r._Refs_key, mr._Marker_key
+select r._Refs_key, mr._Marker_key, mr.jnumID, mr.jnum
 into #refs6
 from #refs5 r, MRK_Reference mr
 where r._Refs_key = mr._Refs_key
@@ -152,18 +152,14 @@ print "    b.  the Sequence is not associated with any Marker "
 print "    c.  the Marker associated with the Reference (a) has no Sequence Annotations"
 print ""
 
-select b.accID, m.accID
-from #refs6 r, ACC_Accession b, ACC_Accession m
-where r._Refs_key = b._Object_key
-and b._MGIType_key = 1
-and b._LogicalDB_key = 1
-and b.prefixPart = "J:"
-and r._Marker_key = m._Object_key
+select r.jnumID, m.accID
+from #refs6 r, ACC_Accession m
+where r._Marker_key = m._Object_key
 and m._MGIType_key = 2
 and m._LogicalDB_key = 1
 and m.prefixPart = "MGI:"
 and m.preferred = 1
-order by b.numericPart
+order by r.jnum
 go
 
 print ""

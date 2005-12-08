@@ -14,10 +14,9 @@ go
 
 select distinct m._Marker_key
 into #exclude
-from #markers m, MRK_Reference r, BIB_All_View b
+from #markers m, MRK_Reference r
 where m._Marker_key = r._Marker_key
-and r._Refs_key = b._Refs_key
-and b.jnum in (24195, 24194, 34136, 29126, 29505, 37748, 37749, 37750, 58777, 59376, 34105, 34106, 55473, 55472, 55474, 37732)
+and r.jnum in (24195, 24194, 34136, 29126, 29505, 37748, 37749, 37750, 58777, 59376, 34105, 34106, 55473, 55472, 55474, 37732)
 go
 
 set nocount off
