@@ -189,3 +189,34 @@ print ""
 select seqID, mgiID, name from #pdeleted
 go
 
+set nocount on
+
+select distinct pm._Probe_key, pm._Marker_key
+into #encodes
+from PRB_Marker pm, GXD_ProbePrep g
+where g._Probe_key = pm._Probe_key
+and pm.relationship = "E"
+go
+
+select * into #multencodes from #encodes group by _Probe_key having count(*) > 1
+go
+
+create index idx1 on #multencodes(_Probe_key)
+create index idx2 on #multencodes(_Marker_key)
+go
+
+set nocount off
+
+select distinct a.accid, p.name, m.symbol
+from #multencodes e, PRB_Probe p, MRK_Marker m, ACC_Accession a
+where e._Probe_key = p._Probe_key
+and e._Probe_key = a._Object_key
+and a._MGIType_key = 3
+and a._Logicaldb_key = 1
+and a.prefixPart = "MGI:"
+and a.preferred = 1
+and e._Marker_key = m._Marker_key
+order by a.accid
+go
+
+
