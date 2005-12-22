@@ -207,6 +207,10 @@ go
 
 set nocount off
 
+print ""
+print "Probe w/ more than one encodes relationship"
+print ""
+
 select distinct a.accid, p.name, m.symbol
 from #multencodes e, PRB_Probe p, MRK_Marker m, ACC_Accession a
 where e._Probe_key = p._Probe_key
