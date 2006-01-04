@@ -1,3 +1,9 @@
+TAG:  qcreports_db-3-4-0-12
+DATE: 01/04/2006
+STAFF: lec
+CHANGES:
+1) added RADAR_DBNAME to Configuration.default
+
 TAG:  qcreports_db-tr7335-BP
 DATE: 12/27/2005
 STAFF: mbw

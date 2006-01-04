@@ -88,6 +88,7 @@ setenv DSQUERY ${DBSERVER}
 setenv DBNAME mgd
 setenv MGD ${DBNAME}
 setenv RADARDB radar
+setenv RADAR_DBNAME ${RADARDB}
 
 # DBO User
 setenv DBOUSER  mgd_dbo
