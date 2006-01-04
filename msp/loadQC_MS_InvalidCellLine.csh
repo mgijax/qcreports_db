@@ -62,6 +62,7 @@ date >> $LOG
  
 cat - <<EOSQL | doisql.csh $0 >> $LOG
 
+
 use $DBNAME
 go
 
@@ -75,7 +76,7 @@ where _JobStream_key = ${JOBSTREAM}
 
 select s.rawCellLine
 into #all
-from ${MGDDBNAME}..SEQ_Sequence s, ${MGDDBNAME}..SEQ_Source_Assoc sa, ${MGDDBNAME}..PRB_Source ps
+from ${MGDDBNAME}..SEQ_Sequence_Raw s, ${MGDDBNAME}..SEQ_Source_Assoc sa, ${MGDDBNAME}..PRB_Source ps
 where convert(char(10), s.modification_date, 101) >= @startDate
 and s.rawCellLine is not null
 and s.rawCellLine != "Not Loaded"
