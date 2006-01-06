@@ -1,3 +1,10 @@
+TAG:  qcreports_db-3-4-0-14
+DATE: 01/06/2006
+STAFF: lec
+CHANGES:
+1) TR 7369; GXD_FullCodeMissingIndex.sql
+2) TR 7370; GXD_FullCodeGene.sql
+
 TAG:  qcreports_db-3-4-0-13
 DATE: 01/06/2006
 STAFF: dow
