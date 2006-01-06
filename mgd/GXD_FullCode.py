@@ -6,6 +6,8 @@
 #
 # Report:
 #
+# Papers to full code by specific Journals
+#
 # Usage:
 #       GXD_FullCode.py
 #
