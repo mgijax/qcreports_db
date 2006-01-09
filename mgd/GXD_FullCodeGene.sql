@@ -4,20 +4,33 @@ go
 
 /* exclude cDNA (74725) and primer extension (74728) */
 
-select _Index_key
-into #singles
-from GXD_Index_Stages
-group by _Index_key having count(*) = 1
-go
-
-create index idx1 on #singles(_Index_key)
-go
-
-select s._Index_key
+select distinct gi._Index_key
 into #excluded
-from #singles s, GXD_Index_Stages gs
-where s._Index_key = gs._Index_key
+from GXD_Index gi, GXD_Index_Stages gs 
+where gi._Index_key = gs._Index_key
 and gs._IndexAssay_key in (74725, 74728)
+and not exists (select 1 from GXD_Index_Stages gs2
+where gi._Index_key = gs2._Index_key
+and gs2._IndexAssay_key not in (74725, 74728))
+go
+
+/* exclude E? */
+
+insert into #excluded
+select distinct gi._Index_key
+from GXD_Index gi, GXD_Index_Stages gs 
+where gi._Index_key = gs._Index_key
+and gs._StageID_key = 74769
+and not exists (select 1 from GXD_Index_Stages gs2
+where gi._Index_key = gs2._Index_key
+and gs2._StageID_key != 74769)
+go
+
+insert into #excluded
+select _Index_key from GXD_Index
+where comments like '%ot blot%'
+or comments like '%fraction%'
+or comments like '%reverse%'
 go
 
 create index idx1 on #excluded(_Index_key)
