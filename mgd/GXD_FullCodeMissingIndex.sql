@@ -2,6 +2,9 @@
 print ""
 print "Full Coded References that are missing a Gene in the Index"
 print ""
+print "excluded:"
+print "  Freeman reference (J:64991)"
+print ""
 
 select distinct b.accID, m.symbol
 from GXD_Assay a, MRK_Marker m, ACC_Accession b

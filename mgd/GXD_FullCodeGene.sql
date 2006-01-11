@@ -42,6 +42,11 @@ go
 print ""
 print "Full Coded References that contain indexed Genes that have not been full coded"
 print ""
+print "excluded:"
+print "     index records that contain only cDNA or primer extension assays"
+print "     index records that contain age 'E?'"
+print "     index records that have a note that contains 'ot blot', 'fraction', or 'reverse'"
+print ""
 
 select distinct b.accID, m.symbol
 from GXD_Index i, MRK_Marker m, ACC_Accession b
