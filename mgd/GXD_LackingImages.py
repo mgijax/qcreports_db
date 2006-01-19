@@ -51,7 +51,7 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
-db.sql('select distinct r._Refs_key, r.journal into #refs ' + \
+db.sql('select distinct r._Refs_key, r.journal, a.creation_date into #refs ' + \
 	'from BIB_Refs r, GXD_Assay a ' + \
 	'where r.journal in ("' + string.join(journals, '","') + '") ' + \
 	'and r._Refs_key = a._Refs_key ' + \
@@ -70,7 +70,7 @@ for r in results:
     fLabels[key].append(value)
 
 results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key order by b.jnumID', 'auto')
+	'where r._Refs_key = b._Refs_key order by r.creation_date, b.jnumID', 'auto')
 for r in results:
     fp.write(TAB + string.ljust(r['jnumID'], 12))
     fp.write(string.ljust(r['short_citation'], 75))

@@ -66,7 +66,7 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
-db.sql('select distinct a._Refs_key ' + \
+db.sql('select distinct a._Refs_key, a.creation_date ' + \
       'into #refs ' + \
       'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
            'IMG_Image i, IMG_ImagePane p ' + \
@@ -78,7 +78,7 @@ db.sql('select distinct a._Refs_key ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'union ' + \
-      'select distinct a._Refs_key ' + \
+      'select distinct a._Refs_key, a.creation_date ' + \
       'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
            'GXD_Specimen g, GXD_ISResultImage_View r ' + \
       'where g._Assay_key = a._Assay_key and ' + \
@@ -104,7 +104,7 @@ for r in results:
 
 results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
 	'where r._Refs_key = b._Refs_key ' + \
-        'order by b.jnumID', 'auto')
+        'order by r.creation_date, b.jnumID', 'auto')
 
 for r in results:
     fp.write(TAB + string.ljust(r['jnumID'], 12))
