@@ -106,10 +106,13 @@ results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, B
 	'where r._Refs_key = b._Refs_key ' + \
         'order by r.creation_date, b.jnumID', 'auto')
 
+refprinted = []
 for r in results:
-    fp.write(TAB + string.ljust(r['jnumID'], 12))
-    fp.write(string.ljust(r['short_citation'], 75))
-    fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
+    if r['_Refs_key'] not in refprinted:
+        fp.write(TAB + string.ljust(r['jnumID'], 12))
+        fp.write(string.ljust(r['short_citation'], 75))
+        fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
+	refprinted.append(r['_Refs_key'])
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
 
