@@ -44,7 +44,7 @@ print "Full Coded References that contain indexed Genes that have not been full 
 print ""
 print "excluded:"
 print "     index records that contain only cDNA or primer extension assays"
-print "     index records that contain age 'E?'"
+print "     index records that contain only age 'E?'"
 print "     index records that have a note that contains 'ot blot', 'fraction', or 'reverse'"
 print ""
 
