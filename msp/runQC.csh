@@ -62,6 +62,7 @@ endif
 
 source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
+setenv MGD ${RADAR_DBNAME}
 
 setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf ${LOG}
