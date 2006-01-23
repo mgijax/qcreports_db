@@ -1,3 +1,9 @@
+TAG:  qcreports_db-3-4-0-20
+DATE: 01/23/2006
+STAFF: lec
+CHANGES:
+1) msp, seqload; added "setenv MGD ${RADAR_DBNAME} to runQC.csh
+
 TAG:  qcreports_db-3-4-0-19
 DATE: 01/20/2006
 STAFF: lec
