@@ -31,6 +31,7 @@ import reportlib
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
+RADAR = os.environ['RADAR_DBNAME']
 
 mgiID = {}
 egID = {}
@@ -114,12 +115,12 @@ def runQueries(includeRiken):
 
     db.sql('select h.*, hstatus = e.status ' + \
 	'into #results ' + \
-        'from #homology h, radar..DP_EntrezGene_Info e ' + \
+        'from #homology h, %s..DP_EntrezGene_Info e ' % (RADAR) + \
         'where h.hsymbol = e.symbol and e.taxID = 9606 ' + \
         'union ' + \
         'select h.*, hstatus = "?" ' + \
         'from #homology h ' + \
-        'where not exists (select 1 from radar..DP_EntrezGene_Info e ' + \
+        'where not exists (select 1 from %s..DP_EntrezGene_Info e ' % (RADAR) + \
         'where h.hsymbol = e.symbol and e.taxID = 9606) ', None)
 
 def report1(fp, includeRiken = 0):
