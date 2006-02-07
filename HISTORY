@@ -1,3 +1,10 @@
+TAG:  qcreports_db-3-4-0-21
+DATE: 02/07/2006
+STAFF: lec
+CHANGES:
+1) GXD_LackingImages.py; 2002 cutoff
+2) GXD_FullCode.py; removed "nature family"
+
 TAG:  qcreports_db-3-4-0-20
 DATE: 01/23/2006
 STAFF: lec
