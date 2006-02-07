@@ -40,6 +40,8 @@ journals = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Gen
 
 fp = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
 
+fp.write(TAB + 'where publication year >= 2002' + CRT*2)
+
 fp.write(TAB + 'Journals Checked:' + CRT)
 for j in journals:
     fp.write(2*TAB + j + CRT)
@@ -53,7 +55,8 @@ fp.write(string.ljust('-------------', 50) + CRT)
 
 db.sql('select distinct r._Refs_key, r.journal, a.creation_date into #refs ' + \
 	'from BIB_Refs r, GXD_Assay a ' + \
-	'where r.journal in ("' + string.join(journals, '","') + '") ' + \
+	'where r.year >= 2002 ' + \
+	'and r.journal in ("' + string.join(journals, '","') + '") ' + \
 	'and r._Refs_key = a._Refs_key ' + \
 	'and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)', None)
 db.sql('create index idx1 on #refs(_Refs_key)', None)
