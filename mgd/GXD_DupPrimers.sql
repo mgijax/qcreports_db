@@ -45,7 +45,8 @@ print ""
 print "Primer Sets whose Sequences are identical and one of the Primer Sets is used in a GXD Assay"
 print ""
 
-select a1.accID, primer1 = d.name, a2.accID, d.primer2, d.primer1sequence, d.primer2sequence
+select accID1 = substring(a1.accID,1,15), primer1 = d.name, 
+accID2 = substring(a2.accID,1,15), d.primer2, d.primer1sequence, d.primer2sequence
 from #gxd d, ACC_Accession a1, ACC_Accession a2
 where d._Probe_key = a1._Object_key
 and a1._MGIType_key = 3
