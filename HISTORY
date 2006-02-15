@@ -1,3 +1,9 @@
+TAG:  qcreports_db-3-4-0-24
+DATE: 02/15/2006
+STAFF: lec
+CHANGES:
+1) SEQ_GenBank.py; moved from mgd to weekly
+
 TAG:  qcreports_db-3-4-0-23
 DATE: 02/14/2006
 STAFF: lec
