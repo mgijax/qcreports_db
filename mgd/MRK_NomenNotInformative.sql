@@ -43,7 +43,7 @@ go
 
 select s.*, refID = c.pubMedID
 into #sequencesFinal
-from #sequences1 s, ACC_Accession a, radar_lec_lec_lec..DP_EntrezGene_PubMed c
+from #sequences1 s, ACC_Accession a, radar..DP_EntrezGene_PubMed c
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 55
@@ -54,7 +54,7 @@ from #sequences1 s, ACC_Accession a
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 55
-and not exists (select 1 from radar_lec_lec_lec..DP_EntrezGene_PubMed c
+and not exists (select 1 from radar..DP_EntrezGene_PubMed c
 where a.accID = c.geneID)
 go
 

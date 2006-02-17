@@ -13,6 +13,7 @@
 
 source ./Configuration
 
+if ( ${QCINSTALLDIR} == /usr/local/mgi/live/qcreports_db ) then
 cd ${QCINSTALLDIR}
 sed "s/ftp.informatics.jax.org/$FTPURL/" qcr.html > qcr.html.new
 mv -f qcr.html.new qcr.html
@@ -22,6 +23,7 @@ foreach i ($toEdit)
 sed "s/radar/$RADARDB/g" $i > $i.new
 mv -f $i.new $i
 end
+endif
 
 cd ${QCINSTALLDIR}
 chmod 644 Configuration.* HISTORY *.html
