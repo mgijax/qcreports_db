@@ -2,7 +2,7 @@
 /* Comparison of orthologous relationships between MGD and HomoloGene */
 /* Uses the HomologGene file homologene.data which is downloaded from their */
 /* ftp site using the locuslinkload product */
-/* This file is dumped into radar..DP_HomoloGene */
+/* This file is dumped into radar_lec_lec_lec..DP_HomoloGene */
 
 print ""
 print "The mouse/human orthologous pairs that HomoloGene is reporting that we are"
@@ -12,7 +12,7 @@ print ""
 
 select species1 = "human", geneID1 = h1.geneID, symbol1 = h1.symbol,
 species2 = "mouse", geneID2 = h2.geneID, symbol2 = h2.symbol
-from radar..DP_HomoloGene h1, radar..DP_HomoloGene h2,
+from radar_lec_lec_lec..DP_HomoloGene h1, radar_lec_lec_lec..DP_HomoloGene h2,
 HMD_Homology_Marker hm1, MRK_Marker m1, HMD_Homology h3
 where h1.taxID = 9606
 and h1.groupID = h2.groupID

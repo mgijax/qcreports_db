@@ -24,8 +24,11 @@ setenv QCLOGSDIR           	${QCREPORTDIR}/logs
 # archive output directory
 setenv QCARCHIVEDIR		${QCREPORTDIR}/archive
 
-# Alleles archive directory
+# Allele archive directory
 setenv QCALLELEARCHIVE          ${QCARCHIVEDIR}/alleles
+
+# Strain archive directory
+setenv QCSTRAINARCHIVE          ${QCARCHIVEDIR}/strain
 
 # nomen-specific reports directory
 setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen

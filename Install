@@ -47,6 +47,10 @@ if ( ! -d ${QCALLELEARCHIVE} ) then
 	mkdir ${QCALLELEARCHIVE}
 endif
 
+if ( ! -d ${QCSTRAINARCHIVE} ) then
+	mkdir ${QCSTRAINARCHIVE}
+endif
+
 if ( ! -d ${QCNOMENARCHIVE} ) then
 	mkdir ${QCNOMENARCHIVE}
 endif

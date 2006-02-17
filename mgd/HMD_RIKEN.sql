@@ -52,7 +52,7 @@ go
 
 select h.*, e.status
 into #results
-from #homology2 h, radar..DP_EntrezGene_Info e
+from #homology2 h, radar_lec_lec_lec..DP_EntrezGene_Info e
 where h.hsymbol = e.symbol
 and e.taxID = 9606
 go
@@ -60,9 +60,9 @@ go
 insert into #results
 select h.*, status = "?"
 from #homology2 h
-where not exists (select 1 from radar..DP_EntrezGene_Info e
+where not exists (select 1 from radar_lec_lec_lec..DP_EntrezGene_Info e
 where e.taxID = 9606 and h.hsymbol = e.symbol)
-and not exists (select 1 from radar..DP_EntrezGene_Synonym es, radar..DP_EntrezGene_Info e
+and not exists (select 1 from radar_lec_lec_lec..DP_EntrezGene_Synonym es, radar_lec_lec_lec..DP_EntrezGene_Info e
 where e.taxID = 9606 and e.geneID = es.geneID
 and h.hsymbol = es.synonym)
 go

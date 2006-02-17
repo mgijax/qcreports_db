@@ -23,16 +23,31 @@ cd `dirname $0` && source ./Configuration
 
 cd weekly
 foreach i (*.py)
-if ( $i == "ALL_ImmuneAnnot.py" || $i == "ALL_Progress.py" ) then
+if ( $i == "PRB_StrainJAX2.py" ) then
         echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.rpt"
-	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
+	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCSTRAINARCHIVE
 	rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
 	$i
 	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
-else
-	$i
 endif
 end
+
+#if ( $i == "ALL_ImmuneAnnot.py" || $i == "ALL_Progress.py" ) then
+#        echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.rpt"
+#	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
+#	rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
+#	$i
+#	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
+#else if ( $i == "PRB_StrainJAX2.py" ) then
+#        echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.rpt"
+#	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCSTRAINARCHIVE
+#	rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
+#	$i
+#	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
+#else
+#	$i
+#endif
+#end
 
 cd $QCOUTPUTDIR
 foreach i (NOM_BroadcastReserved.rpt)
