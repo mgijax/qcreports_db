@@ -26,8 +26,10 @@ end
 endif
 
 cd ${QCINSTALLDIR}
+if ( ${QCINSTALLDIR} == /usr/local/mgi/live/qcreports_db ) then
 chmod 644 Configuration.* HISTORY *.html
 chmod 755 *.sh */*.py */*.sql Install
+end if
 
 if ( ! -d ${QCREPORTDIR} ) then
 	mkdir ${QCREPORTDIR}
