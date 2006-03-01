@@ -8,7 +8,6 @@ where m._Marker_Status_key in (1,3)
 and m._Organism_key = 1
 and m.chromosome not in ("MT", "UN")
 and m._Marker_Type_key != 3
-and not exists (select 1 from MLD_Marker e where m._Marker_key = e._Marker_key)
 and not exists (select 1 from MLD_Expt_Marker e where m._Marker_key = e._Marker_key)
 go
 

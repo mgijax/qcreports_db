@@ -1,35 +1,6 @@
 set nocount on
 go
 
-select distinct m._Refs_key, m._Marker_key 
-into #expts
-from MLD_Marker m
-where not exists (select em.* from MLD_Expts e, MLD_Expt_Marker em
-where m._Refs_key = e._Refs_key
-and e._Expt_key = em._Expt_key
-and m._Marker_key = em._Marker_key)
-go
-
-set nocount off
-go
-
-print ""
-print "Mapping - Markers in Primary Marker List - Not Found in Experimental Marker List"
-print ""
-
-select distinct v.jnum, substring(v.short_citation, 1, 40), v.symbol
-from MLD_Marker_View v, #expts e
-where e._Refs_key = v._Refs_key
-and e._Marker_key = v._Marker_key
-order by v.jnum, v.symbol
-go
-
-set nocount on
-go
-
-drop table #expts
-go
-
 select distinct m._Expt_key, m._Marker_key 
 into #expts
 from MLD_Expt_Marker m, MLD_RIData d
