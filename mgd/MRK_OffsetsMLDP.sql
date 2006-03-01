@@ -2,16 +2,16 @@ set nocount on
 go
 
 select distinct m.symbol, m.chromosome, mo.offset, e.exptType,
-modDate = convert(char(10), e.modification_date, 101), g._Refs_key
+modDate = convert(char(10), e.modification_date, 101), e._Refs_key
 into #markers
-from MRK_Marker m, MRK_Offset mo, MLD_Marker g, MLD_Expts e
+from MRK_Marker m, MRK_Offset mo, MLD_Expt_Marker g, MLD_Expts e
 where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m._Marker_key = mo._Marker_key
 and mo.source = 0
 and mo.offset < 0
 and m._Marker_key = g._Marker_key
-and g._Refs_key = e._Refs_key
+and g._Expt_key = e._Expt_key
 and e.modification_date >= dateadd(day, -3, getdate())
 go
 
@@ -44,12 +44,12 @@ delete from #mgd where source > 0
 go
 
 select distinct m.symbol, m.chromosome, d.offset, e.exptType,
-modDate = convert(char(10), e.modification_date, 101), g._Refs_key
+modDate = convert(char(10), e.modification_date, 101), e._Refs_key
 into #markers
-from #mgd d, MRK_Marker m, MLD_Marker g, MLD_Expts e
+from #mgd d, MRK_Marker m, MLD_Expt_Marker g, MLD_Expts e
 where d._Marker_key = m._Marker_key
 and m._Marker_key = g._Marker_key
-and g._Refs_key = e._Refs_key
+and g._Expt_key = e._Expt_key
 and e.modification_date >= dateadd(day, -3, getdate())
 go
  
@@ -91,12 +91,12 @@ and o2.offset < 0
 go
 
 select distinct m.symbol, m.chromosome, d.offset, e.exptType,
-modDate = convert(char(10), e.modification_date, 101), g._Refs_key
+modDate = convert(char(10), e.modification_date, 101), e._Refs_key
 into #markers
-from #mgd d, MRK_Marker m, MLD_Marker g, MLD_Expts e
+from #mgd d, MRK_Marker m, MLD_Expt_Marker g, MLD_Expts e
 where d._Marker_key = m._Marker_key
 and m._Marker_key = g._Marker_key
-and g._Refs_key = e._Refs_key
+and g._Expt_key = e._Expt_key
 and e.modification_date >= dateadd(day, -3, getdate())
 go
  
