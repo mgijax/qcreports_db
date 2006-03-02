@@ -34,7 +34,7 @@ set nocount off
 go
 
 print ""
-print "References w/no Marker Attached"
+print "References with no Marker Attached"
 print ""
 
 select b.jnum, substring(b.short_citation, 1, 75), b.year, r.strain
