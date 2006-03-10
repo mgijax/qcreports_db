@@ -14,12 +14,14 @@ setenv LOG	${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
+date >> ${LOG}
+
 ./strainAllele.sh >>& ${LOG}
 ./strainChanges.sh >>& ${LOG}
 ./goStats.sh >>& ${LOG}
 
 foreach i (${QCMGD}/*.sql)
-echo $i, `date`
+echo $i, `date` | tee -a ${LOG}
 if ( $i == "${QCMGD}/MRK_MarkerClip.sql" ) then
 	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCALLELEARCHIVE}
 	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
@@ -28,14 +30,14 @@ if ( $i == "${QCMGD}/MRK_MarkerClip.sql" ) then
 else
 	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.rpt ${DSQUERY} ${MGD}
 endif
-echo $i, `date`
+echo $i, `date` | tee -a ${LOG}
 end
 
 cd ${QCMGD}
 foreach i (*.py)
-echo $i, `date`
+echo $i, `date` | tee -a ${LOG}
 $i >>& ${LOG}
-echo $i, `date`
+echo $i, `date` | tee -a ${LOG}
 end
 
 cd ${QCOUTPUTDIR}
@@ -46,3 +48,6 @@ end
 
 rcp ${HOBBITONNOMENFASTA} ${QCOUTPUTDIR}
 rcp ${QCOUTPUTDIR}/${NOMENFASTA} ${HUGOWEBDIR}
+
+date >> ${LOG}
+

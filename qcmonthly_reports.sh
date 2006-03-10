@@ -14,7 +14,13 @@ setenv LOG	${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
+date >> ${LOG}
+
 foreach i ($QCMONTHLY/*.sql)
-	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+echo $i, 'date' | tee -a ${LOG}
+reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+echo $i, 'date' | tee -a ${LOG}
 end
+
+date >> ${LOG}
 
