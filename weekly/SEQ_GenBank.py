@@ -183,15 +183,12 @@ for r in results:
 	accIDs[key] = []
     accIDs[key].append(value)
 
-results = db.sql('select distinct accID from #mseqIDs ' + \
-	'union ' + \
-	'select distinct accID from #pseqIDs order by accID', 'auto')
+#
+# process accession ids
+#
 
-# for each Sequence Accession ID
+for accID in accIDs.keys():
 
-for r in results:
-
-    accID = regsub.gsub('\n', '', r['accID'])
     fp.write(accID)
 
     # for each Object associated with the Sequence Accession ID
