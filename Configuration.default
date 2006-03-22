@@ -24,8 +24,11 @@ setenv QCLOGSDIR           	${QCREPORTDIR}/logs
 # archive output directory
 setenv QCARCHIVEDIR		${QCREPORTDIR}/archive
 
-# Alleles archive directory
+# Allele archive directory
 setenv QCALLELEARCHIVE          ${QCARCHIVEDIR}/alleles
+
+# Strain archive directory
+setenv QCSTRAINARCHIVE          ${QCARCHIVEDIR}/strain
 
 # nomen-specific reports directory
 setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
@@ -34,7 +37,7 @@ setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
 setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 
 # private HUGO directories
-setenv HUGOWEBDIR		/usr/local/mgi/private/www/hugo
+setenv HUGOWEBDIR		gondor:/usr/local/mgi/private/www/hugo
 setenv HUGOFTPDIR		gondor:/export/gondor/ftp/private/hes
 
 # FASTA NOMEN DB File
@@ -53,6 +56,9 @@ setenv QCWEEKLY                 ${QCINSTALLDIR}/weekly
 # monthly reports directory
 setenv QCMONTHLY                ${QCINSTALLDIR}/monthly
 
+# MLC index file
+setenv MLCINDEX			/usr/local/mgi/live/wi/www/images/mlc/index
+
 # EI Log files
 setenv EILOGFILES		/net/orodruin/vol/home
 
@@ -65,12 +71,36 @@ setenv DATE `date '+%Y-%m-%d'`
 # FTP 
 setenv FTPURL			ftp.informatics.jax.org
 
-# MGD Schema
-setenv MGD_DBSCHEMADIR		/usr/local/mgi/live/dbutils/mgd/mgddbschema
+# SYBASE
+setenv SYBASE			/opt/sybase/12.5
 
-# RADAR Schema
-setenv RADAR_DBSCHEMADIR	/usr/local/mgi/live/dbutils/radar/radardbschema
+# PYTHON
+setenv PYTHONPATH       	/usr/local/mgi/live/lib/python
 
-source ${RADAR_DBSCHEMADIR}/Configuration
-source ${MGD_DBSCHEMADIR}/Configuration
+# DBUTILITIESPATH
+setenv DBUTILITIESPATH		/usr/local/mgi/live/dbutils/mgidbutilities
 
+# PATH
+set path = (. $path $DBUTILITIESPATH/bin $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
+
+# Database Server
+setenv DBSERVER PROD_MGI
+setenv DSQUERY ${DBSERVER}
+
+# MGD Database
+setenv DBNAME mgd
+setenv MGD ${DBNAME}
+setenv RADARDB radar
+setenv RADAR_DBNAME ${RADARDB}
+
+# DBO User
+setenv DBOUSER  mgd_dbo
+
+# DBO Password
+setenv DBOPASSWORDFILE  /usr/local/mgi/live/dbutils/mgidbutilities/.mgd_dbo_password
+
+# Public User
+setenv PUBUSER  mgd_public
+
+# DBO Password
+setenv PUBPASSWORDFILE  /usr/local/mgi/live/dbutils/mgidbutilities/.mgd_public_password

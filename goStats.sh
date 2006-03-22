@@ -7,7 +7,12 @@
 # then, run this script
 #
 
-ARCHIVE_DIR=${QCARCHIVEDIR}/go
+SERVER=$DSQUERY
+USER=$PUBUSER
+PASSWORD=`cat $PUBPASSWORDFILE`
+DATABASE=$MGD
+
+ARCHIVE_DIR=$QCARCHIVEDIR/go
 
 #GO_FISH="'J:56000'"
 #SWISS_PROT="'J:60000'"
@@ -36,11 +41,11 @@ COUNT_ALL_REFERENCES="ALL_REFERENCES"
 NOT_IN="not in"
 EQUALS="="
 
-REPORT=${QCOUTPUTDIR}/GO_stats.rpt
+REPORT=$QCOUTPUTDIR/GO_stats.rpt
 
 setRefsClause()
 {
-   if test "$1" != "${COUNT_ALL_REFERENCES}"
+   if test "$1" != "$COUNT_ALL_REFERENCES"
    then
       REFS_CLAUSE="and    e._Refs_key         $1 $2"
    else
@@ -52,9 +57,8 @@ getAnnotations()
 {
    setRefsClause "$2" $3
    
-isql -S${MGD_DBSERVER} -U${PUBDBUSER} -P${PUBDBPASSWORD} -w200 << END >> ${REPORT}
-
-use ${MGD_DBNAME}
+   isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+use $DATABASE
 go
 
 set nocount on
@@ -83,9 +87,9 @@ getAnnotationByOntology()
 
    setRefsClause "$2" $3
    
-isql -S${MGD_DBSERVER} -U${PUBDBUSER} -P${PUBDBPASSWORD} -w200 << END >> ${REPORT}
+isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
 
-use ${MGD_DBNAME}
+use $DATABASE
 go
 
 set nocount on
@@ -139,9 +143,9 @@ echo "*********************************************************************" >> 
 echo "GO Ontology Summary - Number of GO Terms per Ontology"                 >> $REPORT
 echo ""                                                                      >> $REPORT
 
-isql -S${MGD_DBSERVER} -U${PUBDBUSER} -P${PUBDBPASSWORD} -w200 << END >> ${REPORT}
+isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
 
-use ${MGD_DBNAME}
+use $DATABASE
 go
 
 set nocount on
@@ -171,9 +175,9 @@ echo "*********************************************************************" >> 
 echo "GO Ontology Summary - Number of GO Terms per Ontology Used in MGI"     >> $REPORT
 echo ""                                                                      >> $REPORT
 
-isql -S${MGD_DBSERVER} -U${PUBDBUSER} -P${PUBDBPASSWORD} -w200 << END >> ${REPORT}
+isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
 
-use ${MGD_DBNAME}
+use $DATABASE
 go
 
 set nocount on
@@ -220,7 +224,7 @@ The Jackson Laboratory - Mouse Genome Informatics - Mouse Genome Database (MGD)
 Copyright 1996, 1999, 2000 The Jackson Laboratory
 All Rights Reserved
 Date Generated:  `date`
-(SERVER=${MGD_DBSERVER};DATABASE=${MGD_DBNAME})
+(SERVER=$SERVER;DATABASE=$DATABASE)
 
 END
 
@@ -237,7 +241,7 @@ getCounts "FANTOM2"    $EQUALS               $FANTOM2
 getCounts "FANTOM3"    $EQUALS               $FANTOM3
 getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
 
-cat ${DBUTILSDIR}/text/copyrightnotice >> $REPORT
+cat ${DBUTILITIESPATH}/text/copyrightnotice >> $REPORT
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]

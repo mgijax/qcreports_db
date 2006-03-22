@@ -1,10 +1,10 @@
 print ""
-print "Markers of Type 'Pseudogene' mapped to PIRSF superfamilies"
+print "Pseudogenes mapped to PIRSF superfamilies"
 print ""
 
 select acc1.accID, symbol = substring(m.symbol,1,25), acc2.accID, term = substring(t.term,1,50)
 from MRK_Marker m, ACC_Accession acc1, ACC_Accession acc2, VOC_Annot a, VOC_Term t
-where a._AnnotType_key = 1007
+where a._Annottype_key = 1007
 and acc1._Object_key = a._Object_key
 and acc1._MGIType_key = 2
 and acc1._LogicalDB_key = 1

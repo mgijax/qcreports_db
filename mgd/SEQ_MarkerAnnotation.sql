@@ -63,6 +63,6 @@ print ""
 select distinct m.symbol, ma.accID, ma.egID
 from #final ma, MRK_Marker m
 where ma._Object_key = m._Marker_key
-order by m.symbol
+order by ma.egID, m.symbol
 go
 

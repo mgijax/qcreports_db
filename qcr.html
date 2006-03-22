@@ -29,11 +29,11 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#nomenclature">Nomenclature</A>
 <LI><A HREF="#strains">Strains</A>
 <LI><A HREF="#strainsjax">Strains - JAX</A>
-<LI><A HREF="#mgs">MGS</A>
+<LI><A HREF="#sequencegroup">Sequence Group</A>
 <LI><A HREF="#sequence">Sequence</A>
 <LI><A HREF="#dataloads">Data Loads</A>
 <LI><A HREF="#lists">Lists/Other</A>
-<LI><A HREF="ftp://devftp.informatics.jax.org/pub/reports/index.html">Public Reports</A>
+<LI><A HREF="ftp://devdevdevdevdevdevftp.informatics.jax.org/pub/reports/index.html">Public Reports</A>
 </UL>
 <HR>
 
@@ -42,6 +42,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_NeedNLM1.sql.rpt">References Which Need NLM Updates</A>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_InPress.sql.rpt">References In Press/Submissions</A>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_NoAbstract.sql.rpt">References w/ Medline UI and No Abstract</A>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_NoRef.sql.rpt">References with no Marker Attached</A>
 </OL>
 
 <A NAME="markers"><B>Markers</B> </A>
@@ -143,8 +144,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_DevBiol.rpt">Dev Biol papers to full code</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_Development.rpt">Development papers to full code</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_DevDyn.rpt">Dev Dyn papers to full code</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_Nature.rpt">Nature family papers to full code</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_FullCodeable.rpt">Markers that have not been full coded that have full codeable papers</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_FullCodeable.rpt">Markers that have not been full coded and that have full codeable papers</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_FullCodeGene.sql.rpt">Full Coded References that contain indexed Genes that have not been full coded</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_FullCodeMissingIndex.sql.rpt">Full Coded References that are missing a Gene in the Index</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_KnockInGene.sql.rpt">GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_GenotypeRef.sql.rpt">References where GXD and Pheno differ in Genotype</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_WildType.sql.rpt">Genotypes where Allele 1 is "wild type"</A>
@@ -155,11 +157,12 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_ImageCheck.sql.rpt">GXD Image Check</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SameStructure.rpt">GXD Specimens/Lanes that use the same Structure > 1</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_GelBand.sql.rpt">GXD Blot w/ Control = No and Strength = Not Applicable</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_DupPrimers.sql.rpt">Duplicate Primer Sets used in GXD</A>
 </OL>
 
 <A NAME="go"><B>GO</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Mouse Genes that have Rat Homologs but no GO Annotations</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_A.rpt">Genes (neither 'RIKEN' or 'expressed' or 'EST') with no GO Annotations and reference count excludes data loads and GenBank submissions</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_B.rpt">Genes (neither 'RIKEN' or 'expressed' or 'EST') with no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_C.rpt">Genes (neither 'RIKEN' or 'expressed' or 'EST') with no GO Annotations and reference count includes only data loads and GenBank submissions</A>
@@ -183,6 +186,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.sql.rpt">All genes with 'unknown' annotations with new indexed literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_GODups.sql.rpt">Duplicate GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/gp2protein.mgi">Special gp2protein.mgi (includes TrEMBL)</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 </OL>
 
 <A NAME="nomenclature"><B>Nomenclature</B></A>
@@ -201,7 +205,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_RIKEN.sql.rpt">Human/Mouse Orthologies involving RIKEN Symbols</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Synonym_J94790.sql.rpt">Synonyms that require proper J number assignment</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Synonym_Verify.sql.rpt">Synonyms that need to be verified</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_PirsfPseudogene.sql.rpt">Pseudogenes mapped to PIRSF</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_PirsfPseudogene.sql.rpt">Pseudogenes mapped to PIRSF superfamilies</A>
 </OL>
 
 <A NAME="strains"><B>Strains</B></A>
@@ -224,15 +228,17 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_PrivateRef.sql.rpt">Private Strains Referenced by Other Database Objects</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_NomenSyns.rpt">Strain Nomenclature Synonyms</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_OtherSyns.rpt">Strain Other Synonyms</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain3.rpt">Public Non-Standard Strains that have a MGI ID or an External ID</A>
 </OL>
 
 <A NAME="strainsjax"><B>Strains - JAX</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainsJAX1.rpt">Public JAX Strains with no Annotation</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainsJAX2.rpt">Public JAX Strains with exact/inexact Genotype Matches</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX1.rpt">Public JAX Strains with no Annotation</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX2.current.rpt">Public JAX strains/Alleles used in Genotype/No Strain/Genotype Association</A>
+<LI><A HREF="/data/reports/qcreports_db/archive/strain">Strain Archive</A>
 </OL>
 
-<A NAME="mgs"><B>MGS</B></A>
+<A NAME="sequencegroup"><B>Sequence Group</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_GenBank.rpt">All Sequences with Marker/Molecular Segment (bobs)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ACC_GenBank.sql.rpt">All GenBank IDs in MGI Associated with a Molecular Segment or Mouse Gene</A>
@@ -275,6 +281,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/loads/dots/dotsseqload/index.html">DoTS Sequence Load</A>
 <LI><A HREF="/data/loads/nia/niaseqload/index.html">NIA Sequence Load</A>
 <LI><A HREF="/data/loads/pirsf/pirsfload/index.html">PIRSF Load</A>
+<LI><A HREF="/usrlocalmgi/imsr/imsrload/IMSRindex.html">IMSR Load</A>
 </OL>
 
 

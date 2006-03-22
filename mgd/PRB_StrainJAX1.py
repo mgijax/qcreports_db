@@ -17,6 +17,9 @@
 #
 # History:
 #
+# lec	02/17/2006
+#	- TR 7495/convert to tab-delimited
+#
 # lec	12/20/2005
 #	- TR 7342
 #
@@ -29,6 +32,9 @@ import db
 import mgi_utils
 import reportlib
 
+TAB = reportlib.TAB
+CRT = reportlib.CRT
+
 #
 # Main
 #
@@ -36,14 +42,9 @@ import reportlib
 title = 'Public JAX strains with no exact/inexact genotype matches'
 fp = reportlib.init(sys.argv[0], title, outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write(string.ljust('JR#', 10))
-fp.write(string.ljust('Strain', 75))
-fp.write(string.ljust('Alleles', 50))
-fp.write(reportlib.CRT)
-fp.write(string.ljust('------', 10))
-fp.write(string.ljust('--------------------------------------------------', 75))
-fp.write(string.ljust('----------------------------------------', 50))
-fp.write(reportlib.CRT)
+fp.write('JR#' + TAB)
+fp.write('Strain' + TAB)
+fp.write('Alleles' + CRT)
 
 # Retrieve all Strains that have a JRS ID and no genotype association
 
@@ -73,15 +74,14 @@ for r in results:
 
 results = db.sql('select * from #strains order by strain', 'auto')
 for r in results:
-    fp.write(string.ljust(r['jrs'], 10))
-    fp.write(string.ljust(r['strain'], 75))
+    fp.write(r['jrs'] + TAB)
+    fp.write(r['strain'] + TAB)
 
     if alleles.has_key(r['_Strain_key']):
         fp.write(string.join(alleles[r['_Strain_key']], ','))
-    fp.write(reportlib.CRT)
+    fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

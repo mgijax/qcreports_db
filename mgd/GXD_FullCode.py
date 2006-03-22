@@ -6,6 +6,8 @@
 #
 # Report:
 #
+# Papers to full code by specific Journals
+#
 # Usage:
 #       GXD_FullCode.py
 #
@@ -32,8 +34,6 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 journals = ['Dev Biol', 'Dev Dyn', 'Development', 'Mech Dev', 'Gene Expr Patterns', 'Brain Res Gene Expr Patterns']
-
-natureJournals = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Genet', 'Nat Immunol', 'Nat Med', 'Nat Neurosci', 'Nat Struct Biol', 'Nat Biotechnol', 'Biotechnology', 'Nat Rev Cancer', 'Nat Rev Genet', 'Nat Rev Immunol', 'Nat Rev Mol Cell Bio', 'Nat Rev Neurosci']
 
 def processJournal(jList, fileName, journalTitle):
 
@@ -141,7 +141,4 @@ for j in journals:
     jList.append(j)
     fileName = 'GXD_' + regsub.gsub(' ', '', j)
     processJournal(jList, fileName, j)
-
-fileName = 'GXD_Nature'
-processJournal(natureJournals, fileName, 'Nature family')
 

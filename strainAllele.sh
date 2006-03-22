@@ -54,7 +54,7 @@ date >> $LOG
  
 cat - <<EOSQL | doisql.csh $0 >> $LOG
 
-use ${MGD_DBNAME}
+use $DBNAME
 go
 
 select distinct s._Strain_key, strain = substring(s.strain,1,85), 
