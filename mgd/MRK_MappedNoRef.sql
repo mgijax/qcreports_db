@@ -45,8 +45,8 @@ print "(excludes Markers referenced by mapping panel database releases)"
 print "(only includes Markers broadcast 05/25/2000 or later)"
 print ""
 
-select m.symbol, m.chromosome, substring(t.name, 1, 20), h.jnumID
-from #markers me, MRK_Marker m, MRK_Chromosome c, MRK_Types t, MRK_History_Ref_View h
+select m.symbol, m.chromosome, substring(t.name, 1, 20), jnumID = a.accID
+from #markers me, MRK_Marker m, MRK_Chromosome c, MRK_Types t, MRK_History h, ACC_Accession a
 where me._Marker_key = m._Marker_key
 and m._Marker_Type_key = t._Marker_Type_key
 and m._Organism_key = c._Organism_key
@@ -54,6 +54,9 @@ and m.chromosome = c.chromosome
 and m._Marker_Key = h._Marker_key
 and h._Marker_Event_key = 1
 and h.event_date >= "05/24/2000"
+and h._Refs_key = a._Object_key
+and a._MGIType_key = 1
+and a.prefixPart = "J:"
 and not exists (select 1 from #exclude e
 where m._Marker_key = e._Marker_key)
 order by m._Marker_Type_key, c.sequenceNum, m.symbol
