@@ -17,9 +17,9 @@ touch ${LOG}
 date >> ${LOG}
 
 foreach i ($QCMONTHLY/*.sql)
-echo $i, 'date' | tee -a ${LOG}
+echo $i, `date` | tee -a ${LOG}
 reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
-echo $i, 'date' | tee -a ${LOG}
+echo $i, `date` | tee -a ${LOG}
 end
 
 date >> ${LOG}
