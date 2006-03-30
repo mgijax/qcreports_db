@@ -1,3 +1,9 @@
+TAG:  qcreports_db-3-4-3-8
+DATE: 03/30/2006
+STAFF: lec
+CHANGES:
+1) new GXD_ImageJPG.sql (TR 7599)
+
 TAG:  qcreports_db-3-4-3-7
 TAG:  qcreports_db-3-4-3-6
 DATE: 03/20/2006
