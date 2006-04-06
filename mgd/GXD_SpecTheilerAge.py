@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	04/06/2996
+#	- converted regex to re
+#
 # lec	02/11/2003
 #	- TR 4481; converted to QC report
 #
@@ -35,7 +38,7 @@
 
 import sys
 import string
-import regex
+import re
 import os
 import db
 import reportlib
@@ -45,7 +48,6 @@ CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
-
 
 #
 # Main
@@ -125,20 +127,23 @@ for r in results:
        	continue
     
     age = r['age']
-    start = regex.search('[0-9]',age)
+    m = re.search('[0-9]',age)
 
-    if (start < 0):
+    if m == None:
        	fp.write(r['MGI'] + TAB + r['J'] + TAB + mgi_utils.prvalue(r['label']) + CRT)
        	count = count + 1
        	continue
 
-    range = age[start:]
-    delim = regex.search('[-,]',range)
+    start = m.start(0)
 
-    if (delim < 0):
+    range = age[start:]
+    m = re.search('[-,]', range)
+
+    if m == None:
        	minAge = string.atof(range)
        	maxAge = minAge
     else:
+        delim = m.start(0)
        	minAge = string.atof(range[0:delim])
        	maxAge = string.atof(range[delim+1:])
 	
