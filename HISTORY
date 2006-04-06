@@ -1,8 +1,10 @@
+TAG:  qcreports_db-tr7062-7
 TAG:  qcreports_db-tr7062-6
 DATE: 04/06/2006
 STAFF: lec
 CHANGES:
 1) tag for MGI 3.5 (TR 7062)
+2) convert regsub.gsub() to re.sub()
 
 TAG:  qcreports_db-tr7062-5
 DATE: 03/23/2006
