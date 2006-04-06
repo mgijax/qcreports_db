@@ -39,7 +39,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import db
 import reportlib
 
@@ -56,7 +56,7 @@ def writeRecord(fp, r):
 	fp.write(r['jnumID'] + TAB)
 
 	if r['pubmedID'] != None:
-		purl = regsub.gsub('@@@@', r['pubmedID'], url)
+		purl = re.sub('@@@@', r['pubmedID'], url)
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 

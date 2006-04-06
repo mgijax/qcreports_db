@@ -24,7 +24,7 @@
 import sys
 import os
 import string
-import regsub
+import re
 import db
 import reportlib
 
@@ -139,6 +139,6 @@ def processJournal(jList, fileName, journalTitle):
 for j in journals:
     jList = []
     jList.append(j)
-    fileName = 'GXD_' + regsub.gsub(' ', '', j)
+    fileName = 'GXD_' + re.sub(' ', '', j)
     processJournal(jList, fileName, j)
 

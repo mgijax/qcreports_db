@@ -93,7 +93,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import db
 import reportlib
 import mgi_utils
@@ -227,7 +227,7 @@ def writeRecordD(fp, r):
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
 	if r['pubmedID'] != None:
-		purl = regsub.gsub('@@@@', r['pubmedID'], url)
+		purl = re.sub('@@@@', r['pubmedID'], url)
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
