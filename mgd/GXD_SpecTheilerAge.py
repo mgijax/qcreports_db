@@ -134,7 +134,7 @@ for r in results:
        	count = count + 1
        	continue
 
-    start = m.start(0)
+    start = m.start()
 
     range = age[start:]
     m = re.search('[-,]', range)
@@ -143,7 +143,7 @@ for r in results:
        	minAge = string.atof(range)
        	maxAge = minAge
     else:
-        delim = m.start(0)
+        delim = m.start()
        	minAge = string.atof(range[0:delim])
        	maxAge = string.atof(range[delim+1:])
 	
