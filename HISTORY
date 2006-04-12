@@ -1,3 +1,9 @@
+TAG:  qcreports_db-3-4-3-9
+DATE: 04/12/2006
+STAFF: lec
+CHANGES:
+1) new GO_NotGenes.sql (TR 7620)
+
 TAG:  qcreports_db-3-4-3-8
 DATE: 03/30/2006
 STAFF: lec
