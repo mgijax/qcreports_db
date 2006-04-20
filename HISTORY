@@ -1,3 +1,10 @@
+DATE: 04/06/2006
+STAFF: lec
+CHANGES:
+1) ./msp/ - updated so db.sql no longer uses the default DSQUERY and MGD environment values 
+2) ./seqload/ - as in 1.
+3) ./seqload/QC_SEQ_RawSourceConflict.py updated to use SEQ_Sequence_Raw
+
 TAG:  qcreports_db-tr7062-7
 TAG:  qcreports_db-tr7062-6
 DATE: 04/06/2006
