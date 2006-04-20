@@ -22,6 +22,7 @@ import sys
 import db
 import string
 import reportlib
+import os
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -35,6 +36,11 @@ PAGE = reportlib.PAGE
 outputDir = sys.argv[1]
 jobStreamKey = sys.argv[2]
 mgdDB = sys.argv[3]
+
+radarDB = os.environ['RADAR_DBNAME']
+server = os.environ['RADAR_DBSERVER']
+db.set_sqlServer(server)
+db.set_sqlDatabase(radarDB)
 
 #
 # Main
@@ -61,8 +67,9 @@ fp.write(string.ljust('------------------', 35))
 fp.write(CRT)
 
 results = db.sql('select seqID = a.accID, qc.attrName, ' + \
-	    'newRaw = qc.incomingValue, oldRaw = s.rawLibrary, oldResolved = ps.name ' + \
-	    'from QC_SEQ_RawSourceConflict qc, %s..ACC_Accession a, %s..SEQ_Sequence s, ' % (mgdDB, mgdDB) + \
+	    'newRaw = qc.incomingValue, oldRaw = sr.rawLibrary, oldResolved = ps.name ' + \
+	    'from QC_SEQ_RawSourceConflict qc, ' + \
+	    '%s..ACC_Accession a, %s..SEQ_Sequence s, %s..SEQ_Sequence_Raw sr, ' % (mgdDB, mgdDB, mgdDB) + \
 	    '%s..SEQ_Source_Assoc sa, %s..PRB_Source ps ' % (mgdDB, mgdDB) + \
             'where qc._JobStream_key = %s ' % (jobStreamKey) + \
 	    'and qc._Sequence_key = a._Object_key ' + \
@@ -71,11 +78,13 @@ results = db.sql('select seqID = a.accID, qc.attrName, ' + \
 	    'and a.preferred = 1 ' + \
 	    'and qc._Sequence_key = s._Sequence_key ' + \
 	    'and s._Sequence_key = sa._Sequence_key ' + \
+	    'and s._Sequence_key = sr._Sequence_key ' + \
 	    'and sa._Source_key = ps._Source_key ' + \
 	    'union ' + \
             'select seqID = a.accID, qc.attrName, ' + \
-	    'newRaw = qc.incomingValue, oldRaw = s.rawOrganism, oldResolved = o.commonName ' + \
+	    'newRaw = qc.incomingValue, oldRaw = sr.rawOrganism, oldResolved = o.commonName ' + \
 	    'from QC_SEQ_RawSourceConflict qc, %s..ACC_Accession a, %s..SEQ_Sequence s, ' % (mgdDB, mgdDB) + \
+	    '%s..SEQ_Sequence_Raw sr, ' % mgdDB + \
 	    '%s..SEQ_Source_Assoc sa, %s..PRB_Source ps, %s..MGI_Organism o ' % (mgdDB, mgdDB, mgdDB) + \
             'where qc._JobStream_key = %s ' % (jobStreamKey) + \
 	    'and qc._Sequence_key = a._Object_key ' + \
@@ -84,6 +93,7 @@ results = db.sql('select seqID = a.accID, qc.attrName, ' + \
 	    'and a.preferred = 1 ' + \
 	    'and qc._Sequence_key = s._Sequence_key ' + \
 	    'and s._Sequence_key = sa._Sequence_key ' + \
+	    'and s._Sequence_key = sr._Sequence_key ' + \
 	    'and sa._Source_key = ps._Source_key ' + \
 	    'and ps._Organism_key = o._Organism_key ' + \
 	    'order by seqID', 'auto')
