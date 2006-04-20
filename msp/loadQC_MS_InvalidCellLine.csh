@@ -53,7 +53,7 @@ setenv OUTPUTDIR $4
 
 source ../Configuration
 source ${RDRSCHEMADIR}/Configuration
-
+echo "DBNAME: ${DBNAME}"
 setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf $LOG
 touch $LOG
