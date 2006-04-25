@@ -36,7 +36,11 @@ PAGE = reportlib.PAGE
 
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
-mgdDB = os.environ['MGDDBNAME']
+mgdDB = os.environ['MGD_DBNAME']
+radarDB = os.environ['RADAR_DBNAME']
+server = os.environ['RADAR_DBSERVER']
+db.set_sqlServer(server)
+db.set_sqlDatabase(radarDB)
 
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Changed Library (Job Stream %s)' % (jobStreamKey), 

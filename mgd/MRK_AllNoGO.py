@@ -39,7 +39,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import db
 import reportlib
 
@@ -55,9 +55,9 @@ def writeRecord(fp, r):
 
 	fp.write(r['jnumID'] + TAB)
 
-	if pubMedIDs.has_key(r['_Refs_key']):
-		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
-		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
+	if r['pubmedID'] != None:
+		purl = re.sub('@@@@', r['pubmedID'], url)
+		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
 	if r['_Refs_key'] in gxd:
@@ -113,9 +113,9 @@ db.sql('create nonclustered index index_marker_key on #markers(_Marker_key)', No
 
 # select all genes with references selected for GO
 
-db.sql('select distinct m.*, r._Refs_key, r.jnumID ' + \
+db.sql('select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID ' + \
 	'into #references ' + \
-	'from #markers m , MRK_Reference_View r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'from #markers m , MRK_Reference r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where m._Marker_key = r._Marker_key ' + \
 	'and r._Refs_key = b._Refs_key ' + \
 	'and b._Refs_key = ba._Refs_key ' + \
@@ -123,18 +123,6 @@ db.sql('select distinct m.*, r._Refs_key, r.jnumID ' + \
 	'and bd.dataSet = "Gene Ontology" ' + \
 	'and ba.isNeverUsed = 0', None)
 db.sql('create nonclustered index index_refs_key on #references(_Refs_key)', None)
-
-# select PubMed IDs for references
-
-results = db.sql('select distinct r._Refs_key, a.accID ' + \
-	'from #references r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = %d ' % (PUBMED) + \
-	'and a.preferred = 1', 'auto')
-pubMedIDs = {}
-for r in results:
-	pubMedIDs[r['_Refs_key']] = r['accID']
 
 # has reference been selected for GXD
 
@@ -158,7 +146,7 @@ annotations = []
 for r in results:
 	annotations.append(r['_Marker_key'])
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart ' + \
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart, r.pubmedID ' + \
 	'from #references r ' + \
 	'order by r.numericPart', 'auto')
 

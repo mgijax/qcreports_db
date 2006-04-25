@@ -21,6 +21,7 @@ import sys
 import db
 import string
 import reportlib
+import os
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -34,6 +35,11 @@ PAGE = reportlib.PAGE
 outputDir = sys.argv[1]
 jobStreamKey = sys.argv[2]
 mgdDB = sys.argv[3]
+
+radarDB = os.environ['RADAR_DBNAME']
+server = os.environ['RADAR_DBSERVER']
+db.set_sqlServer(server)
+db.set_sqlDatabase(radarDB)
 
 #
 # Main

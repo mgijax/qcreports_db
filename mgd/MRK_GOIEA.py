@@ -115,7 +115,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import db
 import reportlib
 import mgi_utils
@@ -145,9 +145,9 @@ def writeRecordD(fp, r):
 
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
-	if pubMedIDs.has_key(r['_Refs_key']):
-		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
-		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
+	if r['pubmedID'] != None:
+		purl = re.sub('@@@@', r['pubmedID'], url)
+		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
 	if r['_Refs_key'] in gxd:
@@ -272,7 +272,7 @@ for r in results:
 
 ##
 
-db.sql('select distinct m.*, r._Refs_key ' + \
+db.sql('select distinct m.*, r._Refs_key, r.pubmedID ' + \
 	'into #references1 ' + \
 	'from #markers m , MRK_Reference r ' + \
 	'where m._Marker_key = r._Marker_key ', None)
@@ -283,18 +283,6 @@ db.sql('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
 	'from #references1 r, BIB_All_View b ' + \
 	'where r._Refs_key = b._Refs_key', None)
 db.sql('create index index_refs_key on #references(_Refs_key)', None)
-
-# select PubMed IDs for references
-
-results = db.sql('select distinct r._Refs_key, a.accID ' + \
-	'from #references r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = %d ' % (PUBMED) + \
-	'and a.preferred = 1', 'auto')
-pubMedIDs = {}
-for r in results:
-	pubMedIDs[r['_Refs_key']] = r['accID']
 
 # has reference been chosen for GXD
 results = db.sql('select distinct r._Refs_key ' + \
@@ -332,7 +320,7 @@ for r in results:
 	writeRecord(fpC, r)
 
 results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
-	'r.jnumID, r.jnum, r.numericPart ' + \
+	'r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \

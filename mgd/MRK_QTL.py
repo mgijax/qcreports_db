@@ -62,18 +62,13 @@ db.sql('select m._Marker_key, m.symbol, m.mgiID ' + \
 db.sql('create index idx1 on #markers(_Marker_key)', None)
 
 # select all references for the set of markers
-results = db.sql('select m._Marker_key, b.accID ' + \
-	'from #markers m, MRK_Reference r, ACC_Accession b ' + \
-	'where m._Marker_key = r._Marker_key ' + \
-	'and r._Refs_key = b._Object_key ' + \
-	'and b._MGIType_key = 1 ' + \
-	'and b._LogicalDB_key = 1 ' + \
-	'and b.prefixPart = "J:" ' + \
-	'and b.preferred = 1 ', 'auto')
+results = db.sql('select m._Marker_key, r.jnumID ' + \
+	'from #markers m, MRK_Reference r ' + \
+	'where m._Marker_key = r._Marker_key ', 'auto')
 refs = {}
 for r in results:
     key = r['_Marker_key']
-    value = r['accID']
+    value = r['jnumID']
     if not refs.has_key(key):
 	refs[key] = []
     refs[key].append(value)

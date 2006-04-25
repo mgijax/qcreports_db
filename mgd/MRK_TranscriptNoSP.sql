@@ -90,15 +90,12 @@ go
 
 /* NM annotated to each Marker */
 
-select m._Marker_key, rnaseq = a.accID
+select m._Marker_key, rnaseq = sc.accID
 into #nms
-from #markers m, SEQ_Marker_Cache sc, ACC_Accession a
+from #markers m, SEQ_Marker_Cache sc
 where m._Marker_key = sc._Marker_key
 and sc._SequenceType_key = 316346
-and sc._Sequence_key = a._Object_key
-and a._MGIType_key = 19
-and a.prefixPart = "NM_"
-and a.preferred = 1
+and sc.accid like "NM_%"
 go
 
 create index idx1 on #nms(_Marker_key)

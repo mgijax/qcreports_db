@@ -23,7 +23,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import db
 import mgi_utils
 import reportlib
@@ -55,7 +55,7 @@ results = db.sql(cmd, 'auto')
 
 for r in results:
 
-	note = regsub.gsub('\n', ' ' , r['statusNote'])
+	note = re.sub('\n', ' ' , r['statusNote'])
 	fp.write(r['symbol'] + reportlib.TAB + \
 		 r['bdate'] + reportlib.TAB + \
 		 note + reportlib.TAB + \

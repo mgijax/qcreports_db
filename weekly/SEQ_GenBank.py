@@ -37,7 +37,7 @@
 import sys
 import os
 import string
-import regsub
+import re
 import db
 import mgi_utils
 import reportlib
@@ -90,7 +90,7 @@ results = db.sql('select s._Object_key, a.accID ' +
 	'and a.preferred = 1 ', 'auto')
 for r in results:
     key = markerType + ':' + str(r['_Object_key'])
-    value = regsub.gsub('\n', '', r['accID'])
+    value = re.sub('\n', '', r['accID'])
     mgiIDs[key] = value
 
 results = db.sql('select s._Object_key, a.accID ' +
@@ -102,7 +102,7 @@ results = db.sql('select s._Object_key, a.accID ' +
 	'and a.preferred = 1 ', 'auto')
 for r in results:
     key = molsegType + ':' + str(r['_Object_key'])
-    value = regsub.gsub('\n', '', r['accID'])
+    value = re.sub('\n', '', r['accID'])
     mgiIDs[key] = value
 
 #
@@ -170,14 +170,14 @@ for r in results:
 accIDs = {}
 results = db.sql('select accID, _Object_key from #mseqIDs', 'auto')
 for r in results:
-    key = regsub.gsub('\n', '', r['accID'])
+    key = re.sub('\n', '', r['accID'])
     value = markerType + ':' + str(r['_Object_key'])
     if not accIDs.has_key(key):
 	accIDs[key] = []
     accIDs[key].append(value)
 results = db.sql('select accID, _Object_key from #pseqIDs', 'auto')
 for r in results:
-    key = regsub.gsub('\n', '', r['accID'])
+    key = re.sub('\n', '', r['accID'])
     value = molsegType + ':' + str(r['_Object_key'])
     if not accIDs.has_key(key):
 	accIDs[key] = []

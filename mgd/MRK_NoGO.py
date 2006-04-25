@@ -93,7 +93,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import db
 import reportlib
 import mgi_utils
@@ -107,7 +107,6 @@ PUBMED = 29
 url = ''
 jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
 hasOrthology = {}
-pubMedIDs = {}
 gxd = []
 
 fpA = None
@@ -133,7 +132,7 @@ def reportClose():
 
 def runQueries():
 
-    global hasOrthology, pubMedIDs, gxd, url
+    global hasOrthology, gxd, url
 
     results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
     for r in results:
@@ -190,36 +189,15 @@ def runQueries():
 	hasOrthology[r['_Marker_key']] = 1
 
     db.sql('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
-	'r._Refs_key, b.journal ' + \
-	'into #references1 ' + \
+	'r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal ' + \
+	'into #references ' + \
 	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
 	'where m._Marker_key = r._Marker_key ' + \
 	'and r._Refs_key = b._Refs_key', None)
-    db.sql('create index idx1 on #references1(_Refs_key)', None)
-
-    db.sql('select r.*, jnum = a.numericPart, jnumID = a.accID ' + \
-	'into #references ' + \
-	'from #references1 r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "J:" ' + \
-	'and a.preferred = 1', None)
     db.sql('create index idx1 on #references(_Refs_key)', None)
     db.sql('create index idx2 on #references(_Marker_key)', None)
     db.sql('create index idx3 on #references(symbol)', None)
     db.sql('create index idx4 on #references(numericPart)', None)
-
-    # select PubMed IDs for references
-
-    results = db.sql('select distinct r._Refs_key, a.accID ' + \
-	'from #references r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = %d ' % (PUBMED) + \
-	'and a.preferred = 1', 'auto')
-    for r in results:
-	pubMedIDs[r['_Refs_key']] = r['accID']
 
     # has reference been chosen for GXD
 
@@ -248,9 +226,9 @@ def writeRecordD(fp, r):
 
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
-	if pubMedIDs.has_key(r['_Refs_key']):
-		purl = regsub.gsub('@@@@', pubMedIDs[r['_Refs_key']], url)
-		fp.write('<A HREF="%s">%s</A>' % (purl, pubMedIDs[r['_Refs_key']]))
+	if r['pubmedID'] != None:
+		purl = re.sub('@@@@', r['pubmedID'], url)
+		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
 	if r['_Refs_key'] in gxd:
@@ -329,7 +307,7 @@ def reportD():
 	     'name' + CRT*2)
 
     results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
-	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart ' + \
+	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \

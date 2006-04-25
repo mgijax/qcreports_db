@@ -31,7 +31,7 @@
 import sys 
 import os
 import string
-import regsub
+import re
 import db
 import reportlib
 import mgi_utils
@@ -86,7 +86,7 @@ for r in results:
 	fp.write(r['name'] + TAB)
 
 	if r['statusNote'] != None:
-		fp.write(regsub.gsub('\n', ' ', r['statusNote']))
+		fp.write(re.sub('\n', ' ', r['statusNote']))
 	fp.write(TAB)
 
 	if accids.has_key(r['_Nomen_key']):

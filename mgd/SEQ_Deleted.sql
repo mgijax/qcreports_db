@@ -2,6 +2,8 @@
 set nocount on
 go
 
+/* delete Sequences */
+
 select s._Sequence_key
 into #deleted1
 from SEQ_Sequence s
@@ -10,6 +12,8 @@ go
 
 create index idx1 on #deleted1(_Sequence_key)
 go
+
+/* their accession ids (primary and secondary) */
 
 select a.accID, d._Sequence_key
 into #deleted2
@@ -21,6 +25,8 @@ go
 create index idx1 on #deleted2(accID)
 create index idx2 on #deleted2(_Sequence_key)
 go
+
+/* deleted sequences annotated to mouse markers */
 
 select seqID = d.accID, mgiID = ma2.accID, name = m.symbol
 into #mdeleted
@@ -36,6 +42,8 @@ go
 
 create index idx1 on #mdeleted(seqID)
 go
+
+/* deleted sequences annotated to molecular segments */
 
 select seqID = d.accID, mgiID = pa2.accID, p.name
 into #pdeleted

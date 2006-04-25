@@ -75,7 +75,7 @@ where _JobStream_key = ${JOBSTREAM}
 
 select s.rawSex
 into #all
-from ${MGDDBNAME}..SEQ_Sequence s, ${MGDDBNAME}..SEQ_Source_Assoc sa, ${MGDDBNAME}..PRB_Source ps
+from ${MGDDBNAME}..SEQ_Sequence_Raw s, ${MGDDBNAME}..SEQ_Source_Assoc sa, ${MGDDBNAME}..PRB_Source ps
 where convert(char(10), s.modification_date, 101) >= @startDate
 and s.rawSex is not null
 and s.rawSex != "Not Loaded"

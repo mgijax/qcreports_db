@@ -36,6 +36,11 @@ PAGE = reportlib.PAGE
 outputDir = os.environ['OUTPUTDIR']
 jobStreamKey = os.environ['JOBSTREAM']
 
+radarDB = os.environ['RADAR_DBNAME']
+server = os.environ['RADAR_DBSERVER']
+db.set_sqlServer(server)
+db.set_sqlDatabase(radarDB)
+
 fp = reportlib.init(sys.argv[0],  
 		    'Molecular Source Processer - Invalid Libraries (Job Stream %s)' % (jobStreamKey), 
 		    outputdir = outputDir, sqlLogging = 0)

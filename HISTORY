@@ -205,6 +205,51 @@ STAFF: lec
 CHANGES: 
 1) TR 7190; mgd/MRK_GOIEA.py; change to F report
 
+DATE: 04/06/2006
+STAFF: lec
+CHANGES:
+1) ./msp/ - updated so db.sql no longer uses the default DSQUERY and MGD environment values 
+2) ./seqload/ - as in 1.
+3) ./seqload/QC_SEQ_RawSourceConflict.py updated to use SEQ_Sequence_Raw
+
+TAG:  qcreports_db-tr7062-7
+TAG:  qcreports_db-tr7062-6
+DATE: 04/06/2006
+STAFF: lec
+CHANGES:
+1) tag for MGI 3.5 (TR 7062)
+2) convert regsub.gsub() to re.sub()
+
+TAG:  qcreports_db-tr7062-5
+DATE: 03/23/2006
+STAFF: lec
+CHANGES:
+1) tag for MGI 3.5 (TR 7062)
+
+TAG:  qcreports_db-tr7062-4
+DATE: 01/05/2006
+STAFF: mbw
+CHANGES:
+1) tag for MGI 3.5 (TR 7062)
+
+TAG:  qcreports_db-tr7062-3
+DATE: 12/08/2005
+STAFF: lec
+CHANGES:
+1) tag for MGI 3.5 (TR 7062)
+
+TAG:  qcreports_db-tr7062-2
+DATE: 12/05/2005
+STAFF: lec
+CHANGES:
+1) tag for MGI 3.5 (TR 7062)
+
+TAG:  qcreports_db-tr7062-1
+DATE: 11/22/2005
+STAFF: lec
+CHANGES:
+1) tag for MGI 3.5 (TR 7062)
+
 TAG:  qcreports_db-tr7062-BP
 DATE: 10/14/2005
 STAFF: lec

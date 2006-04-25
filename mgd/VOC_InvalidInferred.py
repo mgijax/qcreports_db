@@ -29,7 +29,7 @@
 import sys
 import os
 import string
-import regsub
+import re
 import db
 import mgi_utils
 import reportlib
@@ -101,7 +101,7 @@ for r in results:
 	idList = [ids]
 
     for id in idList:
-	id = regsub.gsub('"', '', id)
+	id = re.sub('"', '', id)
 
 	if string.find(id, 'MGI:') >= 0:
 	    if id not in mgiLookup:
