@@ -26,7 +26,7 @@
  
 import sys 
 import os
-import regsub
+import re
 import string
 import db
 import reportlib
@@ -67,8 +67,8 @@ for r in results:
 for k in gonote.keys():
 
     m = gonote[k]
-    checkDate = regsub.gsub('<d>', '', m['note'])
-    checkDate = regsub.gsub('\n', '', checkDate)
+    checkDate = re.sub('<d>', '', m['note'])
+    checkDate = re.sub('\n', '', checkDate)
     tokens = string.split(checkDate, '<')
     checkDate = tokens[0]
 
