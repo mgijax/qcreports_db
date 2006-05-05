@@ -10,7 +10,7 @@
 umask 002
 
 # install directory
-setenv QCINSTALLDIR		/usr/local/mgi/live/qcreports_db
+setenv QCINSTALLDIR		${USRLOCALMGI}/qcreports_db
 
 # report output main directory
 setenv QCREPORTDIR		/data/reports/qcreports_db
@@ -56,9 +56,6 @@ setenv QCWEEKLY                 ${QCINSTALLDIR}/weekly
 # monthly reports directory
 setenv QCMONTHLY                ${QCINSTALLDIR}/monthly
 
-# MLC index file
-setenv MLCINDEX			/usr/local/mgi/live/wi/www/images/mlc/index
-
 # EI Log files
 setenv EILOGFILES		/net/orodruin/vol/home
 
@@ -75,10 +72,10 @@ setenv FTPURL			ftp.informatics.jax.org
 setenv SYBASE			/opt/sybase/12.5
 
 # PYTHON
-setenv PYTHONPATH       	/usr/local/mgi/live/lib/python
+setenv PYTHONPATH       	${USRLOCALMGI}/lib/python
 
 # DBUTILITIESPATH
-setenv DBUTILITIESPATH		/usr/local/mgi/live/dbutils/mgidbutilities
+setenv DBUTILITIESPATH		${USRLOCALMGI}/dbutils/mgidbutilities
 
 # PATH
 set path = (. $path $DBUTILITIESPATH/bin $SYBASE/ASE-12_5/bin $SYBASE/OCS-12_5/bin)
@@ -97,10 +94,10 @@ setenv RADAR_DBNAME ${RADARDB}
 setenv DBOUSER  mgd_dbo
 
 # DBO Password
-setenv DBOPASSWORDFILE  /usr/local/mgi/live/dbutils/mgidbutilities/.mgd_dbo_password
+setenv DBOPASSWORDFILE  ${USRLOCALMGI}/dbutils/mgidbutilities/.mgd_dbo_password
 
 # Public User
 setenv PUBUSER  mgd_public
 
 # DBO Password
-setenv PUBPASSWORDFILE  /usr/local/mgi/live/dbutils/mgidbutilities/.mgd_public_password
+setenv PUBPASSWORDFILE  ${USRLOCALMGI}/dbutils/mgidbutilities/.mgd_public_password
