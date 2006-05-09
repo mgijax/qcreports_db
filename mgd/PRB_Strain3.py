@@ -60,7 +60,7 @@ results = db.sql('select distinct s._Strain_key, a.accID from #strains s, ACC_Ac
 	'and a._MGIType_key = 10 ' + \
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "MGI:" ' + \
-	'and a._LogicalDB_key = 1 ', 'auto')
+	'and a.preferred = 1 ', 'auto')
 mgiIDs = {}
 for r in results:
 	mgiIDs[r['_Strain_key']] = r['accID']

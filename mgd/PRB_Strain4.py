@@ -1,0 +1,106 @@
+#!/usr/local/bin/python
+
+'''
+#
+# PRB_Strain4.py
+#
+# Report:
+#       Tab-delimited file
+#
+#	All Strains w/ Genotype Associations (via PRB_Strain_Genotype)
+#	where the Markers/Alleles of the Strain record do not exactly match
+#	the Markers/Alleles of the Genotype record.
+#
+# Usage:
+#       PRB_Strain4.py
+#
+# Used by:
+#       Internal Report
+#
+# Notes:
+#
+# History:
+#
+# 05/08/2006	lec
+#	- TR 7614
+#
+'''
+ 
+import sys
+import os
+import string
+import db
+import mgi_utils
+import reportlib
+
+#
+# Main
+#
+
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
+
+title = 'Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
+	'do not exactly match the Markers/Alleles of the Genotype record.'
+
+fp.write(title + '\n\n')
+fp.write('JR#' + reportlib.TAB)
+fp.write('Strain' + reportlib.TAB)
+fp.write('Genotypes' + reportlib.TAB)
+fp.write(reportlib.CRT)
+
+# JR Strains w/ Genotype Associations
+db.sql('select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key ' + \
+	'into #strains ' + \
+	'from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ACC_Accession sa ' + \
+	'where s._Strain_key = g._Strain_key ' + \
+	'and g._Genotype_key = a._Genotype_key ' + \
+	'and s._Strain_key = sa._Object_key ' + \
+	'and sa._MGIType_key = 10 ' + \
+	'and sa._LogicalDB_key = 22 ' + \
+	'and sa.preferred = 1 ', None)
+db.sql('create index idx1 on #strains(_Strain_key)', None)
+
+# Same Strains and the Marker/Allele associations
+db.sql('select s._Strain_key, a._Marker_key, a._Allele_key ' + \
+	'into #strains2 ' + \
+	'from #strains s, PRB_Strain_Marker a ' + \
+	'where s._Strain_key = a._Strain_key', None)
+db.sql('create index idx1 on #strains2(_Strain_key)', None)
+
+# Strains that do not have the same Allele
+
+db.sql('select s.* into #strainsToProcess from #strains s ' + \
+	'where not exists (select 1 from #strains2 ss where s._Strain_key = ss._Strain_key ' + \
+	'and s._Allele_key = ss._Allele_key)', None)
+
+# Retrieve MGI ids of the Genotypes
+
+mgiIDs = {}
+results = db.sql('select s._Strain_key, a.accID ' + \
+	'from #strainsToProcess s, ACC_Accession a ' + \
+	'where s._Genotype_key = a._Object_key ' + \
+	'and a._MGIType_key = 12 ' + \
+	'and a._LogicalDB_key = 1 ' + \
+	'and a.preferred = 1', 'auto')
+for r in results:
+    key = r['_Strain_key']
+    value = r['accID']
+    if not mgiIDs.has_key(key):
+	mgiIDs[key] = []
+    mgiIDs[key].append(value)
+
+# Process
+
+rows = 0
+results = db.sql('select distinct _Strain_key, accID, strain from #strainsToProcess order by strain', 'auto')
+for r in results:
+    key = r['_Strain_key']
+    fp.write(r['accID'] + reportlib.TAB)
+    fp.write(r['strain'] + reportlib.TAB)
+    fp.write(string.join(mgiIDs[key], ',') + reportlib.CRT)
+
+fp.write('\n(%d rows affected)\n' % (len(results)))
+
+reportlib.trailer(fp)
+reportlib.finish_nonps(fp)
+
