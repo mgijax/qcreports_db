@@ -1,5 +1,8 @@
 
-declare @printdate varchar(255)
+set nocount on
+go
+
+declare @printDate varchar(255)
 select @printDate = "New JR#s created between " + 
 	convert(char(10), dateadd(day, -7, getdate()), 101) + 
 	" and " + convert(char(10), getdate(), 101)
@@ -7,6 +10,9 @@ select @printDate = "New JR#s created between " +
 print ""
 print @printDate
 print ""
+
+set nocount off
+go
 
 select a.accID
 from ACC_Accession a
