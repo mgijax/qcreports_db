@@ -2,8 +2,6 @@
 
 '''
 #
-# PRB_Strain4.py
-#
 # Report:
 #       Tab-delimited file
 #
@@ -12,7 +10,7 @@
 #	the Markers/Alleles of the Genotype record.
 #
 # Usage:
-#       PRB_Strain4.py
+#       PRB_StrainJAX3.py
 #
 # Used by:
 #       Internal Report
