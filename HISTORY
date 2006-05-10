@@ -1,3 +1,10 @@
+TAG:  qcreports_db-mgi34-patch-1
+DATE: 05/10/2006
+STAFF: lec
+CHANGES:
+1) TR 7650; weekly/PRB_StrainJAX4.sql
+2) TR 7614; mgd/PRB_StrainJAX3.py
+
 TAG:  qcreports_db-3-4-3-10
 TAG:  qcreports_db-3-4-3-9
 DATE: 04/12/2006
