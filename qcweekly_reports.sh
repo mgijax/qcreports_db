@@ -19,7 +19,6 @@ date >> ${LOG}
 foreach i ($QCWEEKLY/*.sql)
 	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
 end
-exit 0
 
 cd weekly
 foreach i (*.py)
