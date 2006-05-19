@@ -32,9 +32,9 @@ go
 
 /* select those that are annotated to more than 2 assays */
 
-select * into #final from #assays where _AssayType_key = 2 group by _ImagePane_key having count(*) > 2
+select * into #final from #assays where _AssayType_key = 6 group by _ImagePane_key having count(*) > 2
 union
-select * from #assays where _AssayType_key != 2 group by _ImagePane_key having count(*) > 1
+select * from #assays where _AssayType_key != 6 group by _ImagePane_key having count(*) > 1
 go
 
 create index idx1 on #final(_Refs_key)
