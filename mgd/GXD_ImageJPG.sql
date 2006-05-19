@@ -48,6 +48,7 @@ go
 
 print ""
 print "Displayed Image Panes annotated to >2 assays (if Immunohistochemistry), >1 assay for all others."
+print "Excludes J:80502"
 print ""
 
 select distinct imageID = i.accID, refID = r.accID 
