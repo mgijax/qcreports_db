@@ -15,6 +15,7 @@ and a._Refs_key not in (81463)
 go
 
 /* select all InSitu Assays with Image Panes that have JPGs (xDim is not null) */
+/* exclude J:80502 */
 
 insert into #assays 
 select distinct s._Assay_key, a._AssayType_key, i._Refs_key, iri._ImagePane_key, ip._Image_key
