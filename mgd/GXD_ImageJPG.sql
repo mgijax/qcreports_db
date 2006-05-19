@@ -25,6 +25,7 @@ and i.xDim is not null
 and iri._Result_key = r._Result_key 
 and r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
+and a._Refs_key not in (81463)
 go
 
 create index idx1 on #assays(_ImagePane_key)
