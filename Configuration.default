@@ -13,7 +13,7 @@ endif
 
 source ${MGICONFIG}/master.config.csh
 # this can be removed once PYTHONPATH is in mgiconfig
-source ${MGD_DBSCHEMA}/Configuration
+source ${MGD_DBSCHEMADIR}/Configuration
 
 umask 002
 
