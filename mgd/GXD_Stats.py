@@ -15,7 +15,11 @@
 #
 # History:
 #
-# lec    12/23/2004
+# 05/24/2006	lec
+#	- TR 7694; imagesCount(); added "Number of Results...",
+	  "Number of Image Panes (no jpg attached)"
+#
+# 12/23/2004	lec
 #       - adapted from GXD_Stats.sql and customSQL/expression/tr5521.py
 # 
 '''
@@ -31,12 +35,6 @@ CRT = reportlib.CRT
 
 startYear = 1998
 endYear = string.atoi(mgi_utils.date('%Y'))
-
-#############
-#           #
-# Functions #
-#           #
-#############
 
 '''
 # requires: results,    The array of data
@@ -214,9 +212,7 @@ def indexOnly():
     results = db.sql('select * from #westcount', 'auto')
     west  = createDict(results,'year','west_number')
 
-    ###################
     # Column headings #
-    ###################
 
     #
     #  We'll start by printing out a table for the index, reference and gene statistics.
