@@ -71,7 +71,7 @@ db.sql('select s._Assay_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, 
           'r._Result_key = i._Result_key and ' + \
           'i._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \
-          '(s.age like "embryonic%" or s.age = "perinatal") ' + \
+          's.age like "embryonic%" ' + \
 	  'and t.stage = 28 ' + \
 	  'and not exists (select 1 from GXD_StructureName sn ' + \
 	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))' + \
@@ -90,7 +90,7 @@ db.sql('select s._Assay_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, 
     'where g._GelLane_key = l._GelLane_key and ' + \
           'l._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \
-          '(g.age like "embryonic%" or g.age = "perinatal") ' + \
+          'g.age like "embryonic%" ' + \
 	  'and g.age not like "%-%" ' + \
 	  'and t.stage = 28 ' + \
 	  'and not exists (select 1 from GXD_StructureName sn ' + \
