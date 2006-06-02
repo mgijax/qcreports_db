@@ -7,11 +7,6 @@
 # then, run this script
 #
 
-SERVER=$DSQUERY
-USER=$PUBUSER
-PASSWORD=`cat $PUBPASSWORDFILE`
-DATABASE=$MGD
-
 ARCHIVE_DIR=$QCARCHIVEDIR/go
 
 #GO_FISH="'J:56000'"
@@ -35,7 +30,7 @@ UNKNOWN=74750
 MANUAL_NOT_IN_CLAUSE="($GO_FISH,$SWISS_PROT,$INTERPRO,$EC,$FANTOM2,$FANTOM3)"
 
 COUNT_ALL_ANNOTATIONS="a._Annot_key"
-COUNT_DISTINCT_MARKERS="distinct(_Marker_key)"
+COUNT_DISTINCT_MARKERS="distinct(a._Object_key)"
 
 COUNT_ALL_REFERENCES="ALL_REFERENCES"
 NOT_IN="not in"
@@ -57,21 +52,19 @@ getAnnotations()
 {
    setRefsClause "$2" $3
    
-   isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
-use $DATABASE
+isql -S${MGD_DBSERVER} -U${MGI_PUBLICUSER} -P${MGI_PUBLICPASSWORD} -w200 << END >> $REPORT
+
+use ${MGD_DBNAME}
 go
 
 set nocount on
 
-declare @annotations     int
+declare @annotations int
 
-select @annotations   = count($1)
-from   VOC_Annot         a                                              
-      ,VOC_Evidence      e
-      ,MRK_Marker        m                                                   
-where  a._AnnotType_key  = 1000 --(GO/Marker)                           
-and    a._Object_key     = m._Marker_key                                   
-and    a._Annot_key      = e._Annot_key                                     
+select @annotations = count($1)
+from VOC_Annot a, VOC_Evidence e
+where a._AnnotType_key  = 1000
+and a._Annot_key = e._Annot_key                                     
 $REFS_CLAUSE
 
 if "$1" = "$COUNT_DISTINCT_MARKERS"
@@ -87,9 +80,9 @@ getAnnotationByOntology()
 
    setRefsClause "$2" $3
    
-isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+isql -S${MGD_DBSERVER} -U${MGI_PUBLICUSER} -P${MGI_PUBLICPASSWORD} -w200 << END >> $REPORT
 
-use $DATABASE
+use ${MGD_DBNAME}
 go
 
 set nocount on
@@ -100,26 +93,20 @@ go
    -- Component
 
 declare aliascursor cursor for
-
-select  d.name                                                        
-       ,convert ( char(6), count($1))
-from    VOC_Annot         a                                             
-       ,VOC_Evidence      e
-       ,MRK_Marker        m                                                  
-       ,DAG_Node          n                                                    
-       ,DAG_DAG           d                                                     
-where  a._AnnotType_key   = 1000 --(GO/Marker)                          
-and    a._Object_key      = m._Marker_key                                  
-and    a._Annot_key       = e._Annot_key                                    
+select d.name, convert (char(6), count($1))
+from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d                                                     
+where a._AnnotType_key = 1000
+and a._Annot_key = e._Annot_key                                    
 $REFS_CLAUSE
-and    a._Term_key        = n._Object_key                                    
-and    d._DAG_Key         = n._DAG_Key                                        
-group  by  d.name                                                     
+and a._Term_key = n._Object_key                                    
+and d._DAG_Key = n._DAG_Key                                        
+group by d.name                                                     
 go
 
 declare @ontologyName    char(30)
 declare @genesAnnotated  char(30)
-print   "Breakdown by OntologyName:"
+
+print "Breakdown by OntologyName:"
 
 open  aliascursor 
 fetch aliascursor into @ontologyName, @genesAnnotated
@@ -143,9 +130,9 @@ echo "*********************************************************************" >> 
 echo "GO Ontology Summary - Number of GO Terms per Ontology"                 >> $REPORT
 echo ""                                                                      >> $REPORT
 
-isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+isql -S${MGD_DBSERVER} -U${MGI_PUBLICUSER} -P${MGI_PUBLICPASSWORD} -w200 << END >> $REPORT
 
-use $DATABASE
+use ${MGD_DBNAME}
 go
 
 set nocount on
@@ -175,9 +162,9 @@ echo "*********************************************************************" >> 
 echo "GO Ontology Summary - Number of GO Terms per Ontology Used in MGI"     >> $REPORT
 echo ""                                                                      >> $REPORT
 
-isql -S$SERVER -U$USER -P$PASSWORD -w200 << END >> $REPORT
+isql -S${MGD_DBSERVER} -U${MGI_PUBLICUSER} -P${MGI_PUBLICPASSWORD} -w200 << END >> $REPORT
 
-use $DATABASE
+use ${MGD_DBNAME}
 go
 
 set nocount on
@@ -221,10 +208,10 @@ rm -f $REPORT
 
 cat > $REPORT <<END
 The Jackson Laboratory - Mouse Genome Informatics - Mouse Genome Database (MGD)
-Copyright 1996, 1999, 2000 The Jackson Laboratory
+Copyright 1996, 1999, 2000, 2006 The Jackson Laboratory
 All Rights Reserved
 Date Generated:  `date`
-(SERVER=$SERVER;DATABASE=$DATABASE)
+(DBSERVER=${MGD_DBSERVER};DATABASE=${MGD_DBNAME}})
 
 END
 
@@ -241,7 +228,7 @@ getCounts "FANTOM2"    $EQUALS               $FANTOM2
 getCounts "FANTOM3"    $EQUALS               $FANTOM3
 getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
 
-cat ${DBUTILITIESPATH}/text/copyrightnotice >> $REPORT
+cat ${MGI_DBUTILS}/text/copyrightnotice >> $REPORT
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
