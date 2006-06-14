@@ -13,8 +13,8 @@
 
 source ./Configuration
 
-if ( ${RELEASE_TYPE} == "prod" ) then
-echo 'here'
+#if ( ${RELEASE_TYPE} == "prod" ) then
+#echo 'here'
 #cd ${QCINSTALLDIR}
 #sed "s/ftp.informatics.jax.org/${FTPURL}/" qcr.html > qcr.html.new
 #mv -f qcr.html.new qcr.html
@@ -24,14 +24,14 @@ echo 'here'
 #sed "s/radar/${RADAR_DBNAME}/g" $i > $i.new
 #mv -f $i.new $i
 #end
-endif
+#endif
 
-cd ${QCINSTALLDIR}
-if ( ${RELEASE_TYPE} == "prod" ) then
-echo 'here'
+#cd ${QCINSTALLDIR}
+#if ( ${RELEASE_TYPE} == "prod" ) then
+#echo 'here'
 #chmod 644 Configuration.* HISTORY *.html
 #chmod 755 *.sh */*.py */*.sql Install
-endif
+#endif
 
 if ( ! -d ${QCREPORTDIR} ) then
 	mkdir ${QCREPORTDIR}

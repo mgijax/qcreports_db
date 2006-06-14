@@ -17,7 +17,7 @@ touch ${LOG}
 date >> ${LOG}
 
 foreach i ($QCWEEKLY/*.sql)
-	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt $DSQUERY $MGD
+	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 cd weekly

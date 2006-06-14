@@ -12,8 +12,6 @@ if ( ${?MGICONFIG} == 0 ) then
 endif
 
 source ${MGICONFIG}/master.config.csh
-# this can be removed once PYTHONPATH is in mgiconfig
-source ${MGD_DBSCHEMADIR}/Configuration
 
 umask 002
 
