@@ -12,6 +12,7 @@ if ( ${?MGICONFIG} == 0 ) then
 endif
 
 source ${MGICONFIG}/master.config.csh
+source ${MGD_DBSCHEMADIR}/Configuration
 
 umask 002
 
