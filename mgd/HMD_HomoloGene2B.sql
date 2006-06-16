@@ -1,7 +1,7 @@
 /* TR 2920 */
 /* Comparison of orthologous relationships between MGD and HomoloGene */
 /* Uses the HomologGene file homologene.data which is downloaded from their */
-/* ftp site using the locuslinkload product */
+/* ftp site using the entrezgeneload product */
 /* This file is dumped into radar..DP_HomoloGene */
 
 set nocount on

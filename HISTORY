@@ -1,15 +1,21 @@
+TAG: qcreports_db-mgiconfig-3
+DATE: 06/14/2006
+STAFF: lec
+CHANGES:
+1) mgiconfig
+
 TAG: qcreports_db-mgiconfig-2
 TAG: qcreports_db-mgiconfig-1
 DATE: 06/14/2006
 STAFF: lec
 CHANGES:
-1) MGI 3.5
+1) mgiconfig
 
 TAG: qcreports_db-BP-mgiconfig
 DATE: 06/14/2006
 STAFF: lec
 CHANGES:
-1) MGI 3.5
+1) branch point tag for mgiconfig
 
 TAG: qcreports_db-3-5-0-11
 DATE: 06/02/2006
