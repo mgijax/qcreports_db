@@ -304,9 +304,10 @@ def fullCoded():
     #  J:80501 Gitton 116 results in 269 assays
     #  J:85124 Sousa-Nunes 455 results in 32 assays
     #  J:91257 Gray 37841 results in 2769 assays
+    #  J:101679 Deltagen 3214 results in 90 assays
 
     # _Refs_key for all electronic references
-    electronic = "(46734,81462,81463,86101,92242,94290)"
+    electronic = "(46734,81462,81463,86101,92242,94290,102744)"
 
     db.sql('select _Assay_key, _Refs_key, _Marker_key, source = "E" into #gxd ' + \
 	'from GXD_Expression where _Refs_key in %s' % (electronic), None)
@@ -331,7 +332,7 @@ def fullCoded():
 
     fp.write('Assays, Assay Results and Genes by Source:' + CRT)
     fp.write('(Electronic References are:  J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, ' + CRT)
-    fp.write('                             J:85124 Sousa-Nunes, J:91257 Gray, J:93300 Blackshaw)' + 2*CRT)
+    fp.write('                             J:85124 Sousa-Nunes, J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen)' + 2*CRT)
 
     fp.write(string.ljust('             ', 15))
     fp.write(string.ljust('Electronic Submission', 25))
