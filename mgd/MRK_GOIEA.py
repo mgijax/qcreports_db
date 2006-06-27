@@ -54,6 +54,7 @@
 #		Y/N (has reference been selected for GXD)
 #		symbol
 #		name
+#		OMIM (print "OMIM" if gene has a mouse model associated with an OMIM disease)
 #
 #	Report 2E (TR 7125)
 #	Title = Genes that have OMIM annotations and either no GO annotations or only IEA GO annotations
@@ -157,7 +158,11 @@ def writeRecordD(fp, r):
 
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
-	         r['name'] + CRT)
+	         r['name'] + TAB)
+
+	if r['_Marker_key'] in omim:
+		fp.write('OMIM')
+	fp.write(CRT)
 
 def writeRecordEF(fp, r):
 
@@ -196,7 +201,8 @@ fpD.write('jnum ID' + TAB + \
 	 'ref in GXD?' + TAB + \
 	 'mgi ID' + TAB + \
 	 'symbol' + TAB + \
-	 'name' + CRT*2)
+	 'name' + TAB + \
+	 'OMIM' + CRT*2)
 
 fpE = reportlib.init("MRK_GOIEA_E", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
 fpE.write('mgi ID' + TAB + \
@@ -294,6 +300,14 @@ results = db.sql('select distinct r._Refs_key ' + \
 gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
+
+# does gene have mouse model annotated to OMIM disease
+results = db.sql('select distinct m._Marker_key ' + \
+	'from #markers m, MRK_OMIM_Cache o ' + \
+	'where m._Marker_key = o._Marker_key', 'auto')
+omim = []
+for r in results:
+	omim.append(r['_Marker_key'])
 
 results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references ' + \
