@@ -1,37 +1,37 @@
 #!/bin/csh
 
 #
-# To install this product in the appropriate directory
-#
-# 1. cd to the parent of the installation directory (i.e. /usr/local/mgi)
-# 2. cvs export -r qcreports_db-#-# qcreports_db
-# 3. cd to the installation directory
-# 4. cp Configuration.default Configuration
-# 5. edit Configuration file
-# 6. run Install
+# Install
 #
 
-source ./Configuration
+cd `dirname $0` && source ./Configuration
 
-if ( ${RELEASE_TYPE} == "prod" ) then
-echo 'here'
-#cd ${QCINSTALLDIR}
+#cd ${QCRPTS}
 #sed "s/ftp.informatics.jax.org/${FTPURL}/" qcr.html > qcr.html.new
 #mv -f qcr.html.new qcr.html
+
+#
+# if running against a database other than "radar", 
+# then we need to replace "radar" with the appropriate value
+#
+
 #cd ${QCMGD}
 #set toEdit=`grep -l radar *`
 #foreach i ($toEdit)
 #sed "s/radar/${RADAR_DBNAME}/g" $i > $i.new
 #mv -f $i.new $i
 #end
-endif
 
-cd ${QCINSTALLDIR}
-if ( ${RELEASE_TYPE} == "prod" ) then
-echo 'here'
-#chmod 644 Configuration.* HISTORY *.html
-#chmod 755 *.sh */*.py */*.sql Install
-endif
+#
+# permissions
+#
+
+chmod 664 Configuration.* HISTORY *.html
+chmod 775 *.sh */*.py */*.sql Install
+
+#
+# directories
+#
 
 if ( ! -d ${QCREPORTDIR} ) then
 	mkdir ${QCREPORTDIR}
