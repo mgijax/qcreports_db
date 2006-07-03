@@ -46,9 +46,6 @@ setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 # FASTA NOMEN DB File
 setenv NOMENFASTA               gbmusnomen
 
-# RIKEN FTP report directory
-setenv RIKENFTPDIR              gondor:/export/gondor/ftp/private/riken
-
 # mgd-specific reports directory
 setenv QCMGD			${QCINSTALLDIR}/mgd
 
@@ -66,7 +63,4 @@ setenv EILOGNAME		.ei-log
 
 # Date
 setenv DATE `date '+%Y-%m-%d'`
-
-# FTP 
-setenv FTPURL			ftp.informatics.jax.org
 
