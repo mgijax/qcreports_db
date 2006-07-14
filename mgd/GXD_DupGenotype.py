@@ -188,8 +188,8 @@ cmds.append('select g1._Genotype_key as geno1, ' +
             'a1._Allele_key_2 = a2._Allele_key_2 and ' +
             'a2._Genotype_key = g2._Genotype_key and ' +
             'g2._Strain_key = g1._Strain_key and ' +
-            'g1._Genotype_key != g2._Genotype_key and ' +
 	    'g1.isConditional = g2.isConditional and ' +
+            'g1._Genotype_key != g2._Genotype_key and ' +
             '(select count(distinct _AllelePair_key) ' +
             'from GXD_AllelePair ap ' +
             'where ap._Genotype_key = g1._Genotype_key) = ' +
@@ -213,7 +213,8 @@ cmds.append('insert #pairs ' +
             'a1._Allele_key_2 = a2._Allele_key_1 and ' +
             'a2._Genotype_key = g2._Genotype_key and ' +
             'g2._Strain_key = g1._Strain_key and ' +
-            ' g1._Genotype_key != g2._Genotype_key and ' +
+	    'g1.isConditional = g2.isConditional and ' +
+            'g1._Genotype_key != g2._Genotype_key and ' +
             '(select count(distinct _AllelePair_key) ' +
             'from GXD_AllelePair ap ' +
             'where ap._Genotype_key = g1._Genotype_key) = ' +
