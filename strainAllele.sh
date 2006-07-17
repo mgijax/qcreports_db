@@ -52,9 +52,9 @@ touch $LOG
  
 date >> $LOG
  
-cat - <<EOSQL | doisql.csh $0 >> $LOG
+cat - <<EOSQL | doisql.csh ${MGD_DBSERVER} ${MGD_DBNAME} $0 >> $LOG
 
-use $DBNAME
+use ${MGD_DBNAME}
 go
 
 select distinct s._Strain_key, strain = substring(s.strain,1,85), 

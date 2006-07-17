@@ -1,8 +1,5 @@
 #!/bin/csh -f
 
-# $Header$
-# $Name$
-
 #
 # Program: loadQC_MS_InvalidLibrary.csh
 #
@@ -46,13 +43,14 @@
 #	- created
 #
 
+# these parameters are obsolete
 setenv RDRSCHEMADIR $1
 setenv MGDDBNAME $2
+
 setenv JOBSTREAM $3
 setenv OUTPUTDIR $4
 
 source ../Configuration
-source ${RDRSCHEMADIR}/Configuration
 
 setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf $LOG
@@ -60,9 +58,9 @@ touch $LOG
  
 date >> $LOG
  
-cat - <<EOSQL | doisql.csh $0 >> $LOG
+cat - <<EOSQL | doisql.csh ${RADAR_DBSCHEMA} ${RADAR_DBNAME} $0 >> $LOG
 
-use $DBNAME
+use ${RADAR_DBNAME}
 go
 
 delete from QC_MS_InvalidLibrary where _JobStream_key = ${JOBSTREAM}
@@ -75,7 +73,7 @@ where _JobStream_key = ${JOBSTREAM}
 
 select s.rawLibrary
 into #all
-from ${MGDDBNAME}..SEQ_Sequence_Raw s, ${MGDDBNAME}..SEQ_Source_Assoc sa, ${MGDDBNAME}..PRB_Source ps
+from ${MGD_DBNAME}..SEQ_Sequence_Raw s, ${MGD_DBNAME}..SEQ_Source_Assoc sa, ${MGD_DBNAME}..PRB_Source ps
 where convert(char(10), s.modification_date, 101) >= @startDate
 and s.rawLibrary is not null
 and s.rawLibrary != "Not Loaded"
