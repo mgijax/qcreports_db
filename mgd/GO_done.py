@@ -12,12 +12,15 @@
 # field 1: Gene Symbol
 # field 2: Completion Date
 # field 3: list of references that have not yet been annotated to the gene
-	   whose creation date is greater than the completion date.
+#	   whose creation date is greater than the completion date.
 #
 # Usage:
 #       GO_done.py
 #
 # History:
+#
+# 08/28/2006	lec
+#	- TR 7876; added headings and Refs_used column
 #
 # 03/02/2006	lec
 #	- TR 7532
@@ -98,6 +101,10 @@ for k in gonote.keys():
     checkDate = re.sub('\n', '', checkDate)
     tokens = string.split(checkDate, '<')
     checkDate = tokens[0]
+
+    if string.count(checkDate, '/') != 2:
+	fp.write(m['symbol'] + TAB + 'invalid date: %s' % (checkDate) + CRT)
+	continue
 
     results = db.sql('select jnumID from BIB_GOXRef_View where _Marker_key = %s ' % (k) + \
 	'and convert(char(10), creation_date, 101) > dateadd(day,1,"%s")' % (checkDate), 'auto')
