@@ -41,19 +41,46 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp.write('Gene Symbol' + TAB)
+fp.write('Date_complete' + TAB)
+fp.write('#Refs_used' + TAB)
+fp.write('outstanding_refs' + 2*CRT)
 
 #
 # select all Markers w/ GO Annotation Note that contains a Complete Date
 #
-results = db.sql('select distinct n._Object_key, note = rtrim(n.note), m.symbol ' + \
+db.sql('select distinct n._Object_key, note = rtrim(n.note), m.symbol ' + \
+	'into #gomarkers ' + \
 	'from MGI_Note_MRKGO_View n, MRK_Marker m ' + \
 	'where n._Object_key = m._Marker_key ' + \
-	'and n.note like "%<d>%"', 'auto')
+	'and n.note like "%<d>%"', None)
+db.sql('create index idx1 on #gomarkers(_Object_key)', None)
+
+results = db.sql('select * from #gomarkers', 'auto')
 gonote = {}
 for r in results:
     key = r['_Object_key']
     value = r
     gonote[key] = r
+
+#
+# cache # of GO references per Marker
+# exclude J:60000,J:73065,J:72245,J:80000,J:72247,J:99680
+#
+
+results = db.sql('select distinct m._Object_key, e._Refs_key ' + \
+	'from #gomarkers m, VOC_Annot a, VOC_Evidence e ' + \
+	'where m._Object_key = a._Object_key ' + \
+	'and a._AnnotType_key = 1000 ' + \
+	'and a._Annot_key = e._Annot_key ' + \
+	'and e._Refs_key not in (61933,73197,73199,74017,80961,100707)', 'auto')
+gorefs = {}
+for r in results:
+    key = r['_Object_key']
+    value = r['_Refs_key']
+    if not gorefs.has_key(key):
+	gorefs[key] = []
+    gorefs[key].append(value)
 
 #
 # for each Marker, compare the date in the note to the date of the references
@@ -75,10 +102,15 @@ for k in gonote.keys():
     results = db.sql('select jnumID from BIB_GOXRef_View where _Marker_key = %s ' % (k) + \
 	'and convert(char(10), creation_date, 101) > dateadd(day,1,"%s")' % (checkDate), 'auto')
 
+    if gorefs.has_key(k):
+        numRefs = str(len(gorefs[k]))
+    else:
+	numRefs = '0'
+    
     # no references meet criteria
 
     if len(results) == 0:
-	fp.write(m['symbol'] + TAB + checkDate + TAB + CRT)
+	fp.write(m['symbol'] + TAB + checkDate + TAB + numRefs + TAB + CRT)
 	continue
 
     # references that do meet criteria
@@ -86,7 +118,7 @@ for k in gonote.keys():
     jnums = []
     for r in results: 
 	jnums.append(r['jnumID'])
-    fp.write(m['symbol'] + TAB + checkDate + TAB + string.joinfields(jnums, ',') + CRT)
+    fp.write(m['symbol'] + TAB + checkDate + TAB + numRefs + TAB + string.joinfields(jnums, ',') + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
 
