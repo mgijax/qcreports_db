@@ -106,7 +106,7 @@ for r in results:
     if labseq == 0:
 	continue
 
-    if labcode == 'Lexicon Genetics Inc' or labcode == 'Lexicon genetics':
+    if labcode == 'Lexicon Genetics Inc':
 	labcode = 'Lexicon Genetics'
 
     #
