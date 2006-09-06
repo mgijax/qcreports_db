@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-1-1
+DATE: 09/06/2006
+STAFF: lec
+CHANGES:
+1) build 36; merge
+
 TAG: qcreports_db-3-5-0-18
 DATE: 08/30/2006
 STAFF: lec
@@ -10,6 +16,25 @@ STAFF: lec
 CHANGES:
 1) build 36
 
+TAG: qcreports_db-build36-3
+DATE: 08/29/2006
+STAFF: lec
+CHANGES:
+1) build 36
+
+TAG: qcreports_db-build36-2
+DATE: 07/17/2006
+STAFF: lec
+CHANGES:
+1) build 36
+
+TAG: qcreports_db-build36-1
+DATE: 07/12/2006
+STAFF: lec
+CHANGES:
+1) build 36
+
+>>>>>>> 1.385.2.3
 TAG: qcreports_db-build36-BP
 DATE: 07/12/2006
 STAFF: lec
