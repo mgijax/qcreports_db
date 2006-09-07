@@ -86,9 +86,7 @@ def process():
     db.sql('create index idx1 on #refscodeable(_Marker_key)', None)
     db.sql('create index idx2 on #refscodeable(_Refs_key)', None)
 
-def report1():
-
-    fp = reportlib.init(sys.argv[0], 'Markers that have not been full coded that have full codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
+def report1(fp):
 
     fp.write(string.ljust('symbol', 35))
     fp.write(SPACE)
@@ -151,12 +149,8 @@ def report1():
 	
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
-    reportlib.trailer(fp)
-    reportlib.finish_nonps(fp)
+def report2(fp):
 
-def report2():
-
-    fp = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
     fp.write('This report excludes papers that have E? and adult in situ data.\n\n')
 
     fp.write(string.ljust('j number', 30))
@@ -221,17 +215,18 @@ def report2():
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
-    reportlib.trailer(fp)
-    reportlib.finish_nonps(fp)
-
 #
 #  main
 #
 
-db.useOneConnection(1)
-db.set_sqlLogFunction(db.sqlLogAll)
+fp1 = reportlib.init(sys.argv[0], 'Markers that have not been full coded that have full codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
+fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
+
 process()
-report1()
-report2()
-db.useOneConnection(0)
+report1(fp1)
+report2(fp2)
+reportlib.trailer(fp1)
+reportlib.finish_nonps(fp1)
+reportlib.trailer(fp2)
+reportlib.finish_nonps(fp2)
 
