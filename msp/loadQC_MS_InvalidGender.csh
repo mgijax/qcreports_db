@@ -58,7 +58,7 @@ touch $LOG
  
 date >> $LOG
  
-cat - <<EOSQL | doisql.csh ${RADAR_DBSCHEMA} ${RADAR_DBNAME} $0 >> $LOG
+cat - <<EOSQL | doisql.csh ${RADAR_DBSCHEMADIR} ${RADAR_DBNAME} $0 >> $LOG
 
 use ${RADAR_DBNAME}
 go
