@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-1-3
+DATE: 09/07/2006
+STAFF: lec
+CHANGES:
+1) updated msp/loadQC_* RADAR_DBSCHEMA to RADAR_DBSCHEMADIR
+
 TAG: qcreports_db-3-5-1-2
 DATE: 09/07/2006
 STAFF: lec
