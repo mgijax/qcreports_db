@@ -1,15 +1,12 @@
 
-print ""
-print "Number of unique PIRSF Terms"
-print "
-
-select count(*) from VOC_Term where _Vocab_key = 46
+set nocount on
 go
 
 print ""
-print "Number of Mouse Markers with PIRSF Terms"
-print ""
+select count(*) "# of unique PIRSF Terms" from VOC_Term where _Vocab_key = 46
+go
 
-select count(distinct _Object_key) from VOC_Annot where _AnnotType_key = 1007
+print ""
+select count(distinct _Object_key) "# of Markers w/ PIRSF Terms" from VOC_Annot where _AnnotType_key = 1007
 go
 
