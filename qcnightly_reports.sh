@@ -48,7 +48,6 @@ end
 
 rcp ${HOBBITONNOMENFASTA} ${QCOUTPUTDIR}
 rcp ${QCOUTPUTDIR}/${NOMENFASTA} ${HUGOWEBDIR}
-cp ${QCOUTPUTDIR}/PIRSF_Stats.sql.rpt /data/loads/pirsf/pirsfload/reports
 
 date >> ${LOG}
 

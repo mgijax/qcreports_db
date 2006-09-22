@@ -68,5 +68,9 @@ foreach RPT (*.py)
     ${RPT} ${OUTPUTDIR} ${SERVER} ${MGD} ${RADAR} ${JOBKEY}
 end
 
+foreach RPT (*.sql)
+   reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${SERVER} ${MGD}
+end
+
 exit 0
 
