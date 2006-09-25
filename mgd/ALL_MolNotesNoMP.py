@@ -83,7 +83,7 @@ results = db.sql('select a._Allele_key, cDate = convert(char(10), a.creation_dat
     'and a1._LogicalDB_key = 1 ' + \
     'and a1.prefixPart = "MGI:" ' + \
     'and a1.preferred = 1 ' + \
-    'order by a.symbol', 'auto')
+    'order by a.creation_date desc, a.symbol', 'auto')
 
 for r in results:
 
