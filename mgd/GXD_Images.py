@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	09/28/2006
+#	- TR 7925; added Nucleic Acids Res
+#
 # lec	10/18/2005
 #	- remove restriction on Assay Type per Connie
 #
@@ -50,15 +53,25 @@ journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain R
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
 'BMC Ophthalmol']
 
+# journals where year >= 2005
+journals2005 = ['Nucleic Acids Res']
+
 #
 # Main
 #
 
 fp = reportlib.init(sys.argv[0], 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
+
 fp.write(TAB + 'Journals Checked:' + CRT)
 for j in journals:
     fp.write(2*TAB + j + CRT)
 fp.write(CRT)
+
+fp.write(TAB + 'Journals > 2005:' + CRT)
+for j in journals2005:
+    fp.write(2*TAB + j + CRT)
+fp.write(CRT)
+
 fp.write(TAB + string.ljust('J#', 12))
 fp.write(string.ljust('short_citation', 75))
 fp.write(string.ljust('figure labels', 50) + CRT)
@@ -74,7 +87,8 @@ db.sql('select distinct a._Refs_key, a.creation_date ' + \
             'p._Image_key = i._Image_key and ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
+	    '((b.journal in ("' + string.join(journals, '","') + '")) or ' + \
+	    '(b.journal in ("' + string.join(journals2005, '","') + '") and year >= 2005)) and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ' + \
       'union ' + \
@@ -85,7 +99,8 @@ db.sql('select distinct a._Refs_key, a.creation_date ' + \
             'g._Specimen_key = r._Specimen_key and ' + \
             'r.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
-	    'b.journal in ("' + string.join(journals, '","') + '") and ' + \
+	    '((b.journal in ("' + string.join(journals, '","') + '")) or ' + \
+	    '(b.journal in ("' + string.join(journals2005, '","') + '") and year >= 2005)) and ' + \
             'a._Assay_key = ac._Object_key and ' + \
             'ac._MGIType_key = 8 ', None)
 
