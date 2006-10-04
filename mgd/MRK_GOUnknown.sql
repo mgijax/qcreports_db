@@ -11,7 +11,7 @@ from MRK_Marker m, VOC_Annot_View a, MRK_Reference r
 where m._Organism_key = 1 
 and m._Marker_key = a._Object_key 
 and a._AnnotType_key = 1000 
-and a.accID in ("GO:0000004", "GO:0008372", "GO:0005554") 
+and a.accID in ("GO:0008150", "GO:0003674", "GO:0005575") 
 and m._Marker_key = r._Marker_key
 and r.pubmedID not in ('11217851', '12466851', '14621295', '11125038', '12466854', '12466855', '12693553')
 go
