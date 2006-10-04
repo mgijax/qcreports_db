@@ -109,14 +109,13 @@ db.sql('create index idx1 on #markers(_Marker_key)', None)
 #
 # select orthologs
 #
-db.sql('select distinct m._Marker_key, orthologyKey = m2._Marker_key, s.commonName ' + \
+db.sql('select distinct m._Marker_key, orthologyKey = hm2._Marker_key, s.commonName ' + \
 	'into #orthologs ' + \
-	'from #markers m, HMD_Homology_Marker hm1, HMD_Homology_Marker hm2, MRK_Marker m2, MGI_Organism s ' + \
+	'from #markers m, MRK_Homology_Cache hm1, MRK_Homology_Cache hm2, MGI_Organism s ' + \
 	'where m._Marker_key = hm1._Marker_key ' + \
 	'and hm1._Homology_key = hm2._Homology_key ' + \
-	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key != 1 ' + \
-	'and m2._Organism_key = s._Organism_key', None)
+	'and hm2._Organism_key != 1 ' + \
+	'and hm2._Organism_key = s._Organism_key', None)
 db.sql('create index idx1 on #orthologs(orthologyKey)', None)
 
 results = db.sql('select * from #orthologs', 'auto')

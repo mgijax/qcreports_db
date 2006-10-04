@@ -122,11 +122,13 @@ for r in results:
 # Get Human Homologies
 #
 
-db.sql('select p._Marker_key, hmarkerkey = h.markerKey2, hsymbol = h.marker2 ' + \
+db.sql('select distinct p._Marker_key, hmarkerkey = h2._Marker_key, hsymbol = m.symbol ' + \
 	'into #homology ' + \
-	'from #pending p, HMD_Homology_Pairs_View h ' + \
-	'where p._Marker_key = h.markerkey1 ' + \
-	'and h.organismkey2 = 2 ', None)
+	'from #pending p, MRK_Homology_Cache h1, MRK_Homology_Cache h2, MRK_Marker m ' + \
+	'where p._Marker_key = h1._Marker_key ' + \
+	'and h1._Class_key = h2._Class_key ' + \
+	'and h2._Organism_key = 2 ' + \
+	'and h2._Marker_key = m._Marker_key', None)
 
 homologs = {}
 results = db.sql('select _Marker_key, hsymbol from #homology', 'auto')

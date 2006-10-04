@@ -57,17 +57,15 @@ def runQueries(includeRiken):
        'h_Marker_key = m2._Marker_key, hsymbol = substring(m2.symbol,1,30), hname = substring(m2.name, 1, 40), ' + \
        'm2.modification_date ' + \
        'into #homology ' + \
-       'from HMD_Homology r1, HMD_Homology_Marker h1, ' + \
-            'HMD_Homology r2, HMD_Homology_Marker h2, ' + \
+       'from MRK_Homology_Cache h1, ' + \
+            'MRK_Homology_Cache h2, ' + \
             'MRK_Marker m1, MRK_Marker m2, MRK_Status ms ' + \
        'where m1._Organism_key = 1 ' + \
        'and m1._Marker_Status_key = ms._Marker_Status_key ' + \
        'and m1._Marker_key = h1._Marker_key ' + \
-       'and h1._Homology_key = r1._Homology_key ' + \
-       'and r1._Class_key = r2._Class_key ' + \
-       'and r2._Homology_key = h2._Homology_key ' +\
+       'and h1._Class_key = h2._Class_key ' + \
+       'and h2._Organism_key = 2 ' + \
        'and h2._Marker_key = m2._Marker_key ' + \
-       'and m2._Organism_key = 2 ' + \
        'and m1.symbol != m2.symbol ' + riken, None)
 
     db.sql('create index idx1 on #homology(m_Marker_key)', None)

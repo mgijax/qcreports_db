@@ -1,14 +1,11 @@
 set nocount on
 go
 
-select distinct hm1._Marker_key, m.symbol, h1._Class_key
+select distinct hm1._Marker_key, m.symbol, hm1._Class_key
 into #homology
-from HMD_Homology h1, HMD_Homology_Marker hm1,
-HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m
-where h1._Homology_key = hm1._Homology_key
-and hm1._Marker_key = hm2._Marker_key
-and hm2._Homology_key = h2._Homology_key
-and h1._Class_key != h2._Class_key
+from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2, MRK_Marker m
+where hm1._Marker_key = hm2._Marker_key
+and hm1._Class_key != hm2._Class_key
 and hm1._Marker_key = m._Marker_key
 go
  
@@ -33,9 +30,8 @@ go
 
 select distinct r._Class_key, m._Organism_key, m.symbol
 into #homology
-from HMD_Homology r, HMD_Homology_Marker h, MRK_Marker m
-where r._Homology_key = h._Homology_key
-and h._Marker_key = m._Marker_key
+from MRK_Homology_Cache r, MRK_Marker m
+where r._Marker_key = m._Marker_key
 go
 
 select distinct _Class_key

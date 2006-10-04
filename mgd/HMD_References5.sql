@@ -23,8 +23,8 @@ select distinct r._Refs_key
 into #nodata
 from #references r, MRK_Reference m
 where r._Refs_key = m._Refs_key
-and not exists (select h.* from HMD_Homology_Marker h where m._Marker_key = h._Marker_key)
-and not exists (select h.* from HMD_Homology h where m._Refs_key = h._Refs_key)
+and not exists (select h.* from MRK_Homology_Cache h where m._Marker_key = h._Marker_key)
+and not exists (select h.* from MRK_Homology_Cache h where m._Refs_key = h._Refs_key)
 go
 
 set nocount off

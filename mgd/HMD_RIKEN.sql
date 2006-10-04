@@ -24,13 +24,9 @@ go
 
 select distinct m1.mkey, m1.msymbol, m1.mchr, m2.hsymbol, m2.hchr, m2.sequenceNum
 into #homology1
-from #markers m1, #hmarkers m2, 
-HMD_Homology r1, HMD_Homology_Marker h1, 
-HMD_Homology r2, HMD_Homology_Marker h2
+from #markers m1, #hmarkers m2, MRK_Homology_Cache h1, MRK_Homology_Cache h2
 where m1.mkey = h1._Marker_key 
-and h1._Homology_key = r1._Homology_key 
-and r1._Class_key = r2._Class_key 
-and r2._Homology_key = h2._Homology_key 
+and h1._Class_key = h2._Class_key 
 and h2._Marker_key = m2.hkey
 go
 

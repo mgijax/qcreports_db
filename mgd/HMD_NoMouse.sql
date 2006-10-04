@@ -3,13 +3,11 @@ go
 
 select distinct hc._Class_key
 into #class
-from HMD_Class hc
+from MRK_Homology_Cache hc
 where not exists (select 1 
-from HMD_Homology h, HMD_Homology_Marker hm, MRK_Marker m
-where hc._Class_key = h._Class_key
-and h._Homology_key = hm._Homology_key
-and hm._Marker_key = m._Marker_key
-and m._Organism_key = 1)
+from MRK_Homology_Cache hc2
+where hc._Class_key = hc2._Class_key
+and hc2._Organism_key = 1)
 go
 
 select distinct h._Class_key, h.symbol, organism = h.commonName, h.jnumID, h._Organism_key

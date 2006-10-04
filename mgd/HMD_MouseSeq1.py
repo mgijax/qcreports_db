@@ -67,14 +67,10 @@ db.sql('select distinct m._Marker_key, m.symbol, s.status ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
 	'and a._LogicalDB_Key in (9, 27)) ' + \
-	'and not exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-	'where hm1._Marker_key = m._Marker_key ' + \
-	'and hm1._Homology_key = h1._Homology_key ' + \
+	'and not exists (select 1 from MRK_Homology_Cache h1, MRK_Homology_Cache h2 ' + \
+	'where m._Marker_key = h1._Marker_key ' + \
 	'and h1._Class_key = h2._Class_key ' + \
-	'and h2._Homology_key = hm2._Homology_key ' + \
-	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 2)', None)
+	'and h2._Organism_key = 2)', None)
 db.sql('create index idx1 on #markers(_Marker_key)', None)
 db.sql('create index idx2 on #markers(symbol)', None)
 

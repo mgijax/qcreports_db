@@ -14,15 +14,13 @@ go
 /* Select the mouse homologies for the classes */
 /* where the mouse gene has no seq ID */
 
-select distinct h._Homology_key, h._Class_key, m._Marker_key
+select distinct m._Homology_key, m._Class_key, m._Marker_key
 into #homology
-from #class c, HMD_Homology h, HMD_Homology_Marker m, HMD_Homology_Assay a, MRK_Marker mm
-where c._Class_key = h._Class_key
-and h._Homology_key = m._Homology_key
-and h._Homology_key = a._Homology_key
+from #class c, MRK_Homology_Cache m, HMD_Homology_Assay a
+where c._Class_key = m._Class_key
+and m._Homology_key = a._Homology_key
 and a._Assay_key in (4,5)
-and m._Marker_key = mm._Marker_key
-and mm._Organism_key = 1
+and m._Organism_key = 1
 and not exists (select 1 from ACC_Accession a
 where m._Marker_key = a._Object_key
 and a._MGIType_key = 2

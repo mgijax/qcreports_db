@@ -253,25 +253,17 @@ db.sql('create index idx1 on #markers(_Marker_key)', None)
 
 results = db.sql('select distinct m._Marker_key ' + \
 	'from #markers m ' + \
-	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-	'where hm1._Marker_key = m._Marker_key ' + \
-	'and hm1._Homology_key = h1._Homology_key ' + \
-	'and h1._Class_key = h2._Class_key ' + \
-	'and h2._Homology_key = hm2._Homology_key ' + \
-	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 2) ' + \
+	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
+	'where m._Marker_key = hm1._Marker_key ' + \
+	'and hm1._Class_key = hm2._Class_key ' + \
+	'and hm2._Organism_key = 2) ' + \
 	'union ' + \
 	'select distinct m._Marker_key ' + \
 	'from #markers m ' + \
-	'where exists (select 1 from HMD_Homology h1, HMD_Homology_Marker hm1, ' + \
-	'HMD_Homology h2, HMD_Homology_Marker hm2, MRK_Marker m2 ' + \
-	'where hm1._Marker_key = m._Marker_key ' + \
-	'and hm1._Homology_key = h1._Homology_key ' + \
-	'and h1._Class_key = h2._Class_key ' + \
-	'and h2._Homology_key = hm2._Homology_key ' + \
-	'and hm2._Marker_key = m2._Marker_key ' + \
-	'and m2._Organism_key = 40) ', 'auto')
+	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
+	'where m._Marker_key = hm1._Marker_key ' + \
+	'and hm1._Class_key = hm2._Class_key ' + \
+	'and hm2._Organism_key = 40)', 'auto')
 hasHomology = {}
 for r in results:
 	hasHomology[r['_Marker_key']] = 1
