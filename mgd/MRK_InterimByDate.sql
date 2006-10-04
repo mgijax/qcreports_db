@@ -31,25 +31,18 @@ go
 
 select distinct msymbol = m.symbol, hsymbol = m2.symbol, m.name, m.creation_date
 into #homology
-from #marker m, HMD_Homology r1, HMD_Homology_Marker h1,
-HMD_Homology r2, HMD_Homology_Marker h2, MRK_Marker m2
+from #marker m, MRK_Homology_Cache h1, MRK_Homology_Cache h2, MRK_Marker m2
 where m._Marker_key = h1._Marker_key
-and h1._Homology_key = r1._Homology_key
-and r1._Class_key = r2._Class_key
-and r2._Homology_key = h2._Homology_key
+and h1._Class_key = h2._Class_key
+and h2._Organism_key = 2
 and h2._Marker_key = m2._Marker_key
-and m2._Organism_key = 2
 union
 select distinct m.symbol, null, m.name, m.creation_date
 from #marker m
-where not exists (select 1 from HMD_Homology r1, HMD_Homology_Marker h1,
-HMD_Homology r2, HMD_Homology_Marker h2, MRK_Marker m2
+where not exists (select 1 from MRK_Homology_Cache h1, MRK_Homology_Cache h2
 where m._Marker_key = h1._Marker_key
-and h1._Homology_key = r1._Homology_key
-and r1._Class_key = r2._Class_key
-and r2._Homology_key = h2._Homology_key
-and h2._Marker_key = m2._Marker_key
-and m2._Organism_key = 2)
+and h1._Class_key = h2._Class_key
+and h2._Organism_key = 2)
 go
 
 create index idx1 on #homology(hsymbol)

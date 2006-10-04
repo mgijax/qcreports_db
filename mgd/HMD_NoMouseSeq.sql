@@ -6,7 +6,7 @@ go
 
 select distinct _Class_key
 into #class
-from HMD_Homology h, HMD_Homology_Assay a
+from MRK_Homology_Cache h, HMD_Homology_Assay a
 where h._Homology_key = a._Homology_key
 and a._Assay_key in (4,5)
 go
