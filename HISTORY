@@ -1,8 +1,10 @@
+TAG: qcreports_db-3-5-1-9
 TAG: qcreports_db-3-5-1-8
 DATE: 10/04/2006
 STAFF: lec
 CHANGES:
-1) TR 7865/MRK_GOUnknown.sqltesNoMP.py
+1) TR 7865/MRK_GOUnknown.sql
+2) convert to MRK_Homology_Cache
 
 TAG: qcreports_db-3-5-1-7
 DATE: 10/02/2006
