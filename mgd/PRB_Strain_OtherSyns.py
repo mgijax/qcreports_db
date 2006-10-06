@@ -68,6 +68,5 @@ for r in results:
     fp.write(string.joinfields(syns[r['_Strain_key']], ',') + reportlib.CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

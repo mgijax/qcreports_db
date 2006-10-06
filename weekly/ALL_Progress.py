@@ -352,6 +352,5 @@ genesalleles()
 vocab()
 omim()
 
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
 

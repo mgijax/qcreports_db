@@ -96,6 +96,5 @@ for r in results:
 rows = len(results)
 fp.write('\n(%d rows affected)\n' % (rows))
 
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

@@ -69,5 +69,4 @@ for r in results:
 		fp.write('%-50s' % r['symbol'] + TAB)
 		fp.write('%-30s' % r['accID'] + CRT)
 
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file

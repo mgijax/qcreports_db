@@ -70,6 +70,5 @@ for r in results:
 
 fp.write(reportlib.CRT + '(%d rows affected)' % (len(results)) + reportlib.CRT)
 
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
 

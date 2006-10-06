@@ -108,7 +108,6 @@ for s in synKeys:
 	rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
 db.useOneConnection(0)
 

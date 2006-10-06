@@ -121,7 +121,6 @@ for r in results:
     fp.write("%-12s    %-30s    %-12s\n" % (r['mgiID'],r['probeName'],r['seqID']))
 
 #
-# Add the trailer to the output file.
 #
 reportlib.trailer(fp)
 reportlib.finish_nonps(fp)

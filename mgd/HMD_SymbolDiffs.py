@@ -178,7 +178,6 @@ def report1(fp, includeRiken = 0):
         fp.write(CRT)
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
-    reportlib.trailer(fp)
 
 def report2(fp, includeRiken):
 

@@ -223,6 +223,5 @@ for r in results:
 	fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)	# non-postscript file
 

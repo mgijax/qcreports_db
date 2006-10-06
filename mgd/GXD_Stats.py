@@ -770,6 +770,5 @@ fullCoded()
 mutantAlleles()
 imageCounts()
 monthlyCounts()
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 

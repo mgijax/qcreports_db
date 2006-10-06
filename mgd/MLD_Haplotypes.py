@@ -95,6 +95,5 @@ for exptKey in alleleLine.keys():
 	    fp.write(`d['jnum']` + TAB + d['exptType'] + TAB + `d['tag']` + CRT)
 	    break
 
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)
 
