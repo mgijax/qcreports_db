@@ -122,5 +122,4 @@ for r in results:
 
 #
 #
-reportlib.trailer(fp)
 reportlib.finish_nonps(fp)

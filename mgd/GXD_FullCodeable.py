@@ -226,6 +226,5 @@ process()
 report1(fp1)
 report2(fp2)
 reportlib.finish_nonps(fp1)
-reportlib.trailer(fp2)
 reportlib.finish_nonps(fp2)
 

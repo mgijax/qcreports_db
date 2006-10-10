@@ -25,5 +25,3 @@ quit
 
 END
 
-cat /mgi/software/customSQL/bin/trailer >> $0.rpt
-
