@@ -34,26 +34,26 @@ chmod 775 *.sh */*.py */*.sql Install
 #
 
 if ( ! -d ${QCREPORTDIR} ) then
-	mkdir ${QCREPORTDIR}
+	mkdir -p ${QCREPORTDIR}
 endif
 
 if ( ! -d ${QCOUTPUTDIR} ) then
-	mkdir ${QCOUTPUTDIR}
+	mkdir -p ${QCOUTPUTDIR}
 endif
 
 if ( ! -d ${QCLOGSDIR} ) then
-	mkdir ${QCLOGSDIR}
+	mkdir -p ${QCLOGSDIR}
 endif
 
 if ( ! -d ${QCARCHIVEDIR} ) then
-	mkdir ${QCARCHIVEDIR}
+	mkdir -p ${QCARCHIVEDIR}
 endif
 
 if ( ! -d ${QCALLELEARCHIVE} ) then
-	mkdir ${QCALLELEARCHIVE}
+	mkdir -p ${QCALLELEARCHIVE}
 endif
 
 if ( ! -d ${QCNOMENARCHIVE} ) then
-	mkdir ${QCNOMENARCHIVE}
+	mkdir -p ${QCNOMENARCHIVE}
 endif
 
