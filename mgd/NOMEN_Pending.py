@@ -41,7 +41,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 #
 # Get -pending symbols

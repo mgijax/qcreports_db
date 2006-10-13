@@ -45,7 +45,7 @@ import reportlib
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init('gp2protein', fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init('gp2protein', fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 # Retrieve Markers with GO Annotations
 

@@ -32,7 +32,7 @@ import os
 import db
 import reportlib
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 db.sql('select m._Marker_key, m._Marker_Type_key, m.symbol, markerType = t.name ' + \
      'into #markers1 ' + \

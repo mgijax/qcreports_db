@@ -43,7 +43,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 fp.write('Gene Symbol' + TAB)
 fp.write('Date_complete' + TAB)
 fp.write('#Refs_used' + TAB)

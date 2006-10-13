@@ -79,7 +79,7 @@ def writeRecord(fp, r):
 # Main
 #
 
-fp = reportlib.init("MRK_AllNoGO", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+fp = reportlib.init("MRK_AllNoGO", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 fp.write(CRT + 'jnumID' + TAB + \
 	 'pubMedID' + TAB + \

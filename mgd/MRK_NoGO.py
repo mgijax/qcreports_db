@@ -117,10 +117,10 @@ fpD = None
 def reportOpen():
     global fpA, fpB, fpC, fpD
 
-    fpA = reportlib.init("MRK_NoGO_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
-    fpB = reportlib.init("MRK_NoGO_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
-    fpC = reportlib.init("MRK_NoGO_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
-    fpD = reportlib.init("MRK_NoGO_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+    fpA = reportlib.init("MRK_NoGO_A", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+    fpB = reportlib.init("MRK_NoGO_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+    fpC = reportlib.init("MRK_NoGO_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+    fpD = reportlib.init("MRK_NoGO_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 def reportClose():
     global fpA, fpB, fpC, fpD

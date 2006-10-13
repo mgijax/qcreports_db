@@ -51,7 +51,7 @@ CRT = reportlib.CRT
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 #
 # Sequence Providers

@@ -49,7 +49,7 @@ molsegType = 'Molecular Segment'
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 0)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 db.sql('select a.accID, a._Object_key ' + \
 	'into #mseqIDs ' + \

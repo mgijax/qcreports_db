@@ -47,7 +47,7 @@ radarDB=sys.argv[3]
 jobKey=sys.argv[4]
  
 fp = reportlib.init(outputfile='DuplicateSequence.rpt', outputdir=outputDir,
-                    printHeading = 0, sqlLogging = 0)
+                    printHeading = None, sqlLogging = 0)
 
 db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)

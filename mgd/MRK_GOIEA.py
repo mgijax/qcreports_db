@@ -174,28 +174,28 @@ def writeRecordEF(fp, r):
 # Main
 #
 
-fpA = reportlib.init("MRK_GOIEA_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpA = reportlib.init("MRK_GOIEA_A", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpA.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
 	 '# of refs' + TAB + \
 	 'has orthology?' + CRT*2)
 
-fpB = reportlib.init("MRK_GOIEA_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpB = reportlib.init("MRK_GOIEA_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpB.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
 	 '# of refs' + TAB + \
 	 'has orthology?' + CRT*2)
 
-fpC = reportlib.init("MRK_GOIEA_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpC = reportlib.init("MRK_GOIEA_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpC.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
 	 '# of refs' + TAB + \
 	 'has orthology?' + CRT*2)
 
-fpD = reportlib.init("MRK_GOIEA_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 fpD.write('jnum ID' + TAB + \
 	 'pubMed ID' + TAB + \
 	 'ref in GXD?' + TAB + \
@@ -204,12 +204,12 @@ fpD.write('jnum ID' + TAB + \
 	 'name' + TAB + \
 	 'OMIM' + CRT*2)
 
-fpE = reportlib.init("MRK_GOIEA_E", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpE = reportlib.init("MRK_GOIEA_E", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpE.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'GO?' + CRT*2)
 
-fpF = reportlib.init("MRK_GOIEA_F", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpF = reportlib.init("MRK_GOIEA_F", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpF.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'GO?' + CRT*2)

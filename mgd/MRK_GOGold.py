@@ -98,7 +98,7 @@ def writeRecord2(fp, r):
 # Main
 #
 
-fpA = reportlib.init("MRK_GOGold_A", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpA = reportlib.init("MRK_GOGold_A", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpA.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
@@ -107,7 +107,7 @@ fpA.write('mgi ID' + TAB + \
 	 'GO Term' + TAB + \
 	 'evidence codes' + CRT*2)
 
-fpB = reportlib.init("MRK_GOGold_B", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpB = reportlib.init("MRK_GOGold_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpB.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
@@ -117,7 +117,7 @@ fpB.write('mgi ID' + TAB + \
 	 'evidence codes' + CRT*2)
 
 
-fpC = reportlib.init("MRK_GOGold_C", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpC = reportlib.init("MRK_GOGold_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpC.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
@@ -127,7 +127,7 @@ fpC.write('mgi ID' + TAB + \
 	 'evidence codes' + CRT*2)
 
 
-fpD = reportlib.init("MRK_GOGold_D", printHeading = 0, outputdir = os.environ['QCOUTPUTDIR'])
+fpD = reportlib.init("MRK_GOGold_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpD.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
