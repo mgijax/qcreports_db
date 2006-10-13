@@ -37,7 +37,7 @@ journals = ['Dev Biol', 'Dev Dyn', 'Development', 'Mech Dev', 'Gene Expr Pattern
 
 def processJournal(jList, fileName, journalTitle):
 
-    fp = reportlib.init(fileName, outputdir = os.environ['QCOUTPUTDIR'])
+    fp = reportlib.init(fileName, outputdir = os.environ['QCOUTPUTDIR'], printHeading = "DBINFO")
 
     fp.write('Reference and Number of Markers Analyzed for Journal: %s' % (journalTitle) + 2*CRT)
     fp.write(string.ljust('accID', 30))

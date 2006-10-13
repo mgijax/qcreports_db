@@ -42,6 +42,9 @@ setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
 # GO-specific reports directory
 setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 
+# GXD-specific reports directory
+setenv QCGXDARCHIVE		${QCARCHIVEDIR}/gxd
+
 # FASTA NOMEN DB File
 setenv NOMENFASTA               gbmusnomen
 

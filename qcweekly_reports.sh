@@ -16,9 +16,27 @@ touch ${LOG}
 
 date >> ${LOG}
 
-foreach i ($QCWEEKLY/*.sql)
-	reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+#foreach i (${QCWEEKLY}/*.sql)
+foreach i (${QCWEEKLY}/NOM_Triage.sql)	## REMOVE BEFORE TAGGING
+echo $i, `date` | tee -a ${LOG}
+if ( $i == "${QCWEEKLY}/GXD_Triage.sql" ) then
+	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCGXDARCHIVE}
+	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
+	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
+else if ( $i == "${QCWEEKLY}/NOM_Triage.sql" ) then
+	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCNOMENARCHIVE}
+	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
+	setenv MGD_DBSERVER DEV_MGI
+	setenv MGD_DBNAME mgd
+	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
+else
+	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+endif
+echo $i, `date` | tee -a ${LOG}
 end
+exit 0	# REMOVE BEFORE TAGGING
 
 cd weekly
 foreach i (*.py)

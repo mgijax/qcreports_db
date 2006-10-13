@@ -57,3 +57,11 @@ if ( ! -d ${QCNOMENARCHIVE} ) then
 	mkdir -p ${QCNOMENARCHIVE}
 endif
 
+if ( ! -d ${QCGOARCHIVE} ) then
+	mkdir -p ${QCGOARCHIVE}
+endif
+
+if ( ! -d ${QCGXDARCHIVE} ) then
+	mkdir -p ${QCGXDARCHIVE}
+endif
+
