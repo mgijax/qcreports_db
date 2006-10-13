@@ -1,5 +1,5 @@
 
-/* which papers have been selected for GXD in the past week */
+/* papers selected for Expression in the past week */
 
 set nocount on
 

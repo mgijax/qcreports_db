@@ -1,5 +1,5 @@
 
-/* which papers have been selected for Nomenclature in the past week */
+/* papers for Nomenclature in the past week */
 
 set nocount on
 
@@ -10,10 +10,6 @@ declare @edate char(10)
 select @cdate = convert(char(10), getdate(), 101)
 select @bdate = convert(char(10), dateadd(day, -7, @cdate), 101)
 select @edate = convert(char(10), dateadd(day, 1, @cdate), 101)
-
-select @cdate = "11/16/2005"
-select @bdate = @cdate
-select @edate = convert(char(10), getdate(), 101)
 
 select r._Refs_key, r.creation_date
 into #triage

@@ -7,6 +7,8 @@
 #
 # Usage: qcweekly_reports.sh
 #
+# convert to bourne shell
+#
 
 cd `dirname $0` && source ./Configuration
 
@@ -16,8 +18,7 @@ touch ${LOG}
 
 date >> ${LOG}
 
-#foreach i (${QCWEEKLY}/*.sql)
-foreach i (${QCWEEKLY}/NOM_Triage.sql)	## REMOVE BEFORE TAGGING
+foreach i (${QCWEEKLY}/*.sql)
 echo $i, `date` | tee -a ${LOG}
 if ( $i == "${QCWEEKLY}/GXD_Triage.sql" ) then
 	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCGXDARCHIVE}
@@ -36,7 +37,6 @@ else
 endif
 echo $i, `date` | tee -a ${LOG}
 end
-exit 0	# REMOVE BEFORE TAGGING
 
 cd weekly
 foreach i (*.py)
