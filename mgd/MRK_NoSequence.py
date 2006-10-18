@@ -30,6 +30,9 @@
 #
 # History:
 #
+# lec	10/18/2006
+#	- TR7974; added VEGA, Ensembl and NCBI Gene Models
+#
 # lec	02/23/2004
 #	- include XM (RefSeq)
 #
@@ -56,7 +59,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq), excluding Mutant Phenotypes'
+title = 'Genes with no Sequence Data (GenBank, SwissPROT, TrEMBL, RefSeq, VEGA Gene Model, NCBI Gene Model, Ensembl Gene Model), excluding Mutant Phenotypes'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(string.ljust('Gene Symbol', 27) + \
@@ -87,7 +90,7 @@ db.sql('select distinct m._Marker_key ' + \
 	'and not exists (select 1 from ACC_Accession a ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_Key in (9, 13, 27, 41)) ', None)
+	'and a._LogicalDB_Key in (9, 13, 27, 41, 59, 60, 85)) ', None)
 db.sql('create index idx1 on #mutants(_Marker_key)', None)
 
 #
@@ -102,7 +105,7 @@ db.sql('select m._Marker_key, m.symbol ' + \
 	'and not exists (select 1 from ACC_Accession a ' + \
 	'where m._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_Key in (9, 13, 27, 41)) ' + \
+	'and a._LogicalDB_Key in (9, 13, 27, 41, 59, 60, 85)) ' + \
 	'and not exists (select 1 from #mutants t where t._Marker_key = m._Marker_key)', None)
 db.sql('create index idx1 on #markers(_Marker_key)', None)
 
