@@ -40,12 +40,21 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 def outstandingrefs(key, cDate):
-    # return list of jnumbers whose creation date is greater than the completion date
+    # return list of jnumbers selected for GO that have not already been used in an annotation
+    # return list of jnumbers selected for GO whose creation date is greater than the completion date
+    # depending on whether there is a completion date, or not
 
     jnums = []
 
-    results = db.sql('select jnumID from BIB_GOXRef_View where _Marker_key = %s ' % (key) + \
-	'and convert(char(10), creation_date, 101) > dateadd(day,1,"%s")' % (cDate), 'auto')
+    if cDate == '':
+	results = db.sql('select r.jnumID from BIB_GOXRef_View r where r._Marker_key = %s ' % (key) + \
+		' and not exists (select 1 from VOC_Annot a, VOC_Evidence e ' + \
+		' where a._AnnotType_key = 1000 ' + \
+	        ' and a._Annot_key = e._Annot_key ' + \
+	        ' and e._Refs_key = r._Refs_key) ', 'auto')
+    else:
+	results = db.sql('select jnumID from BIB_GOXRef_View where _Marker_key = %s ' % (key) + \
+		'and convert(char(10), creation_date, 101) > dateadd(day,1,"%s")' % (cDate), 'auto')
 
     for r in results: 
 	jnums.append(r['jnumID'])
@@ -74,7 +83,7 @@ def printResults(cmd, isReferenceGene):
 
 	    jnums = outstandingrefs(key, cDate)
         else:
-	    jnums = []
+	    jnums = outstandingrefs(key, cDate)
 
         fp.write(r['symbol'] + TAB)
         fp.write(r['accID'] + TAB)
