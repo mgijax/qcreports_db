@@ -19,6 +19,9 @@
 #
 # History:
 #
+# 10/17/2006	lec
+#	- TR 7976; added Reference genes; more columns
+#
 # 08/28/2006	lec
 #	- TR 7876; added headings and Refs_used column
 #
@@ -80,7 +83,6 @@ def printResults(cmd, isReferenceGene):
             cDate = re.sub('\n', '', cDate)
             tokens = string.split(cDate, '<')
             cDate = tokens[0]
-
 	    jnums = outstandingrefs(key, cDate)
         else:
 	    jnums = outstandingrefs(key, cDate)
@@ -91,7 +93,7 @@ def printResults(cmd, isReferenceGene):
         fp.write(cDate + TAB)
         fp.write(numRefs + TAB)
 
-	# if more than 5 references, just print out how many, else list them
+	# if more than 5 references, just print out how many, else list the jnum IDs
 
 	if len(jnums) > 5:
 	    fp.write(str(len(jnums)))
@@ -112,7 +114,7 @@ fp.write('#Refs_used' + TAB)
 fp.write('outstanding_refs' + 2*CRT)
 
 #
-# select all Markers w/ GO Annotation that are Reference genes
+# select all Markers w/ GO Annotations that are Reference genes
 #
 db.sql('select distinct n._Object_key, note = rtrim(n.note), m.symbol, a.accID ' + \
 	'into #goref ' + \
@@ -127,7 +129,7 @@ db.sql('select distinct n._Object_key, note = rtrim(n.note), m.symbol, a.accID '
 db.sql('create index idx1 on #goref(_Object_key)', None)
 
 #
-# select all Markers w/ GO Annotation Note that contains a Complete Date
+# select all Markers w/ GO Annotations that contains a completion date
 #
 db.sql('select distinct n._Object_key, note = rtrim(n.note), m.symbol, a.accID ' + \
 	'into #godone ' + \
