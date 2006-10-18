@@ -52,6 +52,12 @@ else if ( $i == "PRB_StrainJAX2.py" ) then
 	rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
 	$i >>& ${LOG}
 	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
+else if ( $i == "MTB_Triage.py" ) then
+        echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.txt" | tee -a ${LOG}
+	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.txt $QCMTBARCHIVE
+	rm -rf $QCOUTPUTDIR/`basename $i py`current.txt
+	$i >>& ${LOG}
+	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.txt $QCOUTPUTDIR/`basename $i py`current.txt
 else
 	$i >>& ${LOG}
 endif

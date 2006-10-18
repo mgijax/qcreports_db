@@ -36,6 +36,9 @@ setenv QCALLELEARCHIVE          ${QCARCHIVEDIR}/alleles
 # Strain archive directory
 setenv QCSTRAINARCHIVE          ${QCARCHIVEDIR}/strain
 
+# mtb-specific reports directory
+setenv QCMTBARCHIVE		${QCARCHIVEDIR}/mtb
+
 # nomen-specific reports directory
 setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
 
