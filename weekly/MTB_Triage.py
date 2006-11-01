@@ -43,7 +43,7 @@ reportlib.column_width = 150
 
 currentDate = mgi_utils.date('%m/%d/%Y')
 fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
-toDate = db.sql('select convert(char(10), dateadd(day, 1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+toDate = db.sql('select convert(char(10), dateadd(day, -1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.' + os.environ['DATE'] + '.txt', printHeading = None)
 

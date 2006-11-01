@@ -9,7 +9,7 @@ declare @edate char(10)
 
 select @cdate = convert(char(10), getdate(), 101)
 select @bdate = convert(char(10), dateadd(day, -7, @cdate), 101)
-select @edate = convert(char(10), dateadd(day, 1, @cdate), 101)
+select @edate = convert(char(10), dateadd(day, -1, @cdate), 101)
 
 select r._Refs_key, r.creation_date
 into #triage
