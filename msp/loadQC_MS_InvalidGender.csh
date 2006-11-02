@@ -43,12 +43,8 @@
 #	- created
 #
 
-# these parameters are obsolete
-setenv RDRSCHEMADIR $1
-setenv MGDDBNAME $2
-
-setenv JOBSTREAM $3
-setenv OUTPUTDIR $4
+setenv JOBSTREAM $1
+setenv OUTPUTDIR $2
 
 source ../Configuration
 

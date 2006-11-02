@@ -1,8 +1,5 @@
 #!/bin/csh -f
 
-# $Header$
-# $Name$
-
 #
 # Program: runQC.csh
 #
@@ -61,8 +58,6 @@ else
 endif
 
 source ../Configuration
-source ${RDRSCHEMADIR}/Configuration
-setenv MGD ${RADAR_DBNAME}
 
 setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf ${LOG}
@@ -73,7 +68,7 @@ date | tee ${LOG}
 # load QC tables which were not loaded during execution of the MSP
 
 foreach i (loadQC_MS_Invalid*.csh)
-./$i ${RDRSCHEMADIR} ${MGDDBNAME} ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
+./$i ${JOBSTREAM} ${OUTPUTDIR} | tee -a ${LOG}
 end
 
 # execute all reports
