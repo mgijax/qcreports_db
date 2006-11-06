@@ -69,3 +69,7 @@ if ( ! -d ${QCMTBARCHIVE} ) then
 	mkdir -p ${QCMTBARCHIVE}
 endif
 
+if ( ! -d ${QCMLDARCHIVE} ) then
+	mkdir -p ${QCMLDARCHIVE}
+endif
+

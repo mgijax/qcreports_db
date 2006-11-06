@@ -15,9 +15,6 @@ source ${MGICONFIG}/master.config.csh
 
 umask 002
 
-# install directory
-setenv QCINSTALLDIR		${USRLOCALMGI}/qcreports_db
-
 # report output main directory
 setenv QCREPORTDIR		/data/reports/qcreports_db
 
@@ -47,6 +44,9 @@ setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 
 # GXD-specific reports directory
 setenv QCGXDARCHIVE		${QCARCHIVEDIR}/gxd
+
+# MLD-specific reports directory
+setenv QCMLDARCHIVE		${QCARCHIVEDIR}/mapping
 
 # FASTA NOMEN DB File
 setenv NOMENFASTA               gbmusnomen

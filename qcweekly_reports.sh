@@ -28,8 +28,11 @@ if ( $i == "${QCWEEKLY}/GXD_Triage.sql" ) then
 else if ( $i == "${QCWEEKLY}/NOM_Triage.sql" ) then
 	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCNOMENARCHIVE}
 	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
-	setenv MGD_DBSERVER DEV_MGI
-	setenv MGD_DBNAME mgd
+	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
+else if ( $i == "${QCWEEKLY}/MLD_Triage.sql" ) then
+	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCMLDARCHIVE}
+	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
 	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
 else
