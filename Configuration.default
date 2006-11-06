@@ -52,13 +52,13 @@ setenv QCMLDARCHIVE		${QCARCHIVEDIR}/mapping
 setenv NOMENFASTA               gbmusnomen
 
 # mgd-specific reports directory
-setenv QCMGD			${QCINSTALLDIR}/mgd
+setenv QCMGD			${QCRPTS}/mgd
 
 # weekly reports directory
-setenv QCWEEKLY                 ${QCINSTALLDIR}/weekly
+setenv QCWEEKLY                 ${QCRPTS}/weekly
 
 # monthly reports directory
-setenv QCMONTHLY                ${QCINSTALLDIR}/monthly
+setenv QCMONTHLY                ${QCRPTS}/monthly
 
 # EI Log files
 setenv EILOGFILES		/net/orodruin/vol/home
