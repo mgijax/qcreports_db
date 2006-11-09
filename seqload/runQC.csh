@@ -1,8 +1,5 @@
 #!/bin/csh -f
 
-# $Header$
-# $Name$
-
 #
 # Program: runQC.csh
 #
@@ -50,19 +47,15 @@ cd `dirname $0`
 #  Verify the argument(s) to the shell script.
 #
 
-if  ( ${#argv} != 4 ) then
-    echo "Usage: $0  RADARDBSchemaDir MGD  JobKey OutputDir"
+if  ( ${#argv} != 2 ) then
+    echo "Usage: $0 JobKey OutputDir"
     exit 1
 else
-    setenv RDRSCHEMADIR $1
-    setenv MGDDBNAME $2
-    setenv JOBSTREAM $3
-    setenv OUTPUTDIR $4
+    setenv JOBSTREAM $1
+    setenv OUTPUTDIR $2
 endif
 
 source ../Configuration
-source ${RDRSCHEMADIR}/Configuration
-setenv MGD ${RADAR_DBNAME}
 
 setenv LOG ${OUTPUTDIR}/`basename $0`.log
 rm -rf $LOG
@@ -73,7 +66,7 @@ date | tee ${LOG}
 # execute all reports
 
 foreach i (*.py)
-./$i ${OUTPUTDIR} ${JOBSTREAM} ${MGDDBNAME}
+./$i ${OUTPUTDIR} ${JOBSTREAM} ${MGD_DBNAME}
 end
 
 date | tee -a ${LOG}

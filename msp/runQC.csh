@@ -47,14 +47,12 @@ cd `dirname $0`
 #  Verify the argument(s) to the shell script.
 #
 
-if  ( ${#argv} != 4 ) then
-    echo "Usage: $0  RADARDBSchemaDir MGD  JobKey OutputDir"
+if  ( ${#argv} != 2 ) then
+    echo "Usage: $0  JobKey OutputDir"
     exit 1
 else
-    setenv RDRSCHEMADIR $1
-    setenv MGDDBNAME $2
-    setenv JOBSTREAM $3
-    setenv OUTPUTDIR $4
+    setenv JOBSTREAM $1
+    setenv OUTPUTDIR $2
 endif
 
 source ../Configuration
