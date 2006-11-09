@@ -15,7 +15,7 @@
 #
 # Usage:
 #
-#	runQC.csh [RADAR DB Schema path] [MGD Database Name] [Job Stream Key] [Output Directory]
+#	runQC.csh [Job Stream Key] [Output Directory]
 #
 # Envvars:
 #
@@ -36,6 +36,9 @@
 #    Modules:
 #
 # Modification History:
+#
+# 11/09/2006	lec
+#	- removed db params
 #
 # 03/16/2004	lec
 #	- created

@@ -34,8 +34,8 @@ PAGE = reportlib.PAGE
 
 outputDir = sys.argv[1]
 jobStreamKey = sys.argv[2]
-mgdDB = sys.argv[3]
 
+mgdDB = os.environ['MGD_DBNAME']
 radarDB = os.environ['RADAR_DBNAME']
 server = os.environ['RADAR_DBSERVER']
 db.set_sqlServer(server)

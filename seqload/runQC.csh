@@ -15,7 +15,7 @@
 #
 # Usage:
 #
-#	runQC.csh [RADAR DB Schema path] [MGD Database Name] [Job Stream Key] [Output Directory]
+#	runQC.csh [Job Stream Key] [Output Directory]
 #
 # Envvars:
 #
@@ -36,6 +36,9 @@
 #    Modules:
 #
 # Modification History:
+#
+# 11/09/2006	lec
+#	- removed db params
 #
 # 03/30/2004	lec
 #	- created
@@ -66,7 +69,7 @@ date | tee ${LOG}
 # execute all reports
 
 foreach i (*.py)
-./$i ${OUTPUTDIR} ${JOBSTREAM} ${MGD_DBNAME}
+./$i ${OUTPUTDIR} ${JOBSTREAM}
 end
 
 date | tee -a ${LOG}
