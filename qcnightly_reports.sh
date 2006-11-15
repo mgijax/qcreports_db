@@ -42,12 +42,12 @@ end
 
 cd ${QCOUTPUTDIR}
 foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt HMD_SymbolDiffs2.rpt)
-cp $i ${HUGOWEBDIR}
+rcp $i ${HUGOWEBDIR}
 cp $i ${HUGOFTPDIR}
 end
 
-cp ${HOBBITONNOMENFASTA} ${QCOUTPUTDIR}
-cp ${QCOUTPUTDIR}/${NOMENFASTA} ${HUGOWEBDIR}
+rcp ${HOBBITONNOMENFASTA} ${QCOUTPUTDIR}
+rcp ${QCOUTPUTDIR}/${NOMENFASTA} ${HUGOWEBDIR}
 
 date >> ${LOG}
 
