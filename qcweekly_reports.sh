@@ -68,7 +68,7 @@ end
 
 cd $QCOUTPUTDIR
 foreach i (NOM_BroadcastReserved.rpt)
-cp $i $HUGOWEBDIR
+rcp $i $HUGOWEBDIR
 cp $i $HUGOFTPDIR
 end
 
