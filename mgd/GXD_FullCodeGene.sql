@@ -31,6 +31,7 @@ select _Index_key from GXD_Index
 where comments like '%ot blot%'
 or comments like '%fraction%'
 or comments like '%reverse%'
+or comments like '%"immunoprecip"%'
 go
 
 create index idx1 on #excluded(_Index_key)
@@ -45,7 +46,7 @@ print ""
 print "excluded:"
 print "     index records that contain only cDNA or primer extension assays"
 print "     index records that contain only age 'E?'"
-print "     index records that have a note that contains 'ot blot', 'fraction', or 'reverse'"
+print "     index records that have a note that contains 'ot blot', 'fraction', 'reverse', 'immunoprecip'"
 print ""
 
 select distinct b.accID, m.symbol
