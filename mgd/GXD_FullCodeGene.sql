@@ -31,7 +31,7 @@ select _Index_key from GXD_Index
 where comments like '%ot blot%'
 or comments like '%fraction%'
 or comments like '%reverse%'
-or comments like '%"immunoprecip"%'
+or comments like '%immunoprecip%'
 go
 
 create index idx1 on #excluded(_Index_key)
