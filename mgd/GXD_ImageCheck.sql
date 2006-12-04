@@ -1,12 +1,11 @@
 
 print ""
-print "GXD Image Figure Labels Beginning 'Fig' or ending '.'"
+print "GXD Image Figure Labels Beginning 'Fig'."
 print ""
 
 select distinct i.jnumID + ";" + i.figureLabel
 from IMG_Image_View i
 where i.figureLabel like "Fig%"
-or i.figureLabel like "%."
 order by i.jnum
 go
 
