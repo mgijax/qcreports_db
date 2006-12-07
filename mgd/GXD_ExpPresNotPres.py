@@ -9,16 +9,15 @@
 #       coded as having expression both present and absent.  Note the
 #       following conditions:
 #
-#       1) Limit the comparison to structures within the same assay.
-#       2) Limit the comparison to structures with wild type specimens.
-#       3) Limit the comparison to specimens with the same genotype.
-#       4) Limit the comparison to speciment with the same sex.
-#       5) Limit the comparison to specimens with the same age.
-#       6) A structure is considered to be a combination of Theiler stage
+#       .) Limit the comparison to structures within the same assay.
+#       .) Limit the comparison to specimens with the same genotype.
+#       .) Limit the comparison to speciment with the same sex.
+#       .) Limit the comparison to specimens with the same age.
+#       .) A structure is considered to be a combination of Theiler stage
 #          and body part (e.g. TS11;embryo).
-#       7) Absence of staining is when strength is "Absent".  Presence
+#       .) Absence of staining is when strength is "Absent".  Presence
 #          of staining is anything other than "Absent".
-#       8) Exclude assays with any of these references: J:46439,
+#       .) Exclude assays with any of these references: J:46439,
 #          J:50869, J:91257, J:93500, J:93300, J:99307.
 #
 #       The report should have the following columns:
@@ -60,6 +59,7 @@ reportTitle = 'Assays in which the same anatomical structure is annotated as hav
 
 fp = reportlib.init(sys.argv[0], title = reportTitle, outputdir = os.environ['QCOUTPUTDIR'])
 
+fp.write('Specimens must have the same genotype and age; reproductive system structures are excluded\n\n')
 fp.write('J Number   ')
 fp.write('MGI ID        ')
 fp.write('Structure' + CRT)
@@ -74,15 +74,6 @@ db.sql('select _Refs_key = a._Object_key into #excludeRefs ' + \
         'and a._LogicalDB_key = 1 ' + \
         'and a.accID in ("J:46439","J:50869","J:91257","J:93500","J:93300","J:99307")', None)
 db.sql('create index idx1 on #excludeRefs(_Refs_key)', None)
-
-#
-# wild type specimens (to include)
-#
-db.sql('select distinct e._Genotype_key into #wildtype ' + \
-	'from GXD_Expression e ' + \
-	'where e.expressed = 0 ' + \
-	'and not exists (select 1 from GXD_AlleleGenotype g where e._Genotype_key = g._Genotype_key)', None)
-db.sql('create index idx1 on #wildtype(_Genotype_key)', None)
 
 #
 # structures of male/female reproductive systems are to be excluded
@@ -112,7 +103,6 @@ db.sql('select distinct e._Assay_key, e._Refs_key, e._Structure_key, e._Genotype
 	'into #expressed ' + \
 	'from GXD_Expression e ' + \
 	'where e.expressed = 1 ' + \
-	'and exists (select 1 from #wildtype w where e._Genotype_key = w._Genotype_key) ' + \
 	'and not exists (select 1 from #excludeStructs r where e._Structure_key = r._Structure_key) ' + \
 	'and not exists (select 1 from #excludeRefs r where e._Refs_key = r._Refs_key)', None)
 db.sql('create index idx1 on #expressed(_Assay_key)', None)
@@ -138,7 +128,7 @@ db.sql('create index idx3 on #results(_Refs_key)', None)
 #
 # final results
 #
-results = db.sql('select jnumID = ac1.accID , mgiID = ac2.accID, s.printName, t.stage ' + \
+results = db.sql('select jnumID = ac1.accID , mgiID = ac2.accID, structure = convert(varchar(2), t.stage) + ":" + s.printName ' + \
          'from #results r, GXD_Structure s, GXD_TheilerStage t, ACC_Accession ac1, ACC_Accession ac2 ' + \
          'where r._Structure_key = s._Structure_key ' + \
          'and s._Stage_key = t._Stage_key ' + \
@@ -156,19 +146,6 @@ results = db.sql('select jnumID = ac1.accID , mgiID = ac2.accID, s.printName, t.
 # Process each row of the results set.
 #
 for r in results:
-
-    #
-    # Determine the structure name.
-    #
-    if r['printName'] == None:
-        structure = str(r['stage'])
-    else:
-        structure = str(r['stage']) + ":" + r['printName']
-
-    #
-    # Write a row of data to the output file.
-    #
-    fp.write("%-9s  %-12s  %-100s\n" % (r['jnumID'],r['mgiID'],structure))
-
+    fp.write("%-9s  %-12s  %-100s\n" % (r['jnumID'],r['mgiID'],r['structure']))
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
