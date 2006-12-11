@@ -54,10 +54,7 @@ if  ( ${#argv} != 5 ) then
     exit 1
 else
     setenv OUTPUTDIR $1
-    setenv SERVER $2
-    setenv MGD $3
-    setenv RADAR $4
-    setenv JOBKEY $5
+    setenv JOBKEY $2
 endif
 
 #
@@ -65,11 +62,11 @@ endif
 #
 
 foreach RPT (*.py)
-    ${RPT} ${OUTPUTDIR} ${SERVER} ${MGD} ${RADAR} ${JOBKEY}
+    ${RPT} ${OUTPUTDIR} ${JOBKEY}
 end
 
 foreach RPT (*.sql)
-   reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${SERVER} ${MGD}
+   reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 exit 0
