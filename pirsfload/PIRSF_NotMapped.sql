@@ -1,9 +1,6 @@
 
-set nocount on
-go
-
 print ""
-print "PIRSFLoad - Superfamilies not mapped to MGI
+print "PIRSFLoad - Superfamilies not mapped to MGI"
 print ""
 
 select a.accID "Superfamily ID", substring(p.term,1,50) "Superfamily Name"

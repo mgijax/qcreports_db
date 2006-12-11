@@ -7,7 +7,7 @@
 #
 #  Usage:
 #
-#      "pirsfloadRpt.csh  OutputDir Server MGD RADAR JobKey
+#      "pirsfloadRpt.csh  OutputDir JobKey
 #
 #      where
 #
@@ -49,7 +49,7 @@ cd `dirname $0` && source ../Configuration
 #
 #  Verify the argument(s) to the shell script.
 #
-if  ( ${#argv} != 5 ) then
+if  ( ${#argv} != 2 ) then
     echo "Usage: $0 OutputDir Server MGD RADAR JobKey"
     exit 1
 else
