@@ -55,7 +55,7 @@ fp.write(string.ljust('--------------', 15))
 fp.write(string.ljust('-------------------------------------------------------------------------------', 80))
 fp.write(CRT)
 
-results = db.sql('select mt.name, acc1.accID as 'markerid', m.symbol, acc2.accID as 'sfid', t.term ' + \
+results = db.sql('select mt.name, markerid = acc1.accID, m.symbol, sfid = acc2.accID, t.term ' + \
        'from MRK_Marker m, MRK_Types mt, ACC_Accession acc1, ACC_Accession acc2, VOC_Annot a, VOC_Term t ' + \
        'where a._AnnotType_key = 1007 ' + \
        'and acc1._Object_key = a._Object_key ' + \
