@@ -44,7 +44,7 @@ create index idx2 on #final(_Image_key)
 go
 
 print ""
-select count(distinct _Image_key) "rows" from #final
+select count(distinct _Image_key) "rows affected" from #final
 go
 
 set nocount off
