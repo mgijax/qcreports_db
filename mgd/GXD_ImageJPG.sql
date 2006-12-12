@@ -43,6 +43,10 @@ create index idx1 on #final(_Refs_key)
 create index idx2 on #final(_Image_key)
 go
 
+print ""
+select count(distinct _Image_key) "rows" from #final
+go
+
 set nocount off
 go
 

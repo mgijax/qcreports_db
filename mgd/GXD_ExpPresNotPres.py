@@ -145,6 +145,8 @@ results = db.sql('select jnumID = ac1.accID , mgiID = ac2.accID, structure = con
 #
 # Process each row of the results set.
 #
+
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 for r in results:
     fp.write("%-9s  %-12s  %-100s\n" % (r['jnumID'],r['mgiID'],r['structure']))
 fp.write('\n(%d rows affected)\n' % (len(results)))
