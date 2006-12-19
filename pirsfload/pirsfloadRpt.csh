@@ -12,9 +12,6 @@
 #      where
 #
 #          OutputDir is the directory where the report files are created.
-#          Server is the database server to use.
-#          MGD is the MGD database to use.
-#          RADAR is the name of the RADAR database to use.
 #          JobKey is the value that identifies the records in the RADAR
 #                 QC report tables that are to be processed.
 #
@@ -68,6 +65,11 @@ end
 foreach RPT (*.sql)
    reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
+
+# this is klunky...we just want to sort this report
+cd ${OUTPUTDIR}
+rm -rf oneToMany.rpt
+sort -k1 oneToMany.txt > oneToMany.rpt
 
 exit 0
 
