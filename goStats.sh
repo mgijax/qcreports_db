@@ -126,6 +126,7 @@ END
 getSummary1()
 {
 
+echo ""                                                                      >> $REPORT
 echo "*********************************************************************" >> $REPORT
 echo "GO Ontology Summary - Number of GO Terms per Ontology"                 >> $REPORT
 echo ""                                                                      >> $REPORT
@@ -205,15 +206,7 @@ getCounts()
 echo "GO Stats Being Generated..."
 
 rm -f $REPORT
-
-cat > $REPORT <<END
-The Jackson Laboratory - Mouse Genome Informatics - Mouse Genome Database (MGD)
-Copyright 1996, 1999, 2000, 2006 The Jackson Laboratory
-All Rights Reserved
-Date Generated:  `date`
-(DBSERVER=${MGD_DBSERVER};DATABASE=${MGD_DBNAME}})
-
-END
+${MGI_DBUTILS}/text/header.sh ${REPORT} ${MGD_DBSERVER} ${MGD_DBNAME}
 
 getSummary1
 getSummary2
@@ -227,8 +220,6 @@ getCounts "EC"         $EQUALS               $EC
 getCounts "FANTOM2"    $EQUALS               $FANTOM2
 getCounts "FANTOM3"    $EQUALS               $FANTOM3
 getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
-
-cat ${MGI_DBUTILS}/text/copyrightnotice >> $REPORT
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
