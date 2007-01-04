@@ -1,17 +1,18 @@
+TAG: qcreports_db-3-5-1-35
 TAG: qcreports_db-3-5-1-34
-DATE :01/04/2007
+DATE: 01/04/2007
 STAFF: lec
 CHANGES:
 1) goStats.sh; fix header
 
 TAG: qcreports_db-3-5-1-33
-DATE :12/18/2006
+DATE: 12/18/2006
 STAFF: lec
 CHANGES:
 1) TR8063; GXD_SpecTheilerAge.py
 
 TAG: qcreports_db-3-5-1-32
-DATE :12/12/2006
+DATE: 12/12/2006
 STAFF: lec
 CHANGES: add row count to top of GXD reports
 
