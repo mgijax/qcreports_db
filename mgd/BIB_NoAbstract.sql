@@ -16,7 +16,7 @@ into #refs2
 from #refs1 r, ACC_Accession a
 where r._Refs_key = a._Object_key
 and a._MGIType_key = 1
-and a._LogicalDB_key in (7,29)
+and a._LogicalDB_key = 29
 go
 
 create index idx1 on #refs2(_Refs_key)
@@ -37,7 +37,7 @@ set nocount off
 go
 
 print ""
-print "References w/ Medline or PubMed ID and No Abstract"
+print "References w/ PubMed ID and No Abstract (where publication year >= 1975)"
 print ""
 
 select distinct r.accID, c.jnum, substring(c.short_citation, 1, 50)
