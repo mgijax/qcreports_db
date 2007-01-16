@@ -32,6 +32,10 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
+fp.write('#\n')
+fp.write('# VEGA Gene Models with no Marker Association\n')
+fp.write('#\n')
+
 results = db.sql('select a.accID ' + \
       'from ACC_Accession a ' + \
       'where a._MGIType_key = 19 and ' + \
