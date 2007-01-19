@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-1-37
+DATE: 01/19/2007
+STAFF: sc
+CHANGES:
+1)qcr.html -updated path to index.html. We started putting logs etc
+  in /data/downloads, but never updated qcr.html
+
 TAG: qcreports_db-3-5-1-36
 DATE: 01/16/2007
 STAFF: lec
