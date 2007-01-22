@@ -18,7 +18,7 @@ from #all
 group by mouseChr, humanChr having count(*) = 1
 go
 
-select s.mouseMarker, s.humanMarker, a.accID
+select distinct s.mouseMarker, s.humanMarker, a.accID
 into #homologies
 from #singles s, MRK_Homology_Cache hm1, MRK_Homology_Cache hm2, ACC_Accession a
 where s.mouseMarker = hm1._Marker_key
