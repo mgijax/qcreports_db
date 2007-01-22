@@ -46,4 +46,6 @@ results = db.sql('select a.accID ' + \
 for r in results:
     fp.write(r['accID'] + CRT)
 
+fp.write('\n(%d rows affected)\n' % (len(results)))
+
 reportlib.finish_nonps(fp)
