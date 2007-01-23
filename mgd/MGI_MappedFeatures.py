@@ -38,10 +38,10 @@ TAB = reportlib.TAB
 
 field1 = 'chr%s'
 field2 = 'MGI'
-field3 = 'exon'
+field3 = 'GeneModel'
 field6 = '.'
 field8 = '.'
-field9 = '%s;%s;%s'
+field9 = '%s;%s'
 
 # Main
 #
@@ -73,13 +73,13 @@ for r in results:
 
     fp.write(field1 % (r['chromosome']) + TAB)
     fp.write(field2 + TAB)
-    fp.write(field3 + TAB)
+    fp.write(r['markerType'] + TAB)
     fp.write(str(r['startC']) + TAB)
     fp.write(str(r['endC']) + TAB)
     fp.write(field6 + TAB)
     fp.write(str(r['strand']) + TAB)
     fp.write(field8 + TAB)
-    fp.write(field9 % (r['markerType'], r['accID'], r['symbol']) + CRT)
+    fp.write(field9 % (r['accID'], r['symbol']) + CRT)
 
 # mapped sequence features that don't have marker associations
 
