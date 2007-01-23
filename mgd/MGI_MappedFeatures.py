@@ -4,17 +4,18 @@
 #
 # Report:
 #       Tab-delimited file of MGI Mapped Features in GFF format
+#	excludes DNA segments and QTLs
 #	(TR 8120)
 #
 #   1. chromosome: "chr##"
 #   2. source of feature: "MGI"
-#   3. gene feature: "exon"
+#   3. gene feature: marker type or "GeneModel"
 #   4. start coordinate
 #   5. end coordinate
 #   6. empty: "."
 #   7. strand
 #   8. empty "."
-#   9. "marker type;MGI ID;marker symbol" or blank
+#   9. MGI ID;marker symbol" or blank
 #
 # Usage:
 #       MGI_MappedFeature.py
