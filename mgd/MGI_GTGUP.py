@@ -3,7 +3,7 @@
 '''
 #
 # Report:
-#       Tab-delimited file of MGI Mapped Features in GFF format
+#       Tab-delimited file of MGI coordinates for gene trap/gene unification pipeline
 #	excludes DNA segments and QTLs
 #	(TR 8120)
 #
