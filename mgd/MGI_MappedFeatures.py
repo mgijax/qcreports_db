@@ -50,6 +50,7 @@ db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], fileExt = '.gff', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 # mapped features that have marker associations
+# exclude DNA Segments and QTLs
 
 results = db.sql('select l.chromosome, l.strand, m.symbol, markerType = mt.name, a.accID, ' + \
         'startC = convert(int, l.startCoordinate), ' + \
@@ -59,6 +60,7 @@ results = db.sql('select l.chromosome, l.strand, m.symbol, markerType = mt.name,
 	'and l.startCoordinate is not null ' + \
 	'and l._Marker_key = m._Marker_key ' + \
 	'and m._Marker_Status_key in (1,3) ' + \
+	'and l._Marker_Type_key not in (2,6) ' + \
 	'and l._Marker_Type_key = mt._Marker_Type_key ' + \
 	'and l._Marker_key = a._Object_key ' + \
 	'and a._MGIType_key = 2 ' + \
