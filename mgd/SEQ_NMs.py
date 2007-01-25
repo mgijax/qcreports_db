@@ -7,7 +7,8 @@
 # Report:
 #	TR 8125
 #
-#       Tab-delimited file
+#
+# NM sequences that are not associated with any MGI mouse marker
 #
 # Usage:
 #       SEQ_NMs.py
@@ -34,6 +35,8 @@ import reportlib
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
+# mouse entrezgene load buckets
+
 egbucketsdir = os.environ['DATALOADSOUTPUT'] + '/entrezgene/egload/reports/'
 
 egbuckets = {'1:N' : 'bucket_one_to_many.txt',
@@ -42,7 +45,7 @@ egbuckets = {'1:N' : 'bucket_one_to_many.txt',
 	     'N:M' : 'bucket_many_to_many.txt'
 	     }
 
-# define what field contains the EG ID in each bucket -1 
+# define what field contains the EG ID in each bucket, and subtract 1
 
 egfield = {'1:N' : 3,
 	   '0:1' : 0,
@@ -52,8 +55,9 @@ egfield = {'1:N' : 3,
 
 def searchBuckets(id):
 
+    #
     # determine which bucket the EG ID is in by looking
-    # the EG ID field in each bucket
+    # at the EG ID field in each bucket
     #
     # IDs should be found in at most one bucket
     #
@@ -70,8 +74,14 @@ def searchBuckets(id):
 
 	for line in bfp.readlines():
 	    tokens = string.split(line[:-1], TAB)
+
+	    # lines without ids
+
 	    if len(tokens) < i:
 		continue
+
+	    # if id is found, we're done
+
 	    if id == tokens[i]:
 		found = 1
 		break
@@ -162,7 +172,11 @@ for b in bkeys:
 	c = c + 1
 fp.write('\n(%d rows affected)\n' % (c))
 
-fp.write(CRT + "NM's not in EG Buckets" + 2*CRT)
+#
+# those NMs that are not in the EG file
+#
+
+fp.write(CRT + "NM's not in EG File" + 2*CRT)
 fp.write(string.ljust('NM Acc ID', 35) + CRT)
 fp.write(string.ljust('---------', 35) + CRT)
 
