@@ -34,6 +34,55 @@ import reportlib
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
+egbucketsdir = os.environ['DATALOADSOUTPUT'] + '/entrezgene/egload/reports/'
+
+egbuckets = {'1:N' : 'bucket_one_to_many.txt',
+	     '0:1' : 'bucket_zero_to_one.txt',
+	     'N:1' : 'bucket_many_to_one.txt',
+	     'N:M' : 'bucket_many_to_many.txt'
+	     }
+
+# define what field contains the EG ID in each bucket -1 
+
+egfield = {'1:N' : 3,
+	   '0:1' : 0,
+	   'N:1' : 3,
+	   'N:M' : 3
+	   }
+
+def searchBuckets(id):
+
+    # determine which bucket the EG ID is in by looking
+    # the EG ID field in each bucket
+    #
+    # IDs should be found in at most one bucket
+    #
+
+    whichBucket = 'not found'
+
+    for b in egbuckets.keys():
+
+	i = egfield[b]
+        found = 0
+
+	bfile = egbucketsdir + egbuckets[b]
+        bfp = open(bfile, 'r')
+
+	for line in bfp.readlines():
+	    tokens = string.split(line[:-1], TAB)
+	    if len(tokens) < i:
+		continue
+	    if id == tokens[i]:
+		found = 1
+		break
+
+	bfp.close()
+
+	if found:
+	    whichBucket = b
+
+    return whichBucket
+
 #
 # Main
 #
@@ -76,21 +125,46 @@ db.sql('select eg.rna, eg.geneID ' + \
 db.sql('create index idx1 on #eg(rna)', None)
 
 fp.write(CRT + "NM's falling into EG Buckets" + 2*CRT)
-fp.write(string.ljust('_NM Acc ID', 35))
-fp.write(string.ljust('EG ID of _NM', 35) + CRT)
+fp.write(string.ljust('NM Acc ID', 35))
+fp.write(string.ljust('EG ID of NM', 35))
+fp.write(string.ljust('MGI/EG Bucket', 35) + CRT)
+fp.write(string.ljust('---------', 35))
+fp.write(string.ljust('-----------', 35))
+fp.write(string.ljust('-------------', 35) + CRT)
 
+#
+# retrieve results and sort them into their appropriate buckets
+#
+
+bresults = {}
 results = db.sql('select distinct a.accID, eg.geneID ' + \
 	'from #acc a, #eg eg ' + \
 	'where a.accID = eg.rna ' + \
 	'order by a.accID ', 'auto')
 for r in results:
-    fp.write(string.ljust(r['accID'], 35))
-    fp.write(string.ljust(r['geneID'], 35) + CRT)
-fp.write('\n(%d rows affected)\n' % (len(results)))
+    bucket = searchBuckets(r['geneID'])
+    if not bresults.has_key(bucket):
+	bresults[bucket] = []
+    bresults[bucket].append(r)
+
+#
+# sort the buckets and print them out
+#
+
+c = 0
+bkeys = bresults.keys()
+bkeys.sort()
+for b in bkeys:
+    for r in bresults[b]:
+        fp.write(string.ljust(r['accID'], 35))
+        fp.write(string.ljust(r['geneID'], 35))
+        fp.write(string.ljust(b, 35) + CRT)
+	c = c + 1
+fp.write('\n(%d rows affected)\n' % (c))
 
 fp.write(CRT + "NM's not in EG Buckets" + 2*CRT)
-fp.write(string.ljust('_NM Acc ID', 35))
-fp.write(string.ljust('EG ID of _NM', 35) + CRT)
+fp.write(string.ljust('NM Acc ID', 35) + CRT)
+fp.write(string.ljust('---------', 35) + CRT)
 
 results = db.sql('select a.accID from #acc a ' + \
 	'where not exists (select 1 from #eg eg where a.accID = eg.rna) ' + \
