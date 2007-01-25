@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-1-42
+DATE: 01/25/2007
+STAFF: lec
+CHANGES:
+1) TR 8125; replace SEQ_NoMarker.sql with SEQ_NMs.py
+
 TAG: qcreports_db-3-5-1-41
 DATE: 01/24/2007
 STAFF: lec
