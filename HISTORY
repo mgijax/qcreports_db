@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-1-43
+DATE: 01/29/2007
+STAFF: lec
+CHANGES:
+1) TR 8120; moved MGI_GTGUP.py to public reports per Joel
+
 TAG: qcreports_db-3-5-1-42
 DATE: 01/25/2007
 STAFF: lec
