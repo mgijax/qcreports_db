@@ -34,7 +34,7 @@ CRT = reportlib.CRT
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 'Strains containing "either" or "involves" and are marked STANDARD')
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 'Strains containing "either" or "involves" and marked STANDARD')
 
 results = db.sql('select s.strain ' + \
 	'from PRB_Strain s ' + \

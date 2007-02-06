@@ -34,7 +34,7 @@ CRT = reportlib.CRT
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 'Strains with MGI_IDs that have more than one additional external ID')
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 'Strains with MGI IDs that have more than one additional external ID')
 
 # strains with MGI IDs
 
