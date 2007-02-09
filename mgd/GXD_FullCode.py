@@ -15,6 +15,9 @@
 #
 # History:
 #
+# lec	02/09/2007
+#	- TR 8147; added Proc Natl Acad Sci U S A
+#
 # lec	01/12/2005
 #	- converted GXD_DevBiol.sql, GXD_Development.sql, GXD_MechDev.sql, GXD_GeneExprPatterns.sql to one report
 #	- added Dev Dyn
@@ -33,7 +36,8 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-journals = ['Dev Biol', 'Dev Dyn', 'Development', 'Mech Dev', 'Gene Expr Patterns', 'Brain Res Gene Expr Patterns']
+journals = ['Dev Biol', 'Dev Dyn', 'Development', 'Mech Dev', 'Gene Expr Patterns', 'Brain Res Gene Expr Patterns',
+	'Proc Natl Acad Sci U S A']
 
 def processJournal(jList, fileName, journalTitle):
 

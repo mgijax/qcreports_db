@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	02/09/2007
+#	- TR 8147; added Proc Natl Acad Sci U S A
+#
 # lec	09/28/2006
 #	- TR 7925; added Nucleic Acids Res
 #
@@ -51,7 +54,7 @@ journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain R
 'PLoS Genet', 'PLoS Med',
 'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
-'BMC Ophthalmol']
+'BMC Ophthalmol', 'Proc Natl Acad Sci U S A']
 
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
