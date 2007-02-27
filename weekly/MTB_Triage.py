@@ -70,14 +70,46 @@ results = db.sql('select authors = b.authors + b.authors2, b.title, b.journal, b
 for r in results:
     fp.write(r['jnumID'] + TAB)
     fp.write(r['pubmedID']  + TAB)
-    fp.write(r['authors'] + TAB)
-    fp.write(r['title'] + TAB)
-    fp.write(r['journal'] + TAB)
-    fp.write(str(r['year']) + TAB)
-    fp.write(r['vol'] + TAB)
-    fp.write(r['issue'] + TAB)
-    fp.write(r['pgs'] + TAB)
-    fp.write(r['abstract'] + CRT)
+
+    authors = r['authors']
+    if authors == None:
+        authors = 'Null'
+    fp.write(authors + TAB)
+
+    title = r['title']
+    if title == None:
+        title = 'Null'
+    fp.write(title + TAB)
+
+    journal = r['journal']
+    if journal == None:
+        journal = 'Null'
+    fp.write(journal + TAB)
+
+    year = str(r['year'])
+    if year == None:
+        year = 'Null'
+    fp.write(year + TAB)
+
+    vol = r['vol']
+    if vol == None:
+        vol = 'Null'
+    fp.write(vol + TAB)
+
+    issue = r['issue']
+    if issue == None:
+        issue = 'Null'
+    fp.write(issue + TAB)
+
+    pgs = r['pgs']
+    if pgs == None:
+        pgs = 'Null'
+    fp.write(pgs + TAB)
+
+    abstract = r['abstract']
+    if abstract == None:
+        abstract = 'Null'
+    fp.write(abstract + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
 
