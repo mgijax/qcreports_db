@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-1-46
+DATE: 02/27/2007
+STAFF: sc
+CHANGES:
+1) TR8171 - Error MTB_Triage.py - not testing for null
+
 TAG: qcreports_db-3-5-1-45
 DATE: 02/09/2007
 STAFF: lec
