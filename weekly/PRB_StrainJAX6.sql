@@ -11,7 +11,7 @@ print ""
 
 set nocount off
 go
-select a.accID
+select a.accID, s.strain
 from ACC_Accession a, PRB_Strain s
 where a._MGIType_key = 10
       and a._LogicalDB_key = 22
