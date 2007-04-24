@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-3-1
+DATE: 04/24/2007
+STAFF: dbm
+CHANGES:
+1) TR8253 - Added PRB_StrainJAX5.sql
+2) TR8267 - Added PRB_StrainJAX6.sql
+
 TAG: qcreports_db-3-5-1-46
 DATE: 02/27/2007
 STAFF: sc
