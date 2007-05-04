@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-3-3
+DATE: 05/04/2007
+STAFF: sc
+CHANGES: TR8288
+1) updated mgd/MRK_MultCoordinate.sql, mgd/MRK_NoVEGA.py
+2) updated qcr.html adding vega to MRK_MltCoordinate.rpt
+
 TAG: qcreports_db-3-5-3-2
 TAG: qcreports_db-3-5-3-1
 DATE: 04/24/2007
