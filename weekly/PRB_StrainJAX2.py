@@ -85,7 +85,7 @@ results = db.sql('select distinct s._Strain_key, s.strain, s.jrs ' + \
 	'from #strains s ' + \
 	'where not exists ' + \
 	'(select 1 from PRB_Strain_Genotype g where s._Strain_key = g._Strain_key and s._Genotype_key = g._Genotype_key) ' + \
-	'order by strain', 'auto')
+	'order by s.jrs', 'auto')
 for r in results:
     fp.write(r['jrs'] + TAB)
     fp.write(r['strain'] + TAB)
