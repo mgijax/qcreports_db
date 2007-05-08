@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-3-5
+DATE: 05/08/2007
+STAFF: dbm
+CHANGES:
+1) Another fixed to PRB_StrainJAX5.sql: Restore original report and detect
+   any marker/allele record changes (per acv).
+
 TAG: qcreports_db-3-5-3-4
 DATE: 05/07/2007
 STAFF: dbm
