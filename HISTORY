@@ -1,3 +1,14 @@
+TAG: qcreports_db-3-5-3-6
+DATE: 05/17/2007
+STAFF: sc
+CHANGES: 
+1) TR8304 ensembl release 44 - mgd/MRK_NoENSEMBL.py - update to exclude 
+obsoletes and include only protein_coding and pseudogene
+2) TR8288 - new reports:
+a) mgd/MRK_MultMarkerGeneModels.sql - new
+b) mgd/MRK_ENSEMBLnoGeneModel.py - new
+c) mgd/MRK_VEGAnoGeneModel.py - new
+
 TAG: qcreports_db-3-5-3-5
 DATE: 05/08/2007
 STAFF: dbm
