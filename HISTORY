@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-3-7
+DATE: 05/18/2007
+STAFF: sc
+CHANGES:
+1) MRK_ENSEMBLnoGeneModel.py and VEGA version - filter out
+   non-official markers.
 TAG: qcreports_db-3-5-3-6
 DATE: 05/17/2007
 STAFF: sc
