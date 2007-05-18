@@ -57,20 +57,23 @@ results = db.sql('select distinct m.symbol ' + \
     'and a._MGIType_key = 2 ' + \
     'and a.preferred = 1 ' + \
     'and a._Object_key = m._Marker_key ' + \
-    'and m.symbol like "OTTMUSG%"', 'auto')
+    'and m.symbol like "OTTMUSG%" ' + \
+    'and m._Marker_Status_key = 1', 'auto')
 
 geneAssocList = []
 for r in results:
     geneAssocList.append(r['symbol'])
 
+# get the list of official VEGA Markers and their MGI ids
 results = db.sql('select a.accID as MGIid, m.symbol ' + \
     'from ACC_Accession a, MRK_Marker m ' + \
     'where a._MGIType_key = 2 ' + \
     'and a._LogicalDB_key = 1 ' + \
     'and a.preferred = 1 ' + \
     'and a._Object_key = m._Marker_key ' + \
-    'and m.symbol like "OTTMUSG%" '
-    'order by m.symbol', 'auto')
+    'and m.symbol like "OTTMUSG%" ' + \
+    'and m._Marker_Status_key = 1' + \
+    'order by m.symbol ' , 'auto')
 
 ctr = 0
 for r in results:
