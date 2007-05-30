@@ -1,9 +1,17 @@
+TAG: qcreports_db-3-5-3-8
+DATE: 05/30/2007
+STAFF: dbm
+CHANGES:
+1) Added a third report to GXD_FullCodeable.py (TR8182)
+2) Added a link to the new report to qcr.html
+
 TAG: qcreports_db-3-5-3-7
 DATE: 05/18/2007
 STAFF: sc
 CHANGES:
 1) MRK_ENSEMBLnoGeneModel.py and VEGA version - filter out
    non-official markers.
+
 TAG: qcreports_db-3-5-3-6
 DATE: 05/17/2007
 STAFF: sc
