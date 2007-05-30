@@ -4,6 +4,7 @@
 #
 # TR 6720 (report #1)
 # TR 7887 (report #2)
+# TR 8182 (report #3)
 #
 # Report:
 #
@@ -11,6 +12,9 @@
 #       GXD_FullCodeable.py
 #
 # History:
+#
+# dbm	05/29/2007
+#	- added report #3 (TR 8182)
 #
 # lec	09/07/2006
 #	- added report #2 (TR 7887)
@@ -85,6 +89,17 @@ def process():
 
     db.sql('create index idx1 on #refscodeable(_Marker_key)', None)
     db.sql('create index idx2 on #refscodeable(_Refs_key)', None)
+
+    #
+    # count of total index records per reference
+    #
+
+    db.sql('select g._Refs_key, idx_count = count(*) ' + \
+	'into #indexcount ' + \
+	'from GXD_Index g ' + \
+	'group by g._Refs_key', None)
+
+    db.sql('create index idx1 on #indexcount(_Refs_key)', None)
 
 def report1(fp):
 
@@ -173,17 +188,6 @@ def report2(fp):
     fp.write(CRT)
 
     #
-    # count of total index records per reference
-    #
-
-    db.sql('select g._Refs_key, idx_count = count(*) ' + \
-	'into #indexcount ' + \
-	'from GXD_Index g ' + \
-	'group by g._Refs_key', None)
-
-    db.sql('create index idx1 on #indexcount(_Refs_key)', None)
-
-    #
     # count of new markers per reference
     #
 
@@ -215,16 +219,128 @@ def report2(fp):
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
+def report3(fp):
+
+    fp.write('This report excludes papers that have E? blot data.\n\n')
+
+    fp.write(string.ljust('j number', 30))
+    fp.write(SPACE)
+    fp.write(string.ljust('index records', 20))
+    fp.write(SPACE)
+    fp.write(string.ljust('new genes', 20))
+    fp.write(SPACE)
+    fp.write(string.ljust('priority', 20))
+    fp.write(SPACE)
+    fp.write(CRT)
+    fp.write(string.ljust('-------------', 30))
+    fp.write(SPACE)
+    fp.write(string.ljust('-------------', 20))
+    fp.write(SPACE)
+    fp.write(string.ljust('-------------  ', 20))
+    fp.write(SPACE)
+    fp.write(string.ljust('-------------  ', 20))
+    fp.write(SPACE)
+    fp.write(CRT)
+
+    #
+    # get the number of new markers per reference
+    #
+
+    db.sql('select i._Refs_key, mrk_count = count(*) ' + \
+           'into #mrk_count ' + \
+           'from GXD_Index i ' + \
+           'where not exists (select 1 from GXD_Assay a ' + \
+                             'where a._Marker_key = i._Marker_key) ' + \
+           'group by i._Refs_key', None)
+
+    db.sql('create index idx1 on #mrk_count(_Refs_key)', None)
+
+    #
+    # get the priority
+    #
+
+    db.sql('select distinct i._Marker_key, i._Refs_key, ' + \
+                  'i._Priority_key, priority = t.term ' + \
+           'into #priority ' + \
+           'from GXD_Index i, VOC_Term t ' + \
+           'where i._Priority_key = t._Term_key', None)
+
+    db.sql('create index idx1 on #priority(_Refs_key)', None)
+
+    #
+    # get a list of references with assay type of northern, western, RT-PCR,
+    # RNAse protection, or Nuclease S1 (aka blots)
+    # no assay of immunohistochemistry, RNA in situ, or in situ reporter;
+    # no stage E;
+    #
+
+    db.sql('select distinct b._Refs_key ' + \
+           'into #refs ' + \
+           'from BIB_View b ' + \
+           'where not exists (select 1 ' + \
+                             'from GXD_Index i, GXD_Assay a ' + \
+                             'where i._Refs_key = b._Refs_key ' + \
+                                   'and a._Refs_key   = i._Refs_key ' + \
+                                   'and a._Marker_key = i._Marker_key) ' + \
+                 'and exists (select 1 ' + \
+                             'from GXD_Index i, GXD_Index_Stages s ' + \
+                             'where  i._Refs_key = b._Refs_key ' + \
+                                    'and  s._index_key  = i._index_key ' + \
+                                    'and  s._indexAssay_key in (74722, 74723, 74724, 74726, 74727)) ' + \
+                 'and not exists (select 1 ' + \
+                                 'from GXD_Index i, GXD_Index_Stages s ' + \
+                                 'where  i._Refs_key = b._Refs_key ' + \
+                                        'and  s._index_key  = i._index_key ' + \
+                                        'and  s._indexAssay_key in (74722, 74723, 74724, 74726, 74727) ' + \
+                                        'and  s._stageID_key = 74769) ' + \
+                 'and not exists (select 1 ' + \
+                                 'from GXD_Index i, GXD_Index_Stages s ' + \
+                                 'where  i._Refs_key = b._Refs_key ' + \
+                                        'and  s._index_key  = i._index_key ' + \
+                                        'and  s._indexAssay_key in (74717, 74718, 74719, 74720, 74721))', None)
+
+    results = db.sql('select distinct a.accID, i.idx_count, m.mrk_count, ' + \
+                     'p.priority ' + \
+	'from #refs r, #indexcount i, #mrk_count m, #priority p, ' + \
+             'ACC_Accession a ' + \
+	'where r._Refs_key = i._Refs_key ' + \
+	'and r._Refs_key *= m._Refs_key ' + \
+	'and r._Refs_key = p._Refs_key ' + \
+        'and r._Refs_key = a._Object_key ' + \
+        'and a._MGIType_key = 1 ' + \
+        'and a._LogicalDB_key = 1 ' + \
+        'and a.prefixPart = "J:" ' + \
+	'order by p._Priority_key, m.mrk_count desc, i.idx_count desc', 'auto')
+
+    for r in results:
+	if r['mrk_count'] == None:
+		mrk_count = 0
+        else:
+		mrk_count = r['mrk_count']
+
+	fp.write(string.ljust(r['accID'], 30))
+        fp.write(SPACE)
+	fp.write(string.ljust(str(r['idx_count']), 20))
+        fp.write(SPACE)
+	fp.write(string.ljust(str(mrk_count), 20))
+        fp.write(SPACE)
+	fp.write(string.ljust(r['priority'], 20) + CRT)
+
+    fp.write('\n(%d rows affected)\n' % (len(results)))
+
 #
 #  main
 #
 
 fp1 = reportlib.init(sys.argv[0], 'Markers that have not been full coded that have full codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
 fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
+fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
 
 process()
 report1(fp1)
 report2(fp2)
+report3(fp3)
 reportlib.finish_nonps(fp1)
 reportlib.finish_nonps(fp2)
+reportlib.finish_nonps(fp3)
 
