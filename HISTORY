@@ -1,3 +1,11 @@
+TAG: qcreports_db-3-5-3-9
+DATE: 06/01/2007
+STAFF: dbm
+CHANGES:
+1) Added GXD_WithdrawnMarker.py (TR8212)
+2) Remove GXD_DupGenotype.rpt from the GXD section of qcr.html because
+   it is already in the Alleles section (per Connie)
+
 TAG: qcreports_db-3-5-3-8
 DATE: 05/30/2007
 STAFF: dbm
