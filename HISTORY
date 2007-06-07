@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-3-10
+DATE: 06/07/2007
+STAFF: dbm
+CHANGES:
+1) Modified GXD_FullCodeable.py (TR8235 and TR8289)
+
 TAG: qcreports_db-3-5-3-9
 DATE: 06/01/2007
 STAFF: dbm
