@@ -13,6 +13,10 @@
 #
 # History:
 #
+# dbm	06/06/2007
+#	- modified report #1 to get high priority papers (TR 8235)
+#	- modified report #1 to add OMIM annotation column (TR 8289)
+#
 # dbm	05/29/2007
 #	- added report #3 (TR 8182)
 #
@@ -105,42 +109,51 @@ def report1(fp):
 
     fp.write(string.ljust('symbol', 35))
     fp.write(SPACE)
+    fp.write(string.ljust('OMIM', 8))
+    fp.write(SPACE)
     fp.write(string.ljust('index records', 20))
     fp.write(SPACE)
-    fp.write(string.ljust('codeable papers', 20))
+    fp.write(string.ljust('high priority J numbers', 25))
     fp.write(SPACE)
     fp.write(CRT)
     fp.write(string.ljust('------', 35))
     fp.write(SPACE)
+    fp.write(string.ljust('----', 8))
+    fp.write(SPACE)
     fp.write(string.ljust('-------------', 20))
     fp.write(SPACE)
-    fp.write(string.ljust('-------------  ', 20))
+    fp.write(string.ljust('-------------------------', 25))
     fp.write(SPACE)
     fp.write(CRT)
 
     #
-    # all papers in index
+    # all markers with high priority papers that have not been full coded
     #
 
-    db.sql('select g._Marker_key, ref_count = count(*) ' + \
-	'into #refsall ' + \
-	'from GXD_Index g ' + \
-	'group by g._Marker_key', None)
+    db.sql('select distinct gi._Marker_key ' + \
+           'into #markers ' + \
+           'from GXD_Index gi ' + \
+           'where gi._Priority_key = 74714 and ' + \
+                 'not exists (select 1 from GXD_Assay ga ' + \
+                             'where ga._Marker_key = gi._Marker_key)', None)
 
-    db.sql('create index idx1 on #refsall(_Marker_key)', None)
+    db.sql('create index idx1 on #markers(_Marker_key)', None)
 
     #
-    # resolve jnum
+    # all references for the markers of interest
     #
 
     jnums = {}	# key = Marker key, value = list of J numbers
 
-    results = db.sql('select distinct r._Marker_key, a.accID from #refscodeable r, ACC_Accession a ' + \
-	'where r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "J:" ' + \
-	'order by a.numericPart', 'auto')
+    results = db.sql('select gi._Marker_key, a.accID ' + \
+                     'from GXD_Index gi, #markers tm, ACC_Accession a ' + \
+                     'where gi._Priority_key = 74714 and ' + \
+                           'gi._Marker_key = tm._Marker_key and ' + \
+                           'gi._Refs_key = a._Object_key and ' + \
+                           'a._MGIType_key = 1 and ' + \
+                           'a._LogicalDB_key = 1 and ' + \
+                           'a.prefixPart = "J:"', 'auto')
+
     for r in results:
         key = r['_Marker_key']
         value = r['accID']
@@ -148,16 +161,49 @@ def report1(fp):
 	    jnums[key] = []
         jnums[key].append(value)
 
-    results = db.sql('select a._Marker_key, m.symbol, a.ref_count ' + \
-	'from #refsall a, MRK_Marker m ' + \
-	'where a._Marker_key = m._Marker_key ' + \
-	'and exists (select 1 from #refscodeable r where a._Marker_key = r._Marker_key) ' + \
-	'order by a.ref_count desc, m.symbol ', 'auto')
+    #
+    #
+    # all markers with a human ortholog that has an OMIM annotation
+    #
+
+    omim = {}	# key = Marker key, value = 1
+
+    results = db.sql('select distinct h1._Marker_key ' + \
+                     'from MRK_Homology_Cache h1, MRK_Homology_Cache h2, ' + \
+                          'MRK_Marker m1, MRK_Marker m2, ACC_Accession a, ' + \
+                          '#markers tm ' + \
+                     'where h1._Organism_key = 1 ' + \
+                           'and h1._Class_key = h2._Class_key ' + \
+                           'and h1._Marker_key = m1._Marker_key ' + \
+                           'and h2._Marker_key = m2._Marker_key ' + \
+                           'and m2._Marker_key = a._Object_key ' + \
+                           'and a._MGIType_key = 2 ' + \
+                           'and a._LogicalDB_key = 15 ' + \
+                           'and m1._Marker_key = tm._Marker_key', 'auto')
+
+    for r in results:
+        omim[r['_Marker_key']] = 1
+
+    #
+    # number of index records for the markers of interest
+    #
+
+    results = db.sql('select m._Marker_key, m.symbol, idx_count = count(*) ' + \
+                     'from GXD_Index gi, MRK_Marker m, #markers tm ' + \
+                     'where gi._Marker_key = tm._Marker_key and ' + \
+                           'gi._Marker_key = m._Marker_key ' + \
+                     'group by m._Marker_key, m.symbol ' + \
+                     'order by idx_count desc, m.symbol', 'auto')
 
     for r in results:
         fp.write(string.ljust(r['symbol'], 35))
         fp.write(SPACE)
-        fp.write(string.ljust(str(r['ref_count']), 20))
+        if omim.has_key(r['_Marker_key']):
+            fp.write(string.ljust('Yes', 8))
+        else:
+            fp.write(string.ljust('No', 8))
+        fp.write(SPACE)
+        fp.write(string.ljust(str(r['idx_count']), 20))
         fp.write(SPACE)
         fp.write(string.join(jnums[r['_Marker_key']], ' '))
         fp.write(CRT)
