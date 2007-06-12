@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-3-12
+DATE: 06/12/2007
+STAFF: 
+CHANGES:
+1) added - mgd/MGI_GenesAndPseudogenesWithSequence.py
+2) updated qcr.html with above
+
 TAG: qcreports_db-3-5-3-11
 DATE: 06/08/2007
 STAFF: dbm
