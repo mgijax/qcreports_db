@@ -29,6 +29,6 @@ print ""
 select a.symbol, a.markerSymbol
 from #duplicates d, ALL_Allele_View a
 where d._Allele_key = a._Allele_key
-order by markerSymbol
+order by creation_date desc
 go
 
