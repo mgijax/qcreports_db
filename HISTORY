@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-3-14
+DATE: 06/19/2007
+STAFF: dbm
+CHANGES:
+1) Change sort column to be creation_date on MRK_Alleles.sql (TR8351)
+
 TAG: qcreports_db-3-5-3-13
 DATE: 06/18/2007
 STAFF: dbm
