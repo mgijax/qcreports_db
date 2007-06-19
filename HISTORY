@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-3-13
+DATE: 06/18/2007
+STAFF: dbm
+CHANGES:
+1) Added GXD_EarlyPapers.py (TR8343)
+2) Updated qcr.html with a link to the new report
+
 TAG: qcreports_db-3-5-3-12
 DATE: 06/12/2007
 STAFF: 
