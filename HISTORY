@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-3-15
+DATE: 06/20/2007
+STAFF: dbm
+CHANGES:
+1) Added BIB_RefsToIndex.py (TR8343)
+2) Updated qcr.html with a link to the new report
+
 TAG: qcreports_db-3-5-3-14
 DATE: 06/19/2007
 STAFF: dbm
