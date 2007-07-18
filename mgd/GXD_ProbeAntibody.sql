@@ -223,4 +223,71 @@ and e._Marker_key = m._Marker_key
 order by a.accid
 go
 
+print ""
+print "Antigens with source information but both tissue and cell line are Not specified"
+print ""
 
+set nocount on
+
+select distinct _Antigen_key, antigenName, mgiID 
+into #antigens 
+from GXD_Antigen_View  g, PRB_Source s 
+where s._Source_key = g._Source_key 
+and g._CellLine_key = 316335  
+and g._Tissue_key = -1  
+and s.description is not null
+go
+
+insert into #antigens 
+select distinct _Antigen_key, antigenName, mgiID 
+from GXD_Antigen_View 
+where _CellLine_key = 316335 
+and _Tissue_key = -1 
+and (age != "Not Specified" 
+or _Strain_key != -1 
+or _Gender_key != 315167)
+go
+
+set nocount off
+
+select mgiID, antigenName
+from #antigens
+go
+
+print ""
+print "Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified"
+print ""
+
+set nocount on
+
+select distinct m._Probe_key, m.name as cDNAname, p.mgiID 
+into #probes 
+from PRB_Source s, PRB_Probe_View p, PRB_Marker_View m
+where s._Organism_key = 1 
+and p._SegmentType_key = 63468 
+and s._CellLine_key = 316335 
+and s._Tissue_key = -1 
+and s._Source_key = p._Source_key 
+and p._Probe_key = m._Probe_key 
+and (s.age != "Not Specified" 
+or s._Strain_key != -1 
+or s._Gender_key != 315167)
+go
+
+insert into #probes 
+select distinct m._Probe_key, m.name, p.mgiID 
+from PRB_Source s, PRB_Probe_View p, PRB_Marker_View m
+where s._Organism_key = 1 
+and p._SegmentType_key = 63468 
+and s._CellLine_key = 316335 
+and s._Tissue_key = -1 
+and s._Source_key = p._Source_key 
+and p._Probe_key = m._Probe_key 
+and s.description is not null
+go
+
+set nocount off
+
+select mgiID, cDNAname
+from #probes
+go
