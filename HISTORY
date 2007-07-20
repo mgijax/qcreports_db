@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-3-18
+DATE: 07/20/2007
+STAFF: sc
+CHANGES:
+1) TR8382 - add MRK_GORCA.py and link from qcr.html
+
 TAG: qcreports_db-3-5-3-17
 DATE: 07/13/2007
 STAFF: sc
