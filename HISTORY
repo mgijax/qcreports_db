@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-4-1
+DATE: 07/26/2007
+STAFF: dbm
+CHANGES:
+1) TR8368 - added GXD_OneGenePapers.py and link from qcr.html
+
 TAG: qcreports_db-3-5-3-18
 DATE: 07/20/2007
 STAFF: sc
