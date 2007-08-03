@@ -80,11 +80,11 @@ fp.write(CRT)
 
 cmds = []
 #
-# Get the index records for one gene papers that have not been full coded.
+# Get one gene papers that have not been full coded.  If a paper is not full
+# coded, it should be in the index, but not in any assay.
 #
-db.sql('select gi._Index_key, gi._Refs_key, gi._Marker_key, ' + \
-              'gi._Priority_key ' + \
-       'into #papers1 ' + \
+db.sql('select gi._Refs_key ' + \
+       'into #included_papers ' + \
        'from GXD_Index gi ' + \
        'where not exists (select 1 ' + \
                          'from GXD_Assay ga ' + \
@@ -93,18 +93,46 @@ db.sql('select gi._Index_key, gi._Refs_key, gi._Marker_key, ' + \
        'having count(gi._Refs_key) = 1', None)
 
 #
+# Get papers that only contain assay type "cDNA" and/or "Primer extension".
+# These will be excluded from the results.
+#
+db.sql('select distinct gi._Refs_key ' + \
+       'into #excluded_papers ' + \
+       'from GXD_Index gi ' + \
+       'where 0 = (select count(*) from GXD_Index_Stages gis ' + \
+                  'where gi._Index_key = gis._Index_key ' + \
+                  'and gis._IndexAssay_key != 74725 ' + \
+                  'and gis._IndexAssay_key != 74728) ' + \
+       'and exists (select 1 from GXD_Index_Stages gis ' + \
+                   'where gi._Index_key = gis._Index_key ' + \
+                   'and gis._IndexAssay_key in (74725, 74728))', None)
+
+#
+# Get the final list of papers for the report by excluding the ones that 
+# are not needed.
+#
+db.sql('select gi._Index_key, gi._Refs_key, gi._Marker_key, ' + \
+              'gi._Priority_key ' + \
+       'into #papers1 ' + \
+       'from GXD_Index gi, #included_papers ip ' + \
+       'where gi._Refs_key = ip._Refs_key and ' + \
+             'not exists (select 1 ' + \
+                         'from #excluded_papers ep ' + \
+                         'where ep._Refs_key = gi._Refs_key)', None)
+
+#
 # Add in the new gene indicator.
 #
 db.sql('select p1.*, 1 "new_gene" ' + \
        'into #papers2 ' + \
        'from #papers1 p1 ' + \
        'where not exists (select 1 from GXD_Assay ga ' + \
-                         'where ga._Marker_key = p1._Marker_key) ' + \
+                         'where p1._Marker_key = ga._Marker_key) ' + \
        'union ' + \
        'select p1.*, 0 "new_gene" ' + \
        'from #papers1 p1 ' + \
        'where exists (select 1 from GXD_Assay ga ' + \
-                     'where ga._Marker_key = p1._Marker_key)', None)
+                      'where p1._Marker_key = ga._Marker_key)', None)
 
 #
 # Add in the E? annotation indicator.
