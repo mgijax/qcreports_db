@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-4-2
+DATE: 08/03/2007
+STAFF: dbm
+CHANGES:
+1) TR8368 - changed to make it exclude papers with cDNA and/or primer
+            extension assay types
+
 TAG: qcreports_db-3-5-4-1
 DATE: 07/26/2007
 STAFF: dbm
