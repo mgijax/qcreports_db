@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-4-3
+DATE: 08/08/2007
+STAFF: dbm
+CHANGES:
+1) TR8435 - changed ALL_MolNotesNoMP.py to exclude rows with only J:94338
+
 TAG: qcreports_db-3-5-4-2
 DATE: 08/03/2007
 STAFF: dbm
