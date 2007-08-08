@@ -28,6 +28,9 @@
 # 09/20/2006	lec
 #       - created
 #
+# 08/08/2007	dbm
+#       - added code to exclude rows with only J:94338
+#
 '''
  
 import sys 
@@ -81,7 +84,7 @@ for r in results:
     value = r['numericPart']
 
     if not refs.has_key(key):
-	refs[key] = []
+        refs[key] = []
     refs[key].append(value)
 
 results = db.sql('select a._Allele_key, cDate = convert(char(10), a.approval_date, 101), a1.accID, a.alleleType, a.symbol ' + \
@@ -93,22 +96,30 @@ results = db.sql('select a._Allele_key, cDate = convert(char(10), a.approval_dat
     'and a1.preferred = 1 ' + \
     'order by a.approval_date desc, a.symbol', 'auto')
 
+skipped = 0
 for r in results:
 
-	listOfRefs = refs[r['_Allele_key']]
-	listOfRefs.sort()
-	listOfRefs.reverse()
+    listOfRefs = refs[r['_Allele_key']]
+    listOfRefs.sort()
+    listOfRefs.reverse()
 
-        fp.write(r['cDate'] + TAB + \
-		 r['accID'] + TAB + \
-		 r['alleleType'] + TAB + \
-		 r['symbol'] + TAB)
+    if listOfRefs[0] == 94338 and len(listOfRefs) == 1:
+        skipped += 1
+        continue
 
-	for l in listOfRefs:
-	    fp.write('J:' + str(l) + ',')
-        fp.write(CRT)
+    fp.write(r['cDate'] + TAB + \
+             r['accID'] + TAB + \
+             r['alleleType'] + TAB + \
+             r['symbol'] + TAB)
 
-fp.write(CRT + 'Number of Alleles: ' + str(len(results)) + CRT)
+    for l in listOfRefs:
+        if l == listOfRefs[-1]:
+            fp.write('J:' + str(l))
+        else:
+            fp.write('J:' + str(l) + ',')
+    fp.write(CRT)
+
+fp.write(CRT + 'Number of Alleles: ' + str(len(results) - skipped) + CRT)
 
 reportlib.finish_nonps(fp)
 
