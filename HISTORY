@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-4-4
+DATE: 08/10/2007
+STAFF: dbm
+CHANGES:
+1) TR8394 - added GXD_RefNoTitle.py and link from qcr.html
+
 TAG: qcreports_db-3-5-4-3
 DATE: 08/08/2007
 STAFF: dbm
