@@ -29,7 +29,10 @@
 #       - created
 #
 # 08/08/2007	dbm
-#       - added code to exclude rows with only J:94338
+#       - added code to exclude rows with only J:94338 (TR8435)
+#
+# 08/10/2007	dbm
+#       - added code to exclude rows with only J:94077 (TR8442)
 #
 '''
  
@@ -103,7 +106,9 @@ for r in results:
     listOfRefs.sort()
     listOfRefs.reverse()
 
-    if listOfRefs[0] == 94338 and len(listOfRefs) == 1:
+    # If the only reference is J:94077 or J:94338, exclude it from the report.
+    #
+    if (listOfRefs[0] == 94077 or listOfRefs[0] == 94338) and len(listOfRefs) == 1:
         skipped += 1
         continue
 
