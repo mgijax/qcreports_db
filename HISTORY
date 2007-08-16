@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-4-6
+DATE: 08/16/2007
+STAFF: sc
+CHANGES: TR8389
+1) added 3rd section to GXD_SpecTheiler.sql 
+2) qcr.html - updated description of above
+
 TAG: qcreports_db-3-5-4-5
 DATE: 08/13/2007
 STAFF: dbm
