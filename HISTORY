@@ -1,8 +1,14 @@
+TAG: qcreports_db-3-5-4-8
+DATE: 09/27/2007
+STAFF: dbm
+CHANGES:
+1) TR 8460; Updates to GXD_Stats.py
+
 TAG: qcreports_db-3-5-4-7
 DATE: 09/25/2007
 STAFF: lec
 CHANGES:
-1) TR 8425; GXD_IndexUnused.py
+1) TR 8429; GXD_IndexUnused.py
 
 TAG: qcreports_db-3-5-4-6
 DATE: 08/16/2007
