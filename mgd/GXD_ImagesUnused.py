@@ -50,13 +50,6 @@ fp = reportlib.init(sys.argv[0], 'Unused image panes from full coded references'
 
 #
 # Select Gel Assays Image Panes that are full-coded.
-#
-# Gel Images are stored directly in the Assay table:
-#	Assay Types = 2 Northern blot
-#                     3 Nuclease Si
-#                     4 RNase protection
-#                     5 RT_PCR
-#                     8 Western blot
 # 	Images that are "not null"
 #
 
@@ -64,7 +57,6 @@ db.sql('select r._Refs_key, r.jnumID, a._ImagePane_key ' \
      'into #gel ' + \
      'from GXD_Assay a, BIB_Citation_Cache r ' \
      'where a._Refs_key = r._Refs_key ' \
-     'and a._Assay_key in (2,3,4,5,8) ' + \
      'and a._ImagePane_key is not null', 'None')
 
 db.sql('create index idx1 on #gel(_Refs_key)', None)
