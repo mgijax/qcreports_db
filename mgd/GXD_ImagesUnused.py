@@ -48,18 +48,37 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Unused image panes from full coded references', outputdir = os.environ['QCOUTPUTDIR'])
 
-# Gel with Pane keys
+#
+# Select Gel Assays Image Panes that are full-coded.
+#
+# Gel Images are stored directly in the Assay table:
+#	Assay Types = 2 Northern blot
+#                     3 Nuclease Si
+#                     4 RNase protection
+#                     5 RT_PCR
+#                     8 Western blot
+# 	Images that are "not null"
+#
 
 db.sql('select r._Refs_key, r.jnumID, a._ImagePane_key ' \
      'into #gel ' + \
      'from GXD_Assay a, BIB_Citation_Cache r ' \
      'where a._Refs_key = r._Refs_key ' \
+     'and a._Assay_key in (2,3,4,5,8) ' + \
      'and a._ImagePane_key is not null', 'None')
 
 db.sql('create index idx1 on #gel(_Refs_key)', None)
 db.sql('create index idx2 on #gel(_ImagePane_key)', None)
 
-# Specimen with Pane keys
+#
+# Select Specimen Image Panes that are full-coded.
+#
+# Specimen Images are:
+#	Assay Types = 1 RNA in situ
+#                     6 Immunohistochemistry
+#                     9 In situ reporter (knock in)
+#
+#
 
 db.sql('select r._Refs_key, r.jnumID, p._ImagePane_key ' + \
     'into #specimen ' + \
@@ -74,8 +93,11 @@ db.sql('create index idx1 on #specimen(_Refs_key)', None)
 db.sql('create index idx2 on #specimen(_ImagePane_key)', None)
 
 #
-# Images with Pane keys and stubs
-# that have been full-coded (jnumber exist in Assay)
+# Select Image Panes that are full-coded.
+#      Reference exists (is used) in Assay table
+#      Image Type = "Full Size"
+#      Image stub exists (x dimension is not null)
+#      Pane Label is filled in (not null)
 #
 
 db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel ' + \
@@ -92,7 +114,17 @@ db.sql('create index idx1 on #images(jnumID)', None)
 db.sql('create index idx2 on #images(figureLabel)', None)
 
 #
-# Image Stubs that are not used in Specimens or Gels
+# From this list of Image Panes, select those that are not used
+# in either the Specimen or Gel table.
+#
+# That is, select Images where some Panes have been full-coded,
+# and some Image Panes have not been full-coded.
+#
+# Print in the:
+#     MGI ID of the Image
+#     J# of the Image
+#     Figure Label
+#     Image Pane
 #
 
 results = db.sql('select a.accID, i.jnumID, i.figureLabel, i.paneLabel ' + \
