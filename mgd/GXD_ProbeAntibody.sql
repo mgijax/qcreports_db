@@ -80,6 +80,8 @@ where p._Assay_key = a._Object_key
 and a._MGIType_key = 8
 and p._Refs_key = b._Object_key
 and b._MGIType_key = 1
+and b._LogicalDB_key = 1 
+and b.prefixPart = "J:"
 and p._Probe_key = pb._Probe_key
 order by pb.name, a.accID
 go
