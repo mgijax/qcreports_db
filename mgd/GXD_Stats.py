@@ -15,9 +15,15 @@
 #
 # History:
 #
+#
+# 10/18/2007	lec
+#	- TR 8556; 
+#	- Full Coded stats uses GXD_Expression; fixed the
+#         "number of genes with GXD data" select statement
+#
 # 05/24/2006	lec
 #	- TR 7694; imagesCount(); added "Number of Results...",
-	  "Number of Image Panes (no jpg attached)"
+#	  "Number of Image Panes (no jpg attached)"
 #
 # 12/23/2004	lec
 #       - adapted from GXD_Stats.sql and customSQL/expression/tr5521.py
@@ -375,15 +381,8 @@ def fullCoded():
     # Genes
     #
 
-    results = db.sql('select count(distinct _Marker_key) from #gxd where source = "E"', 'auto')
-    for r in results:
-        ecount = r['']
-
-    results = db.sql('select count(distinct _Marker_key) from #gxd where source = "L"', 'auto')
-    for r in results:
-        lcount = r['']
-
-    fp.write(2*CRT + 'Number of genes with GXD data:  ' + str(ecount + lcount) + CRT)
+    results = db.sql('select genes = count(distinct _Marker_key) from GXD_Expression', 'auto')
+    fp.write(2*CRT + 'Number of genes with GXD data:  ' + str(results[0]['genes'] + CRT)
 
 def mutantAlleles():
 
