@@ -382,7 +382,7 @@ def fullCoded():
     #
 
     results = db.sql('select genes = count(distinct _Marker_key) from GXD_Expression', 'auto')
-    fp.write(2*CRT + 'Number of genes with GXD data:  ' + str(results[0]['genes'] + CRT)
+    fp.write(2*CRT + 'Number of genes with GXD data:  ' + str(results[0]['genes']) + CRT)
 
 def mutantAlleles():
 
