@@ -235,6 +235,7 @@ select distinct _Antigen_key, antigenName, mgiID
 into #antigens 
 from GXD_Antigen_View  g, PRB_Source s 
 where s._Source_key = g._Source_key 
+and g._Organism_key = 1  
 and g._CellLine_key = 316335  
 and g._Tissue_key = -1  
 and s.description is not null
@@ -243,7 +244,8 @@ go
 insert into #antigens 
 select distinct _Antigen_key, antigenName, mgiID 
 from GXD_Antigen_View 
-where _CellLine_key = 316335 
+where _Organism_key = 1
+and _CellLine_key = 316335 
 and _Tissue_key = -1 
 and (age != "Not Specified" 
 or _Strain_key != -1 
