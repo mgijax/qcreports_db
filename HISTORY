@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-4-15
+DATE: 11/01/2007
+STAFF: lec
+CHANGES:
+1) TR 8553; ALL_MolNotesNoMP.py
+2) TR 8554; ALL_Priority.py
+
 TAG: qcreports_db-3-5-4-14
 DATE: 10/26/2007
 STAFF: dbm
