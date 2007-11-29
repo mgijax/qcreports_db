@@ -70,6 +70,7 @@ cmds.append('SELECT r._Specimen_key, ' + \
                   'and r2._Specimen_key = sp2._Specimen_key ' + \
                   'and sp._Assay_key = sp2._Assay_key ' + \
                   'and sp._Genotype_key = sp2._Genotype_key ' + \
+                  'and sp.age = sp2.age ' + \
                   'and s._Structure_key = c._Structure_key ' + \
                   'and s2._Structure_key = c._Descendent_key')
 
