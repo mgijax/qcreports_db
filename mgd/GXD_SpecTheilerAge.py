@@ -7,8 +7,8 @@
 # Report:
 #       Produce a report listing GXD specimens that have an age value that
 #       is inappropriate for the anatomical structures attached to them.
-#       Exclude TS28 and adjust the maximum range on TS26 to include ages
-#       up to 19.9.  Display the following fields:
+#       Exclude TS28.
+#       Display the following fields:
 #
 #       MGI ID (of the assay)  J Number  Specimen Label
 #
@@ -20,6 +20,9 @@
 # Notes:
 #
 # History:
+#
+# lec   12/04/2007
+#	- TR 8659; Stage 26 dpcMax has been corrected in the database, so no special changes are required
 #
 # lec   12/18/2006
 #	- TR 8063; fixed logic; need to group by _Assay_key & _Specimen_key
@@ -189,10 +192,6 @@ for r in results:
 	
     dpcMin = r['dpcMin']
     dpcMax = r['dpcMax']
-
-    # embryos which are Theiler Stage 27 are put in Theiler Stage 26
-    if (stage == 26):
-       	dpcMax = 19.9
 
     # if the age min is below the dpc min or age max is above the dpc max, print
 
