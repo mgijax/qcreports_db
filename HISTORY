@@ -1,3 +1,11 @@
+TAG: qcreports_db-3-5-4-20
+DATE: 12/17/2007
+STAFF: dbm
+CHANGES:
+1) Performance tuning on PRB_StrainNonStd.sql; Pull accIDs from IMSR database
+   into a temp table and build an index instead of using the Accession table
+   in the IMSR database with no index.  Saves over an hour.
+
 TAG: qcreports_db-3-5-4-19
 DATE: 12/04/2007
 STAFF: lec
