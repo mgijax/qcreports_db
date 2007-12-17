@@ -34,9 +34,17 @@ and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 go
 
+select accID
+into #IMSR_Accession
+from imsr..Accession
+go
+
+create index index_imsr_accID on #IMSR_Accession (accID)
+go
+
 update #strains
 set inIMSR = "y"
-from #strains s, ACC_Accession a, imsr..Accession ac
+from #strains s, ACC_Accession a, #IMSR_Accession ac
 where s._Strain_key = a._Object_key
 and a._MGIType_key = 10
 and a.accID = ac.accID
