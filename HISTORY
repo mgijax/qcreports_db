@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-4-22
+DATE: 12/31/2007
+STAFF: dbm
+CHANGES:
+1) TR 8697; GO_gp2protein.py
+2) TR 8707; MRK_ESTSynonyms.sql
+
 TAG: qcreports_db-3-5-4-21
 DATE: 12/20/2007
 STAFF: dbm
