@@ -14,7 +14,10 @@
 #
 #	A tab-delimited file in this format:
 #	field 1: MGI Marker ID
-#	field 2: SWP:#####;SWP:#####;...
+#	field 2: Swiss-Prot sequence ('SWP:' + seqID) OR
+#	         TrEMBL sequence ('TR:' + seqID) OR
+#	         RefSeq sequence ('NCBI:' + seqID) OR
+#
 # Used by:
 #
 #	Harold
@@ -22,6 +25,10 @@
 # Notes:
 #
 # History:
+#
+# 12/24/2007	dbm
+#	- TR 8697; complete re-write; Show all protein coding genes and
+#	  their representative protein sequences, regardless of annotations.
 #
 # 08/01/2005	lec
 #	- TR 6942; special version for Harold; include SP and TrEMBL
@@ -47,69 +54,65 @@ CRT = reportlib.CRT
 
 fp = reportlib.init('gp2protein', fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
-# Retrieve Markers with GO Annotations
-
-db.sql('select distinct m._Marker_key, a.accID ' + \
-	'into #markers ' + \
-	'from MRK_Marker m, ACC_Accession a ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and exists (select 1 from VOC_Annot v ' + \
-	'where v._AnnotType_key = 1000 ' + \
-	'and m._Marker_key = v._Object_key) ', None)
-db.sql('create index idx1 on #markers(_Marker_key)', None)
+cmds = []
 
 #
-# select Markers that have SP or TrEMBL ids
+# Get the representative sequence (_Qualifier_key = 615421) for each marker
+# if the sequence is:
+# Swiss-Prot (logical DB = 13)
+# TrEMBL (logical DB = 41
+# RefSeq (logical DB = 27 and accID starts with 'NP_' or 'XP_'
 #
+cmds.append('select mc._Marker_key, ' + \
+                   'mc.accID, ' + \
+                   'mc._LogicalDB_key ' + \
+            'into #markerseq ' + \
+            'from ACC_Accession a, SEQ_Marker_Cache mc ' + \
+            'where a._MGIType_key = 2 and ' + \
+                  '(a._LogicalDB_key in (13,41) or ' + \
+                  '(a._LogicalDB_key = 27 and ' + \
+                   'a.prefixPart in ("NP_","XP_"))) and ' + \
+                  'a._Object_key = mc._Marker_key and ' + \
+                  'a.accID = mc.accID and ' + \
+                  'mc._Qualifier_key = 615421 and ' + \
+                  'mc._Organism_key = 1')
 
-results = db.sql('select m._Marker_key, a.accID, a._LogicalDB_key ' + \
-	'from #markers m, ACC_Accession a ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key in (13, 41) ', 'auto')
-spIDs = {}
-for r in results:
-    key = r['_Marker_key']
+#
+# Get the MGI ID for each of the markers.
+#
+cmds.append('select a.accID "mgiID", ' + \
+                   'ms.accID "seqID", ' + \
+                   'ms._LogicalDB_key ' + \
+            'from ACC_Accession a, #markerseq ms ' + \
+            'where a._Object_key = ms._Marker_key and ' + \
+                  'a._MGIType_key = 2 and ' + \
+                  'a._LogicalDB_key = 1 and ' + \
+                  'a.prefixPart = "MGI:" and ' + \
+                  'a.preferred = 1 ' + \
+            'order by a.accID')
 
-    if r['_LogicalDB_key'] == 13:
-        value = 'SWP:' + r['accID']
+#
+# Get the results set.
+#
+results = db.sql(cmds,'auto')
+
+#
+# Write a record to the report for each marker/sequence in the results set.
+#
+for r in results[1]:
+    mgiID = r['mgiID']
+    logicalDB = r['_LogicalDB_key']
+
+    #
+    # Apply the proper prefix to the seq ID based on the logical DB.
+    #
+    if logicalDB == 13:
+        seqID = 'SWP:' + r['seqID']
+    elif logicalDB == 41:
+        seqID = 'TR:' + r['seqID']
     else:
-        value = 'TR:' + r['accID']
+        seqID = 'NCBI:' + r['seqID']
 
-    if not spIDs.has_key(key):
-	spIDs[key] = []
-    spIDs[key].append(value)
-
-#
-# select Markers that have protein id in their GO annotation inferred from field
-#
-
-results = db.sql('select distinct m._Marker_key, e.inferredFrom ' + \
-	'from #markers m, VOC_Annot v, VOC_Evidence e ' + \
-	'where v._AnnotType_key = 1000 ' + \
-	'and m._Marker_key = v._Object_key ' + \
-	'and v._Annot_key = e._Annot_key ' + \
-	'and e.inferredFrom like "protein_id:%"', 'auto')
-for r in results:
-    key = r['_Marker_key']
-    ids = string.split(r['inferredFrom'], 'protein_id:')
-    for i in ids:
-	if len(i) > 0:
-	    value = 'Entrez:' + i
-            if not spIDs.has_key(key):
-	        spIDs[key] = []
-	    if value not in spIDs[key]:
-                spIDs[key].append(value)
-
-results = db.sql('select distinct _Marker_key, accID from #markers order by accID', 'auto')
-for r in results:
-    if spIDs.has_key(r['_Marker_key']):
-        fp.write(r['accID'] + reportlib.TAB + \
-	         string.join(spIDs[r['_Marker_key']], ';') + CRT)
+    fp.write(mgiID + TAB + seqID + CRT)
 
 reportlib.finish_nonps(fp)
-
