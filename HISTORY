@@ -1,3 +1,9 @@
+TAG: qcreports_db-3-5-4-23
+DATE: 01/03/2007
+STAFF: lec
+CHANGES:
+1) TR 8691; GXD_FullCodeMissingIndex.sql
+
 TAG: qcreports_db-3-5-4-22
 DATE: 12/31/2007
 STAFF: dbm
