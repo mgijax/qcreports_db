@@ -17,7 +17,7 @@ setenv OUTPUTFILE	${QCOUTPUTDIR}/PRB_Strain_NameChanges.rpt
 
 cat > $OUTPUTFILE <<END
 The Jackson Laboratory - Mouse Genome Informatics - Mouse Genome Database (MGD)
-Copyright 1996, 1999, 2000 The Jackson Laboratory
+Copyright 1996, 1999, 2002, 2005, 2008 The Jackson Laboratory
 All Rights Reserved
 Date Generated:  `date`
 (EILOGS=$EILOGFILES)
