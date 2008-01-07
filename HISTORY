@@ -1,3 +1,10 @@
+TAG: qcreports_db-3-5-4-24
+DATE: 01/07/2007
+STAFF: dbm
+CHANGES:
+1) Rename gp2protein.mgi to gp2protein_SWP_TR.mgi (per Harold)
+2) Update copyright dates (strainChanges.sh)
+
 TAG: qcreports_db-3-5-4-23
 DATE: 01/03/2007
 STAFF: lec
