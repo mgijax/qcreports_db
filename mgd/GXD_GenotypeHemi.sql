@@ -25,10 +25,6 @@ set nocount on
 go
 
 print ""
-print ""
-print ""
-
-print ""
 print "specimens"
 print "genotypes that have 2 alleles and pair state = heterozygous or homozygous"
 print "mutated gene on X or Y"
