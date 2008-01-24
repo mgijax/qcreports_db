@@ -1,3 +1,13 @@
+TAG: qcreports_db-3-5-4-29
+DATE: 01/24/2008
+STAFF: dbm
+CHANGES:
+1) Remove 8 reports that are no longer referenced on the QC index page
+   (strainAllele.sh, HMD_References3.sql, HMD_References4.sql,
+    MLD_Statistics.sql, MRK_MLC_Withdrawn.sql, MLD_Haplotypes.py,
+    NOMEN_Pending.py, NOM_BroadcastReserved.py)
+2) Copy NOMEN_Pending.sql.rpt to HUGO directory instead of NOMEN_Pending.rpt
+
 TAG: qcreports_db-3-5-4-28
 DATE: 01/22/2008
 STAFF: lec
