@@ -76,11 +76,5 @@ else
 endif
 end
 
-cd $QCOUTPUTDIR
-foreach i (NOM_BroadcastReserved.rpt)
-rcp $i $HUGOWEBDIR
-cp $i $HUGOFTPDIR
-end
-
 date >> ${LOG}
 
