@@ -16,7 +16,6 @@ touch ${LOG}
 
 date >> ${LOG}
 
-./strainAllele.sh >>& ${LOG}
 ./strainChanges.sh >>& ${LOG}
 ./goStats.sh >>& ${LOG}
 
@@ -41,7 +40,7 @@ echo $i, `date` | tee -a ${LOG}
 end
 
 cd ${QCOUTPUTDIR}
-foreach i (NOMEN_Reserved.rpt NOMEN_Pending.rpt HMD_SymbolDiffs2.rpt)
+foreach i (NOMEN_Reserved.rpt NOMEN_Pending.sql.rpt HMD_SymbolDiffs2.rpt)
 rcp $i ${HUGOWEBDIR}
 cp $i ${HUGOFTPDIR}
 end
