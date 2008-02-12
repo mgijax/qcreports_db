@@ -97,6 +97,10 @@
 #
 # History:
 #
+# lec	02/12/2008
+#	- TR 8774/remove report "B"
+#	- TR 8774/"D": add number of unique mgi gene ids
+#
 # lec	10/26/2005
 #	- TR 7190; exclude from Report 2F any Marker that has at most one Allele and
 #	  that Allele has reference J:94338.
@@ -181,12 +185,12 @@ fpA.write('mgi ID' + TAB + \
 	 '# of refs' + TAB + \
 	 'has orthology?' + CRT*2)
 
-fpB = reportlib.init("MRK_GOIEA_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpB.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 '# of refs' + TAB + \
-	 'has orthology?' + CRT*2)
+#fpB = reportlib.init("MRK_GOIEA_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+#fpB.write('mgi ID' + TAB + \
+#	 'symbol' + TAB + \
+#	 'name' + TAB + \
+#	 '# of refs' + TAB + \
+#	 'has orthology?' + CRT*2)
 
 fpC = reportlib.init("MRK_GOIEA_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpC.write('mgi ID' + TAB + \
@@ -310,11 +314,11 @@ results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = co
 for r in results:
 	writeRecord(fpA, r)
 
-results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-	'from #references group by _Marker_key ' + \
-	'order by symbol', 'auto')
-for r in results:
-	writeRecord(fpB, r)
+#results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+#	'from #references group by _Marker_key ' + \
+#	'order by symbol', 'auto')
+#for r in results:
+#	writeRecord(fpB, r)
 
 results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
 	'from #references ' + \
@@ -327,6 +331,7 @@ for r in results:
 
 results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
 	'r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
+	'into #genesD ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
@@ -335,11 +340,16 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
 	'where r._Refs_key = e._Refs_key ' + \
 	'and e._Annot_key = a._Annot_key ' + \
-	'and a._AnnotType_key = 1000) ' + \
+	'and a._AnnotType_key = 1000) ', None)
+
+results = db.sql('select * from #genesD ' + \
 	'order by numericPart', 'auto')
 for r in results:
 	writeRecordD(fpD, r)
 fpD.write('\n(%d rows affected)\n' % (len(results)))
+
+results = db.sql('select distinct mgiID from #genesD', 'auto')
+fpD.write('(%d unique MGI Gene Ids)\n' % (len(results)))
 
 #
 # report 2E
@@ -426,7 +436,7 @@ for r in results:
 fpF.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fpA)	# non-postscript file
-reportlib.finish_nonps(fpB)	# non-postscript file
+#reportlib.finish_nonps(fpB)	# non-postscript file
 reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
 reportlib.finish_nonps(fpE)	# non-postscript file

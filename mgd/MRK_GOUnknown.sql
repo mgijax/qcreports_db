@@ -40,30 +40,18 @@ go
 
 print ""
 print "All genes with 'unknown' annotations with new indexed literature"
-print "Indicator column indicates if reference is selected for GO and 'not used' for any GO annotation"
+print "and if reference is selected for GO and 'not used' for any GO annotation"
 print "(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)"
 print ""
 
-/* set indicator if reference is selected for GO and 'not used' for any GO annotation */
-/* else set indicator to blank */
+/* if reference is selected for GO and 'not used' for any GO annotation */
 
-select t.symbol, t.mgiID, t.pubmedID, indicator = "Y"
+select t.symbol, t.mgiID, t.pubmedID
 from #temp2 t, BIB_DataSet_Assoc a, BIB_DataSet d
 where t._Refs_key = a._Refs_key
 and a._DataSet_key = d._DataSet_key
 and d.abbreviation = 'GO'
 and a.isNeverUsed = 0
-and not exists (select 1 from VOC_Annot va, VOC_Evidence e
-where va._AnnotType_key = 1000
-and va._Annot_key = e._Annot_key
-and e._Refs_key = t._Refs_key)
-union
-select t.symbol, t.mgiID, t.pubmedID, indicator = ""
-from #temp2 t
-where not exists (select 1 from BIB_DataSet_Assoc a, BIB_DataSet d
-where t._Refs_key = a._Refs_key
-and a._DataSet_key = d._DataSet_key
-and d.abbreviation = 'GO')
 and not exists (select 1 from VOC_Annot va, VOC_Evidence e
 where va._AnnotType_key = 1000
 and va._Annot_key = e._Annot_key

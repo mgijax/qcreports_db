@@ -72,6 +72,9 @@
 #
 # History:
 #
+# lec	02/12/2008
+#	- TR 8774; exclude "gene trap" markers
+#
 # lec	07/22/2004
 #	- TR 6053
 #
@@ -147,6 +150,7 @@ def runQueries():
 	    'and m.name not like "%expressed%" ' + \
 	    'and m.name not like "EST %" ' + \
 	    'and m.name not like "gene model %" ' + \
+	    'and m.name not like "gene trap %" ' + \
 	    'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
 	    'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
 	    'and m.symbol not like "ORF%" ' + \
