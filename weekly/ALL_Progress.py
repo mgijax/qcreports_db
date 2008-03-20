@@ -247,26 +247,17 @@ def allelesnomp():
     fp.write(2*CRT + '#########################' + 2*CRT)
     fp.write('Alleles with NO MP Terms, but with other annotations' + 2*CRT)
 
-    db.sql('select n._Object_key into #other1 ' + \
+    db.sql('select n._Object_key into #other ' + \
 	'from MGI_Note n, MGI_NoteChunk nc ' + \
 	'where n._MGIType_key = 11 ' + \
 	'and n._Note_key = nc._Note_key ' + \
-	'and nc.note like "%Associated Phenotype Controlled Terms%" ', None)
-
-    other1 = db.sql('select count(distinct _Object_key) from #other1', 'auto')[0]['']
-
-    db.sql('select n._Object_key into #other2 ' + \
-	'from MGI_Note n, MGI_NoteChunk nc ' + \
-	'where n._MGIType_key = 11 ' + \
-	'and n._Note_key = nc._Note_key ' + \
+	'and n._NoteType_key = 1020 ' + \
 	'and nc.note like "%J:%" ', None)
 
-    other2 = db.sql('select count(distinct _Object_key) from #other2', 'auto')[0]['']
+    other = db.sql('select count(distinct _Object_key) from #other', 'auto')[0]['']
 
-    fp.write(string.ljust('"Associated Phenotype Controlled Terms" in Notes:', 60))
-    fp.write(string.rjust(str(other1), 10) + CRT)
     fp.write(string.ljust('J# in the Notes:', 60))
-    fp.write(string.rjust(str(other2), 10) + CRT)
+    fp.write(string.rjust(str(other), 10) + CRT)
 
 def genesalleles():
 
