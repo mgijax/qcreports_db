@@ -1,3 +1,14 @@
+TAG: qcreports_db-4-0-1-1
+DATE: 03/21/2008
+STAFF: dbm
+CHANGES:
+1) TR8888 - Remove: MRK_WithAllele_MLC.sql, ALL_AssocPheno.py
+2) TR8889 - ALL_Progress.py
+3) TR8890 - ALL_ESCellStrain.sql
+4) TR8891 - Move to weekly: ALL_MolNotesNoMP.py, ALL_NoMolMutation.py,
+            ALL_NoMutantSentence.py, ALL_Priority.py, VOC_MPDups.sql,
+            VOC_MPObsolete.sql, VOC_OMIMObsolete.sql
+
 TAG: qcreports_db-4-0-0-2
 DATE: 03/05/2008
 STAFF: lec
