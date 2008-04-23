@@ -5,12 +5,11 @@ select distinct s._Strain_key, strain = substring(s.strain,1,85),
 alleleSymbol = substring(strain, charindex("-", strain) + 1, char_length(s.strain)),
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
-from PRB_Strain s, PRB_Strain_Type st, VOC_Term t, PRB_Strain_Marker_View sm
+from PRB_Strain s, PRB_Strain_Attribute_View st, PRB_Strain_Marker_View sm
 where s.strain like '%>'
 and s.strain not like 'STOCK%'
 and s._Strain_key = st._Strain_key
-and st._StrainType_key = t._Term_key
-and t.term in ('mutant stock', 'mutant strain', 'targeted mutation')
+and st.term in ('mutant stock', 'mutant strain', 'targeted mutation')
 and s._Strain_key = sm._Strain_key
 go
 
@@ -25,7 +24,7 @@ go
 
 print ""
 print "Strains ending with '>' "
-print "with Strain Type of mutant stock, mutant strain or targeted mutation "
+print "with Strain Attribute of mutant stock, mutant strain or targeted mutation "
 print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is in MGD"
 print ""
