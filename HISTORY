@@ -1,3 +1,17 @@
+TAG: qcreports_db-tr8747-1
+DATE: 04/23/2008
+STAFF: lec
+CHANGES:
+1) changes from strain type to strain attribute:
+   PRB_Strain_SingleNoAlleles2.sql
+   PRB_StrainTrans.sql
+   PRB_StrainF1F2.sql
+   PRB_StrainDup.sql
+   PRB_Strain_SingleNoAlleles1.sql
+   PRB_Strain_MultNoAlleles.sql
+   PRB_StrainByDate.sql
+
+
 TAG: qcreports_db-tr8747
 DATE: 04/23/2008
 STAFF: lec
