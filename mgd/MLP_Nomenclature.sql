@@ -5,9 +5,10 @@ print "These Strains have their 'Needs Review' flag set to 'Yes'."
 print "To remove a Strain from this report, set the flag to 'No'."
 print ""
 
-select strain 
-from PRB_Strain 
-where needsReview = 1
-order by strain
+select s.strain 
+from PRB_Strain s, PRB_Strain_NeedsReview_View n
+where s._Strain_key = n._Strain_key
+and n.term = "Needs Review - nomen"
+order by s.strain
 go
 
