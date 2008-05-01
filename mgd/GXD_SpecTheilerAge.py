@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # lec   12/04/2007
 #	- TR 8659; Stage 26 dpcMax has been corrected in the database, so no special changes are required
 #
@@ -66,8 +69,10 @@ fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages
 #
 db.sql('select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
     'into #temp1 ' + \
-    'from GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where s._Specimen_key = r._Specimen_key and ' + \
+    'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
+    'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+	  'a._Assay_key = s._Assay_key and ' + \
+	  's._Specimen_key = r._Specimen_key and ' + \
           'r._Result_key = i._Result_key and ' + \
           'i._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \
@@ -79,8 +84,10 @@ db.sql('select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.
 #
 db.sql('insert into #temp1 ' + \
     'select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'from GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where s._Specimen_key = r._Specimen_key and ' + \
+    'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
+    'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+	  'a._Assay_key = s._Assay_key and ' + \
+          's._Specimen_key = r._Specimen_key and ' + \
           'r._Result_key = i._Result_key and ' + \
           'i._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \

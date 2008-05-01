@@ -31,6 +31,9 @@
 #
 # History:
 #
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # lec	12/07/2006
 #	- TR 8053; converted to QC report
 #
@@ -102,7 +105,8 @@ db.sql('create index idx1 on #excludeStructs(_Structure_key)', None)
 db.sql('select distinct e._Assay_key, e._Refs_key, e._Structure_key, e._Genotype_key, e.age ' + \
 	'into #expressed ' + \
 	'from GXD_Expression e ' + \
-	'where e.expressed = 1 ' + \
+	'where e.isForGXD = 1 ' + \
+	'and e.expressed = 1 ' + \
 	'and not exists (select 1 from #excludeStructs r where e._Structure_key = r._Structure_key) ' + \
 	'and not exists (select 1 from #excludeRefs r where e._Refs_key = r._Refs_key)', None)
 db.sql('create index idx1 on #expressed(_Assay_key)', None)
@@ -117,6 +121,7 @@ db.sql('select distinct e.* ' + \
 	'into #results ' + \
 	'from #expressed e, GXD_Expression n ' + \
 	'where e._Assay_key = n._Assay_key ' + \
+	'and n.isForGXD = 1 ' + \
 	'and e._Structure_key = n._Structure_key ' + \
 	'and e._Genotype_key = n._Genotype_key ' + \
 	'and e.age = n.age ' + \

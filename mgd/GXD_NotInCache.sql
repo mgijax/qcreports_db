@@ -5,7 +5,8 @@ select a._Assay_key
 into #missing
 from GXD_Assay a
 where not exists (select e.* from GXD_Expression e
-where a._Assay_key = e._Assay_key)
+where a._Assay_key = e._Assay_key
+and e.isForGXD = 1)
 go
 
 set nocount off

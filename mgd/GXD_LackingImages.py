@@ -61,7 +61,7 @@ db.sql('select distinct r._Refs_key, r.journal, a.creation_date into #refs ' + \
 	'where r.year >= 2002 ' + \
 	'and r.journal in ("' + string.join(journals, '","') + '") ' + \
 	'and r._Refs_key = a._Refs_key ' + \
-	'and a._AssayType_key not in (10,11) ' + \
+	'and a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
 	'and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)', None)
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 

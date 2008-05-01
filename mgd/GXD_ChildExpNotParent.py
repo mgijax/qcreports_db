@@ -30,6 +30,9 @@
 #
 # History:
 #
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # dbm	11/28/2007
 #	- new
 #
@@ -61,14 +64,18 @@ cmds.append('SELECT r._Specimen_key, ' + \
             'FROM GXD_InSituResult r, GXD_InSituResult r2, ' + \
                  'GXD_ISResultStructure s, GXD_ISResultStructure s2, ' + \
                  'GXD_StructureClosure c, GXD_Specimen sp, ' + \
-                 'GXD_Specimen sp2 ' + \
+                 'GXD_Specimen sp2, GXD_Assay a, GXD_Assay a2 ' + \
             'WHERE r._Strength_key = 1 ' + \
                   'and r._Result_key = s._Result_key ' + \
                   'and r._Specimen_key = sp._Specimen_key ' + \
+		  'and sp._Assay_key = a._Assay_key ' + \
+		  'and a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
                   'and r2._Strength_key > 1 ' + \
                   'and r2._Result_key = s2._Result_key ' + \
                   'and r2._Specimen_key = sp2._Specimen_key ' + \
                   'and sp._Assay_key = sp2._Assay_key ' + \
+                  'and sp2._Assay_key = a2._Assay_key ' + \
+		  'and a2._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
                   'and sp._Genotype_key = sp2._Genotype_key ' + \
                   'and sp.age = sp2.age ' + \
                   'and s._Structure_key = c._Structure_key ' + \

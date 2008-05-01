@@ -51,6 +51,7 @@ select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 print ""
@@ -62,6 +63,7 @@ select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
 from #temp4 t, GXD_GelLane s, GXD_Assay_View a
 where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 set nocount on

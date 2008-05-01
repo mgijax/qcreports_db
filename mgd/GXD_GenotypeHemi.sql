@@ -36,6 +36,7 @@ from #genotypes g, GXD_Assay a, GXD_Specimen s, ACC_Accession a1, ACC_Accession 
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'
 and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and a._Refs_key = a1._Object_key
 and a1._MGIType_key = 1
 and a1.prefixPart = "J:"
@@ -56,6 +57,7 @@ from #genotypes g, GXD_Assay a, GXD_GelLane s, ACC_Accession a1, ACC_Accession a
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'
 and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and a._Refs_key = a1._Object_key
 and a1._MGIType_key = 1
 and a1.prefixPart = "J:"

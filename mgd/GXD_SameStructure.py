@@ -28,6 +28,9 @@
 #
 # History:
 #
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # lec	04/11/2005
 #	 - converted to QC report
 #
@@ -68,8 +71,11 @@ fp.write(2*CRT)
 
 db.sql('select gr._Specimen_key, grs._Structure_key ' + \
     'into #specstructs ' + \
-    'from GXD_InSituResult gr, GXD_ISResultStructure grs ' + \
-    'where gr._Result_key = grs._Result_key', None)
+    'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult gr, GXD_ISResultStructure grs ' + \
+    'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+    'and a._Assay_key = s._Assay_key ' + \
+    'and s._Specimen_key = gr._Specimen_key ' + \
+    'and gr._Result_key = grs._Result_key', None)
 
 db.sql('create index idx1 on #specstructs (_Specimen_key)', None)
 db.sql('create index idx2 on #specstructs (_Structure_key)', None)
@@ -97,8 +103,10 @@ db.sql('select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, gsn
 
 db.sql('select gr._GelLane_key, grs._Structure_key ' + \
     'into #gelstructs ' + \
-    'from GXD_GelLane gr, GXD_GelLaneStructure grs ' + \
-    'where gr._GelLane_key = grs._GelLane_key', None)
+    'from GXD_Assay a, GXD_GelLane gr, GXD_GelLaneStructure grs ' + \
+    'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+    'and a._Assay_key = gr._Assay_key ' + \
+    'and gr._GelLane_key = grs._GelLane_key', None)
 
 db.sql('create index idx1 on #gelstructs (_GelLane_key)', None)
 db.sql('create index idx2 on #gelstructs (_Structure_key)', None)
