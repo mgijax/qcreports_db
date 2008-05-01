@@ -2,15 +2,13 @@
 
 '''
 #
-# TR 8618
+# TR 8775: TR 8618
 #
 # Report:
 #
 # List anatomical structures used in assays that have been annotated as having
 # no expression, but the children used in the same assay have been annotated
 # as having expression.
-#
-# Exclude J:80501, J:80502, J:91257, J:93300, J:101679, J:122989
 #
 # Columns to display:
 #    1) J-Number of the assay
@@ -24,17 +22,14 @@
 # Originally requested as a custom SQL (TR 8073).
 #
 # Usage:
-#       GXD_ChildExpNotParent.py
+#       RECOMB_ChildExpNotParent.py
 #
 # Notes:
 #
 # History:
 #
 # lec	05/01/2008
-#	- TR 8775; on select GXD assay types
-#
-# dbm	11/28/2007
-#	- new
+#	- new; TR 8775; copy from GXD
 #
 '''
 
@@ -48,8 +43,6 @@ CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
-
-excluded = '"J:80501","J:80502","J:91257","J:93300","J:101679","J:122989"'
 
 cmds = []
 
@@ -69,13 +62,13 @@ cmds.append('SELECT r._Specimen_key, ' + \
                   'and r._Result_key = s._Result_key ' + \
                   'and r._Specimen_key = sp._Specimen_key ' + \
 		  'and sp._Assay_key = a._Assay_key ' + \
-		  'and a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+		  'and a._AssayType_key in (10,11) ' + \
                   'and r2._Strength_key > 1 ' + \
                   'and r2._Result_key = s2._Result_key ' + \
                   'and r2._Specimen_key = sp2._Specimen_key ' + \
                   'and sp._Assay_key = sp2._Assay_key ' + \
                   'and sp2._Assay_key = a2._Assay_key ' + \
-		  'and a2._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+		  'and a2._AssayType_key in (10,11) ' + \
                   'and sp._Genotype_key = sp2._Genotype_key ' + \
                   'and sp.age = sp2.age ' + \
                   'and s._Structure_key = c._Structure_key ' + \
@@ -91,14 +84,13 @@ cmds.append('SELECT distinct a.accID, d._Stage_key, d.printName ' + \
                  'GXD_Structure d, GXD_Structure d2 ' + \
             'WHERE w._Specimen_key = s._Specimen_key ' + \
                   'and s._Assay_key = e._Assay_key ' + \
-		  'and e.isForGXD = 1 ' + \
+		  'and e.isForGXD = 0 ' + \
                   'and e.expressed = 1 ' + \
                   'and s._Assay_key = a._Object_key ' + \
                   'and a._MGIType_key = 8 ' + \
                   'and e._Refs_key = j._Object_key ' + \
                   'and j._MGIType_key = 1 ' + \
                   'and j.prefixPart = "J:" ' + \
-                  'and j.accID not in (' + excluded + ') ' + \
                   'and w.parentStructureKey = d._Structure_key ' + \
                   'and w.childStructureKey = d2._Structure_key')
 
@@ -118,14 +110,13 @@ cmds.append('SELECT distinct j.accID "JNumber", ' + \
                  'GXD_Structure d, GXD_Structure d2 ' + \
             'WHERE w._Specimen_key = s._Specimen_key ' + \
                   'and s._Assay_key = e._Assay_key ' + \
-		  'and e.isForGXD = 1 ' + \
+		  'and e.isForGXD = 0 ' + \
                   'and e.expressed = 1 ' + \
                   'and s._Assay_key = a._Object_key ' + \
                   'and a._MGIType_key = 8 ' + \
                   'and e._Refs_key = j._Object_key ' + \
                   'and j._MGIType_key = 1 ' + \
                   'and j.prefixPart = "J:" ' + \
-                  'and j.accID not in (' + excluded + ') ' + \
                   'and w.parentStructureKey = d._Structure_key ' + \
                   'and w.childStructureKey = d2._Structure_key ' + \
             'order by a.accID, d._Stage_key, d.printName')
@@ -135,10 +126,7 @@ results = db.sql(cmds, 'auto')
 #
 # Create the report file and write the heading to it.
 #
-fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
-
-fp.write(CRT)
-fp.write('Excluded J-Numbers: J:80501, J:80502, J:91257, J:93300, J:101679, J:122989')
+fp = reportlib.init(sys.argv[0], 'Recombinant/transgenic specimens with incompatible Theiler stages and ages', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(2*CRT)
 fp.write('Row Count: ' + str(len(results[1])))
