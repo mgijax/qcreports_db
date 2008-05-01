@@ -165,7 +165,7 @@ set nocount off
 go
 
 print ""
-print "InSitu Specimens with > 1 Sex" 
+print "InSitu Specimens and Gel Lanes with > 1 Sex" 
 print "(excludes J:80502)"
 print ""
 

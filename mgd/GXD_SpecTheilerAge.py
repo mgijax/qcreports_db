@@ -62,7 +62,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'GXD Specimens with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'GXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
 #
 # insitu specimens with "embryonic day" age; exclude TS 28

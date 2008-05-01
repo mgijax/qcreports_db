@@ -74,6 +74,7 @@ def monthlyCounts():
 	'into #gelresults ' + \
 	'from GXD_Assay a, GXD_GelLane l, GXD_GelLaneStructure gls ' + \
 	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+	'and a._Assay_key = l._Assay_key ' + \
 	'and l._GelControl_key = 1 ' + \
 	'and l._GelLane_key = gls._GelLane_key ' + \
 	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
