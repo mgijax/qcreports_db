@@ -1,3 +1,4 @@
+TAG: qcreports_db-tr8747-4
 TAG: qcreports_db-tr8747-3
 TAG: qcreports_db-tr8747-2
 TAG: qcreports_db-tr8747-1
@@ -13,6 +14,8 @@ CHANGES:
    PRB_Strain_SingleNoAlleles1.sql
    PRB_Strain_MultNoAlleles.sql
    PRB_StrainByDate.sql
+2) GXD and Recombinase reports (TR8775)
+3) TR 8984, GXD_Images
 
 TAG: qcreports_db-tr8747
 DATE: 04/23/2008
