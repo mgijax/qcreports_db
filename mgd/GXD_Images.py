@@ -16,6 +16,12 @@
 #
 # History:
 #
+# lec	05/06/2008
+#	- TR 8984; The journals are:
+#         J Biol Chem
+#         J Lipid Res
+#         J Clin Invest
+#
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
 #
@@ -60,7 +66,8 @@ journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain R
 'PLoS Genet', 'PLoS Med', 'PLoS ONE' ,
 'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
-'BMC Ophthalmol', 'Proc Natl Acad Sci U S A']
+'BMC Ophthalmol', 'Proc Natl Acad Sci U S A',
+'J Biol Chem', 'J Lipid Res', 'J Clin Invest']
 
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
