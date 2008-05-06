@@ -22,5 +22,12 @@ reportisql.csh $i $QCOUTPUTDIR/`basename $i`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 echo $i, `date` | tee -a ${LOG}
 end
 
+cd ${QCMONTHLY}
+foreach i (*.py)
+echo $i, `date` | tee -a ${LOG}
+$i >>& ${LOG}
+echo $i, `date` | tee -a ${LOG}
+end
+
 date >> ${LOG}
 
