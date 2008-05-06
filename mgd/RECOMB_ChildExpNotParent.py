@@ -126,7 +126,7 @@ results = db.sql(cmds, 'auto')
 #
 # Create the report file and write the heading to it.
 #
-fp = reportlib.init(sys.argv[0], 'Recombinant/transgenic specimens with incompatible Theiler stages and ages', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(2*CRT)
 fp.write('Row Count: ' + str(len(results[1])))
