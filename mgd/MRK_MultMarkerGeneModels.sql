@@ -7,7 +7,7 @@ into #coord
 from SEQ_Marker_Cache s, SEQ_Coord_Cache c
 where s._Organism_key = 1
 and s._Sequence_key = c._Sequence_key
-and c.provider in ('Ensembl Gene Model', 'VEGA Gene Model')
+and c.provider in ('Ensembl Gene Model', 'VEGA Gene Model', 'NCBI Gene Model')
 go
 
 create index idx1 on #coord(_Sequence_key)
@@ -28,7 +28,7 @@ set nocount off
 go
 
 print ""
-print "Ensembl or VEGA Gene Models w/ > 1 Marker Association"
+print "Ensembl, VEGA Gene Models, or NCBI Gene Model w/ > 1 Marker Association"
 print ""
 
 select s.accID, m.symbol, provider = substring(s.provider,1,40)
