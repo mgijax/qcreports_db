@@ -1,8 +1,10 @@
+TAG: qcreports_db-4-0-2-2
 TAG: qcreports_db-4-0-2-1
 DATE: 05/13/2008
 STAFF: lec
 CHANGES:
 1) Merged TR8747 branch to trunk
+2) added TR8966/prelimary Build 37 QC reports
 
 TAG: qcreports_db-tr8528-BP
 DATE: 04/27/2008
