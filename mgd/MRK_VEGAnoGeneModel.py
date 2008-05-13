@@ -31,7 +31,6 @@ PAGE = reportlib.PAGE
 #
 # Main
 #
-print "initializing"
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 fp.write('#%s' % CRT)
@@ -42,7 +41,7 @@ fp.write('MGI ID%sGene Symbol%sHas GM by same name%s' % (TAB, TAB, CRT))
 # get the full set of VEGA gene model ids
 results = db.sql('select accID ' + \
     'from ACC_Accession  a, SEQ_Sequence s ' + \
-    'where a._lOGicalDB_key = 85 ' + \
+    'where a._LogicalDB_key = 85 ' + \
     'and a._MGIType_key = 19 ' + \
     'and a._Object_key = s._Sequence_key', 'auto')
 
