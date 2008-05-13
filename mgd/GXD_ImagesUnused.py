@@ -77,6 +77,7 @@ db.sql('select r._Refs_key, r.jnumID, p._ImagePane_key ' + \
     'from GXD_Assay a, BIB_Citation_Cache r, ' + \
     'GXD_Specimen s, GXD_InSituResult i, GXD_InSituResultImage p ' + \
     'where a._Refs_key = r._Refs_key ' + \
+    'and a._AssayType_key in (1,6,9) ' + \
     'and a._Assay_key = s._Assay_key ' + \
     'and s._Specimen_key = i._Specimen_key ' + \
     'and i._Result_key = p._Result_key', 'None')

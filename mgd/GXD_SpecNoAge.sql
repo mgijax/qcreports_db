@@ -28,6 +28,7 @@ print ""
 select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
 from #spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
 where s._Assay_key = ga._Assay_key
+and ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Marker_key = a1._Object_key
 and a1._MGIType_key = 2
 and a1._LogicalDB_key = 1
@@ -47,6 +48,7 @@ print ""
 select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
 from #spec2 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
 where s._Assay_key = ga._Assay_key
+and ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Marker_key = a1._Object_key
 and a1._MGIType_key = 2
 and a1._LogicalDB_key = 1
@@ -94,6 +96,7 @@ select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
 from #temp1 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 print ""
@@ -104,4 +107,5 @@ select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
 from #temp2 t, GXD_GelLane s, GXD_Assay_View a
 where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go

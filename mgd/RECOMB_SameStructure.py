@@ -2,7 +2,7 @@
 
 '''
 #
-# GXD_SameStructure.py (TR 6677, TR 6724)
+# TR 8775: RECOMB_SameStructure.py (TR 6677, TR 6724)
 #
 # Report:
 #
@@ -16,7 +16,7 @@
 #	Sort by: J number
 #
 # Usage:
-#       GXD_SameStructure.py
+#       RECOMB_SameStructure.py
 #
 # Notes:
 #	- all reports use mgireport directory for output file
@@ -29,13 +29,7 @@
 # History:
 #
 # lec	05/01/2008
-#	- TR 8775; on select GXD assay types
-#
-# lec	04/11/2005
-#	 - converted to QC report
-#
-# sc	03/29/2005
-#	- created
+#	- new; TR 8775; copy from GXD
 #
 '''
  
@@ -54,7 +48,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'GXD Specimens/Lanes that use the same Structure > 1', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Recombinant/Transgenic Specimens/Lanes that use the same Structure > 1', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(string.ljust('J:', 35))
 fp.write(string.ljust('Assay ID', 35))
@@ -72,7 +66,7 @@ fp.write(2*CRT)
 db.sql('select gr._Specimen_key, grs._Structure_key ' + \
     'into #specstructs ' + \
     'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult gr, GXD_ISResultStructure grs ' + \
-    'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+    'where a._AssayType_key in (10,11) ' + \
     'and a._Assay_key = s._Assay_key ' + \
     'and s._Specimen_key = gr._Specimen_key ' + \
     'and gr._Result_key = grs._Result_key', None)
@@ -104,7 +98,7 @@ db.sql('select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, gsn
 db.sql('select gr._GelLane_key, grs._Structure_key ' + \
     'into #gelstructs ' + \
     'from GXD_Assay a, GXD_GelLane gr, GXD_GelLaneStructure grs ' + \
-    'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
+    'where a._AssayType_key in (10,11) ' + \
     'and a._Assay_key = gr._Assay_key ' + \
     'and gr._GelLane_key = grs._GelLane_key', None)
 

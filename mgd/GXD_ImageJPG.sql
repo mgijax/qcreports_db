@@ -8,7 +8,8 @@ go
 select distinct a._Assay_key, a._AssayType_key, i._Refs_key, a._ImagePane_key, ip._Image_key
 into #assays 
 from GXD_Assay a, IMG_Image i, IMG_ImagePane ip 
-where a._ImagePane_key = ip._ImagePane_key 
+where a._AssayType_key in (1,2,3,4,5,6,8,9)
+and a._ImagePane_key = ip._ImagePane_key 
 and ip._Image_key = i._Image_key 
 and i.xDim is not null
 and a._Refs_key not in (81463)
@@ -27,6 +28,7 @@ and iri._Result_key = r._Result_key
 and r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
 and a._Refs_key not in (81463)
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 create index idx1 on #assays(_ImagePane_key)

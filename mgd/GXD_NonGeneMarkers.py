@@ -25,6 +25,9 @@
 #
 # History:
 #
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # 01/09/2007	dbm
 #       - created
 #
@@ -66,7 +69,8 @@ cmds.append('select distinct m.symbol, mt.name ' + \
 #
 cmds.append('select distinct m.symbol, mt.name ' + \
             'from GXD_Expression ge, MRK_Marker m, MRK_Types mt ' + \
-            'where ge._Marker_key = m._Marker_key and ' + \
+            'where ge.isForGXD = 1 and ' + \
+		  'ge._Marker_key = m._Marker_key and ' + \
                   'm._Marker_type_key = mt._Marker_Type_key and ' + \
                   'mt._Marker_Type_key not in (1,2,11) ' + \
             'order by mt.name, m.symbol')

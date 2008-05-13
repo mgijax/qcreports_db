@@ -16,6 +16,15 @@
 #
 # History:
 #
+# lec	05/06/2008
+#	- TR 8984; The journals are:
+#         J Biol Chem
+#         J Lipid Res
+#         J Clin Invest
+#
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # lec	03/04/2008
 #	- TR 8826; added PLoS ONE
 #
@@ -57,7 +66,8 @@ journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain R
 'PLoS Genet', 'PLoS Med', 'PLoS ONE' ,
 'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
-'BMC Ophthalmol', 'Proc Natl Acad Sci U S A']
+'BMC Ophthalmol', 'Proc Natl Acad Sci U S A',
+'J Biol Chem', 'J Lipid Res', 'J Clin Invest']
 
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
@@ -89,7 +99,8 @@ db.sql('select distinct a._Refs_key, a.creation_date ' + \
       'into #refs ' + \
       'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
            'IMG_Image i, IMG_ImagePane p ' + \
-      'where a._ImagePane_key = p._ImagePane_key and ' + \
+      'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+	    'a._ImagePane_key = p._ImagePane_key and ' + \
             'p._Image_key = i._Image_key and ' + \
             'i.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \
@@ -101,7 +112,8 @@ db.sql('select distinct a._Refs_key, a.creation_date ' + \
       'select distinct a._Refs_key, a.creation_date ' + \
       'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
            'GXD_Specimen g, GXD_ISResultImage_View r ' + \
-      'where g._Assay_key = a._Assay_key and ' + \
+      'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+	    'a._Assay_key = g._Assay_key and ' + \
             'g._Specimen_key = r._Specimen_key and ' + \
             'r.xDim is NULL and ' + \
             'a._Refs_key = b._Refs_key and ' + \

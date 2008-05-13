@@ -2,10 +2,10 @@
 
 '''
 #
-# TR 4432/TR 4481
+# TR 8775: TR 4432/TR 4481
 #
 # Report:
-#       Produce a report listing GXD specimens that have an age value that
+#       Produce a report listing specimens that have an age value that
 #       is inappropriate for the anatomical structures attached to them.
 #       Exclude TS28.
 #       Display the following fields:
@@ -15,33 +15,14 @@
 #       Sort by the MGI ID
 #
 # Usage:
-#       GXD_SpecTheilerAge.py
+#       RECOMB_SpecTheilerAge.py
 #
 # Notes:
 #
 # History:
 #
 # lec	05/01/2008
-#	- TR 8775; on select GXD assay types
-#
-# lec   12/04/2007
-#	- TR 8659; Stage 26 dpcMax has been corrected in the database, so no special changes are required
-#
-# lec   12/18/2006
-#	- TR 8063; fixed logic; need to group by _Assay_key & _Specimen_key
-#
-# lec	04/06/2996
-#	- converted regex to re
-#
-# lec	02/11/2003
-#	- TR 4481; converted to QC report
-#
-# dbm   1/20/2003
-#       - created
-#
-# dbm   1/28/2003
-#       - added additional query against the GXD_GelLane table to include
-#         results for assay type 'RT-PCR' in the report
+#	- new; TR 8775; copy from GXD
 #
 '''
 
@@ -62,7 +43,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'GXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Recombinant/transgenic specimens with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
 #
 # insitu specimens with "embryonic day" age; exclude TS 28
@@ -70,7 +51,7 @@ fp = reportlib.init(sys.argv[0], 'GXD Specimens and Gel Lanes with incompatible 
 db.sql('select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
     'into #temp1 ' + \
     'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+    'where a._AssayType_key in (10,11) and ' + \
 	  'a._Assay_key = s._Assay_key and ' + \
 	  's._Specimen_key = r._Specimen_key and ' + \
           'r._Result_key = i._Result_key and ' + \
@@ -85,7 +66,7 @@ db.sql('select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.
 db.sql('insert into #temp1 ' + \
     'select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
     'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+    'where a._AssayType_key in (10,11) and ' + \
 	  'a._Assay_key = s._Assay_key and ' + \
           's._Specimen_key = r._Specimen_key and ' + \
           'r._Result_key = i._Result_key and ' + \
@@ -97,40 +78,12 @@ db.sql('insert into #temp1 ' + \
 	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))', None)
 
 #
-# gel lanes with "embryonic day" age; no age ranges; exclude TS 28
-#
-db.sql('insert into #temp1 ' + \
-    'select g._Assay_key, g._GelLane_key, g.age, label = g.laneLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'from GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where g._GelLane_key = l._GelLane_key and ' + \
-          'l._Structure_key = c._Structure_key and ' + \
-          'c._Stage_key = t._Stage_key and ' + \
-          'g.age like "embryonic day%" and ' + \
-	  'g.age not like "%-%" ' + \
-	  'and t.stage != 28 ', None)
-
-#
-# gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only
-#
-db.sql('insert into #temp1 ' + \
-    'select g._Assay_key, g._GelLane_key, g.age, label = g.laneLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'from GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where g._GelLane_key = l._GelLane_key and ' + \
-          'l._Structure_key = c._Structure_key and ' + \
-          'c._Stage_key = t._Stage_key and ' + \
-          'g.age like "embryonic%" ' + \
-	  'and g.age not like "%-%" ' + \
-	  'and t.stage = 28 ' + \
-	  'and not exists (select 1 from GXD_StructureName sn ' + \
-	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))', None)
-
-#
-# select specimens/gel lanes and group by assay & specimen
+# select specimens and group by assay & specimen
 # take the mininum stage dpc value and maximum stage dpc value from all structures annotated to 
 # a particular specimen/gel lane
 #
 # we want to make sure the "age" is within the dpc range based on *all* annotated structures of a given
-# specimen label/gel lane.
+# specimen label.
 #
 # for example:  if a lane has "embryonic day 0.5,22" and structures from Stage 1 and Stage 28,
 # then dpcMin = dpcMin from Stage 1

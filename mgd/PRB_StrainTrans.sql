@@ -3,7 +3,7 @@ print "Strains - Transgenic or Targeted Mutation"
 print ""
 
 select jr = a.accID, substring(t.term,1,30) "straintype", substring(s.strain,1,125) "strain"
-from PRB_Strain s, PRB_Strain_Type_View t, ACC_Accession a
+from PRB_Strain s, PRB_Strain_Attribute_View t, ACC_Accession a
 where s._Strain_key = t._Strain_key
 and t.term in ('transgenic', 'targeted mutation')
 and a._Object_key = s._Strain_key

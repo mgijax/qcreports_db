@@ -4,7 +4,7 @@ go
 select a._Assay_key
 into #missing
 from GXD_Assay a
-where a._AssayType_key in (1,2,3,4,5,6,8,9)
+where a._AssayType_key in (10,11)
 and not exists (select e.* from GXD_Expression e
 where a._Assay_key = e._Assay_key)
 go
@@ -13,7 +13,7 @@ set nocount off
 go
 
 print ""
-print "GXD Assays entirely missing from GXD Expression Cache Table"
+print "Assays entirely missing from cache table"
 print "(and therefore not visible in Web interface)"
 print ""
 
@@ -23,20 +23,7 @@ where m._Assay_key = v._Assay_key
 go
 
 print ""
-print "Gel GXD Assays entirely missing from GXD Expression Cache Table"
-print "(due to missing Gel Lane Structures)"
-print ""
-
-select a.mgiID, a.jnumID, a.assayType
-from #missing m, GXD_Assay_View a
-where m._Assay_key = a._Assay_key
-and a.isGelAssay = 1
-and not exists (select gl.* from GXD_GelLaneStructure_View gl
-where a._Assay_key = gl._Assay_key)
-go
-
-print ""
-print "InSitu GXD Assays entirely missing from GXD Expression Cache Table"
+print "Recombinant/transgenic assays entirely missing from cache table"
 print "(due to missing Specimen Results)"
 print ""
 
@@ -50,7 +37,7 @@ and s._Specimen_key = r._Specimen_key)
 go
 
 print ""
-print "InSitu GXD Assays entirely missing from GXD Expression Cache Table"
+print "Recombinant/transgenic assays entirely missing from cache table"
 print "(due to missing Specimen Results or Results Structures)"
 print ""
 
@@ -111,53 +98,6 @@ print ""
 select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
 from #imissingresults r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
-and s._Assay_key = a._Assay_key
-go
-
-set nocount on
-go
-
-select g._GelLane_key
-into #gmissingstructs
-from GXD_GelLane g
-where g._GelControl_key = 1
-and not exists
-(select 1 from GXD_GelLaneStructure s
-where g._GelLane_key = s._GelLane_key)
-go
-
-set nocount off
-go
-
-print ""
-print "Gel Results missing Structures"
-print ""
-
-select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
-from #gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
-where r._GelLane_key = s._GelLane_key
-and s._Assay_key = a._Assay_key
-go
-
-select g._GelLane_key
-into #gmissingbands
-from GXD_GelLane g
-where g._GelControl_key = 1
-and not exists
-(select 1 from GXD_GelBand b
-where g._GelLane_key = b._GelLane_key)
-go
-
-set nocount off
-go
-
-print ""
-print "Gel Results missing Bands"
-print ""
-
-select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
-from #gmissingbands r, GXD_GelLane s, GXD_Assay_View a
-where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 go
 

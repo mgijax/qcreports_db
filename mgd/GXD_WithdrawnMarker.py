@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	05/01/2008
+#	- TR 8775; on select GXD assay types
+#
 # dbm	06/01/2007
 #	- new
 #
@@ -56,7 +59,8 @@ results = db.sql('select distinct m.symbol, a.accID ' + \
                        '(exists (select 1 from GXD_Index gi ' + \
                                 'where m._Marker_key = gi._Marker_key) or ' + \
                         'exists (select 1 from GXD_Assay ga ' + \
-                                'where m._Marker_key = ga._Marker_key))', 'auto')
+                                'where m._Marker_key = ga._Marker_key ' + \
+				'and ga._AssayType_key in (1,2,3,4,5,6,8,9)))', 'auto')
 
 for r in results:
     fp.write(string.ljust(r['symbol'], 50))

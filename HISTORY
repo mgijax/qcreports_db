@@ -1,8 +1,33 @@
+TAG: qcreports_db-4-0-2-1
+DATE: 05/13/2008
+STAFF: lec
+CHANGES:
+1) Merged TR8747 branch to trunk
+
 TAG: qcreports_db-tr8528-BP
 DATE: 04/27/2008
 STAFF: sc
 CHANGES:
 1) branch point tag for TR8528 (B37)
+
+TAG: qcreports_db-tr8747-4
+TAG: qcreports_db-tr8747-3
+TAG: qcreports_db-tr8747-2
+TAG: qcreports_db-tr8747-1
+DATE: 05/06/2008
+DATE: 04/23/2008
+STAFF: lec
+CHANGES:
+1) changes from strain type to strain attribute:
+   PRB_Strain_SingleNoAlleles2.sql
+   PRB_StrainTrans.sql
+   PRB_StrainF1F2.sql
+   PRB_StrainDup.sql
+   PRB_Strain_SingleNoAlleles1.sql
+   PRB_Strain_MultNoAlleles.sql
+   PRB_StrainByDate.sql
+2) GXD and Recombinase reports (TR8775)
+3) TR 8984, GXD_Images
 
 TAG: qcreports_db-tr8747
 DATE: 04/23/2008
