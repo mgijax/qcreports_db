@@ -42,7 +42,7 @@ fp.write('MGI ID%sGene Symbol%sHas GM by same name%s' % (TAB, TAB, CRT))
 # get the full set of Ensembl gene model ids
 results = db.sql('select accID ' + \
     'from ACC_Accession  a, SEQ_Sequence s ' + \
-    'where a._lOGicalDB_key = 60 ' + \
+    'where a._LogicalDB_key = 60 ' + \
     'and a._MGIType_key = 19 ' + \
     'and a._Object_key = s._Sequence_key', 'auto')
 
