@@ -78,15 +78,20 @@ journals2005 = ['Nucleic Acids Res']
 
 fp = reportlib.init(sys.argv[0], 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write(TAB + 'Journals Checked:' + CRT)
+count = 0
+fp.write(TAB + 'Journals Checked:' + CRT + 2*TAB)
 for j in journals:
-    fp.write(2*TAB + j + CRT)
-fp.write(CRT)
+    fp.write(string.ljust(j, 25) + TAB)
+    count = count + 1
+    if count > 2:
+      fp.write(CRT + 2*TAB)
+      count = 0
+fp.write(2*CRT)
 
 fp.write(TAB + 'Journals > 2005:' + CRT)
 for j in journals2005:
     fp.write(2*TAB + j + CRT)
-fp.write(CRT)
+fp.write(2*CRT)
 
 fp.write(TAB + string.ljust('J#', 12))
 fp.write(string.ljust('short_citation', 75))
@@ -139,6 +144,7 @@ results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, B
 	'where r._Refs_key = b._Refs_key ' + \
         'order by r.creation_date, b.jnumID', 'auto')
 
+count = 0
 refprinted = []
 for r in results:
     if r['_Refs_key'] not in refprinted:
@@ -146,7 +152,8 @@ for r in results:
         fp.write(string.ljust(r['short_citation'], 75))
         fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
 	refprinted.append(r['_Refs_key'])
+	count = count + 1
 
-fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
+fp.write(CRT + 'Total J numbers: ' + str(count) + CRT)
 
 reportlib.finish_nonps(fp)

@@ -18,6 +18,7 @@
 #
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
+#	- TR 8984; fix counts
 #
 # lec	01/13/2005
 #	- TR 6480
@@ -45,10 +46,16 @@ fp = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.
 
 fp.write(TAB + 'where publication year >= 2002' + CRT*2)
 
-fp.write(TAB + 'Journals Checked:' + CRT)
+count = 0
+fp.write(TAB + 'Journals Checked:' + CRT + 2*TAB)
 for j in journals:
-    fp.write(2*TAB + j + CRT)
-fp.write(CRT)
+    fp.write(string.ljust(j, 25) + TAB)
+    count = count + 1
+    if count > 2:
+      fp.write(CRT + 2*TAB)
+      count = 0
+fp.write(2*CRT)
+
 fp.write(TAB + string.ljust('J#', 12))
 fp.write(string.ljust('short_citation', 75))
 fp.write(string.ljust('figure labels', 50) + CRT)
@@ -79,6 +86,7 @@ for r in results:
 results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
 	'where r._Refs_key = b._Refs_key order by r.creation_date, b.jnumID', 'auto')
 
+count = 0
 refprinted = []
 for r in results:
     if r['_Refs_key'] not in refprinted:
@@ -86,7 +94,8 @@ for r in results:
         fp.write(string.ljust(r['short_citation'], 75))
         fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
 	refprinted.append(r['_Refs_key'])
+	count = count + 1
 
-fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)
+fp.write(CRT + 'Total J numbers: ' + str(count) + CRT)
 
 reportlib.finish_nonps(fp)
