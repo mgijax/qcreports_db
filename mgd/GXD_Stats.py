@@ -15,6 +15,10 @@
 #
 # History:
 #
+# 05/20/2008
+#	per Martin & Connie:
+#	  remove "Number of Results (jpg attached)"
+#	  remove "Number of Results (no jpg attached)"
 #
 # 10/18/2007	lec
 #	- TR 8556; 
@@ -478,57 +482,6 @@ def imageCounts():
     results = db.sql('select acount = count(distinct _ImagePane_key) from #imagepanes2', 'auto')
     for r in results:
         fp.write('Number of Image Panes (no jpg attached):  ' + str(r['acount']) + CRT)
-
-    #
-    # number of results with image panes and jpg attached
-    # number of results with image panes and no jpg attached
-    #
-
-    db.sql('select e._Expression_key ' + \
-	   'into #imagepanes3 ' + \
-	   'from GXD_Expression e, GXD_Assay a, IMG_ImagePane ip, IMG_Image i '  + \
-	   'where e.isForGXD = 1 ' + \
-	   'and e._Assay_key = a._Assay_key ' + \
-	   'and a._ImagePane_key = ip._ImagePane_key ' + \
-	   'and ip._Image_key = i._Image_key ' + \
-	   'and i.xDim is not null ' + \
-	   'union  ' + \
-           'select e._Expression_key ' + \
-	   'from GXD_Expression e, GXD_Specimen s, GXD_InSituResult isr, GXD_InSituResultImage isri, IMG_ImagePane ip, IMG_Image i '  + \
-	   'where e.isForGXD = 1 ' + \
-	   'and e._Assay_key = s._Assay_key ' + \
-	   'and s._Specimen_key = isr._Specimen_key ' + \
-	   'and isr._Result_key = isri._Result_key ' + \
-	   'and isri._ImagePane_key = ip._ImagePane_key ' + \
-	   'and ip._Image_key = i._Image_key ' + \
-	   'and i.xDim is not null ', 'auto')
-
-    results = db.sql('select acount = count(_Expression_key) from #imagepanes3', 'auto')
-    for r in results:
-        fp.write('Number of Results (jpg attached):  ' + str(r['acount']) + CRT)
-
-    db.sql('select e._Expression_key ' + \
-	   'into #imagepanes4 ' + \
-	   'from GXD_Expression e, GXD_Assay a, IMG_ImagePane ip, IMG_Image i '  + \
-	   'where e.isForGXD = 1 ' + \
-	   'and e._Assay_key = a._Assay_key ' + \
-	   'and a._ImagePane_key = ip._ImagePane_key ' + \
-	   'and ip._Image_key = i._Image_key ' + \
-	   'and i.xDim is null ' + \
-	   'union  ' + \
-           'select e._Expression_key ' + \
-	   'from GXD_Expression e, GXD_Specimen s, GXD_InSituResult isr, GXD_InSituResultImage isri, IMG_ImagePane ip, IMG_Image i '  + \
-	   'where e.isForGXD = 1 ' + \
-	   'and e._Assay_key = s._Assay_key ' + \
-	   'and s._Specimen_key = isr._Specimen_key ' + \
-	   'and isr._Result_key = isri._Result_key ' + \
-	   'and isri._ImagePane_key = ip._ImagePane_key ' + \
-	   'and ip._Image_key = i._Image_key ' + \
-	   'and i.xDim is null ', 'auto')
-
-    results = db.sql('select acount = count(_Expression_key) from #imagepanes4', 'auto')
-    for r in results:
-        fp.write('Number of Results (no jpg attached):  ' + str(r['acount']) + CRT)
 
 def assayTypeCounts():
 
