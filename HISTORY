@@ -1,9 +1,12 @@
+TAG: qcreports_db-4-0-2-7
 TAG: qcreports_db-4-0-2-6
 TAG: qcreports_db-4-0-2-5
 DATE: 05/20/2008
 STAFF: lec
 CHANGES:
 1) GXD_Status.py; removed some unnecessary image reports
+2) TR8961; add this check to the GXD_ImageCheck.sql
+3) fixes for 4.B (4.02)
 
 TAG: qcreports_db-4-0-2-4
 TAG: qcreports_db-4-0-2-3
