@@ -5,7 +5,7 @@ select a._Assay_key, a._Marker_key, p._Probe_key
 into #probe
 from GXD_Assay a, GXD_ProbePrep p
 where a._ProbePrep_key = p._ProbePrep_key
-and a._AssayType_key != 9
+and a._AssayType_key in (1,2,3,4,5,6,8)
 go
 
 set nocount off
@@ -33,7 +33,7 @@ select a._Assay_key, a._Marker_key, p._Antibody_key
 into #antibody
 from GXD_Assay a, GXD_AntibodyPrep p
 where a._AntibodyPrep_key = p._AntibodyPrep_key
-and a._AssayType_key != 9
+and a._AssayType_key in (1,2,3,4,5,6,8)
 go
 
 set nocount off
@@ -61,7 +61,7 @@ select a._Assay_key, a._Refs_key, p._Probe_key
 into #proberef
 from GXD_Assay a, GXD_ProbePrep p
 where a._ProbePrep_key = p._ProbePrep_key
-and a._AssayType_key != 9
+and a._AssayType_key in (1,2,3,4,5,6,8)
 and not exists (select 1 from PRB_Reference r
 		where p._Probe_key = r._Probe_key
                 and a._Refs_key = r._Refs_key)

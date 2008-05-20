@@ -85,7 +85,7 @@ select distinct s._Specimen_key, s.specimenLabel, a.jnumID, a.mgiID
 into #fSpecimens
 from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs
 where s._Assay_key = a._Assay_key
-and a._AssayType_key in (1, 6, 9)
+and a._AssayType_key in (10,11)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
 and irs._Structure_key in (
