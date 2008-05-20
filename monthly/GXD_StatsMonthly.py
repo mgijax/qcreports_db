@@ -116,7 +116,7 @@ def monthlyCounts():
     db.sql('select p.year, p.month, t._AssayType_key, assayType = substring(t.assayType,1,25), ' + \
 	'assays = 0, results = 0 ' + \
 	'into #periodCounts ' +  \
-	'from #periods p, GXD_AssayType t where t._AssayType_key > 0', None)
+	'from #periods p, GXD_AssayType t where t._AssayType_key in (1,2,3,4,5,6,8,9)', None)
 
     # update the Assay count
 
