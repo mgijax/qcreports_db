@@ -62,3 +62,37 @@ and n._Object_key = i._Image_key
 order by i.jnumID
 go
 
+print ""
+print "Images with JPGs whose Thumbnails have no JPGs"
+print ""
+
+select distinct c.accID "MGI ID"
+from IMG_Image a, IMG_Image b, ACC_Accession c
+where a._MGIType_key = 8 
+and a._ImageType_key = 1072158
+and a.xDim is not null
+and a._ThumbnailImage_key = b._Image_key
+and b.xDim is null
+and a._Refs_key = c._Object_key
+and c._MGIType_key = 1
+and c.prefixPart = "MGI:"
+order by accID
+go
+
+print ""
+print "Images with JPGs whose Thumbnails have JPGs with incorrect X dimension (not = 150 pixels)"
+print ""
+
+select distinct c.accID "MGI ID"
+from IMG_Image a, IMG_Image b, ACC_Accession c
+where a._MGIType_key = 8 
+and a._ImageType_key = 1072158
+and a.xDim is not null
+and a._ThumbnailImage_key = b._Image_key
+and b.xDim != 150
+and a._Refs_key = c._Object_key
+and c._MGIType_key = 1
+and c.prefixPart = "MGI:"
+order by accID
+go
+
