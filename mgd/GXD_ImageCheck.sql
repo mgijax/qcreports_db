@@ -73,8 +73,9 @@ and a._ImageType_key = 1072158
 and a.xDim is not null
 and a._ThumbnailImage_key = b._Image_key
 and b.xDim is null
-and a._Refs_key = c._Object_key
-and c._MGIType_key = 1
+and a._Image_key = c._Object_key
+and c._MGIType_key = 9
+and c._LogicalDB_key = 1
 and c.prefixPart = "MGI:"
 order by accID
 go
@@ -90,8 +91,9 @@ and a._ImageType_key = 1072158
 and a.xDim is not null
 and a._ThumbnailImage_key = b._Image_key
 and b.xDim != 150
-and a._Refs_key = c._Object_key
-and c._MGIType_key = 1
+and a._Image_key = c._Object_key
+and c._MGIType_key = 9
+and c._LogicalDB_key = 1
 and c.prefixPart = "MGI:"
 order by accID
 go
