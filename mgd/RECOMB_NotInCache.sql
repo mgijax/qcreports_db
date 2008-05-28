@@ -56,10 +56,13 @@ go
 
 select r._Result_key, r._Specimen_key
 into #imissingstructs
-from GXD_InSituResult r
-where not exists
-(select 1 from GXD_ISResultStructure s
-where r._Result_key = s._Result_key)
+from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r
+where a._AssayType_key in (10,11)
+and a._Assay_key = s._Assay_key
+and s._Specimen_key = r._Specimen_key
+and not exists
+(select 1 from GXD_ISResultStructure i
+where r._Result_key = i._Result_key)
 go
 
 set nocount off
@@ -80,8 +83,10 @@ go
 
 select r._Specimen_key
 into #imissingresults
-from GXD_Specimen r
-where not exists
+from GXD_Assay a, GXD_Specimen r
+where a._AssayType_key in (10,11)
+and a._Assay_key = r._Assay_key
+and not exists
 (select 1 from GXD_InSituResult s
 where r._Specimen_key = s._Specimen_key)
 and not exists
