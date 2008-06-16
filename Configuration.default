@@ -61,7 +61,7 @@ setenv QCWEEKLY                 ${QCRPTS}/weekly
 setenv QCMONTHLY                ${QCRPTS}/monthly
 
 # EI Log files
-setenv EILOGFILES		/net/orodruin/vol/home
+setenv EILOGFILES		/userhome
 
 # EI Log Name
 setenv EILOGNAME		.ei-log
