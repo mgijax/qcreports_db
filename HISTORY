@@ -1,3 +1,20 @@
+TAG: qcreports_db-4-1-1-2
+DATE: 07/09/2008
+STAFF: lec
+CHANGES:
+TR 8945
+1) MRK_AllNoGO.py
+2) MRK_GOIEA.py
+3) MRK_GOGold
+4) MRK_GOAllele.py
+5) MRK_NoGO.py
+6) MRK_RatNOGO.sql
+7) MRK_GOUnknown.sql
+8) VOC_GODups.sql
+9) GO_NotGene.sql
+10) MRK_GORCA.py
+11) GO_gp2protein_SWP_TR.py
+
 TAG: qcreports_db-4-1-1-1
 DATE: 07/09/2008
 STAFF: dbm
