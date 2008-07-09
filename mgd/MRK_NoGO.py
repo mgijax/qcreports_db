@@ -72,6 +72,9 @@
 #
 # History:
 #
+# lec	07/09/2008
+#	- TR 8945
+#
 # lec	02/12/2008
 #	- TR 8774; exclude "gene trap" markers
 #
@@ -109,7 +112,6 @@ PAGE = reportlib.PAGE
 PUBMED = 29
 url = ''
 jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
-hasOrthology = {}
 gxd = []
 
 fpA = None
@@ -135,13 +137,13 @@ def reportClose():
 
 def runQueries():
 
-    global hasOrthology, gxd, url
+    global gxd, url
 
     results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
     for r in results:
 	    url = r['url']
 
-    db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
+    db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart, hasOrthology = "no " ' + \
 	    'into #markers ' + \
 	    'from MRK_Marker m, ACC_Accession a ' + \
 	    'where m._Marker_Type_key = 1 ' + \
@@ -166,25 +168,23 @@ def runQueries():
 
     # orthologies
 
-    results = db.sql('select m._Marker_key ' + \
+    db.sql('update #markers set hasOrthology = "yes" ' + \
 	'from #markers m ' + \
 	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
 	'where m._Marker_key = hm1._Marker_key ' + \
 	'and hm1._Class_key = hm2._Class_key ' + \
-	'and hm2._Organism_key = 2) ', 'auto')
-    for r in results:
-	hasOrthology[r['_Marker_key']] = 1
+	'and hm2._Organism_key = 2) ', None)
 
-    results = db.sql('select m._Marker_key ' + \
+    db.sql('update #markers set hasOrthology = "yes" ' + \
 	'from #markers m ' + \
 	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
 	'where m._Marker_key = hm1._Marker_key ' + \
 	'and hm1._Class_key = hm2._Class_key ' + \
-	'and hm2._Organism_key = 40) ', 'auto')
-    for r in results:
-	hasOrthology[r['_Marker_key']] = 1
+	'and hm2._Organism_key = 40) ', None)
 
-    db.sql('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, ' + \
+    # references
+
+    db.sql('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, ' + \
 	'r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal ' + \
 	'into #references ' + \
 	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
@@ -194,6 +194,15 @@ def runQueries():
     db.sql('create index idx2 on #references(_Marker_key)', None)
     db.sql('create index idx3 on #references(symbol)', None)
     db.sql('create index idx4 on #references(numericPart)', None)
+
+    # check if reference is selected for GO
+
+#db.sql('update #references set isGO = 1 ' + \
+#	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+#	'where r._Refs_key = ba._Refs_key ' + \
+#	'and ba._DataSet_key = bd._DataSet_key ' + \
+#	'and bd.dataSet = "Gene Ontology" ' + \
+#	'and ba.isNeverUsed = 0', None)
 
     # has reference been chosen for GXD
 
@@ -211,12 +220,8 @@ def writeRecord(fp, r):
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + TAB + \
-	         `r['numRefs']` + TAB)
-
-	if hasOrthology.has_key(r['_Marker_key']):
-		fp.write('yes' + CRT)
-	else:
-		fp.write('no' + CRT)
+	         `r['numRefs']` + TAB + \
+		 r['hasOrthology'] + CRT)
 
 def writeRecordD(fp, r):
 
@@ -244,12 +249,28 @@ def reportA():
 	     '# of refs' + TAB + \
 	     'has orthology?' + CRT*2)
 
-    results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+    db.sql('select distinct _Marker_key, symbol, name, mgiID, hasOrthology, numRefs = count(_Refs_key) ' + \
+	'into #fpA ' + \
 	'from #references ' + \
 	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
 	'and journal != "Genbank Submission" ' + \
-	'group by _Marker_key ' + \
-	'order by symbol', 'auto')
+	'group by _Marker_key ', None)
+
+    # number of unique MGI gene
+    results = db.sql('select distinct _Marker_key from #fpA', 'auto')
+    fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+    # number of has orthology?
+    results = db.sql('select * from #fpA where hasOrthology = "yes"', 'auto')
+    fpA.write('Number of has orthology? = yes:  %s\n' % (len(results)))
+    results = db.sql('select * from #fpA where hasOrthology = "no "', 'auto')
+    fpA.write('Number of has orthology? = no:  %s\n' % (len(results)))
+
+    # total number of rows
+    results = db.sql('select * from #fpA', 'auto')
+    fpA.write('Total number of rows:  %s\n\n' % (len(results)))
+
+    results = db.sql('select * from #fpA order by hasOrthology desc, symbol', 'auto')
     for r in results:
 	    writeRecord(fpA, r)
 
@@ -261,9 +282,25 @@ def reportB():
 	     '# of refs' + TAB + \
 	     'has orthology?' + CRT*2)
 
-    results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-	'from #references group by _Marker_key ' + \
-	'order by symbol', 'auto')
+    db.sql('select distinct _Marker_key, symbol, name, mgiID, hasOrthology, numRefs = count(_Refs_key) ' + \
+	'into #fpB ' + \
+	'from #references group by _Marker_key ', None)
+
+    # number of unique MGI gene
+    results = db.sql('select distinct _Marker_key from #fpB', 'auto')
+    fpB.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+    # number of has orthology?
+    results = db.sql('select * from #fpB where hasOrthology = "yes"', 'auto')
+    fpB.write('Number of has orthology? = yes:  %s\n' % (len(results)))
+    results = db.sql('select * from #fpB where hasOrthology = "no "', 'auto')
+    fpB.write('Number of has orthology? = no:  %s\n' % (len(results)))
+
+    # total number of rows
+    results = db.sql('select * from #fpB', 'auto')
+    fpB.write('Total number of rows:  %s\n\n' % (len(results)))
+
+    results = db.sql('select * from #fpB order by hasOrthology desc, symbol', 'auto')
     for r in results:
 	    writeRecord(fpB, r)
 
@@ -275,7 +312,7 @@ def reportC():
 	     '# of refs' + TAB + \
 	     'has orthology?' + CRT*2)
 
-    db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1._Refs_key ' + \
+    db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1._Refs_key, r1.hasOrthology ' + \
 	'into #refC ' + \
 	'from #references r1 ' + \
 	'where r1.jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
@@ -283,13 +320,29 @@ def reportC():
     db.sql('create index idx1 on #refC(_Marker_key)', None)
     db.sql('create index idx2 on #refC(symbol)', None)
 
-    results = db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, ' + \
+    db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1.hasOrthology, ' + \
 	'numRefs = count(r1._Refs_key) ' + \
+	'into #fpC ' + \
 	'from #refC r1 ' + \
 	'where exists (select 1 from #references r2 where r1._Marker_key = r2._Marker_key ' + \
 	'and r2._Refs_key not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944)) ' + \
-	'group by r1._Marker_key ' + \
-	'order by r1.symbol', 'auto')
+	'group by r1._Marker_key ', None)
+
+    # number of unique MGI gene
+    results = db.sql('select distinct _Marker_key from #fpC', 'auto')
+    fpC.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+    # number of has orthology?
+    results = db.sql('select * from #fpC where hasOrthology = "yes"', 'auto')
+    fpC.write('Number of has orthology? = yes:  %s\n' % (len(results)))
+    results = db.sql('select * from #fpC where hasOrthology = "no "', 'auto')
+    fpC.write('Number of has orthology? = no:  %s\n' % (len(results)))
+
+    # total number of rows
+    results = db.sql('select * from #fpC', 'auto')
+    fpC.write('Total number of rows:  %s\n\n' % (len(results)))
+
+    results = db.sql('select * from #fpC order by hasOrthology desc, symbol', 'auto')
     for r in results:
 	writeRecord(fpC, r)
 
@@ -302,8 +355,9 @@ def reportD():
 	     'symbol' + TAB + \
 	     'name' + CRT*2)
 
-    results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
-	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
+    db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
+	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology ' + \
+	'into #fpD ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
@@ -312,11 +366,29 @@ def reportD():
 	'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
 	'where r._Refs_key = e._Refs_key ' + \
 	'and e._Annot_key = a._Annot_key ' + \
-	'and a._AnnotType_key = 1000) ' + \
-	'order by numericPart', 'auto')
+	'and a._AnnotType_key = 1000) ', None)
+
+    # number of unique MGI gene
+    results = db.sql('select distinct _Marker_key from #fpD', 'auto')
+    fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+    # number of unique J:
+    results = db.sql('select distinct _Refs_key from #fpD', 'auto')
+    fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
+
+    # number of has orthology?
+    results = db.sql('select * from #fpD where hasOrthology = "yes"', 'auto')
+    fpD.write('Number of has orthology? = yes:  %s\n' % (len(results)))
+    results = db.sql('select * from #fpD where hasOrthology = "no "', 'auto')
+    fpD.write('Number of has orthology? = no:  %s\n' % (len(results)))
+
+    # total number of rows
+    results = db.sql('select * from #fpD', 'auto')
+    fpD.write('Total number of rows:  %s\n\n' % (len(results)))
+
+    results = db.sql('select * from #fpD order by hasOrthology desc, numericPart', 'auto')
     for r in results:
 	    writeRecordD(fpD, r)
-    fpD.write('\n(%d rows affected)\n' % (len(results)))
 
 #
 # Main

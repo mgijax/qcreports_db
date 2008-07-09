@@ -23,14 +23,8 @@ create index idx1 on #nongeneout(_Object_key)
 create index idx2 on #nongeneout(_Marker_Type_key)
 go
 
-set nocount off
-go
-
-print ""
-print "Non-Gene Markers with GO Annotations"
-print ""
-
 select a.accID, type = substring(t.name,1,25), m.symbol, m.name, m.annotations
+into #toPrint
 from #nongeneout m, ACC_Accession a, MRK_Types t
 where m._Marker_Type_key = t._Marker_Type_key
 and m._Object_key = a._Object_key
@@ -38,6 +32,19 @@ and a._MGIType_key = 2
 and a._LogicalDB_key = 1
 and a.prefixPart = "MGI:"
 and a.preferred = 1
-order by t.name
+go
+
+print ""
+print "Non-Gene Markers with GO Annotations"
+print ""
+
+select "Number of unique MGI Gene IDs:  ", count(distinct accID) from #toPrint
+union
+select "Number of total rows:  ", count(*) from #toPrint
+go
+
+print ""
+
+select * from #toPrint order by name
 go
 

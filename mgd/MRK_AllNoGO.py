@@ -32,6 +32,12 @@
 #
 # History:
 #
+# lec	07/08/2008
+#	- TR 8945
+#	show number of unique MGI gene ids
+#	sort by "GO annotation?" by "Y" first
+#	show numer of GO annotation "yes" and "no"
+#	
 # lec	04/11/2003
 #	- TR 4698
 #
@@ -65,14 +71,9 @@ def writeRecord(fp, r):
 	else:
 		fp.write('N' + TAB)
 
-	fp.write(r['mgiID'] + TAB)
-
-	if r['_Marker_key'] in annotations:
-		fp.write('Y' + TAB)
-	else:
-		fp.write('N' + TAB)
-
-	fp.write(r['symbol'] + TAB + \
+	fp.write(r['mgiID'] + TAB + \
+	         r['hasAnnotations'] + TAB + \
+	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
 
 #
@@ -113,7 +114,7 @@ db.sql('create nonclustered index index_marker_key on #markers(_Marker_key)', No
 
 # select all genes with references selected for GO
 
-db.sql('select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID ' + \
+db.sql('select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, hasAnnotations = "N" ' + \
 	'into #references ' + \
 	'from #markers m , MRK_Reference r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where m._Marker_key = r._Marker_key ' + \
@@ -138,17 +139,43 @@ for r in results:
 
 # does marker have GO annotations
 
-results = db.sql('select distinct r._Marker_key ' + \
+db.sql('update #references set hasAnnotations = "Y" ' + \
 	'from #references r, VOC_Annot a ' + \
 	'where a._AnnotType_key = 1000 ' + \
-	'and r._Marker_key = a._Object_key', 'auto')
-annotations = []
-for r in results:
-	annotations.append(r['_Marker_key'])
+	'and r._Marker_key = a._Object_key', None)
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, r.jnumID, r.numericPart, r.pubmedID ' + \
+# number of unique genes
+results = db.sql('select distinct r._Marker_key from #references r', 'auto')
+fp.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# number of unique J:
+results = db.sql('select distinct r._Refs_key from #references r', 'auto')
+fp.write('Number of unique J: IDs:  %s\n' % (len(results)))
+
+# number of total rows
+results = db.sql('select r._Marker_key from #references r', 'auto')
+fp.write('Number of total rows:  %s\n' % (len(results)))
+
+# number of GO annotation "yes"
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, ' + \
+	'r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations ' + \
 	'from #references r ' + \
-	'order by r.numericPart', 'auto')
+	'where r.hasAnnotations = "Y"', 'auto')
+fp.write('Number of "GO annotation?" for Y:  %s\n' % (len(results)))
+
+# number of GO annotation "no"
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, ' + \
+	'r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations ' + \
+	'from #references r ' + \
+	'where r.hasAnnotations = "N"', 'auto')
+fp.write('Number of "GO annotation?" for N:  %s\n\n' % (len(results)))
+
+# records
+
+results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, ' + \
+	'r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations ' + \
+	'from #references r ' + \
+	'order by r.hasAnnotations desc, r.numericPart', 'auto')
 
 for r in results:
 	writeRecord(fp, r)

@@ -107,6 +107,13 @@ for r in results:
                 spIDs[key].append(value)
 
 results = db.sql('select distinct _Marker_key, accID from #markers order by accID', 'auto')
+
+# number of unique MGI gene
+fp.write('#   Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+fp.write('#   Total number of rows:  %s\n\n' % (len(results)))
+
 for r in results:
     if spIDs.has_key(r['_Marker_key']):
         fp.write(r['accID'] + reportlib.TAB + \

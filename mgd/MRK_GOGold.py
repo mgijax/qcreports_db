@@ -52,6 +52,9 @@
 #
 # History:
 #
+# lec	07/08/2008
+#	- TR8945
+#
 # lec	06/07/2002
 #	- created
 #
@@ -188,11 +191,27 @@ for r in results:
 
 ## Report A
 
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #m1', 'auto')
+fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #m1', 'auto')
+fpA.write('Total number of rows:  %s\n\n' % (len(results)))
+
 results = db.sql('select * from #m1', 'auto')
 for r in results:
 	writeRecord1(fpA, r)
 
 ## Report B
+
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #m2', 'auto')
+fpB.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #m2', 'auto')
+fpB.write('Total number of rows:  %s\n\n' % (len(results)))
 
 results = db.sql('select * from #m2', 'auto')
 for r in results:
@@ -218,6 +237,14 @@ for r in results:
 		ecode[key] = []
 	ecode[key].append(r['evidenceCode'])
 
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #m3', 'auto')
+fpC.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #m3', 'auto')
+fpC.write('Total number of rows:  %s\n\n' % (len(results)))
+
 results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbreviation from #m3 order by symbol', 'auto')
 for r in results:
 	writeRecord2(fpC, r)
@@ -237,6 +264,14 @@ for r in results:
 	if not ecode.has_key(key):
 		ecode[key] = []
 	ecode[key].append(r['evidenceCode'])
+
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #m4', 'auto')
+fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #m4', 'auto')
+fpD.write('Total number of rows:  %s\n\n' % (len(results)))
 
 results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbreviation from #m4 order by symbol', 'auto')
 for r in results:

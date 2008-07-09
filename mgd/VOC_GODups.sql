@@ -16,17 +16,24 @@ group by _Term_key, _Object_key, _Qualifier_key, _EvidenceTerm_key, _Refs_key
 having count(*) > 1
 go
 
-set nocount off
+select m._Marker_key, m.symbol, term = substring(t.term,1,50) 
+into #toPrint
+from #dup d, MRK_Marker m, VOC_Term t
+where d._Object_key = m._Marker_key
+and d._Term_key = t._Term_key
 go
 
 print ""
 print "Duplicate GO Annotations"
 print ""
 
-select m.symbol, substring(t.term,1,50) 
-from #dup d, MRK_Marker m, VOC_Term t
-where d._Object_key = m._Marker_key
-and d._Term_key = t._Term_key
-order by m.symbol
+select "Number of unique MGI Gene IDs:  ", count(distinct _Marker_key) from #toPrint
+union
+select "Number of total rows:  ", count(*) from #toPrint
+go
+
+print ""
+
+select symbol, term from #toPrint order by symbol
 go
 

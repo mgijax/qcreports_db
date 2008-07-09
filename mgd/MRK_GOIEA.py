@@ -97,6 +97,9 @@
 #
 # History:
 #
+# lec	07/08/2008
+#	- TR 8945
+#
 # lec	02/12/2008
 #	- TR 8774/remove report "B"
 #	- TR 8774/"D": add number of unique mgi gene ids
@@ -305,12 +308,26 @@ omim = []
 for r in results:
 	omim.append(r['_Marker_key'])
 
-results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+#
+# fpA
+#
+
+db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+	'into #fpA ' + \
 	'from #references ' + \
 	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
 	'and short_citation not like "%Genbank Submission%" ' + \
-	'group by _Marker_key ' + \
-	'order by symbol', 'auto')
+	'group by _Marker_key ', None)
+
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #fpA', 'auto')
+fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #fpA', 'auto')
+fpA.write('Total number of rows:  %s\n\n' % (len(results)))
+
+results = db.sql('select * from #fpA order by symbol', 'auto')
 for r in results:
 	writeRecord(fpA, r)
 
@@ -320,18 +337,36 @@ for r in results:
 #for r in results:
 #	writeRecord(fpB, r)
 
-results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+#
+# fpC
+#
+
+db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
+	'into #fpC ' + \
 	'from #references ' + \
 	'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
 	'and short_citation not like "%Genbank Submission%" ' + \
-	'group by _Marker_key ' + \
-	'order by symbol', 'auto')
+	'group by _Marker_key ', None)
+
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #fpC', 'auto')
+fpC.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #fpC', 'auto')
+fpC.write('Total number of rows:  %s\n\n' % (len(results)))
+
+results = db.sql('select * from #fpC order by symbol', 'auto')
 for r in results:
 	writeRecord(fpC, r)
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
+#
+# fpD
+#
+
+db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
 	'r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
-	'into #genesD ' + \
+	'into #fpD ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
@@ -342,14 +377,21 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'and e._Annot_key = a._Annot_key ' + \
 	'and a._AnnotType_key = 1000) ', None)
 
-results = db.sql('select * from #genesD ' + \
-	'order by numericPart', 'auto')
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #fpD', 'auto')
+fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# number of unique J:gene
+results = db.sql('select distinct _Refs_key from #fpD', 'auto')
+fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #fpD', 'auto')
+fpD.write('Total number of rows:  %s\n\n' % (len(results)))
+
+results = db.sql('select * from #fpD order by numericPart', 'auto')
 for r in results:
 	writeRecordD(fpD, r)
-fpD.write('\n(%d rows affected)\n' % (len(results)))
-
-results = db.sql('select distinct mgiID from #genesD', 'auto')
-fpD.write('(%d unique MGI Gene Ids)\n' % (len(results)))
 
 #
 # report 2E
@@ -377,17 +419,26 @@ db.sql('create index idx1 on #omimmarkers(_Marker_key)', None)
 # select markers with OMIM annotations and either only IEA GO annotations or no GO annotations
 #
 
-results = db.sql('select o.*, isGO = "yes" ' + \
+db.sql('select o.*, isGO = "yes" ' + \
+	'into #fpE ' + \
 	'from #omimmarkers o, #markers m ' + \
 	'where o._Marker_key = m._Marker_key ' + \
 	'union ' + \
 	'select o.*, isGO = "no" ' + \
 	'from #omimmarkers o ' + \
-	'where not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
-	'order by o.symbol', 'auto')
+	'where not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ', None)
+
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #fpE', 'auto')
+fpE.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #fpE', 'auto')
+fpE.write('Total number of rows:  %s\n\n' % (len(results)))
+
+results = db.sql('select * from #fpE order by symbol', 'auto')
 for r in results:
     writeRecordEF(fpE, r)
-fpE.write('\n(%d rows affected)\n' % (len(results)))
 
 #
 # report 2F
@@ -422,6 +473,7 @@ db.sql('select a._Marker_key into #excludeMarker from #oneAllele a, MGI_Referenc
 db.sql('create index idx1 on #excludeMarker(_Marker_key)', None)
 
 results = db.sql('select o.*, isGO = "yes" ' + \
+	'into #alleles ' + \
 	'from #allelemarkers o, #markers m ' + \
 	'where o._Marker_key = m._Marker_key ' + \
 	'and not exists (select 1 from #excludeMarker e where o._Marker_key = e._Marker_key) ' + \
@@ -430,10 +482,28 @@ results = db.sql('select o.*, isGO = "yes" ' + \
 	'from #allelemarkers o ' + \
 	'where not exists (select 1 from #excludeMarker e where o._Marker_key = e._Marker_key) ' + \
 	'and not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
-	'order by o.symbol', 'auto')
+	'order by isGO desc, o.symbol', None)
+db.sql('create index idx1 on #alleles(_Marker_key)', None)
+
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #alleles', 'auto')
+fpF.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #alleles', 'auto')
+fpF.write('Total number of rows:  %s\n' % (len(results)))
+
+# number of GO yes
+results = db.sql('select * from #alleles where isGO = "yes"', 'auto')
+fpF.write('Number of "GO?" for "yes":  %s\n' % (len(results)))
+
+# number of GO no
+results = db.sql('select * from #alleles where isGO = "no"', 'auto')
+fpF.write('Number of "GO?" for "no":  %s\n\n' % (len(results)))
+
+results = db.sql('select * from #alleles', 'auto')
 for r in results:
     writeRecordEF(fpF, r)
-fpF.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fpA)	# non-postscript file
 #reportlib.finish_nonps(fpB)	# non-postscript file

@@ -33,6 +33,9 @@
 #
 # History:
 #
+# lec	07/08/2008
+#	- TR8945
+
 # lec	01/11/2002
 #	- created
 #
@@ -114,6 +117,18 @@ for r in results:
 		alleles[key] = []
 	alleles[key].append(r['alleleID'])
 
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #m2', 'auto')
+fp.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# number of unique J numbers
+results = db.sql('select distinct _Refs_key from #m2', 'auto')
+fp.write('Number of unique J: IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #m2', 'auto')
+fp.write('Total number of rows:  %s\n\n' % (len(results)))
+
 #
 # select the markers which have associated alleles
 #
@@ -128,6 +143,5 @@ for r in results:
 	 	 string.ljust(r['jnumID'], 12) + \
 	 	 string.joinfields(alleles[key], ',') + CRT)
 
-fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)	# non-postscript file
 

@@ -34,6 +34,9 @@
 #
 # History:
 #
+# lec	07/09/2008
+#	- TR 8945
+#
 # sc	07/13/2007
 #	- created
 #
@@ -147,8 +150,9 @@ gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
+db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
 	'r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
+	'into #fpA ' + \
 	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
@@ -157,12 +161,23 @@ results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
 	'where r._Refs_key = e._Refs_key ' + \
 	'and e._Annot_key = a._Annot_key ' + \
-	'and a._AnnotType_key = 1000) ' + \
-	'order by numericPart', 'auto')
+	'and a._AnnotType_key = 1000)', None)
 
+# number of unique MGI gene
+results = db.sql('select distinct _Marker_key from #fpA', 'auto')
+fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+
+# number of unique J:
+results = db.sql('select distinct _Refs_key from #fpA', 'auto')
+fpA.write('Number of unique J: IDs:  %s\n' % (len(results)))
+
+# total number of rows
+results = db.sql('select * from #fpA', 'auto')
+fpA.write('Total number of rows:  %s\n\n' % (len(results)))
+
+results = db.sql('select * from #fpA order by numericPart', 'auto')
 for r in results:
 	writeRecordA(fpA, r)
-fpA.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fpA, isHTML = 1)	# non-postscript file
 

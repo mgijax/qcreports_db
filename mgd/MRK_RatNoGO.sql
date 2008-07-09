@@ -29,26 +29,16 @@ go
 create index index_marker_key on #markers2(_Marker_key)
 go
 
-set nocount off
-go
-
-print ""
-print "Mouse Genes that have Rat Homologs but no GO associations"
-print ""
-
 select distinct m.accID, m.symbol, m.name
+into #markersA
 from #markers2 m, MRK_Homology_Cache hm1, MRK_Homology_Cache hm2
 where m._Marker_key = hm1._Marker_key
 and hm1._Class_key = hm2._Class_key
 and hm2._Organism_key = 40
-order by m.symbol
 go
 
-print ""
-print "Mouse Genes that have Human Homologs Only but no GO associations"
-print ""
-
 select distinct m.accID, m.symbol, m.name
+into #markersB
 from #markers2 m, MRK_Homology_Cache hm1, MRK_Homology_Cache hm2
 where m._Marker_key = hm1._Marker_key
 and hm1._Class_key = hm2._Class_key
@@ -56,5 +46,33 @@ and hm2._Organism_key = 2
 and not exists (select 1 from MRK_Homology_Cache hm3
 where hm1._Class_key = hm3._Class_key
 and hm3._Organism_key not in (1,2))
-order by m.symbol
 go
+
+print ""
+print "Mouse Genes that have Rat Homologs but no GO associations"
+print ""
+
+select "Number of unique MGI Gene IDs:  ", count(distinct accID) from #markersA
+union
+select "Number of total rows:  ", count(*) from #markersA
+go
+
+print ""
+
+select * from #markersA order by symbol
+go
+
+print ""
+print "Mouse Genes that have Human Homologs Only but no GO associations"
+print ""
+
+select "Number of unique MGI Gene IDs:  ", count(distinct accID) from #markersB
+union
+select "Number of total rows:  ", count(*) from #markersB
+go
+
+print ""
+
+select * from #markersB order by symbol
+go
+
