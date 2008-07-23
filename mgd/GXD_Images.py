@@ -16,6 +16,12 @@
 #
 # History:
 #
+# lec	07/23/2008
+#	- TR 9163; The journals:
+#	  J Cell Biol
+#	  J Exp Med
+#	  J Gen Physiol
+#
 # lec	05/06/2008
 #	- TR 8984; The journals are:
 #         J Biol Chem
@@ -67,7 +73,8 @@ journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain R
 'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
 'BMC Ophthalmol', 'Proc Natl Acad Sci U S A',
-'J Biol Chem', 'J Lipid Res', 'J Clin Invest']
+'J Biol Chem', 'J Lipid Res', 'J Clin Invest',
+'J Cell Biol', 'J Exp Med', 'J Gen Physiol']
 
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
