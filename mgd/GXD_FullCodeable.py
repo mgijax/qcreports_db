@@ -13,6 +13,9 @@
 #
 # History:
 #
+# lec	07/24/2008
+#	- TR 9149; include adult insitu (74770)
+#
 # dbm	06/06/2007
 #	- modified report #1 to get high priority papers (TR 8235)
 #	- modified report #1 to add OMIM annotation column (TR 8289)
@@ -42,7 +45,7 @@ PAGE = reportlib.PAGE
 def process():
 
     #
-    # exclude any paper that contains an index stage E or A for the following assay:
+    # exclude any paper that contains an index stage E for the following assay:
     # 	in situ protein (section)
     #	in situ RNA (section)
     #	in situ protein (whole mount)
@@ -60,7 +63,7 @@ def process():
 	'into #recsexcluded ' + \
 	'from GXD_Index gi, GXD_Index_Stages gs ' + \
 	'where gi._Index_key = gs._Index_key ' + \
-	'and ((gs._IndexAssay_key in (74717, 74718, 74719, 74720, 74721) and gs._StageID_key in (74769, 74770)) ' + \
+	'and ((gs._IndexAssay_key in (74717, 74718, 74719, 74720, 74721) and gs._StageID_key in (74769)) ' + \
 	'or  (gs._IndexAssay_key in (74722, 74723, 74724, 74726, 74727) and gs._StageID_key = 74769)) ', None)
 
     # 
@@ -212,7 +215,7 @@ def report1(fp):
 
 def report2(fp):
 
-    fp.write('This report excludes papers that have E? and adult in situ data.\n\n')
+    fp.write('This report excludes papers that have E? in situ data.\n\n')
 
     fp.write(string.ljust('j number', 30))
     fp.write(SPACE)
