@@ -6,7 +6,7 @@ into #m1
 from MRK_History h, MLD_Expt_Marker em, MLD_Expts e
 where datepart(mm, h.event_date) = datepart(mm, getdate())
 and datepart(yy, h.event_date) = datepart(yy, getdate())
-and h._Marker_Event_key in (2,3,4,5)
+and h._Marker_Event_key in (2,3,4,5,6)
 and h._Marker_key = em._Marker_key
 and em._Expt_key = e._Expt_key
 and e.exptType like 'TEXT%'

@@ -10,7 +10,7 @@ print ""
 
 select substring(history,1,30) "Old Symbol", substring(symbol,1,30) "New Symbol", substring(markerName,1,50) "New Name"
 from MRK_History_View
-where _Marker_Event_key in (2,3,4,5)
+where _Marker_Event_key in (2,3,4,5,6)
 and event_date between @startDate and @endDate
 order by symbol
 go
