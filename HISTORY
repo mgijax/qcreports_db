@@ -1,8 +1,10 @@
-TAG: qcreports_db-4-1-1-?
-DATE: 07/24/2008
+TAG: qcreports_db-4-1-1-4
+DATE: 08/06/2008
 STAFF: lec
 CHANGES:
 1) TR9149; GXD_FullCodeable.py
+2) TR9133; GXD_ImageCheck.sql
+3) TR9155; MLD_NomenText.sql, MRK_Withdrawn.sql
 
 TAG: qcreports_db-4-1-1-3
 DATE: 07/23/2008
