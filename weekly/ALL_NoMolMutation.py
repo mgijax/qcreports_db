@@ -20,6 +20,11 @@
 #
 # History:
 #
+# 08/14/2008	lec
+#	- TR9187
+#	   only list alleles with status = "approved"
+#	   list last modification date in descending order
+#
 # 04/01/2005	lec
 #       - created
 #
@@ -41,10 +46,14 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no Molecular Mutation', os.environ['QCOUTPUTDIR'])
+fp.write('only list alleles with status = "approved"\n')
+fp.write('list last modication date in descending order\n')
+fp.write('\n')
 
 db.sql('select a._Allele_key into #alleles ' + \
 	'from ALL_Allele a, VOC_Term t ' + \
-	'where a._Allele_Type_key = t._Term_key ' + \
+	'where a._Allele_Status_key = 847114 ' + \
+		'and a._Allele_Type_key = t._Term_key ' + \
 		'and t.term != "QTL" ' + \
 		'and exists (select 1 from MGI_Note n, MGI_NoteType nt ' + \
 		'where a._Allele_key = n._Object_key ' + \
@@ -71,7 +80,8 @@ for r in results:
 	notes[key] = []
     notes[key].append(value)
 
-results = db.sql('select a._Allele_key, ac.accID, aa.symbol, alleleType = t.term ' + \
+results = db.sql('select a._Allele_key, ac.accID, aa.symbol, alleleType = t.term, ' + \
+	'modDate = convert(char(10), aa.modification_date, 101) ' + \
 	'from #alleles a, ACC_Accession ac, ALL_Allele aa, VOC_Term t ' + \
 	'where a._Allele_key = ac._Object_key ' + \
         'and ac._MGIType_key = 11 ' + \
@@ -80,12 +90,13 @@ results = db.sql('select a._Allele_key, ac.accID, aa.symbol, alleleType = t.term
         'and ac.preferred = 1 ' + \
 	'and a._Allele_key = aa._Allele_key ' + \
 	'and aa._Allele_Type_key = t._Term_key ' + \
-        'order by ac.numericPart', 'auto')
+        'order by aa.modification_date desc, ac.numericPart', 'auto')
 
 for r in results:
         fp.write(r['accID'] + TAB + \
 		 r['symbol'] + TAB + \
 		 r['alleleType'] + TAB + \
+		 r['modDate'] + TAB + \
 		 string.join(notes[r['_Allele_key']], '') + CRT)
 
 fp.write(CRT + 'Number of Alleles: ' + str(len(results)) + CRT)
