@@ -9,25 +9,19 @@
 
 ARCHIVE_DIR=$QCARCHIVEDIR/go
 
-#GO_FISH="'J:56000'"
 #SWISS_PROT="'J:60000'"
 #INTERPRO="'J:72247'"
 #ORTHOLOGY="'J:73065'"
 #EC="'J:72245'"
-#FANTOM2="J:80000"
-#FANTOM3="J:99680"
-#UNKNOWN="J:73796"
+#ROOT="J:73796"
 
-GO_FISH=59154
 SWISS_PROT=61933
 INTERPRO=73199
 ORTHOLOGY=74017
 EC=73197
-FANTOM2=80961
-FANTOM3=100707
-UNKNOWN=74750
+ROOT=74750
 
-MANUAL_NOT_IN_CLAUSE="($GO_FISH,$SWISS_PROT,$INTERPRO,$EC,$FANTOM2,$FANTOM3)"
+MANUAL_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC)"
 
 COUNT_ALL_ANNOTATIONS="a._Annot_key"
 COUNT_DISTINCT_MARKERS="distinct(a._Object_key)"
@@ -212,14 +206,11 @@ getSummary1
 getSummary2
 getCounts "ALL"        $COUNT_ALL_REFERENCES ""
 getCounts "HAND"       "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE 
-getCounts "GO_FISH"    $EQUALS               $GO_FISH 
 getCounts "SWISS_PROT" $EQUALS               $SWISS_PROT
 getCounts "INTERPRO"   $EQUALS               $INTERPRO 
 getCounts "ORTHOLOGY"  $EQUALS               $ORTHOLOGY  
 getCounts "EC"         $EQUALS               $EC
-getCounts "FANTOM2"    $EQUALS               $FANTOM2
-getCounts "FANTOM3"    $EQUALS               $FANTOM3
-getCounts "UNKNOWN"    $EQUALS               $UNKNOWN
+getCounts "ROOT"    $EQUALS               $ROOT
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
