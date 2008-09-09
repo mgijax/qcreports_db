@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec	09/09/2008
+#	- TR 9251; exclude Cre
+#
 # lec	09/25/2007
 #	- TR 8429
 #
@@ -57,6 +60,7 @@ db.sql('select r._Refs_key, r.jnumID, a._ImagePane_key ' \
      'into #gel ' + \
      'from GXD_Assay a, BIB_Citation_Cache r ' \
      'where a._Refs_key = r._Refs_key ' \
+     'and a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
      'and a._ImagePane_key is not null', 'None')
 
 db.sql('create index idx1 on #gel(_Refs_key)', None)
