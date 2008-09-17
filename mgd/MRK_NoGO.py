@@ -8,9 +8,9 @@
 #       TR 3269 - Report 1
 #
 #	Report 1A
-#	Title = Genes Not RIKEN or 'expressed' or 'EST' with no GO associations
+#	Title = Genes with no GO associations
 #	Select markers of type 'gene' 
-#		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
+#		where 'current' name does not contain 'gene model', 'gene trap'
 #               where the marker has no 'GO' association
 #               where the reference count exludes J:23000, J:57747, J:63103, J:57656, J:51368, 
 #               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
@@ -25,17 +25,17 @@
 #    		human or rat ortholog?    'yes'
 #
 #    	Report 1B
-#    	Title = Genes Not RIKEN or 'expressed' or 'EST' with no GO associations
+#    	Title = Genes with no GO associations
 #    	Select markers of type 'gene'
-#    		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
+#		where 'current' name does not contain 'gene model', 'gene trap'
 #               where the marker has no 'GO' association.
 #
 #    	Report in a tab delimited file with same columns as 1A
 #
 #	Report 1C
-#	Title = Genes Not RIKEN or 'expressed' or 'EST' with no GO associations
+#	Title = Genes with no GO associations
 #	Select markers of type 'gene' 
-#		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
+#		where 'current' name does not contain 'gene model', 'gene trap'
 #               where the marker has no 'GO' association
 #               where the reference count includes J:23000, J:57747, J:63103, J:57656, J:51368, 
 #               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
@@ -45,9 +45,9 @@
 #
 #	TR 4491
 #	Report 1D
-#	Title = Genes Not RIKEN or 'expressed' or 'EST' with no GO associations
+#	Title = Genes with no GO associations
 #    	Select markers of type 'gene'
-#    		where 'current' name does not contain 'RIKEN' or 'expressed' or 'EST'
+#		where 'current' name does not contain 'gene model', 'gene trap'
 #               where the marker has no 'GO' association.
 #
 #	Report in a tab delimited/html file with the following columns:
@@ -71,6 +71,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	09/17/2008
+#	- TR 9265; remove "RIKEN", "expressed", "EST" restrictions
 #
 # lec	07/09/2008
 #	- TR 8945
@@ -148,9 +151,6 @@ def runQueries():
 	    'from MRK_Marker m, ACC_Accession a ' + \
 	    'where m._Marker_Type_key = 1 ' + \
 	    'and m._Marker_Status_key in (1,3) ' + \
-	    'and m.name not like "%RIKEN%" ' + \
-	    'and m.name not like "%expressed%" ' + \
-	    'and m.name not like "EST %" ' + \
 	    'and m.name not like "gene model %" ' + \
 	    'and m.name not like "gene trap %" ' + \
 	    'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \

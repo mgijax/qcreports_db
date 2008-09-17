@@ -8,7 +8,7 @@
 #       TR 8382 
 #
 #	Report 1A
-#	Title = Gene Not RIKEN or 'expressed' or 'EST' with only 
+#	Title = Gene with only 
 #               GO Associations w/ RCA evidence with references that are 
 #               selected for GO but have not been used
 #
@@ -33,6 +33,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	09/17/2008
+#	- TR 9265; remove RIKEN, exporessed, EST restrictions
 #
 # lec	07/09/2008
 #	- TR 8945
@@ -95,16 +98,13 @@ results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PU
 for r in results:
 	url = r['url']
 
-# select non-RIKEN, non-EST, non-ORF genes with GO Associations of evidence RCA only
+# select genes with GO Associations of evidence RCA only
 
 db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
 	'into #markers ' + \
 	'from MRK_Marker m, ACC_Accession a ' + \
 	'where m._Marker_Type_key = 1 ' + \
 	'and m._Marker_Status_key in (1,3) ' + \
-	'and m.name not like "%RIKEN%" ' + \
-	'and m.name not like "%expressed%" ' + \
-	'and m.name not like "EST %" ' + \
 	'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
 	'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
 	'and m._Marker_key = a._Object_key ' + \
