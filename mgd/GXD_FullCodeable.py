@@ -13,6 +13,9 @@
 #
 # History:
 #
+# lec	10/22/2008
+#	- TR 9336; add E? to report #2
+#
 # lec	07/24/2008
 #	- TR 9149; include adult insitu (74770)
 #
@@ -42,57 +45,27 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+# list of references that contain at least one E? annotation
+eAnnot = []
+
 def process():
-
-    #
-    # exclude any paper that contains an index stage E for the following assay:
-    # 	in situ protein (section)
-    #	in situ RNA (section)
-    #	in situ protein (whole mount)
-    #	in situ RNA (whole mount)
-    #	in situ reporter (knock in)
-    #
-    # exclude any paper that contains an index stage E for the following assay:
-    # 	northern blot
-    #	western blot
-    #	RT-PCR
-    #	RNase protection
-    #	nuclease S1
-
-    db.sql('select distinct gi._Refs_key ' + \
-	'into #recsexcluded ' + \
-	'from GXD_Index gi, GXD_Index_Stages gs ' + \
-	'where gi._Index_key = gs._Index_key ' + \
-	'and ((gs._IndexAssay_key in (74717, 74718, 74719, 74720, 74721) and gs._StageID_key in (74769)) ' + \
-	'or  (gs._IndexAssay_key in (74722, 74723, 74724, 74726, 74727) and gs._StageID_key = 74769)) ', None)
-
-    # 
-    # exclude any paper that *only* has the following assay:
-    # 	cDNA clones 
-    #	primer extension
-
-    db.sql('insert into #recsexcluded ' + \
-	'select distinct gi._Refs_key ' + \
-	'from GXD_Index gi, GXD_Index_Stages gs  ' + \
-	'where gi._Index_key = gs._Index_key ' + \
-	'and gs._IndexAssay_key in (74725, 74728) ' + \
-	'and not exists (select 1 from GXD_Index_Stages gs2 ' + \
-	'where gi._Index_key = gs2._Index_key ' + \
-	'and gs2._IndexAssay_key not in (74725, 74728))', None)
-
-    db.sql('create index idx1 on #recsexcluded(_Refs_key)', None)
+    global eAnnot
 
     #
     # markers/papers where the paper is not excluded and
     # the marker does not have *any* coded papers.
+    # only select medium or high priority papers
+    # add in the E? annotation indicator.
     #
 
-    db.sql('select distinct g._Marker_key, g._Refs_key, g._Priority_key, priority = t.term ' + \
-	'into #refscodeable ' + \
-	'from GXD_Index g, VOC_Term t ' + \
-	'where g._Priority_key = t._Term_key ' + \
-	'and not exists (select 1 from #recsexcluded r where r._Refs_key = g._Refs_key) ' + \
-	'and not exists (select 1 from GXD_Assay a where a._Marker_key = g._Marker_key) ', None)
+    db.sql('''
+	select distinct g._Marker_key, g._Refs_key, g._Priority_key, priority = t.term
+	into #refscodeable 
+	from GXD_Index g, VOC_Term t 
+	where g._Priority_key = t._Term_key 
+	and g._Priority_key in (74715, 74714) 
+	and not exists (select 1 from GXD_Assay a where a._Marker_key = g._Marker_key) 
+	''', None)
 
     db.sql('create index idx1 on #refscodeable(_Marker_key)', None)
     db.sql('create index idx2 on #refscodeable(_Refs_key)', None)
@@ -101,12 +74,31 @@ def process():
     # count of total index records per reference
     #
 
-    db.sql('select g._Refs_key, idx_count = count(*) ' + \
-	'into #indexcount ' + \
-	'from GXD_Index g ' + \
-	'group by g._Refs_key', None)
+    db.sql('''
+	select g._Refs_key, idx_count = count(*) 
+	into #indexcount 
+	from GXD_Index g 
+	group by g._Refs_key
+	''', None)
 
     db.sql('create index idx1 on #indexcount(_Refs_key)', None)
+
+    #
+    # those references that contain at least one E? annotation
+    #
+
+    results = db.sql('''
+	select distinct g._Refs_key
+	from #refscodeable g
+        where exists (select 1 from GXD_Index i, GXD_Index_Stages gis 
+            where g._Refs_key = i._Refs_key
+	    and i._Index_key = gis._Index_key 
+            and gis._StageID_key = 74769
+            and gis._IndexAssay_key not in (74725,74728))
+	''', 'auto')
+
+    for r in results:
+	eAnnot.append(r['_Refs_key'])
 
 def report1(fp):
 
@@ -133,12 +125,14 @@ def report1(fp):
     # all markers with high priority papers that have not been full coded
     #
 
-    db.sql('select distinct gi._Marker_key ' + \
-           'into #markers ' + \
-           'from GXD_Index gi ' + \
-           'where gi._Priority_key = 74714 and ' + \
-                 'not exists (select 1 from GXD_Assay ga ' + \
-                             'where ga._Marker_key = gi._Marker_key)', None)
+    db.sql('''
+	select distinct gi._Marker_key 
+        into #markers 
+        from GXD_Index gi 
+        where gi._Priority_key = 74714 and 
+            not exists (select 1 from GXD_Assay ga 
+                        where ga._Marker_key = gi._Marker_key)
+        ''', None)
 
     db.sql('create index idx1 on #markers(_Marker_key)', None)
 
@@ -148,14 +142,16 @@ def report1(fp):
 
     jnums = {}	# key = Marker key, value = list of J numbers
 
-    results = db.sql('select gi._Marker_key, a.accID ' + \
-                     'from GXD_Index gi, #markers tm, ACC_Accession a ' + \
-                     'where gi._Priority_key = 74714 and ' + \
-                           'gi._Marker_key = tm._Marker_key and ' + \
-                           'gi._Refs_key = a._Object_key and ' + \
-                           'a._MGIType_key = 1 and ' + \
-                           'a._LogicalDB_key = 1 and ' + \
-                           'a.prefixPart = "J:"', 'auto')
+    results = db.sql('''
+	select gi._Marker_key, a.accID 
+        from GXD_Index gi, #markers tm, ACC_Accession a 
+        where gi._Priority_key = 74714 and 
+            gi._Marker_key = tm._Marker_key and 
+            gi._Refs_key = a._Object_key and 
+            a._MGIType_key = 1 and 
+            a._LogicalDB_key = 1 and 
+            a.prefixPart = "J:"
+	''', 'auto')
 
     for r in results:
         key = r['_Marker_key']
@@ -225,6 +221,8 @@ def report2(fp):
     fp.write(SPACE)
     fp.write(string.ljust('priority', 20))
     fp.write(SPACE)
+    fp.write(string.ljust('E?', 4))
+    fp.write(SPACE)
     fp.write(CRT)
     fp.write(string.ljust('-------------', 30))
     fp.write(SPACE)
@@ -234,37 +232,51 @@ def report2(fp):
     fp.write(SPACE)
     fp.write(string.ljust('-------------  ', 20))
     fp.write(SPACE)
+    fp.write(string.ljust('----', 4))
+    fp.write(SPACE)
     fp.write(CRT)
 
     #
     # count of new markers per reference
     #
 
-    db.sql('select g._Refs_key, mrk_count = count(*) ' + \
-	'into #markercount ' + \
-	'from #refscodeable g ' + \
-	'group by g._Refs_key', None)
+    db.sql('''
+	select g._Refs_key, mrk_count = count(*) 
+	into #markercount 
+	from #refscodeable g 
+	group by g._Refs_key
+	''', None)
 
     db.sql('create index idx1 on #markercount(_Refs_key)', None)
 
-    results = db.sql('select distinct a.accID, i.idx_count, m.mrk_count, r.priority ' + \
-	'from #refscodeable r, #indexcount i, #markercount m, ACC_Accession a ' + \
-	'where r._Refs_key = i._Refs_key ' + \
-	'and r._Refs_key = m._Refs_key ' + \
-	'and r._Refs_key = a._Object_key ' + \
-	'and a._MGIType_key = 1 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "J:" ' + \
-	'order by r._Priority_key, m.mrk_count desc, a.numericPart desc', 'auto')
+    results = db.sql('''
+	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority 
+	from #refscodeable r, #indexcount i, #markercount m, ACC_Accession a 
+	where r._Refs_key = i._Refs_key 
+	and r._Refs_key = m._Refs_key 
+	and r._Refs_key = a._Object_key 
+	and a._MGIType_key = 1 
+	and a._LogicalDB_key = 1 
+	and a.prefixPart = "J:" 
+	order by r._Priority_key, m.mrk_count desc, a.numericPart desc
+	''', 'auto')
 
     for r in results:
+
 	fp.write(string.ljust(r['accID'], 30))
         fp.write(SPACE)
 	fp.write(string.ljust(str(r['idx_count']), 20))
         fp.write(SPACE)
 	fp.write(string.ljust(str(r['mrk_count']), 20))
         fp.write(SPACE)
-	fp.write(string.ljust(r['priority'], 20) + CRT)
+	fp.write(string.ljust(r['priority'], 20))
+        fp.write(SPACE)
+
+	if r['_Refs_key'] in eAnnot:
+	    fp.write('Yes')
+	else:
+	    fp.write('No')
+	fp.write(CRT)
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
@@ -280,6 +292,8 @@ def report3(fp):
     fp.write(SPACE)
     fp.write(string.ljust('priority', 20))
     fp.write(SPACE)
+    fp.write(string.ljust('E?', 4))
+    fp.write(SPACE)
     fp.write(CRT)
     fp.write(string.ljust('-------------', 30))
     fp.write(SPACE)
@@ -289,30 +303,36 @@ def report3(fp):
     fp.write(SPACE)
     fp.write(string.ljust('-------------  ', 20))
     fp.write(SPACE)
+    fp.write(string.ljust('----', 4))
+    fp.write(SPACE)
     fp.write(CRT)
 
     #
     # get the number of new markers per reference
     #
 
-    db.sql('select i._Refs_key, mrk_count = count(*) ' + \
-           'into #mrk_count ' + \
-           'from GXD_Index i ' + \
-           'where not exists (select 1 from GXD_Assay a ' + \
-                             'where a._Marker_key = i._Marker_key) ' + \
-           'group by i._Refs_key', None)
+    db.sql('''
+	select i._Refs_key, mrk_count = count(*) 
+        into #mrk_count 
+        from GXD_Index i 
+        where not exists (select 1 from GXD_Assay a where a._Marker_key = i._Marker_key) 
+        group by i._Refs_key
+	''', None)
 
     db.sql('create index idx1 on #mrk_count(_Refs_key)', None)
 
     #
     # get the priority
+    # only select medium or high priority papers
     #
 
-    db.sql('select distinct i._Marker_key, i._Refs_key, ' + \
-                  'i._Priority_key, priority = t.term ' + \
-           'into #priority ' + \
-           'from GXD_Index i, VOC_Term t ' + \
-           'where i._Priority_key = t._Term_key', None)
+    db.sql('''
+       select distinct i._Marker_key, i._Refs_key, i._Priority_key, priority = t.term 
+           into #priority 
+           from GXD_Index i, VOC_Term t 
+	   where i._Priority_key in (74715, 74714) 
+           and i._Priority_key = t._Term_key
+	   ''', None)
 
     db.sql('create index idx1 on #priority(_Refs_key)', None)
 
@@ -320,38 +340,28 @@ def report3(fp):
     # get a list of references with assay type of northern, western, RT-PCR,
     # RNAse protection, or Nuclease S1 (aka blots)
     # no assay of immunohistochemistry, RNA in situ, or in situ reporter;
-    # no stage E;
     #
 
-    db.sql('select distinct b._Refs_key ' + \
-           'into #refs ' + \
-           'from BIB_View b ' + \
-           'where not exists (select 1 ' + \
-                             'from GXD_Index i, GXD_Assay a ' + \
-                             'where i._Refs_key = b._Refs_key ' + \
-                                   'and a._Refs_key   = i._Refs_key ' + \
-                                   'and a._Marker_key = i._Marker_key) ' + \
-                 'and exists (select 1 ' + \
-                             'from GXD_Index i, GXD_Index_Stages s ' + \
-                             'where  i._Refs_key = b._Refs_key ' + \
-                                    'and  s._index_key  = i._index_key ' + \
-                                    'and  s._indexAssay_key in (74722, 74723, 74724, 74726, 74727)) ' + \
-                 'and not exists (select 1 ' + \
-                                 'from GXD_Index i, GXD_Index_Stages s ' + \
-                                 'where  i._Refs_key = b._Refs_key ' + \
-                                        'and  s._index_key  = i._index_key ' + \
-                                        'and  s._indexAssay_key in (74722, 74723, 74724, 74726, 74727) ' + \
-                                        'and  s._stageID_key = 74769) ' + \
-                 'and not exists (select 1 ' + \
-                                 'from GXD_Index i, GXD_Index_Stages s ' + \
-                                 'where  i._Refs_key = b._Refs_key ' + \
-                                        'and  s._index_key  = i._index_key ' + \
-                                        'and  s._indexAssay_key in (74717, 74718, 74719, 74720, 74721))', None)
+    db.sql('''
+       select distinct b._Refs_key 
+       into #refs 
+       from BIB_View b 
+       where not exists (select 1 from GXD_Index i, GXD_Assay a 
+                             where i._Refs_key = b._Refs_key 
+                             and a._Refs_key   = i._Refs_key 
+                             and a._Marker_key = i._Marker_key) 
+       and exists (select 1 from GXD_Index i, GXD_Index_Stages s 
+                             where  i._Refs_key = b._Refs_key 
+                             and  s._index_key  = i._index_key 
+                             and  s._indexAssay_key in (74722, 74723, 74724, 74726, 74727)) 
+       and not exists (select 1 from GXD_Index i, GXD_Index_Stages s 
+                             where  i._Refs_key = b._Refs_key 
+                             and  s._index_key  = i._index_key 
+                             and  s._indexAssay_key in (74717, 74718, 74719, 74720, 74721))
+       ''', None)
 
-    results = db.sql('select distinct a.accID, i.idx_count, m.mrk_count, ' + \
-                     'p.priority ' + \
-	'from #refs r, #indexcount i, #mrk_count m, #priority p, ' + \
-             'ACC_Accession a ' + \
+    results = db.sql('select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, p.priority ' + \
+	'from #refs r, #indexcount i, #mrk_count m, #priority p, ACC_Accession a ' + \
 	'where r._Refs_key = i._Refs_key ' + \
 	'and r._Refs_key *= m._Refs_key ' + \
 	'and r._Refs_key = p._Refs_key ' + \
@@ -373,7 +383,14 @@ def report3(fp):
         fp.write(SPACE)
 	fp.write(string.ljust(str(mrk_count), 20))
         fp.write(SPACE)
-	fp.write(string.ljust(r['priority'], 20) + CRT)
+	fp.write(string.ljust(r['priority'], 20))
+        fp.write(SPACE)
+
+	if r['_Refs_key'] in eAnnot:
+	    fp.write('Yes')
+	else:
+	    fp.write('No')
+	fp.write(CRT)
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
