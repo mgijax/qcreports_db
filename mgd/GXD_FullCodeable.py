@@ -211,8 +211,6 @@ def report1(fp):
 
 def report2(fp):
 
-    fp.write('This report excludes papers that have E? in situ data.\n\n')
-
     fp.write(string.ljust('j number', 30))
     fp.write(SPACE)
     fp.write(string.ljust('index records', 20))
@@ -281,8 +279,6 @@ def report2(fp):
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
 def report3(fp):
-
-    fp.write('This report excludes papers that have E? blot data.\n\n')
 
     fp.write(string.ljust('j number', 30))
     fp.write(SPACE)
@@ -398,7 +394,7 @@ def report3(fp):
 #  main
 #
 
-fp1 = reportlib.init(sys.argv[0], 'Markers that have not been full coded that have full codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
+fp1 = reportlib.init(sys.argv[0], 'Markers that have not been full coded', outputdir = os.environ['QCOUTPUTDIR'])
 fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
 fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
 
