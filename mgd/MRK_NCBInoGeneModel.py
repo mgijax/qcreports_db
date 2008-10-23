@@ -18,6 +18,10 @@
 #
 # 	MRK_NCBInoGeneModel.py	
 #
+# lec	10/23/2008
+#	- TR 9340; remove "EG" symbol characters
+#	- also select the "predicted gene, [0-9]%" whic are also NCBI genes
+#
 # lec	05/08/2008
 #	- TR 8966; Build 37
 #	copied from MRK_ENSEMBLnoGeneModel
@@ -26,6 +30,7 @@
  
 import sys 
 import os
+import string
 import db
 import reportlib
 
@@ -63,12 +68,13 @@ results = db.sql('select distinct m.symbol ' + \
     'and a._MGIType_key = 2 ' + \
     'and a.preferred = 1 ' + \
     'and a._Object_key = m._Marker_key ' + \
-    'and m.name like "predicted gene, EG%" ' + \
+    'and (m.name like "predicted gene, EG%" or m.name like "predicted gene, [0-9]%")' + \
     'and m._Marker_Status_key = 1', 'auto')
 
 geneAssocList = []
 for r in results:
-    geneAssocList.append(r['symbol'])
+    symbol = string.replace(r['symbol'], 'EG', '')
+    geneAssocList.append(symbol)
 
 # get the full set of NCBI Markers
 results = db.sql('select a.accID as MGIid, m.symbol ' + \
@@ -77,18 +83,20 @@ results = db.sql('select a.accID as MGIid, m.symbol ' + \
     'and a._LogicalDB_key = 1 ' + \
     'and a.preferred = 1 ' + \
     'and a._Object_key = m._Marker_key ' + \
-    'and m.name like "predicted gene, EG%" ' + \
+    'and (m.name like "predicted gene, EG%" or m.name like "predicted gene, [0-9]%")' + \
     'and m._Marker_Status_key = 1' + \
     'order by m.symbol', 'auto')
 
 ctr = 0
 for r in results:
-    symbol = r['symbol']
+    origsymbol = r['symbol']
+    symbol = string.replace(r['symbol'], 'EG', '')
     if symbol not in geneAssocList:
 	hasModel = 'no'
         if symbol in geneModelList:
 	    hasModel = 'yes'
-	fp.write('%s%s%s%s%s%s' % (r['MGIid'], TAB, symbol, TAB, hasModel, CRT))
+	fp.write('%s%s%s%s%s%s' % (r['MGIid'], TAB, origsymbol, TAB, hasModel, CRT))
 	ctr= ctr + 1
 fp.write('total = %s' % ctr)
 reportlib.finish_nonps(fp)
+
