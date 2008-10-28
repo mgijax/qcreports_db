@@ -31,6 +31,9 @@
 #
 # History:
 #
+# lec	10/28/2008
+#	- TR9349; only select high and medium priority
+#
 # dbm	07/26/2007
 #	- new
 #
@@ -115,8 +118,9 @@ db.sql('select gi._Index_key, gi._Refs_key, gi._Marker_key, ' + \
               'gi._Priority_key ' + \
        'into #papers1 ' + \
        'from GXD_Index gi, #included_papers ip ' + \
-       'where gi._Refs_key = ip._Refs_key and ' + \
-             'not exists (select 1 ' + \
+       'where gi._Refs_key = ip._Refs_key ' + \
+       'and gi._Priority_key in (74715, 74714) ' + \
+             'and not exists (select 1 ' + \
                          'from #excluded_papers ep ' + \
                          'where ep._Refs_key = gi._Refs_key)', None)
 
