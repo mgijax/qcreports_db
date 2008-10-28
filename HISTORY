@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-1-2-5
+DATE: 10/28/2008
+STAFF: lec
+CHANGES:
+1) add TR9322 to qcr.html
+
 TAG: qcreports_db-4-1-2-4
 DATE: 10/23/2008
 STAFF: lec
@@ -10,7 +16,7 @@ STAFF: lec
 CHANGES:
 1) TR9313/Early Embryonic Expression Papers/GXD_EarlyEmbPapers.py
 2) TR9322/Transgenic alleles/GXD_Transgenic.py
-3) TR 9336/modernizing paper selection/GXD_FullCodeable.py
+3) TR9336/modernizing paper selection/GXD_FullCodeable.py
 
 TAG: qcreports_db-4-1-2-2
 DATE: 10/06/2008
