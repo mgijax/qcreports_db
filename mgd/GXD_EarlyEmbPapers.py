@@ -11,6 +11,9 @@
 #
 # History:
 #
+# lec	10/28/2008
+#	- TR9349, only select high and medium priority
+#
 # lec	10/21/2008
 #	- TR 9313
 #
@@ -68,6 +71,7 @@ db.sql('''
     and gis._StageID_key = vts._Term_key
     and vts._Vocab_key = 13
     and vts.term in ('0.5','1','1.5','2','2.5','3','3.5','4','5.5','6','6.5','7','7.5','A')
+    and gi._Priority_key in (74715, 74714)
     and gi._Priority_key = p._Term_key
     ''', None)
 
