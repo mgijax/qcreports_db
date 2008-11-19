@@ -15,6 +15,9 @@
 #
 # History:
 #
+# 11/19/2008	lec
+#	- TR 9365; added J:140465 Robson
+#
 # 05/20/2008
 #	per Martin & Connie:
 #	  remove "Number of Results (jpg attached)"
@@ -48,10 +51,10 @@ endYear = string.atoi(mgi_utils.date('%Y'))
 
 # electronic references
 elect_ref1 = 'J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, J:85124 Sousa-Nunes,'
-elect_ref2 = 'J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen, J:122989 Eichele'
+elect_ref2 = 'J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen, J:122989 Eichele, J:140465 Robson'
 
 # _Refs_key for all electronic references
-electronic = "(46734,81462,81463,86101,92242,94290,102744,124081)"
+electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558)"
 
 
 '''
