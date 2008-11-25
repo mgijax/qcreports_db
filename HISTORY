@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-1-3-3
+DATE: 11/25/2008
+STAFF: lec
+CHANGES:
+1) GXD_SpecNoAge.sql; fix _MGIType_key = 2 error (should be 1 for references)
+
 TAG: qcreports_db-4-1-3-2
 DATE: 11/20/2008
 STAFF: lec
