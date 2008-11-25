@@ -29,8 +29,8 @@ select mgiID = a1.accID, jnumID = a2.accID, s.specimenLabel
 from #spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
 where s._Assay_key = ga._Assay_key
 and ga._AssayType_key in (1,2,3,4,5,6,8,9)
-and ga._Marker_key = a1._Object_key
-and a1._MGIType_key = 2
+and ga._Assay_key = a1._Object_key
+and a1._MGIType_key = 8
 and a1._LogicalDB_key = 1
 and a1.prefixPart = "MGI:"
 and a1.preferred = 1
@@ -49,8 +49,8 @@ select mgiID = a1.accID, jnumID = a2.accID, s.laneLabel
 from #spec2 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
 where s._Assay_key = ga._Assay_key
 and ga._AssayType_key in (1,2,3,4,5,6,8,9)
-and ga._Marker_key = a1._Object_key
-and a1._MGIType_key = 2
+and ga._Assay_key = a1._Object_key
+and a1._MGIType_key = 8
 and a1._LogicalDB_key = 1
 and a1.prefixPart = "MGI:"
 and a1.preferred = 1

@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-1-3-4
+DATE: 11/25/2008
+STAFF: lec
+CHANGES:
+1) TR9391/GXD_SpecNoAge.sql; change "mgiID" from Marker to Assay
+
 TAG: qcreports_db-4-1-3-3
 DATE: 11/25/2008
 STAFF: lec
