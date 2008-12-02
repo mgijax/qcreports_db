@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec	12/02/2008
+#	- TR 9357; remove image stub check
+#
 # lec	09/09/2008
 #	- TR 9251; exclude Cre
 #
@@ -93,17 +96,16 @@ db.sql('create index idx2 on #specimen(_ImagePane_key)', None)
 # Select Image Panes that are full-coded.
 #      Reference exists (is used) in Assay table
 #      Image Type = "Full Size"
-#      Image stub exists (x dimension is not null)
 #      Pane Label is filled in (not null)
 #
 
-db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel ' + \
+db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, ' + \
+     'cdate = convert(char(10), aa.creation_date, 101) ' + \
      'into #images ' + \
      'from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa ' + \
      'where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key) ' +
      'and a._Refs_key = r._Refs_key ' + \
      'and a._ImageType_key = 1072158 ' \
-     'and a.xDim is not null ' + \
      'and a._Image_key = aa._Image_key '
      'and aa.paneLabel is not null', 'None')
 
@@ -122,9 +124,10 @@ db.sql('create index idx2 on #images(figureLabel)', None)
 #     J# of the Image
 #     Figure Label
 #     Image Pane
+#     Creation date of Image Pane
 #
 
-results = db.sql('select a.accID, i.jnumID, i.figureLabel, i.paneLabel ' + \
+results = db.sql('select a.accID, i.jnumID, i.figureLabel, i.paneLabel, i.cdate ' + \
     'from #images i, ACC_Accession a ' + \
     'where not exists (select 1 from #specimen s ' + \
     'where i._Refs_key = s._Refs_key ' + \
@@ -141,7 +144,8 @@ for r in results:
     fp.write(r['accID'] + TAB)
     fp.write(r['jnumID'] + TAB)
     fp.write(r['figureLabel'] + TAB)
-    fp.write(r['paneLabel'] + CRT)
+    fp.write(r['paneLabel'] + TAB)
+    fp.write(r['cdate'] + CRT)
 
 fp.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
 
