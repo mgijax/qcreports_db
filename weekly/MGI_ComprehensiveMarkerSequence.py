@@ -13,28 +13,29 @@
 #
 #  1: MGI ID
 #  2: Symbol
-#  3. Marker Status
-#  4: Marker Type
-#  5: Chromosome
-#  6: Coordinates formatted as start..end
+#  3. Synonyms
+#  4. Marker Status
+#  5: Marker Type
+#  6: Chromosome
+#  7: Coordinates formatted as start..end
 #
-#  7. Representative Transcript (RNA)
-#  8. Representative Genomic (DNA)
+#  8. Representative Transcript (RNA)
+#  9. Representative Genomic (DNA)
 #
-#  9. Refseq IDs - all types, NM, NR, XM, etc (27)
-# 10. Deleted refseq IDs (sequences) - again all types
+# 10. Refseq IDs - all types, NM, NR, XM, etc (27)
+# 11. Deleted refseq IDs (sequences) - again all types
 #
-# 11. Genbank IDs (9)
-# 12. Deleted genbank IDs (sequences)
+# 12. Genbank IDs (9)
+# 13. Deleted genbank IDs (sequences)
 #
-# 13. NCBI GeneIDs (59)
-# 14. Ensembl ENSMUSG IDs (60)
-# 15. VEGA OTTMUSG IDs (85)
+# 14. NCBI GeneIDs (59)
+# 15. Ensembl ENSMUSG IDs (60)
+# 16. VEGA OTTMUSG IDs (85)
 #
-# 16. DFCI/TIGR IDs (35)
-# 17. DoTS IDs (36)
-# 18. NIA IDs (53)
-# 19. Unigene IDs (23)
+# 17. DFCI/TIGR IDs (35)
+# 18. DoTS IDs (36)
+# 19. NIA IDs (53)
+# 20. Unigene IDs (23)
 #
 # Usage:
 #       MGI_ComprehensiveMarkerSequence.py
@@ -42,6 +43,9 @@
 # Used by:
 #
 # History:
+#
+# lec	12/09/2008
+#	- added Synonyms column
 #
 # lec	11/20/2008
 #	- TR9376
@@ -69,23 +73,24 @@ fp.write('#  contain a primary MGI ID\n')
 fp.write('#\n')
 fp.write('#  column 1: MGI ID\n')
 fp.write('#  column 2: Symbol\n')
-fp.write('#  column 3. Marker Status\n')
-fp.write('#  column 4: Marker Type\n')
-fp.write('#  column 5: Chromosome\n')
-fp.write('#  column 6: Coordinates formatted as start..end\n')
-fp.write('#  column 7. Representative Transcript (RNA)\n')
-fp.write('#  column 8. Representative Genomic (DNA)\n')
-fp.write('#  column 9. Refseq IDs - all types, NM, NR, XM, etc (27)\n')
-fp.write('#  column 10. Deleted refseq IDs (sequences) - again all types\n')
-fp.write('#  column 11. Genbank IDs (9)\n')
-fp.write('#  column 12. Deleted genbank IDs (sequences)\n')
-fp.write('#  column 13. NCBI GeneIDs (59)\n')
-fp.write('#  column 14. Ensembl ENSMUSG IDs (60)\n')
-fp.write('#  column 15. VEGA OTTMUSG IDs (85)\n')
-fp.write('#  column 16. DFCI/TIGR IDs (35)\n')
-fp.write('#  column 17. DoTS IDs (36)\n')
-fp.write('#  column 18. NIA IDs (53)\n')
-fp.write('#  column 19. Unigene IDs (23)\n')
+fp.write('#  column 3. Synonyms\n')
+fp.write('#  column 4. Marker Status\n')
+fp.write('#  column 5: Marker Type\n')
+fp.write('#  column 6: Chromosome\n')
+fp.write('#  column 7: Coordinates formatted as start..end\n')
+fp.write('#  column 8. Representative Transcript (RNA)\n')
+fp.write('#  column 9. Representative Genomic (DNA)\n')
+fp.write('#  column 10. Refseq IDs - all types, NM, NR, XM, etc (27)\n')
+fp.write('#  column 11. Deleted refseq IDs (sequences) - again all types\n')
+fp.write('#  column 12. Genbank IDs (9)\n')
+fp.write('#  column 13. Deleted genbank IDs (sequences)\n')
+fp.write('#  column 14. NCBI GeneIDs (59)\n')
+fp.write('#  column 15. Ensembl ENSMUSG IDs (60)\n')
+fp.write('#  column 16. VEGA OTTMUSG IDs (85)\n')
+fp.write('#  column 17. DFCI/TIGR IDs (35)\n')
+fp.write('#  column 18. DoTS IDs (36)\n')
+fp.write('#  column 19. NIA IDs (53)\n')
+fp.write('#  column 20. Unigene IDs (23)\n')
 fp.write('#\n\n')
 
 # deleted sequences
@@ -122,7 +127,21 @@ db.sql('create index idx1 on #markers(_Marker_key)', None)
 db.sql('create index idx2 on #markers(symbol)', None)
 db.sql('create index idx3 on #markers(numericPart)', None)
 
-# Representative Transript (RNA)
+# 3. Synonyms
+
+mSynonym = {}
+results = db.sql('''select distinct m._Marker_key, s.synonym
+        from #markers m, MGI_Synonym s  
+        where m._Marker_key = s._Object_key 
+        and s._MGIType_key = 2''', 'auto')
+for r in results:
+    key = r['_Marker_key']
+    value = r['synonym']
+    if not mSynonym.has_key(key):
+	mSynonym[key] = []
+    mSynonym[key].append(value)
+
+# 8. Representative Transript (RNA)
 
 repTran = {}
 results = db.sql('''select m._Marker_key, a.accID
@@ -137,7 +156,7 @@ for r in results:
     value = r['accID']
     repTran[key] = value
 
-# Representative Genomic (DNA)
+# 9. Representative Genomic (DNA)
 
 repGen = {}
 results = db.sql('''select m._Marker_key, a.accID
@@ -152,7 +171,7 @@ for r in results:
     value = r['accID']
     repGen[key] = value
 
-#  9. Refseq IDs - all types, NM, NR, XM, etc (27)
+# 10. Refseq IDs - all types, NM, NR, XM, etc (27)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -168,7 +187,7 @@ for r in results:
 	rsID[key] = []
     rsID[key].append(value)
 
-# 10. Deleted refseq IDs (sequences) - again all types
+# 11. Deleted refseq IDs (sequences) - again all types
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -184,7 +203,7 @@ for r in results:
 	rsDelID[key] = []
     rsDelID[key].append(value)
 
-# 11. Genbank IDs (9)
+# 12. Genbank IDs (9)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -200,7 +219,7 @@ for r in results:
 	gbID[key] = []
     gbID[key].append(value)
 
-# 12. Deleted genbank IDs (sequences)
+# 13. Deleted genbank IDs (sequences)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a 
@@ -216,7 +235,7 @@ for r in results:
 	gbDelID[key] = []
     gbDelID[key].append(value)
 
-# 13. NCBI GeneIDs (59)
+# 14. NCBI GeneIDs (59)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -234,7 +253,7 @@ for r in results:
 
 # UniGene ids
 
-# 14. Ensembl ENSMUSG IDs (60)
+# 15. Ensembl ENSMUSG IDs (60)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -250,7 +269,7 @@ for r in results:
 	ensemblID[key] = []
     ensemblID[key].append(value)
 
-# 15. VEGA OTTMUSG IDs (85)
+# 16. VEGA OTTMUSG IDs (85)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -266,7 +285,7 @@ for r in results:
 	vegaID[key] = []
     vegaID[key].append(value)
 
-# 16. DFCI/TIGR IDs (35)
+# 17. DFCI/TIGR IDs (35)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -282,7 +301,7 @@ for r in results:
 	dfciID[key] = []
     dfciID[key].append(value)
 
-# 17. DoTS IDs (36)
+# 18. DoTS IDs (36)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -298,7 +317,7 @@ for r in results:
 	dotsID[key] = []
     dotsID[key].append(value)
 
-# 18. NIA IDs (53)
+# 19. NIA IDs (53)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -314,7 +333,7 @@ for r in results:
 	niaID[key] = []
     niaID[key].append(value)
 
-# 19. Unigene IDs (23)
+# 20. Unigene IDs (23)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -339,17 +358,27 @@ for r in results:
 
 	#  1: MGI ID
 	#  2: Symbol
-	#  3. Marker Status
-	#  4: Marker Type
-	#  5: Chromosome
 
 	fp.write(r['mgiID'] + reportlib.TAB + \
-	       	 r['symbol'] + reportlib.TAB + \
-	       	 r['markerStatus'] + reportlib.TAB + \
+	       	 r['symbol'] + reportlib.TAB)
+
+	#  3: Synonym
+
+	if mSynonym.has_key(key):
+		fp.write(string.join(mSynonym[key], '|'))
+	else:
+		fp.write(blankTag)
+	fp.write(reportlib.TAB)
+
+	#  4. Marker Status
+	#  5: Marker Type
+	#  6: Chromosome
+
+	fp.write(r['markerStatus'] + reportlib.TAB + \
 	         r['markerType'] + reportlib.TAB + \
 	         r['chromosome'] + reportlib.TAB)
 
-	#  6: Coordinates formatted as start..end
+	#  7: Coordinates formatted as start..end
 
         if r['startC'] != None:
 		fp.write(str(r['startC']) + '..' + str(r['endC']))
@@ -357,7 +386,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	#  7. Representative Transcript (RNA)
+	#  8. Representative Transcript (RNA)
 
 	if repTran.has_key(key):
 		fp.write(repTran[key])
@@ -365,7 +394,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	#  8. Representative Genomic (DNA)
+	#  9. Representative Genomic (DNA)
 
 	if repGen.has_key(key):
 		fp.write(repGen[key])
@@ -373,7 +402,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	#  9. Refseq IDs - all types, NM, NR, XM, etc
+	# 10. Refseq IDs - all types, NM, NR, XM, etc
 
 	if rsID.has_key(key):
 		fp.write(string.join(rsID[key], ' '))
@@ -381,7 +410,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 10. Deleted refseq IDs (sequences) - again all types
+	# 11. Deleted refseq IDs (sequences) - again all types
 
 	if rsDelID.has_key(key):
 		fp.write(string.join(rsDelID[key], ' '))
@@ -389,7 +418,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 11. Genbank IDs
+	# 12. Genbank IDs
 
 	if gbID.has_key(key):
 		fp.write(string.join(gbID[key], ' '))
@@ -397,7 +426,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 12. Deleted genbank IDs (sequences)
+	# 13. Deleted genbank IDs (sequences)
 
 	if gbDelID.has_key(key):
 		fp.write(string.join(gbDelID[key], ' '))
@@ -405,7 +434,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 13. NCBI GeneIDs (59)
+	# 14. NCBI GeneIDs (59)
 
 	if ncbiID.has_key(key):
 		fp.write(string.join(ncbiID[key], ' '))
@@ -413,7 +442,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 14. Ensembl ENSMUSG IDs (60)
+	# 15. Ensembl ENSMUSG IDs (60)
 
 	if ensemblID.has_key(key):
 		fp.write(string.join(ensemblID[key], ' '))
@@ -421,7 +450,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 15. VEGA OTTMUSG IDs (85)
+	# 16. VEGA OTTMUSG IDs (85)
 
 	if vegaID.has_key(key):
 		fp.write(string.join(vegaID[key], ' '))
@@ -429,7 +458,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 16. DFCI/TIGR IDs (35)
+	# 17. DFCI/TIGR IDs (35)
 
 	if dfciID.has_key(key):
 		fp.write(string.join(dfciID[key], ' '))
@@ -437,7 +466,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 17. DoTS IDs (36)
+	# 18. DoTS IDs (36)
 
 	if dotsID.has_key(key):
 		fp.write(string.join(dotsID[key], ' '))
@@ -445,7 +474,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 18. NIA IDs (53)
+	# 19. NIA IDs (53)
 
 	if niaID.has_key(key):
 		fp.write(string.join(niaID[key], ' '))
@@ -453,7 +482,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 19. Unigene IDs (23)
+	# 20. Unigene IDs (23)
 
 	if unigeneID.has_key(key):
 		fp.write(string.join(unigeneID[key], ' '))

@@ -59,6 +59,9 @@ go
 print ""
 print "Markers Annotated to a Secondary Sequence Accession ID"
 print ""
+print "Includes: all marker statuses (interim, official, withdrawn)
+print "Includes: all marker types (gene, DNA segment, etc.)
+print ""
 
 select distinct m.symbol, ma.accID, ma.egID
 from #final ma, MRK_Marker m
