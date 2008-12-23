@@ -35,7 +35,14 @@ end
 cd ${QCMGD}
 foreach i (*.py)
 echo $i, `date` | tee -a ${LOG}
-$i >>& ${LOG}
+if ( $i == "GXD_Stats.py" ) then
+        mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCGXDARCHIVE
+        rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
+        $i >>& ${LOG}
+        ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
+else
+	$i >>& ${LOG}
+endif
 echo $i, `date` | tee -a ${LOG}
 end
 
