@@ -656,7 +656,8 @@ def assayTypeCounts():
 #      #
 ########
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1,
+	fileExt = '.' + os.environ['DATE'] + '.rpt')
 cdnas()
 indexOnly()
 fullCoded()
