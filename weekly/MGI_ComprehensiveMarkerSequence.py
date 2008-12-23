@@ -23,22 +23,24 @@
 #  9. Representative Transcript (RNA)
 # 10. Representative Genomic (DNA)
 #
-# note that all of the sequence ids includes both primary and secondary ids
+# note that some of the sequence ids includes both primary and secondary ids
+# and some include only those entered by curators.
 #
-# 11. Refseq IDs - all types, NM, NR, XM, etc (27)
-# 12. Deleted refseq IDs (sequences) - again all types
+# 11. Refseq IDs                primary/secondary
+# 12. Deleted refseq IDs        primary/secondary
 #
-# 13. Genbank IDs (9)
-# 14. Deleted genbank IDs (sequences)
+# 13. Genbank IDs (9)           primary/secondary
+# 14. Deleted genbank IDs       primary/secondary
 #
-# 15. NCBI GeneIDs (59)
-# 16. Ensembl ENSMUSG IDs (60)
-# 17. VEGA OTTMUSG IDs (85)
+# 15. NCBI GeneIDs (59)         curator
+# 16. Ensembl ENSMUSG IDs (60)  curator
+# 17. VEGA OTTMUSG IDs (85)     curator
 #
-# 18. DFCI/TIGR IDs (35)
-# 19. DoTS IDs (36)
-# 20. NIA IDs (53)
-# 21. Unigene IDs (23)
+# 18. DFCI/TIGR IDs (35)        curator
+# 19. DoTS IDs (36)             curator
+# 20. NIA IDs (53)              curator
+
+# 21. Unigene IDs (23)          curator
 #
 # Usage:
 #       MGI_ComprehensiveMarkerSequence.py
@@ -47,8 +49,11 @@
 #
 # History:
 #
-# lec	12/18/2008
-#	- for 11-21, select all primary and secondary ids
+# lec	12/18/2008,12/23/2008
+#	- some marker/accession associations select all primary and secondary ids
+#	  in this case, the SEQ_Marker_Cache table is used
+#	- some marker/accession associations select those entered by curator's
+#	  in this case, the ACC_Accession table is used
 #
 # lec	12/10/2008
 #	- added History Symbols column
@@ -80,6 +85,9 @@ fp.write('# This report selects all mouse Markers that:\n')
 fp.write('#  are of any Status (interim, official, withdrawn)\n')
 fp.write('#  contain a primary MGI ID\n')
 fp.write('#\n')
+fp.write('# note that some of the sequence ids includes both primary and secondary ids\n')
+fp.write('# and some include only those entered by curators.\n')
+fp.write('#\n')
 fp.write('#  column 1: MGI ID\n')
 fp.write('#  column 2: Symbol\n')
 fp.write('#  column 3. Synonyms\n')
@@ -90,17 +98,17 @@ fp.write('#  column 7: Chromosome\n')
 fp.write('#  column 8: Coordinates formatted as start..end\n')
 fp.write('#  column 9. Representative Transcript (RNA)\n')
 fp.write('#  column 10.Representative Genomic (DNA)\n')
-fp.write('#  column 11. Refseq IDs - all types, NM, NR, XM, etc (27)\n')
-fp.write('#  column 12. Deleted refseq IDs (sequences) - again all types\n')
-fp.write('#  column 13. Genbank IDs (9)\n')
-fp.write('#  column 14. Deleted genbank IDs (sequences)\n')
-fp.write('#  column 15. NCBI GeneIDs (59)\n')
-fp.write('#  column 16. Ensembl ENSMUSG IDs (60)\n')
-fp.write('#  column 17. VEGA OTTMUSG IDs (85)\n')
-fp.write('#  column 18. DFCI/TIGR IDs (35)\n')
-fp.write('#  column 19. DoTS IDs (36)\n')
-fp.write('#  column 20. NIA IDs (53)\n')
-fp.write('#  column 21. Unigene IDs (23)\n')
+fp.write('#  column 11. Refseq IDs - all types, NM, NR, XM, etc (27):  PRIMARY/SECONDARY\n')
+fp.write('#  column 12. Deleted refseq IDs (sequences) - again all types: CURATOR\n')
+fp.write('#  column 13. Genbank IDs (9):  PRIMARY/SECONDARY\n')
+fp.write('#  column 14. Deleted genbank IDs (sequences): CURATOR\n')
+fp.write('#  column 15. NCBI GeneIDs (59): CURATOR\n')
+fp.write('#  column 16. Ensembl ENSMUSG IDs (60): CURATOR\n')
+fp.write('#  column 17. VEGA OTTMUSG IDs (85): CURATOR\n')
+fp.write('#  column 18. DFCI/TIGR IDs (35): CURATOR\n')
+fp.write('#  column 19. DoTS IDs (36): CURATOR\n')
+fp.write('#  column 20. NIA IDs (53): CURATOR\n')
+fp.write('#  column 21. Unigene IDs (23): CURATOR\n')
 fp.write('#\n\n')
 
 # deleted sequences
@@ -198,7 +206,7 @@ for r in results:
 # the queries for 11-x will select all primary and secondary ids
 # for all sequences associated with the marker
 
-# 11. Refseq IDs - all types, NM, NR, XM, etc (27)
+# 11. Refseq IDs - all types, NM, NR, XM, etc (27): PRIMARY/SECONDARY
 
 results = db.sql('''select distinct m._Marker_key, sa.accID
       from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
@@ -216,7 +224,7 @@ for r in results:
 	rsID[key] = []
     rsID[key].append(value)
 
-# 12. Deleted refseq IDs (sequences) - again all types
+# 12. Deleted refseq IDs (sequences) - again all types: PRIMARY/SECONDARY
 
 results = db.sql('''select distinct m._Marker_key, sa.accID
       from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
@@ -234,7 +242,7 @@ for r in results:
 	rsDelID[key] = []
     rsDelID[key].append(value)
 
-# 13. Genbank IDs (9)
+# 13. Genbank IDs (9): PRIMARY/SECONDARY
 
 results = db.sql('''select distinct m._Marker_key, sa.accID
       from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
@@ -252,7 +260,7 @@ for r in results:
 	gbID[key] = []
     gbID[key].append(value)
 
-# 14. Deleted genbank IDs (sequences)
+# 14. Deleted genbank IDs (sequences): PRIMARY/SECONDARY
 
 results = db.sql('''select distinct m._Marker_key, sa.accID
       from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
@@ -272,13 +280,11 @@ for r in results:
 
 # 15. NCBI GeneIDs (59)
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 59
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 ncbiID = {}
 for r in results:
@@ -288,17 +294,13 @@ for r in results:
 	ncbiID[key] = []
     ncbiID[key].append(value)
 
-# UniGene ids
-
 # 16. Ensembl ENSMUSG IDs (60)
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 60
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 ensemblID = {}
 for r in results:
@@ -310,13 +312,11 @@ for r in results:
 
 # 17. VEGA OTTMUSG IDs (85)
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 85
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 vegaID = {}
 for r in results:
@@ -328,13 +328,11 @@ for r in results:
 
 # 18. DFCI/TIGR IDs (35)
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 35
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 dfciID = {}
 for r in results:
@@ -346,13 +344,11 @@ for r in results:
 
 # 19. DoTS IDs (36)
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 36
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 dotsID = {}
 for r in results:
@@ -364,13 +360,11 @@ for r in results:
 
 # 20. NIA IDs (53)
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 53
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 niaID = {}
 for r in results:
@@ -380,15 +374,13 @@ for r in results:
 	niaID[key] = []
     niaID[key].append(value)
 
-# 21. Unigene IDs (23)
+# 21. Unigene IDs (23): CURATOR
 
-results = db.sql('''select distinct m._Marker_key, sa.accID
-      from #markers m, SEQ_Marker_Cache a, ACC_Accession sa
-      where m._Marker_key = a._Marker_key
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
       and a._LogicalDB_key = 23
-      and a._Sequence_key = sa._Object_key
-      and sa._MGIType_key = 19
-      and a._LogicalDB_key = sa._LogicalDB_key
       and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
 unigeneID = {}
 for r in results:
