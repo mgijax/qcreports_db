@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-2-0-1
+DATE: 01/09/2009
+STAFF: dbm
+CHANGES:
+1) Fixed link in qcr.html file to be GXD_Stats.current.rpt (not GXD_Stats.rpt)
+
 TAG: qcreports_db-4-1-3-12
 DATE: 12/23/2008
 STAFF: lec
