@@ -56,7 +56,7 @@ db.sql('select r._Refs_key ' + \
 
 db.sql('create index idx1 on #triage(_Refs_key)', None)
 
-results = db.sql('select authors = b.authors + b.authors2, b.title, b.journal, b.year, b.vol, b.issue, b.pgs, b.abstract, ' + \
+results = db.sql('select b.authors, b.authors2, b.title, b.journal, b.year, b.vol, b.issue, b.pgs, b.abstract, ' + \
 	'jnumID = a1.accID, pubmedID = a2.accID ' + \
 	'from #triage t, BIB_Refs b, ACC_Accession a1, ACC_Accession a2 ' + \
 	'where t._Refs_key = b._Refs_key ' + \
@@ -69,11 +69,24 @@ results = db.sql('select authors = b.authors + b.authors2, b.title, b.journal, b
 
 for r in results:
     fp.write(r['jnumID'] + TAB)
-    fp.write(r['pubmedID']  + TAB)
 
-    authors = r['authors']
-    if authors == None:
+    pubmedID = r['pubmedID']
+    if pubmedID == None:
+	pubmedID = 'Null'
+    fp.write(pubmedID  + TAB)
+   
+    author1 = r['authors']
+    author2 = r['authors2']
+    # if author empty, no authors
+    if author1 == None:
         authors = 'Null'
+    # if author not empty and author2 empty
+    elif author2 == None:
+	authors = author1
+    # both author and author2 not empty
+    else:
+	authors = author1 + author2
+     
     fp.write(authors + TAB)
 
     title = r['title']
