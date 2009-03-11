@@ -1,3 +1,10 @@
+TAG: 
+DATE: 03/11/2009
+STAFF: lec
+CHANGES:
+1) TR9517/problem running public/qc reports that join to IMSR
+   moved PRB_StrainNonStd.sql from "mgd" to "weekly"
+
 TAG: qcreports_db-4-2-0-5
 DATE: 03/06/2009
 STAFF: sc
