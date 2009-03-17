@@ -26,6 +26,9 @@
 #
 # History:
 #
+# mhall	3/17/2009
+#	- TR 9479; removed the restriction on null image panels
+#
 # lec	12/02/2008
 #	- TR 9357; remove image stub check
 #
@@ -106,8 +109,7 @@ db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane
      'where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key) ' +
      'and a._Refs_key = r._Refs_key ' + \
      'and a._ImageType_key = 1072158 ' \
-     'and a._Image_key = aa._Image_key '
-     'and aa.paneLabel is not null', 'None')
+     'and a._Image_key = aa._Image_key ', 'None')
 
 db.sql('create index idx1 on #images(jnumID)', None)
 db.sql('create index idx2 on #images(figureLabel)', None)
@@ -144,7 +146,10 @@ for r in results:
     fp.write(r['accID'] + TAB)
     fp.write(r['jnumID'] + TAB)
     fp.write(r['figureLabel'] + TAB)
-    fp.write(r['paneLabel'] + TAB)
+    if (r['paneLabel'] == None):
+    	fp.write('None' + TAB)
+    else:
+    	fp.write(r['paneLabel'] + TAB)
     fp.write(r['cdate'] + CRT)
 
 fp.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
