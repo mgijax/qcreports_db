@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-2-1-1
+DATE: 03/18/2009
+STAFF: dbm
+CHANGES:
+1) Merged tr9440 branch to the trunk for 4.21 release
+2) Added links to qcr.html for MouseFunc and Microarray Association loads
+
 TAG: qcreports_db-4-2-0-7
 DATE: 03/17/2009
 STAFF: mhall
@@ -22,6 +29,13 @@ DATE: 03/05/2009
 STAFF: lec
 CHANGES:
 1) qcr.html; fixed link to mousecycload
+
+TAG: qcreports_db-tr9440-2
+TAG: qcreports_db-tr9440-1
+DATE: 03/02/2009
+STAFF: dbm
+CHANGES:
+1) Added links to machipload and mousefuncload index files to qcr.html
 
 TAG: qcreports_db-tr9440-BP
 DATE: 02/23/2009
