@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-2-1-2
+DATE: 03/24/2009
+STAFF: lec
+CHANGES:
+1) TR9526/GXD_Stats.py
+2) TR9563/GXD_FullCodeGene.sql
+
 TAG: qcreports_db-4-2-1-1
 DATE: 03/18/2009
 STAFF: dbm
