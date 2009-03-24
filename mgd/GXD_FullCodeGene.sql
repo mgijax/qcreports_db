@@ -52,8 +52,8 @@ print ""
 select distinct b.accID, m.symbol
 from GXD_Index i, MRK_Marker m, ACC_Accession b
 where not exists (select 1 from #excluded e where i._Index_key = e._Index_key)
-and exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key)
-and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key
+and exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key and a._AssayType_key in (1,2,3,4,5,6,8,9))
+and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and i._Marker_key = a._Marker_key)
 and i._Marker_key = m._Marker_key
 and i._Refs_key = b._Object_key
