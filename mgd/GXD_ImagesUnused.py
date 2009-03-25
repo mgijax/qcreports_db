@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec	03/25/2009
+#	- TR 9566; only select _MGIType_key = Assay (8)
+#
 # mhall	3/17/2009
 #	- TR 9479; removed the restriction on null image panels
 #
@@ -79,6 +82,8 @@ db.sql('create index idx2 on #gel(_ImagePane_key)', None)
 #	Assay Types = 1 RNA in situ
 #                     6 Immunohistochemistry
 #                     9 In situ reporter (knock in)
+#                     10 In situ reporter (transgenic)
+#                     11 Recombinase reporter
 #
 #
 
@@ -99,16 +104,19 @@ db.sql('create index idx2 on #specimen(_ImagePane_key)', None)
 # Select Image Panes that are full-coded.
 #      Reference exists (is used) in Assay table
 #      Image Type = "Full Size"
-#      Pane Label is filled in (not null)
+#      Image MGI Type = "Assay" (8)
+#
 #
 
 db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, ' + \
      'cdate = convert(char(10), aa.creation_date, 101) ' + \
      'into #images ' + \
      'from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa ' + \
-     'where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key) ' +
+     'where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key ' + \
+     'and assay._AssayType_key in (1,2,3,4,5,6,8,9)) ' +
      'and a._Refs_key = r._Refs_key ' + \
-     'and a._ImageType_key = 1072158 ' \
+     'and a._ImageType_key = 1072158 ' + \
+     'and a._MGIType_key = 8 ' + \
      'and a._Image_key = aa._Image_key ', 'None')
 
 db.sql('create index idx1 on #images(jnumID)', None)
