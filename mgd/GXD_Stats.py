@@ -324,11 +324,11 @@ def fullCoded():
     fp.write(2*CRT + 'GXD Assay and Results:' + 2*CRT)
 
     db.sql('select _Assay_key, _Refs_key, _Marker_key, source = "E" into #gxd ' + \
-	'from GXD_Expression where _Refs_key in %s ' + \
-	'and _AssayType_key in (1,2,3,4,5,6,8,9)' % (electronic), None)
+	'from GXD_Expression where _Refs_key in %s ' % (electronic) + \
+	'and _AssayType_key in (1,2,3,4,5,6,8,9)', None)
     db.sql('insert into #gxd select _Assay_key, _Refs_key, _Marker_key, source = "L" ' + \
-	'from GXD_Expression where _Refs_key not in %s ' + \
-	'and _AssayType_key in (1,2,3,4,5,6,8,9)' % (electronic), None)
+	'from GXD_Expression where _Refs_key not in %s '  % (electronic) + \
+	'and _AssayType_key in (1,2,3,4,5,6,8,9)', None)
     db.sql('create index idx1 on #gxd(_Assay_key)', None)
     db.sql('create index idx2 on #gxd(_Refs_key)', None)
     db.sql('create index idx3 on #gxd(_Marker_key)', None)
@@ -399,7 +399,7 @@ def fullCoded():
     #
 
     results = db.sql('select genes = count(distinct _Marker_key) ' + \
-    	from GXD_Expression where _AssayType_key in (1,2,3,4,5,6,8,9)', 'auto')
+    	'from GXD_Expression where _AssayType_key in (1,2,3,4,5,6,8,9)', 'auto')
     fp.write(2*CRT + 'Number of genes with GXD data:  ' + str(results[0]['genes']) + CRT)
 
 def mutantAlleles():
@@ -506,14 +506,14 @@ def assayTypeCounts():
     db.sql('select _Assay_key, _AssayType_key, _Marker_key, source = "L" ' + \
            'into #gxdcounts ' + \
            'from GXD_Expression ' + \
-           'where isForGXD = 1 and _Refs_key not in %s ' + \
-           'and _AssayType_key in (1,2,3,4,5,6,8,9)' % (electronic), None)
+           'where isForGXD = 1 and _Refs_key not in %s ' % (electronic) + \
+           'and _AssayType_key in (1,2,3,4,5,6,8,9)' , None)
 
     db.sql('insert into #gxdcounts ' + \
            'select _Assay_key, _AssayType_key, _Marker_key, source = "E" ' + \
            'from GXD_Expression ' + \
-           'where isForGXD = 1 and _Refs_key in %s ' + \
-           'and _AssayType_key in (1,2,3,4,5,6,8,9)' % (electronic), None)
+           'where isForGXD = 1 and _Refs_key in %s ' % (electronic) + \
+           'and _AssayType_key in (1,2,3,4,5,6,8,9)', None)
 
     db.sql('create index idx1 on #gxdcounts(_Assay_key)', None)
     db.sql('create index idx2 on #gxdcounts(_AssayType_key)', None)
@@ -562,13 +562,13 @@ def assayTypeCounts():
     cmd = []
     cmd.append('select _AssayType_key, count(_Assay_key) "count" ' + \
                'from GXD_Expression ' + \
-               'where isForGXD = 1 and _Refs_key not in %s ' + \
-               'and _AssayType_key in (1,2,3,4,5,6,8,9)' % (electronic) + \
+               'where isForGXD = 1 and _Refs_key not in %s ' % (electronic) + \
+               'and _AssayType_key in (1,2,3,4,5,6,8,9)' + \
                'group by _AssayType_key')
     cmd.append('select _AssayType_key, count(_Assay_key) "count" ' + \
                'from GXD_Expression ' + \
-               'where isForGXD = 1 and _Refs_key in %s ' + \
-               'and _AssayType_key in (1,2,3,4,5,6,8,9)' % (electronic) + \
+               'where isForGXD = 1 and _Refs_key in %s ' % (electronic) + \
+               'and _AssayType_key in (1,2,3,4,5,6,8,9)' + \
                'group by _AssayType_key')
     results = db.sql(cmd,'auto')
 
