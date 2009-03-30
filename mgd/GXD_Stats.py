@@ -411,7 +411,7 @@ def mutantAlleles():
     results = db.sql('select acount = count(distinct a._Allele_key) ' + \
 	'from GXD_AlleleGenotype g, ALL_Allele a ' + \
 	'where g._Allele_key = a._Allele_key ' + \
-	'and a.isWildType != 0 ' +\
+	'and a.isWildType != 1 ' +\
 	'and exists (select 1 from GXD_Expression e ' + \
 	'where g._Genotype_key = e._Genotype_key and _AssayType_key in (1,2,3,4,5,6,8,9)) ' + \
 	'and a.symbol not like "%<+>%"', 'auto')
