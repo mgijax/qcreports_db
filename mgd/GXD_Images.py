@@ -16,6 +16,12 @@
 #
 # History:
 #
+# lec	04/07/2009
+#	- TR 9606; The jouranls:
+#         Genesis
+#	  J Comp Neurol
+#	  Mol Reprod Dev
+#	  
 # lec	07/23/2008
 #	- TR 9163; The journals:
 #	  J Cell Biol
@@ -68,13 +74,15 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 'Brain Res Gene Expr Patterns', 'Mech Dev', 'PLoS Biol', 
+journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 
+'Brain Res Gene Expr Patterns', 'Mech Dev', 'PLoS Biol', 
 'PLoS Genet', 'PLoS Med', 'PLoS ONE' ,
 'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
 'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
 'BMC Ophthalmol', 'Proc Natl Acad Sci U S A',
 'J Biol Chem', 'J Lipid Res', 'J Clin Invest',
-'J Cell Biol', 'J Exp Med', 'J Gen Physiol']
+'J Cell Biol', 'J Exp Med', 'J Gen Physiol',
+'Genesis', 'J Comp Neurol', 'Mol Reprod Dev']
 
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
