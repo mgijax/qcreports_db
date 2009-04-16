@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	04/16/2009
+#	- TR 9616; add 'Genes Dev'
+#
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
 #	- TR 8984; fix counts
@@ -36,7 +39,11 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-journals = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Genet', 'Nat Immunol', 'Nat Med', 'Nat Neurosci', 'Nat Struct Biol', 'Nat Biotechnol', 'Biotechnology', 'Nat Rev Cancer', 'Nat Rev Genet', 'Nat Rev Immunol', 'Nat Rev Mol Cell Bio', 'Nat Rev Neurosci']
+# journals for year >= 2002
+journals2002 = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Genet', 'Nat Immunol', 'Nat Med', 'Nat Neurosci', 'Nat Struct Biol', 'Nat Biotechnol', 'Biotechnology', 'Nat Rev Cancer', 'Nat Rev Genet', 'Nat Rev Immunol', 'Nat Rev Mol Cell Bio', 'Nat Rev Neurosci']
+
+# journals for all years
+journalsAll = ['Genes Dev']
 
 #
 # Main
@@ -44,11 +51,19 @@ journals = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Gen
 
 fp = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write(TAB + 'where publication year >= 2002' + CRT*2)
+count = 0
+fp.write(TAB + 'Journals where year >= 2002:' + CRT + 2*TAB)
+for j in journals2002:
+    fp.write(string.ljust(j, 25) + TAB)
+    count = count + 1
+    if count > 2:
+      fp.write(CRT + 2*TAB)
+      count = 0
+fp.write(2*CRT)
 
 count = 0
-fp.write(TAB + 'Journals Checked:' + CRT + 2*TAB)
-for j in journals:
+fp.write(TAB + 'Journals for all years:' + CRT + 2*TAB)
+for j in journalsAll:
     fp.write(string.ljust(j, 25) + TAB)
     count = count + 1
     if count > 2:
@@ -63,18 +78,27 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
-db.sql('select distinct r._Refs_key, r.journal, a.creation_date into #refs ' + \
-	'from BIB_Refs r, GXD_Assay a ' + \
-	'where r.year >= 2002 ' + \
-	'and r.journal in ("' + string.join(journals, '","') + '") ' + \
-	'and r._Refs_key = a._Refs_key ' + \
-	'and a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
-	'and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)', None)
+db.sql('''select distinct r._Refs_key, r.journal, a.creation_date 
+	into #refs
+	from BIB_Refs r, GXD_Assay a
+	where r.year >= 2002
+	and r.journal in ("%s")
+	and r._Refs_key = a._Refs_key
+	and a._AssayType_key in (1,2,3,4,5,6,8,9)
+	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)
+	union
+        select distinct r._Refs_key, r.journal, a.creation_date
+	from BIB_Refs r, GXD_Assay a
+	where r.journal in ("%s")
+	and r._Refs_key = a._Refs_key
+	and a._AssayType_key in (1,2,3,4,5,6,8,9)
+	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)
+	''' % (string.join(journals2002, '","'), string.join(journalsAll, '","')), None)
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
-results = db.sql('select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel) ' + \
-	'from #refs r, IMG_Image i ' + \
-	'where r._Refs_key = i._Refs_key', 'auto')
+results = db.sql('''select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)
+	from #refs r, IMG_Image i
+	where r._Refs_key = i._Refs_key''', 'auto')
 fLabels = {}
 for r in results:
     key = r['_Refs_key']
@@ -83,8 +107,8 @@ for r in results:
 	fLabels[key] = []
     fLabels[key].append(value)
 
-results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key order by r.creation_date, b.jnumID', 'auto')
+results = db.sql('''select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b
+	where r._Refs_key = b._Refs_key order by r.creation_date, b.jnumID''', 'auto')
 
 count = 0
 refprinted = []
