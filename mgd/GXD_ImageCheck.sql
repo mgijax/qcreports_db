@@ -1,4 +1,36 @@
 
+set nocount on
+
+/* select all Gel Assays with Image Panes that have JPGs (xDim is not null) */
+
+select distinct a._Assay_key, a._ImagePane_key, ip._Image_key
+into #assays 
+from GXD_Assay a, IMG_Image i, IMG_ImagePane ip 
+where a._AssayType_key in (1,2,3,4,5,6,8,9)
+and a._ImagePane_key = ip._ImagePane_key 
+and ip._Image_key = i._Image_key 
+and i.xDim is not null
+go
+
+/* select all InSitu Assays with Image Panes that have JPGs (xDim is not null) */
+
+insert into #assays 
+select distinct s._Assay_key, iri._ImagePane_key, ip._Image_key
+from GXD_InSituResultImage iri, GXD_InSituResult r, GXD_Specimen s, GXD_Assay a, IMG_Image i, IMG_ImagePane ip 
+where iri._ImagePane_key = ip._ImagePane_key 
+and ip._Image_key = i._Image_key 
+and i.xDim is not null 
+and iri._Result_key = r._Result_key 
+and r._Specimen_key = s._Specimen_key
+and s._Assay_key = a._Assay_key
+and a._AssayType_key in (1,2,3,4,5,6,8,9)
+go
+
+create index idx1 on #assays(_ImagePane_key)
+go
+
+set nocount off
+
 print ""
 print "GXD Image Figure Labels Beginning 'Fig'."
 print ""
@@ -28,7 +60,7 @@ print "GXD Image Pane Labels containing ','"
 print ""
 
 select distinct i.jnumID + ";" + i.figureLabel
-from IMG_Image_View i,IMG_ImagePane p
+from IMG_Image_View i, IMG_ImagePane p
 where p.paneLabel like "%,%" and p._Image_key = i._Image_key
 order by i.jnum
 go
@@ -38,7 +70,7 @@ print "Elsevier: where the J# in the copyright does not match the J# of the stub
 print ""
 
 select distinct i.jnumID, i.mgiID
-from IMG_Image_View i,MGI_Note_Image_View n
+from IMG_Image_View i, MGI_Note_Image_View n
 where i._MGIType_key = 8
 and n._NoteType_key = 1023
 and n.note like "reprinted with permission from elsevier%"
@@ -52,7 +84,7 @@ print "non-Elsevier: the first author in the copyright does not match the first 
 print ""
 
 select distinct i.jnumID, i.mgiID, r._primary
-from IMG_Image_View i,MGI_Note_Image_View n, BIB_Refs r
+from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._MGIType_key = 8
 and n._NoteType_key = 1023
 and n.note like "this image is from%"
@@ -64,13 +96,15 @@ go
 
 print ""
 print "Images with JPGs whose Thumbnails have no JPGs"
+print "(this only includes GXD assays and exclucdes recombinase assays)"
 print ""
 
 select distinct c.accID "MGI ID"
-from IMG_Image a, IMG_Image b, ACC_Accession c
+from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158
 and a.xDim is not null
+and a._Image_key = aa._Image_key
 and a._ThumbnailImage_key = b._Image_key
 and b.xDim is null
 and a._Image_key = c._Object_key
@@ -82,13 +116,15 @@ go
 
 print ""
 print "Images with JPGs whose Thumbnails have JPGs with incorrect X dimension (not = 150 pixels)"
+print "(this only includes GXD assays and exclucdes recombinase assays)"
 print ""
 
 select distinct c.accID "MGI ID"
-from IMG_Image a, IMG_Image b, ACC_Accession c
+from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158
 and a.xDim is not null
+and a._Image_key = aa._Image_key
 and a._ThumbnailImage_key = b._Image_key
 and b.xDim != 150
 and a._Image_key = c._Object_key
