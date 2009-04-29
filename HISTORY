@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-2-1-12
+DATE: 04/29/2009
+STAFF: lec
+CHANGES:
+1) TR9621/GXD_ImageCheck.sql
+2) TR9621/RECOMB_ImageCheck.sql (new)
+
 TAG: qcreports_db-4-2-1-11
 DATE: 04/16/2009
 STAFF: lec
