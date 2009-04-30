@@ -116,7 +116,7 @@ go
 
 print ""
 print "Images with JPGs whose Thumbnails have JPGs with incorrect X dimension (not = 150 pixels)"
-print "(this only includes GXD assays and exclucdes recombinase assays)"
+print "(this only includes GXD assays and excludes recombinase assays)"
 print ""
 
 select distinct c.accID "MGI ID"
