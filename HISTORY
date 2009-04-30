@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-2-1-13
+DATE: 04/30/2009
+STAFF: lec
+CHANGES:
+1) fix print errors:  SEQ_Deleted.sql, SEQ_Dummy.sql)
+
 TAG: qcreports_db-4-2-1-12
 DATE: 04/29/2009
 STAFF: lec
