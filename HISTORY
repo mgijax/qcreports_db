@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-2-1-15
+DATE: 05/06/2009
+STAFF: mhall
+CHANGES:
+1) TR9613/RECOMB_Images.sql; add to qcr.html
+2) TR9613/RECOMB_LackingImages.sql; add to qcr.html
+
 TAG: qcreports_db-4-2-1-14
 DATE: 04/30/2009
 STAFF: lec
