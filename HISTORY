@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-2-1-16
+DATE: 05/12/2009
+STAFF: lec
+CHANGES:
+1) TR9643; added Cell Commun Signal, J Biomed Sci, Neural Develop
+   GXD_Images.py
+   RECOMB_Images.py
+
 TAG: qcreports_db-4-2-1-15
 DATE: 05/06/2009
 STAFF: mhall
