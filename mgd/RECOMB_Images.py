@@ -16,6 +16,13 @@
 #
 # History:
 #
+# lec   05/12/2009
+#       - TR 9643; added:
+#         Cell Commun Signal
+#         J Biomed Sci
+#         Neural Develop
+#       - alphabetize names
+#
 # lec	04/07/2009
 #	- TR 9606; The jouranls:
 #         Genesis
@@ -74,15 +81,45 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-journals = ['Dev Biol', 'Development', 'Dev Dyn', 'Gene Expr Patterns', 
-'Brain Res Gene Expr Patterns', 'Mech Dev', 'PLoS Biol', 
-'PLoS Genet', 'PLoS Med', 'PLoS ONE' ,
-'BMC Biochem', 'BMC Biol', 'BMC Biotechnol', 'BMC Cancer', 'BMC Cell Biol', 'BMC Complement Altern Med',
-'BMC Dev Biol', 'BMC Evol Biol', 'BMC Genet', 'BMC Genomics', 'BMC Med', 'BMC Mol Biol', 'BMC Neurosci',
-'BMC Ophthalmol', 'Proc Natl Acad Sci U S A',
-'J Biol Chem', 'J Lipid Res', 'J Clin Invest',
-'J Cell Biol', 'J Exp Med', 'J Gen Physiol',
-'Genesis', 'J Comp Neurol', 'Mol Reprod Dev']
+journals = [
+'BMC Biochem', 
+'BMC Biol', 
+'BMC Biotechnol', 
+'BMC Cancer', 
+'BMC Cell Biol', 
+'BMC Complement Altern Med',
+'BMC Dev Biol', 
+'BMC Evol Biol', 
+'BMC Genet', 
+'BMC Genomics', 
+'BMC Med', 
+'BMC Mol Biol', 
+'BMC Neurosci',
+'BMC Ophthalmol', 
+'Brain Res Gene Expr Patterns',
+'Cell Commun Signal',
+'Dev Biol', 
+'Dev Dyn', 
+'Development', 
+'Gene Expr Patterns', 
+'Genesis', 
+'J Biol Chem', 
+'J Biomed Sci',
+'J Cell Biol', 
+'J Clin Invest',
+'J Comp Neurol', 
+'J Exp Med', 
+'J Gen Physiol',
+'J Lipid Res', 
+'Mech Dev', 
+'Mol Reprod Dev',
+'Neural Develop',
+'PLoS Biol', 
+'PLoS Genet', 
+'PLoS Med', 
+'PLoS ONE' ,
+'Proc Natl Acad Sci U S A'
+]
 
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
