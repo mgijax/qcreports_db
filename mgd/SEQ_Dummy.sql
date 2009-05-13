@@ -54,8 +54,8 @@ go
 print ""
 print "Dummy Sequence Records Annotated to Mouse Molecular Segments"
 print ""
-print "Includes: all marker statuses (interim, official, withdrawn)
-print "Includes: all marker types (gene, DNA segment, etc.)
+print "Includes: all marker statuses (interim, official, withdrawn)"
+print "Includes: all marker types (gene, DNA segment, etc.)"
 print ""
 
 select ma.accID "MGI ID", substring(p.name,1,30) "Molecular Segment", 
