@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-2-1-20
+DATE: 05/26/2009
+STAFF: lec
+CHANGES:
+1) removed mgd/ACC_GenBank.sql
+2) removed mgd/MGI_RepSequences.py (TR8121)
+
 TAG: qcreports_db-4-2-1-19
 TAG: qcreports_db-4-2-1-18
 DATE: 05/19/2009
