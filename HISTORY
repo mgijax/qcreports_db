@@ -4,6 +4,7 @@ STAFF: lec
 CHANGES:
 1) removed mgd/ACC_GenBank.sql
 2) removed mgd/MGI_RepSequences.py (TR8121)
+3) removed mgd/SEQ_SeqRefMrkNoSeqMrk.sql
 
 TAG: qcreports_db-4-2-1-19
 TAG: qcreports_db-4-2-1-18
