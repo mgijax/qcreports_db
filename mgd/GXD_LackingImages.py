@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	05/26/2009
+#	- TR 9641; only select Full Size Images
+#
 # lec	04/16/2009
 #	- TR 9616; add 'Genes Dev'
 #
@@ -85,14 +88,18 @@ db.sql('''select distinct r._Refs_key, r.journal, a.creation_date
 	and r.journal in ("%s")
 	and r._Refs_key = a._Refs_key
 	and a._AssayType_key in (1,2,3,4,5,6,8,9)
-	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)
+	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key 
+	and a._ImageType_key = 1072158
+	and a.xDim is null)
 	union
         select distinct r._Refs_key, r.journal, a.creation_date
 	from BIB_Refs r, GXD_Assay a
 	where r.journal in ("%s")
 	and r._Refs_key = a._Refs_key
 	and a._AssayType_key in (1,2,3,4,5,6,8,9)
-	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key and xDim is null)
+	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key 
+	and a._ImageType_key = 1072158
+	and a.xDim is null)
 	''' % (string.join(journals2002, '","'), string.join(journalsAll, '","')), None)
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
