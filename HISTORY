@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-2-1-21
+DATE: 05/26/2009
+STAFF: lec
+CHANGES:
+1) TR9641; mgd/GXD_LackingImages.py
+2) TR9641; mgd/RECOMB_LackingImages.py
+3) TR9646; mgd/GXD_FullCodeGene.sql
+
 TAG: qcreports_db-4-2-1-20
 DATE: 05/26/2009
 STAFF: lec
