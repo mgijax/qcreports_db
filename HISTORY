@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-2-2-1
+DATE: 05/26/2009
+STAFF: dbm
+CHANGES:
+1) TR9509; Removed MRK_AllNoGeneModel.py, MRK_ENSEMBLnoGeneModel.py,
+           MRK_NCBInoGeneModel.py and MRK_VEGAnoGeneModel.py
+
 TAG: qcreports_db-4-2-1-21
 DATE: 05/26/2009
 STAFF: lec
