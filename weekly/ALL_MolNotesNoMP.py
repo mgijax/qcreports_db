@@ -19,6 +19,7 @@
 #	exclude Alleles of type QTL
 #	exclude Alleles of type "transgenic (cre/flp)"
 #	exclude Alleles of type "transgenic (reporter)"
+#	exclude Alleles of type "gene trapped" and status = 'Autoload'
 #
 # Usage:
 #       ALL_MolNotesNoMP.py
@@ -26,6 +27,10 @@
 # Notes:
 #
 # History:
+#
+# 05/14/2009
+#	- TR9405/gene trap less filling
+#	- exclude all alleles where status = 'autoload'
 #
 # 09/20/2006	lec
 #       - created
@@ -59,7 +64,9 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no MP Annotations', os.environ['QCOUTPUTDIR'])
-
+fp.write('\texcludes allele types: Transgenic (random, expressed), Transgenic (Cre/Flp), Transgenic (Reporter)\n')
+fp.write('\texcludes allele types: QTL, Not Applicable\n')
+fp.write('\texcludes allele status: Autload\n\n')
 
 fp.write(string.ljust('Approval', 15) + \
          string.ljust('Acc ID', 15) + \
@@ -72,6 +79,7 @@ db.sql('select a._Allele_key, a.symbol, a.approval_date, alleleType = t.term ' +
     'from ALL_Allele a, VOC_Term t ' + \
     'where a.approval_date is not NULL ' + \
     'and a._Allele_Type_key not in (847130, 847128, 847129, 847127, 847131) ' + \
+    'and a._Allele_Status_key != 3983021 ' + \
     'and a._Allele_Type_key = t._Term_key ' + \
     'and exists (select 1 from MGI_Note n, MGI_NoteType nt  ' + \
     'where a._Allele_key = n._Object_key  ' + \
@@ -81,7 +89,11 @@ db.sql('select a._Allele_key, a.symbol, a.approval_date, alleleType = t.term ' +
     'and not exists (select 1 from VOC_Annot t, GXD_AlleleGenotype g ' + \
     'where a._Allele_key = g._Allele_key ' + \
     'and g._Genotype_key = t._Object_key ' + \
-    'and t._AnnotType_key = 1002)', None)
+    'and t._AnnotType_key = 1002) ' + \
+    'and not exists (select 1 from MGI_Reference_Assoc r ' + \
+    'where a._Allele_key = r._Object_key ' + \
+    'and r._MGIType_key = 11 ' + \
+    'and r._Refs_key = 137203)', None)
 db.sql('create index idx1 on #alleles(_Allele_key)', None)
 
 results = db.sql('select distinct a._Allele_key, a1.numericPart ' + \
