@@ -12,8 +12,10 @@ print ""
 
 select substring(a1.accID,1,15) "acc #1", 
 substring(u1.login,1,10) "user #1", 
+a1.creation_date,
 substring(a2.accID,1,15) "acc #2", 
 substring(u2.login,1,10) "user #2", 
+a2.creation_date,
 r._Assay_key "assay #1", l._Assay_key "assay #2"
 from GXD_GelBand b, GXD_GelRow r, GXD_GelLane l, ACC_Accession a1, ACC_Accession a2,
 MGI_User u1, MGI_User u2
