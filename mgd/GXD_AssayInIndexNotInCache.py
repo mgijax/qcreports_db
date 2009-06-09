@@ -55,6 +55,8 @@ and gi.comments not like '%ot blot%'
 and gi.comments not like '%fraction%'
 and gi.comments not like '%reverse%'
 and gi.comments not like '%immunoprecip%'
+and gi.comments not like '%rocket%'
+and gi.comments not like '%binding%'
 and gi._Refs_key = bcc._Refs_key
 and gis._IndexAssay_key = vt._Term_key
 and gi._Marker_key = m._Marker_key''')
@@ -109,8 +111,13 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-fp.write('Full coded refernces that contain indexed assays that have not been full coded' + CRT)
-
+fp.write('Full coded references that contain indexed assays that have not been full coded' + CRT)
+fp.write('excluded:' + CRT)
+fp.write('     index records that contain only cDNA or primer extension assays' + CRT)
+fp.write('     index records that contain only age ''E?''' + CRT)
+fp.write('     index records that have a note that contains: ' + CRT)
+fp.write('     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket''' + CRT)
+fp.write(CRT)
 fp.write('rowcount: ' + str(len(results[1])) + CRT + CRT)
 
 for item in results[1]:
