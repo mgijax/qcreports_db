@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-2-2-3
+DATE: 06/09/2009
+STAFF: mhall
+CHANGES:
+1) TR8820/GXD_AssayInIndexNotInCache.py minor formatting changes.
+
 TAG: qcreports_db-4-2-2-2
 DATE: 05/28/2009
 STAFF: lec
