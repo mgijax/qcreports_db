@@ -21,6 +21,8 @@
 #	- all private SQL reports require the header
 #
 # History:
+# 	- minor modifications to use the modification date, rather than the
+#	  creation date for this report.
 #
 '''
  
@@ -50,7 +52,7 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt 
 db.sql('select r._Refs_key ' + \
 	'into #triage ' + \
 	'from BIB_Refs r, BIB_DataSet_Assoc a ' + \
-	'where r.creation_date between "%s" and "%s" ' % (fromDate, toDate) + \
+	'where r.modification_date between "%s" and "%s" ' % (fromDate, toDate) + \
 	'and r._Refs_key = a._Refs_key ' + \
 	'and a._DataSet_key = 1007', None)
 
