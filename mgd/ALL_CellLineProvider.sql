@@ -56,7 +56,7 @@ go
 print ""
 print "Cases where the cell line creator has been entered"
 print "and the Accession ID of the mutant cell line has been attached,"
-print "but the mutant cell line ID is not the same as the name of the Accession ID."
+print "but the mutant cell line name is not the same as the name of the Accession ID."
 print "(See the EI Mutant Cell Line Module)"
 print ""
 
