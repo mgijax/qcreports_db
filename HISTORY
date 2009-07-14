@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-3-0-1
+DATE: 07/14/2009
+STAFF: lec
+CHANGES:
+1) merge of TR7493 branch gene trap less filling
+
 TAG: qcreports_db-4-2-2-3
 DATE: 06/09/2009
 STAFF: mhall
@@ -10,11 +16,23 @@ STAFF: lec
 CHANGES:
 1) TR9665/GXD_GelBandError.sql
 
+TAG: qcreports_db-tr7493-2
+DATE: 07/14/2009
+STAFF: lec
+CHANGES:
+1) TR7493/gene trap less filling
+
+TAG: qcreports_db-tr7493-1
+DATE: 05/27/2009
+STAFF: lec
+CHANGES:
+1) TR7493/gene trap less filling
+
 TAG: qcreports_db-tr7493-BP
 DATE: 05/27/2009
 STAFF: lec
 CHANGES:
-1) brnach tag for TR7493/gene trap less filling
+1) branch tag for TR7493/gene trap less filling
 
 TAG: qcreports_db-4-2-2-1
 DATE: 05/26/2009

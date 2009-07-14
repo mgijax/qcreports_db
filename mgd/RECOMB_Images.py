@@ -16,6 +16,10 @@
 #
 # History:
 #
+# lec	07/14/2009
+#	- TR 9717; added:
+#	  BMC Res Notes
+#
 # lec   05/12/2009
 #       - TR 9643; added:
 #         Cell Commun Signal
@@ -96,6 +100,7 @@ journals = [
 'BMC Mol Biol', 
 'BMC Neurosci',
 'BMC Ophthalmol', 
+'BMC Res Notes',
 'Brain Res Gene Expr Patterns',
 'Cell Commun Signal',
 'Dev Biol', 

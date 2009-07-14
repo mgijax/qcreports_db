@@ -17,6 +17,11 @@
 #
 # History:
 #
+# 05/14/2009
+#	- TR9405/gene trap less filling
+#	- only include genes that have at least one genotype
+#	- only include genes that have at least on MP annotation
+#
 # dbm   12/6/2002
 #       - created
 #
@@ -46,11 +51,16 @@ cmd = 'select ac.accID, m.symbol ' + \
             'ac._MGIType_key = 2 and ' + \
             'ac._LogicalDB_key = 1 and ' + \
             'm._Marker_Type_key = 1 and ' + \
-            'exists (select * ' + \
+            'exists (select 1 ' + \
                     'from ALL_Allele a ' + \
                     'where m._Marker_key = a._Marker_key and ' + \
-                          'a.symbol not like "%<+>") and ' + \
-            'not exists (select * ' + \
+                          'a.isWildType = 0) and ' + \
+            'exists (select 1 ' + \
+                    'from GXD_AlleleGenotype a, VOC_Annot va ' + \
+                    'where m._Marker_key = a._Marker_key ' + \
+		    'and a._Genotype_key = va._Object_key ' + \
+		    'and va._AnnotType_key = 1002) and ' + \
+            'not exists (select 1 ' + \
                         'from MRK_Notes n ' + \
                         'where m._Marker_key = n._Marker_key) ' + \
       'order by ac.accID, m.symbol'
