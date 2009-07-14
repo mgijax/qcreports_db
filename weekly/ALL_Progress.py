@@ -22,6 +22,19 @@
 #
 # History:
 #
+# lec   07/14/2009
+#	- in "Allele category"
+#	- below "Targeted (all types)", add "in mice"
+#	- below "Gene Trapped (all types)", add "in mice"
+#	- below "Total", add "in mice"
+#	- below "Total minus QTL", add "in mice"
+#
+#	- in "Number of Genes"
+#	- below "Total Genes with Alleles", add "in mice"
+#	- below "Genes with targeted alleles", add "in mice"
+#	- below "Genes with gene trapped alleles", add "in mice"
+#	- below "Genes with both targeted and gene trapped alleles", add "in mice"
+#
 # lec	11/14/2005
 #	- created, originally a simple isql script
 #	- TR 7284
@@ -58,15 +71,28 @@ def alleleCounts():
     fp.write(string.rjust('-----',  15))
     fp.write(string.rjust('--------------------',  25) + CRT)
 
-    db.sql('select _Allele_key, _Allele_Type_key, _Marker_key into #alleles from ALL_Allele where isWildType = 0 ', None)
+    db.sql('select _Allele_key, _Allele_Type_key, _Marker_key ' + \
+	'into #alleles from ALL_Allele where isWildType = 0 ', None)
+
+    db.sql('select _Allele_key, _Allele_Type_key, _Marker_key ' + \
+	'into #allelesmice from ALL_Allele where isWildType = 0 and _Transmission_key != 3982953', None)
 
     db.sql('select _Allele_key, _Allele_Type_key into #amonthly from ALL_Allele ' + \
 	'where isWildType = 0 ' + \
 	'and datepart(year, creation_date) = %d ' % (year) + \
 	'and datepart(month, creation_date) = %d ' % (month), None)
 
+    db.sql('select _Allele_key, _Allele_Type_key into #amonthlymice from ALL_Allele ' + \
+	'where isWildType = 0 ' + \
+	'and _Transmission_key != 3982953 ' + \
+	'and datepart(year, creation_date) = %d ' % (year) + \
+	'and datepart(month, creation_date) = %d ' % (month), None)
+
     total = db.sql('select count(*) from #alleles', 'auto')[0]['']
     totalM = db.sql('select count(*) from #amonthly', 'auto')[0]['']
+
+    totalMice = db.sql('select count(*) from #allelesmice', 'auto')[0]['']
+    totalMiceM = db.sql('select count(*) from #amonthlymice', 'auto')[0]['']
 
     transgenic = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (transgenicKeys), 'auto')[0]['']
     transgenicM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (transgenicKeys), 'auto')[0]['']
@@ -74,8 +100,14 @@ def alleleCounts():
     targeted = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
     targetedM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
 
+    targetedMice = db.sql('select count(*) from #allelesmice where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+    targetedMiceM = db.sql('select count(*) from #amonthlymice where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+
     trapped = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
     trappedM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+
+    trappedMice = db.sql('select count(*) from #allelesmice where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    trappedMiceM = db.sql('select count(*) from #amonthlymice where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
 
     qtl = db.sql('select count(*) from #alleles where _Allele_Type_key in (%s)' % (qtlKeys), 'auto')[0]['']
     qtlM = db.sql('select count(*) from #amonthly where _Allele_Type_key in (%s)' % (qtlKeys), 'auto')[0]['']
@@ -92,6 +124,9 @@ def alleleCounts():
     nonqtl = db.sql('select count(*) from #alleles where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['']
     nonqtlM = db.sql('select count(*) from #amonthly where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['']
 
+    nonqtlMice = db.sql('select count(*) from #allelesmice where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['']
+    nonqtlMiceM = db.sql('select count(*) from #amonthlymice where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['']
+
     fp.write(string.ljust('Transgeneic (all types)', 35))
     fp.write(string.rjust(str(transgenic), 15))
     fp.write(string.rjust(str(transgenicM), 25))
@@ -102,9 +137,19 @@ def alleleCounts():
     fp.write(string.rjust(str(targetedM), 25))
     fp.write(CRT)
 
+    fp.write(string.ljust('Targeted (all types - in mice)', 35))
+    fp.write(string.rjust(str(targetedMice), 15))
+    fp.write(string.rjust(str(targetedMiceM), 25))
+    fp.write(CRT)
+
     fp.write(string.ljust('Gene Trapped', 35))
     fp.write(string.rjust(str(trapped), 15))
     fp.write(string.rjust(str(trappedM), 25))
+    fp.write(CRT)
+
+    fp.write(string.ljust('Gene Trapped (in mice)', 35))
+    fp.write(string.rjust(str(trappedMice), 15))
+    fp.write(string.rjust(str(trappedMiceM), 25))
     fp.write(CRT)
 
     fp.write(string.ljust('QTL', 35))
@@ -132,9 +177,19 @@ def alleleCounts():
     fp.write(string.rjust(str(totalM), 25))
     fp.write(CRT)
 
+    fp.write(string.ljust('Total (in mice)', 35))
+    fp.write(string.rjust(str(totalMice), 15))
+    fp.write(string.rjust(str(totalMiceM), 25))
+    fp.write(CRT)
+
     fp.write(string.ljust('Total minus QTL', 35))
     fp.write(string.rjust(str(nonqtl), 15))
     fp.write(string.rjust(str(nonqtlM), 25))
+    fp.write(CRT)
+
+    fp.write(string.ljust('Total minus QTL (in mice)', 35))
+    fp.write(string.rjust(str(nonqtlMice), 15))
+    fp.write(string.rjust(str(nonqtlMiceM), 25))
     fp.write(CRT)
 
 def genotypeCounts():
@@ -270,9 +325,22 @@ def genesalleles():
 	'from #alleles a, MRK_Marker m ' + \
 	'where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1', None)
 
-    genes = db.sql('select count(distinct _Marker_key) from #genes', 'auto')[0]['']
-    targeted = db.sql('select count(distinct _Marker_key) from #genes where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
-    trapped = db.sql('select count(distinct _Marker_key) from #genes where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    db.sql('select distinct a._Marker_key, a._Allele_Type_key into #genesMice ' + \
+	'from #allelesmice a, MRK_Marker m ' + \
+	'where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1', None)
+
+    genes = db.sql('select count(distinct _Marker_key) from #genes', 'auto')[0][''] 
+    genesMice = db.sql('select count(distinct _Marker_key) from #genesMice', 'auto')[0]['']
+
+    targeted = db.sql('select count(distinct _Marker_key) from #genes ' + \
+	'where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+    targetedMice = db.sql('select count(distinct _Marker_key) from #genesMice ' + \
+	'where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+
+    trapped = db.sql('select count(distinct _Marker_key) from #genes ' + \
+	'where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    trappedMice = db.sql('select count(distinct _Marker_key) from #genesMice ' + \
+	'where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
 
     # markers that have both targeted and trapped alleles
 
@@ -281,14 +349,30 @@ def genesalleles():
 	'and g1._Marker_key = g2._Marker_key ' + \
 	'and g2._Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
 
+    bothTargTrappedMice = db.sql('select count(distinct g1._Marker_key) from #genesMice g1, #genesMice g2 ' + \
+	'where g1._Allele_Type_key in (%s) ' % (targetedKeys) + \
+	'and g1._Marker_key = g2._Marker_key ' + \
+	'and g2._Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+
     fp.write(string.ljust('Total Genes with Alleles:', 60))
     fp.write(string.rjust(str(genes), 10) + CRT)
+    fp.write(string.ljust('Total Genes with Alleles in mice:', 60))
+    fp.write(string.rjust(str(genesMice), 10) + CRT)
+
     fp.write(string.ljust('Genes with targeted alleles (all types):', 60))
     fp.write(string.rjust(str(targeted), 10) + CRT)
+    fp.write(string.ljust('Genes with targeted alleles (all types - in mice):', 60))
+    fp.write(string.rjust(str(targetedMice), 10) + CRT)
+
     fp.write(string.ljust('Genes with gene trapped alleles:', 60))
     fp.write(string.rjust(str(trapped), 10) + CRT)
+    fp.write(string.ljust('Genes with gene trapped alleles in mice:', 60))
+    fp.write(string.rjust(str(trappedMice), 10) + CRT)
+
     fp.write(string.ljust('Genes with both targeted and gene trapped alleles:', 60))
     fp.write(string.rjust(str(bothTargTrapped), 10) + CRT)
+    fp.write(string.ljust('Genes with both targeted and gene trapped alleles in mice:', 60))
+    fp.write(string.rjust(str(bothTargTrappedMice), 10) + CRT)
 
 def vocab():
 
