@@ -1,10 +1,14 @@
+TAG: qcreports_db-4-3-0-3
 TAG: qcreports_db-4-3-0-2
 TAG: qcreports_db-4-3-0-1
+DATE: 07/15/2009
 DATE: 07/14/2009
 STAFF: lec
 CHANGES:
 1) merge of TR7493 branch gene trap less filling
 2) weekly/ALL_Progress.py
+3) added "15. Allele Strain of Origin vs. Parent Cell Line Strain" to Alleles
+   this report is generated from allcacheload/allstrain.py
 
 TAG: qcreports_db-4-2-2-3
 DATE: 06/09/2009
