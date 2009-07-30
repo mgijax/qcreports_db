@@ -4,7 +4,8 @@ go
 
 print ""
 print "Germline Transmission Checks"
-print""
+print "  only includes alleles of type 'Approved' or 'Autoload'"
+print ""
 
 print ""
 print "transmission status is germline or chimeric and transmission reference does not exist"
@@ -12,7 +13,8 @@ print ""
 
 select acc.accID, substring(a.symbol,1,35) "symbol", substring(t.term,1,25) "term"
 from ALL_Allele a, VOC_Term t, ACC_Accession acc
-where a._Transmission_key = t._Term_key
+where a._Allele_Type_key in (847114,3983021)
+and a._Transmission_key = t._Term_key
 and t._Term_key in (3982951,3982952)
 and a._Allele_key = acc._Object_key
 and acc._MGIType_key = 11
@@ -31,7 +33,8 @@ print ""
 
 select acc.accID, substring(a.symbol,1,35) "symbol", substring(t.term,1,25) "term"
 from ALL_Allele a, VOC_Term t, ACC_Accession acc
-where a._Transmission_key = t._Term_key
+where a._Allele_Type_key in (847114,3983021)
+and a._Transmission_key = t._Term_key
 and t._Term_key not in (3982951,3982952)
 and a._Allele_key = acc._Object_key
 and acc._MGIType_key = 11
@@ -50,7 +53,8 @@ print ""
 
 select acc.accID, substring(a.symbol,1,35) "symbol", substring(t.term,1,25) "term"
 from ALL_Allele a, VOC_Term t, ACC_Accession acc
-where a._Transmission_key = t._Term_key
+where a._Allele_Type_key in (847114,3983021)
+and a._Transmission_key = t._Term_key
 and t._Term_key not in (3982955)
 and a._Allele_key = acc._Object_key
 and acc._MGIType_key = 11
