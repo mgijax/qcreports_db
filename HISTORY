@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-3-0-10
+DATE: 08/20/2009
+STAFF: lec
+CHANGES:
+1) TR9770/GXD_Images.py, RECOMB_Images.py
+2) TR9770/GXD_LackingImages.py, RECOMB_LackingImages.py
+
 TAG: qcreports_db-4-3-0-9
 DATE: 08/19/2009
 STAFF: lec
