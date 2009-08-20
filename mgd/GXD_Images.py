@@ -18,6 +18,9 @@
 #
 # lec	08/20/2009
 #	- TR9770; Neural Develop changed to Neural Dev
+#	  Breast Cancer Res
+#	  Genome Biol
+#	  J Biol
 #
 # lec	07/14/2009
 #	- TR9717; added:
@@ -105,12 +108,15 @@ journals = [
 'BMC Ophthalmol', 
 'BMC Res Notes',
 'Brain Res Gene Expr Patterns',
+'Breast Cancer Res',
 'Cell Commun Signal',
 'Dev Biol', 
 'Dev Dyn', 
 'Development', 
 'Gene Expr Patterns', 
 'Genesis', 
+'Genome Biol',
+'J Biol', 
 'J Biol Chem', 
 'J Biomed Sci',
 'J Cell Biol', 
