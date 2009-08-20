@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	08/20/2009
+#	- TR 9770; Nat Methods, Nat Protoc
+#
 # lec	05/26/2009
 #	- TR 9641; only select Full Size Images
 #
@@ -43,7 +46,25 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 # journals for year >= 2002
-journals2002 = ['Cell Death Differ', 'Oncogene', 'Nature', 'Nat Cell Biol', 'Nat Genet', 'Nat Immunol', 'Nat Med', 'Nat Neurosci', 'Nat Struct Biol', 'Nat Biotechnol', 'Biotechnology', 'Nat Rev Cancer', 'Nat Rev Genet', 'Nat Rev Immunol', 'Nat Rev Mol Cell Bio', 'Nat Rev Neurosci']
+journals2002 = [
+'Biotechnology',
+'Cell Death Differ',
+'Nat Biotechnol',
+'Nat Cell Biol',
+'Nat Genet',
+'Nat Immunol',
+'Nat Med',
+'Nat Methods',
+'Nat Neurosci',
+'Nat Protoc',
+'Nat Rev Cancer',
+'Nat Rev Genet',
+'Nat Rev Immunol',
+'Nat Rev Mol Cell Bio',
+'Nat Rev Neurosci',
+'Nat Struct Biol',
+'Nature',
+'Oncogene']
 
 # journals for all years
 journalsAll = ['Genes Dev']
