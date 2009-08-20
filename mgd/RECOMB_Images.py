@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	08/20/2009
+#	- TR9770; Neural Develop changed to Neural Dev
+#
 # lec	07/14/2009
 #	- TR 9717; added:
 #	  BMC Res Notes
@@ -118,7 +121,7 @@ journals = [
 'J Lipid Res', 
 'Mech Dev', 
 'Mol Reprod Dev',
-'Neural Develop',
+'Neural Dev',
 'PLoS Biol', 
 'PLoS Genet', 
 'PLoS Med', 
