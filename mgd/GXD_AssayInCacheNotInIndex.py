@@ -40,7 +40,8 @@ PAGE = reportlib.PAGE
 
 db.useOneConnection(1)
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
+fp.write('Full coded assays that were not indexed' + CRT)
 
 cmds = []
 
@@ -72,8 +73,6 @@ cmds.append('''create index caLookupindex on #cacheAssayLookup (_Assay_key, _Ass
 results = db.sql(cmds,'auto')
 
 cmds = []
-
-fp.write('Full coded assays that were not indexed' + CRT)
 
 # Check the various assay type relationships, bringing back those that are missing
 # for each type
@@ -137,7 +136,9 @@ order by cal.jnum''')
 
 results = db.sql(cmds,'auto')
 
-fp.write('rowcount: ' + str(len(results[0])) + CRT + CRT)
-
 for item in results[0]:
 	fp.write(item['jnum'] + TAB + item['mgiid'] + TAB + item['assayType'] + CRT)
+fp.write('\n(%d rows affected)\n' % (len(results)))
+
+reportlib.finish_nonps(fp)
+

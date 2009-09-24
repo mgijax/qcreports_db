@@ -1,3 +1,14 @@
+TAG: qcreports_db-4-3-0-11
+DATE: 09/24/2009
+STAFF: lec
+CHANGES:
+1) TR9806/GXD_EarlyEmbPapers.py
+	  GXD_FullCodeable.py
+	  GXD_FullCode.py
+	  GXD_OneGenePapers.py
+2) TR9846/GXD_WithdrawnMarker.py
+3) TR9858/GXD_AssayInIndexNotInCache.py
+
 TAG: qcreports_db-4-3-0-10
 DATE: 08/20/2009
 STAFF: lec

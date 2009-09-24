@@ -13,6 +13,9 @@
 #
 # History:
 #
+# lec	09/23/2009
+#	- TR 9806; add conditional column
+#
 # lec	10/22/2008
 #	- TR 9336; add E? to report #2
 #
@@ -59,11 +62,13 @@ def process():
     #
 
     db.sql('''
-	select distinct g._Marker_key, g._Refs_key, g._Priority_key, priority = t.term
+	select distinct g._Marker_key, g._Refs_key, g._Priority_key, 
+          priority = t.term, conditional = t2.term
 	into #refscodeable 
-	from GXD_Index g, VOC_Term t 
-	where g._Priority_key = t._Term_key 
-	and g._Priority_key in (74715, 74714) 
+	from GXD_Index g, VOC_Term t, VOC_Term t2
+	where g._Priority_key in (74715, 74714) 
+	and g._Priority_key = t._Term_key 
+	and g._ConditionalMutants_key = t2._Term_key
 	and not exists (select 1 from GXD_Assay a where a._Marker_key = g._Marker_key) 
 	''', None)
 
@@ -129,9 +134,8 @@ def report1(fp):
 	select distinct gi._Marker_key 
         into #markers 
         from GXD_Index gi 
-        where gi._Priority_key = 74714 and 
-            not exists (select 1 from GXD_Assay ga 
-                        where ga._Marker_key = gi._Marker_key)
+        where gi._Priority_key = 74714
+	and not exists (select 1 from GXD_Assay ga where ga._Marker_key = gi._Marker_key)
         ''', None)
 
     db.sql('create index idx1 on #markers(_Marker_key)', None)
@@ -211,6 +215,8 @@ def report1(fp):
 
 def report2(fp):
 
+    fp.write ('note:  this report only contains references where ALL of its markers are not assay coded\n\n')
+
     fp.write(string.ljust('j number', 30))
     fp.write(SPACE)
     fp.write(string.ljust('index records', 20))
@@ -220,6 +226,8 @@ def report2(fp):
     fp.write(string.ljust('priority', 20))
     fp.write(SPACE)
     fp.write(string.ljust('E?', 4))
+    fp.write(SPACE)
+    fp.write(string.ljust('Conditional', 20))
     fp.write(SPACE)
     fp.write(CRT)
     fp.write(string.ljust('-------------', 30))
@@ -231,6 +239,8 @@ def report2(fp):
     fp.write(string.ljust('-------------  ', 20))
     fp.write(SPACE)
     fp.write(string.ljust('----', 4))
+    fp.write(SPACE)
+    fp.write(string.ljust('-------------  ', 20))
     fp.write(SPACE)
     fp.write(CRT)
 
@@ -244,11 +254,22 @@ def report2(fp):
 	from #refscodeable g 
 	group by g._Refs_key
 	''', None)
-
     db.sql('create index idx1 on #markercount(_Refs_key)', None)
 
+    #
+    # we don't want a reference if it has any assays coded
+    # that is, we only want references where all of their markers are not full coded
+    #
+    db.sql('''
+	select g._Refs_key
+	into #excluded
+	from #refscodeable g, GXD_Assay a
+	where g._Refs_key = a._Refs_key
+	''', None)
+    db.sql('create index idx1 on #excluded(_Refs_key)', None)
+
     results = db.sql('''
-	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority 
+	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority, r.conditional 
 	from #refscodeable r, #indexcount i, #markercount m, ACC_Accession a 
 	where r._Refs_key = i._Refs_key 
 	and r._Refs_key = m._Refs_key 
@@ -256,6 +277,7 @@ def report2(fp):
 	and a._MGIType_key = 1 
 	and a._LogicalDB_key = 1 
 	and a.prefixPart = "J:" 
+	and not exists (select 1 from #excluded d where r._Refs_key = d._Refs_key)
 	order by r._Priority_key, m.mrk_count desc, a.numericPart desc
 	''', 'auto')
 
@@ -271,9 +293,12 @@ def report2(fp):
         fp.write(SPACE)
 
 	if r['_Refs_key'] in eAnnot:
-	    fp.write('Yes')
+	    fp.write(string.ljust('Yes', 4))
 	else:
-	    fp.write('No')
+	    fp.write(string.ljust('No', 4))
+        fp.write(SPACE)
+
+	fp.write(string.ljust(r['conditional'], 20))
 	fp.write(CRT)
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
@@ -394,7 +419,7 @@ def report3(fp):
 #  main
 #
 
-fp1 = reportlib.init(sys.argv[0], 'Markers that have not been full coded', outputdir = os.environ['QCOUTPUTDIR'])
+fp1 = reportlib.init(sys.argv[0], 'Markers that have no embryonic data and have high priority papers', outputdir = os.environ['QCOUTPUTDIR'])
 fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
 fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
 

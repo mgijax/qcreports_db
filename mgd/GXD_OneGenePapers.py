@@ -31,6 +31,9 @@
 #
 # History:
 #
+# lec	09/23/2009
+#	- TR9896; add conditional column
+#
 # lec	10/28/2008
 #	- TR9349; only select high and medium priority
 #
@@ -63,6 +66,8 @@ fp.write(string.ljust('Priority', 10))
 fp.write(SPACE)
 fp.write(string.ljust('E?', 4))
 fp.write(SPACE)
+fp.write(string.ljust('Conditional', 20))
+fp.write(SPACE)
 fp.write(string.ljust('J Number', 10))
 fp.write(SPACE)
 fp.write(string.ljust('Short Citation', 255))
@@ -75,6 +80,8 @@ fp.write(SPACE)
 fp.write(10*'-')
 fp.write(SPACE)
 fp.write(4*'-')
+fp.write(SPACE)
+fp.write(20*'-')
 fp.write(SPACE)
 fp.write(10*'-')
 fp.write(SPACE)
@@ -160,11 +167,11 @@ db.sql('select p2.*, 0 "E_annot" ' + \
 # Get the final results set for the report.
 #
 results = db.sql('select giv.symbol, p3.new_gene, vt.term, p3.E_annot, ' + \
-                        'giv.jnumID, giv.short_citation ' + \
-                 'from #papers3 p3, GXD_Index_View giv, VOC_Term vt ' + \
+                        'giv.jnumID, giv.short_citation, conditional = vt2.term ' + \
+                 'from #papers3 p3, GXD_Index_View giv, VOC_Term vt, VOC_Term vt2 ' + \
                  'where p3._Index_key = giv._Index_key and ' + \
                        'p3._Priority_key = vt._Term_key and ' + \
-                       'vt._Vocab_key = 11 ' + \
+                       'giv._ConditionalMutants_key = vt2._Term_key ' + \
                  'order by p3.new_gene desc, p3._Priority_key, giv.symbol', 'auto')
 
 for r in results:
@@ -185,6 +192,8 @@ for r in results:
     fp.write(string.ljust(r['term'], 10))
     fp.write(SPACE)
     fp.write(string.ljust(eAnnot, 4))
+    fp.write(SPACE)
+    fp.write(string.ljust(r['conditional'], 20))
     fp.write(SPACE)
     fp.write(string.ljust(r['jnumID'], 10))
     fp.write(SPACE)
