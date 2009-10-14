@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-3-1-1
+DATE: 10/14/2009
+STAFF: lec
+CHANGES:
+1) TR9665/GXD_GelBandError.sql/remove wrong report....
+   GXD_GelBand.sql.rpt needs to be restored
+
 TAG: qcreports_db-4-3-0-12
 DATE: 10/07/2009
 STAFF: lec
