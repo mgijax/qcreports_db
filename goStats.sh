@@ -6,6 +6,10 @@
 # first, in a csh, source the Configuration file
 # then, run this script
 #
+# 10/20/2009	lec
+#	- TR 9894/add a GOA annotation check: setCreatedByClause, GOA_CLAUSE
+#	this report can/should probably be moved to a python report
+#
 
 ARCHIVE_DIR=$QCARCHIVEDIR/go
 
@@ -23,6 +27,9 @@ ROOT=74750
 
 MANUAL_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC)"
 
+# select created_by/login that begin with "GOA_"
+GOA_CLAUSE="'GOA_%'"
+
 COUNT_ALL_ANNOTATIONS="a._Annot_key"
 COUNT_DISTINCT_MARKERS="distinct(a._Object_key)"
 
@@ -36,15 +43,26 @@ setRefsClause()
 {
    if test "$1" != "$COUNT_ALL_REFERENCES"
    then
-      REFS_CLAUSE="and    e._Refs_key         $1 $2"
+      REFS_CLAUSE="and e._Refs_key $1 $2"
    else
       REFS_CLAUSE=""
+   fi
+}
+
+setCreatedByClause()
+{
+   if test "$1" != ""
+   then
+      CREATEDBY_CLAUSE="and u.login like $1"
+   else
+      CREATEDBY_CLAUSE=""
    fi
 }
 
 getAnnotations()
 {
    setRefsClause "$2" $3
+   setCreatedByClause $4
    
 isql -S${MGD_DBSERVER} -U${MGI_PUBLICUSER} -P${MGI_PUBLICPASSWORD} -w200 << END >> $REPORT
 
@@ -56,10 +74,12 @@ set nocount on
 declare @annotations int
 
 select @annotations = count($1)
-from VOC_Annot a, VOC_Evidence e
+from VOC_Annot a, VOC_Evidence e, MGI_User u
 where a._AnnotType_key  = 1000
 and a._Annot_key = e._Annot_key                                     
 $REFS_CLAUSE
+and e._CreatedBy_key = u._User_key
+$CREATEDBY_CLAUSE
 
 if "$1" = "$COUNT_DISTINCT_MARKERS"
    print "Total Number of Genes Annotated to:    %1!", @annotations
@@ -88,13 +108,15 @@ go
 
 declare aliascursor cursor for
 select d.name, convert (char(6), count($1))
-from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d                                                     
+from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
 where a._AnnotType_key = 1000
-and a._Annot_key = e._Annot_key                                    
+and a._Annot_key = e._Annot_key
 $REFS_CLAUSE
-and a._Term_key = n._Object_key                                    
-and d._DAG_Key = n._DAG_Key                                        
-group by d.name                                                     
+and e._CreatedBy_key = u._User_key
+$CREATEDBY_CLAUSE
+and a._Term_key = n._Object_key
+and d._DAG_Key = n._DAG_Key
+group by d.name
 go
 
 declare @ontologyName    char(30)
@@ -189,11 +211,11 @@ getCounts()
    echo "Processing $1 Annotations..."                                                     
    echo "$1 Annotations:"                                                       >> $REPORT
    echo "======================"                                                >> $REPORT
-   getAnnotations           $COUNT_DISTINCT_MARKERS "$2" $3
-   getAnnotationByOntology  $COUNT_DISTINCT_MARKERS "$2" $3
+   getAnnotations           $COUNT_DISTINCT_MARKERS "$2" $3 $4
+   getAnnotationByOntology  $COUNT_DISTINCT_MARKERS "$2" $3 $4
    echo "---------------------------------------------------------------------" >> $REPORT
-   getAnnotations           $COUNT_ALL_ANNOTATIONS  "$2" $3 
-   getAnnotationByOntology  $COUNT_ALL_ANNOTATIONS  "$2" $3
+   getAnnotations           $COUNT_ALL_ANNOTATIONS  "$2" $3 $4
+   getAnnotationByOntology  $COUNT_ALL_ANNOTATIONS  "$2" $3 $4
    echo "*********************************************************************" >> $REPORT
 }
 
@@ -204,13 +226,14 @@ ${MGI_DBUTILS}/text/header.sh ${REPORT} ${MGD_DBSERVER} ${MGD_DBNAME}
 
 getSummary1
 getSummary2
-getCounts "ALL"        $COUNT_ALL_REFERENCES ""
-getCounts "HAND"       "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE 
-getCounts "SWISS_PROT" $EQUALS               $SWISS_PROT
-getCounts "INTERPRO"   $EQUALS               $INTERPRO 
-getCounts "ORTHOLOGY"  $EQUALS               $ORTHOLOGY  
-getCounts "EC"         $EQUALS               $EC
-getCounts "ROOT"    $EQUALS               $ROOT
+getCounts "ALL"        $COUNT_ALL_REFERENCES "" ""
+getCounts "HAND"        "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE ""
+getCounts "GOA"         "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE "$GOA_CLAUSE"
+getCounts "SWISS_PROT" $EQUALS               $SWISS_PROT ""
+getCounts "INTERPRO"   $EQUALS               $INTERPRO ""
+getCounts "ORTHOLOGY"  $EQUALS               $ORTHOLOGY ""
+getCounts "EC"         $EQUALS               $EC ""
+getCounts "ROOT"       $EQUALS               $ROOT ""
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
