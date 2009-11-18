@@ -1,5 +1,7 @@
 
 /* TR 7454 */
+/* TR 9949: remove gxd assay check */
+/*        : sort by creation_date */
 
 set nocount on
 go
@@ -8,7 +10,8 @@ go
 
 select _Probe_key, name = substring(name, 1, 50), 
 primer1sequence = substring(primer1sequence, 1,50), 
-primer2sequence = substring(primer2sequence, 1, 50)
+primer2sequence = substring(primer2sequence, 1, 50),
+creation_date
 into #primers
 from PRB_Probe
 where _SegmentType_key = 63473
@@ -22,27 +25,18 @@ go
 /* primers that are duplicates by sequence */
 
 select p1.*, probeKey2 = p2._Probe_key, primer2 = p2.name
-into #dups
+into #gxd
 from #primers p1, #primers p2
 where p1.primer1sequence = p2.primer1sequence
 and p1.primer2sequence = p2.primer2sequence
 and p1._Probe_key != p2._Probe_key
 go
 
-/* duplicates that appear in GXD */
-
-select distinct p.*
-into #gxd
-from #dups p, GXD_ProbePrep g
-where p._Probe_key = g._Probe_key
-or p.probeKey2 = g._Probe_key
-go
-
 set nocount off
 go
 
 print ""
-print "Primer Sets whose Sequences are identical and one of the Primer Sets is used in a GXD Assay"
+print "Primer Sets whose Sequences are identical"
 print ""
 
 select accID1 = substring(a1.accID,1,15), primer1 = d.name, 
@@ -58,6 +52,6 @@ and a2._MGIType_key = 3
 and a2._LogicalDB_key = 1
 and a2.prefixPart = "MGI:"
 and a2.preferred = 1
-order by primer1
+order by d.creation_date desc, d.primer1
 go
 
