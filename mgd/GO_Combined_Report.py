@@ -57,16 +57,21 @@ type5 = template % (" "," "," "," ","X")
 
 cmds = []
 
-cmds.append('select m.* ' + \
-	'into #validMarkers ' + \
-	'from mrk_marker m ' + \
-	'where  m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m.name not like "gene model %" ' + \
-	'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
-	'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
-	'and m.symbol not like "ORF%" ' + \
-	'and m._Organism_key = 1')
+cmds.append('''select distinct m.* 
+	into #validMarkers
+	from mrk_marker m, SEQ_Marker_Cache smc
+	where  m._Marker_Type_key = 1
+	and m._Marker_Status_key in (1,3) 
+	and m.name not like 'gene model %' 
+	and m.name not like 'gene trap %' 
+	and m.name not like 'predicted gene %' 
+	and m.symbol not like '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
+	and m.symbol not like '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
+	and m.symbol not like 'ORF%' 
+	and m._Organism_key = 1
+	and m._Marker_key = smc._Marker_key
+	and (smc.accID like 'XP%' or smc.accID like 'NP%' 
+	or smc._logicalDB_key in (13, 41)) ''')
 
 cmds.append('create index vmIndex on #validMarkers (_Marker_key)')
 
@@ -76,11 +81,16 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select mm._Marker_key, count(_Allele_key) as "hasAlleles" ' + \
-	'into #mrkAlleles ' + \
-	'from all_allele aa, #validMarkers mm ' + \
-	'where mm._Marker_key *= aa._Marker_key ' + \
-	'group by mm._Marker_key')
+cmds.append('''select mm._Marker_key, count(_Allele_key) as "hasAlleles"
+	into #mrkAlleles
+	from all_allele aa, #validMarkers mm
+	where mm._Marker_key *= aa._Marker_key
+	and aa.isWildType = 0 
+	AND aa._Allele_Type_key != 847130
+	AND aa._Allele_Status_key = 847114
+	AND aa.isWildType = 0
+	and aa._Transmission_key != 3982953 
+	group by mm._Marker_key''')
 
 cmds.append('create index mrkAlleleIndex on #mrkAlleles (_Marker_key)')
 
@@ -90,12 +100,12 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select m._Marker_key, count(vmc._Term_key) as "hasOmim" ' + \
-	'into #mrkOmimAnnot ' + \
-	'from VOC_Marker_Cache vmc, #validMarkers m ' + \
-	'where m._Marker_key *= vmc._Marker_key ' + \
-	'and annotType = "OMIM/Genotype" ' + \
-	'group by m._Marker_key')
+cmds.append('''select m._Marker_key, count(vmc._Term_key) as 'hasOmim'
+	into #mrkOmimAnnot
+	from VOC_Marker_Cache vmc, #validMarkers m
+	where m._Marker_key *= vmc._Marker_key
+	and annotType = 'OMIM/Genotype'
+	group by m._Marker_key''')
 
 cmds.append('create index mrkOmimIndex on #mrkOmimAnnot (_Marker_key)')
 results = db.sql(cmds,'auto')
@@ -104,12 +114,12 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select m._Marker_key, count(vmc._Term_key) as "hasOmimHuman" ' + \
-	'into #mrkOmimHumanAnnot ' + \
-	'from VOC_Marker_Cache vmc, #validMarkers m ' + \
-	'where m._Marker_key *= vmc._Marker_key ' + \
-	'and annotType = "OMIM/Human Marker" ' + \
-	'group by m._Marker_key')
+cmds.append('''select m._Marker_key, count(vmc._Term_key) as 'hasOmimHuman'
+	into #mrkOmimHumanAnnot
+	from VOC_Marker_Cache vmc, #validMarkers m
+	where m._Marker_key *= vmc._Marker_key
+	and annotType = 'OMIM/Human Marker'
+	group by m._Marker_key''')
 
 cmds.append('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)')
 results = db.sql(cmds,'auto')
@@ -118,22 +128,22 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select mm._Marker_key, ' + \
-	'count(hm._Marker_key) as "hasOrtholog" ' + \
-	'into #tmp_homology ' + \
-	'from MRK_Homology_Cache mh, MRK_Homology_Cache hh, ' + \
-	'#validMarkers mm, MRK_Marker hm ' + \
-	'where mh._Class_key = hh._Class_key ' + \
-	'and hm._Marker_key = hh._Marker_key ' + \
-	'and mh._Marker_key = mm._Marker_key ' + \
-	'and mh._Organism_key = 1 ' + \
-	'and hh._Organism_key in (2, 40) ' + \
-	'group by (mm._Marker_key)')
+cmds.append('''select mm._Marker_key,
+	count(hm._Marker_key) as 'hasOrtholog'
+	into #tmp_homology
+	from MRK_Homology_Cache mh, MRK_Homology_Cache hh,
+	#validMarkers mm, MRK_Marker hm
+	where mh._Class_key = hh._Class_key
+	and hm._Marker_key = hh._Marker_key
+	and mh._Marker_key = mm._Marker_key
+	and mh._Organism_key = 1
+	and hh._Organism_key in (2, 40)
+	group by (mm._Marker_key)''')
 
-cmds.append('select m._Marker_key, count(t.hasOrtholog) as "hasOrtholog" ' + \
-	'into #mrkHomology ' + \
-	'from #validMarkers m, #tmp_homology t ' + \
-	'where m._Marker_key *= t._Marker_key')
+cmds.append('''select m._Marker_key, t.hasOrtholog as 'hasOrtholog'
+	into #mrkHomology
+	from #validMarkers m, #tmp_homology t
+	where m._Marker_key *= t._Marker_key''')
 
 cmds.append('create index mrkOrthoIndex on #mrkHomology (_Marker_key)')
 results = db.sql(cmds,'auto')
@@ -142,23 +152,23 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select r.* ' +\
-	'into #reduced_bibgo ' +\
-	'from BIB_GOXRef_View r, #validMarkers vm ' +\
-	'where r._Marker_key = vm._Marker_key')
+cmds.append('''select r.*
+	into #reduced_bibgo
+	from BIB_GOXRef_View r, #validMarkers vm
+	where r._Marker_key = vm._Marker_key''')
 
 cmds.append('create index vmIndex on #reduced_bibgo (_Marker_key)')
 
-cmds.append('select vm._Marker_key, count(r._Refs_key) as "goRefcount" ' +\
-	'into #refGoUnused ' +\
-	'from #reduced_bibgo r, #validMarkers vm ' +\
-	'where vm._Marker_key *= r._Marker_key ' +\
-	'and not exists (select 1 from ' +\
-	'VOC_ANNOT a, VOC_EVIDENCE e ' +\
-	'where a._AnnotType_key = 1000 ' +\
-	'and a._Annot_key = e._Annot_key ' +\
-	'and e._Refs_key = r._Refs_key) ' +\
-	'group by vm._Marker_key ')
+cmds.append('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
+	into #refGoUnused
+	from #reduced_bibgo r, #validMarkers vm
+	where vm._Marker_key *= r._Marker_key
+	and not exists (select 1 from
+	VOC_ANNOT a, VOC_EVIDENCE e
+	where a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._Refs_key = r._Refs_key)
+	group by vm._Marker_key ''')
 
 cmds.append('create index goRefIndex on #refGoUnused (_Marker_key)')
 
@@ -169,22 +179,22 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select m._Marker_key, ' + \
-	'case when gt.completion_date != null then "Yes" else "No" end as "isComplete", ' + \
-	'case when ma.hasAlleles > 0 then "Yes" else "No" end as "hasAlleles", ' + \
-	'case when moa.hasOmim > 0 then "Yes" else "No" end as "hasOmim", ' + \
-	'case when moha.hasOmimHuman > 0 then "Yes" else "No" end as "hasHumanOmim", ' + \
-	'case when moa.hasOmim > 0 then "Yes" else "No" end as "hasOrtholog", ' + \
-	'rgs.goRefcount ' + \
-	'into #goOverall ' + \
-	'from #validMarkers m, GO_Tracking gt, #mrkAlleles ma, #mrkOmimAnnot moa, ' + \
-	'#mrkHomology mh, #refGoUnused rgs, #mrkOmimHumanAnnot moha ' + \
-	'where m._Marker_key = ma._Marker_key ' + \
-	'and m._Marker_key *= gt._Marker_key ' + \
-	'and m._Marker_key = moa._Marker_key ' + \
-	'and m._Marker_key = mh._Marker_key ' + \
-	'and m._Marker_key = rgs._Marker_key ' + \
-	'and m._Marker_key = moha._Marker_key')
+cmds.append('''select m._Marker_key,
+	case when gt.completion_date != null then 'Yes' else 'No' end as 'isComplete',
+	case when ma.hasAlleles > 0 then 'Yes' else 'No' end as 'hasAlleles',
+	case when moa.hasOmim > 0 then 'Yes' else 'No' end as 'hasOmim',
+	case when moha.hasOmimHuman > 0 then 'Yes' else 'No' end as 'hasHumanOmim',
+	case when mho.hasOrtholog > 0 then 'Yes' else 'No' end as 'hasOrtholog',
+	rgs.goRefcount 
+	into #goOverall
+	from #validMarkers m, GO_Tracking gt, #mrkAlleles ma, #mrkOmimAnnot moa,
+	#refGoUnused rgs, #mrkOmimHumanAnnot moha, #mrkHomology mho
+	where m._Marker_key = ma._Marker_key
+	and m._Marker_key *= gt._Marker_key
+	and m._Marker_key = moa._Marker_key
+	and m._Marker_key = mho._Marker_key
+	and m._Marker_key = rgs._Marker_key
+	and m._Marker_key = moha._Marker_key''')
 
 cmds.append('create index goOverall on #goOverall (_Marker_key)')
 results = db.sql(cmds,'auto')
@@ -193,19 +203,34 @@ results = db.sql(cmds,'auto')
 
 cmds = []
 
-cmds.append('select distinct "1" as type, m.symbol, mgiID = a.accID, m.name, ' + \
-	'g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount ' + \
-	'from #validMarkers m, ACC_Accession a, #goOverall g  ' + \
-	'where m._Marker_key = a._Object_key  ' + \
-	'and a._MGIType_key = 2  ' + \
-	'and a._LogicalDB_key = 1  ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1  ' + \
-	'and m._Marker_key = g._Marker_key ' + \
-	'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e  ' + \
-	'where m._Marker_key = a._Object_key  ' + \
-	'and a._AnnotType_key = 1000  ' + \
-	'and a._Annot_key = e._Annot_key)') 
+cmds.append('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
+	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	from #validMarkers m, ACC_Accession a, #goOverall g
+	where m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = 'MGI:'
+	and a.preferred = 1
+	and m._Marker_key = g._Marker_key
+	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key)''') 
+	
+cmds.append('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
+	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount, m._Marker_key
+	into #hasNoGo
+	from #validMarkers m, ACC_Accession a, #goOverall g
+	where m._Marker_key = a._Object_key
+	and a._MGIType_key = 2 
+	and a._LogicalDB_key = 1
+	and a.prefixPart = 'MGI:'
+	and a.preferred = 1
+	and m._Marker_key = g._Marker_key
+	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key)''') 	
 
 resultsNoGo = db.sql(cmds,'auto')
 noGoCount = len(resultsNoGo[0])
@@ -214,28 +239,28 @@ noGoCount = len(resultsNoGo[0])
 
 cmds = []
 
-cmds.append('select distinct "2" as type, m.symbol, mgiID = a.accID, m.name,  ' + \
-	'g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount ' + \
-	'from #validMarkers m, ACC_Accession a, voc_annot a2, ' + \
-	'voc_evidence e2, voc_term vt, #goOverall g ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000 and a2._Annot_key = e2._Annot_key ' + \
-	'and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3 ' + \
-	'and m._Marker_key = g._Marker_key ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key = 118) ' + \
-	'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key != 118)')
+cmds.append('''select distinct '2' as type, m.symbol, mgiID = a.accID, m.name,
+	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	from #validMarkers m, ACC_Accession a, voc_annot a2,
+	voc_evidence e2, voc_term vt, #goOverall g
+	where m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = 'MGI:'
+	and a.preferred = 1
+	and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000 and a2._Annot_key = e2._Annot_key
+	and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3
+	and m._Marker_key = g._Marker_key
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key = 118)
+	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key != 118)''')
 	
 resultsNDOnly = db.sql(cmds,'auto')	
 NDOnlyCount = len(resultsNDOnly[0])
@@ -244,29 +269,29 @@ NDOnlyCount = len(resultsNDOnly[0])
 
 cmds = []
 
-cmds.append('select distinct "3" as type, m.symbol, mgiID = a.accID, m.name, ' + \
-	'g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount ' + \
-	'from #validMarkers m, ACC_Accession a, voc_annot a2, ' + \
-	'voc_evidence e2, voc_term vt, #goOverall g ' + \
-	'where m._Marker_key = a._Object_key  ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000 ' + \
-	'and a2._Annot_key = e2._Annot_key ' + \
-	'and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3 ' + \
-	'and m._Marker_key = g._Marker_key ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key = 115) ' + \
-	'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key != 115)')
+cmds.append('''select distinct '3' as type, m.symbol, mgiID = a.accID, m.name,
+	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	from #validMarkers m, ACC_Accession a, voc_annot a2,
+	voc_evidence e2, voc_term vt, #goOverall g
+	where m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = 'MGI:'
+	and a.preferred = 1
+	and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000
+	and a2._Annot_key = e2._Annot_key
+	and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3
+	and m._Marker_key = g._Marker_key
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key = 115)
+	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key != 115)''')
 
 resultsIEAOnly = db.sql(cmds,'auto')
 IEAOnlyCount = len(resultsIEAOnly[0])
@@ -275,34 +300,34 @@ IEAOnlyCount = len(resultsIEAOnly[0])
 
 cmds = []
 
-cmds.append('select distinct "4" as type, m.symbol, mgiID = a.accID, m.name, ' + \
-	'g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount ' + \
-	'from MRK_Marker m, ACC_Accession a, voc_annot a2, ' + \
-	'voc_evidence e2, voc_term vt, #goOverall g ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000 ' + \
-	'and a2._Annot_key = e2._Annot_key ' + \
-	'and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3 ' + \
-	'and m._Marker_key = g._Marker_key ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key = 115) ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key = 118) ' + \
-	'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key not in (115, 118))')
+cmds.append('''select distinct '4' as type, m.symbol, mgiID = a.accID, m.name,
+	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	from MRK_Marker m, ACC_Accession a, voc_annot a2,
+	voc_evidence e2, voc_term vt, #goOverall g
+	where m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = 'MGI:'
+	and a.preferred = 1
+	and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000
+	and a2._Annot_key = e2._Annot_key
+	and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3
+	and m._Marker_key = g._Marker_key
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key = 115)
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key = 118)
+	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key not in (115, 118))''')
 	
 resultsIEAAndNDOnly = db.sql(cmds,'auto')
 IEAAndNDOnlyCount = len(resultsIEAAndNDOnly[0])
@@ -311,28 +336,28 @@ IEAAndNDOnlyCount = len(resultsIEAAndNDOnly[0])
 
 cmds = []
 	
-cmds.append('select distinct "5" as type, m.symbol, mgiID = a.accID, m.name, ' + \
-	'g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount ' + \
-	'from MRK_Marker m, ACC_Accession a, voc_annot a2, ' + \
-	'voc_evidence e2, voc_term vt, #goOverall g ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000 ' + \
-	'and a2._Annot_key = e2._Annot_key ' + \
-	'and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3 ' + \
-	'and m._Marker_key = g._Marker_key ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key) ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key not in (115, 118))')	
+cmds.append('''select distinct '5' as type, m.symbol, mgiID = a.accID, m.name,
+	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	from MRK_Marker m, ACC_Accession a, voc_annot a2,
+	voc_evidence e2, voc_term vt, #goOverall g
+	where m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = 'MGI:'
+	and a.preferred = 1
+	and m._Marker_key = a2._Object_key and a2._AnnotType_key = 1000
+	and a2._Annot_key = e2._Annot_key
+	and e2._EvidenceTerm_key = vt._Term_key and vt._Vocab_key = 3
+	and m._Marker_key = g._Marker_key
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key)
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key not in (115, 118))''')	
 	
 resultsAllOther = db.sql(cmds,'auto')
 otherCount = len(resultsAllOther[0])
@@ -343,138 +368,81 @@ cmds = []
 
 # Total number of rows
 
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasOrtholog = "Yes"')
-
-# Total number of unique markers (Same as above)
-
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasOrtholog = "No"')
+cmds.append('''select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGo hng
+	where go.hasOrtholog = 'Yes' and go._Marker_key = hng._Marker_key ''')
 
 # Count of markers with omim geno annotations
 
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasOmim = "Yes"')
-
-# Count of markers w/0 omim geno annotations
-
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasOmim = "No"')
-
-# Count of markers w/ omim human annotations
-	
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasHumanOmim = "Yes"')
-
-# Count of markers w/o omim human annotations
-
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasHumanOmim = "No"')	
+cmds.append('''select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGo hng
+	where go.hasOmim = 'Yes' and go._Marker_key = hng._Marker_key ''')
 	
 # Count of markers that have alleles	
 	
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasAlleles = "Yes"')
-
-# Count of markers that w/o alleles
-
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where hasAlleles = "No"')		
+cmds.append('''select count(distinct go._Marker_key) as 'count' from #goOverall go, #hasNoGo hng
+	where go.hasAlleles = 'Yes' and go._Marker_key = hng._Marker_key''')	
 	
 # Count of markers marked complete in go	
 	
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where isComplete = "Yes"')
+cmds.append('''select count(_Marker_key) as 'count' from #goOverall
+	where isComplete = 'Yes' ''')
 
-# Count of markers not marked complete in go
-
-cmds.append('select count(_Marker_key) as "count" from #goOverall ' + \
-	'where isComplete = "No"')
-
-# Total number of references unused for all markers
+# Total number of references for all markers
 	
-cmds.append('select sum(goRefcount) as "count" ' + \
-	'from #goOverall')	
+cmds.append('''select sum(goRefcount) as 'count' from #goOverall''')	
 
-# Count of unique unused references for all markers.
+# Count of unique references for all markers.
 	
-cmds.append('select count(distinct jnum) as "count" from #reduced_bibgo')	
+cmds.append('''select count(distinct jnum) as 'count' from #reduced_bibgo''')	
 
 resultsStats = db.sql(cmds,'auto')
+
+# Print out the descriptive information about the genes
+
+fp.write("Genes in this report are of type 'Gene', are for the mouse, and do not have a 'withdrawn' status.\n")
+fp.write("Additionally they have had the following restrictions placed on them:\n\n")
+fp.write("They cannot have a name that starts with the words 'gene model'\n")
+fp.write("They cannot have a name that starts with the words 'predicted gene'\n")
+fp.write("They cannot have a name that starts with the words 'gene trap'\n")
+fp.write("They cannot have a symbol that starts with the word 'ORF'\n")
+fp.write("They cannot have a symbol that is a single letter followed by up to 5 numbers, for example 'a12345'\n")
+fp.write("They cannot have a symbol that is two letters followed by up to 5 numbers, for example 'ab12345'\n\n\n")
+fp.write("They must have a protien sequence of type Uniprot, XP or NP \n\n\n")
 	
 # Print out the Header
 
 totalCount = noGoCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
 
 fp.write("1. Total number of rows: %d" % totalCount)
-fp.write(CRT + "2. Total number unique MGI IDs: %d" % totalCount)
-fp.write(CRT + "3. Total no go Number: %d" % noGoCount)
-fp.write(CRT + "4. IEA Only Number: %d" % IEAOnlyCount)
-fp.write(CRT + "5. ND Only Number: %d" % NDOnlyCount)
-fp.write(CRT + "6. ND+IEA Number: %d" % IEAAndNDOnlyCount)
-fp.write(CRT + "7. All other Number: %d" % otherCount)
+fp.write(CRT + "2. Genes with no go Annotations: %d" % noGoCount)
+fp.write(CRT + "3. Genes with Annotations to IEA Only: %d" % IEAOnlyCount)
+fp.write(CRT + "4. Genes with Annotations to ND Only: %d" % NDOnlyCount)
+fp.write(CRT + "5. Genes with Annotations to ND+IEA: %d" % IEAAndNDOnlyCount)
+fp.write(CRT + "6. Genes with Annotations to All other: %d" % otherCount)
 
 for r in resultsStats[0]:
     rhHomologsYes = r['count']
     
+fp.write(CRT + "7. Mouse Genes that have Rat/Human Homologs and NO GO annotations: %d" % rhHomologsYes)
+
 for r in resultsStats[1]:
-    rhHomologsNo = r['count']
-    
-
-fp.write(CRT + "8. Rat/Human Homologs - yes Number: %d" % rhHomologsYes)
-fp.write(CRT + "9. Rat/Human Homologs - no Number: %d" % rhHomologsNo)
-
-for r in resultsStats[2]:
     omimGenoYes = r['count']
     
-for r in resultsStats[3]:
-    omimGenoNo = r['count']
-    
+fp.write(CRT + "8. Mouse Genes with Human Disease Annotations and NO GO annotations: %d" % omimGenoYes)
 
-fp.write(CRT + "10. OMIM Genotype Annotations - yes Number: %d" % omimGenoYes)
-fp.write(CRT + "11. OMIM Genotype Annotations - no Number: %d" % omimGenoNo)
-
-for r in resultsStats[4]:
-    omimHumanYes = r['count']
-    
-for r in resultsStats[5]:
-    omimHumanNo = r['count']
-    
-
-fp.write(CRT + "12. OMIM Human Annotations - yes Number: %d" % omimHumanYes)
-fp.write(CRT + "13. OMIM Human Annotations - no Number: %d" % omimHumanNo)
-
-for r in resultsStats[6]:
+for r in resultsStats[2]:
     allelesYes = r['count']
     
-for r in resultsStats[7]:
-    allelesNo = r['count']
-    
+fp.write(CRT + "9. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
 
-fp.write(CRT + "14. Alleles - yes Number: %d" % allelesYes)
-fp.write(CRT + "15. Alleles - no Number: %d" % allelesNo)
-
-for r in resultsStats[8]:
+for r in resultsStats[3]:
     completeYes = r['count']
     
-for r in resultsStats[9]:
-    completeNo = r['count']
-    
+fp.write(CRT + "10. Genes with Go Annotation Complete: %d" % completeYes)
 
-fp.write(CRT + "16. Annotation Complete - yes Number: %d" % completeYes)
-fp.write(CRT + "17. Annotation Complete - no Number: %d" % completeNo)
-
-for r in resultsStats[10]:
-    totalRef = r['count']
-    
-
-fp.write(CRT + "18. Total number of references for all Rows - yes Number: %d" % totalRef)
-
-for r in resultsStats[11]:
+for r in resultsStats[5]:
     uniqueRef = r['count']
     
-
-fp.write(CRT + "19. Total number of unique references: %d" % uniqueRef)
+fp.write(CRT + "11. Total number of unique references: %d" % uniqueRef)
 
 # Setup the template for rows in the report
 
