@@ -5,43 +5,8 @@
 # MRK_NoGO.py 01/08/2002
 #
 # Report:
-#       TR 3269 - Report 1
 #
-#	Report 1A
-#	Title = Genes with no GO associations
-#	Select markers of type 'gene' 
-#		where 'current' name does not contain 'gene model', 'gene trap'
-#               where the marker has no 'GO' association
-#               where the reference count exludes J:23000, J:57747, J:63103, J:57656, J:51368, 
-#               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
-#               the Journal title
-#
-#       Report in a tab delimited file with the following columns:
-#
-#    		MGI:ID
-#    		symbol
-#    		name
-#    		number of references
-#    		human or rat ortholog?    'yes'
-#
-#    	Report 1B
-#    	Title = Genes with no GO associations
-#    	Select markers of type 'gene'
-#		where 'current' name does not contain 'gene model', 'gene trap'
-#               where the marker has no 'GO' association.
-#
-#    	Report in a tab delimited file with same columns as 1A
-#
-#	Report 1C
-#	Title = Genes with no GO associations
-#	Select markers of type 'gene' 
-#		where 'current' name does not contain 'gene model', 'gene trap'
-#               where the marker has no 'GO' association
-#               where the reference count includes J:23000, J:57747, J:63103, J:57656, J:51368, 
-#               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
-#               the Journal title
-#
-#    	Report in a tab delimited file with same columns as 1A
+#	TR 3269 (removed A,B,C)
 #
 #	TR 4491
 #	Report 1D
@@ -71,6 +36,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	12/31/2009
+#	- TR 9989; remove A,B,C; keep D
 #
 # lec	09/17/2008
 #	- TR 9265; remove "RIKEN", "expressed", "EST" restrictions
@@ -117,25 +85,16 @@ url = ''
 jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
 gxd = []
 
-fpA = None
-fpB = None
-fpC = None
 fpD = None
 
 def reportOpen():
-    global fpA, fpB, fpC, fpD
+    global fpD
 
-    fpA = reportlib.init("MRK_NoGO_A", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-    fpB = reportlib.init("MRK_NoGO_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-    fpC = reportlib.init("MRK_NoGO_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
     fpD = reportlib.init("MRK_NoGO_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 def reportClose():
-    global fpA, fpB, fpC, fpD
+    global fpD
 
-    reportlib.finish_nonps(fpA)
-    reportlib.finish_nonps(fpB)
-    reportlib.finish_nonps(fpC)
     reportlib.finish_nonps(fpD, isHTML = 1)
 
 def runQueries():
@@ -215,14 +174,6 @@ def runQueries():
     for r in results:
 	gxd.append(r['_Refs_key'])
 
-def writeRecord(fp, r):
-
-	fp.write(r['mgiID'] + TAB + \
-	         r['symbol'] + TAB + \
-	         r['name'] + TAB + \
-	         `r['numRefs']` + TAB + \
-		 r['hasOrthology'] + CRT)
-
 def writeRecordD(fp, r):
 
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
@@ -240,111 +191,6 @@ def writeRecordD(fp, r):
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
-
-def reportA():
-
-    fpA.write('mgi ID' + TAB + \
-	     'symbol' + TAB + \
-	     'name' + TAB + \
-	     '# of refs' + TAB + \
-	     'has orthology?' + CRT*2)
-
-    db.sql('select distinct _Marker_key, symbol, name, mgiID, hasOrthology, numRefs = count(_Refs_key) ' + \
-	'into #fpA ' + \
-	'from #references ' + \
-	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-	'and journal != "Genbank Submission" ' + \
-	'group by _Marker_key ', None)
-
-    # number of unique MGI gene
-    results = db.sql('select distinct _Marker_key from #fpA', 'auto')
-    fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-    # number of has orthology?
-    results = db.sql('select * from #fpA where hasOrthology = "yes"', 'auto')
-    fpA.write('Number of has orthology? = yes:  %s\n' % (len(results)))
-    results = db.sql('select * from #fpA where hasOrthology = "no "', 'auto')
-    fpA.write('Number of has orthology? = no:  %s\n' % (len(results)))
-
-    # total number of rows
-    results = db.sql('select * from #fpA', 'auto')
-    fpA.write('Total number of rows:  %s\n\n' % (len(results)))
-
-    results = db.sql('select * from #fpA order by hasOrthology desc, symbol', 'auto')
-    for r in results:
-	    writeRecord(fpA, r)
-
-def reportB():
-
-    fpB.write('mgi ID' + TAB + \
-	     'symbol' + TAB + \
-	     'name' + TAB + \
-	     '# of refs' + TAB + \
-	     'has orthology?' + CRT*2)
-
-    db.sql('select distinct _Marker_key, symbol, name, mgiID, hasOrthology, numRefs = count(_Refs_key) ' + \
-	'into #fpB ' + \
-	'from #references group by _Marker_key ', None)
-
-    # number of unique MGI gene
-    results = db.sql('select distinct _Marker_key from #fpB', 'auto')
-    fpB.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-    # number of has orthology?
-    results = db.sql('select * from #fpB where hasOrthology = "yes"', 'auto')
-    fpB.write('Number of has orthology? = yes:  %s\n' % (len(results)))
-    results = db.sql('select * from #fpB where hasOrthology = "no "', 'auto')
-    fpB.write('Number of has orthology? = no:  %s\n' % (len(results)))
-
-    # total number of rows
-    results = db.sql('select * from #fpB', 'auto')
-    fpB.write('Total number of rows:  %s\n\n' % (len(results)))
-
-    results = db.sql('select * from #fpB order by hasOrthology desc, symbol', 'auto')
-    for r in results:
-	    writeRecord(fpB, r)
-
-def reportC():
-
-    fpC.write('mgi ID' + TAB + \
-	     'symbol' + TAB + \
-	     'name' + TAB + \
-	     '# of refs' + TAB + \
-	     'has orthology?' + CRT*2)
-
-    db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1._Refs_key, r1.hasOrthology ' + \
-	'into #refC ' + \
-	'from #references r1 ' + \
-	'where r1.jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-	'or r1.journal = "Genbank Submission"', None)
-    db.sql('create index idx1 on #refC(_Marker_key)', None)
-    db.sql('create index idx2 on #refC(symbol)', None)
-
-    db.sql('select distinct r1._Marker_key, r1.symbol, r1.name, r1.mgiID, r1.hasOrthology, ' + \
-	'numRefs = count(r1._Refs_key) ' + \
-	'into #fpC ' + \
-	'from #refC r1 ' + \
-	'where exists (select 1 from #references r2 where r1._Marker_key = r2._Marker_key ' + \
-	'and r2._Refs_key not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944)) ' + \
-	'group by r1._Marker_key ', None)
-
-    # number of unique MGI gene
-    results = db.sql('select distinct _Marker_key from #fpC', 'auto')
-    fpC.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-    # number of has orthology?
-    results = db.sql('select * from #fpC where hasOrthology = "yes"', 'auto')
-    fpC.write('Number of has orthology? = yes:  %s\n' % (len(results)))
-    results = db.sql('select * from #fpC where hasOrthology = "no "', 'auto')
-    fpC.write('Number of has orthology? = no:  %s\n' % (len(results)))
-
-    # total number of rows
-    results = db.sql('select * from #fpC', 'auto')
-    fpC.write('Total number of rows:  %s\n\n' % (len(results)))
-
-    results = db.sql('select * from #fpC order by hasOrthology desc, symbol', 'auto')
-    for r in results:
-	writeRecord(fpC, r)
 
 def reportD():
 
@@ -396,9 +242,6 @@ def reportD():
 
 reportOpen()
 runQueries()
-reportA()
-reportB()
-reportC()
 reportD()
 reportClose()
 

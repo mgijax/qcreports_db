@@ -5,43 +5,7 @@
 # MRK_GOIEA.py 01/08/2002
 #
 # Report:
-#       TR 3269 - Report 1
-#
-#	Report 2A
-#	Title = Genes with only GO Associations w/ IEA evidence
-#	Select markers of type 'gene' 
-#		where 'current' name does not contain 'gene model'
-#               where the marker has 'GO' association w/ IEA only
-#               where the reference count exludes J:23000, J:57747, J:63103, J:57656, J:51368, 
-#               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
-#               the Journal title
-#
-#       Report in a tab delimited file with the following columns:
-#
-#    		MGI:ID
-#    		symbol
-#    		name
-#    		number of references
-#    		human or rat ortholog?    'yes'
-#
-#    	Report 2B
-#	Title = Genes with only GO Associations w/ IEA evidence
-#    	Select markers of type 'gene'
-#    		where 'current' name does not contain 'gene model'
-#               where the marker has 'GO' association w/ IEA only
-#
-#    	Report in a tab delimited file with same columns as 1A
-#
-#	Report 2C
-#	Title = Genes with only GO Associations w/ IEA evidence
-#	Select markers of type 'gene' 
-#		where 'current' name does not contain 'gene model'
-#               where the marker has 'GO' association w/ IEA only
-#               where the reference count includes J:23000, J:57747, J:63103, J:57656, J:51368, 
-#               J:67225, J:67226, or any reference that has "Genbank Submission"  in 
-#               the Journal title
-#
-#    	Report in a tab delimited file with same columns as 1A
+#       TR 3269 - remove A,B,C,F
 #
 #	Report 2D
 #	Title = Gene with only GO Assocations w/ IEA evidence
@@ -70,20 +34,6 @@
 #	Sort by:
 #		symbol
 #
-#	Report 2F (TR 7125)
-#	Title = Genes that have Alleles and either no GO annotations or only IEA GO annotations
-#    	Select markers of type 'gene'
-#               where the marker has Alleles
-#               where the marker has 'GO' association w/ IEA only or no GO annotations
-#
-#       Report in a tab delimited file with the following columns:
-#
-#    		MGI:ID
-#    		symbol
-#    		GO ("no" if no GO, "yes" if IEA)
-#	Sort by:
-#		symbol
-#
 # Usage:
 #       MRK_GOIEA.py
 #
@@ -96,6 +46,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	12/31/2009
+#	- TR 9989; remove A,C,F
 #
 # lec	09/17/2008
 #	- TR 9265; remove RIKEN, expressed, EST restrictions
@@ -140,18 +93,6 @@ PUBMED = 29
 url = ''
 jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
 
-def writeRecord(fp, r):
-
-	fp.write(r['mgiID'] + TAB)
-	fp.write(r['symbol'] + TAB)
-	fp.write(r['name'] + TAB)
-	fp.write(`r['numRefs']` + TAB)
-
-	if hasHomology.has_key(r['_Marker_key']):
-		fp.write('yes' + CRT)
-	else:
-		fp.write('no' + CRT)
-
 def writeRecordD(fp, r):
 
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
@@ -174,7 +115,7 @@ def writeRecordD(fp, r):
 		fp.write('OMIM')
 	fp.write(CRT)
 
-def writeRecordEF(fp, r):
+def writeRecordF(fp, r):
 
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
@@ -183,27 +124,6 @@ def writeRecordEF(fp, r):
 #
 # Main
 #
-
-fpA = reportlib.init("MRK_GOIEA_A", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpA.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 '# of refs' + TAB + \
-	 'has orthology?' + CRT*2)
-
-#fpB = reportlib.init("MRK_GOIEA_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-#fpB.write('mgi ID' + TAB + \
-#	 'symbol' + TAB + \
-#	 'name' + TAB + \
-#	 '# of refs' + TAB + \
-#	 'has orthology?' + CRT*2)
-
-fpC = reportlib.init("MRK_GOIEA_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpC.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 '# of refs' + TAB + \
-	 'has orthology?' + CRT*2)
 
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 fpD.write('jnum ID' + TAB + \
@@ -216,11 +136,6 @@ fpD.write('jnum ID' + TAB + \
 
 fpE = reportlib.init("MRK_GOIEA_E", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpE.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'GO?' + CRT*2)
-
-fpF = reportlib.init("MRK_GOIEA_F", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpF.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'GO?' + CRT*2)
 
@@ -256,25 +171,6 @@ db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart '
 	'and e._EvidenceTerm_key != 115) ', None)
 db.sql('create index idx1 on #markers(_Marker_key)', None)
 
-# orthologies
-
-results = db.sql('select distinct m._Marker_key ' + \
-	'from #markers m ' + \
-	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
-	'where m._Marker_key = hm1._Marker_key ' + \
-	'and hm1._Class_key = hm2._Class_key ' + \
-	'and hm2._Organism_key = 2) ' + \
-	'union ' + \
-	'select distinct m._Marker_key ' + \
-	'from #markers m ' + \
-	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
-	'where m._Marker_key = hm1._Marker_key ' + \
-	'and hm1._Class_key = hm2._Class_key ' + \
-	'and hm2._Organism_key = 40)', 'auto')
-hasHomology = {}
-for r in results:
-	hasHomology[r['_Marker_key']] = 1
-
 ##
 
 db.sql('select distinct m.*, r._Refs_key, r.pubmedID ' + \
@@ -307,58 +203,6 @@ results = db.sql('select distinct m._Marker_key ' + \
 omim = []
 for r in results:
 	omim.append(r['_Marker_key'])
-
-#
-# fpA
-#
-
-db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-	'into #fpA ' + \
-	'from #references ' + \
-	'where jnum not in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-	'and short_citation not like "%Genbank Submission%" ' + \
-	'group by _Marker_key ', None)
-
-# number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #fpA', 'auto')
-fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-# total number of rows
-results = db.sql('select * from #fpA', 'auto')
-fpA.write('Total number of rows:  %s\n\n' % (len(results)))
-
-results = db.sql('select * from #fpA order by symbol', 'auto')
-for r in results:
-	writeRecord(fpA, r)
-
-#results = db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-#	'from #references group by _Marker_key ' + \
-#	'order by symbol', 'auto')
-#for r in results:
-#	writeRecord(fpB, r)
-
-#
-# fpC
-#
-
-db.sql('select distinct _Marker_key, symbol, name, mgiID, numRefs = count(_Refs_key) ' + \
-	'into #fpC ' + \
-	'from #references ' + \
-	'where jnum in (23000, 57747, 63103, 57676, 67225, 67226, 81149, 77944) ' + \
-	'and short_citation not like "%Genbank Submission%" ' + \
-	'group by _Marker_key ', None)
-
-# number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #fpC', 'auto')
-fpC.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-# total number of rows
-results = db.sql('select * from #fpC', 'auto')
-fpC.write('Total number of rows:  %s\n\n' % (len(results)))
-
-results = db.sql('select * from #fpC order by symbol', 'auto')
-for r in results:
-	writeRecord(fpC, r)
 
 #
 # fpD
@@ -438,77 +282,8 @@ fpE.write('Total number of rows:  %s\n\n' % (len(results)))
 
 results = db.sql('select * from #fpE order by symbol', 'auto')
 for r in results:
-    writeRecordEF(fpE, r)
+    writeRecordF(fpE, r)
 
-#
-# report 2F
-#
-
-# select genes with Alleles
-
-db.sql('select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart ' + \
-	'into #allelemarkers ' + \
-	'from MRK_Marker m, ACC_Accession a ' + \
-	'where m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and exists (select 1 from ALL_Allele a where m._Marker_key = a._Marker_key and a.isWildType = 0)', None)
-db.sql('create index idx1 on #allelemarkers(_Marker_key)', None)
-
-#
-# select markers with Alleles and either only IEA GO annotations or no GO annotations
-# exclude Markers with at most one Allele and that Allele has reference J:94338
-#
-
-db.sql('select _Allele_key, _Marker_key into #oneAllele from ALL_Allele group by _Marker_key having count(*) = 1', None)
-db.sql('create index idx1 on #oneAllele(_Allele_key)', None)
-db.sql('select a._Marker_key into #excludeMarker from #oneAllele a, MGI_Reference_Assoc r  ' + \
-	'where a._Allele_key = r._Object_key ' + \
-	'and r._MGIType_key = 11 ' + \
-	'and r._Refs_key = 95329', None)
-db.sql('create index idx1 on #excludeMarker(_Marker_key)', None)
-
-results = db.sql('select o.*, isGO = "yes" ' + \
-	'into #alleles ' + \
-	'from #allelemarkers o, #markers m ' + \
-	'where o._Marker_key = m._Marker_key ' + \
-	'and not exists (select 1 from #excludeMarker e where o._Marker_key = e._Marker_key) ' + \
-	'union ' + \
-	'select o.*, isGO = "no" ' + \
-	'from #allelemarkers o ' + \
-	'where not exists (select 1 from #excludeMarker e where o._Marker_key = e._Marker_key) ' + \
-	'and not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ' + 
-	'order by isGO desc, o.symbol', None)
-db.sql('create index idx1 on #alleles(_Marker_key)', None)
-
-# number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #alleles', 'auto')
-fpF.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-# total number of rows
-results = db.sql('select * from #alleles', 'auto')
-fpF.write('Total number of rows:  %s\n' % (len(results)))
-
-# number of GO yes
-results = db.sql('select * from #alleles where isGO = "yes"', 'auto')
-fpF.write('Number of "GO?" for "yes":  %s\n' % (len(results)))
-
-# number of GO no
-results = db.sql('select * from #alleles where isGO = "no"', 'auto')
-fpF.write('Number of "GO?" for "no":  %s\n\n' % (len(results)))
-
-results = db.sql('select * from #alleles', 'auto')
-for r in results:
-    writeRecordEF(fpF, r)
-
-reportlib.finish_nonps(fpA)	# non-postscript file
-#reportlib.finish_nonps(fpB)	# non-postscript file
-reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD, isHTML = 1)	# non-postscript file
 reportlib.finish_nonps(fpE)	# non-postscript file
-reportlib.finish_nonps(fpF)	# non-postscript file
 

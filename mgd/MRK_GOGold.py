@@ -5,33 +5,12 @@
 # MRK_GOGold.py 06/07/2002
 #
 # Report:
-#       TR 3763 - Report 1
-#
-#	Report 1
-#	Title = All Genes with Annotation to IDA, IGI, IMP, IPI, TAS
-#	Select markers of type 'gene' 
-#		where evidence code = IDA, IGI, IMP, IPI, TAS
-#
-#       Report in a tab delimited file with the following columns:
-#
-#    		MGI:ID
-#    		symbol
-#		name
-#		DAG
-#		GO ID
-#		Term
-#		Evidence Code
+#       TR 3763 - remove A(1), C(3)
 #
 #    	Report 2
 #	Title = All Genes with Annotation to IDA, IGI, IMP, IPI
 #	Select markers of type 'gene' 
 #		where evidence code = IDA, IGI, IMP, IPI
-#
-#	Report 3
-#	Title = All Genes with > 1 Annotation to IDA, IGI, IMP, IPI, TAS
-#	Select markers of type 'gene' 
-#		where evidence code = IDA, IGI, IMP, IPI, TAS
-#		where number of annoations > 1
 #
 #	Report 4
 #	Title = All Genes with > 1 Annotation to IDA, IGI, IMP, IPI
@@ -51,6 +30,9 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	12/31/2009
+#	- TR9989; remove A(1), C(3)
 #
 # lec	07/08/2008
 #	- TR8945
@@ -101,15 +83,6 @@ def writeRecord2(fp, r):
 # Main
 #
 
-fpA = reportlib.init("MRK_GOGold_A", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpA.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 'DAG abbreviation' + TAB + \
-	 'GO ID' + TAB + \
-	 'GO Term' + TAB + \
-	 'evidence codes' + CRT*2)
-
 fpB = reportlib.init("MRK_GOGold_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpB.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
@@ -118,17 +91,6 @@ fpB.write('mgi ID' + TAB + \
 	 'GO ID' + TAB + \
 	 'GO Term' + TAB + \
 	 'evidence codes' + CRT*2)
-
-
-fpC = reportlib.init("MRK_GOGold_C", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpC.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 'DAG abbreviation' + TAB + \
-	 'GO ID' + TAB + \
-	 'GO Term' + TAB + \
-	 'evidence codes' + CRT*2)
-
 
 fpD = reportlib.init("MRK_GOGold_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpD.write('mgi ID' + TAB + \
@@ -189,20 +151,6 @@ accid = {}
 for r in results:
 	accid[r['_Marker_key']] = r['accID']
 
-## Report A
-
-# number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #m1', 'auto')
-fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-# total number of rows
-results = db.sql('select * from #m1', 'auto')
-fpA.write('Total number of rows:  %s\n\n' % (len(results)))
-
-results = db.sql('select * from #m1', 'auto')
-for r in results:
-	writeRecord1(fpA, r)
-
 ## Report B
 
 # number of unique MGI gene
@@ -216,38 +164,6 @@ fpB.write('Total number of rows:  %s\n\n' % (len(results)))
 results = db.sql('select * from #m2', 'auto')
 for r in results:
 	writeRecord1(fpB, r)
-
-## Report C
-
-# select all records from set 1 which have multiple annotations to the same GO term
-db.sql('select * into #m3 from #m1 group by _Marker_key, goID having count(*) > 1', None)
-db.sql('create index idx1 on #m3(_Marker_key)', None)
-db.sql('create index idx2 on #m3(symbol)', None)
-
-# select distinct marker, GO ID, evidence code from set 1 annotations
-# we're doing this because for a given marker/go ID we only want to print
-# one row in the output file which will contain the list of unique evidence codes
-# used for that marker/go ID annotation
-# store dictionary of evidence cods by marker/go ID
-results = db.sql('select distinct _Marker_key, goID, evidenceCode from #m3', 'auto')
-ecode = {}
-for r in results:
-	key = `r['_Marker_key']` + ':' + r['goID']
-	if not ecode.has_key(key):
-		ecode[key] = []
-	ecode[key].append(r['evidenceCode'])
-
-# number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #m3', 'auto')
-fpC.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
-
-# total number of rows
-results = db.sql('select * from #m3', 'auto')
-fpC.write('Total number of rows:  %s\n\n' % (len(results)))
-
-results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbreviation from #m3 order by symbol', 'auto')
-for r in results:
-	writeRecord2(fpC, r)
 
 ## Report D
 
@@ -277,8 +193,6 @@ results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbrevi
 for r in results:
 	writeRecord2(fpD, r)
 
-reportlib.finish_nonps(fpA)	# non-postscript file
 reportlib.finish_nonps(fpB)	# non-postscript file
-reportlib.finish_nonps(fpC)	# non-postscript file
 reportlib.finish_nonps(fpD)	# non-postscript file
 
