@@ -15,13 +15,17 @@
 # field 2: Gene Accession ID
 # field 3: Reference gene? (y/n)
 # field 4: Completion Date
-# field 5: list of references that have not yet been annotated to the gene
+# field 5: # of outstanding references
+# field 6: list of references that have not yet been annotated to the gene
 #	   whose creation date is greater than the completion date.
 #
 # Usage:
 #       GO_done.py
 #
 # History:
+#
+# 01/06/2010
+#	- TR9996/modification to "more than 5 references"
 #
 # 10/24/2006	lec
 #	- TR7533/7920; GO tracking
@@ -62,12 +66,14 @@ def outstandingrefs(key, cdate):
 		' where a._AnnotType_key = 1000 ' + \
 	        ' and a._Annot_key = e._Annot_key ' + \
 	        ' and e._Refs_key = r._Refs_key) ', 'auto')
+
     else:
 	results = db.sql('select jnumID from BIB_GOXRef_View where _Marker_key = %s ' % (key) + \
 		'and creation_date > dateadd(day,1,"%s")' % (cdate), 'auto')
 
+
     for r in results: 
-	jnums.append(r['jnumID'])
+        jnums.append(r['jnumID'])
 
     return jnums
 
@@ -96,10 +102,13 @@ def printResults(cmd, isReferenceGene):
         fp.write(numRefs + TAB)
 
 	# if more than 5 references, just print out how many, else list the jnum IDs
+	# TR9996/remove this check
+	#if len(jnums) > 5:
+	#    fp.write(str(len(jnums)))
+        #else:
 
-	if len(jnums) > 5:
-	    fp.write(str(len(jnums)))
-        else:
+        fp.write(str(len(jnums)) + TAB)
+	if cdate != '':
 	    fp.write(string.join(jnums, ','))
         fp.write(CRT)
 
@@ -113,7 +122,8 @@ fp.write('MGI-ID' + TAB)
 fp.write('reference gene status' + TAB)
 fp.write('Date_complete' + TAB)
 fp.write('#Refs_used' + TAB)
-fp.write('outstanding_refs' + 2*CRT)
+fp.write('outstanding_refs' + TAB)
+fp.write('J numbers' + 2*CRT)
 
 #
 # select all Markers w/ GO Annotations that are Reference genes
