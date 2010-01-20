@@ -1,5 +1,5 @@
 TAG: ?
-DATE: 12/31/2009
+DATE: 12/31/2009-01/20/2010
 STAFF: lec
 CHANGES:
 TR9989 - delete some GO QC reports
@@ -8,8 +8,9 @@ TR9989 - delete some GO QC reports
 3) MRK_GOGold.py; remove A,C; keep B
 4) MRK_GOAllele.py; remove
 5) VOC_GODups.sql; remove
+TR9996 - modifications to GO "done" (GO_done.py)
 
-Remember to manually remove the /data/reports/qcreports_db/output files
+Remember to manually remove the old /data/reports/qcreports_db/output files
 
 TAG: qcreports_db-4-3-2-4
 DATE: 12/21/2009
