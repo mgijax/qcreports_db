@@ -39,7 +39,14 @@ PAGE = reportlib.PAGE
 
 db.useOneConnection(1)
 
+# The main report
 fp = reportlib.init(sys.argv[0], 'Go Combined Report', os.environ['QCOUTPUTDIR'])
+
+# The secondary report, just the No GO Section
+fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No Go', os.environ['QCOUTPUTDIR'])
+
+# The third report, the no go section that has been filtered down to just alleles
+fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No Go w/ Alleles', os.environ['QCOUTPUTDIR'])
 
 # Type Mapping Strings
 
@@ -414,6 +421,10 @@ totalCount = noGoCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherC
 
 fp.write("1. Total number of rows: %d" % totalCount)
 fp.write(CRT + "2. Genes with no go Annotations: %d" % noGoCount)
+
+# The second report also needs this line, so print it out.
+fp2.write(CRT + "1. Genes with no go Annotations: %d" % noGoCount)
+
 fp.write(CRT + "3. Genes with Annotations to IEA Only: %d" % IEAOnlyCount)
 fp.write(CRT + "4. Genes with Annotations to ND Only: %d" % NDOnlyCount)
 fp.write(CRT + "5. Genes with Annotations to ND+IEA: %d" % IEAAndNDOnlyCount)
@@ -433,6 +444,9 @@ for r in resultsStats[2]:
     allelesYes = r['count']
     
 fp.write(CRT + "9. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
+
+# The third report also needs this line, so print it out.
+fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
 
 for r in resultsStats[3]:
     completeYes = r['count']
@@ -457,6 +471,19 @@ templateRow = '%s' + TAB + \
 	'%s' + TAB + \
 	'%s' + CRT;
 
+# The other two reports do not need the template section, so we can remove them.
+	
+templateRow2 = '%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + TAB + \
+	'%s' + CRT;
+	
+
 # Print out the report itself
 
 fp.write(CRT + CRT + CRT + 'No GO' + TAB + \
@@ -474,9 +501,43 @@ fp.write(CRT + CRT + CRT + 'No GO' + TAB + \
 	'Annotation Complete?' + TAB + \
 	'Number of Go References' + CRT)
 
+# Repeat for the second report
+
+fp2.write(CRT + CRT + CRT + 
+	'Gene Symbol' + TAB + \
+	'MGI ID' + TAB + \
+	'Gene Name' + TAB + \
+	'Rat/Human Orthologs?' + TAB + \
+	'OMIM Genotype Annotations?' + TAB + \
+	'OMIM Human Annotations?' + TAB + \
+	'Alleles?' + TAB + \
+	'Annotation Complete?' + TAB + \
+	'Number of Go References' + CRT)
+
+# Repeat for the third report, maybe this could be factored out in the future.
+	
+fp3.write(CRT + CRT + CRT + 
+	'Gene Symbol' + TAB + \
+	'MGI ID' + TAB + \
+	'Gene Name' + TAB + \
+	'Rat/Human Orthologs?' + TAB + \
+	'OMIM Genotype Annotations?' + TAB + \
+	'OMIM Human Annotations?' + TAB + \
+	'Alleles?' + TAB + \
+	'Annotation Complete?' + TAB + \
+	'Number of Go References' + CRT)
+	
+	
 for r in resultsNoGo[0]:
     fp.write(templateRow % (type1, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
-
+    
+    # Report #2 needs a copy of this
+    fp2.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
+    
+    # Report #3 needs a copy of this, if they have alleles.
+    if r['hasAlleles'] == 'Yes':
+        fp3.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
+        
 for r in resultsNDOnly[0]:
     fp.write(templateRow % (type2, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
 
