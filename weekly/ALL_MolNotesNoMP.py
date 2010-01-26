@@ -28,6 +28,10 @@
 #
 # History:
 #
+# 01/26/2010	lec
+#	- TR10040
+#	- exclude J:136110, J:148605, J:155845
+#
 # 05/14/2009
 #	- TR9405/gene trap less filling
 #	- exclude all alleles where status = 'autoload'
@@ -66,7 +70,8 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no MP Annotations', os.environ['QCOUTPUTDIR'])
 fp.write('\texcludes allele types: Transgenic (random, expressed), Transgenic (Cre/Flp), Transgenic (Reporter)\n')
 fp.write('\texcludes allele types: QTL, Not Applicable\n')
-fp.write('\texcludes allele status: Autload\n\n')
+fp.write('\texcludes allele status: Autload\n')
+fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n\n')
 
 fp.write(string.ljust('Approval', 15) + \
          string.ljust('Acc ID', 15) + \
@@ -96,7 +101,7 @@ db.sql('select a._Allele_key, a.symbol, a.approval_date, alleleType = t.term ' +
     'and r._Refs_key = 137203)', None)
 db.sql('create index idx1 on #alleles(_Allele_key)', None)
 
-results = db.sql('select distinct a._Allele_key, a1.numericPart ' + \
+results = db.sql('select distinct a._Allele_key, a1.accID ' + \
     'from #alleles a, MGI_Reference_Assoc r, ACC_Accession a1 ' + \
     'where a._Allele_key = r._Object_key ' + \
     'and r._MGIType_key = 11 ' + \
@@ -104,12 +109,14 @@ results = db.sql('select distinct a._Allele_key, a1.numericPart ' + \
     'and a1._MGIType_key = 1 ' + \
     'and a1._LogicalDB_key = 1 ' + \
     'and a1.prefixPart = "J:" ' + \
-    'and a1.preferred = 1', 'auto')
+    'and a1.numericPart not in (94077,94338,136110,148605,155845) ' + \
+    'and a1.preferred = 1 ' + \
+    'order by a._Allele_key, a1.numericPart desc', 'auto')
 
 refs = {}
 for r in results:
     key = r['_Allele_key']
-    value = r['numericPart']
+    value = r['accID']
 
     if not refs.has_key(key):
         refs[key] = []
@@ -127,15 +134,9 @@ results = db.sql('select a._Allele_key, cDate = convert(char(10), a.approval_dat
 skipped = 0
 for r in results:
 
-    listOfRefs = refs[r['_Allele_key']]
-    listOfRefs.sort()
-    listOfRefs.reverse()
-
-    # If the only reference is J:94077 or J:94338, exclude it from the report.
-    #
-    if (listOfRefs[0] == 94077 or listOfRefs[0] == 94338) and len(listOfRefs) == 1:
-        skipped += 1
-        continue
+    if not refs.has_key(r['_Allele_key']):
+	skipped += 1
+	continue
 
     fp.write(string.ljust(r['cDate'], 15) + \
              string.ljust(r['accID'], 15) + \
@@ -143,14 +144,8 @@ for r in results:
              string.ljust(r['symbol'], 35))
 
     # total number of references associated with each alleles
-    fp.write(string.ljust(str(len(listOfRefs)), 15))
-
-    for l in listOfRefs:
-        if l == listOfRefs[-1]:
-            fp.write('J:' + str(l))
-        else:
-            fp.write('J:' + str(l) + ',')
-    fp.write(CRT)
+    fp.write(string.ljust(str(len(refs[r['_Allele_key']])), 15))
+    fp.write(string.join(refs[r['_Allele_key']], ',') + CRT)
 
 fp.write(CRT + 'Number of Alleles: ' + str(len(results) - skipped) + CRT)
 
