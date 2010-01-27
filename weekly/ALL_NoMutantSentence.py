@@ -17,6 +17,15 @@
 #
 # History:
 #
+# lec	01/26/2010
+#	- TR 10019
+#
+#       The revised report should include those markers where
+#       marker type = gene
+#       and where the gene has one or more phenotypic allele(s)
+#       and where at least one of the phenotypic allele(s) has MP terms
+#       and where a "marker clip" does not exist for the gene
+#
 # 05/14/2009
 #	- TR9405/gene trap less filling
 #	- only include genes that have at least one genotype
