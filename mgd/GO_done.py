@@ -24,6 +24,10 @@
 #
 # History:
 #
+# 01/27/2010
+#	- TR9612; reduced this report to 
+#	  "completed annotations that contain new literature"
+#
 # 01/06/2010
 #	- TR9996/modification to "more than 5 references"
 #
@@ -53,64 +57,33 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-def outstandingrefs(key, cdate):
-    # return list of jnumbers selected for GO that have not already been used in an annotation
-    # return list of jnumbers selected for GO whose creation date is greater than the completion date
-    # depending on whether there is a completion date, or not
-
-    jnums = []
-
-    if cdate == '':
-	results = db.sql('select r.jnumID from BIB_GOXRef_View r where r._Marker_key = %s ' % (key) + \
-		' and not exists (select 1 from VOC_Annot a, VOC_Evidence e ' + \
-		' where a._AnnotType_key = 1000 ' + \
-	        ' and a._Annot_key = e._Annot_key ' + \
-	        ' and e._Refs_key = r._Refs_key) ', 'auto')
-
-    else:
-	results = db.sql('select jnumID from BIB_GOXRef_View where _Marker_key = %s ' % (key) + \
-		'and creation_date > dateadd(day,1,"%s")' % (cdate), 'auto')
-
-
-    for r in results: 
-        jnums.append(r['jnumID'])
-
-    return jnums
-
 def printResults(cmd, isReferenceGene):
+
+    global reportCount
 
     results = db.sql(cmd, 'auto')
     for r in results:
 
         key = r['_Marker_key']
-	cdate = ''
+
+	# skip if no literature
+	if not jnums.has_key(key):
+	   continue
 
         if gorefs.has_key(key):
-            numRefs = str(len(gorefs[key]))
+           numRefs = str(len(gorefs[key]))
         else:
-	    numRefs = '0'
-    
-        if godone.has_key(key):
-            m = godone[key]
-	    cdate = m['cdate']
-	jnums = outstandingrefs(key, cdate)
-
+	   numRefs = '0'
+     
         fp.write(r['symbol'] + TAB)
         fp.write(r['accID'] + TAB)
         fp.write(isReferenceGene + TAB)
-        fp.write(cdate + TAB)
+        fp.write(r['cdate'] + TAB)
         fp.write(numRefs + TAB)
+        fp.write(str(len(jnums[key])) + TAB)
+	fp.write(string.join(jnums[key], ',') + CRT)
 
-	# if more than 5 references, just print out how many, else list the jnum IDs
-	# TR9996/remove this check
-	#if len(jnums) > 5:
-	#    fp.write(str(len(jnums)))
-        #else:
-
-        fp.write(str(len(jnums)) + TAB)
-	if cdate != '':
-	    fp.write(string.join(jnums, ','))
-        fp.write(CRT)
+	reportCount = reportCount + 1
 
 #
 # Main
@@ -127,32 +100,34 @@ fp.write('J numbers' + 2*CRT)
 
 #
 # select all Markers w/ GO Annotations that are Reference genes
+# and that contains a completion date
 #
-db.sql('select m._Marker_key, m.symbol, a.accID ' + \
-	'into #goref ' + \
-	'from GO_Tracking t, MRK_Marker m, ACC_Accession a ' + \
-	'where t.isReferenceGene = 1 ' + \
-	'and t._Marker_key = m._Marker_key ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1', None)
+db.sql('''select cdate = convert(char(10), t.completion_date, 101), m._Marker_key, m.symbol, a.accID
+	  into #goref 
+	  from GO_Tracking t, MRK_Marker m, ACC_Accession a 
+	  where t.isReferenceGene = 1 
+	  and t.completion_date is not null 
+	  and t._Marker_key = m._Marker_key 
+	  and m._Marker_key = a._Object_key 
+	  and a._MGIType_key = 2 
+	  and a._LogicalDB_key = 1 
+	  and a.prefixPart = "MGI:" 
+	  and a.preferred = 1''', None)
 db.sql('create index idx1 on #goref(_Marker_key)', None)
 
 #
 # select all Markers w/ GO Annotations that contains a completion date
 #
-db.sql('select cdate = convert(char(10), t.completion_date, 101), m._Marker_key, m.symbol, a.accID ' + \
-	'into #godone ' + \
-	'from GO_Tracking t, MRK_Marker m, ACC_Accession a ' + \
-	'where t.completion_date is not null ' + \
-	'and t._Marker_key = m._Marker_key ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ', None)
+db.sql('''select cdate = convert(char(10), t.completion_date, 101), m._Marker_key, m.symbol, a.accID 
+	  into #godone 
+	  from GO_Tracking t, MRK_Marker m, ACC_Accession a 
+	  where t.completion_date is not null 
+	  and t._Marker_key = m._Marker_key 
+	  and m._Marker_key = a._Object_key 
+	  and a._MGIType_key = 2 
+	  and a._LogicalDB_key = 1 
+	  and a.prefixPart = "MGI:" 
+	  and a.preferred = 1 ''', None)
 db.sql('create index idx1 on #godone(_Marker_key)', None)
 
 results = db.sql('select * from #godone', 'auto')
@@ -161,6 +136,28 @@ for r in results:
     key = r['_Marker_key']
     value = r
     godone[key] = r
+
+#
+# select all jnumbers that exist from both goref and godone
+#
+results = db.sql('''select b._Marker_key, b.jnumID 
+		    from BIB_GOXRef_View b, #goref g
+		    where b._Marker_key = g._Marker_key
+	            and b.creation_date > dateadd(day,1,g.cdate)
+		    union
+                    select b._Marker_key, b.jnumID 
+		    from BIB_GOXRef_View b, #godone g
+		    where b._Marker_key = g._Marker_key
+	            and b.creation_date > dateadd(day,1,g.cdate)
+		    ''', 'auto')
+
+jnums = {}
+for r in results: 
+    key = r['_Marker_key']
+    value = r['jnumID']
+    if not jnums.has_key(key):
+        jnums[key] = []
+    jnums[key].append(r['jnumID'])
 
 #
 # cache # of GO references per Marker
@@ -188,6 +185,8 @@ for r in results:
 	gorefs[key] = []
     gorefs[key].append(value)
 
+reportCount = 0
+
 # reference genes first
 printResults('select * from #goref order by symbol', 'y')
 
@@ -196,14 +195,8 @@ printResults('select d.* from #godone d ' + \
 	'where not exists (select 1 from #goref r where d._Marker_key = r._Marker_key) ' + \
 	'order by d.symbol', 'n')
 
-referenceGenes = db.sql('select count(*) from #goref', 'auto')[0]['']
-completedGenes = db.sql('select count(*) from #godone', 'auto')[0]['']
-refcompletedGenes = db.sql('select count(r._Marker_key) from #goref r, #godone d where r._Marker_key = d._Marker_key', 'auto')[0]['']
-
 fp.write(CRT * 2)
-fp.write('total number of completed genes: %s\n' % (completedGenes))
-fp.write('total number of reference genes: %s\n' % (referenceGenes))
-fp.write('total number of reference genes that are completed: %s\n' % (refcompletedGenes))
+fp.write('total number of genes: %s\n' % (reportCount))
 
 reportlib.finish_nonps(fp)
 
