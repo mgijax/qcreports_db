@@ -8,19 +8,22 @@
 #       
 # A report of all markers with GO Annotations 
 # where the GO marker is a reference gene
-# OR
+# AND
 # the GO Annotation has a completion date.
+#
+# exclude J:60000,J:73065,J:72245,J:80000,J:72247,J:99680
 #
 # field 1: Gene Symbol
 # field 2: Gene Accession ID
 # field 3: Reference gene? (y/n)
 # field 4: Completion Date
-# field 5: # of outstanding references
-# field 6: list of references that have not yet been annotated to the gene
+# field 5: # of references used
+# field 6: # of outstanding references
+# field 7: list of references that have not yet been annotated to the gene
 #	   whose creation date is greater than the completion date.
 #
 # Usage:
-#       GO_done.py
+#       GO_done_newlit.py
 #
 # History:
 #
