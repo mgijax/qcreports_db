@@ -46,6 +46,9 @@ and p.name not like 'NIA clone%'
 and p.name not like 'RIKEN clone%'
 and p.name not like 'J%'
 and datepart(year, p.creation_date) >= 2002
+and not exists (select 1 from PRB_Reference r 
+		where p._Probe_key = r._Probe_key
+		and r._Refs_key not in (154591))
 go
 
 create index idx1 on #probe(_Probe_key)
@@ -57,6 +60,7 @@ go
 print ""
 print "Probes - No Markers (excluding MGC, IMAGE, RPCI, NIA, RIKEN clones)"
 print "where probe record was created in 2002 or later"
+print "where probe record does not have J:153498 (the EurExpress J#)"
 print ""
 
 select p.name, p.creation_date, p._Probe_key
