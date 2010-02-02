@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec	02/02/2010
+#	- TR10056/remove Mapping, Expression & Nomen
+#
 # dbm	06/20/2007
 #	- new
 #
@@ -49,7 +52,7 @@ PAGE = reportlib.PAGE
 #
 # Create a list of dataset keys to be included in the report.
 #
-datasetKeys = [ 1001, 1004, 1005, 1006 ]
+datasetKeys = [ 1005 ]
 inClause = string.join(map(str,datasetKeys),',')
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
