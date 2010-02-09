@@ -73,10 +73,10 @@ refB = {}
 for r in results:
     refB[r['_Object_key']] = r['counter']
 
+# only interested in the A group
 results = db.sql('''select distinct a._Allele_key, a.symbol 
 		    from ALL_Allele a
 		    where exists (select 1 from #refA r where a._Allele_key = r._Object_key)
-		    or exists (select 1 from #refB r where a._Allele_key = r._Object_key)
 		    order by a.symbol
                  ''', 'auto')
 
