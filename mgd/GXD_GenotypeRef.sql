@@ -76,6 +76,12 @@ and g.alleleCount = a.alleleCount
 go
 
 /* select those that do not have the same allele pairs */
+/* TR 10093 */
+/* should be able to remove the checks on sequenceNum */
+/* however, as long as the sequenceNum are the same, the allele pair */
+/* match should work correctly */
+/* for now, leave the sequenceNum check in... */
+
 select s.*
 into #diffAlleles
 from #shareRef s, #sameCount c
