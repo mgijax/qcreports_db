@@ -6,6 +6,10 @@
 # first, in a csh, source the Configuration file
 # then, run this script
 #
+# 02/23/2010	lec
+#	- TR 10035/add J:155856 to orthology section
+#	- change EQUALS "=" to "in"
+#
 # 10/20/2009	lec
 #	- TR 9894/add a GOA annotation check: setCreatedByClause, GOA_CLAUSE
 #	this report can/should probably be moved to a python report
@@ -15,15 +19,15 @@ ARCHIVE_DIR=$QCARCHIVEDIR/go
 
 #SWISS_PROT="'J:60000'"
 #INTERPRO="'J:72247'"
-#ORTHOLOGY="'J:73065'"
+#ORTHOLOGY="'J:73065','J:155856'"
 #EC="'J:72245'"
 #ROOT="J:73796"
 
-SWISS_PROT=61933
-INTERPRO=73199
-ORTHOLOGY=74017
-EC=73197
-ROOT=74750
+SWISS_PROT="(61933)"
+INTERPRO="(73199)"
+ORTHOLOGY="(74017,156949)"
+EC="(73197)"
+ROOT="(74750)"
 
 MANUAL_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC)"
 
@@ -35,7 +39,7 @@ COUNT_DISTINCT_MARKERS="distinct(a._Object_key)"
 
 COUNT_ALL_REFERENCES="ALL_REFERENCES"
 NOT_IN="not in"
-EQUALS="="
+EQUALS="in"
 
 REPORT=$QCOUTPUTDIR/GO_stats.rpt
 
