@@ -35,12 +35,14 @@
 # 15. NCBI GeneIDs (59)         curator
 # 16. Ensembl ENSMUSG IDs (60)  curator
 # 17. VEGA OTTMUSG IDs (85)     curator
+# 18. Ensembl transcript ENSMUST IDs (133)  curator
+# 19. VEGA transcript OTTMUST IDs (131)     curator
 #
-# 18. DFCI/TIGR IDs (35)        curator
-# 19. DoTS IDs (36)             curator
-# 20. NIA IDs (53)              curator
-
-# 21. Unigene IDs (23)          curator
+# 20. DFCI/TIGR IDs (35)        curator
+# 21. DoTS IDs (36)             curator
+# 22. NIA IDs (53)              curator
+#
+# 23. Unigene IDs (23)          curator
 #
 # Usage:
 #       MGI_ComprehensiveMarkerSequence.py
@@ -48,6 +50,10 @@
 # Used by:
 #
 # History:
+#
+# lec	03/10/2010
+#	- TR10113/add column 18:Ensembl transcript (ldb = 133)
+#	          add column 19:VEGA transcript (ldb = 131)
 #
 # lec	12/18/2008,12/23/2008
 #	- some marker/accession associations select all primary and secondary ids
@@ -105,10 +111,12 @@ fp.write('#  column 14. Deleted genbank IDs (sequences): PRIMARY/SECONDARY\n')
 fp.write('#  column 15. NCBI GeneIDs (59): CURATOR\n')
 fp.write('#  column 16. Ensembl ENSMUSG IDs (60): CURATOR\n')
 fp.write('#  column 17. VEGA OTTMUSG IDs (85): CURATOR\n')
-fp.write('#  column 18. DFCI/TIGR IDs (35): CURATOR\n')
-fp.write('#  column 19. DoTS IDs (36): CURATOR\n')
-fp.write('#  column 20. NIA IDs (53): CURATOR\n')
-fp.write('#  column 21. Unigene IDs (23): CURATOR\n')
+fp.write('#  column 18. Ensembl transcript ENSMUST IDs (133): CURATOR\n')
+fp.write('#  column 19. VEGA transcript OTTMUST IDs (131): CURATOR\n')
+fp.write('#  column 20. DFCI/TIGR IDs (35): CURATOR\n')
+fp.write('#  column 21. DoTS IDs (36): CURATOR\n')
+fp.write('#  column 22. NIA IDs (53): CURATOR\n')
+fp.write('#  column 23. Unigene IDs (23): CURATOR\n')
 fp.write('#\n\n')
 
 # deleted sequences
@@ -326,7 +334,39 @@ for r in results:
 	vegaID[key] = []
     vegaID[key].append(value)
 
-# 18. DFCI/TIGR IDs (35)
+# 18. Ensembl transcript ENSMUST IDs (133)
+
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
+      and a._LogicalDB_key = 133
+      and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
+ensembltransID = {}
+for r in results:
+    key = r['_Marker_key']
+    value = r['accID']
+    if not ensembltransID.has_key(key):
+	ensembltransID[key] = []
+    ensembltransID[key].append(value)
+
+# 19. VEGA transcript OTTMUST IDs (131)
+
+results = db.sql('''select distinct m._Marker_key, a.accID
+      from #markers m, ACC_Accession a
+      where m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
+      and a._LogicalDB_key = 131
+      and not exists (select 1 from #deletedIDs d where a.accID = d.accID and a._LogicalDB_key = d._LogicalDB_key)''', 'auto')
+vegatransID = {}
+for r in results:
+    key = r['_Marker_key']
+    value = r['accID']
+    if not vegatransID.has_key(key):
+	vegatransID[key] = []
+    vegatransID[key].append(value)
+
+# 20. DFCI/TIGR IDs (35)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -342,7 +382,7 @@ for r in results:
 	dfciID[key] = []
     dfciID[key].append(value)
 
-# 19. DoTS IDs (36)
+# 21. DoTS IDs (36)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -358,7 +398,7 @@ for r in results:
 	dotsID[key] = []
     dotsID[key].append(value)
 
-# 20. NIA IDs (53)
+# 22. NIA IDs (53)
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -374,7 +414,7 @@ for r in results:
 	niaID[key] = []
     niaID[key].append(value)
 
-# 21. Unigene IDs (23): CURATOR
+# 23. Unigene IDs (23): CURATOR
 
 results = db.sql('''select distinct m._Marker_key, a.accID
       from #markers m, ACC_Accession a
@@ -507,7 +547,23 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 18. DFCI/TIGR IDs (35)
+	# 18. Ensembl transcript ENSMUST IDs (133)
+
+	if ensembltransID.has_key(key):
+		fp.write(string.join(ensembltransID[key], ' '))
+	else:
+		fp.write(blankTag)
+	fp.write(reportlib.TAB)
+
+	# 19. VEGA trnascrip OTTMUST IDs (131)
+
+	if vegatransID.has_key(key):
+		fp.write(string.join(vegatransID[key], ' '))
+	else:
+		fp.write(blankTag)
+	fp.write(reportlib.TAB)
+
+	# 20. DFCI/TIGR IDs (35)
 
 	if dfciID.has_key(key):
 		fp.write(string.join(dfciID[key], ' '))
@@ -515,7 +571,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 19. DoTS IDs (36)
+	# 21. DoTS IDs (36)
 
 	if dotsID.has_key(key):
 		fp.write(string.join(dotsID[key], ' '))
@@ -523,7 +579,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 20. NIA IDs (53)
+	# 22. NIA IDs (53)
 
 	if niaID.has_key(key):
 		fp.write(string.join(niaID[key], ' '))
@@ -531,7 +587,7 @@ for r in results:
 		fp.write(blankTag)
 	fp.write(reportlib.TAB)
 
-	# 21. Unigene IDs (23)
+	# 23. Unigene IDs (23)
 
 	if unigeneID.has_key(key):
 		fp.write(string.join(unigeneID[key], ' '))
