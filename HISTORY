@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-3-3-3
+DATE: 03/10/2010
+STAFF: lec
+CHANGES:
+TR10113/MGI_ComprehensiveMarkerSequence.py
+  added fields 18 & 19
+
 TAG: qcreports_db-4-3-3-2
 DATE: 03/03/2010
 STAFF: lec
