@@ -19,6 +19,10 @@
 #
 # History:
 #
+# 03/16/2010	lec
+#	- TR10126/modify this report such that column "B" is only counting "Used-FC" references 
+#         and exclude ""not used" + "expression only" + "reviewed" from the count.
+#
 # 02/04/2010	lec
 #       - created
 #
@@ -42,7 +46,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Alleles with most uncoded references', os.environ['QCOUTPUTDIR'])
 
 fp.write('     A = # of "priority indexed" + "indexed"' + CRT)
-fp.write('     B = # of "used-fc" + "not used" + "expression only" + "reviewed"' + CRT)
+fp.write('     B = # of "used-fc"' + CRT)
 fp.write('     ration of A/B' + 2*CRT)
 
 db.sql('''select distinct m._Object_key, counter = count(m._Refs_key)
@@ -64,7 +68,7 @@ db.sql('''select distinct m._Object_key, counter = count(m._Refs_key)
           from MGI_Reference_Assoc m, MGI_RefAssocType t
           where m._MGIType_key = 11
           and m._RefAssocType_key = t._RefAssocType_key
-          and t.assocType in ('Used-FC', 'Not Used', 'Reviewed')
+          and t.assocType in ('Used-FC')
 	  group by m._Object_key
 	  ''', None)
 db.sql('create index idx1 on #refB(_Object_key)', None)
