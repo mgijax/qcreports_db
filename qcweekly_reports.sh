@@ -35,12 +35,12 @@ else if ( $i == "${QCWEEKLY}/MLD_Triage.sql" ) then
 	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
 	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
-else if ( $i == "${QCWEEKLY}/PRB_StrainJAX4.sql" ) then
+else if ( $i == "${QCWEEKLY}/PRB_StrainJAX4.sql" || $i == "${QCWEEKLY}/PRB_StrainJAX5.sql" ) then
 	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCSTRAINARCHIVE}
 	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
 	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 	ln -s ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${QCOUTPUTDIR}/`basename $i`.current.rpt
-else if ( $i == "${QCWEEKLY}/PRB_StrainJAX5.sql" ) then
+else if ( $i == "${QCWEEKLY}/PRB_StrainJAX7.sql" || $i == "${QCWEEKLY}/PRB_StrainJAX8.sql" ) then
 	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCSTRAINARCHIVE}
 	rm -rf ${QCOUTPUTDIR}/`basename $i`.current.rpt
 	reportisql.csh $i ${QCOUTPUTDIR}/`basename $i`.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}

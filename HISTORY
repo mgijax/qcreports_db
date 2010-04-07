@@ -1,3 +1,21 @@
+TAG: qcreports_db-4-3-3-5
+DATE: 04/07/2010
+STAFF: lec
+CHANGES:
+TR10136
+2. Public JAX strains/Alleles used in Genotype/No Strain/Genotype Association
+   (weekly/PRB_StrainJAX2.py)
+
+3. JAX Strains w/ Genotype Associations where the Markers/Alleles of the 
+   Strain record do not exactly match the Markers/Alleles of the Genotype record
+   (mgd/PRB_StrainJAX3.py)
+
+4. New JR##s created in the past week
+   (weekly/PRB_StrainJAX4.sql==>weekly/PRB_StrainJAX7.sql)
+
+5. JR##s with alleles added within the past week 
+   (weekly/PRB_StrainJAX5.sql==>weekly/PRB_StrainJAX8.sql)
+
 TAG: qcreports_db-4-3-3-4
 DATE: 03/16/2010
 STAFF: lec
