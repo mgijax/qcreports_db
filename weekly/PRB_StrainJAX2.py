@@ -47,7 +47,7 @@ def jrs():
 
 
     jrsfp = reportlib.init(sys.argv[0], title, \
-			outputdir = os.environ['QCOUTPUTDIR'], fileExt = 'jrs.' + os.environ['DATE'] + '.rpt')
+			outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.jrs.' + os.environ['DATE'] + '.rpt')
 
     jrsfp.write('JR#' + TAB)
     jrsfp.write('Strain' + TAB)
@@ -80,7 +80,7 @@ def mmnc():
 
 
     fp = reportlib.init(sys.argv[0], title, \
-			outputdir = os.environ['QCOUTPUTDIR'], fileExt = 'mmrrc.' + os.environ['DATE'] + '.rpt')
+			outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmnc.' + os.environ['DATE'] + '.rpt')
 
     fp.write('MMRRC' + TAB)
     fp.write('Strain' + TAB)

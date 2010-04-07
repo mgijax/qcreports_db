@@ -18,7 +18,8 @@ touch ${LOG}
 
 date >> ${LOG}
 
-foreach i (${QCWEEKLY}/*.sql)
+#foreach i (${QCWEEKLY}/*.sql)
+foreach i (${QCWEEKLY}/PRB_StrainJAX*.sql)
 echo $i, `date` | tee -a ${LOG}
 if ( $i == "${QCWEEKLY}/GXD_Triage.sql" ) then
 	mv -f ${QCOUTPUTDIR}/`basename $i`.[0-9]*.rpt ${QCGXDARCHIVE}
@@ -52,7 +53,8 @@ echo $i, `date` | tee -a ${LOG}
 end
 
 cd weekly
-foreach i (*.py)
+#foreach i (*.py)
+foreach i (PRB_StrainJAX*.py)
 if ( $i == "ALL_ImmuneAnnot.py" || $i == "ALL_Progress.py" ) then
         echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.rpt" | tee -a ${LOG}
 	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
@@ -60,11 +62,15 @@ if ( $i == "ALL_ImmuneAnnot.py" || $i == "ALL_Progress.py" ) then
 	$i >>& ${LOG}
 	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
 else if ( $i == "PRB_StrainJAX2.py" ) then
-        echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.rpt" | tee -a ${LOG}
-	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCSTRAINARCHIVE
-	rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
+        echo "$QCOUTPUTDIR/`basename $i py`jrs.[0-9]*.rpt" | tee -a ${LOG}
+        echo "$QCOUTPUTDIR/`basename $i py`mmnc.[0-9]*.rpt" | tee -a ${LOG}
+	mv -f $QCOUTPUTDIR/`basename $i py`jrs.[0-9]*.rpt $QCSTRAINARCHIVE
+	mv -f $QCOUTPUTDIR/`basename $i py`mmnc.[0-9]*.rpt $QCSTRAINARCHIVE
+	rm -rf $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
+	rm -rf $QCOUTPUTDIR/`basename $i py`mmnc.current.rpt
 	$i >>& ${LOG}
-	ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
+	ln -s $QCOUTPUTDIR/`basename $i py`jrs.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
+	ln -s $QCOUTPUTDIR/`basename $i py`mmnc.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`mmnc.current.rpt
 else if ( $i == "MTB_Triage.py" ) then
         echo "$QCOUTPUTDIR/`basename $i py`[0-9]*.txt" | tee -a ${LOG}
 	mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.txt $QCMTBARCHIVE
