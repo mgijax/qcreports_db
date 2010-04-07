@@ -40,9 +40,9 @@ import reportlib
 
 def jrs():
 
-    jrsfp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = 'jrs.rpt')
+    jrsfp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.jrs.rpt')
 
-    title = 'Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
+    title = 'JAX Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
 	    'do not exactly match the Markers/Alleles of the Genotype record.'
 
     jrsfp.write(title + '\n\n')
@@ -69,9 +69,9 @@ def jrs():
 
 def mmnc():
 
-    mmncfp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = 'mmnc.rpt')
+    mmncfp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmnc.rpt')
 
-    title = 'Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
+    title = 'MMNC Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
 	    'do not exactly match the Markers/Alleles of the Genotype record.'
 
     mmncfp.write(title + '\n\n')
@@ -84,7 +84,8 @@ def mmnc():
     db.sql('select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key ' + \
 	    'into #strains ' + \
 	    'from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa ' + \
-	    'where s._Strain_key = g._Strain_key ' + \
+	    'where s.strain like "%/Mmnc" + \
+	    'and s._Strain_key = g._Strain_key ' + \
 	    'and g._Genotype_key = a._Genotype_key ' + \
 	    'and a._Allele_key = aa._Allele_key ' + \
 	    'and aa.isWildType = 0 ' + \
