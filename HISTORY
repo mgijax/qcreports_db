@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-3-4-1
+DATE: 05/13/2010
+STAFF: lec
+CHANGES:
+1) TR10601;mgd/GXD_Stats.py;added J:157819 to list of electronic reports
+
 TAG: qcreports_db-4-3-3-6
 DATE: 04/27/2010
 STAFF: lec
