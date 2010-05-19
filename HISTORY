@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-3-4-2
+DATE: 05/19/2010
+STAFF: dbm
+CHANGES:
+1) TR10039; mgd/MRK_GOIEA.py; Changed shire to prodwww in URL
+2) TR10039; mgd/MRK_GORCA.py; Changed shire to prodwww in URL
+3) TR10039; mgd/MRK_NoGO.py; Changed shire to prodwww in URL
+
 TAG: qcreports_db-4-3-4-1
 DATE: 05/13/2010
 STAFF: lec
