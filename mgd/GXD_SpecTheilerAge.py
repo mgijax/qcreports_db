@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	05/19/2010
+#	- TR 10204; add "decidua basalis" and "decidua capsularis"
+#
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
 #
@@ -94,7 +97,8 @@ db.sql('insert into #temp1 ' + \
           's.age like "embryonic%" ' + \
 	  'and t.stage = 28 ' + \
 	  'and not exists (select 1 from GXD_StructureName sn ' + \
-	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))', None)
+	  'where c._Structure_key = sn._Structure_key ' + \
+	  'and sn.structure in ("placenta", "decidua", "decidua basalis", "decidua capsularis", "uterus"))', None)
 
 #
 # gel lanes with "embryonic day" age; no age ranges; exclude TS 28
@@ -122,7 +126,8 @@ db.sql('insert into #temp1 ' + \
 	  'and g.age not like "%-%" ' + \
 	  'and t.stage = 28 ' + \
 	  'and not exists (select 1 from GXD_StructureName sn ' + \
-	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))', None)
+	  'where c._Structure_key = sn._Structure_key ' + \
+	  'and sn.structure in ("placenta", "decidua", "decidua basalis", "decidua capsularis", "uterus"))', None)
 
 #
 # select specimens/gel lanes and group by assay & specimen
