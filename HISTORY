@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-3-4-3
+DATE: 05/19/2010
+STAFF: lec
+CHANGES:
+1) TR10204; mgd/GXD_SpecTheiler.sql, mgd/GXD_SpecTheilerAge.py
+
 TAG: qcreports_db-4-3-4-2
 DATE: 05/19/2010
 STAFF: dbm

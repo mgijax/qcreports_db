@@ -67,6 +67,26 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'GXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
+fp.write('1. insitu specimens with "embryonic day" age; exclude TS 28\n')
+fp.write('2. insitu specimens with "embryonic" age; include TS 28 for certain structures only\n')
+fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
+fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 28\n')
+fp.write('4. gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only\n')
+fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n\n')
+
+fp.write('select specimens/gel lanes and group by assay & specimen\n')
+fp.write('take the mininum stage dpc value and maximum stage dpc value from all structures annotated to \n')
+fp.write('a particular specimen/gel lane\n\n')
+
+fp.write('we want to make sure the "age" is within the dpc range based on *all* annotated structures of a given\n')
+fp.write('specimen label/gel lane.\n\n')
+
+fp.write('for example:  if a lane has "embryonic day 0.5,22" and structures from Stage 1 and Stage 28,\n')
+fp.write('then dpcMin = dpcMin from Stage 1\n')
+fp.write('then dpcMax = dpcMax from Stage 28\n')
+fp.write('so the age values (0.5 and 22) for this specimen must be between 0.0 and 1500.00\n')
+
+#
 #
 # insitu specimens with "embryonic day" age; exclude TS 28
 #
