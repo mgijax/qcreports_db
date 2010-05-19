@@ -59,7 +59,7 @@ PAGE = reportlib.PAGE
 
 PUBMED = 29
 url = ''
-jfileurl = 'http://shire.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
+jfileurl = 'http://prodwww.informatics.jax.org/usrlocalmgi/jfilescanner/current/get.cgi?jnum='
 
 def writeRecordA(fp, r):
 
