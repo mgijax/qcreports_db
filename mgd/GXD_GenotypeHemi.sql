@@ -21,7 +21,7 @@ go
 create index idx1 on #genotypes(_Genotype_key)
 go
 
-set nocount on
+set nocount off
 go
 
 print ""
