@@ -55,7 +55,7 @@ set nocount off
 go
 
 print ""
-print "specimen results with incomplete image annotations"
+print "Specimen Results with Incomplete Image Annotations"
 print ""
 print "excluding references"
 print "     J:101025 GenePaint"
