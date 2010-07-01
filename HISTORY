@@ -1,3 +1,12 @@
+TAG: qcreports_db-4-3-4-?
+DATE: 07/01/2010
+STAFF: lec
+CHANGES:
+1) TR10208/MRK_GmNoGeneModel.sql
+2) TR10228/ALL_TransgeneDiff.sql
+3) TR10268/GXD_SpecNoImage.sql
+4) TR10270/GXD_SpecImageDiffFigure.sql
+
 TAG: qcreports_db-4-3-4-4
 DATE: 06/22/2010
 STAFF: lec
