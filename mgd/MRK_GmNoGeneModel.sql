@@ -6,7 +6,7 @@ print "   where name begins 'predicted gene'"
 print "   and status = 'official' or 'interim'"
 print ""
 
-select distinct m.symbol, a.accID, substring(h.name,1,50) "old name"
+select distinct a.accID, m.symbol, substring(h.name,1,50) "old name"
 from MRK_Marker m, ACC_Accession a, MRK_History h
 where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
