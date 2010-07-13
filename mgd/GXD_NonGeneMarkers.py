@@ -25,6 +25,9 @@
 #
 # History:
 #
+# lec	07/13/2010
+#	- TR 6839/remove marker type 11
+#
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
 #
@@ -50,18 +53,19 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Non-gene markers with GXD annotations', os.environ['QCOUTPUTDIR'])
 
-fp.write('DNA segments and microRNAs are excluded' + CRT*2)
+fp.write('DNA segments are excluded' + CRT*2)
 
 cmds = []
 
 #
 # Find the distinct markers and marker types in the index.
+# exclude 'gene' and 'dna segments'
 #
 cmds.append('select distinct m.symbol, mt.name ' + \
             'from GXD_Index gi, MRK_Marker m, MRK_Types mt ' + \
             'where gi._Marker_key = m._Marker_key and ' + \
                   'm._Marker_type_key = mt._Marker_Type_key and ' + \
-                  'mt._Marker_Type_key not in (1,2,11) ' + \
+                  'mt._Marker_Type_key not in (1,2) ' + \
             'order by mt.name, m.symbol')
 
 #
@@ -72,7 +76,7 @@ cmds.append('select distinct m.symbol, mt.name ' + \
             'where ge.isForGXD = 1 and ' + \
 		  'ge._Marker_key = m._Marker_key and ' + \
                   'm._Marker_type_key = mt._Marker_Type_key and ' + \
-                  'mt._Marker_Type_key not in (1,2,11) ' + \
+                  'mt._Marker_Type_key not in (1,2) ' + \
             'order by mt.name, m.symbol')
 
 results = db.sql(cmds,'auto')
