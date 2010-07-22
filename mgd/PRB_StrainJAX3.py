@@ -52,17 +52,17 @@ def jrs():
     jrsfp.write(reportlib.CRT)
 
     # JR Strains w/ Genotype Associations; exclude wild type alleles
-    db.sql('select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key ' + \
-	    'into #strains ' + \
-	    'from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa ' + \
-	    'where s._Strain_key = g._Strain_key ' + \
-	    'and g._Genotype_key = a._Genotype_key ' + \
-	    'and a._Allele_key = aa._Allele_key ' + \
-	    'and aa.isWildType = 0 ' + \
-	    'and s._Strain_key = sa._Object_key ' + \
-	    'and sa._MGIType_key = 10 ' + \
-	    'and sa._LogicalDB_key = 22 ' + \
-	    'and sa.preferred = 1 ', None)
+    db.sql('''select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key
+	    into #strains 
+	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
+	    where s._Strain_key = g._Strain_key 
+	    and g._Genotype_key = a._Genotype_key 
+	    and a._Allele_key = aa._Allele_key 
+	    and aa.isWildType = 0 
+	    and s._Strain_key = sa._Object_key 
+	    and sa._MGIType_key = 10 
+	    and sa._LogicalDB_key = 22 
+	    and sa.preferred = 1 ''', None)
     db.sql('create index idx1 on #strains(_Strain_key)', None)
 
     printReport(jrsfp)
@@ -80,19 +80,19 @@ def mmnc():
     mmncfp.write('Genotypes' + reportlib.TAB)
     mmncfp.write(reportlib.CRT)
 
-    # JR Strains w/ Genotype Associations; exclude wild type alleles
-    db.sql('select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key ' + \
-	    'into #strains ' + \
-	    'from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa ' + \
-	    'where s.strain like "%/Mmnc" + \
-	    'and s._Strain_key = g._Strain_key ' + \
-	    'and g._Genotype_key = a._Genotype_key ' + \
-	    'and a._Allele_key = aa._Allele_key ' + \
-	    'and aa.isWildType = 0 ' + \
-	    'and s._Strain_key = sa._Object_key ' + \
-	    'and sa._MGIType_key = 10 ' + \
-	    'and sa._LogicalDB_key = 38 ' + \
-	    'and sa.preferred = 1 ', None)
+    # MMNC Strains w/ Genotype Associations; exclude wild type alleles
+    db.sql('''select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
+	    into #strains 
+	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
+	    where s.strain like "%/Mmnc"
+	    and s._Strain_key = g._Strain_key 
+	    and g._Genotype_key = a._Genotype_key 
+	    and a._Allele_key = aa._Allele_key 
+	    and aa.isWildType = 0 
+	    and s._Strain_key = sa._Object_key 
+	    and sa._MGIType_key = 10 
+	    and sa._LogicalDB_key = 38 
+	    and sa.preferred = 1 ''', None)
     db.sql('create index idx1 on #strains(_Strain_key)', None)
 
     printReport(mmncfp)
