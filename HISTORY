@@ -4,6 +4,9 @@ STAFF: lec
 CHANGES: TR10136
 1) fix mgd/PRB_StrainJAX3.py
 2) fix weekly/PRB_StrainJAX2.py
+3) fix weekly/PRB_StrainJAX7.sql
+4) fix weekly/PRB_StrainJAX8.sql
+select all MMRRC ids, not just MMNC
 
 TAG: qcreports_db-4-3-4-7
 DATE: 07/21/2010
