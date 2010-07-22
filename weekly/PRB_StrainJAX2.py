@@ -78,31 +78,30 @@ def mmnc():
     title = title + '(where Genotypes have been created within the last week)'
 
 
-    fp = reportlib.init(sys.argv[0], title, \
+    mmncfp = reportlib.init(sys.argv[0], title, \
 			outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmnc.' + os.environ['DATE'] + '.rpt')
 
-    fp.write('MMRRC' + TAB)
-    fp.write('Strain' + TAB)
-    fp.write('Genotypes' + CRT*2)
+    mmncfp.write('MMRRC' + TAB)
+    mmncfp.write('Strain' + TAB)
+    mmncfp.write('Genotypes' + CRT*2)
     
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
     db.sql('''
-	select distinct s._Strain_key, strain = substring(s.strain,1,70), a.accID, g._Genotype_key 
+	select distinct s._Strain_key, strain = substring(s.strain,1,70), accID = substring(a.accID,1,6), g._Genotype_key 
 	into #strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
-	and s.strain like '%/Mmnc'
+	and s.strain like "%/Mmnc"
 	and s._Strain_key = a._Object_key 
 	and a._MGIType_key = 10 
 	and a._LogicalDB_key = 38 
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
-	and ag._Genotype_key = g._Genotype_key 
-	and g.creation_date between dateadd(day, -7, "%s") and "%s" 
-	''' % (currentDate, currentDate), None)
+	and ag._Genotype_key = g._Genotype_key ''' + \
+	'and g.creation_date between dateadd(day, -7, "%s") and "%s"' % (currentDate, currentDate), None)
 
-    printReport(fp)
+    printReport(mmncfp)
 
 def printReport(fp):
 
@@ -146,7 +145,7 @@ def printReport(fp):
 #
 
 db.useOneConnection(1)
-jrs()
+#jrs()
 mmnc()
 db.useOneConnection(0)
 
