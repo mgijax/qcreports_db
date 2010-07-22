@@ -3,7 +3,7 @@ set nocount on
 go
 
 declare @printDate varchar(255)
-select @printDate = "MMNC JR#s with alleles added between " + 
+select @printDate = "MMRRC JR#s with alleles added between " + 
 	convert(char(10), dateadd(day, -7, getdate()), 101) + 
 	" and " + convert(char(10), getdate(), 101)
 
@@ -19,7 +19,6 @@ where a._MGIType_key = 10 and
       a._LogicalDB_key = 38 and
       a._Object_key = s._Strain_key and
       s.private = 0 and
-      s.strain like '%/Mmnc' and
       exists (select 1 from PRB_Strain_Marker sm
               where sm._Strain_key = s._Strain_key and
                     sm._Qualifier_key = 615427 and

@@ -19,6 +19,9 @@
 #
 # History:
 #
+# lec	07/22/2010
+#	- TR10136/revised; select all MMRRC
+#
 # lec	04/06/2010
 #	- TR10136/added MMNC/MMRRC report
 #
@@ -71,19 +74,19 @@ def jrs():
 
     printReport(jrsfp)
 
-def mmnc():
+def mmrrc():
 
-    title = 'Public MMNC strains whose Alleles are used in a Genotype'
+    title = 'Public MMRRC strains whose Alleles are used in a Genotype'
     title = title + ' but there is no corresponding Strain/Genotype association\n'
     title = title + '(where Genotypes have been created within the last week)'
 
 
-    mmncfp = reportlib.init(sys.argv[0], title, \
-			outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmnc.' + os.environ['DATE'] + '.rpt')
+    mmrrcfp = reportlib.init(sys.argv[0], title, \
+			outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmrrc.' + os.environ['DATE'] + '.rpt')
 
-    mmncfp.write('MMRRC' + TAB)
-    mmncfp.write('Strain' + TAB)
-    mmncfp.write('Genotypes' + CRT*2)
+    mmrrcfp.write('MMRRC' + TAB)
+    mmrrcfp.write('Strain' + TAB)
+    mmrrcfp.write('Genotypes' + CRT*2)
     
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
@@ -92,16 +95,16 @@ def mmnc():
 	into #strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
-	and s.strain like "%/Mmnc"
 	and s._Strain_key = a._Object_key 
 	and a._MGIType_key = 10 
 	and a._LogicalDB_key = 38 
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
-	and ag._Genotype_key = g._Genotype_key ''' + \
-	'and g.creation_date between dateadd(day, -7, "%s") and "%s"' % (currentDate, currentDate), None)
+	and ag._Genotype_key = g._Genotype_key
+	and g.creation_date between dateadd(day, -7, "%s") and "%s"
+	''' % (currentDate, currentDate), None)
 
-    printReport(mmncfp)
+    printReport(mmrrcfp)
 
 def printReport(fp):
 
@@ -145,7 +148,7 @@ def printReport(fp):
 #
 
 db.useOneConnection(1)
-#jrs()
-mmnc()
+jrs()
+mmrrc()
 db.useOneConnection(0)
 

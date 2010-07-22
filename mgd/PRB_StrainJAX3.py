@@ -74,7 +74,7 @@ def mmrrc():
 
     mmrrcfp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmrrc.rpt')
 
-    title = 'MMNC Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
+    title = 'MMRRC Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
 	    'do not exactly match the Markers/Alleles of the Genotype record.'
 
     mmrrcfp.write(title + '\n\n')
@@ -83,7 +83,7 @@ def mmrrc():
     mmrrcfp.write('Genotypes' + reportlib.TAB)
     mmrrcfp.write(reportlib.CRT)
 
-    # MMNC Strains w/ Genotype Associations; exclude wild type alleles
+    # MMRRC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
 	    into #strains 
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
