@@ -19,6 +19,9 @@
 #
 # History:
 #
+# 07/22/2010	lec
+#	- TR10136 revisited; retrieve all MMRRC not just Mmnc subset
+#
 # 04/06/2010	lec
 #	- TR10136/add MMNC/MMRRC report
 #
@@ -84,8 +87,7 @@ def mmnc():
     db.sql('''select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
 	    into #strains 
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
-	    where s.strain like "%/Mmnc"
-	    and s._Strain_key = g._Strain_key 
+	    where s._Strain_key = g._Strain_key 
 	    and g._Genotype_key = a._Genotype_key 
 	    and a._Allele_key = aa._Allele_key 
 	    and aa.isWildType = 0 
