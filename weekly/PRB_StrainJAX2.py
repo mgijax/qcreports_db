@@ -69,8 +69,8 @@ def jrs():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key 
-	and g.creation_date between dateadd(day, -7, "%s") and "%s" 
-	''' % (currentDate, currentDate), None)
+	and g.creation_date between dateadd(day, -7, "%s") and getdate()
+	''' % (currentDate), None)
 
     printReport(jrsfp)
 
@@ -101,8 +101,8 @@ def mmrrc():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key
-	and g.creation_date between dateadd(day, -7, "%s") and "%s"
-	''' % (currentDate, currentDate), None)
+	and g.creation_date between dateadd(day, -7, "%s") and getdate()
+	''' % (currentDate), None)
 
     printReport(mmrrcfp)
 
