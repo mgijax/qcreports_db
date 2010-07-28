@@ -1,3 +1,10 @@
+TAG: qcreports_db-tr6839-5
+DATE: 07/28/2010
+STAFF: lec
+CHANGES:
+1) MGI_ComprehensiveMarkerSequence.py
+   add Marker Features (MRK_MCV_Cache)
+
 TAG: qcreports_db-tr6839-4
 DATE: 07/21/2010
 STAFF: sc
