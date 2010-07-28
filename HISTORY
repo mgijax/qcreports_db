@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-3-4-11
+DATE: 07/28/2010
+STAFF: lec
+CHANGES: TR10136
+1) fix qcweekly_reports.sh
+
 TAG: qcreports_db-4-3-4-10
 DATE: 07/27/2010
 STAFF: lec
