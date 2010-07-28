@@ -91,7 +91,7 @@ def mmrrc():
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
     db.sql('''
-	select distinct s._Strain_key, strain = substring(s.strain,1,70), accID = substring(a.accID,1,6), g._Genotype_key 
+	select distinct s._Strain_key, strain = substring(s.strain,1,70), a.accID, g._Genotype_key 
 	into #strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
