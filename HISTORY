@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-3-4-13
+DATE: 07/29/2010
+STAFF: lec
+CHANGES: TR10281
+1) BIB_RefsToIndex.py
+2) BIB_NoRef.sql
+add pubmed ids
+
 TAG: qcreports_db-4-3-4-12
 DATE: 07/29/2010
 STAFF: lec
