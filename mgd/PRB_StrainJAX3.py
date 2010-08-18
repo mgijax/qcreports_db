@@ -77,17 +77,18 @@ def mmrrc():
     title = 'MMRRC Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
 	    'do not exactly match the Markers/Alleles of the Genotype record.'
 
-    mmrrcfp.write(title + '\n\n')
-    mmrrcfp.write('MMRRC#' + reportlib.TAB)
-    mmrrcfp.write('Strain' + reportlib.TAB)
-    mmrrcfp.write('Genotypes' + reportlib.TAB)
-    mmrrcfp.write(reportlib.CRT)
+    mmncfp.write(title + '\n\n')
+    mmncfp.write('MMRRC#' + reportlib.TAB)
+    mmncfp.write('Strain' + reportlib.TAB)
+    mmncfp.write('Genotypes' + reportlib.TAB)
+    mmncfp.write(reportlib.CRT)
 
-    # MMRRC Strains w/ Genotype Associations; exclude wild type alleles
+    # MMNC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
 	    into #strains 
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
-	    where s._Strain_key = g._Strain_key 
+	    where s.strain like "%/Mmnc"
+	    and s._Strain_key = g._Strain_key 
 	    and g._Genotype_key = a._Genotype_key 
 	    and a._Allele_key = aa._Allele_key 
 	    and aa.isWildType = 0 

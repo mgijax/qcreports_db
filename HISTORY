@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-0-1
+DATE: 08/18/2010
+STAFF: lec
+CHANGES:
+1) TR6839/merge tr6829 to trunk
+
 TAG: qcreports_db-4-3-4-14
 DATE: 08/18/2010
 STAFF: lec
@@ -48,6 +54,38 @@ CHANGES:
 1) TR9316/genmapload
 2) alomrkload
 3) gocfpload
+
+TAG: qcreports_db-tr6839-5
+DATE: 07/28/2010
+STAFF: lec
+CHANGES:
+1) MGI_ComprehensiveMarkerSequence.py
+   add Marker Features (MRK_MCV_Cache)
+
+TAG: qcreports_db-tr6839-4
+DATE: 07/21/2010
+STAFF: sc
+CHANGES:
+1) added another report name to qcr.html
+
+TAG: qcreports_db-tr6839-3
+DATE: 07/15/2010
+STAFF: sc
+CHANGES:
+1) Added reports to the qcr.html
+
+TAG: qcreports_db-tr6839-2
+DATE: 07/15/2010
+STAFF: sc 
+CHANGES:
+1) MRK_McvAnnotByFeature.py
+2) MRK_GeneNoMcvAnnot.py
+
+TAG: qcreports_db-tr6839-1
+DATE: 07/13/2010
+STAFF: lec
+CHANGES:
+1) GXD_NonGeneMarkers.py
 
 TAG: qcreports_db-tr6839-BP
 DATE: 07/13/2010
