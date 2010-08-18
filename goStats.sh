@@ -6,6 +6,12 @@
 # first, in a csh, source the Configuration file
 # then, run this script
 #
+# 08/18/2010	lec
+#	- TR 10318/add GOC Annotations, Curator Annotations
+#	- Curator Annotations: CURATOR_NOT_IN_CLAUSE
+#	                       EVIDENCE_NOT_IN_CLAUSE
+#	                       created by not in GOC_CLAUSE
+#
 # 02/23/2010	lec
 #	- TR 10035/add J:155856 to orthology section
 #	- change EQUALS "=" to "in"
@@ -17,29 +23,36 @@
 
 ARCHIVE_DIR=$QCARCHIVEDIR/go
 
-#SWISS_PROT="'J:60000'"
-#INTERPRO="'J:72247'"
-#ORTHOLOGY="'J:73065','J:155856'"
-#EC="'J:72245'"
+#SWISS_PROT="J:60000"
+#INTERPRO="J:72247"
+#ORTHOLOGY="J:73065,J:155856"
+#EC="J:72245"
 #ROOT="J:73796"
+#RGD="J:155856"
 
 SWISS_PROT="(61933)"
 INTERPRO="(73199)"
 ORTHOLOGY="(74017,156949)"
 EC="(73197)"
+RGD="(156949)"
 ROOT="(74750)"
 
 MANUAL_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC)"
+EVIDENCE_NOT_IN_CLAUSE="(115,118)"
+CURATOR_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC,$RGD)"
 
 # select created_by/login that begin with "GOA_"
 GOA_CLAUSE="'GOA_%'"
+GOC_CLAUSE="'GOC'"
 
 COUNT_ALL_ANNOTATIONS="a._Annot_key"
 COUNT_DISTINCT_MARKERS="distinct(a._Object_key)"
 
 COUNT_ALL_REFERENCES="ALL_REFERENCES"
 NOT_IN="not in"
-EQUALS="in"
+EQUALS_IN="in"
+NOT_LIKE="not like"
+EQUALS_LIKE="like"
 
 REPORT=$QCOUTPUTDIR/GO_stats.rpt
 
@@ -55,18 +68,29 @@ setRefsClause()
 
 setCreatedByClause()
 {
-   if test "$1" != ""
+   if test "$2" != ""
    then
-      CREATEDBY_CLAUSE="and u.login like $1"
+      CREATEDBY_CLAUSE="and u.login $1 $2"
    else
       CREATEDBY_CLAUSE=""
+   fi
+}
+
+setEvidenceClause()
+{
+   if test "$1" != ""
+   then
+      EVIDENCE_CLAUSE="and e._EvidenceTerm_key not in $1"
+   else
+      EVIDENCE_CLAUSE=""
    fi
 }
 
 getAnnotations()
 {
    setRefsClause "$2" $3
-   setCreatedByClause $4
+   setCreatedByClause "$4" $5
+   setEvidenceClause $6
    
 isql -S${MGD_DBSERVER} -U${MGI_PUBLICUSER} -P${MGI_PUBLICPASSWORD} -w200 << END >> $REPORT
 
@@ -82,6 +106,7 @@ from VOC_Annot a, VOC_Evidence e, MGI_User u
 where a._AnnotType_key  = 1000
 and a._Annot_key = e._Annot_key                                     
 $REFS_CLAUSE
+$EVIDENCE_CLAUSE
 and e._CreatedBy_key = u._User_key
 $CREATEDBY_CLAUSE
 
@@ -215,11 +240,11 @@ getCounts()
    echo "Processing $1 Annotations..."                                                     
    echo "$1 Annotations:"                                                       >> $REPORT
    echo "======================"                                                >> $REPORT
-   getAnnotations           $COUNT_DISTINCT_MARKERS "$2" $3 $4
-   getAnnotationByOntology  $COUNT_DISTINCT_MARKERS "$2" $3 $4
+   getAnnotations           $COUNT_DISTINCT_MARKERS "$2" $3 "$4" $5 $6
+   getAnnotationByOntology  $COUNT_DISTINCT_MARKERS "$2" $3 "$4" $5 $6
    echo "---------------------------------------------------------------------" >> $REPORT
-   getAnnotations           $COUNT_ALL_ANNOTATIONS  "$2" $3 $4
-   getAnnotationByOntology  $COUNT_ALL_ANNOTATIONS  "$2" $3 $4
+   getAnnotations           $COUNT_ALL_ANNOTATIONS  "$2" $3 "$4" $5 $6
+   getAnnotationByOntology  $COUNT_ALL_ANNOTATIONS  "$2" $3 "$4" $5 $6
    echo "*********************************************************************" >> $REPORT
 }
 
@@ -230,14 +255,16 @@ ${MGI_DBUTILS}/text/header.sh ${REPORT} ${MGD_DBSERVER} ${MGD_DBNAME}
 
 getSummary1
 getSummary2
-getCounts "ALL"        $COUNT_ALL_REFERENCES "" ""
-getCounts "HAND"        "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE ""
-getCounts "GOA"         "$NOT_IN"             $MANUAL_NOT_IN_CLAUSE "$GOA_CLAUSE"
-getCounts "SWISS_PROT" $EQUALS               $SWISS_PROT ""
-getCounts "INTERPRO"   $EQUALS               $INTERPRO ""
-getCounts "ORTHOLOGY"  $EQUALS               $ORTHOLOGY ""
-getCounts "EC"         $EQUALS               $EC ""
-getCounts "ROOT"       $EQUALS               $ROOT ""
+getCounts "ALL"        $COUNT_ALL_REFERENCES "" "" "" ""
+getCounts "HAND"       "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "" ""
+getCounts "GOC"        "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "$GOC_CLAUSE" ""
+getCounts "Curator"    "$NOT_IN" $CURATOR_NOT_IN_CLAUSE "$NOT_LIKE" "$GOC_CLAUSE" $EVIDENCE_NOT_IN_CLAUSE
+getCounts "GOA"        "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "$GOA_CLAUSE" ""
+getCounts "SWISS_PROT" $EQUALS_IN $SWISS_PROT "" "" ""
+getCounts "INTERPRO"   $EQUALS_IN $INTERPRO "" "" ""
+getCounts "ORTHOLOGY"  $EQUALS_IN $ORTHOLOGY "" "" ""
+getCounts "EC"         $EQUALS_IN $EC "" "" ""
+getCounts "ROOT"       $EQUALS_IN $ROOT "" "" ""
 
 #Archive the file
 if [ ! -d $ARCHIVE_DIR ]
