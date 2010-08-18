@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec	07/29/2010
+#	- TR10281/add pubmedid
+#
 # lec	02/02/2010
 #	- TR10056/remove Mapping, Expression & Nomen
 #
@@ -69,6 +72,7 @@ results = db.sql('select _DataSet_key, abbreviation ' + \
 # Write the report heading.
 #
 fp.write('J Number')
+fp.write(TAB + 'PubMed ID')
 for r in results:
     fp.write(TAB + r['abbreviation'])
 fp.write(TAB + 'Review')
@@ -80,7 +84,7 @@ fp.write(CRT)
 # specified in the list of keys.
 #
 cmds = []
-cmds.append('select cc.jnumID, cc.isReviewArticle, da._DataSet_key ' + \
+cmds.append('select cc.jnumID, cc.pubmedID, cc.isReviewArticle, da._DataSet_key ' + \
             'into #refds ' + \
             'from BIB_DataSet_Assoc da, BIB_Citation_Cache cc ' + \
             'where da._DataSet_key in (' + inClause + ') and ' + \
@@ -92,13 +96,13 @@ cmds.append('select cc.jnumID, cc.isReviewArticle, da._DataSet_key ' + \
 #
 # Get each J number/dataset pair needed to build the grid.
 #
-cmds.append('select jnumID, _DataSet_key ' + \
+cmds.append('select jnumID, pubmedID, _DataSet_key ' + \
             'from #refds ')
 
 #
 # Get the review indicator for each J number.
 #
-cmds.append('select distinct jnumID, isReviewArticle ' + \
+cmds.append('select distinct jnumID, pubmedID, isReviewArticle ' + \
             'from #refds ' + \
             'order by jnumID')
 
@@ -130,6 +134,7 @@ for r in results[1]:
 #
 for r in results[2]:
     jnumID = r['jnumID']
+    pubmedID = r['pubmedID']
     review = r['isReviewArticle']
     dsKeyList = dict[jnumID]
 
@@ -137,6 +142,7 @@ for r in results[2]:
     # Write the J number in the first column.
     #
     fp.write(jnumID)
+    fp.write(TAB + pubmedID)
 
     #
     # Write an "X" under each dataset in the heading if the J number has
