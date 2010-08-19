@@ -256,7 +256,7 @@ ${MGI_DBUTILS}/text/header.sh ${REPORT} ${MGD_DBSERVER} ${MGD_DBNAME}
 getSummary1
 getSummary2
 getCounts "ALL"        $COUNT_ALL_REFERENCES "" "" "" ""
-getCounts "HAND"       "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "" ""
+getCounts "HAND (non-IEA)"       "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "" ""
 getCounts "GOC"        "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "$GOC_CLAUSE" ""
 getCounts "Curator"    "$NOT_IN" $CURATOR_NOT_IN_CLAUSE "$NOT_LIKE" "$GOC_CLAUSE" $EVIDENCE_NOT_IN_CLAUSE
 getCounts "GOA"        "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "$GOA_CLAUSE" ""
