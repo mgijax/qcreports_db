@@ -311,7 +311,22 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GeneNoMcvAnnot.rpt">Genes with no MCV Annotation</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A>
-<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">Markers with Conflict btwn Marker Type and the MCV Marker Type and Markers annotated to MCV Grouping Terms</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A> 
+<BR>This report contains the following sections:
+    <OL>
+    <LI>Markers  with conflict between the Marker Type and the MCV Marker Type
+    <LI>Markers Annotated to Grouping Terms
+    <LI>Markers with Multiple MCV Annotations
+    </OL>
+<LI>The following logs report:
+    <BR>* Gene Models in MGI that have been obsoleted by the provider 
+    <BR> * Gene Model biotypes not loaded because unable to translate biotype. 
+    <OL>
+    <LI><A HREF="/data/loads/mgi/genemodelload/logs/ensembl_seqgenemodelload.log"> Ensembl Sequence Gene Model Information Load</A>
+    <LI><A HREF="/data/loads/mgi/genemodelload/logs/vega_seqgenemodelload.log"> VEGA Sequence Gene Model Information Load</A>
+<LI><A HREF="/data/loads/mgi/genemodelload/logs/ncbi_seqgenemodelload.log"> NCBI Sequence Gene Model Information Load</A>
+    </OL>
 </OL>
 
 <A NAME="sequence"><B>Sequences</B></A>
@@ -371,6 +386,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/genmapload/index.html">Genetic Map Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
 </OL>
 
 
