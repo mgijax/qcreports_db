@@ -1,8 +1,11 @@
+TAG: qcreports_db-4-4-0-4
 TAG: qcreports_db-4-4-0-3
 DATE: 09/08/2010
 STAFF: lec
 CHANGES:
 1) TR10353/GXD_ImageCheck.py
+2) TR10344/GXD_ImageJPG.sql
+3) TR10344/GXD_SpecTheilerAge.py
 
 TAG: qcreports_db-4-4-0-2
 DATE: 09/07/2010

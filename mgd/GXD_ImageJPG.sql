@@ -4,6 +4,7 @@ go
 
 /* select all Gel Assays with Image Panes that have JPGs (xDim is not null) */
 /* exclude J:80502 */
+/* exclude J:153498/Eurexpress */
 
 select distinct a._Assay_key, a._AssayType_key, i._Refs_key, a._ImagePane_key, ip._Image_key
 into #assays 
@@ -12,11 +13,12 @@ where a._AssayType_key in (1,2,3,4,5,6,8,9)
 and a._ImagePane_key = ip._ImagePane_key 
 and ip._Image_key = i._Image_key 
 and i.xDim is not null
-and a._Refs_key not in (81463)
+and a._Refs_key not in (81463,154591)
 go
 
 /* select all InSitu Assays with Image Panes that have JPGs (xDim is not null) */
 /* exclude J:80502 */
+/* exclude J:153498/Eurexpress */
 
 insert into #assays 
 select distinct s._Assay_key, a._AssayType_key, i._Refs_key, iri._ImagePane_key, ip._Image_key
@@ -27,7 +29,7 @@ and i.xDim is not null
 and iri._Result_key = r._Result_key 
 and r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
-and a._Refs_key not in (81463)
+and a._Refs_key not in (81463,154591)
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
