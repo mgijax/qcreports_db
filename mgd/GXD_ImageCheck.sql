@@ -83,15 +83,23 @@ print ""
 print "non-Elsevier: the first author in the copyright does not match the first author in the paper"
 print ""
 
-select distinct i.jnumID, i.mgiID, r._primary
+set nocount on
+select distinct i.jnumID, i.mgiID, r._primary, 
+       n.note, p = substring(r._primary, 1, charindex(" ", r._primary) - 1)
+into #a
 from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._MGIType_key = 8
 and n._NoteType_key = 1023
 and n.note like "this image is from%"
 and i._Refs_key = r._Refs_key
-and n.note not like "%" + substring(r._primary, 1, charindex(" ", r._primary) - 1) + "%"
 and n._Object_key = i._Image_key
-order by i.jnumID
+go
+set nocount off
+
+select jnumID, mgiID, _primary
+from #a
+where note not like "%" + p + "%"
+order by jnumID
 go
 
 print ""

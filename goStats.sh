@@ -6,6 +6,10 @@
 # first, in a csh, source the Configuration file
 # then, run this script
 #
+# 09/01/2010	lec
+#	- TR 9962/TR10341
+#	"HAND" renamed "Total Non-IEA"
+#
 # 08/18/2010	lec
 #	- TR 10318/add GOC Annotations, Curator Annotations
 #	- Curator Annotations: CURATOR_NOT_IN_CLAUSE
@@ -37,13 +41,14 @@ EC="(73197)"
 RGD="(156949)"
 ROOT="(74750)"
 
-MANUAL_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC)"
+IEA_CLAUSE="($SWISS_PROT,$INTERPRO,$EC)"
 EVIDENCE_NOT_IN_CLAUSE="(115,118)"
 CURATOR_NOT_IN_CLAUSE="($SWISS_PROT,$INTERPRO,$EC,$RGD)"
 
 # select created_by/login that begin with "GOA_"
 GOA_CLAUSE="'GOA_%'"
 GOC_CLAUSE="'GOC'"
+REFGEN_CLAUSE="'RefGenome'"
 
 COUNT_ALL_ANNOTATIONS="a._Annot_key"
 COUNT_DISTINCT_MARKERS="distinct(a._Object_key)"
@@ -256,13 +261,15 @@ ${MGI_DBUTILS}/text/header.sh ${REPORT} ${MGD_DBSERVER} ${MGD_DBNAME}
 getSummary1
 getSummary2
 getCounts "ALL"        $COUNT_ALL_REFERENCES "" "" "" ""
-getCounts "HAND (non-IEA)"       "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "" ""
-getCounts "GOC"        "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "$GOC_CLAUSE" ""
+getCounts "Total Non-IEA"       "$NOT_IN" $IEA_CLAUSE "" "" ""
+getCounts "GOC"        "$NOT_IN" $IEA_CLAUSE $EQUALS_LIKE "$GOC_CLAUSE" ""
 getCounts "Curator"    "$NOT_IN" $CURATOR_NOT_IN_CLAUSE "$NOT_LIKE" "$GOC_CLAUSE" $EVIDENCE_NOT_IN_CLAUSE
-getCounts "GOA"        "$NOT_IN" $MANUAL_NOT_IN_CLAUSE $EQUALS_LIKE "$GOA_CLAUSE" ""
+getCounts "GOA"        "$NOT_IN" $IEA_CLAUSE $EQUALS_LIKE "$GOA_CLAUSE" ""
+getCounts "ORTHOLOGY"  $EQUALS_IN $ORTHOLOGY "" "" ""
+getCounts "RefGenome"  "$NOT_IN" $IEA_CLAUSE $EQUALS_LIKE "$REFGEN_CLAUSE" ""
+getCounts "Total IEA"  $EQUALS_IN $IEA_CLAUSE "" "" ""
 getCounts "SWISS_PROT" $EQUALS_IN $SWISS_PROT "" "" ""
 getCounts "INTERPRO"   $EQUALS_IN $INTERPRO "" "" ""
-getCounts "ORTHOLOGY"  $EQUALS_IN $ORTHOLOGY "" "" ""
 getCounts "EC"         $EQUALS_IN $EC "" "" ""
 getCounts "ROOT"       $EQUALS_IN $ROOT "" "" ""
 
