@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	09/08/2010
+#	- TR 10344; exclude J:153498/Eurexpress
+#
 # lec	05/19/2010
 #	- TR 10204; add "decidua basalis" and "decidua capsularis"
 #
@@ -94,13 +97,14 @@ db.sql('select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.
     'into #temp1 ' + \
     'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
     'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+	  'a._Refs_key not in (154591) and ' + \
 	  'a._Assay_key = s._Assay_key and ' + \
 	  's._Specimen_key = r._Specimen_key and ' + \
           'r._Result_key = i._Result_key and ' + \
           'i._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \
-          's.age like "embryonic day%" ' + \
-	  'and t.stage != 28 ', None)
+          's.age like "embryonic day%" and ' + \
+	  't.stage != 28 ', None)
 
 #
 # insitu specimens with "embryonic" age; include TS 28 for certain structures only
@@ -109,6 +113,7 @@ db.sql('insert into #temp1 ' + \
     'select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
     'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
     'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
+	  'a._Refs_key not in (154591) and ' + \
 	  'a._Assay_key = s._Assay_key and ' + \
           's._Specimen_key = r._Specimen_key and ' + \
           'r._Result_key = i._Result_key and ' + \
@@ -125,8 +130,10 @@ db.sql('insert into #temp1 ' + \
 #
 db.sql('insert into #temp1 ' + \
     'select g._Assay_key, g._GelLane_key, g.age, label = g.laneLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'from GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where g._GelLane_key = l._GelLane_key and ' + \
+    'from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t ' + \
+    'where a._Refs_key not in (154591) and ' + \
+	  'a._Assay_key = g._Assay_key and ' + \
+          'g._GelLane_key = l._GelLane_key and ' + \
           'l._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \
           'g.age like "embryonic day%" and ' + \
@@ -138,8 +145,10 @@ db.sql('insert into #temp1 ' + \
 #
 db.sql('insert into #temp1 ' + \
     'select g._Assay_key, g._GelLane_key, g.age, label = g.laneLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'from GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where g._GelLane_key = l._GelLane_key and ' + \
+    'from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t ' + \
+    'where a._Refs_key not in (154591) and ' + \
+	  'a._Assay_key = g._Assay_key and ' + \
+          'g._GelLane_key = l._GelLane_key and ' + \
           'l._Structure_key = c._Structure_key and ' + \
           'c._Stage_key = t._Stage_key and ' + \
           'g.age like "embryonic%" ' + \
