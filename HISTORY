@@ -1,3 +1,17 @@
+TAG: qcreports_db-4-4-0-7
+DATE: 09/30/2010
+STAFF: dbm
+CHANGES: TR8688 (except for #1)
+1) converted goStats.sh to mgd/GO_stats.py (Lori)
+2) renamed strainChanges.sh to strainChanges.csh
+3) renamed qcnightly_reports.sh to qcnightly_reports.csh and fixed logging
+4) renamed qcweekly_reports.sh to qcweekly_reports.csh and fixed logging
+5) renamed qcmonthly_reports.sh to qcmonthly_reports.csh and fixed logging
+6) mgd/PRB_Strain.py: exclude null symbols when retrieving markers because
+                      it was causing an exception
+7) mgd/PRB_StrainJAX3.py: fixed bug - using undefined file pointer
+8) Configuration.default: fixed spacing and comments
+
 TAG: qcreports_db-4-4-0-6
 TAG: qcreports_db-4-4-0-5
 DATE: 09/16/2010
