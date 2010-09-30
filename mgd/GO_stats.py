@@ -15,8 +15,8 @@
 #
 # 08/18/2010    lec
 #       - TR 10318/add GOC Annotations, Curator Annotations
-#       - Curator Annotations: CURATOR_NOT_IN_CLAUSE
-#                              EVIDENCE_NOT_IN_CLAUSE
+#       - Curator Annotations: CURATOR_CLAUSE
+#                              EVIDENCE_CLAUSE
 #                              created by not in GOC_CLAUSE
 #
 # 02/23/2010    lec
@@ -288,16 +288,16 @@ def writeCount(name):
 	# in "RefGenome" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
 			''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
 			''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
 			''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
 			''), 'auto')
 
    elif name == "ORTHOLOGY":
@@ -368,7 +368,7 @@ def writeCount(name):
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = 'DBINFO')
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 goSummary1()
 goSummary2()
