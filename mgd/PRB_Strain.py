@@ -63,7 +63,7 @@ for r in results:
 
 # Retrieve markers
 
-results = db.sql('select _Strain_key, symbol from PRB_Strain_Marker_View', 'auto')
+results = db.sql('select _Strain_key, symbol from PRB_Strain_Marker_View where symbol is not null', 'auto')
 markers = {}
 for r in results:
 	if markers.has_key(r['_Strain_key']):
