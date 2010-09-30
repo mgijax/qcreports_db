@@ -17,7 +17,6 @@ touch ${LOG}
 date >> ${LOG}
 
 ./strainChanges.sh >>& ${LOG}
-./goStats.sh >>& ${LOG}
 
 foreach i (${QCMGD}/*.sql)
 echo $i, `date` | tee -a ${LOG}
@@ -37,6 +36,11 @@ foreach i (*.py)
 echo $i, `date` | tee -a ${LOG}
 if ( $i == "GXD_Stats.py" ) then
         mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCGXDARCHIVE
+        rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
+        $i >>& ${LOG}
+        ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
+else if ( $i == "GO_stats.py" ) then
+        mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCGOARCHIVE
         rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
         $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
