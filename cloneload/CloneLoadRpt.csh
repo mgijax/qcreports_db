@@ -1,13 +1,13 @@
 #!/bin/csh
 #
-#  CloneLoadRpt.sh
+#  CloneLoadRpt.csh
 ###########################################################################
 #
 #  Purpose:  This script runs the clone loader QC reports.
 #
 #  Usage:
 #
-#      CloneLoadRpt.sh  OutputDir  Server  RADAR  MGD  JobKey
+#      CloneLoadRpt.csh  OutputDir  Server  RADAR  MGD  JobKey
 #
 #      where
 #

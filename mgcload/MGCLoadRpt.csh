@@ -1,13 +1,13 @@
 #!/bin/csh
 #
-#  GBcDNALoadRpt.sh
+#  MGCLoadRpt.csh
 ###########################################################################
 #
-#  Purpose:  This script runs the GenBank EST cDNA clone load QC reports.
+#  Purpose:  This script runs the MGC load QC reports.
 #
 #  Usage:
 #
-#      GBcDNALoadRpt.sh  OutputDir  Server  RADAR  JobKey
+#      MGCLoadRpt.csh  OutputDir  Server  RADAR  JobKey
 #
 #      where
 #

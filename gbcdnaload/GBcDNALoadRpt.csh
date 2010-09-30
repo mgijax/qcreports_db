@@ -1,20 +1,19 @@
 #!/bin/csh
 #
-#  AssocLoadRpt.sh
+#  GBcDNALoadRpt.csh
 ###########################################################################
 #
-#  Purpose:  This script runs the Association loader QC reports.
+#  Purpose:  This script runs the GenBank EST cDNA clone load QC reports.
 #
 #  Usage:
 #
-#      AssocLoadRpt.sh  OutputDir  Server  RADAR  MGD  JobKey
+#      GBcDNALoadRpt.csh  OutputDir  Server  RADAR  JobKey
 #
 #      where
 #
 #          OutputDir is the directory where the report files are created.
 #          Server is the database server to use.
 #          RADAR is the name of the RADAR database to use.
-#          MGD is the name of the MGD database to use.
 #          JobKey is the value that identifies the records in the RADAR
 #                 QC report tables that are to be processed.
 #
@@ -50,15 +49,14 @@ cd `dirname $0` && source ../Configuration
 #
 #  Verify the argument(s) to the shell script.
 #
-if  ( ${#argv} != 5 ) then
-    echo "Usage: $0  OutputDir  Server  RADAR  MGD  JobKey"
+if  ( ${#argv} != 4 ) then
+    echo "Usage: $0  OutputDir  Server  RADAR  JobKey"
     exit 1
 else
     setenv OUTPUTDIR $1
     setenv SERVER $2
     setenv RADAR $3
-    setenv MGD $4
-    setenv JOBKEY $5
+    setenv JOBKEY $4
 endif
 
 #
@@ -67,7 +65,7 @@ endif
 cd `dirname $0`
 
 foreach RPT (*.py)
-    ${RPT} ${OUTPUTDIR} ${SERVER} ${RADAR} ${MGD} ${JOBKEY}
+    ${RPT} ${OUTPUTDIR} ${SERVER} ${RADAR} ${JOBKEY}
 end
 
 exit 0
