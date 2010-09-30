@@ -22,16 +22,16 @@ setenv QCREPORTDIR		/data/reports/qcreports_db
 setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 
 # report log directory
-setenv QCLOGSDIR           	${QCREPORTDIR}/logs
+setenv QCLOGSDIR		${QCREPORTDIR}/logs
 
 # archive output directory
 setenv QCARCHIVEDIR		${QCREPORTDIR}/archive
 
 # Allele archive directory
-setenv QCALLELEARCHIVE          ${QCARCHIVEDIR}/alleles
+setenv QCALLELEARCHIVE		${QCARCHIVEDIR}/alleles
 
 # Strain archive directory
-setenv QCSTRAINARCHIVE          ${QCARCHIVEDIR}/strain
+setenv QCSTRAINARCHIVE		${QCARCHIVEDIR}/strain
 
 # mtb-specific reports directory
 setenv QCMTBARCHIVE		${QCARCHIVEDIR}/mtb
@@ -49,16 +49,16 @@ setenv QCGXDARCHIVE		${QCARCHIVEDIR}/gxd
 setenv QCMLDARCHIVE		${QCARCHIVEDIR}/mapping
 
 # FASTA NOMEN DB File
-setenv NOMENFASTA               gbmusnomen
+setenv NOMENFASTA		gbmusnomen
 
-# mgd-specific reports directory
+# daily reports directory
 setenv QCMGD			${QCRPTS}/mgd
 
 # weekly reports directory
-setenv QCWEEKLY                 ${QCRPTS}/weekly
+setenv QCWEEKLY			${QCRPTS}/weekly
 
 # monthly reports directory
-setenv QCMONTHLY                ${QCRPTS}/monthly
+setenv QCMONTHLY		${QCRPTS}/monthly
 
 # EI Log files
 setenv EILOGFILES		/userhome
@@ -68,4 +68,3 @@ setenv EILOGNAME		.ei-log
 
 # Date
 setenv DATE `date '+%Y-%m-%d'`
-
