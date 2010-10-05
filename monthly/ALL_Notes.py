@@ -333,7 +333,7 @@ def markerNotes():
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], '', os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], 'Allele Notes with HTML errors', os.environ['QCOUTPUTDIR'], printHeading = None)
 markerNotes()
 mpNotes()
 alleleNotes()
