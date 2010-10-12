@@ -6,6 +6,10 @@
 #
 # Report:
 #       
+# 10/12/2010	lec
+#	- add GOA/Human to ORTHOLOGY_CLAUSE (J:164563/165659)
+#	- add GOA/Human to CURATOR_CLAUSE (J:164563/165659)
+#
 # 09/30/2010	lec
 #	- moved goStats.sh to python
 #
@@ -43,8 +47,8 @@ PAGE = reportlib.PAGE
 #ROOT="J:73796"
 ROOT_CLAUSE="(74750)"
 
-#ORTHOLOGY="J:73065,J:155856"/74017/156949
-ORTHOLOGY_CLAUSE="(74017,156949)"
+#ORTHOLOGY="J:73065,J:155856,J:164563"/74017/156949/165659
+ORTHOLOGY_CLAUSE="(74017,156949,165659)"
 
 #SWISS_PROT="J:60000"
 SWISSPROT_CLAUSE="(61933)"
@@ -59,8 +63,10 @@ EC_CLAUSE="(73197)"
 IEA_CLAUSE="(61933,73199,73197)"
 
 #RGD="J:155856"/156949
+#UniProtKB="J:164563"/165659
 #SWISS_PROT, INTERPRO, EC, RGD
-CURATOR_CLAUSE="(61933,73199,73197,156949)"
+# curator clauses that we exclude
+CURATOR_CLAUSE="(61933,73199,73197,156949,165659)"
 
 # 115 = IEA
 # 118 = ND
@@ -69,6 +75,8 @@ EVIDENCE_CLAUSE="(115,118)"
 # MGI_User.login names
 GOA_CLAUSE="'GOA_%'"
 GOC_CLAUSE="'GOC'"
+GOA_HUMAN_CLAUSE="'UniProtKB'"
+GORAT_CLAUSE="'RGD'"
 REFGENOME_CLAUSE="'RefGenome'"
 GO_CLAUSE="('GOC', 'RefGenome') "
 
@@ -300,6 +308,40 @@ def writeCount(name):
 			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
 			''), 'auto')
 
+   elif name == "GO/Rat":
+	# not in IEA references
+	# in "RGD" user
+
+       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GORAT_CLAUSE), \
+			''), 'auto')
+       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GORAT_CLAUSE), \
+			''), 'auto')
+       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GORAT_CLAUSE), \
+			''), 'auto')
+       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GORAT_CLAUSE), \
+			''), 'auto')
+
+   elif name == "GOA/Human":
+	# not in IEA references
+	# in "UniProtKB" user
+
+       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+			''), 'auto')
+       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+			''), 'auto')
+       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+			''), 'auto')
+       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
+			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+			''), 'auto')
+
    elif name == "ORTHOLOGY":
 	# in orthology reference
 
@@ -377,6 +419,8 @@ writeCount('Total Non-IEA')
 writeCount('GOC')
 writeCount('Curator')
 writeCount('GOA')
+writeCount('GO/Rat')
+writeCount('GOA/Human')
 writeCount('ORTHOLOGY')
 writeCount('RefGenome')
 writeCount('Total IEA')
