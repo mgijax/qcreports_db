@@ -128,10 +128,14 @@ results = db.sql(cmds, 'auto')
 
 rows = 0
 for r in results[-1]:
+    # incomingValue might be null
+    incomingValue = r['incomingValue']
+    if incomingValue == None:
+	incomingValue = "Null"
     fp.write(string.ljust(r['accID'], 16) + \
              string.ljust(r['attrName'], 19) + \
              string.ljust(r['resolvedValue'], 35) + \
-             string.ljust(r['incomingValue'], 35) + \
+             string.ljust(incomingValue, 35) + \
 	     CRT)
     rows = rows + 1
 
