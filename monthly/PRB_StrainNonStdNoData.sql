@@ -31,13 +31,17 @@ where s._Strain_key = a._Strain_key)
 and not exists (select 1 from RI_RISet a
 where s._Strain_key = a._Strain_key_1
 or s._Strain_key = a._Strain_key_2)
+and not exists (select 1 from MGI_Note n
+where s._Strain_key = n._Object_key
+and n._MGIType_key = 10
+and n._NoteType_key in (1011,1012,1013))
 go
 
 set nocount off
 go
 
 print ""
-print "Non-Standard Strains with no JR# and no data attached"
+print "Non-Standard Strains with no external IDs, no data attached and no notes in any notes field"
 print ""
 
 select s.strain, accID = null, accType = "Other"
