@@ -78,7 +78,7 @@ GOC_CLAUSE="'GOC'"
 GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
 REFGENOME_CLAUSE="'RefGenome'"
-GO_CLAUSE="('GOC', 'RefGenome') "
+GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB') "
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
