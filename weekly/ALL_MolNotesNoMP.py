@@ -76,7 +76,7 @@ fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n\n')
 fp.write(string.ljust('Approval', 15) + \
          string.ljust('Acc ID', 15) + \
          string.ljust('Allele Type', 45) + \
-         string.ljust('Symbol', 35) + \
+         string.ljust('Symbol', 45) + \
          string.ljust('References', 15) + CRT*2)
 
 db.sql('select a._Allele_key, a.symbol, a.approval_date, alleleType = t.term ' + \
@@ -141,7 +141,7 @@ for r in results:
     fp.write(string.ljust(r['cDate'], 15) + \
              string.ljust(r['accID'], 15) + \
              string.ljust(r['alleleType'], 45) + \
-             string.ljust(r['symbol'], 35))
+             string.ljust(r['symbol'], 45))
 
     # total number of references associated with each alleles
     fp.write(string.ljust(str(len(refs[r['_Allele_key']])), 15))
