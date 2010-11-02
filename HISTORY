@@ -101,7 +101,6 @@ CHANGES:
    BIB_NoRef.sql
    BIB_NeedNLM1.sql
    BIB_InPress.sql
-   BIB_NoAbstract.sql
 
 TAG: qcreports_db-4-4-0-13
 DATE: 10/27/2010
