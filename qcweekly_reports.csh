@@ -25,11 +25,6 @@ foreach i (*.sql)
         rm -rf ${QCOUTPUTDIR}/$i.current.rpt
         reportisql.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
         ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
-    else if ( $i == "NOM_Triage.sql" ) then
-        mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCNOMENARCHIVE}
-        rm -rf ${QCOUTPUTDIR}/$i.current.rpt
-        reportisql.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
-        ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
     else if ( $i == "MLD_Triage.sql" ) then
         mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCMLDARCHIVE}
         rm -rf ${QCOUTPUTDIR}/$i.current.rpt
@@ -52,12 +47,7 @@ end
 
 foreach i (*.py)
     echo `date`: $i | tee -a ${LOG}
-    if ( $i == "ALL_ImmuneAnnot.py" || $i == "ALL_Progress.py" ) then
-        mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
-        rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
-        $i >>& ${LOG}
-        ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
-    else if ( $i == "PRB_StrainJAX2.py" ) then
+    if ( $i == "PRB_StrainJAX2.py" ) then
         mv -f $QCOUTPUTDIR/`basename $i py`jrs.[0-9]*.rpt $QCSTRAINARCHIVE
         mv -f $QCOUTPUTDIR/`basename $i py`mmrrc.[0-9]*.rpt $QCSTRAINARCHIVE
         rm -rf $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
