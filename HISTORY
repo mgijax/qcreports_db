@@ -67,6 +67,10 @@ CHANGES:
    HMD_HomoloGene3.sql
    HMD_HomoloGene4.sql
    HMD_RatNoSeq.sql
+   HMD_Singletons.sql
+   HMD_HomoloGene2A.sql
+   HMD_HomoloGene2B.sql
+   MRK_NomenRat.sql
 
    PRB_StrainJAX1.py
    PRB_StrainJAX6.sql
@@ -83,8 +87,7 @@ CHANGES:
    GO_gp2protein_SWP_TR.py
 
    NOM_Triage.sql
-   HMD_SymbolDiffs2.py
-   HMD_SymbolDiffs4.py
+   HMD_SymbolDiffs.py (HMD_SymbolDiffs2, HMD_SymbolDiffs4)
    MRK_ESTSynonyms.sql
    HMD_RIKEN.sql
    MRK_Synonym_J94790.sql
