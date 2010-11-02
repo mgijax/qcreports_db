@@ -1,3 +1,99 @@
+TAG: qcreports_db-4-4-0-?
+DATE: 10/26/2010
+STAFF: lec
+CHANGES:
+1) TR10434/archive/remove cleanup
+
+2) moved to monthly
+   SEQ_RepTransGenomic.py
+   GXD_GenotypeHemi.sql
+   GXD_KnockInGene.sql
+   GXD_DupPrimers.sql
+   GXD_SeqID.py
+   PRB_Reference.sql
+   GXD_Transgenic.py
+
+3) moved to weekly
+
+   GXD_NonGeneMarkers.py
+   GXD_FullCode.py
+   GXD_GenotypeNA.sql
+   GXD_GelBand.py
+   GXD_SpecNoImage.sql
+   GXD_SpecImageDiffFigure.sql
+   GXD_NoSequence.py
+
+4) archived
+
+   ALL_GeneTrap.py
+   MRK_MarkerClip.sql
+   ALL_Priority.py
+   ALL_ImmuneAnnot.py
+   ALL_TransgeneDiff.sql
+
+   MLD_Chromosome.sql
+   MLD_Cross.sql
+   MLD_DupMarker.sql
+   MLD_Marker.sql
+   MLD_NomenText.sql
+
+   PRB_CellLine.sql
+   PRB_Tissue.sql
+   PRB_NoGenBank.sql
+   PRB_NoMarkerSeq.sql
+   MGI_ProblemSequence.py
+
+   MRK_OffsetsMLDP.sql
+   MRK_Offsets.sql
+   MRK_OffsetsUN.sql
+   MRK_MappedNoRef.sql
+   MRK_Matrix.sql
+   MRK_LowerSeq.sql
+   MRK_AssigningRef.py
+   MRK_MGC.sql
+   MRK_NoSequence.py
+   MRK_TranscriptNoSP.sql
+
+   HMD_References2.sql
+   HMD_References5.sql
+   HMD_SpeciesCount.sql
+   HMD_Duplicates
+   HMD_ConservedUN
+   HMD_NoMouseSeq.sql
+   HMD_MouseSeq1.py
+   HMD_MouseSeq2.sql
+   HMD_NoMouse.sql
+   HMD_HomoloGene1.sql
+   HMD_HomoloGene3.sql
+   HMD_HomoloGene4.sql
+   HMD_RatNoSeq.sql
+
+   PRB_StrainJAX1.py
+   PRB_StrainJAX6.sql
+
+   PRB_Strain_PrivateRef.sql
+   PRB_Strain3.py
+
+   ACC_ActualDB.sql
+   ACC_Accession.sql
+
+   PRB_Marker.sql
+   GXD_RefNoTitle.py
+
+   BIB_NoRef.sql
+
+   GO_gp2protein_SWP_TR.py
+
+   NOM_Triage.sql
+   HMD_SymbolDiffs2.py
+   HMD_SymbolDiffs4.py
+   MRK_ESTSynonyms.sql
+   HMD_RIKEN.sql
+   MRK_Synonym_J94790.sql
+   MRK_Synonym_Verify.sql
+   MRK_PirsfPseudogene.sql
+   NOMEN_Uninformative_FAM_Markers.py
+
 TAG: qcreports_db-4-4-0-13
 DATE: 10/27/2010
 STAFF: sc

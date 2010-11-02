@@ -58,7 +58,7 @@ PAGE = reportlib.PAGE
 datasetKeys = [ 1005 ]
 inClause = string.join(map(str,datasetKeys),',')
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 #
 # Get the dataset abbreviations to be used for the report heading.
