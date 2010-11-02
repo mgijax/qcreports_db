@@ -225,18 +225,12 @@ def report2(fp, includeRiken):
 #
 
 fp1 = reportlib.init('HMD_SymbolDiffs1', outputdir = os.environ['QCOUTPUTDIR'])
-fp2 = reportlib.init('HMD_SymbolDiffs2', outputdir = os.environ['QCOUTPUTDIR'])
 runQueries(includeRiken = 0)
 report1(fp1, includeRiken = 0)
-report2(fp2, includeRiken = 0)
 reportlib.finish_nonps(fp1)
-reportlib.finish_nonps(fp2)
 
 fp3 = reportlib.init('HMD_SymbolDiffs3', outputdir = os.environ['QCOUTPUTDIR'])
-fp4 = reportlib.init('HMD_SymbolDiffs4', outputdir = os.environ['QCOUTPUTDIR'])
 runQueries(includeRiken = 1)
 report1(fp3, includeRiken = 1)
-report2(fp4, includeRiken = 1)
 reportlib.finish_nonps(fp3)
-reportlib.finish_nonps(fp4)
 
