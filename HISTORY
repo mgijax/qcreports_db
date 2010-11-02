@@ -80,8 +80,6 @@ CHANGES:
    PRB_Marker.sql
    GXD_RefNoTitle.py
 
-   BIB_NoRef.sql
-
    GO_gp2protein_SWP_TR.py
 
    NOM_Triage.sql
@@ -94,12 +92,13 @@ CHANGES:
    MRK_PirsfPseudogene.sql
    NOMEN_Uninformative_FAM_Markers.py
 
-   ??
+   MRK_QTL.py
+   MRK_New_QTLS.py
+
+   BIB_NoRef.sql
    BIB_NeedNLM1.sql
    BIB_InPress.sql
    BIB_NoAbstract.sql
-   MRK_QTL.py
-   MRK_New_QTLS.py
 
 TAG: qcreports_db-4-4-0-13
 DATE: 10/27/2010
