@@ -94,6 +94,13 @@ CHANGES:
    MRK_PirsfPseudogene.sql
    NOMEN_Uninformative_FAM_Markers.py
 
+   ??
+   BIB_NeedNLM1.sql
+   BIB_InPress.sql
+   BIB_NoAbstract.sql
+   MRK_QTL.py
+   MRK_New_QTLS.py
+
 TAG: qcreports_db-4-4-0-13
 DATE: 10/27/2010
 STAFF: sc
