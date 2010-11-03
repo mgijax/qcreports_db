@@ -23,14 +23,7 @@ cd ${QCMGD}
 
 foreach i (*.sql)
     echo `date`: $i | tee -a ${LOG}
-    if ( $i == "MRK_MarkerClip.sql" ) then
-        mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCALLELEARCHIVE}
-        rm -rf ${QCOUTPUTDIR}/$i.current.rpt
-        reportisql.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
-        ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
-    else
-        reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
-    endif
+    reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 foreach i (*.py)
