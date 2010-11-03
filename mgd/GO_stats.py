@@ -6,6 +6,10 @@
 #
 # Report:
 #       
+#
+# 11/03/2010	lec
+#	- TR 10437/marker type = 'gene' only
+#
 # 10/12/2010	lec
 #	- add GOA/Human to ORTHOLOGY_CLAUSE (J:164563/165659)
 #	- add GOA/Human to CURATOR_CLAUSE (J:164563/165659)
@@ -103,9 +107,11 @@ and e._CreatedBy_key = u._User_Key
 #
 byGene2 = '''
 select d.name, terms = convert (char(6), count(distinct a._Object_key))
-from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, MRK_Marker m
 where a._AnnotType_key = 1000
 and a._Term_key = n._Object_key
+and a._Object_key = m._Marker_key
+and m._Marker_Type_key in (1)
 and d._DAG_Key = n._DAG_Key
 and a._Annot_key = e._Annot_key
 and e._CreatedBy_key = u._User_Key
@@ -120,9 +126,11 @@ group by d.name
 #
 byAnnot1 = '''
 select count(a._Annot_key)
-from VOC_Annot a, VOC_Evidence e, MGI_User u
+from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
 where a._AnnotType_key  = 1000
 and a._Annot_key = e._Annot_key
+and a._Object_key = m._Marker_key
+and m._Marker_Type_key in (1)
 and e._CreatedBy_key = u._User_Key
 %s
 %s
@@ -134,9 +142,11 @@ and e._CreatedBy_key = u._User_Key
 #
 byAnnot2 = '''
 select d.name, terms = convert (char(6), count(a._Annot_key))
-from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, MRK_Marker m
 where a._AnnotType_key = 1000
 and a._Term_key = n._Object_key
+and a._Object_key = m._Marker_key
+and m._Marker_Type_key in (1)
 and d._DAG_Key = n._DAG_Key
 and a._Annot_key = e._Annot_key
 and e._CreatedBy_key = u._User_Key
