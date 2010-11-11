@@ -43,7 +43,8 @@ end
 
 echo `date`: Copy reports | tee -a ${LOG}
 cd ${QCOUTPUTDIR}
-foreach i (NOMEN_Reserved.rpt NOMEN_Pending.sql.rpt HMD_SymbolDiffs2.rpt)
+#foreach i (NOMEN_Reserved.rpt NOMEN_Pending.sql.rpt HMD_SymbolDiffs2.rpt)
+foreach i (NOMEN_Reserved.rpt NOMEN_Pending.sql.rpt)
     rcp $i ${HUGOWEBDIR}
     cp $i ${HUGOFTPDIR}
 end

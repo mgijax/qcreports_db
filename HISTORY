@@ -1,9 +1,13 @@
+TAG: qcreports_db-4-4-0-18
 TAG: qcreports_db-4-4-0-17
 TAG: qcreports_db-4-4-0-16
 DATE: 11/02/2010/ 11/11/2010
 STAFF: lec
 CHANGES:
 1) TR10437/GO_stats.py
+2) temporarly removed HMD_SymbolDiffs2 until we can
+   resolved whether this report is actually used
+   HMD_SymbolDiffs.py (HMD_SymbolDiffs2, HMD_SymbolDiffs4)
 
 TAG: qcreports_db-4-4-0-15
 TAG: qcreports_db-4-4-0-14
