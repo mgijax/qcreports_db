@@ -93,8 +93,10 @@ byEvidenceCode = 'and e._EvidenceTerm_key %s'
 #
 byGene1 = '''
 select count(distinct a._Object_key)
-from VOC_Annot a, VOC_Evidence e, MGI_User u
+from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
 where a._AnnotType_key  = 1000
+and a._Object_key = m._Marker_key
+and m._Marker_Type_key in (1)
 and a._Annot_key = e._Annot_key
 and e._CreatedBy_key = u._User_Key
 %s
