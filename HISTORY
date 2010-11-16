@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-4-0-20
+DATE: 11/16/2010
+STAFF: lec
+CHANGES:
+1) TR10451/retire
+   GXD_SpecNoImage.sql
+   GXD_SpecImageDiffFigure.sql
+
 TAG: qcreports_db-4-4-0-19
 DATE: 11/16/2010
 STAFF: lec
