@@ -48,9 +48,6 @@ setenv QCGXDARCHIVE		${QCARCHIVEDIR}/gxd
 # MLD-specific reports directory
 setenv QCMLDARCHIVE		${QCARCHIVEDIR}/mapping
 
-# FASTA NOMEN DB File
-setenv NOMENFASTA		gbmusnomen
-
 # daily reports directory
 setenv QCMGD			${QCRPTS}/mgd
 

@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-4-0-19
+DATE: 11/16/2010
+STAFF: lec
+CHANGES:
+1) TR10458/remove copy of :/data/seqdbs/blast/gb/gbmusnomen/gbmusnomen
+   to /usr/local/mgi/private/www/hugo/gbmusnomen
+
 TAG: qcreports_db-4-4-0-18
 TAG: qcreports_db-4-4-0-17
 TAG: qcreports_db-4-4-0-16
