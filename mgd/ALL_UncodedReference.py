@@ -87,7 +87,7 @@ results = db.sql('''select distinct a._Allele_key, a.symbol
 for r in results:
 
      alleleKey = r['_Allele_key']
-     fp.write(string.ljust(r['symbol'], 50))
+     fp.write(string.ljust(r['symbol'], 50) + TAB)
 
      a = 0
      b = 0
