@@ -47,8 +47,9 @@ print ""
 
 select distinct i.jnumID + ";" + i.figureLabel
 from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
-where i._Image_key = n._Object_key
-and n._MGIType_key = 12
+where i._MGIType_key = 8
+and i._Image_key = n._Object_key
+and n._MGIType_key = 9
 and n._NoteType_key = 1023
 and n._Note_key = nc._Note_key
 and nc.note like "%(||)%"

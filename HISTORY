@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-0-22
+DATE: 11/24/2010
+STAFF: lec
+CHANGES:
+1) TR10468/GXD_ImageCheck.sql; copyright bug
+
 TAG: qcreports_db-4-4-0-21
 DATE: 11/23/2010
 STAFF: lec
