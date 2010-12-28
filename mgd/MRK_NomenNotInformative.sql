@@ -26,48 +26,43 @@ go
 create index idx1 on #markers(_Marker_key)
 go
 
-select m.*, a.accID
+select m.*
 into #sequences1
-from #markers m, ACC_Accession a, ACC_AccessionReference r
+from #markers m
+where exists (select 1 from ACC_Accession a, ACC_AccessionReference r
 where m._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 9
 and a._Accession_key = r._Accession_key
-and r._Refs_key = 64047
+and r._Refs_key = 64047)
 go
 
 create index idx1 on #sequences1(_Marker_key)
 go
 
 /* find pubmed ids by EntrezGene ID */
+/* exclude certain pubmed ids */
 
-select s.*, refID = c.pubMedID
+select s.*
 into #sequencesFinal
-from #sequences1 s, ACC_Accession a, radar..DP_EntrezGene_PubMed c
+from #sequences1 s
+where exists (select 1 from ACC_Accession a, radar..DP_EntrezGene_PubMed c
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 55
-and a.accID = c.geneID
+and a.accID = c.geneID)
 union
-select s.*, null
-from #sequences1 s, ACC_Accession a
+select s.*
+from #sequences1 s
+where exists (select 1 from ACC_Accession a 
 where s._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 55
 and not exists (select 1 from radar..DP_EntrezGene_PubMed c
-where a.accID = c.geneID)
+where a.accID = c.geneID))
 go
 
-create index idx1 on #sequencesFinal(refID)
-create index idx2 on #sequencesFinal(_Marker_key)
-go
-
-/* exclude certain pubmed ids */
-
-delete from #sequencesFinal
-where refID in ('10349636','11042159','11076861','11217851','12477932','10922068','8889548','7671812','11161784','12466851','14621295',
-'16141072', '16141073', '11420682', '9630514', '12775843', '15576676', '15664164', '3839904', '15885501', '10444330', '9878244',
-'11797099', '2439899', '2778316', '1705514', '2844901', '12693553', '15368895')
+create index idx1 on #sequencesFinal(_Marker_key)
 go
 
 set nocount off
@@ -83,9 +78,24 @@ print "where symbol has acquired a Sequence Accession ID from EntrezGene"
 print "where symbol has no homology entry in MGI"
 print ""
 
-select m.symbol, m.accID, m.category, m.refID
+select m.symbol, m.category
 from #sequencesFinal m
 where not exists (select 1 from HMD_Homology_Marker h where m._Marker_key = h._Marker_key)
-order by m.category, m.symbol, m.accID, m.refID
+order by m.category, m.symbol
+go
+
+print ""
+print "MGI Markers with Uninformative Nomenclature"
+print "   - those with TreeFam information"
+print ""
+
+select m.symbol, m.category, substring(l.name,1,15), a.accID
+from #markers m, ACC_Accession a, ACC_LogicalDB l
+where not exists (select 1 from HMD_Homology_Marker h where m._Marker_key = h._Marker_key)
+and m._Marker_key = a._Object_key
+and a._MGIType_key = 2
+and a._LogicalDB_key in (88)
+and a._LogicalDB_key = l._LogicalDB_key
+order by m.category, m.symbol
 go
 
