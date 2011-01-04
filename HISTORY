@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-1-2
+DATE: 1/4/2011
+STAFF: dbm
+CHANGES:
+1) qcr.html: removed link to crossload (retired)
+
 TAG: qcreports_db-4-4-1-1
 DATE: 12/28/2010
 STAFF: lec
