@@ -16,6 +16,9 @@
 #
 # History
 #
+# 01/19/2011	lec
+#	TR10541/added history/fix 'lOG'/added exclude/include into to header
+#
 # 05/17/2007	sc
 # 	TR8304 ensembl release 44 
 #	update to exclude obsoletes and include only protein_coding and pseudogene
@@ -40,6 +43,8 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 
 fp.write('#\n')
 fp.write('# Ensembl Gene Models with no Marker Association\n')
+fp.write('# excludes obsoletes\n')
+fp.write('# includes only "protein_coding" and "pseudogene"\n')
 fp.write('#\n')
 
 # get the full set of Ensembl gene model ids
