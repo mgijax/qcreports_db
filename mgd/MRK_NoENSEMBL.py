@@ -14,6 +14,12 @@
 #       MRK_NoENSEMBL.py
 #
 #
+# History
+#
+# 05/17/2007	sc
+# 	TR8304 ensembl release 44 
+#	update to exclude obsoletes and include only protein_coding and pseudogene
+#
 '''
  
 import sys 
@@ -49,6 +55,7 @@ db.sql('select accID ' + \
     'and (s.description like "%protein_coding%" or s.description like "%pseudogene%")', None)
 db.sql('create index idxAccid on #ensemblGeneModel(accID)', None)
 print "done first query and index"
+
 # get the set of Ensembl ids with marker associations
 db.sql('select distinct accID ' + \
     'into #ensemblGeneAssoc ' + \
