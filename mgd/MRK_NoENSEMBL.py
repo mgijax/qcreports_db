@@ -48,7 +48,7 @@ fp.write('#\n')
 db.sql('select accID ' + \
     'into #ensemblGeneModel ' + \
     'from ACC_Accession  a, SEQ_Sequence s ' + \
-    'where a._lOGicalDB_key = 60 ' + \
+    'where a._LogicalDB_key = 60 ' + \
     'and a._MGIType_key = 19 ' + \
     'and a._Object_key = s._Sequence_key ' + \
     'and s._SequenceStatus_key = 316342 ' + \
