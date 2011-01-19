@@ -168,85 +168,77 @@ fp = None
 
 fp = reportlib.init(sys.argv[0], 'Duplicate Genotypes', os.environ['QCOUTPUTDIR'])
 
-cmds = []
-
 #
 #  This query will fetch pairs of genotpes that have the same associated
 #  strain and at least one common allele pair between them.  They should
 #  also have the same total number of associated allele pairs.
 #
-cmds.append('select g1._Genotype_key as geno1, ' +
-            'g2._Genotype_key as geno2, ' +
-            'g1._Strain_key as strain ' +
-            'into #pairs ' +
-            'from GXD_Genotype g1, ' +
-            ' GXD_Genotype g2, ' +
-            'GXD_AllelePair a1, ' +
-            'GXD_AllelePair a2 ' +
-            'where g1._Genotype_key = a1._Genotype_key and ' +
-            'a1._Allele_key_1 = a2._Allele_key_1 and ' +
-            '(a1._Allele_key_2 = a2._Allele_key_2 or ' +
-            '(a1._Allele_key_2 is null and ' +
-             'a2._Allele_key_2 is null)) and ' +
-            'a1._PairState_key = a2._PairState_key and ' +
-            'a2._Genotype_key = g2._Genotype_key and ' +
-            'g2._Strain_key = g1._Strain_key and ' +
-	    'g1.isConditional = g2.isConditional and ' +
-            'g1._Genotype_key != g2._Genotype_key and ' +
-            '(select count(distinct _AllelePair_key) ' +
-            'from GXD_AllelePair ap ' +
-            'where ap._Genotype_key = g1._Genotype_key) = ' +
-            '(select count(distinct _AllelePair_key) ' +
-            'from GXD_AllelePair ap ' +
-            'where ap._Genotype_key = g2._Genotype_key)')
+db.sql('''select g1._Genotype_key as geno1, 
+                 g2._Genotype_key as geno2, 
+                 g1._Strain_key as strain 
+          into #pairs 
+          from GXD_Genotype g1, GXD_Genotype g2, GXD_AllelePair a1, GXD_AllelePair a2 
+          where g1._Genotype_key = a1._Genotype_key and 
+                a1._Allele_key_1 = a2._Allele_key_1 and 
+                (a1._Allele_key_2 = a2._Allele_key_2 or 
+                (a1._Allele_key_2 is null and 
+                a2._Allele_key_2 is null)) and 
+                a1._PairState_key = a2._PairState_key and 
+                a2._Genotype_key = g2._Genotype_key and 
+                g2._Strain_key = g1._Strain_key and 
+	        g1.isConditional = g2.isConditional and 
+                g1._Genotype_key != g2._Genotype_key and 
+                (select count(distinct _AllelePair_key) 
+                     from GXD_AllelePair ap 
+                     where ap._Genotype_key = g1._Genotype_key) = 
+                (select count(distinct _AllelePair_key) 
+                     from GXD_AllelePair ap 
+                     where ap._Genotype_key = g2._Genotype_key)
+	''', None)
 
 #
 #  Now add entries that have the allele pairs transposed, but still match.
 #
-cmds.append('insert #pairs ' +
-            'select g1._Genotype_key as geno1, ' +
-            'g2._Genotype_key as geno2, ' +
-            'g1._Strain_key as strain ' +
-            'from GXD_Genotype g1, ' +
-            ' GXD_Genotype g2, ' +
-            'GXD_AllelePair a1, ' +
-            'GXD_AllelePair a2 ' +
-            'where g1._Genotype_key = a1._Genotype_key and ' +
-            'a1._Allele_key_1 = a2._Allele_key_2 and ' +
-            'a1._Allele_key_2 = a2._Allele_key_1 and ' +
-            'a1._PairState_key = a2._PairState_key and ' +
-            'a2._Genotype_key = g2._Genotype_key and ' +
-            'g2._Strain_key = g1._Strain_key and ' +
-	    'g1.isConditional = g2.isConditional and ' +
-            'g1._Genotype_key != g2._Genotype_key and ' +
-            '(select count(distinct _AllelePair_key) ' +
-            'from GXD_AllelePair ap ' +
-            'where ap._Genotype_key = g1._Genotype_key) = ' +
-            '(select count(distinct _AllelePair_key) ' +
-            'from GXD_AllelePair ap ' +
-            'where ap._Genotype_key = g2._Genotype_key)')
+db.sql('''insert #pairs 
+          select g1._Genotype_key as geno1, 
+                 g2._Genotype_key as geno2, 
+                 g1._Strain_key as strain 
+          from GXD_Genotype g1, GXD_Genotype g2, GXD_AllelePair a1, GXD_AllelePair a2 
+          where g1._Genotype_key = a1._Genotype_key and 
+                a1._Allele_key_1 = a2._Allele_key_2 and 
+                a1._Allele_key_2 = a2._Allele_key_1 and 
+                a1._PairState_key = a2._PairState_key and 
+                a2._Genotype_key = g2._Genotype_key and 
+                g2._Strain_key = g1._Strain_key and 
+	        g1.isConditional = g2.isConditional and 
+                g1._Genotype_key != g2._Genotype_key and 
+                (select count(distinct _AllelePair_key) 
+                      from GXD_AllelePair ap 
+                      where ap._Genotype_key = g1._Genotype_key) = 
+                (select count(distinct _AllelePair_key) 
+                      from GXD_AllelePair ap 
+                      where ap._Genotype_key = g2._Genotype_key)
+	  ''', None)
 
 #
 #  We now pull the genotype pair, associated strain, and a count of the number
 #  of allele pairs (this number is used in processing later.
 #
-cmds.append('select p.geno1, p.geno2, p.strain, ' +
-            'count(distinct _AllelePair_key) as numPairs ' +
-            'from #pairs p, GXD_AllelePair gap ' +
-            'where p.geno1 = gap._Genotype_key ' +
-            'group by p.geno1, p.geno2')
-
-#
 #  Excecute query
 #
-results = db.sql(cmds, 'auto')
+results = db.sql('''select p.geno1, p.geno2, p.strain, 
+            count(distinct _AllelePair_key) as numPairs 
+            from #pairs p, GXD_AllelePair gap 
+            where p.geno1 = gap._Genotype_key 
+            group by p.geno1, p.geno2
+	    ''', 'auto')
 
 #
 #  Now cycle through and create a distinct set of genotype pairs.
 #
 genoDict = {}  # Dictionary of distinct genotype pairs
 
-for row in results[2]:
+for row in results:
     geno1 = row['geno1']                     #  Genotype 1
     geno2 = row['geno2']                     #  Genotype 2
 
