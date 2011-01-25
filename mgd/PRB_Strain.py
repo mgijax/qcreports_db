@@ -42,7 +42,6 @@ results = db.sql('select distinct a._Object_key, a.accID from ACC_Accession a ' 
 	'where a._MGIType_key = 10 ' + \
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "MGI:" ' + \
-	'and a._LogicalDB_key = 1 ' + \
 	'and a.preferred = 1', 'auto')
 mgiIDs = {}
 for r in results:
