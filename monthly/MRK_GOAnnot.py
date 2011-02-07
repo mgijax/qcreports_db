@@ -160,7 +160,7 @@ for r in results:
 #
 # GO/EI excludes a Reference if it exists with another Marker/GO annotation
 # however, this report will include that Reference
-# 0610005C13Rik (count 1 in report, count 0 in GO EI), Wnk1, J:86696 
+# 0610005C13Rik (count 1 in report, count 0 in GO EI) due to Wnk1/J:86696 
 #
 totalNotUsed = {}
 results = db.sql('''
