@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-4-1-6
+DATE: 02/09/2011
+STAFF: lec
+CHANGES:
+1) TR10582/weekly/GIA_MRK_ENSEMBL.py, GIA_MRK_Sequence.py
+   moved from reports_db/weekly
+
 TAG: qcreports_db-4-4-1-5
 DATE: 02/07/2011
 STAFF: lec
