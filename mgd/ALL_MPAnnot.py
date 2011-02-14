@@ -24,6 +24,9 @@
 #
 # History:
 #
+# 02/13/2011
+#	- TR10589/add feature type
+#
 # 01/20/2011	lec
 #       - created
 #
@@ -52,9 +55,10 @@ fp.write('    alleles of status "approved"\n')
 fp.write('    alleles that are annotated to the MP\n\n')
 fp.write('field 1: MGI id\n')
 fp.write('field 2: marker symbol\n')
-fp.write('field 3: # of alleles\n')
-fp.write('field 4: # of MP annotations\n')
-fp.write('field 5: list of MP J# from column 4\n\n')
+fp.write('field 3: marker feature type\n')
+fp.write('field 4: # of alleles\n')
+fp.write('field 5: # of MP annotations\n')
+fp.write('field 6: list of MP J# from column 4\n\n')
 
 #
 # markers with 
@@ -91,6 +95,22 @@ for r in results:
     key = r['_Marker_key']
     value = r['accID']
     mgiIDs[key] = value
+
+#
+# marker feature type
+#
+mgiFeature = {}
+results = db.sql('''
+           select m._Marker_key, t.term
+           from #markers m, VOC_Annot a, VOC_Term t
+           where m._Marker_key = a._Object_key
+           and a._AnnotType_key = 1011
+           and a._Term_key = t._Term_key
+        ''', 'auto')
+for r in results:
+    key = r['_Marker_key']
+    value = r['term']
+    mgiFeature[key] = value
 
 #
 # alleles by gene
@@ -152,6 +172,11 @@ for r in results:
 
     fp.write(mgiIDs[key] + TAB)
     fp.write(r['symbol'] + TAB)
+
+    if mgiFeature.has_key(key):
+      fp.write(mgiFeature[key])
+    fp.write(TAB)
+
     fp.write(str(totalAllele[key]) + TAB)
     fp.write(str(totalAnnot[key]) + TAB)
     fp.write(string.join(refsID[key],  ',') + CRT)
