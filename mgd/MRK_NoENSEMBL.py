@@ -16,6 +16,9 @@
 #
 # History
 #
+# 03/07/2011	lec
+#	TR626/add rawbiotype from SEQ_GeneModel
+#
 # 02/10/2011	lec
 #	TR10541/remove "protein_coding" and "pseudogene" exclusions
 #
@@ -47,6 +50,8 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 fp.write('#\n')
 fp.write('# Ensembl Gene Models with no Marker Association\n')
 fp.write('# excludes obsoletes\n')
+fp.write('# field 1: ensembl gene model accession id\n')
+fp.write('# field 2: raw biotype\n')
 fp.write('#\n')
 
 #
@@ -56,7 +61,7 @@ fp.write('#\n')
 # 'and (s.description like "%protein_coding%" or s.description like "%pseudogene%")', None)
 #
 
-db.sql('''select a.accID
+db.sql('''select a.accID, s._Sequence_key
     into #ensemblGeneModel 
     from ACC_Accession  a, SEQ_Sequence s 
     where a._LogicalDB_key = 60 
@@ -65,6 +70,7 @@ db.sql('''select a.accID
     and s._SequenceStatus_key = 316342
     ''', None)
 db.sql('create index idxAccid on #ensemblGeneModel(accID)', None)
+db.sql('create index idxSeqkey on #ensemblGeneModel(_Sequence_key)', None)
 print "done first query and index"
 
 # get the set of Ensembl ids with marker associations
@@ -78,17 +84,19 @@ db.sql('''select distinct accID
 db.sql('create index idxAccid on #ensemblGeneAssoc(accID)', None)
 print "done second query and index"
 
-results = db.sql('''select gm.accid as ensemblGeneModelNoAssoc
-    from #ensemblGeneModel gm
+results = db.sql('''select gm.accid as ensemblGeneModelNoAssoc, s.rawbiotype
+    from #ensemblGeneModel gm, SEQ_GeneModel s
     where not exists (select 1 
     from #ensemblGeneAssoc ga 
     where ga.accid = gm.accid) 
+    and gm._Sequence_key = s._Sequence_key
     order by gm.accID
     ''', 'auto')
 print "done third query and writing out results"
 
 for r in results:
-    fp.write(r['ensemblGeneModelNoAssoc'] + CRT)
+    fp.write(r['ensemblGeneModelNoAssoc'] + TAB)
+    fp.write(r['rawbiotype'] + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
