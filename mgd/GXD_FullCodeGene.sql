@@ -2,6 +2,7 @@
 /* TR 7370 */
 /* TR 9563 */
 /* TR 9646: add "binding" and "rocket" to exclusion list */
+/* TR 10642 add "%quantitative RT%" to exclusion list */
 
 set nocount on
 go
@@ -38,6 +39,7 @@ or comments like '%reverse%'
 or comments like '%immunoprecip%'
 or comments like '%binding%'
 or comments like '%rocket%'
+or comments like '%quantitative RT%'
 go
 
 create index idx1 on #excluded(_Index_key)
@@ -53,7 +55,7 @@ print "excluded:"
 print "     index records that contain only cDNA or primer extension assays"
 print "     index records that contain only age 'E?'"
 print "     index records that have a note that contains: "
-print "     'ot blot', 'fraction', 'reverse', 'immunoprecip', 'binding', 'rocket'"
+print "     'ot blot', 'fraction', 'reverse', 'immunoprecip', 'binding', 'rocket', 'quantitative RT'"
 print ""
 
 select distinct b.accID, m.symbol

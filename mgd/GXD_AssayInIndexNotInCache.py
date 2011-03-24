@@ -17,6 +17,9 @@
 #
 # History:
 #
+# lec	03/24/2011
+#	- TR 10642/add '%quantitative RT%' to exclusion list
+#
 # lec	09/24/2009
 #	- TR 9858
 #	- make sure header prints out
@@ -52,7 +55,7 @@ fp.write('excluded:' + CRT)
 fp.write('     index records that contain only cDNA or primer extension assays' + CRT)
 fp.write('     index records that contain only age ''E?''' + CRT)
 fp.write('     index records that have a note that contains: ' + CRT)
-fp.write('     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket''' + CRT)
+fp.write('     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket'', ''quantitative RT''' + CRT)
 fp.write(CRT)
 
 # Create a temporary table with all of the valid items from GXD_Index
@@ -71,6 +74,7 @@ and gi.comments not like '%reverse%'
 and gi.comments not like '%immunoprecip%'
 and gi.comments not like '%rocket%'
 and gi.comments not like '%binding%'
+and gi.comments not like '%quantitative RT%'
 union
 select gi.*, bcc.jnumID, vt.term, gis._IndexAssay_key, gis._StageID_key, m.symbol
 from GXD_Index gi, GXD_Index_Stages gis, BIB_Citation_Cache bcc, VOC_Term vt, MRK_Marker m
