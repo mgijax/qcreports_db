@@ -1,3 +1,11 @@
+TAG: qcreports_db-4-4-1-12
+DATE: 03/24/2011
+STAFF: lec
+CHANGES:
+1) TR10642
+   mgd/GXD_AssayInIndexNotInCache.py
+   mgd/GXD_FullCodeGene.sql
+
 TAG: qcreports_db-4-4-1-11
 DATE: 03/08/2011
 STAFF: lec
