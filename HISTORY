@@ -1,8 +1,15 @@
+TAG: qcreports_db-4-4-1-14
+DATE: 04/04/2011
+STAFF: lec
+CHANGES:
+1) no tr; connie asked the PRB_CellLine.sql be restored
+   see qcreports_db-4-4-0-15
+
 TAG: qcreports_db-4-4-1-13
 DATE: 04/01/2011
 STAFF: dbm
 CHANGES:
-1) TR10662: GO_stats.py - added BGEM (J:162220) to electronic references
+1) TR10662: GXD_Stats.py - added BGEM (J:162220) to electronic references
 
 TAG: qcreports_db-4-4-1-12
 DATE: 03/24/2011
