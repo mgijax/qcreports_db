@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	04/05/2011
+#	- TR10650/add GO/add Set
+#
 # lec	11/14/2003
 #	- new
 #
@@ -29,7 +32,6 @@
 import sys
 import os
 import string
-import re
 from sets import Set
 import db
 import mgi_utils
@@ -103,7 +105,7 @@ for r in results:
 	idList = [ids]
 
     for id in idList:
-	id = re.sub('"', '', id)
+	id.replace('"', '')
 	id.upper()
 
 	if string.find(id, 'MGI:') >= 0 or string.find(id, 'GO:') >= 0:
@@ -128,21 +130,20 @@ for t in theDiffs:
    toSelect = '%' + t + '%'
 
    results = db.sql('''
-	select e.inferredFrom, a.accID, m.symbol, e.evidenceCode 
+	select a.accID, m.symbol, e.evidenceCode 
 	from #annotations e, ACC_Accession a, MRK_Marker m 
 	where e._Term_key = a._Object_key 
 	and a._MGIType_key = 13 
 	and a.preferred = 1 
 	and e._Object_key = m._Marker_key 
 	and e.inferredFrom like '%s'
-	order by e.inferredFrom
 	''' % (toSelect), 'auto')
 
    for r in results:
-      fp.write(id + reportlib.TAB + \
-      r['accID'] + reportlib.TAB + \
-      r['evidenceCode'] + reportlib.TAB + \
-      r['symbol'] + reportlib.CRT)
+      fp.write(t + reportlib.TAB + \
+               r['accID'] + reportlib.TAB + \
+               r['evidenceCode'] + reportlib.TAB + \
+               r['symbol'] + reportlib.CRT)
       rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
