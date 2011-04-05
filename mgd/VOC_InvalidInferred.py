@@ -30,6 +30,7 @@ import sys
 import os
 import string
 import re
+from sets import Set
 import db
 import mgi_utils
 import reportlib
@@ -57,6 +58,7 @@ for r in results:
 results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart in ("GO:")', 'auto')
 for r in results:
     mgiLookup.append(r['accID'])
+bucketMGI = Set(mgiLookup)
 
 # read in all annotations that contains MGD or GO
 
@@ -74,18 +76,13 @@ db.sql('create nonclustered index idx1 on #annotations(_Term_key)', None)
 db.sql('create nonclustered index idx2 on #annotations(_Object_key)', None)
 db.sql('create nonclustered index idx3 on #annotations(inferredFrom)', None)
 
-# retrieve GO acc ID, marker symbol
+#
+# set of MGI, GO ids in 'inferredFrom'
+#
 
-results = db.sql('''
-	select e.inferredFrom, a.accID, m.symbol, e.evidenceCode 
-	from #annotations e, ACC_Accession a, MRK_Marker m 
-	where e._Term_key = a._Object_key 
-	and a._MGIType_key = 13 
-	and a.preferred = 1 
-	and e._Object_key = m._Marker_key 
-	order by e.inferredFrom
-	''', 'auto')
+results = db.sql('select inferredFrom from #annotations', 'auto')
 
+inferredLookup = []
 for r in results:
     ids = r['inferredFrom']
 
@@ -110,12 +107,43 @@ for r in results:
 	id.upper()
 
 	if string.find(id, 'MGI:') >= 0 or string.find(id, 'GO:') >= 0:
-	    if id not in mgiLookup:
-		fp.write(id + reportlib.TAB + \
-			 r['accID'] + reportlib.TAB + \
-			 r['evidenceCode'] + reportlib.TAB + \
-			 r['symbol'] + reportlib.CRT)
-		rows = rows + 1
+	    if id not in inferredLookup:
+	        inferredLookup.append(id)
+
+#
+# bucket of all inferred-from ids
+#
+
+bucketInferred = Set(inferredLookup)
+
+#
+# compare inferred-from ids to MGI ids
+#
+
+theDiffs = bucketInferred.difference(bucketMGI)
+
+row = 0
+for t in theDiffs:
+
+   toSelect = '%' + t + '%'
+
+   results = db.sql('''
+	select e.inferredFrom, a.accID, m.symbol, e.evidenceCode 
+	from #annotations e, ACC_Accession a, MRK_Marker m 
+	where e._Term_key = a._Object_key 
+	and a._MGIType_key = 13 
+	and a.preferred = 1 
+	and e._Object_key = m._Marker_key 
+	and e.inferredFrom like '%s'
+	order by e.inferredFrom
+	''' % (toSelect), 'auto')
+
+   for r in results:
+      fp.write(id + reportlib.TAB + \
+      r['accID'] + reportlib.TAB + \
+      r['evidenceCode'] + reportlib.TAB + \
+      r['symbol'] + reportlib.CRT)
+      rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
 reportlib.finish_nonps(fp)
