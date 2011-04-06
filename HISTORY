@@ -1,3 +1,12 @@
+TAG: qcreports_db-4-4-1-15
+DATE: 04/06/2011
+STAFF: dbm
+CHANGES:
+1) Install: Make a sym link from the weekly directory to the GO_stats.py
+   report in the mgd directory so it runs weekly and daily.
+2) qcweekly_reports.csh: Archive the GO_stats report after it is created,
+   similar to what is done when it runs nightly.
+
 TAG: qcreports_db-4-4-1-14
 DATE: 04/04/2011
 STAFF: lec
