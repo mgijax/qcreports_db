@@ -65,6 +65,9 @@ foreach i (*.py)
         rm -rf $QCOUTPUTDIR/`basename $i py`current.txt
         $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.txt $QCOUTPUTDIR/`basename $i py`current.txt
+    else if ( $i == "GO_stats.py" ) then
+        $i >>& ${LOG}
+        cp -p ${QCOUTPUTDIR}/GO_stats.rpt ${QCGOARCHIVE}/GO_stats.`date +%Y%m%d`
     else
         $i >>& ${LOG}
     endif
