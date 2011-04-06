@@ -65,7 +65,8 @@ bucketMGI = Set(mgiLookup)
 # read in all annotations that contains MGD or GO
 
 db.sql('''
-	select a._Term_key, a._Object_key, e.inferredFrom, evidenceCode = t.abbreviation 
+	select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, 
+	       evidenceCode = t.abbreviation 
 	into #annotations 
 	from VOC_Annot a, VOC_Evidence e, VOC_Term t 
 	where a._AnnotType_key = 1000 
@@ -82,11 +83,13 @@ db.sql('create nonclustered index idx3 on #annotations(inferredFrom)', None)
 # set of MGI, GO ids in 'inferredFrom'
 #
 
-results = db.sql('select inferredFrom from #annotations', 'auto')
+results = db.sql('select _AnnotEvidence_key, inferredFrom from #annotations', 'auto')
 
 inferredLookup = []
+keysLookup = []
 for r in results:
     ids = r['inferredFrom']
+    key = r['_AnnotEvidence_key']
 
     if string.find(ids, ', ') >= 0:
 	delimiter = ', '
@@ -105,12 +108,15 @@ for r in results:
 	idList = [ids]
 
     for id in idList:
+	# save id as-is to check for lowercase/uppercase variations
+	realid = id
 	id.replace('"', '')
-	id.upper()
+	id = id.upper()
 
 	if string.find(id, 'MGI:') >= 0 or string.find(id, 'GO:') >= 0:
-	    if id not in inferredLookup:
-	        inferredLookup.append(id)
+	   if realid not in inferredLookup:
+	      inferredLookup.append(realid)
+	      keysLookup.append(key)
 
 #
 # bucket of all inferred-from ids
@@ -130,7 +136,7 @@ for t in theDiffs:
    toSelect = '%' + t + '%'
 
    results = db.sql('''
-	select a.accID, m.symbol, e.evidenceCode 
+	select a.accID, m.symbol, e.evidenceCode, e._AnnotEvidence_key
 	from #annotations e, ACC_Accession a, MRK_Marker m 
 	where e._Term_key = a._Object_key 
 	and a._MGIType_key = 13 
@@ -140,11 +146,13 @@ for t in theDiffs:
 	''' % (toSelect), 'auto')
 
    for r in results:
-      fp.write(t + reportlib.TAB + \
-               r['accID'] + reportlib.TAB + \
-               r['evidenceCode'] + reportlib.TAB + \
-               r['symbol'] + reportlib.CRT)
-      rows = rows + 1
+      key = r['_AnnotEvidence_key']
+      if key in keysLookup:
+          fp.write(t + reportlib.TAB + \
+                   r['accID'] + reportlib.TAB + \
+                   r['evidenceCode'] + reportlib.TAB + \
+                   r['symbol'] + reportlib.CRT)
+          rows = rows + 1
 
 fp.write('\n(%d rows affected)\n' % (rows))
 reportlib.finish_nonps(fp)
