@@ -37,6 +37,9 @@
 #
 # History:
 #
+#	04/07/2011
+#	- TR 10668; exclude feature type ''heritable phenotypic marker' (6238170)
+#
 # lec	12/31/2009
 #	- TR 9989; remove A,B,C; keep D
 #
@@ -105,24 +108,33 @@ def runQueries():
     for r in results:
 	    url = r['url']
 
-    db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart, hasOrthology = "no " ' + \
-	    'into #markers ' + \
-	    'from MRK_Marker m, ACC_Accession a ' + \
-	    'where m._Marker_Type_key = 1 ' + \
-	    'and m._Marker_Status_key in (1,3) ' + \
-	    'and m.name not like "gene model %" ' + \
-	    'and m.name not like "gene trap %" ' + \
-	    'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
-	    'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
-	    'and m.symbol not like "ORF%" ' + \
-	    'and m._Marker_key = a._Object_key ' + \
-	    'and a._MGIType_key = 2 ' + \
-	    'and a._LogicalDB_key = 1 ' + \
-	    'and a.prefixPart = "MGI:" ' + \
-	    'and a.preferred = 1 ' + \
-	    'and not exists (select 1 from  VOC_Annot a ' + \
-	    'where m._Marker_key = a._Object_key ' + \
-	    'and a._AnnotType_key = 1000 ) ', None)
+    # exclude markers that have GO annotations
+    # exclude markers that contain feature 'heritable phenotypic marker' (6238170)
+
+    db.sql('''
+	   select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart, hasOrthology = "no " 
+	   into #markers 
+	   from MRK_Marker m, ACC_Accession a 
+	   where m._Marker_Type_key = 1 
+	   and m._Marker_Status_key in (1,3) 
+	   and m.name not like "gene model %" 
+	   and m.name not like "gene trap %" 
+	   and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" 
+	   and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" 
+	   and m.symbol not like "ORF%" 
+	   and m._Marker_key = a._Object_key 
+	   and a._MGIType_key = 2 
+	   and a._LogicalDB_key = 1 
+	   and a.prefixPart = "MGI:" 
+	   and a.preferred = 1 
+	   and not exists (select 1 from  VOC_Annot a 
+	   where m._Marker_key = a._Object_key 
+	   and a._AnnotType_key = 1000) 
+	   and not exists (select 1 from  VOC_Annot a 
+	   where m._Marker_key = a._Object_key 
+	   and a._AnnotType_key = 1011
+	   and a._Term_key = 6238170)
+	   ''', None)
     db.sql('create index idx1 on #markers(_Marker_key)', None)
 
     # orthologies
