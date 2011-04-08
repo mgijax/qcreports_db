@@ -18,7 +18,7 @@ echo `date`: Start weekly QC reports | tee -a ${LOG}
 
 cd ${QCWEEKLY}
 
-foreach i (*.sql)
+foreach i (MP_Triage.sql)
     echo `date`: $i | tee -a ${LOG}
     if ( $i == "GXD_Triage.sql" ) then
         mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCGXDARCHIVE}
@@ -42,34 +42,6 @@ foreach i (*.sql)
         ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
     else
         reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
-    endif
-end
-
-foreach i (*.py)
-    echo `date`: $i | tee -a ${LOG}
-    if ( $i == "ALL_Progress.py" ) then
-        mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
-        rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
-        $i >>& ${LOG}
-        ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
-    else if ( $i == "PRB_StrainJAX2.py" ) then
-        mv -f $QCOUTPUTDIR/`basename $i py`jrs.[0-9]*.rpt $QCSTRAINARCHIVE
-        mv -f $QCOUTPUTDIR/`basename $i py`mmrrc.[0-9]*.rpt $QCSTRAINARCHIVE
-        rm -rf $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
-        rm -rf $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
-        $i >>& ${LOG}
-        ln -s $QCOUTPUTDIR/`basename $i py`jrs.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
-        ln -s $QCOUTPUTDIR/`basename $i py`mmrrc.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
-    else if ( $i == "MTB_Triage.py" ) then
-        mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.txt $QCMTBARCHIVE
-        rm -rf $QCOUTPUTDIR/`basename $i py`current.txt
-        $i >>& ${LOG}
-        ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.txt $QCOUTPUTDIR/`basename $i py`current.txt
-    else if ( $i == "GO_stats.py" ) then
-        $i >>& ${LOG}
-        cp -p ${QCOUTPUTDIR}/GO_stats.rpt ${QCGOARCHIVE}/GO_stats.`date +%Y%m%d`
-    else
-        $i >>& ${LOG}
     endif
 end
 
