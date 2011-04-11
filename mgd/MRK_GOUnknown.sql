@@ -38,10 +38,13 @@ create index idx1 on #temp2(_Refs_key)
 go
 
 /* grab the pubmed ids */
-/* for those with GO annotations only */
+/* tag 1: for those with GO annotations only */
+/* tag 2: for those with GO and A&P annotations only */
+/* tag 0: any GO annotations */
 /* for those without GO annotations */
 
-select t.symbol, t.mgiID, t.pubmedID
+/* tag 1: for those with GO annotations only */
+select t.symbol, t.mgiID, t.pubmedID, tag = "1"
 into #temp3
 from #temp2 t
 where exists (select 1 from BIB_DataSet_Assoc a, BIB_DataSet d
@@ -60,14 +63,15 @@ and va._Annot_key = e._Annot_key
 and e._Refs_key = t._Refs_key)
 go
 
-/* grab the pubmed ids */
-/* for those with GO & A&P annotations only */
-/* for those without GO annotations */
-
-select t.symbol, t.mgiID, t.pubmedID
-into #temp4
+/* tag 2: for those with GO and A&P annotations only */
+/* and not in tag 1 */
+insert into #temp3
+select t.symbol, t.mgiID, t.pubmedID, tag = "2"
 from #temp2 t
-where exists (select 1 from BIB_DataSet_Assoc a, BIB_DataSet d
+where not exists (select 1 from #temp3 t3 
+where t.symbol = t3.symbol
+and t.pubmedID = t3.pubmedID)
+and exists (select 1 from BIB_DataSet_Assoc a, BIB_DataSet d
 where t._Refs_key = a._Refs_key
 and a._DataSet_key = d._DataSet_key
 and d.abbreviation = 'GO'
@@ -88,15 +92,29 @@ and va._Annot_key = e._Annot_key
 and e._Refs_key = t._Refs_key)
 go
 
+/* tag 0: any GO annotations */
+/* and not in tag 1 or 2 */
+insert into #temp3
+select t.symbol, t.mgiID, t.pubmedID, tag = "0"
+from #temp2 t
+where not exists (select 1 from #temp3 t3 
+where t.symbol = t3.symbol
+and t.pubmedID = t3.pubmedID)
+and exists (select 1 from BIB_DataSet_Assoc a, BIB_DataSet d
+where t._Refs_key = a._Refs_key
+and a._DataSet_key = d._DataSet_key
+and d.abbreviation = 'GO'
+and a.isNeverUsed = 0)
+and not exists (select 1 from VOC_Annot va, VOC_Evidence e
+where va._AnnotType_key = 1000
+and va._Annot_key = e._Annot_key
+and e._Refs_key = t._Refs_key)
+go
+
 print ""
 print "All genes with 'unknown' annotations with new indexed literature"
 print "and if reference is selected for GO and 'not used' for any GO annotation"
 print "(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)"
-print ""
-
-/* temp3: GO only */
-
-print "those selected for GO only"
 
 select "Number of unique MGI Gene IDs:  ", count(distinct mgiID) from #temp3
 union
@@ -104,31 +122,14 @@ select "Number of total rows:  ", count(*) from #temp3
 go
 
 print ""
-
-set nocount off
-go
-
-select * from #temp3 order by symbol
-go
-
-/* temp4: GO and A&P only */
-
-set nocount on
-go
-
-print ""
-print "those selected for GO and A&P only"
-
-select "Number of unique MGI Gene IDs:  ", count(distinct mgiID) from #temp4
-union
-select "Number of total rows:  ", count(*) from #temp4
-go
-
+print " tag 0 = any GO"
+print " tag 1 = only for GO"
+print " tag 2 = only for GO and AP"
 print ""
 
 set nocount off
 go
 
-select * from #temp4 order by symbol
+select * from #temp3 order by tag, symbol
 go
 
