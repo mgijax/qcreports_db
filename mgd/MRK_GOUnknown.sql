@@ -40,7 +40,7 @@ go
 /* grab the pubmed ids */
 /* tag 1: for those with GO annotations only */
 /* tag 2: for those with GO and A&P annotations only */
-/* tag 0: any GO annotations */
+/* tag 3: any GO annotations */
 /* for those without GO annotations */
 
 /* tag 1: for those with GO annotations only */
@@ -92,10 +92,10 @@ and va._Annot_key = e._Annot_key
 and e._Refs_key = t._Refs_key)
 go
 
-/* tag 0: any GO annotations */
+/* tag 3: any GO annotations */
 /* and not in tag 1 or 2 */
 insert into #temp3
-select t.symbol, t.mgiID, t.pubmedID, tag = "0"
+select t.symbol, t.mgiID, t.pubmedID, tag = "3"
 from #temp2 t
 where not exists (select 1 from #temp3 t3 
 where t.symbol = t3.symbol
@@ -122,9 +122,9 @@ select "Number of total rows:  ", count(*) from #temp3
 go
 
 print ""
-print " tag 0 = any GO"
 print " tag 1 = only for GO"
 print " tag 2 = only for GO and AP"
+print " tag 3 = any GO"
 print ""
 
 set nocount off
