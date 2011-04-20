@@ -62,7 +62,13 @@ results = db.sql('''select distinct t.accid,
     from #triage t, MGI_Synonym s
     where t._Term_key = s._Object_key
     and s._MGIType_key = 13
-    and t._Term_key = s._Object_key
+    union
+    select distinct t.accid,
+    t.term, synonym = null
+    from #triage t where not exists (
+	select 1 from MGI_Synonym s
+	where t._Term_key = s._Object_key
+	and s._MGIType_key = 13)
     order by t.term''', 'auto')
 
 # MP ID:list of results
@@ -89,7 +95,9 @@ for id in mpIds:
     term = resultList[0]['term']
     synonymList = []
     for r in resultList:
-	synonymList.append(r['synonym'])
+        s = r['synonym']
+	if s != None:
+	    synonymList.append(r['synonym'])
     synonyms = string.join(synonymList, ', ')
     fp.write(string.ljust(id, 15) )
     fp.write(SPACE)
