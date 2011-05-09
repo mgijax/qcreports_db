@@ -422,7 +422,7 @@ def report3(fp):
 #  main
 #
 
-fp1 = reportlib.init(sys.argv[0], 'Markers that have no embryonic data and have codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
+fp1 = reportlib.init(sys.argv[0], 'Markers that have no full coded data', outputdir = os.environ['QCOUTPUTDIR'])
 fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
 fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
 
