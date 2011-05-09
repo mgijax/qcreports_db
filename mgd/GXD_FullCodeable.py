@@ -13,6 +13,9 @@
 #
 # History:
 #
+# lec	05/09/2011
+#	- TR 10703; add medium priority records
+#
 # lec	09/23/2009
 #	- TR 9806; add conditional column
 #
@@ -113,7 +116,7 @@ def report1(fp):
     fp.write(SPACE)
     fp.write(string.ljust('index records', 20))
     fp.write(SPACE)
-    fp.write(string.ljust('high priority J numbers', 25))
+    fp.write(string.ljust('codeable papers', 25))
     fp.write(SPACE)
     fp.write(CRT)
     fp.write(string.ljust('------', 35))
@@ -127,14 +130,14 @@ def report1(fp):
     fp.write(CRT)
 
     #
-    # all markers with high priority papers that have not been full coded
+    # all markers with high or medium priority papers that have not been full coded
     #
 
     db.sql('''
 	select distinct gi._Marker_key 
         into #markers 
         from GXD_Index gi 
-        where gi._Priority_key = 74714
+        where gi._Priority_key in (74714, 74715)
 	and not exists (select 1 from GXD_Assay ga where ga._Marker_key = gi._Marker_key)
         ''', None)
 
@@ -149,7 +152,7 @@ def report1(fp):
     results = db.sql('''
 	select gi._Marker_key, a.accID 
         from GXD_Index gi, #markers tm, ACC_Accession a 
-        where gi._Priority_key = 74714 and 
+        where gi._Priority_key in (74714, 74715) and 
             gi._Marker_key = tm._Marker_key and 
             gi._Refs_key = a._Object_key and 
             a._MGIType_key = 1 and 
@@ -419,7 +422,7 @@ def report3(fp):
 #  main
 #
 
-fp1 = reportlib.init(sys.argv[0], 'Markers that have no embryonic data and have high priority papers', outputdir = os.environ['QCOUTPUTDIR'])
+fp1 = reportlib.init(sys.argv[0], 'Markers that have no embryonic data and have codeable papers', outputdir = os.environ['QCOUTPUTDIR'])
 fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
 fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
 
