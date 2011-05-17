@@ -15,6 +15,9 @@
 #
 # History:
 #
+# 05/17/2011	lec
+#	- TR10629; add J:171409
+#
 # 05/13/2010	lec
 #	- TR10161; add J:157819
 #
@@ -65,9 +68,10 @@ endYear = string.atoi(mgi_utils.date('%Y'))
 elect_ref1 = 'J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, J:85124 Sousa-Nunes,'
 elect_ref2 = 'J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen, J:122989 Eichele, J:140465 Robson'
 elect_ref3 = 'J:141291 Tamplin1, J:143778 Tamplin2, J:153498 Eurexpress, J:157819 Blackshaw2, J:162220 BGEM'
+elect_ref4 = 'J:171409 J Am Soc Nephrol'
 
 # _Refs_key for all electronic references
-electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316)"
+electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316,172505)"
 
 
 '''
@@ -355,7 +359,8 @@ def fullCoded():
     fp.write('Assays and Assay Results by Source:' + CRT)
     fp.write('(Electronic References are:  ' + elect_ref1 + CRT)
     fp.write('                             ' + elect_ref2 + CRT)
-    fp.write('                             ' + elect_ref3 + 2*CRT)
+    fp.write('                             ' + elect_ref3 + CRT)
+    fp.write('                             ' + elect_ref4 + 2*CRT)
 
     fp.write(string.ljust('             ', 15))
     fp.write(string.ljust('Electronic Submission', 25))
