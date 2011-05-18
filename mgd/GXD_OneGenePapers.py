@@ -31,6 +31,9 @@
 #
 # History:
 #
+# lec	10/18/2011
+#	- TR10701/add stages
+#
 # lec	09/23/2009
 #	- TR9896; add conditional column
 #
@@ -45,7 +48,6 @@
 import sys
 import os
 import string
-import re
 import db
 import reportlib
 
@@ -71,6 +73,8 @@ fp.write(SPACE)
 fp.write(string.ljust('J Number', 10))
 fp.write(SPACE)
 fp.write(string.ljust('Short Citation', 255))
+fp.write(SPACE)
+fp.write(string.ljust('Ages', 100))
 fp.write(CRT)
 
 fp.write(20*'-')
@@ -86,6 +90,8 @@ fp.write(SPACE)
 fp.write(10*'-')
 fp.write(SPACE)
 fp.write(255*'-')
+fp.write(SPACE)
+fp.write(100*'-')
 fp.write(CRT)
 
 cmds = []
@@ -93,86 +99,121 @@ cmds = []
 # Get one gene papers that have not been full coded.  If a paper is not full
 # coded, it should be in the index, but not in any assay.
 #
-db.sql('select gi._Refs_key ' + \
-       'into #included_papers ' + \
-       'from GXD_Index gi ' + \
-       'where not exists (select 1 ' + \
-                         'from GXD_Assay ga ' + \
-                         'where ga._Refs_key = gi._Refs_key) ' + \
-       'group by gi._Refs_key ' + \
-       'having count(gi._Refs_key) = 1', None)
+db.sql('''
+	select gi._Refs_key 
+        into #included_papers 
+        from GXD_Index gi 
+        where not exists (select 1 
+                          from GXD_Assay ga 
+                          where ga._Refs_key = gi._Refs_key) 
+        group by gi._Refs_key 
+        having count(gi._Refs_key) = 1
+	''', None)
 
 #
 # Get papers that only contain assay type "cDNA" and/or "Primer extension".
 # These will be excluded from the results.
 #
-db.sql('select distinct gi._Refs_key ' + \
-       'into #excluded_papers ' + \
-       'from GXD_Index gi ' + \
-       'where 0 = (select count(*) from GXD_Index_Stages gis ' + \
-                  'where gi._Index_key = gis._Index_key ' + \
-                  'and gis._IndexAssay_key != 74725 ' + \
-                  'and gis._IndexAssay_key != 74728) ' + \
-       'and exists (select 1 from GXD_Index_Stages gis ' + \
-                   'where gi._Index_key = gis._Index_key ' + \
-                   'and gis._IndexAssay_key in (74725, 74728))', None)
+db.sql('''
+	select distinct gi._Refs_key 
+        into #excluded_papers 
+        from GXD_Index gi 
+        where 0 = (select count(*) from GXD_Index_Stages gis 
+                   where gi._Index_key = gis._Index_key 
+                   and gis._IndexAssay_key != 74725 
+                   and gis._IndexAssay_key != 74728) 
+        and exists (select 1 from GXD_Index_Stages gis 
+                    where gi._Index_key = gis._Index_key 
+                    and gis._IndexAssay_key in (74725, 74728))
+	''', None)
 
 #
 # Get the final list of papers for the report by excluding the ones that 
 # are not needed.
 #
-db.sql('select gi._Index_key, gi._Refs_key, gi._Marker_key, ' + \
-              'gi._Priority_key ' + \
-       'into #papers1 ' + \
-       'from GXD_Index gi, #included_papers ip ' + \
-       'where gi._Refs_key = ip._Refs_key ' + \
-       'and gi._Priority_key in (74715, 74714) ' + \
-             'and not exists (select 1 ' + \
-                         'from #excluded_papers ep ' + \
-                         'where ep._Refs_key = gi._Refs_key)', None)
+db.sql('''
+	select gi._Index_key, gi._Refs_key, gi._Marker_key, 
+               gi._Priority_key 
+        into #papers1 
+        from GXD_Index gi, #included_papers ip 
+        where gi._Refs_key = ip._Refs_key 
+        and gi._Priority_key in (74715, 74714) 
+              and not exists (select 1 
+                          from #excluded_papers ep 
+                          where ep._Refs_key = gi._Refs_key)
+	''', None)
 
 #
 # Add in the new gene indicator.
 #
-db.sql('select p1.*, 1 "new_gene" ' + \
-       'into #papers2 ' + \
-       'from #papers1 p1 ' + \
-       'where not exists (select 1 from GXD_Assay ga ' + \
-                         'where p1._Marker_key = ga._Marker_key) ' + \
-       'union ' + \
-       'select p1.*, 0 "new_gene" ' + \
-       'from #papers1 p1 ' + \
-       'where exists (select 1 from GXD_Assay ga ' + \
-                      'where p1._Marker_key = ga._Marker_key)', None)
+db.sql('''
+	select p1.*, 1 "new_gene" 
+        into #papers2 
+        from #papers1 p1 
+        where not exists (select 1 from GXD_Assay ga 
+                          where p1._Marker_key = ga._Marker_key) 
+        union 
+        select p1.*, 0 "new_gene" 
+        from #papers1 p1 
+        where exists (select 1 from GXD_Assay ga 
+                       where p1._Marker_key = ga._Marker_key)
+	''', None)
 
 #
 # Add in the E? annotation indicator.
 #
-db.sql('select p2.*, 0 "E_annot" ' + \
-       'into #papers3 ' + \
-       'from #papers2 p2 ' + \
-       'where not exists (select 1 from GXD_Index_Stages gis ' + \
-                         'where gis._Index_key = p2._Index_key and ' + \
-                               'gis._StageID_key = 74769 and ' + \
-                               'gis._IndexAssay_key not in (74725,74728)) ' + \
-       'union ' + \
-       'select p2.*, 1 "E_annot" ' + \
-       'from #papers2 p2 ' + \
-       'where exists (select 1 from GXD_Index_Stages gis ' + \
-                     'where gis._Index_key = p2._Index_key and ' + \
-                           'gis._StageID_key = 74769 and ' + \
-                           'gis._IndexAssay_key not in (74725,74728))', None)
+db.sql('''
+	select p2.*, 0 "E_annot" 
+        into #papers3 
+        from #papers2 p2 
+        where not exists (select 1 from GXD_Index_Stages gis 
+                          where gis._Index_key = p2._Index_key and 
+                                gis._StageID_key = 74769 and 
+                                gis._IndexAssay_key not in (74725,74728)) 
+        union 
+        select p2.*, 1 "E_annot" 
+        from #papers2 p2 
+        where exists (select 1 from GXD_Index_Stages gis 
+                      where gis._Index_key = p2._Index_key and 
+                            gis._StageID_key = 74769 and 
+                            gis._IndexAssay_key not in (74725,74728))
+	''', None)
+
+#
+# Add in the Stages
+# print unique stages
+# exclude assay type:  cDNA, Primer ex
+#
+stages = {}
+results = db.sql('''
+	select p3._Index_key, t.term
+	from #papers3 p3, GXD_Index_Stages s, VOC_Term t
+	where p3._Index_key = s._Index_key
+	and s._StageID_key = t._Term_key
+	and s._IndexAssay_key not in (74725,74728)
+	order by p3._Index_key, t.term
+	''', 'auto')
+for r in results:
+    key = r['_Index_key']
+    value = r['term']
+
+    if not stages.has_key(key):
+	stages[key] = []
+    if value not in stages[key]:
+        stages[key].append(value)
 
 #
 # Get the final results set for the report.
 #
-results = db.sql('select giv.symbol, p3.new_gene, vt.term, p3.E_annot, ' + \
-                        'giv.jnumID, giv.short_citation, conditional = vt2.term ' + \
-                 'from #papers3 p3, GXD_Index_View giv, VOC_Term vt, VOC_Term vt2 ' + \
-                 'where p3._Index_key = giv._Index_key and ' + \
-                       'p3._Priority_key = vt._Term_key and ' + \
-                       'giv._ConditionalMutants_key = vt2._Term_key ' + \
-                 'order by p3.new_gene desc, p3._Priority_key, giv.symbol', 'auto')
+results = db.sql('''
+		  select p3._Index_key, giv.symbol, p3.new_gene, vt.term, p3.E_annot, 
+                         giv.jnumID, giv.short_citation, conditional = vt2.term 
+                  from #papers3 p3, GXD_Index_View giv, VOC_Term vt, VOC_Term vt2 
+                  where p3._Index_key = giv._Index_key and 
+                        p3._Priority_key = vt._Term_key and 
+                        giv._ConditionalMutants_key = vt2._Term_key 
+                  order by p3.new_gene desc, p3._Priority_key, giv.symbol
+		  ''', 'auto')
 
 for r in results:
     if r['new_gene'] == 0:
@@ -198,6 +239,11 @@ for r in results:
     fp.write(string.ljust(r['jnumID'], 10))
     fp.write(SPACE)
     fp.write(string.ljust(r['short_citation'], 255))
+    fp.write(SPACE)
+
+    key = r['_Index_key']
+    if stages.has_key(key):
+        fp.write(string.join(stages[key], TAB))
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
