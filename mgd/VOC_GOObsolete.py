@@ -17,6 +17,9 @@
 #
 # History:
 #
+# 05/18/2011	lec
+#	- TR 10720; "clustered" index removed; duplicates may appear
+#
 # 11/07/2006	lec
 #	- TR 8014
 #
@@ -54,7 +57,7 @@ db.sql('select goID = a.accID, ta._Object_key ' + \
 	'and a._MGIType_key = 13 ' + \
 	'and a.preferred = 1', None)
 
-db.sql('create clustered index idx_key on #obsolete(_Object_key)', None)
+db.sql('create index idx_key on #obsolete(_Object_key)', None)
 
 results = db.sql('select goID, ma.accID, m.symbol ' + \
 	'from #obsolete o, ACC_Accession ma, MRK_Marker m ' + \
