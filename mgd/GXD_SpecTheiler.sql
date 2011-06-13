@@ -1,3 +1,5 @@
+/* TR10731/added 'mesometrium' */
+
 set nocount on
 go
 
@@ -10,7 +12,7 @@ and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and s._StructureName_key = sn._StructureName_key
 and not (t.stage = 28 
-and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis"))
+and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis", "mesometrium"))
 go
 
 select distinct _Specimen_key 
@@ -30,7 +32,7 @@ and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and s._StructureName_key = sn._StructureName_key
-and not (t.stage = 28 and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis","uterus"))
+and not (t.stage = 28 and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis","uterus", "mesometrium"))
 go
 
 select distinct _GelLane_key 
@@ -45,7 +47,7 @@ go
 
 print ""
 print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)"
+print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:mesometrium)"
 print ""
 
 select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
@@ -57,7 +59,7 @@ go
 
 print ""
 print "Gel Lane Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus)"
+print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)"
 print ""
 
 select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
