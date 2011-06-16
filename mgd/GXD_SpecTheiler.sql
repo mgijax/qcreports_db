@@ -12,7 +12,7 @@ and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and s._StructureName_key = sn._StructureName_key
 and not (t.stage = 28 
-and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis", "mesometrium"))
+and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis"))
 go
 
 select distinct _Specimen_key 
@@ -47,7 +47,7 @@ go
 
 print ""
 print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:mesometrium)"
+print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)"
 print ""
 
 select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
