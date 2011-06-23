@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select a._Assay_key, a._Refs_key, specimenLabel = substring(specimenLabel, 1, 50)
+select a._Assay_key, a._Refs_key, substring(specimenLabel, 1, 50) as specimenLabel
 into #knockin
 from GXD_Assay a, GXD_Specimen s
 where a._AssayType_key = 9
@@ -18,7 +18,7 @@ print ""
 print "GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype"
 print ""
 
-select a.accID "Assay", b.accID "J:", k.specimenLabel
+select a.accID as "Assay", b.accID as "J:", k.specimenLabel
 from #knockin k, ACC_Accession a, ACC_Accession b
 where k._Assay_key = a._Object_key
 and a._MGIType_key = 8

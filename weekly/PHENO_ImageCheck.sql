@@ -70,7 +70,7 @@ print ""
 print "Images with JPGs whose Thumbnails have no JPGs"
 print ""
 
-select distinct c.accID "MGI ID"
+select distinct c.accID as "MGI ID"
 from IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 11
 and a._ImageType_key = 1072158

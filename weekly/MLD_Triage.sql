@@ -26,7 +26,7 @@ print ""
 
 set nocount off
 
-select v.jnumID, substring(v.short_citation, 1, 50)
+select v.jnumID, substring(v.short_citation, 1, 50) as short_citation
 from #triage t, BIB_All_View v
 where t._Refs_key = v._Refs_key
 order by v.jnum

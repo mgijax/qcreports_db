@@ -23,7 +23,7 @@ print ""
 print "Duplicate MP Annotations"
 print ""
 
-select a.accID, ta.accID, substring(t.term,1,50) 
+select a.accID, ta.accID, substring(t.term,1,50) as term
 from #dup d, ACC_Accession a, ACC_Accession ta, VOC_Term t
 where d._Object_key = a._Object_key
 and a._MGIType_key = 12

@@ -57,7 +57,8 @@ print ""
 print "Non Standard Strains (excluding F1 and F2): data attached = yes"
 print ""
 
-select substring(l.name,1,20) "external db", a.accID "external id", n.inIMSR, substring(s.strain,1,125) "strain"
+select substring(l.name,1,20) as "external db", a.accID as "external id", 
+n.inIMSR, substring(s.strain,1,125) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
@@ -87,7 +88,8 @@ print ""
 print "Non Standard Strains (excluding F1 and F2): data attached = no"
 print ""
 
-select substring(l.name,1,20) "external db", a.accID "external id", n.inIMSR, substring(s.strain,1,125) "strain"
+select substring(l.name,1,20) as "external db", a.accID as "external id", 
+n.inIMSR, substring(s.strain,1,125) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
@@ -99,7 +101,7 @@ and a._MGIType_key = 10
 and a._LogicalDB_key != 1
 and a._LogicalDB_key = l._LogicalDB_key
 union
-select null, null, n.inIMSR, substring(s.strain,1,125)
+select null, null, n.inIMSR, substring(s.strain,1,125) as "strain"
 from PRB_Strain s, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'

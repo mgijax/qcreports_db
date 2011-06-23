@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select s._Strain_key, strain = substring(s.strain,1,100)
+select s._Strain_key, substring(s.strain,1,100) as strain
 into #strains
 from PRB_Strain s
 where s.standard = 0
@@ -44,7 +44,7 @@ print ""
 print "Non-Standard Strains with no external IDs, no data attached and no notes in any notes field"
 print ""
 
-select s.strain, accID = null, accType = "Other"
+select s.strain, null as accID, accType = "Other"
 from #strains s
 where not exists (select 1 from PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key

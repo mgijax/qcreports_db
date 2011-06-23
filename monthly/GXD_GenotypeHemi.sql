@@ -31,7 +31,8 @@ print "mutated gene on X or Y"
 print "sex = male"
 print ""
 
-select distinct a1.accID "J number of assay", a2.accID "MGI ID of assay", substring(g.name, 1, 30) "name of allele1 of genotype"
+select distinct a1.accID as "J number of assay", a2.accID as "MGI ID of assay", 
+substring(g.name, 1, 30) as "name of allele1 of genotype"
 from #genotypes g, GXD_Assay a, GXD_Specimen s, ACC_Accession a1, ACC_Accession a2
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'
@@ -52,7 +53,8 @@ print "mutated gene on X or Y"
 print "sex = male"
 print ""
 
-select distinct a1.accID "J number of assay", a2.accID "MGI ID of assay", substring(g.name, 1, 30) "name of allele1 of genotype"
+select distinct a1.accID as "J number of assay", a2.accID as "MGI ID of assay", 
+substring(g.name, 1, 30) as "name of allele1 of genotype"
 from #genotypes g, GXD_Assay a, GXD_GelLane s, ACC_Accession a1, ACC_Accession a2
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'

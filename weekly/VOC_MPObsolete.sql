@@ -21,7 +21,7 @@ print ""
 print "Genotype Annotations to Obsolete MP Terms"
 print ""
 
-select g.accID "Genotype ID", o.accID "MP ID", substring(o.term , 1, 100) "Term"
+select g.accID as "Genotype ID", o.accID as "MP ID", substring(o.term , 1, 100) as "Term"
 from #obsolete o, VOC_Annot a, ACC_Accession g
 where a._AnnotType_key = 1002 
 and a._Term_key = o._Object_key 
