@@ -17,7 +17,7 @@ go
 
 /* select those that share the same reference */
 /* exclude Not Specified genotype */
-select genoGXD = g._Genotype_key, genoAP = a._Object_key, g._Refs_key
+select genoGXD = g._Genotype_key, a._Object_key as genoAP, g._Refs_key
 into #shareRef
 from #gxd g, #ap a
 where g._Refs_key = a._Refs_key
@@ -54,13 +54,13 @@ and a._Allele_key_2 is not null
 go
 
 /* calculate allele counts */
-select s.genoGXD, alleleCount = count(s._Allele_key_1)
+select s.genoGXD, count(s._Allele_key_1) as alleleCount
 into #gxdCount
 from #gxdAlleles s
 group by s.genoGXD
 go
 
-select s.genoAP, alleleCount = count(s._Allele_key_1)
+select s.genoAP, count(s._Allele_key_1) as alleleCount
 into #apCount
 from #apAlleles s
 group by s.genoAP
@@ -115,7 +115,7 @@ go
 
 /* select those that have the same alleles and where there is not already */
 /* another GXD/AP genotype that does match */
-select jnum = a.accID, gxdStrain = s1.strain, apStrain = s2.strain, s.genoGXD
+select a.accID as jnum, s1.strain as gxdStrain, s2.strain as apStrain, s.genoGXD
 into #toPrint1
 from #sameCount s, GXD_Genotype g1, PRB_Strain s1, GXD_Genotype g2, PRB_Strain s2, ACC_Accession a
 where s.genoGXD = g1._Genotype_key
@@ -138,7 +138,8 @@ print ""
 print "References where GXD and Pheno differ in Genotype"
 print ""
 
-select t.jnum, substring(t.gxdStrain, 1, 75) "GXD Strain", substring(t.apStrain, 1, 75) "A&P Strain", a1.symbol, a2.symbol
+select t.jnum, substring(t.gxdStrain, 1, 75) as "GXD Strain", 
+substring(t.apStrain, 1, 75) as "A&P Strain", a1.symbol, a2.symbol
 from #toPrint1 t, GXD_AllelePair a, ALL_Allele a1, ALL_Allele a2
 where t.genoGXD = a._Genotype_key
 and a._Allele_key_1 = a1._Allele_key

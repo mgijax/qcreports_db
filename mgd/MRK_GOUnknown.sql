@@ -5,7 +5,8 @@ go
 /* GO Annotations to unknown terms */
 /* only include non-FANTOM references */
 
-select distinct symbol = substring(m.symbol,1,25), m._Marker_key, r._Refs_key, pubmedID = substring(r.pubmedID,1,20)
+select distinct substring(m.symbol,1,25) as symbol, m._Marker_key, r._Refs_key, 
+substring(r.pubmedID,1,20) as pubmedID
 into #temp1
 from MRK_Marker m, VOC_Annot_View a, MRK_Reference r
 where m._Organism_key = 1 
@@ -24,7 +25,7 @@ go
 
 /* grab the marker accession ids */
 
-select t.symbol, t._Refs_key, t.pubmedID, mgiID = substring(ma.accID,1,20)
+select t.symbol, t._Refs_key, t.pubmedID, substring(ma.accID,1,20) as mgiID
 into #temp2
 from #temp1 t, ACC_Accession ma
 where t._Marker_key = ma._Object_key 

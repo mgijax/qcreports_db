@@ -1,8 +1,8 @@
 set nocount on
 go
 
-select distinct s._Strain_key, strain = substring(s.strain,1,85),
-alleleSymbol = substring(strain, charindex("-", strain) + 1, char_length(s.strain)),
+select distinct s._Strain_key, substring(s.strain,1,85) as strain,
+substring(strain, charindex("-", strain) + 1, char_length(s.strain)) as alleleSymbol,
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
 from PRB_Strain s, PRB_Strain_Marker_View sm
@@ -19,7 +19,7 @@ print "with any number of Markers and Marker has no Allele"
 print "and Allele symbol embedded in Strain is in MGD"
 print ""
 
-select s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+select s.strain, s.symbol, substring(s.alleleSymbol, 1, 35) as alleleSymbol
 from #strains s
 where s._Allele_key is null
 and exists (select 1 from ALL_Allele a

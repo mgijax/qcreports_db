@@ -8,9 +8,9 @@ print "but the Accession ID of the mutant cell line has not been attached."
 print "(See the EI Mutant Cell Line Module)"
 print ""
 
-select substring(ac.creator,1,25) "creator", acc.accID, 
-substring(a.symbol,1,35) "symbol", 
-substring(ac.cellLine,1,25) "mutant cell line ID"
+select substring(ac.creator,1,25) as "creator", acc.accID, 
+substring(a.symbol,1,35) as "symbol", 
+substring(ac.cellLine,1,25) as "mutant cell line ID"
 from ALL_Allele a, ALL_Allele_CellLine c, ALL_CellLine_View ac, ACC_Accession acc
 where a._Allele_key = c._Allele_key
 and c._MutantCellLine_key = ac._CellLine_key
@@ -60,9 +60,9 @@ print "but the mutant cell line name is not the same as the name of the Accessio
 print "(See the EI Mutant Cell Line Module)"
 print ""
 
-select substring(ac.creator,1,25) "creator", acc.accID, 
-substring(a.symbol,1,35) "symbol", 
-substring(ac.cellLine,1,25) "mutant cell line ID", e.accID "accession id"
+select substring(ac.creator,1,25) as "creator", acc.accID, 
+substring(a.symbol,1,35) as "symbol", 
+substring(ac.cellLine,1,25) as "mutant cell line ID", e.accID "accession id"
 from ALL_Allele a, ALL_Allele_CellLine c, ALL_CellLine_View ac, ACC_Accession acc, #notexists e
 where a._Allele_key = c._Allele_key
 and c._MutantCellLine_key = ac._CellLine_key

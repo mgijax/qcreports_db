@@ -4,7 +4,7 @@ go
 
 /* select all where the a secondary id is annotated */
 
-select ma._Object_key, ma.accID, sequenceKey = sa._Object_key
+select ma._Object_key, ma.accID, sa._Object_key as sequenceKey
 into #markers1
 from ACC_Accession sa, ACC_Accession ma
 where sa._MGIType_key = 19
@@ -35,7 +35,7 @@ go
 create nonclustered index idx_mkey on #markers(_Object_key)
 go
 
-select m.*, egID = a.accID
+select m.*, a.accID as egID
 into #final
 from #markers m, ACC_Accession a
 where m._Object_key = a._Object_key

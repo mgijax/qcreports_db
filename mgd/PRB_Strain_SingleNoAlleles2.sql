@@ -1,8 +1,8 @@
 set nocount on
 go
 
-select distinct s._Strain_key, strain = substring(s.strain,1,50), s.private,
-alleleSymbol = substring(strain, charindex("-", strain) + 1, char_length(s.strain)),
+select distinct s._Strain_key, substring(s.strain,1,50) as strain, s.private,
+substring(strain, charindex("-", strain) + 1, char_length(s.strain)) as alleleSymbol,
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
 from PRB_Strain s, PRB_Strain_Attribute_View st, PRB_Strain_Marker_View sm
@@ -29,7 +29,8 @@ print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is *not* in MGD"
 print ""
 
-select externalDB = substring(l.name, 1, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+select substring(l.name, 1, 20) as externalDB, a.accID, s.strain, s.symbol, 
+substring(s.alleleSymbol, 1, 35) as alleleSymbol
 from #singles s, ACC_Accession a, ACC_LogicalDB l
 where s._Allele_key is null
 and s.private = 1
@@ -50,7 +51,8 @@ print "with at most one Marker and Marker has no Allele"
 print "and Allele symbol is *not* in MGD"
 print ""
 
-select externalDB = substring(l.name, 1, 20), a.accID, s.strain, s.symbol, alleleSymbol = substring(s.alleleSymbol, 1, 35)
+select substring(l.name, 1, 20) as externalDB, a.accID, s.strain, s.symbol, 
+substring(s.alleleSymbol, 1, 35) as alleleSymbol
 from #singles s, ACC_Accession a, ACC_LogicalDB l
 where s._Allele_key is null
 and s.private = 0

@@ -27,7 +27,7 @@ print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
 print "(excludes TS28:placenta, TS28:decidua)"
 print ""
 
-select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key

@@ -86,7 +86,7 @@ print ""
 
 set nocount on
 select distinct i.jnumID, i.mgiID, r._primary, 
-       n.note, p = substring(r._primary, 1, charindex(" ", r._primary) - 1)
+       n.note, substring(r._primary, 1, charindex(" ", r._primary) - 1) as p
 into #a
 from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._MGIType_key = 8
@@ -108,7 +108,7 @@ print "Images with JPGs whose Thumbnails have no JPGs"
 print "(this only includes GXD assays and exclucdes recombinase assays)"
 print ""
 
-select distinct c.accID "MGI ID"
+select distinct c.accID as "MGI ID"
 from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158
@@ -128,7 +128,7 @@ print "Images with JPGs whose Thumbnails have JPGs with incorrect X dimension (n
 print "(this only includes GXD assays and excludes recombinase assays)"
 print ""
 
-select distinct c.accID "MGI ID"
+select distinct c.accID as "MGI ID"
 from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158

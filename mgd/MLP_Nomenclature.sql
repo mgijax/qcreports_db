@@ -5,9 +5,9 @@ print "These Strains have their 'Needs Review' flag set to 'Yes'."
 print "To remove a Strain from this report, set the flag to 'No'."
 print ""
 
-select substring(s.strain,1,60) "strain", 
-       substring(m.symbol,1,25) "marker", 
-       substring(a.symbol,1,25) "allele",
+select substring(s.strain,1,60) as strain, 
+       substring(m.symbol,1,25) as marker, 
+       substring(a.symbol,1,25) as allele,
        s.modification_date
 from PRB_Strain s, PRB_Strain_NeedsReview_View n, PRB_Strain_Marker sm,
      MRK_Marker m, ALL_Allele a

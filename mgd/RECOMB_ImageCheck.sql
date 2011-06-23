@@ -35,7 +35,7 @@ print ""
 print "Thumbnails with JPGs"
 print ""
 
-select distinct c.accID "MGI ID"
+select distinct c.accID as "MGI ID"
 from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158

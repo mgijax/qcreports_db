@@ -31,7 +31,7 @@ print ""
 print "Symbols w/ > 1 Ensembl, VEGA or NCBI Gene Model Association"
 print ""
 
-select m.symbol, s.accID, provider = substring(s.provider,1,50)
+select m.symbol, s.accID, substring(s.provider,1,50) as provider
 from #dups s, MRK_Marker m
 where s._Marker_key = m._Marker_key
 order by s.provider, m.symbol

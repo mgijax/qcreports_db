@@ -2,7 +2,7 @@ print ""
 print "Markers which contain Alleles which do not match the Marker Symbol"
 print ""
 
-select m.symbol "Marker", a.symbol "Allele"
+select m.symbol as "Marker", a.symbol as "Allele"
 from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
 and a.symbol != "+"
@@ -39,8 +39,8 @@ print "    or"
 print "    the marker symbol and the allele symbol are not identical"
 print ""
 
-select m.symbol "Marker Symbol", substring(m.name,1,60) "Marker Name", 
-       a.symbol "Allele Symbol", substring(a.name,1,60) "Allele Name"
+select m.symbol as "Marker Symbol", substring(m.name,1,60) as "Marker Name", 
+       a.symbol as "Allele Symbol", substring(a.name,1,60) as "Allele Name"
 from ALL_Allele a, ALL_Marker_Assoc am, MRK_Marker m
 where a._Allele_Status_key = 847114
 and a._Allele_key = am._Allele_key

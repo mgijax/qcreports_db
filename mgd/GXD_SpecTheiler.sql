@@ -50,7 +50,7 @@ print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
 print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)"
 print ""
 
-select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -62,7 +62,7 @@ print "Gel Lane Specimens annotated to structures of > 1 Theiler Stage"
 print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)"
 print ""
 
-select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #temp4 t, GXD_GelLane s, GXD_Assay_View a
 where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key

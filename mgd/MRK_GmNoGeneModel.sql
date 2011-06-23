@@ -18,7 +18,7 @@ and a.prefixPart = "MGI:"
 and a.preferred = 1
 go
 
-select m._Marker_key, hm.symbol, name = substring(h.name,1,50)
+select m._Marker_key, hm.symbol, substring(h.name,1,50) as name
 into #history
 from #markers m, MRK_History h, MRK_Marker hm
 where m._Marker_key = h._Marker_key
@@ -37,7 +37,7 @@ print "   where name begins 'predicted gene'"
 print "   and status = 'official' or 'interim'"
 print ""
 
-select m.accID, m.symbol, h.symbol "old symbol", h.name
+select m.accID, m.symbol, h.symbol as "old symbol", h.name
 from #markers m, #history h
 where m._Marker_key = h._Marker_key
 union

@@ -2,7 +2,7 @@ print ""
 print "Orphan Genotypes (can be deleted)"
 print ""
 
-select a.accID, strain = substring(s.strain, 1, 65)
+select a.accID, substring(s.strain, 1, 65) as strain
 from GXD_Genotype g, PRB_Strain s, ACC_Accession a
 where not exists (select 1 from GXD_Expression a where g._Genotype_key = a._Genotype_key)
 and not exists (select 1 from GXD_GelLane a where g._Genotype_key = a._Genotype_key)

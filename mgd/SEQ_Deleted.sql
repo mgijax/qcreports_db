@@ -28,7 +28,7 @@ go
 
 /* deleted sequences annotated to mouse markers */
 
-select seqID = d.accID, mgiID = ma2.accID, name = m.symbol
+select d.accID as seqID, ma2.accID as mgiID, m.symbol as name
 into #mdeleted
 from #deleted2 d, SEQ_Marker_Cache ma, ACC_Accession ma2, MRK_Marker m
 where d._Sequence_key = ma._Sequence_key
@@ -45,7 +45,7 @@ go
 
 /* deleted sequences annotated to molecular segments */
 
-select seqID = d.accID, mgiID = pa2.accID, p.name
+select d.accID as seqID, pa2.accID as mgiID, p.name
 into #pdeleted
 from #deleted2 d, SEQ_Probe_Cache pa, ACC_Accession pa2, PRB_Probe p
 where d._Sequence_key = pa._Sequence_key

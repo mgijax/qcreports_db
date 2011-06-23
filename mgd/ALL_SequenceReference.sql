@@ -18,7 +18,7 @@ print ""
 print "Reference associations created by the gene trap load"
 print ""
 
-select jnumID, substring(short_citation, 1, 75) "citation", count(_Object_key) "number of allele records"
+select jnumID, substring(short_citation, 1, 75) as "citation", count(_Object_key) as "number of allele records"
 from #reference
 group by jnumID, short_citation
 order by short_citation

@@ -15,8 +15,8 @@ print ""
 print "MCL's that are associated with more than one Allele"
 print ""
 
-select cellLine = substring(c.cellLine,1,50), 
-       symbol = substring(aa.symbol,1,50), aa.modification_date
+select substring(c.cellLine,1,50) as cellLine, 
+       substring(aa.symbol,1,50) as symbol, aa.modification_date
 from #mutant m, ALL_Allele_CellLine a, ALL_Allele aa, ALL_CellLine c
 where m._MutantCellLine_key = a._MutantCellLine_key
 and a._Allele_key = aa._Allele_key

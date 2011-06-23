@@ -82,7 +82,7 @@ print ""
 print "InSitu Results missing Structures"
 print ""
 
-select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #imissingstructs r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -109,7 +109,7 @@ print ""
 print "InSitu Specimens missing Results"
 print ""
 
-select a.mgiID, a.jnumID, specimenLabel = substring(s.specimenLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #imissingresults r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -135,7 +135,7 @@ print ""
 print "Gel Results missing Structures"
 print ""
 
-select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
@@ -158,7 +158,7 @@ print ""
 print "Gel Results missing Bands"
 print ""
 
-select a.mgiID, a.jnumID, laneLabel = substring(s.laneLabel, 1, 50)
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #gmissingbands r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key

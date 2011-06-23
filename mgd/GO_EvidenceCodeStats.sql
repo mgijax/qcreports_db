@@ -22,7 +22,7 @@ print ""
 print "Total # of Annotations by GO Evidence Code"
 print ""
 
-select count(_Annot_key) "# of Annotations", evidenceCode
+select count(_Annot_key) as "# of Annotations", evidenceCode
 from #goevidence
 group by evidenceCode
 go
@@ -31,7 +31,7 @@ print ""
 print "Number of Markers Per GO Evidence Code"
 print ""
 
-select count(_Object_key) "# of Markers", evidenceCode
+select count(_Object_key) as "# of Markers", evidenceCode
 from #gomarker
 group by evidenceCode
 go

@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select distinct s._Strain_key, strain = substring(s.strain,1,85), 
+select distinct s._Strain_key, substring(s.strain,1,85) as strain, 
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
 from PRB_Strain s, PRB_Strain_Attribute_View st, PRB_Strain_Marker_View sm

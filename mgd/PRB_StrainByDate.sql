@@ -21,7 +21,8 @@ print""
 print "excludes /Mmcd from 06/07/2011"
 print ""
 
-select jr = null, substring(t.term,1,30) "strainattribute", substring(s.strain,1,125) "strain", s.creation_date
+select null as jr, substring(t.term,1,30) as "strainattribute", 
+substring(s.strain,1,125) as "strain", s.creation_date
 from PRB_Strain s, PRB_Strain_Attribute_View t
 where s.standard = 0
 and s._Strain_key *= t._Strain_key
@@ -34,7 +35,8 @@ where s._Strain_key = n._Strain_key
 and n.term = "Needs Review - load")
 and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 union
-select jr = a.accID, substring(t.term,1,30) "strainattribute", substring(s.strain,1,125) "strain", s.creation_date
+select a.accID as jr, substring(t.term,1,30) as "strainattribute", 
+substring(s.strain,1,125) as "strain", s.creation_date
 from PRB_Strain s, PRB_Strain_Attribute_View t, ACC_Accession a
 where s.standard = 0
 and s._Strain_key *= t._Strain_key
@@ -55,7 +57,8 @@ print ""
 print "includes /Mmcd from 06/07/2011"
 print ""
 
-select jr = null, substring(t.term,1,30) "strainattribute", substring(s.strain,1,125) "strain", s.creation_date
+select null as jr, substring(t.term,1,30) as "strainattribute", 
+substring(s.strain,1,125) as "strain", s.creation_date
 from PRB_Strain s, PRB_Strain_Attribute_View t
 where s.standard = 0
 and s._Strain_key *= t._Strain_key
@@ -68,7 +71,8 @@ where s._Strain_key = n._Strain_key
 and n.term = "Needs Review - load")
 and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 union
-select jr = a.accID, substring(t.term,1,30) "strainattribute", substring(s.strain,1,125) "strain", s.creation_date
+select a.accID as jr, substring(t.term,1,30) as "strainattribute", 
+substring(s.strain,1,125) as "strain", s.creation_date
 from PRB_Strain s, PRB_Strain_Attribute_View t, ACC_Accession a
 where s.standard = 0
 and s._Strain_key *= t._Strain_key
