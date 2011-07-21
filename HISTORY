@@ -1,3 +1,10 @@
+TAG: not tagged
+DATE: 07/21/2011
+STAFF: lec
+CHANGES: qcr.html
+1) moved "name = a.name" to "a.name as name"
+   for compliance with ansi sql
+
 TAG: no tag
 DATE: 06/23/2011
 STAFF: lec
