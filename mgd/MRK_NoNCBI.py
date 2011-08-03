@@ -13,6 +13,10 @@
 # Usage:
 #       MRK_NoNCBI.py
 #
+# lec	08/03/2011
+#	- TR 10801; removed 'and (s.description like "%protein_coding%" or s.description like "%pseudogene%")'
+# 	- remove "we exclude all but type protein_coding and pseudogene"
+#
 # lec	05/08/2008
 #	- TR 8966; Build 37
 #
@@ -38,16 +42,14 @@ fp.write('# NCBI Gene Models with no Marker Association\n')
 fp.write('#\n')
 
 # get the full set of NCBI gene model ids
-# we exclude the obsolete vega ids (only include status = active)
-# we exclude all but type protein_coding and pseudogene
+# only include status = active
 db.sql('select accID ' + \
     'into #ncbiGeneModel ' + \
     'from ACC_Accession  a, SEQ_Sequence s ' + \
     'where a._lOGicalDB_key = 59 ' + \
     'and a._MGIType_key = 19 ' + \
     'and a._Object_key = s._Sequence_key ' + \
-    'and s._SequenceStatus_key = 316342 ' + \
-    'and (s.description like "%protein_coding%" or s.description like "%pseudogene%")', None)
+    'and s._SequenceStatus_key = 316342 ', None)
 db.sql('create index idxAccid on #ncbiGeneModel(accID)', None)
 
 # get the set of NCBI ids with marker associations
@@ -59,6 +61,7 @@ db.sql('select distinct accID ' + \
     'and preferred = 1', None)
 db.sql('create index idxAccid on #ncbiGeneAssoc(accID)', None)
 
+# get the set of NCBI ids that do *not* contain markers
 results = db.sql('select gm.accid as ncbiGeneModelNoAssoc ' + \
     'from #ncbiGeneModel gm ' + \
     'where not exists (select 1 ' + \
