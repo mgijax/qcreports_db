@@ -86,7 +86,7 @@ for r in results:
 	fp.write(r['name'] + TAB)
 
 	if r['statusNote'] != None:
-		fp.write(re.sub('\n', ' ', r['statusNote']))
+		fp.write(string.replace(r['statusNote'], '\n', ' '))
 	fp.write(TAB)
 
 	if accids.has_key(r['_Nomen_key']):

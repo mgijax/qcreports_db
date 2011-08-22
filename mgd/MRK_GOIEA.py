@@ -47,6 +47,9 @@
 #
 # History:
 #
+# lec	08/22/2011
+#	- TR10813; 2E; include feature type = 'protein coding genes' only
+#
 # lec	12/31/2009
 #	- TR 9989; remove A,C,F
 #
@@ -79,7 +82,7 @@
  
 import sys 
 import os
-import re
+import string
 import db
 import reportlib
 import mgi_utils
@@ -98,7 +101,7 @@ def writeRecordD(fp, r):
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
 	if r['pubmedID'] != None:
-		purl = re.sub('@@@@', r['pubmedID'], url)
+		purl = string.replace(url, '@@@@', r['pubmedID'])
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
@@ -145,61 +148,66 @@ for r in results:
 
 # select non-ORF genes with GO Associations of evidence IEA only
 
-db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
-	'into #markers ' + \
-	'from MRK_Marker m, ACC_Accession a ' + \
-	'where m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m.name not like "gene model %" ' + \
-	'and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" ' + \
-	'and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" ' + \
-	'and m.symbol not like "ORF%" ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key = 115) ' + \
-	'and not exists (select 1 from  VOC_Annot a, VOC_Evidence e ' + \
-	'where m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e._EvidenceTerm_key != 115) ', None)
+db.sql('''select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart
+	into #markers
+	from MRK_Marker m, ACC_Accession a
+	where m._Marker_Type_key = 1
+	and m._Marker_Status_key in (1,3)
+	and m.name not like "gene model %"
+	and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]"
+	and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]"
+	and m.symbol not like "ORF%"
+	and m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = "MGI:"
+	and a.preferred = 1
+	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key = 115)
+	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
+	where m._Marker_key = a._Object_key
+	and a._AnnotType_key = 1000
+	and a._Annot_key = e._Annot_key
+	and e._EvidenceTerm_key != 115) 
+	''', None)
 db.sql('create index idx1 on #markers(_Marker_key)', None)
 
 ##
 
-db.sql('select distinct m.*, r._Refs_key, r.pubmedID ' + \
-	'into #references1 ' + \
-	'from #markers m , MRK_Reference r ' + \
-	'where m._Marker_key = r._Marker_key ', None)
+db.sql('''select distinct m.*, r._Refs_key, r.pubmedID
+	into #references1
+	from #markers m , MRK_Reference r
+	where m._Marker_key = r._Marker_key
+	''', None)
 db.sql('create index index_refs_key on #references1(_Refs_key)', None)
 
-db.sql('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
-	'into #references ' + \
-	'from #references1 r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key', None)
+db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation
+	into #references
+	from #references1 r, BIB_All_View b
+	where r._Refs_key = b._Refs_key
+	''', None)
 db.sql('create index index_refs_key on #references(_Refs_key)', None)
 
 # has reference been chosen for GXD
-results = db.sql('select distinct r._Refs_key ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where r._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Expression" ' + \
-	'and ba.isNeverUsed = 0', 'auto')
+results = db.sql('''select distinct r._Refs_key
+	from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+	where r._Refs_key = ba._Refs_key
+	and ba._DataSet_key = bd._DataSet_key
+	and bd.dataSet = "Expression"
+	and ba.isNeverUsed = 0
+	''', 'auto')
 gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
 
 # does gene have mouse model annotated to OMIM disease
-results = db.sql('select distinct m._Marker_key ' + \
-	'from #markers m, MRK_OMIM_Cache o ' + \
-	'where m._Marker_key = o._Marker_key', 'auto')
+results = db.sql('''select distinct m._Marker_key
+	from #markers m, MRK_OMIM_Cache o
+	where m._Marker_key = o._Marker_key
+	''', 'auto')
 omim = []
 for r in results:
 	omim.append(r['_Marker_key'])
@@ -208,18 +216,19 @@ for r in results:
 # fpD
 #
 
-db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
-	'r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
-	'into #fpD ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where r._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Gene Ontology" ' + \
-	'and ba.isNeverUsed = 0 ' + \
-	'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
-	'where r._Refs_key = e._Refs_key ' + \
-	'and e._Annot_key = a._Annot_key ' + \
-	'and a._AnnotType_key = 1000) ', None)
+db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
+	r.jnumID, r.jnum, r.numericPart, r.pubmedID
+	into #fpD
+	from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+	where r._Refs_key = ba._Refs_key
+	and ba._DataSet_key = bd._DataSet_key
+	and bd.dataSet = "Gene Ontology"
+	and ba.isNeverUsed = 0
+	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
+	where r._Refs_key = e._Refs_key
+	and e._Annot_key = a._Annot_key
+	and a._AnnotType_key = 1000)
+	''', None)
 
 # number of unique MGI gene
 results = db.sql('select distinct _Marker_key from #fpD', 'auto')
@@ -242,35 +251,42 @@ for r in results:
 #
 
 # select genes with OMIM Associations
+# feature type = 'protein coding genes'
 
-db.sql('select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart ' + \
-	'into #omimmarkers ' + \
-	'from MRK_Marker m, ACC_Accession a ' + \
-	'where m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1 ' + \
-	'and exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a ' + \
-	'where m._Marker_key = g._Marker_key ' + \
-	'and g._Genotype_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1005) ', None)
+db.sql('''select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart 
+	into #omimmarkers
+	from MRK_Marker m, ACC_Accession a, VOC_Annot tdc
+	where m._Organism_key = 1
+	and m._Marker_Type_key = 1
+	and m._Marker_Status_key in (1,3)
+	and m._Marker_key = a._Object_key
+	and a._MGIType_key = 2
+	and a._LogicalDB_key = 1
+	and a.prefixPart = "MGI:"
+	and a.preferred = 1
+	and m._Marker_key = tdc._Object_key
+	and tdc._AnnotType_key = 1011
+	and tdc._Term_key = 6238161
+	and exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a
+	where m._Marker_key = g._Marker_key
+	and g._Genotype_key = a._Object_key
+	and a._AnnotType_key = 1005) ''', None)
 db.sql('create index idx1 on #omimmarkers(_Marker_key)', None)
 
 #
 # select markers with OMIM annotations and either only IEA GO annotations or no GO annotations
 #
 
-db.sql('select o.*, isGO = "yes" ' + \
-	'into #fpE ' + \
-	'from #omimmarkers o, #markers m ' + \
-	'where o._Marker_key = m._Marker_key ' + \
-	'union ' + \
-	'select o.*, isGO = "no" ' + \
-	'from #omimmarkers o ' + \
-	'where not exists (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000) ', None)
+db.sql('''select o.*, isGO = "yes"
+	into #fpE
+	from #omimmarkers o, #markers m
+	where o._Marker_key = m._Marker_key
+	union
+	select o.*, isGO = "no"
+	from #omimmarkers o
+	where not exists 
+	  (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000)
+	''', None)
 
 # number of unique MGI gene
 results = db.sql('select distinct _Marker_key from #fpE', 'auto')

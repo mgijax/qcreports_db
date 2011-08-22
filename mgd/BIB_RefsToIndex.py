@@ -43,7 +43,6 @@
 import sys
 import os
 import string
-import re
 import db
 import reportlib
 

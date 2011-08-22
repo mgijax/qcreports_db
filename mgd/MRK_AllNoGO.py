@@ -45,7 +45,7 @@
  
 import sys 
 import os
-import re
+import string
 import db
 import reportlib
 
@@ -62,7 +62,7 @@ def writeRecord(fp, r):
 	fp.write(r['jnumID'] + TAB)
 
 	if r['pubmedID'] != None:
-		purl = re.sub('@@@@', r['pubmedID'], url)
+		purl = string(url, '@@@@', r['pubmedID'])
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 

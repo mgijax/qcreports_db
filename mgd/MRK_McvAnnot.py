@@ -44,7 +44,7 @@
 
 import sys 
 import os
-import re
+import string
 import db
 import reportlib
 
@@ -129,7 +129,7 @@ for r in results:
     if noteLookup.has_key(evidKey):
 	chunkList = noteLookup[evidKey]
 	note = ''.join(chunkList).strip()
-	note = re.sub('\n', ' ', note)
+	note = string.replace(note, '\n', ' ')
     fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (mcvID, TAB, mgiID, TAB, jnum, TAB, evidCode, TAB, inferredFrom, TAB, qualifier, TAB, login, TAB, date, TAB, note, TAB, col10, TAB, mcvTerm, CRT))
 
 reportlib.finish_nonps(fp)

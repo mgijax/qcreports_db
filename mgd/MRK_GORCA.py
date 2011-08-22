@@ -47,7 +47,7 @@
  
 import sys 
 import os
-import re
+import string
 import db
 import reportlib
 import mgi_utils
@@ -66,7 +66,7 @@ def writeRecordA(fp, r):
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
 
 	if r['pubmedID'] != None:
-		purl = re.sub('@@@@', r['pubmedID'], url)
+		purl = string.replace(url, '@@@@', r['pubmedID'])
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
