@@ -38,7 +38,6 @@
 import sys
 import os
 import string
-import re
 import db
 import reportlib
 
@@ -166,6 +165,6 @@ def processJournal(jList, fileName):
 #
 
 for jList in journals:
-    fileName = 'GXD_' + re.sub(' ', '', string.join(jList, ' and ') )
+    fileName = 'GXD_' + string.replace(string.join(jList, 'and '), ' ', '')
     processJournal(jList, fileName)
 

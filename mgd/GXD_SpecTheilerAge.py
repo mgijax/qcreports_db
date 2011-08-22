@@ -53,8 +53,8 @@
 
 import sys
 import os
-import re
 import string
+import re
 import db
 import reportlib
 import mgi_utils
