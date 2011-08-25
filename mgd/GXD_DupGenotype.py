@@ -98,11 +98,10 @@ def formatOutput( genoTypeSet ):
     #  Get accession id for genotype 1
     #
     cmds.append('select accID ' +
-                'from GXD_Genotype g, ACC_Accession ac, ACC_MGIType mt ' +
+                'from GXD_Genotype g, ACC_Accession ac ' +
                 'where g._GenoType_key = ' + str(genoTypeSet['geno1']['key']) +
                 'and g._GenoType_key = ac._Object_key ' +
-                'and ac._MGIType_key = mt._MGIType_key ' +
-                'and name = "Genotype" ' +
+                'and ac._MGIType_key = 12 ' + 
                 'and ac.prefixPart = "MGI:" ' +
                 'and ac.preferred = 1')
 
@@ -110,11 +109,10 @@ def formatOutput( genoTypeSet ):
     #  Get accession id for genotype 2
     #
     cmds.append('select accID ' +
-                'from GXD_Genotype g, ACC_Accession ac, ACC_MGIType mt ' +
+                'from GXD_Genotype g, ACC_Accession ac ' +
                 'where g._GenoType_key = ' + str(genoTypeSet['geno2']['key']) +
                 'and g._GenoType_key = ac._Object_key ' +
-                'and ac._MGIType_key = mt._MGIType_key ' +
-                'and name = "Genotype" ' +
+                'and ac._MGIType_key = 12 ' +
                 'and ac.prefixPart = "MGI:" ' +
                 'and ac.preferred = 1')
     
@@ -314,6 +312,37 @@ for key in genoDict.keys():
         del genoDict[key]
                         
 fp.write('\n(%d rows affected)\n' % (rows))
+
+#
+# now do a check for the genotypes that have strains only (no genotypes)
+#
+
+db.sql('''select g._Genotype_key, g._Strain_key
+	into #genotype
+	from GXD_Genotype g
+	where not exists (select 1 from GXD_AllelePair p
+		where g._Genotype_key = p._Genotype_key)
+	''', None)
+
+db.sql('''select g.*
+	into #duplicate
+	from #genotype g
+	group by g._Strain_key having count(*) > 1
+	''', None)
+
+results = db.sql('''select a.accID, s.strain
+	from #duplicate d, PRB_Strain s, ACC_Accession a
+	where d._Strain_key = s._Strain_key
+	and d._Genotype_key = a._Object_key
+	and a._MGIType_key = 12
+	and a.prefixPart = "MGI:"
+	and a.preferred = 1
+	''', 'auto')
+
+fp.write('\n\nDuplicate Genotypes where there is no Allele (strain only)\n\n')
+
+for r in results:
+    fp.write(r['accID'] + TAB + TAB + r['strain'] + CRT)
 
 reportlib.finish_nonps(fp)
 
