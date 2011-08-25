@@ -100,3 +100,20 @@ and mn._MGIType_key = 9
 and mn._NoteType_key = 1023)
 go
 
+print ""
+print "All phenotype images (either full size or thumbnail) that lack a caption"
+print ""
+
+select distinct c.accID as "MGI ID"
+from IMG_Image a, ACC_Accession c
+where a._MGIType_key = 11
+and a._Image_key = c._Object_key
+and c._MGIType_key = 9
+and c._LogicalDB_key = 1
+and c.prefixPart = "MGI:"
+and not exists (select 1 from MGI_Note n
+where a._Image_key = n._Object_key
+and n._NoteType_key = 1024)
+order by accID
+go
+

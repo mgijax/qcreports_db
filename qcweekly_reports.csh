@@ -47,7 +47,7 @@ end
 
 foreach i (*.py)
     echo `date`: $i | tee -a ${LOG}
-    if ( $i == "ALL_Progress.py" ) then
+    if ( $i == "ALL_Progress.py" || $i == "ALL_NewAllele.py" ) then
         mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
         rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
         $i >>& ${LOG}
