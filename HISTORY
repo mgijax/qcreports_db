@@ -1,12 +1,10 @@
-TAG: qcreports_db-4-4-1-??
+TAG: qcreports_db-4-4-1-30
 DATE: 08/22/2011
 STAFF: lec
 CHANGES:
 1) TR10813/MRK_GOIEA.py
 2) replace 're' with 'string'
-still to do:
-mgd/GXD_SpecTheilerAge.py
-mgd/RECOMB_SpecTheilerAge.py
+3) TR10816/MGI_GenoNoMarker.sql
 
 TAG: qcreports_db-4-4-1-29
 DATE: 08/03/2011
