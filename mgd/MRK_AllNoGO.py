@@ -62,7 +62,7 @@ def writeRecord(fp, r):
 	fp.write(r['jnumID'] + TAB)
 
 	if r['pubmedID'] != None:
-		purl = string(url, '@@@@', r['pubmedID'])
+		purl = string.replace(url, '@@@@', r['pubmedID'])
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
