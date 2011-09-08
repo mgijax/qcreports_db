@@ -106,7 +106,7 @@ db.sql('''
 	    and b.journal in ("'%s'") 
 	    and b.year > 2008
 	    and not exists (select 1 from IMG_ImagePane_Assoc_View v
-	    where v._MGIType_key = 11
+	    where v._MGIType_key = 12
 	    and v._ImageClass_key in (6481782)
 	    and a._Object_key = v._Object_key)
 	''' % (string.join(journals, '","')), None)
