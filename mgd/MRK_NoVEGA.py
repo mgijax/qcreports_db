@@ -16,6 +16,9 @@
 #
 # History
 #
+# 09/26/2011	sc
+#	TR10866/ include GM if no raw biotype; needed outer join
+#
 # 03/07/2011	lec
 #	TR626/add rawbiotype from SEQ_GeneModel
 #
@@ -34,7 +37,6 @@ PAGE = reportlib.PAGE
 #
 # Main
 #
-
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 fp.write('#\n')
@@ -70,13 +72,16 @@ results = db.sql('''select gm.accid as vegaGeneModelNoAssoc, s.rawbiotype
     where not exists (select 1 
     from #vegaGeneAssoc ga 
     where ga.accid = gm.accid) 
-    and gm._Sequence_key = s._Sequence_key
+    and gm._Sequence_key *= s._Sequence_key
     order by gm.accID
     ''', 'auto')
 
 for r in results:
     fp.write(r['vegaGeneModelNoAssoc'] + TAB)
-    fp.write(r['rawbiotype'] + CRT)
+    raw = r['rawbiotype']
+    if raw == None:
+	raw = ''
+    fp.write(raw + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
