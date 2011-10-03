@@ -117,6 +117,7 @@ results = db.sql('''
 	select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID
 	from #refs r, BIB_Citation_Cache b
 	where r._Refs_key = b._Refs_key
+              and b.pubmedID is not null
         order by b.jnumID
 	''', 'auto')
 
