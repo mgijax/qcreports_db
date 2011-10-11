@@ -84,18 +84,3 @@ where not exists (select 1 from HMD_Homology_Marker h where m._Marker_key = h._M
 order by m.category, m.symbol
 go
 
-print ""
-print "MGI Markers with Uninformative Nomenclature"
-print "   - those with TreeFam information"
-print ""
-
-select m.symbol, m.category, substring(l.name,1,15), a.accID
-from #markers m, ACC_Accession a, ACC_LogicalDB l
-where not exists (select 1 from HMD_Homology_Marker h where m._Marker_key = h._Marker_key)
-and m._Marker_key = a._Object_key
-and a._MGIType_key = 2
-and a._LogicalDB_key in (88)
-and a._LogicalDB_key = l._LogicalDB_key
-order by m.category, m.symbol
-go
-
