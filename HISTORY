@@ -1,3 +1,10 @@
+TAG: qcreports_db-4-4-2-1
+DATE: 10/11/2011
+STAFF: lec
+CHANGES:
+TR8302/TreeFam obsolete
+1) MRK_NomenNotInformative.sql;removed section with TreeFam
+
 TAG: qcreports_db-4-4-1-38
 DATE: 10/05/2011
 STAFF: sc
