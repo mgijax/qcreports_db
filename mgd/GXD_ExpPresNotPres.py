@@ -31,6 +31,9 @@
 #
 # History:
 #
+# lec	10/12/2011
+#	- TR10877; exclude J:174767 [Surani load; TR10840]
+#
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
 #
@@ -62,6 +65,9 @@ reportTitle = 'Assays in which the same anatomical structure is annotated as hav
 
 fp = reportlib.init(sys.argv[0], title = reportTitle, outputdir = os.environ['QCOUTPUTDIR'])
 
+fp.write('Excluded:\n')
+fp.write('\tJ:46439, J:50869, J:91257, J:93500, J:93300, J:99307, J:174767\n\n')
+
 fp.write('Specimens must have the same genotype and age; reproductive system structures are excluded\n\n')
 fp.write('J Number   ')
 fp.write('MGI ID        ')
@@ -71,11 +77,12 @@ fp.write('------------  ')
 fp.write('----------------------------------------------------------------------------------------------------' + CRT)
 
 # excluded references
-db.sql('select _Refs_key = a._Object_key into #excludeRefs ' + \
-	'from ACC_Accession a ' + \
-        'where a._MGIType_key = 1 ' + \
-        'and a._LogicalDB_key = 1 ' + \
-        'and a.accID in ("J:46439","J:50869","J:91257","J:93500","J:93300","J:99307")', None)
+db.sql('''select _Refs_key = a._Object_key into #excludeRefs 
+	from ACC_Accession a 
+        where a._MGIType_key = 1 
+        and a._LogicalDB_key = 1 
+        and a.accID in ("J:46439","J:50869","J:91257","J:93500","J:93300","J:99307", "J:174767")
+	''', None)
 db.sql('create index idx1 on #excludeRefs(_Refs_key)', None)
 
 #
