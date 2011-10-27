@@ -1,0 +1,56 @@
+
+Convert to inner-out joins using ANSI SQL standard:
+
+grep "*=" */*sql
+grep "*=" */*py
+
+mgd/MLP_Nomenclature.sql:and s._Strain_key *= sm._Strain_key
+mgd/MLP_Nomenclature.sql:and sm._Marker_key *= m._Marker_key
+mgd/MLP_Nomenclature.sql:and sm._Allele_key *= a._Allele_key
+mgd/PRB_StrainByDate.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainByDate.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainByDate.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainByDate.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainDup.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainDup.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainF1F2.sql:and s._Strain_key *= t._Strain_key
+mgd/PRB_StrainF1F2.sql:and s._Strain_key *= t._Strain_key
+mgd/GO_Combined_Report.py:	where mm._Marker_key *= aa._Marker_key
+mgd/GO_Combined_Report.py:	where m._Marker_key *= vmc._Marker_key
+mgd/GO_Combined_Report.py:	where m._Marker_key *= vmc._Marker_key
+mgd/GO_Combined_Report.py:	where m._Marker_key *= t._Marker_key''')
+mgd/GO_Combined_Report.py:	where vm._Marker_key *= r._Marker_key
+mgd/GO_Combined_Report.py:	and m._Marker_key *= gt._Marker_key
+mgd/GXD_FullCodeable.py:	'and r._Refs_key *= m._Refs_key ' + \
+mgd/MGI_GenesAndPseudogenesWithSequence.py:            and m._Marker_key *= mlc._Marker_key
+mgd/MRK_McvAnnotByFeature.py:        and va._Term_key *= t._Term_key''')
+mgd/MRK_NoENSEMBL.py:    and gm._Sequence_key *= s._Sequence_key
+mgd/MRK_NoVEGA.py:    and gm._Sequence_key *= s._Sequence_key
+monthly/ALL_Jax_Report.py:	where a._Allele_key *= gag._Allele_key ''')
+weekly/MTB_Triage.py:	'and t._Refs_key *= a2._Object_key ' + \
+
+Sample conversion:
+
+1) INNER JOIN
+
+FROM:
+
+from ALL_CellLine c, VOC_Term vt
+where c._CellLine_Type_key = vt._Term_key
+
+TO:
+
+from ALL_CellLine c
+INNER JOIN VOC_Term vt on (c._CellLine_Type_key = vt._Term_key)
+
+2) LEFT OUTER JOIN
+
+FROM:
+
+from ALL_CellLine c, ALL_CellLine_Derivation d
+where c._Derivation_key *= d._Derivation_key
+
+TO:
+from ALL_CellLine c
+LEFT OUTER JOIN ALL_CellLine_Derivation d on (c._Derivation_key = d._Derivation_key)
+
