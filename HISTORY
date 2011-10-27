@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-2-3
+DATE: 10/27/2011
+STAFF: lec
+CHANGES:
+1) MRK_McvAnnotByFeature.py: convert to ansi standard inner/out join
+
 TAG: qcreports_db-4-4-2-2
 DATE: 10/12/2011
 STAFF: lec
