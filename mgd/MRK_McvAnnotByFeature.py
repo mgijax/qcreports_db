@@ -13,6 +13,9 @@
 #
 # History:
 #
+# lec	10/27/2011
+#	- converted outer join to ANSI standard as part of postgres move
+#
 # sc	06/14/10
 #	- created
 #
@@ -48,9 +51,9 @@ cmds.append('''select t.term as feature, featureCount=0
 
 cmds.append('''select va.*, t.term as feature
         into #mcv
-        from VOC_Annot va, VOC_Term t
-        where va._AnnotType_key = 1011
-        and va._Term_key *= t._Term_key''')
+        from VOC_Annot va
+	LEFT OUTER JOIN VOC_Term t on (va._Term_key = t._Term_key)
+        where va._AnnotType_key = 1011''')
 
 cmds.append('''select feature, count(feature) as featureCount
 	from #mcv
