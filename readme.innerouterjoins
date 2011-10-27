@@ -1,5 +1,16 @@
 
-Convert to inner-out joins using ANSI SQL standard:
+This contains the current list of qcreports_db that 
+contain "*=" (outer joins) that can be converted to ANSI standard SQL.
+
+a) temp tables are *not* being converted with this fix
+   (that is 
+
+   b) if a report contains both INNER and OUTER JOIN, then *both* are convereted to the ANSI standard.
+
+   c) if a report *only* contains INNER JOIN, these are *not* converted as part of this fix.
+
+   The only reports to convert at this time are those that can be converted so that their SQL 
+   will run in both Sybase and Postgres (except for temp tables).
 
 grep "*=" */*sql
 grep "*=" */*py
