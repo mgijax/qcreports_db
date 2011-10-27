@@ -15,6 +15,7 @@ mgd/PRB_StrainDup.sql:and s._Strain_key *= t._Strain_key
 mgd/PRB_StrainDup.sql:and s._Strain_key *= t._Strain_key
 mgd/PRB_StrainF1F2.sql:and s._Strain_key *= t._Strain_key
 mgd/PRB_StrainF1F2.sql:and s._Strain_key *= t._Strain_key
+
 mgd/GO_Combined_Report.py:	where mm._Marker_key *= aa._Marker_key
 mgd/GO_Combined_Report.py:	where m._Marker_key *= vmc._Marker_key
 mgd/GO_Combined_Report.py:	where m._Marker_key *= vmc._Marker_key
@@ -29,28 +30,49 @@ mgd/MRK_NoVEGA.py:    and gm._Sequence_key *= s._Sequence_key
 monthly/ALL_Jax_Report.py:	where a._Allele_key *= gag._Allele_key ''')
 weekly/MTB_Triage.py:	'and t._Refs_key *= a2._Object_key ' + \
 
+1) run the current report and move the output file to a "save" version
+   so you can compare them later:
+	mv MRK_McvAnnotByFeature.rpt MRK_McvAnnotByFeature.save
+
+2) make your changes and run the report
+
+3) check that the counts are the same:
+	wc -l MRK_McvAnnotByFeature*
+
+4) another check is to manually run (websql) the current SQL and
+then the new SQL and compare the row counts returned.  they should
+match.
+
 Sample conversion:
 
-1) INNER JOIN
+1) Examples: INNER JOIN
 
 FROM:
-
 from ALL_CellLine c, VOC_Term vt
 where c._CellLine_Type_key = vt._Term_key
 
 TO:
-
 from ALL_CellLine c
 INNER JOIN VOC_Term vt on (c._CellLine_Type_key = vt._Term_key)
 
-2) LEFT OUTER JOIN
+2) Examples: LEFT OUTER JOIN
 
 FROM:
-
 from ALL_CellLine c, ALL_CellLine_Derivation d
 where c._Derivation_key *= d._Derivation_key
 
 TO:
 from ALL_CellLine c
 LEFT OUTER JOIN ALL_CellLine_Derivation d on (c._Derivation_key = d._Derivation_key)
+
+FROM:
+from VOC_Annot va, VOC_Term t
+where va._AnnotType_key = 1011
+and va._Term_key *= t._Term_key
+
+TO:
+from VOC_Annot va
+LEFT OUTER JOIN VOC_Term t on (va._Term_key = t._Term_key)
+where va._AnnotType_key = 1011
+
 
