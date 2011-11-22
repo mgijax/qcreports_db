@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-2-5
+DATE: 11/22/2011
+STAFF: lec
+CHANGES:
+1) added -f to *.csh, Configuration.default
+
 TAG: qcreports_db-4-4-2-4
 DATE: 11/14/2011
 STAFF: lec
