@@ -13,6 +13,9 @@
 #
 # History:
 #
+# 12/21/2011	lec
+#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#
 # lec	05/09/2011
 #	- TR 10703; add medium priority records
 #
@@ -384,16 +387,19 @@ def report3(fp):
                              and  s._indexAssay_key in (74717, 74718, 74719, 74720, 74721))
        ''', None)
 
-    results = db.sql('select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, p.priority ' + \
-	'from #refs r, #indexcount i, #mrk_count m, #priority p, ACC_Accession a ' + \
-	'where r._Refs_key = i._Refs_key ' + \
-	'and r._Refs_key *= m._Refs_key ' + \
-	'and r._Refs_key = p._Refs_key ' + \
-        'and r._Refs_key = a._Object_key ' + \
-        'and a._MGIType_key = 1 ' + \
-        'and a._LogicalDB_key = 1 ' + \
-        'and a.prefixPart = "J:" ' + \
-	'order by p._Priority_key, m.mrk_count desc, i.idx_count desc', 'auto')
+    results = db.sql('''
+	 select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, p.priority 
+	 from #refs r
+	      LEFT OUTER JOIN #mrk_count m on (r._Refs_key = m._Refs_key),
+	      #indexcount i, #priority p, ACC_Accession a 
+	 where r._Refs_key = i._Refs_key 
+	 and r._Refs_key = p._Refs_key 
+         and r._Refs_key = a._Object_key 
+         and a._MGIType_key = 1 
+         and a._LogicalDB_key = 1 
+         and a.prefixPart = "J:" 
+	 order by p._Priority_key, m.mrk_count desc, i.idx_count desc
+	 ''', 'auto')
 
     for r in results:
 	if r['mrk_count'] == None:

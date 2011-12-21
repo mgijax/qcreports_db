@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	12/21/2011
+#	- TR10930/Oxford journals
+#
 # lec	08/20/2009
 #	- TR9770; Neural Develop changed to Neural Dev
 #	  Breast Cancer Res
@@ -138,6 +141,22 @@ journals = [
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
 
+journalsOxford = [
+'Acta Biochim Biophys Sin (Shanghai)',
+'Brain',
+'Carcinogenesis',
+'Cardiovasc Res',
+'Cereb Cortex',
+'Chem Senses',
+'DNA Res',
+'Glycobiology',
+'Hum Mol Genet',
+'Hum Reprod',
+'J Gerontol A Biol Sci Med Sci',
+'Mol Biol Evol',
+'Toxicol Sci',
+]
+
 #
 # Main
 #
@@ -154,6 +173,11 @@ for j in journals:
       count = 0
 fp.write(2*CRT)
 
+fp.write(TAB + 'Oxford Journals Checked:' + CRT)
+for j in journalsOxford:
+    fp.write(2*TAB + j + CRT)
+fp.write(2*CRT)
+
 fp.write(TAB + 'Journals > 2005:' + CRT)
 for j in journals2005:
     fp.write(2*TAB + j + CRT)
@@ -166,38 +190,68 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
-db.sql('select distinct a._Refs_key, a.creation_date ' + \
-      'into #refs ' + \
-      'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
-           'IMG_Image i, IMG_ImagePane p ' + \
-      'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
-	    'a._ImagePane_key = p._ImagePane_key and ' + \
-            'p._Image_key = i._Image_key and ' + \
-            'i.xDim is NULL and ' + \
-            'a._Refs_key = b._Refs_key and ' + \
-	    '((b.journal in ("' + string.join(journals, '","') + '")) or ' + \
-	    '(b.journal in ("' + string.join(journals2005, '","') + '") and year >= 2005)) and ' + \
-            'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ' + \
-      'union ' + \
-      'select distinct a._Refs_key, a.creation_date ' + \
-      'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
-           'GXD_Specimen g, GXD_ISResultImage_View r ' + \
-      'where a._AssayType_key in (1,2,3,4,5,6,8,9) and ' + \
-	    'a._Assay_key = g._Assay_key and ' + \
-            'g._Specimen_key = r._Specimen_key and ' + \
-            'r.xDim is NULL and ' + \
-            'a._Refs_key = b._Refs_key and ' + \
-	    '((b.journal in ("' + string.join(journals, '","') + '")) or ' + \
-	    '(b.journal in ("' + string.join(journals2005, '","') + '") and year >= 2005)) and ' + \
-            'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ', None)
+journals1 = '\'' + string.join(journals, '\',\'') + '\''
+journals2 = '\'' + string.join(journals2005, '\',\'') + '\''
+journals3 = '\'' + string.join(journalsOxford, '\',\'') + '\''
+noteCheck = '%Creative Commons Attribution%'
+
+db.sql('''
+      select distinct a._Refs_key, a.creation_date 
+      into #refs 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           IMG_Image i, IMG_ImagePane p 
+      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	    and a._ImagePane_key = p._ImagePane_key 
+            and p._Image_key = i._Image_key 
+            and i.xDim is NULL 
+            and a._Refs_key = b._Refs_key 
+	    and ((b.journal in (%s)) or (b.journal in (%s) and year >= 2005))
+            and a._Assay_key = ac._Object_key 
+            and ac._MGIType_key = 8 
+      ''' % (journals1, journals2), None)
+
+db.sql('''
+      insert into #refs
+      select distinct a._Refs_key, a.creation_date 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           GXD_Specimen g, GXD_ISResultImage_View r 
+      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	    and a._Assay_key = g._Assay_key 
+            and g._Specimen_key = r._Specimen_key 
+            and r.xDim is NULL 
+            and a._Refs_key = b._Refs_key 
+	    and ((b.journal in (%s)) or (b.journal in (%s) and year >= 2005)) 
+            and a._Assay_key = ac._Object_key 
+            and ac._MGIType_key = 8 
+      ''' % (journals1, journals2), None)
+
+db.sql('''
+      insert into #refs
+      select distinct a._Refs_key, a.creation_date 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           GXD_Specimen g, GXD_ISResultImage_View r,
+	   MGI_Note n, MGI_NoteChunk c
+      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	    and a._Assay_key = g._Assay_key 
+            and g._Specimen_key = r._Specimen_key 
+            and r.xDim is NULL 
+            and a._Refs_key = b._Refs_key 
+	    and b.journal in (%s) 
+	    and r._Image_key = n._Object_key 
+	    and n._NoteType_key = 1026
+	    and n._Note_key = c._Note_key
+	    and c.note like '%s'
+            and a._Assay_key = ac._Object_key 
+            and ac._MGIType_key = 8 
+      ''' % (journals3, noteCheck), None)
 
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
-results = db.sql('select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel) ' + \
-	'from #refs r, IMG_Image i ' + \
-	'where r._Refs_key = i._Refs_key', 'auto')
+results = db.sql('''
+	select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)
+	from #refs r, IMG_Image i
+	where r._Refs_key = i._Refs_key
+	''', 'auto')
 fLabels = {}
 for r in results:
     key = r['_Refs_key']
@@ -206,9 +260,12 @@ for r in results:
 	fLabels[key] = []
     fLabels[key].append(value)
 
-results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key ' + \
-        'order by r.creation_date, b.jnumID', 'auto')
+results = db.sql('''
+	select r._Refs_key, b.jnumID, b.short_citation 
+	from #refs r, BIB_All_View b
+	where r._Refs_key = b._Refs_key 
+        order by r.creation_date, b.jnumID
+	''', 'auto')
 
 count = 0
 refprinted = []

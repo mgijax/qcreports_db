@@ -18,6 +18,9 @@
 #
 # History:
 #
+# 12/21/2011	lec
+#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#
 # jmason        20070320
 #        - created based on TR 8207
 #
@@ -111,12 +114,12 @@ def process():
             mlc.strand "Strand"
             from
                 ACC_Accession a,
-                MRK_Marker m,
+                MRK_Marker m
+		LEFT OUTER JOIN MRK_Location_Cache mlc on (m._Marker_key = mlc._Marker_key),
                 MRK_Types mt,
                 SEQ_Marker_Cache smc,
                 VOC_Term vt,
-                VOC_Term vt2,
-                MRK_Location_Cache mlc
+                VOC_Term vt2
             where m._Organism_key = 1   -- Use the mouse as the organism
             and a._MGItype_key = 2      -- MGI Type key of type 'Marker'
             and a._Logicaldb_key = 1    -- Use the MGI Database
@@ -125,7 +128,6 @@ def process():
             and m._Marker_Status_key in (1,3)   -- Status of official or interim
             and m._Marker_Type_key = mt._Marker_Type_key
             and m._Marker_Type_key in (1,7)
-            and m._Marker_key *= mlc._Marker_key
             and m._Marker_key = smc._Marker_key
             and smc._Qualifier_key = vt._Term_key
             and smc._SequenceProvider_key = vt2._Term_key

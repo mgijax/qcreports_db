@@ -16,6 +16,9 @@
 #
 # History
 #
+# 12/21/2011	lec
+#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#
 # 09/26/2011    sc
 #       TR10866/ include GM if no raw biotype; needed outer join
 #
@@ -88,11 +91,11 @@ db.sql('create index idxAccid on #ensemblGeneAssoc(accID)', None)
 print "done second query and index"
 
 results = db.sql('''select gm.accid as ensemblGeneModelNoAssoc, s.rawbiotype
-    from #ensemblGeneModel gm, SEQ_GeneModel s
+    from #ensemblGeneModel gm 
+	 LEFT OUTER JOIN SEQ_GeneModel s on (gm._Sequence_key = s._Sequence_key)
     where not exists (select 1 
     from #ensemblGeneAssoc ga 
     where ga.accid = gm.accid) 
-    and gm._Sequence_key *= s._Sequence_key
     order by gm.accID
     ''', 'auto')
 print "done third query and writing out results"

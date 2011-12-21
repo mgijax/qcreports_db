@@ -16,6 +16,9 @@
 #
 # History:
 #
+# 12/21/2011	lec
+#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#
 # mhall	04/01/2009
 #	- TR 9555- created
 #
@@ -58,15 +61,12 @@ type3 = template % (" "," ","X"," "," ")
 type4 = template % (" "," "," ","X"," ")
 type5 = template % (" "," "," "," ","X")
 
-
 # Reduce the total list of markers that we need to compare against w/ a filter versus the
 # marker table.
 
-cmds = []
-
-cmds.append('''select distinct m.* 
+db.sql('''select distinct m.* 
 	into #validMarkers
-	from mrk_marker m, SEQ_Marker_Cache smc
+	from MRK_Marker m, SEQ_Marker_Cache smc
 	where  m._Marker_Type_key = 1
 	and m._Marker_Status_key in (1,3) 
 	and m.name not like 'gene model %' 
@@ -78,64 +78,50 @@ cmds.append('''select distinct m.*
 	and m._Organism_key = 1
 	and m._Marker_key = smc._Marker_key
 	and (smc.accID like 'XP%' or smc.accID like 'NP%' 
-	or smc._logicalDB_key in (13, 41)) ''')
+	or smc._logicalDB_key in (13, 41)) ''', None)
 
-cmds.append('create index vmIndex on #validMarkers (_Marker_key)')
-
-results = db.sql(cmds,'auto')
+db.sql('create index vmIndex on #validMarkers (_Marker_key)', None)
 
 # Setup the alleles count -> markers table
 
-cmds = []
-
-cmds.append('''select mm._Marker_key, count(_Allele_key) as "hasAlleles"
+db.sql('''select mm._Marker_key, count(_Allele_key) as "hasAlleles"
 	into #mrkAlleles
-	from all_allele aa, #validMarkers mm
-	where mm._Marker_key *= aa._Marker_key
+	from #validMarkers mm
+	     LEFT OUTER JOIN ALL_Allele aa on (mm._Marker_key = aa._Marker_key
 	and aa.isWildType = 0 
-	AND aa._Allele_Type_key != 847130
-	AND aa._Allele_Status_key = 847114
-	AND aa.isWildType = 0
-	and aa._Transmission_key != 3982953 
-	group by mm._Marker_key''')
+	and aa._Allele_Type_key != 847130
+	and aa._Allele_Status_key = 847114
+	and aa.isWildType = 0
+	and aa._Transmission_key != 3982953)
+	group by mm._Marker_key''', None)
 
-cmds.append('create index mrkAlleleIndex on #mrkAlleles (_Marker_key)')
-
-results = db.sql(cmds,'auto')
+db.sql('create index mrkAlleleIndex on #mrkAlleles (_Marker_key)', None)
 
 # setup the mrk Omim annotations table
 
-cmds = []
-
-cmds.append('''select m._Marker_key, count(vmc._Term_key) as 'hasOmim'
+db.sql('''select m._Marker_key, count(vmc._Term_key) as 'hasOmim'
 	into #mrkOmimAnnot
 	from VOC_Marker_Cache vmc, #validMarkers m
 	where m._Marker_key *= vmc._Marker_key
 	and annotType = 'OMIM/Genotype'
-	group by m._Marker_key''')
+	group by m._Marker_key''', None)
 
-cmds.append('create index mrkOmimIndex on #mrkOmimAnnot (_Marker_key)')
-results = db.sql(cmds,'auto')
+db.sql('create index mrkOmimIndex on #mrkOmimAnnot (_Marker_key)', None)
 
 # Setup the mrk human -> mouse orthologs relationship
 
-cmds = []
-
-cmds.append('''select m._Marker_key, count(vmc._Term_key) as 'hasOmimHuman'
+db.sql('''select m._Marker_key, count(vmc._Term_key) as 'hasOmimHuman'
 	into #mrkOmimHumanAnnot
 	from VOC_Marker_Cache vmc, #validMarkers m
 	where m._Marker_key *= vmc._Marker_key
 	and annotType = 'OMIM/Human Marker'
-	group by m._Marker_key''')
+	group by m._Marker_key''', None)
 
-cmds.append('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)')
-results = db.sql(cmds,'auto')
+db.sql('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)', None)
 
 # Set up the marker has orthologs table
 
-cmds = []
-
-cmds.append('''select mm._Marker_key,
+db.sql('''select mm._Marker_key,
 	count(hm._Marker_key) as 'hasOrtholog'
 	into #tmp_homology
 	from MRK_Homology_Cache mh, MRK_Homology_Cache hh,
@@ -145,48 +131,41 @@ cmds.append('''select mm._Marker_key,
 	and mh._Marker_key = mm._Marker_key
 	and mh._Organism_key = 1
 	and hh._Organism_key in (2, 40)
-	group by (mm._Marker_key)''')
+	group by (mm._Marker_key)''', None)
 
-cmds.append('''select m._Marker_key, t.hasOrtholog as 'hasOrtholog'
+db.sql('''select m._Marker_key, t.hasOrtholog as 'hasOrtholog'
 	into #mrkHomology
 	from #validMarkers m, #tmp_homology t
-	where m._Marker_key *= t._Marker_key''')
+	where m._Marker_key *= t._Marker_key''', None)
 
-cmds.append('create index mrkOrthoIndex on #mrkHomology (_Marker_key)')
-results = db.sql(cmds,'auto')
+db.sql('create index mrkOrthoIndex on #mrkHomology (_Marker_key)', None)
 
 # Get the number of unused go references per marker
 
-cmds = []
-
-cmds.append('''select r.*
+db.sql('''select r.*
 	into #reduced_bibgo
 	from BIB_GOXRef_View r, #validMarkers vm
-	where r._Marker_key = vm._Marker_key''')
+	where r._Marker_key = vm._Marker_key''', None)
 
-cmds.append('create index vmIndex on #reduced_bibgo (_Marker_key)')
+db.sql('create index vmIndex on #reduced_bibgo (_Marker_key)', None)
 
-cmds.append('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
+db.sql('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
 	into #refGoUnused
 	from #reduced_bibgo r, #validMarkers vm
 	where vm._Marker_key *= r._Marker_key
 	and not exists (select 1 from
-	VOC_ANNOT a, VOC_EVIDENCE e
+	VOC_Annot a, VOC_Evidence e
 	where a._AnnotType_key = 1000
 	and a._Annot_key = e._Annot_key
 	and e._Refs_key = r._Refs_key)
-	group by vm._Marker_key ''')
+	group by vm._Marker_key ''', None)
 
-cmds.append('create index goRefIndex on #refGoUnused (_Marker_key)')
-
-results = db.sql(cmds,'auto')
+db.sql('create index goRefIndex on #refGoUnused (_Marker_key)', None)
 
 # Collapse all these temp tables down to a single one, to make the subsequent queries easier
 # to design.
 
-cmds = []
-
-cmds.append('''select m._Marker_key,
+db.sql('''select m._Marker_key,
 	case when gt.completion_date != null then 'Yes' else 'No' end as 'isComplete',
 	case when ma.hasAlleles > 0 then 'Yes' else 'No' end as 'hasAlleles',
 	case when moa.hasOmim > 0 then 'Yes' else 'No' end as 'hasOmim',
@@ -201,16 +180,13 @@ cmds.append('''select m._Marker_key,
 	and m._Marker_key = moa._Marker_key
 	and m._Marker_key = mho._Marker_key
 	and m._Marker_key = rgs._Marker_key
-	and m._Marker_key = moha._Marker_key''')
+	and m._Marker_key = moha._Marker_key''', None)
 
-cmds.append('create index goOverall on #goOverall (_Marker_key)')
-results = db.sql(cmds,'auto')
+db.sql('create index goOverall on #goOverall (_Marker_key)', None)
 
 # Markers w/o Go Evidence Codes
 
-cmds = []
-
-cmds.append('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
+resultsNoGo = db.sql('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
 	from #validMarkers m, ACC_Accession a, #goOverall g
 	where m._Marker_key = a._Object_key
@@ -222,9 +198,10 @@ cmds.append('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
 	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
-	and a._Annot_key = e._Annot_key)''') 
+	and a._Annot_key = e._Annot_key)''', 'auto') 
+noGoCount = len(resultsNoGo)
 	
-cmds.append('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
+db.sql('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount, m._Marker_key
 	into #hasNoGo
 	from #validMarkers m, ACC_Accession a, #goOverall g
@@ -237,18 +214,13 @@ cmds.append('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
 	and not exists (select 1 from  VOC_Annot a, VOC_Evidence e
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
-	and a._Annot_key = e._Annot_key)''') 	
-
-resultsNoGo = db.sql(cmds,'auto')
-noGoCount = len(resultsNoGo[0])
+	and a._Annot_key = e._Annot_key)''', None)
 
 # Markers with ND Only
 
-cmds = []
-
-cmds.append('''select distinct '2' as type, m.symbol, mgiID = a.accID, m.name,
+resultsNDOnly = db.sql('''select distinct '2' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
-	from #validMarkers m, ACC_Accession a, voc_annot a2,
+	from #validMarkers m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, #goOverall g
 	where m._Marker_key = a._Object_key
 	and a._MGIType_key = 2
@@ -267,18 +239,14 @@ cmds.append('''select distinct '2' as type, m.symbol, mgiID = a.accID, m.name,
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
 	and a._Annot_key = e._Annot_key
-	and e._EvidenceTerm_key != 118)''')
-	
-resultsNDOnly = db.sql(cmds,'auto')	
+	and e._EvidenceTerm_key != 118)''', 'auto')
 NDOnlyCount = len(resultsNDOnly[0])
 
 # Markers with IEA Only
 
-cmds = []
-
-cmds.append('''select distinct '3' as type, m.symbol, mgiID = a.accID, m.name,
+resultsIEAOnly = db.sql('''select distinct '3' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
-	from #validMarkers m, ACC_Accession a, voc_annot a2,
+	from #validMarkers m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, #goOverall g
 	where m._Marker_key = a._Object_key
 	and a._MGIType_key = 2
@@ -298,18 +266,14 @@ cmds.append('''select distinct '3' as type, m.symbol, mgiID = a.accID, m.name,
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
 	and a._Annot_key = e._Annot_key
-	and e._EvidenceTerm_key != 115)''')
-
-resultsIEAOnly = db.sql(cmds,'auto')
+	and e._EvidenceTerm_key != 115)''', 'auto')
 IEAOnlyCount = len(resultsIEAOnly[0])
 
 # Markers with IEA + ND
 
-cmds = []
-
-cmds.append('''select distinct '4' as type, m.symbol, mgiID = a.accID, m.name,
+resultsIEAAndNDOnly = db.sql('''select distinct '4' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
-	from MRK_Marker m, ACC_Accession a, voc_annot a2,
+	from MRK_Marker m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, #goOverall g
 	where m._Marker_key = a._Object_key
 	and a._MGIType_key = 2
@@ -334,18 +298,14 @@ cmds.append('''select distinct '4' as type, m.symbol, mgiID = a.accID, m.name,
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
 	and a._Annot_key = e._Annot_key
-	and e._EvidenceTerm_key not in (115, 118))''')
-	
-resultsIEAAndNDOnly = db.sql(cmds,'auto')
+	and e._EvidenceTerm_key not in (115, 118))''', 'auto')
 IEAAndNDOnlyCount = len(resultsIEAAndNDOnly[0])
 
 # Markers with all other annotations
 
-cmds = []
-	
-cmds.append('''select distinct '5' as type, m.symbol, mgiID = a.accID, m.name,
+resultsAllOther = db.sql('''select distinct '5' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
-	from MRK_Marker m, ACC_Accession a, voc_annot a2,
+	from MRK_Marker m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, #goOverall g
 	where m._Marker_key = a._Object_key
 	and a._MGIType_key = 2
@@ -364,9 +324,7 @@ cmds.append('''select distinct '5' as type, m.symbol, mgiID = a.accID, m.name,
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
 	and a._Annot_key = e._Annot_key
-	and e._EvidenceTerm_key not in (115, 118))''')	
-	
-resultsAllOther = db.sql(cmds,'auto')
+	and e._EvidenceTerm_key not in (115, 118))''', 'auto')	
 otherCount = len(resultsAllOther[0])
 
 # Gather all of the other statistical data.
@@ -482,7 +440,6 @@ templateRow2 = '%s' + TAB + \
 	'%s' + TAB + \
 	'%s' + TAB + \
 	'%s' + CRT;
-	
 
 # Print out the report itself
 
@@ -527,8 +484,7 @@ fp3.write(CRT + CRT + CRT +
 	'Annotation Complete?' + TAB + \
 	'Number of Go References' + CRT)
 	
-	
-for r in resultsNoGo[0]:
+for r in resultsNoGo:
     fp.write(templateRow % (type1, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
     
     # Report #2 needs a copy of this
@@ -538,16 +494,16 @@ for r in resultsNoGo[0]:
     if r['hasAlleles'] == 'Yes':
         fp3.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
         
-for r in resultsNDOnly[0]:
+for r in resultsNDOnly:
     fp.write(templateRow % (type2, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
 
-for r in resultsIEAOnly[0]:
+for r in resultsIEAOnly:
     fp.write(templateRow % (type3, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
     
-for r in resultsIEAAndNDOnly[0]:
+for r in resultsIEAAndNDOnly:
     fp.write(templateRow % (type4, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
     
-for r in resultsAllOther[0]:
+for r in resultsAllOther:
     fp.write(templateRow % (type5, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))    
 
 
