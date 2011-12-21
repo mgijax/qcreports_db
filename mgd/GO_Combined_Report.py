@@ -112,9 +112,9 @@ db.sql('create index mrkOmimIndex on #mrkOmimAnnot (_Marker_key)', None)
 
 db.sql('''select m._Marker_key, count(vmc._Term_key) as 'hasOmimHuman'
 	into #mrkOmimHumanAnnot
-	from VOC_Marker_Cache vmc, #validMarkers m
-	where m._Marker_key *= vmc._Marker_key
-	and annotType = 'OMIM/Human Marker'
+	from #validMarkers m
+	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
+	         and annotType = 'OMIM/Human Marker')
 	group by m._Marker_key''', None)
 
 db.sql('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)', None)
