@@ -1,3 +1,15 @@
+TAG: qcreports_db-4-4-2-?
+DATE: 12/21/2011
+STAFF: lec
+CHANGES:
+1) converted "*=" to LEFT OUTER JOIN
+MLP_Nomenclature.sql
+PRB_StrainByDate.sql
+PRB_StrainDup.sql 
+PRB_StrainF1F2.sql
+2) TR10930/Oxford journals
+GXD_Images.py
+
 TAG: qcreports_db-4-4-2-5
 DATE: 11/22/2011
 STAFF: lec
