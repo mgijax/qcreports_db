@@ -1,12 +1,21 @@
-TAG: qcreports_db-4-4-2-?
+TAG: qcreports_db-4-4-2-6
 DATE: 12/21/2011
 STAFF: lec
 CHANGES:
 1) converted "*=" to LEFT OUTER JOIN
-MLP_Nomenclature.sql
-PRB_StrainByDate.sql
-PRB_StrainDup.sql 
-PRB_StrainF1F2.sql
+mgd/GXD_Images.py
+mgd/GO_Combined_Report.py
+mgd/MRK_NoVEGA.py
+mgd/MRK_NoENSEMBL.py
+mgd/MGI_GenesAndPseudogenesWithSequence.py
+mgd/GXD_FullCodeable.py
+monthly/ALL_Jax_Report.py
+mgd/MGI_GenesAndPseudogenesWithSequence.py.save
+mgd/PRB_StrainF1F2.sql
+mgd/PRB_StrainDup.sql
+mgd/PRB_StrainByDate.sql
+mgd/MLP_Nomenclature.sql
+
 2) TR10930/Oxford journals
 GXD_Images.py
 

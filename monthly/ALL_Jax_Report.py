@@ -28,6 +28,9 @@
 #
 # History:
 #
+# 12/21/2011	lec
+#	- convert to outer join
+#
 # mhall	12/15/2009
 #	- TR 9970- created
 #
@@ -67,8 +70,9 @@ cmds = []
 
 cmds.append('''select a._Allele_key, gag._Genotype_key 
 	into #tmp_geno
-	from all_allele a, GXD_AlleleGenotype gag
-	where a._Allele_key *= gag._Allele_key ''')
+	from all_allele a 
+	     LEFT OUTER JOIN GXD_AlleleGenotype gag on (a._Allele_key = gag._Allele_key)
+	''')
 
 
 cmds.append('''select distinct tg._Allele_key as 'key', vt.term + ' ' + aa.accID as 'term' 
