@@ -17,7 +17,7 @@
 # History
 #
 # 12/21/2011	lec
-#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#	- convert to outer join
 #
 # 09/26/2011    sc
 #       TR10866/ include GM if no raw biotype; needed outer join

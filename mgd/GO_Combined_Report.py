@@ -17,7 +17,7 @@
 # History:
 #
 # 12/21/2011	lec
-#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#	- convert to outer join
 #
 # mhall	04/01/2009
 #	- TR 9555- created
@@ -135,8 +135,9 @@ db.sql('''select mm._Marker_key,
 
 db.sql('''select m._Marker_key, t.hasOrtholog as 'hasOrtholog'
 	into #mrkHomology
-	from #validMarkers m, #tmp_homology t
-	where m._Marker_key *= t._Marker_key''', None)
+	from #validMarkers m
+	     LEFT OUTER JOIN #tmp_homology t on (m._Marker_key = t._Marker_key)
+       ''', None)
 
 db.sql('create index mrkOrthoIndex on #mrkHomology (_Marker_key)', None)
 
@@ -151,13 +152,13 @@ db.sql('create index vmIndex on #reduced_bibgo (_Marker_key)', None)
 
 db.sql('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
 	into #refGoUnused
-	from #reduced_bibgo r, #validMarkers vm
-	where vm._Marker_key *= r._Marker_key
-	and not exists (select 1 from
-	VOC_Annot a, VOC_Evidence e
-	where a._AnnotType_key = 1000
-	and a._Annot_key = e._Annot_key
-	and e._Refs_key = r._Refs_key)
+	from #validMarkers vm
+	     LEFT OUTER JOIN #reduced_bibgo r on (vm._Marker_key = r._Marker_key)
+	where not exists (select 1 from
+		VOC_Annot a, VOC_Evidence e
+		where a._AnnotType_key = 1000
+		and a._Annot_key = e._Annot_key
+		and e._Refs_key = r._Refs_key)
 	group by vm._Marker_key ''', None)
 
 db.sql('create index goRefIndex on #refGoUnused (_Marker_key)', None)
@@ -173,10 +174,11 @@ db.sql('''select m._Marker_key,
 	case when mho.hasOrtholog > 0 then 'Yes' else 'No' end as 'hasOrtholog',
 	rgs.goRefcount 
 	into #goOverall
-	from #validMarkers m, GO_Tracking gt, #mrkAlleles ma, #mrkOmimAnnot moa,
+	from #validMarkers m
+	     LEFT OUTER JOIN GO_Tracking gt on (m._Marker_key = gt._Marker_key),
+	     #mrkAlleles ma, #mrkOmimAnnot moa,
 	#refGoUnused rgs, #mrkOmimHumanAnnot moha, #mrkHomology mho
 	where m._Marker_key = ma._Marker_key
-	and m._Marker_key *= gt._Marker_key
 	and m._Marker_key = moa._Marker_key
 	and m._Marker_key = mho._Marker_key
 	and m._Marker_key = rgs._Marker_key

@@ -19,7 +19,7 @@
 # History:
 #
 # 12/21/2011	lec
-#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#	- convert to outer join
 #
 # jmason        20070320
 #        - created based on TR 8207

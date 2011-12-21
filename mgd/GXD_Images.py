@@ -190,10 +190,12 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
+#
+# journals1 = journals
+# journals2 = journals2005
+#
 journals1 = '\'' + string.join(journals, '\',\'') + '\''
 journals2 = '\'' + string.join(journals2005, '\',\'') + '\''
-journals3 = '\'' + string.join(journalsOxford, '\',\'') + '\''
-noteCheck = '%Creative Commons Attribution%'
 
 db.sql('''
       select distinct a._Refs_key, a.creation_date 
@@ -225,25 +227,50 @@ db.sql('''
             and ac._MGIType_key = 8 
       ''' % (journals1, journals2), None)
 
+#
+# journal3 = Oxford Journals
+#
+journals3 = '\'' + string.join(journalsOxford, '\',\'') + '\''
+
 db.sql('''
       insert into #refs
       select distinct a._Refs_key, a.creation_date 
       from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
-           GXD_Specimen g, GXD_ISResultImage_View r,
-	   MGI_Note n, MGI_NoteChunk c
+           IMG_Image i, IMG_ImagePane p
+      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	    and a._ImagePane_key = p._ImagePane_key 
+            and p._Image_key = i._Image_key 
+            and i.xDim is NULL 
+            and a._Refs_key = b._Refs_key 
+	    and b.journal in (%s)
+            and a._Assay_key = ac._Object_key 
+            and ac._MGIType_key = 8 
+	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+	    where i._Image_key = n._Object_key 
+	    and n._NoteType_key = 1023
+	    and n._MGIType_key = 9
+	    and n._Note_key = c._Note_key)
+      ''' % (journals3), None)
+
+db.sql('''
+      insert into #refs
+      select distinct a._Refs_key, a.creation_date 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           GXD_Specimen g, GXD_ISResultImage_View r
       where a._AssayType_key in (1,2,3,4,5,6,8,9) 
 	    and a._Assay_key = g._Assay_key 
             and g._Specimen_key = r._Specimen_key 
             and r.xDim is NULL 
             and a._Refs_key = b._Refs_key 
 	    and b.journal in (%s) 
-	    and r._Image_key = n._Object_key 
-	    and n._NoteType_key = 1026
-	    and n._Note_key = c._Note_key
-	    and c.note like '%s'
             and a._Assay_key = ac._Object_key 
             and ac._MGIType_key = 8 
-      ''' % (journals3, noteCheck), None)
+	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+	    where r._Image_key = n._Object_key 
+	    and n._NoteType_key = 1023
+	    and n._MGIType_key = 9
+	    and n._Note_key = c._Note_key)
+      ''' % (journals3), None)
 
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 

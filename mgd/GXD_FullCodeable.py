@@ -14,7 +14,7 @@
 # History:
 #
 # 12/21/2011	lec
-#	- make agnostic; changed "*=" to LEFT OUTER JOIN
+#	- convert to outer join
 #
 # lec	05/09/2011
 #	- TR 10703; add medium priority records
