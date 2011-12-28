@@ -45,7 +45,7 @@ import reportlib
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('Invalid "Inferred From" Values in GO Annotations (MGI, GO)' + 2 * reportlib.CRT)
+fp.write('Invalid "Inferred From" Values in GO Annotations (MGI, GO, ",", ";")' + 2 * reportlib.CRT)
 rows = 0
 
 # use for Mol Segs...quicker than mgiLookup method due to number of Mol Segs
