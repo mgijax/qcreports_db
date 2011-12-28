@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	12/28/2011
+#	- TR10934/replace any commas in WITH field with pipe
+#
 # lec	04/05/2011
 #	- TR10650/add GO/add Set
 #
@@ -154,6 +157,29 @@ for t in theDiffs:
                    r['symbol'] + reportlib.CRT)
           rows = rows + 1
 
-fp.write('\n(%d rows affected)\n' % (rows))
+#
+# include list of inferred-from values that contain ','  or ';'
+#
+
+results = db.sql('''
+	select distinct aa.accID, m.symbol, t.term, e.inferredFrom
+	from VOC_Annot a, VOC_Evidence e, VOC_Term t, ACC_Accession aa, MRK_Marker m
+	where a._AnnotType_key = 1000 
+	and a._Annot_key = e._Annot_key 
+	and (e.inferredFrom like '%,%' or e.inferredFrom like '%;%')
+	and e._EvidenceTerm_key = t._Term_key
+	and t._Term_key = aa._Object_key 
+	and aa._MGIType_key = 13 
+	and aa.preferred = 1 
+	and a._Object_key = m._Marker_key 
+	''', 'auto')
+
+for r in results:
+    fp.write(r['inferredFrom'] + reportlib.TAB + \
+             r['accID'] + reportlib.TAB + \
+             r['evidenceCode'] + reportlib.TAB + \
+             r['symbol'] + reportlib.CRT)
+
+fp.write('\n(%d rows affected)\n' % (rows + len(results)))
 reportlib.finish_nonps(fp)
 
