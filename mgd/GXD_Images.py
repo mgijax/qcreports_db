@@ -173,11 +173,6 @@ for j in journals:
       count = 0
 fp.write(2*CRT)
 
-fp.write(TAB + 'Oxford Journals Checked:' + CRT)
-for j in journalsOxford:
-    fp.write(2*TAB + j + CRT)
-fp.write(2*CRT)
-
 fp.write(TAB + 'Journals > 2005:' + CRT)
 for j in journals2005:
     fp.write(2*TAB + j + CRT)
@@ -227,51 +222,6 @@ db.sql('''
             and ac._MGIType_key = 8 
       ''' % (journals1, journals2), None)
 
-#
-# journal3 = Oxford Journals
-#
-journals3 = '\'' + string.join(journalsOxford, '\',\'') + '\''
-
-db.sql('''
-      insert into #refs
-      select distinct a._Refs_key, a.creation_date 
-      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
-           IMG_Image i, IMG_ImagePane p
-      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
-	    and a._ImagePane_key = p._ImagePane_key 
-            and p._Image_key = i._Image_key 
-            and i.xDim is NULL 
-            and a._Refs_key = b._Refs_key 
-	    and b.journal in (%s)
-            and a._Assay_key = ac._Object_key 
-            and ac._MGIType_key = 8 
-	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
-	    where i._Image_key = n._Object_key 
-	    and n._NoteType_key = 1023
-	    and n._MGIType_key = 9
-	    and n._Note_key = c._Note_key)
-      ''' % (journals3), None)
-
-db.sql('''
-      insert into #refs
-      select distinct a._Refs_key, a.creation_date 
-      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
-           GXD_Specimen g, GXD_ISResultImage_View r
-      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
-	    and a._Assay_key = g._Assay_key 
-            and g._Specimen_key = r._Specimen_key 
-            and r.xDim is NULL 
-            and a._Refs_key = b._Refs_key 
-	    and b.journal in (%s) 
-            and a._Assay_key = ac._Object_key 
-            and ac._MGIType_key = 8 
-	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
-	    where r._Image_key = n._Object_key 
-	    and n._NoteType_key = 1023
-	    and n._MGIType_key = 9
-	    and n._Note_key = c._Note_key)
-      ''' % (journals3), None)
-
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
 results = db.sql('''
@@ -304,6 +254,94 @@ for r in results:
 	refprinted.append(r['_Refs_key'])
 	count = count + 1
 
-fp.write(CRT + 'Total J numbers: ' + str(count) + CRT)
+fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
+
+#
+# Oxford Journals
+#
+
+fp.write(TAB + 'Oxford Journals Checked:' + CRT)
+for j in journalsOxford:
+    fp.write(2*TAB + j + CRT)
+fp.write(2*CRT)
+
+#
+# journal3 = Oxford Journals
+#
+journals3 = '\'' + string.join(journalsOxford, '\',\'') + '\''
+
+db.sql('''
+      select distinct a._Refs_key, a.creation_date 
+      into #refs3
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           IMG_Image i, IMG_ImagePane p
+      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	    and a._ImagePane_key = p._ImagePane_key 
+            and p._Image_key = i._Image_key 
+            and i.xDim is NULL 
+            and a._Refs_key = b._Refs_key 
+	    and b.journal in (%s)
+            and a._Assay_key = ac._Object_key 
+            and ac._MGIType_key = 8 
+	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+	    where i._Image_key = n._Object_key 
+	    and n._NoteType_key = 1023
+	    and n._MGIType_key = 9
+	    and n._Note_key = c._Note_key)
+      ''' % (journals3), None)
+
+db.sql('''
+      insert into #refs3
+      select distinct a._Refs_key, a.creation_date 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           GXD_Specimen g, GXD_ISResultImage_View r
+      where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	    and a._Assay_key = g._Assay_key 
+            and g._Specimen_key = r._Specimen_key 
+            and r.xDim is NULL 
+            and a._Refs_key = b._Refs_key 
+	    and b.journal in (%s) 
+            and a._Assay_key = ac._Object_key 
+            and ac._MGIType_key = 8 
+	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+	    where r._Image_key = n._Object_key 
+	    and n._NoteType_key = 1023
+	    and n._MGIType_key = 9
+	    and n._Note_key = c._Note_key)
+      ''' % (journals3), None)
+
+db.sql('create index idx1 on #refs3(_Refs_key)', None)
+
+results = db.sql('''
+	select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)
+	from #refs3 r, IMG_Image i
+	where r._Refs_key = i._Refs_key
+	''', 'auto')
+fLabels = {}
+for r in results:
+    key = r['_Refs_key']
+    value = r['figureLabel']
+    if not fLabels.has_key(key):
+	fLabels[key] = []
+    fLabels[key].append(value)
+
+results = db.sql('''
+	select r._Refs_key, b.jnumID, b.short_citation 
+	from #refs3 r, BIB_All_View b
+	where r._Refs_key = b._Refs_key 
+        order by r.creation_date, b.jnumID
+	''', 'auto')
+
+count = 0
+refprinted = []
+for r in results:
+    if r['_Refs_key'] not in refprinted:
+        fp.write(TAB + string.ljust(r['jnumID'], 12))
+        fp.write(string.ljust(r['short_citation'], 75))
+        fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
+	refprinted.append(r['_Refs_key'])
+	count = count + 1
+
+fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
 reportlib.finish_nonps(fp)

@@ -153,12 +153,12 @@ db.sql('create index vmIndex on #reduced_bibgo (_Marker_key)', None)
 db.sql('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
 	into #refGoUnused
 	from #validMarkers vm
-	     LEFT OUTER JOIN #reduced_bibgo r on (vm._Marker_key = r._Marker_key)
-	where not exists (select 1 from
+	     LEFT OUTER JOIN #reduced_bibgo r on (vm._Marker_key = r._Marker_key
+	and not exists (select 1 from
 		VOC_Annot a, VOC_Evidence e
 		where a._AnnotType_key = 1000
 		and a._Annot_key = e._Annot_key
-		and e._Refs_key = r._Refs_key)
+		and e._Refs_key = r._Refs_key))
 	group by vm._Marker_key ''', None)
 
 db.sql('create index goRefIndex on #refGoUnused (_Marker_key)', None)

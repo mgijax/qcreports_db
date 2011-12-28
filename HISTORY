@@ -1,16 +1,16 @@
 TAG: qcreports_db-4-4-2-6
-DATE: 12/21/2011
+DATE: 12/28/2011
 STAFF: lec
 CHANGES:
-1) converted "*=" to LEFT OUTER JOIN
-mgd/GXD_Images.py
+1)TR10930/mgd/GXD_Images.py
+2)TR10934/replace any commas in WITH field with pipe
+3) converted "*=" to LEFT OUTER JOIN
 mgd/GO_Combined_Report.py
 mgd/MRK_NoVEGA.py
 mgd/MRK_NoENSEMBL.py
 mgd/MGI_GenesAndPseudogenesWithSequence.py
 mgd/GXD_FullCodeable.py
 monthly/ALL_Jax_Report.py
-mgd/MGI_GenesAndPseudogenesWithSequence.py.save
 mgd/PRB_StrainF1F2.sql
 mgd/PRB_StrainDup.sql
 mgd/PRB_StrainByDate.sql
