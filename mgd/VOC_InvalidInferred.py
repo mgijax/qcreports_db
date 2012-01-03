@@ -177,7 +177,6 @@ results = db.sql('''
 for r in results:
     fp.write(r['inferredFrom'] + reportlib.TAB + \
              r['accID'] + reportlib.TAB + \
-             r['evidenceCode'] + reportlib.TAB + \
              r['symbol'] + reportlib.CRT)
 
 fp.write('\n(%d rows affected)\n' % (rows + len(results)))
