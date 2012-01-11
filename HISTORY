@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-2-10
+DATE: 01/11/2021
+STAFF: sc
+CHANGES: TR10952
+1) MRK_GeneNoMcvAnnot.py - added interim markers
+
 TAG: qcreports_db-4-4-2-9
 DATE: 01/04/2012
 STAFF: dbm

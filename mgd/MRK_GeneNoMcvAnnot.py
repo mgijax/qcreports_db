@@ -12,6 +12,9 @@
 #
 # History:
 #
+# sc	01/11/2012
+#	- TR10952 added interim as well as official markers
+#
 # sc	06/07/10
 #	- created
 #
@@ -40,7 +43,7 @@ cmds = []
 cmds.append('''select _Marker_key, _Marker_Type_key, symbol
 	into #noAnnot
 	from MRK_Marker m
-	where m._Marker_Status_key = 1
+	where m._Marker_Status_key in (1,3)
 	and _Organism_key = 1
 	and _Marker_Type_key = 1
 	and not exists(select 1
