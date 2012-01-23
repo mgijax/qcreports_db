@@ -1,5 +1,11 @@
+TAG: qcreports_db-4-4-2-11
+DATE: 01/23/2012
+STAFF: lec
+CHANGES: 
+1) TR10945/mgd/GXD_Images.py/added 'EMBO J' journal
+
 TAG: qcreports_db-4-4-2-10
-DATE: 01/11/2021
+DATE: 01/11/2012
 STAFF: sc
 CHANGES: TR10952
 1) MRK_GeneNoMcvAnnot.py - added interim markers
