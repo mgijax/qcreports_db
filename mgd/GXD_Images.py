@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	01/23/2012
+#	- TR10945/'EMBO J'
+#
 # lec	12/21/2011
 #	- TR10930/Oxford journals
 #
@@ -141,6 +144,15 @@ journals = [
 # journals where year >= 2005
 journals2005 = ['Nucleic Acids Res']
 
+# journals where year >= 2006
+journals2006 = ['DNA Res']
+
+#
+# copyright checks
+#  1) Oxford
+#  2) all else
+#
+
 journalsOxford = [
 'Acta Biochim Biophys Sin (Shanghai)',
 'Brain',
@@ -148,13 +160,16 @@ journalsOxford = [
 'Cardiovasc Res',
 'Cereb Cortex',
 'Chem Senses',
-'DNA Res',
 'Glycobiology',
 'Hum Mol Genet',
 'Hum Reprod',
 'J Gerontol A Biol Sci Med Sci',
 'Mol Biol Evol',
 'Toxicol Sci',
+]
+
+journalsOther = [
+'EMBO J',
 ]
 
 #
@@ -176,6 +191,11 @@ fp.write(2*CRT)
 fp.write(TAB + 'Journals > 2005:' + CRT)
 for j in journals2005:
     fp.write(2*TAB + j + CRT)
+fp.write(CRT)
+
+fp.write(TAB + 'Journals > 2006:' + CRT)
+for j in journals2006:
+    fp.write(2*TAB + j + CRT)
 fp.write(2*CRT)
 
 fp.write(TAB + string.ljust('J#', 12))
@@ -188,9 +208,11 @@ fp.write(string.ljust('-------------', 50) + CRT)
 #
 # journals1 = journals
 # journals2 = journals2005
+# journals3 = journals2006
 #
 journals1 = '\'' + string.join(journals, '\',\'') + '\''
 journals2 = '\'' + string.join(journals2005, '\',\'') + '\''
+journals3 = '\'' + string.join(journals2006, '\',\'') + '\''
 
 db.sql('''
       select distinct a._Refs_key, a.creation_date 
@@ -202,10 +224,12 @@ db.sql('''
             and p._Image_key = i._Image_key 
             and i.xDim is NULL 
             and a._Refs_key = b._Refs_key 
-	    and ((b.journal in (%s)) or (b.journal in (%s) and year >= 2005))
+	    and ((b.journal in (%s)) 
+		or (b.journal in (%s) and year >= 2005)
+		or (b.journal in (%s) and year >= 2006))
             and a._Assay_key = ac._Object_key 
             and ac._MGIType_key = 8 
-      ''' % (journals1, journals2), None)
+      ''' % (journals1, journals2, journals3), None)
 
 db.sql('''
       insert into #refs
@@ -217,10 +241,12 @@ db.sql('''
             and g._Specimen_key = r._Specimen_key 
             and r.xDim is NULL 
             and a._Refs_key = b._Refs_key 
-	    and ((b.journal in (%s)) or (b.journal in (%s) and year >= 2005)) 
+	    and ((b.journal in (%s)) 
+		or (b.journal in (%s) and year >= 2005) 
+		or (b.journal in (%s) and year >= 2006)) 
             and a._Assay_key = ac._Object_key 
             and ac._MGIType_key = 8 
-      ''' % (journals1, journals2), None)
+      ''' % (journals1, journals2, journals3), None)
 
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
@@ -258,17 +284,24 @@ fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
 #
 # Oxford Journals
+# Other Journals
 #
 
 fp.write(TAB + 'Oxford Journals Checked:' + CRT)
 for j in journalsOxford:
     fp.write(2*TAB + j + CRT)
+fp.write(CRT)
+fp.write(TAB + 'Other Journals Checked:' + CRT)
+for j in journalsOther:
+    fp.write(2*TAB + j + CRT)
 fp.write(2*CRT)
 
 #
-# journal3 = Oxford Journals
+# journal4 = Oxford Journals
+# journal5 = Others
 #
-journals3 = '\'' + string.join(journalsOxford, '\',\'') + '\''
+journals4 = '\'' + string.join(journalsOxford, '\',\'') + '\''
+journals5 = '\'' + string.join(journalsOther, '\',\'') + '\''
 
 db.sql('''
       select distinct a._Refs_key, a.creation_date 
@@ -280,7 +313,8 @@ db.sql('''
             and p._Image_key = i._Image_key 
             and i.xDim is NULL 
             and a._Refs_key = b._Refs_key 
-	    and b.journal in (%s)
+	    and (b.journal in (%s)
+		or b.journal in (%s))
             and a._Assay_key = ac._Object_key 
             and ac._MGIType_key = 8 
 	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -288,7 +322,7 @@ db.sql('''
 	    and n._NoteType_key = 1023
 	    and n._MGIType_key = 9
 	    and n._Note_key = c._Note_key)
-      ''' % (journals3), None)
+      ''' % (journals4, journals5), None)
 
 db.sql('''
       insert into #refs3
@@ -300,7 +334,8 @@ db.sql('''
             and g._Specimen_key = r._Specimen_key 
             and r.xDim is NULL 
             and a._Refs_key = b._Refs_key 
-	    and b.journal in (%s) 
+	    and (b.journal in (%s)
+		or b.journal in (%s))
             and a._Assay_key = ac._Object_key 
             and ac._MGIType_key = 8 
 	    and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -308,7 +343,7 @@ db.sql('''
 	    and n._NoteType_key = 1023
 	    and n._MGIType_key = 9
 	    and n._Note_key = c._Note_key)
-      ''' % (journals3), None)
+      ''' % (journals4, journals5), None)
 
 db.sql('create index idx1 on #refs3(_Refs_key)', None)
 
