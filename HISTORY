@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-2-12
+DATE: 02/16/2012
+STAFF: sc
+CHANGES: TR9766
+1) Added: MGI_GenotypeDescriptions.py and added to qcr.html for Mary Dolan
+
 TAG: qcreports_db-4-4-2-11
 DATE: 01/23/2012
 STAFF: lec
