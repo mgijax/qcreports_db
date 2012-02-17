@@ -2,7 +2,7 @@
 
 '''
 #
-# MGI_PhenoGenoMPwithIDs.py
+# MGI_GenotypeDescriptions.py
 #
 # Report:
 #
@@ -18,7 +18,7 @@
 #	field 7: Genetic Background
 #
 # Usage:
-#       MGI_PhenoGenoMPwithIDs.py
+#       MGI_GenotypeDescriptions.py
 #
 # History:
 #
@@ -141,9 +141,11 @@ fp.write(TAB.join(['Gene ID', 'Gene Symbol', 'Allele ID', 'Allele Symbol', 'Geno
 
 for r in results:
         if geneID.has_key(r['_Marker_key']):
-                fp.write(geneID[r['_Marker_key']] + TAB)
-
-        fp.write(r['symbol'] + TAB)
+                fp.write(geneID[r['_Marker_key']])
+	fp.write(TAB)
+        if r['symbol'] != None:
+	    fp.write(r['symbol'])
+	fp.write(TAB)
 
         if alleleID.has_key(r['_Allele_key_1']):
                 fp.write(alleleID[r['_Allele_key_1']] + TAB)
