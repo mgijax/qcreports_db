@@ -143,16 +143,20 @@ cmd = ''' select i._Image_key, i.xDim, i.yDim, i.figureLabel,
 results = db.sql(cmd, 'auto')
 
 for r in results:
+
     key = r['_Image_key']
+
+    #
+    # skip if image has no pix id
+    #
+    if not pixID.has_key(key):
+	continue
+
     fp.write(r['refID'] + TAB)
     fp.write(r['figureLabel'] + TAB)
     fp.write(mgi_utils.prvalue(r['paneLabel']) + TAB)
     fp.write(r['accID'] + TAB)
-
-    if pixID.has_key(key):
-        fp.write(string.join(pixID[key], '|'))
-    fp.write(TAB)
-
+    fp.write(string.join(pixID[key], '|') + TAB)
     fp.write(str(r['xDim']) + TAB)
     fp.write(str(r['yDim']) + TAB)
 
