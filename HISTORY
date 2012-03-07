@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-2-1?
+DATE: 03/07/2012
+STAFF: lec
+CHANGES: 
+1) TR10909/monthly/GXD_ImagePanes.py;added as QC from customSQL
+
 TAG: qcreports_db-4-4-2-13
 TAG: qcreports_db-4-4-2-12
 DATE: 02/16/2012
