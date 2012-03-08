@@ -15,6 +15,7 @@
 #	Y Dim (associated w/ stub)
 #
 # History:
+#	- TR10909/converted from customSQL
 #
 '''
  
@@ -38,6 +39,12 @@ db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'Characteristics of All Image Panes in GXD', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
+fp.write('includes: full-size images (no thumbnails)\n')
+fp.write('includes: images that have pix ids\n')
+fp.write('includes: images associated with assays\n')
+fp.write('excludes: images associated with assay "Recombinase reporter", "In situ reporter (transgenic)"\n')
+fp.write('\n')
+
 #
 # assay types
 #
@@ -57,6 +64,7 @@ cmd = '''
 	and rr._Specimen_key = s._Specimen_key
 	and s._Assay_key = aa._Assay_key
 	and aa._AssayType_key = t._AssayType_key
+	and aa._AssayType_key not in (10,11)
       '''
 
 results = db.sql(cmd, 'auto')
@@ -142,9 +150,16 @@ cmd = ''' select i._Image_key, i.xDim, i.yDim, i.figureLabel,
 
 results = db.sql(cmd, 'auto')
 
+counter = 0
 for r in results:
 
     key = r['_Image_key']
+
+    #
+    # skip if no assay
+    #
+    if not assayType.has_key(key):
+	continue
 
     #
     # skip if image has no pix id
@@ -159,10 +174,11 @@ for r in results:
     fp.write(string.join(pixID[key], '|') + TAB)
     fp.write(str(r['xDim']) + TAB)
     fp.write(str(r['yDim']) + TAB)
+    fp.write(string.join(assayType[key], '|') + CRT)
 
-    if assayType.has_key(key):
-        fp.write(string.join(assayType[key], '|'))
-    fp.write(CRT)
+    counter = counter + 1
+
+fp.write('\n(%d rows affected)\n' % (counter))
 
 reportlib.finish_nonps(fp)	# non-postscript file
 db.useOneConnection(0)
