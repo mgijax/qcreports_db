@@ -45,6 +45,7 @@ import os
 import string
 import db
 import reportlib
+import mgi_utils
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -141,7 +142,7 @@ for r in results[2]:
     # Write the J number in the first column.
     #
     fp.write(jnumID)
-    fp.write(TAB + pubmedID)
+    fp.write(TAB + mgi_utils.prvalue(pubmedID))
 
     #
     # Write an "X" under each dataset in the heading if the J number has
