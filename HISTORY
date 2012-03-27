@@ -1,3 +1,9 @@
+TAG: qcreports_db-4-4-2-15
+DATE: 03/27/2012
+STAFF: lec
+CHANGES: 
+1) mgd/BIB_RefsToIndex.py; fix pubmedID
+
 TAG: qcreports_db-4-4-2-14
 DATE: 03/08/2012
 STAFF: lec
