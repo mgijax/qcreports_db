@@ -16,6 +16,9 @@
 #
 # History:
 #
+# 04/03/2012	lec
+#	- fixed up some nameing issues ('go' -> 'GO')
+#
 # 12/21/2011	lec
 #	- convert to outer join
 #
@@ -27,7 +30,6 @@
  
 import sys 
 import os 
-import string
 import db
 import reportlib
 
@@ -43,13 +45,13 @@ PAGE = reportlib.PAGE
 db.useOneConnection(1)
 
 # The main report
-fp = reportlib.init(sys.argv[0], 'Go Combined Report', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'GO Combined Report', os.environ['QCOUTPUTDIR'])
 
 # The secondary report, just the No GO Section
-fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No Go', os.environ['QCOUTPUTDIR'])
+fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
 
 # The third report, the no go section that has been filtered down to just alleles
-fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No Go w/ Alleles', os.environ['QCOUTPUTDIR'])
+fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
 
 # Type Mapping Strings
 
@@ -151,7 +153,7 @@ db.sql('''select r.*
 db.sql('create index vmIndex on #reduced_bibgo (_Marker_key)', None)
 
 db.sql('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
-	into #refGoUnused
+	into #refGOUnused
 	from #validMarkers vm
 	     LEFT OUTER JOIN #reduced_bibgo r on (vm._Marker_key = r._Marker_key
 	and not exists (select 1 from
@@ -161,7 +163,7 @@ db.sql('''select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
 		and e._Refs_key = r._Refs_key))
 	group by vm._Marker_key ''', None)
 
-db.sql('create index goRefIndex on #refGoUnused (_Marker_key)', None)
+db.sql('create index goRefIndex on #refGOUnused (_Marker_key)', None)
 
 # Collapse all these temp tables down to a single one, to make the subsequent queries easier
 # to design.
@@ -177,7 +179,7 @@ db.sql('''select m._Marker_key,
 	from #validMarkers m
 	     LEFT OUTER JOIN GO_Tracking gt on (m._Marker_key = gt._Marker_key),
 	     #mrkAlleles ma, #mrkOmimAnnot moa,
-	#refGoUnused rgs, #mrkOmimHumanAnnot moha, #mrkHomology mho
+	#refGOUnused rgs, #mrkOmimHumanAnnot moha, #mrkHomology mho
 	where m._Marker_key = ma._Marker_key
 	and m._Marker_key = moa._Marker_key
 	and m._Marker_key = mho._Marker_key
@@ -186,9 +188,9 @@ db.sql('''select m._Marker_key,
 
 db.sql('create index goOverall on #goOverall (_Marker_key)', None)
 
-# Markers w/o Go Evidence Codes
+# Markers w/o GO Evidence Codes
 
-resultsNoGo = db.sql('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
+resultsNoGO = db.sql('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
 	from #validMarkers m, ACC_Accession a, #goOverall g
 	where m._Marker_key = a._Object_key
@@ -201,11 +203,11 @@ resultsNoGo = db.sql('''select distinct '1' as type, m.symbol, mgiID = a.accID, 
 	where m._Marker_key = a._Object_key
 	and a._AnnotType_key = 1000
 	and a._Annot_key = e._Annot_key)''', 'auto') 
-noGoCount = len(resultsNoGo)
+noGOCount = len(resultsNoGO)
 	
 db.sql('''select distinct '1' as type, m.symbol, mgiID = a.accID, m.name,
 	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount, m._Marker_key
-	into #hasNoGo
+	into #hasNoGO
 	from #validMarkers m, ACC_Accession a, #goOverall g
 	where m._Marker_key = a._Object_key
 	and a._MGIType_key = 2 
@@ -335,17 +337,17 @@ cmds = []
 
 # Total number of rows
 
-cmds.append('''select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGo hng
+cmds.append('''select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
 	where go.hasOrtholog = 'Yes' and go._Marker_key = hng._Marker_key ''')
 
 # Count of markers with omim geno annotations
 
-cmds.append('''select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGo hng
+cmds.append('''select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
 	where go.hasOmim = 'Yes' and go._Marker_key = hng._Marker_key ''')
 	
 # Count of markers that have alleles	
 	
-cmds.append('''select count(distinct go._Marker_key) as 'count' from #goOverall go, #hasNoGo hng
+cmds.append('''select count(distinct go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
 	where go.hasAlleles = 'Yes' and go._Marker_key = hng._Marker_key''')	
 	
 # Count of markers marked complete in go	
@@ -377,13 +379,13 @@ fp.write("They must have a protien sequence of type Uniprot, XP or NP \n\n\n")
 	
 # Print out the Header
 
-totalCount = noGoCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
+totalCount = noGOCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
 
 fp.write("1. Total number of rows: %d" % totalCount)
-fp.write(CRT + "2. Genes with no go Annotations: %d" % noGoCount)
+fp.write(CRT + "2. Genes with no GO Annotations: %d" % noGOCount)
 
 # The second report also needs this line, so print it out.
-fp2.write(CRT + "1. Genes with no go Annotations: %d" % noGoCount)
+fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
 
 fp.write(CRT + "3. Genes with Annotations to IEA Only: %d" % IEAOnlyCount)
 fp.write(CRT + "4. Genes with Annotations to ND Only: %d" % NDOnlyCount)
@@ -411,7 +413,7 @@ fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allel
 for r in resultsStats[3]:
     completeYes = r['count']
     
-fp.write(CRT + "10. Genes with Go Annotation Complete: %d" % completeYes)
+fp.write(CRT + "10. Genes with GO Annotation Complete: %d" % completeYes)
 
 for r in resultsStats[5]:
     uniqueRef = r['count']
@@ -458,7 +460,7 @@ fp.write(CRT + CRT + CRT + 'No GO' + TAB + \
 	'OMIM Human Annotations?' + TAB + \
 	'Alleles?' + TAB + \
 	'Annotation Complete?' + TAB + \
-	'Number of Go References' + CRT)
+	'Number of GO References' + CRT)
 
 # Repeat for the second report
 
@@ -471,7 +473,7 @@ fp2.write(CRT + CRT + CRT +
 	'OMIM Human Annotations?' + TAB + \
 	'Alleles?' + TAB + \
 	'Annotation Complete?' + TAB + \
-	'Number of Go References' + CRT)
+	'Number of GO References' + CRT)
 
 # Repeat for the third report, maybe this could be factored out in the future.
 	
@@ -484,9 +486,9 @@ fp3.write(CRT + CRT + CRT +
 	'OMIM Human Annotations?' + TAB + \
 	'Alleles?' + TAB + \
 	'Annotation Complete?' + TAB + \
-	'Number of Go References' + CRT)
+	'Number of GO References' + CRT)
 	
-for r in resultsNoGo:
+for r in resultsNoGO:
     fp.write(templateRow % (type1, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
     
     # Report #2 needs a copy of this
