@@ -16,6 +16,11 @@
 #
 # History:
 #
+# 04/09/2012	lec
+#	- and m.name not like 'predicted gene %'
+#	changed to
+#	- and m.name not like 'predicted gene%'
+#
 # 04/03/2012	lec
 #	- fixed up some nameing issues ('go' -> 'GO')
 #
@@ -73,7 +78,7 @@ db.sql('''select distinct m.*
 	and m._Marker_Status_key in (1,3) 
 	and m.name not like 'gene model %' 
 	and m.name not like 'gene trap %' 
-	and m.name not like 'predicted gene %' 
+	and m.name not like 'predicted gene%' 
 	and m.symbol not like '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
 	and m.symbol not like '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
 	and m.symbol not like 'ORF%' 
