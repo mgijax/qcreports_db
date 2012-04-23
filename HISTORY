@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-0-0-3
+DATE: 04/23/2012
+STAFF: lec
+CHANGES: 
+1) TR11040/monthly/GXD_ImagePanes.py;exclude x,y,width,height = null
+
 TAG: qcreports_db-5-0-0-2
 DATE: 04/09/2012
 STAFF: lec

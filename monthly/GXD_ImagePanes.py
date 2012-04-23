@@ -15,6 +15,10 @@
 #	Y Dim (associated w/ stub)
 #
 # History:
+#
+# 04/23/2012	lec
+#	- TR11040/exclude x,y,width,heigh = null
+#
 #	- TR10909/converted from customSQL
 #
 '''
@@ -43,6 +47,7 @@ fp.write('includes: full-size images (no thumbnails)\n')
 fp.write('includes: images that have pix ids\n')
 fp.write('includes: images associated with assays\n')
 fp.write('excludes: images associated with assay "Recombinase reporter", "In situ reporter (transgenic)"\n')
+fp.write('excludes: images where the image pane has no coordinates (x,y,width,heigh is null)\n')
 fp.write('\n')
 
 #
@@ -127,6 +132,8 @@ for r in results:
 #
 # main query
 #
+# images with image panes
+#
 
 cmd = ''' select i._Image_key, i.xDim, i.yDim, i.figureLabel, 
 		p.paneLabel,
@@ -145,6 +152,7 @@ cmd = ''' select i._Image_key, i.xDim, i.yDim, i.figureLabel,
 	and a2._LogicalDB_key = 1
 	and a2.prefixPart = 'J:'
 	and a2.preferred = 1
+	and (p.x is null and p.y is null and p.width is null and p.height is null)
 	order by i._Image_key, p.paneLabel
       '''
 
