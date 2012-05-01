@@ -29,10 +29,10 @@
  
 import sys 
 import os
-import db
 import string
-import reportlib
 import re
+import db
+import reportlib
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE

@@ -22,8 +22,8 @@ import os
 import sys 
 import db
 import string
-import reportlib
 import mgi_utils
+import reportlib
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE

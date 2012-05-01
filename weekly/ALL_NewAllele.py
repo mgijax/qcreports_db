@@ -28,8 +28,8 @@ import string
 import sys 
 import os
 import db
-import reportlib
 import mgi_utils
+import reportlib
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB

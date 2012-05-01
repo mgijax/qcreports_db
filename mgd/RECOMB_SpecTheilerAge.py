@@ -31,8 +31,8 @@ import os
 import re
 import string
 import db
-import reportlib
 import mgi_utils
+import reportlib
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE

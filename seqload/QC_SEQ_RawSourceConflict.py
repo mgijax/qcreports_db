@@ -19,10 +19,10 @@
 '''
  
 import sys 
+import os
 import db
 import string
 import reportlib
-import os
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
