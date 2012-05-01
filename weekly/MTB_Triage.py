@@ -60,25 +60,30 @@ toDate = db.sql('select convert(char(10), dateadd(day, -1, "%s"), 101) ' % (curr
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.' + os.environ['DATE'] + '.txt', printHeading = None)
 
-db.sql('select r._Refs_key ' + \
-	'into #triage ' + \
-	'from BIB_Refs r, BIB_DataSet_Assoc a ' + \
-	'where r.modification_date between "%s" and "%s" ' % (fromDate, toDate) + \
-	'and r._Refs_key = a._Refs_key ' + \
-	'and a._DataSet_key = 1007', None)
+db.sql('''
+	select r._Refs_key 
+	into #triage 
+	from BIB_Refs r, BIB_DataSet_Assoc a 
+	where r.modification_date between '%s' and '%s' 
+	and r._Refs_key = a._Refs_key 
+	and a._DataSet_key = 1007
+	''' % (fromDate, toDate), None)
 
 db.sql('create index idx1 on #triage(_Refs_key)', None)
 
-results = db.sql('select b.authors, b.authors2, b.title, b.journal, b.year, b.vol, b.issue, b.pgs, b.abstract, ' + \
-	'jnumID = a1.accID, pubmedID = a2.accID ' + \
-	'from #triage t, BIB_Refs b, ACC_Accession a1, ACC_Accession a2 ' + \
-	'where t._Refs_key = b._Refs_key ' + \
-	'and b._Refs_key = a1._Object_key ' + \
-	'and a1._LogicalDB_Key = 1 ' + \
-	'and a1.prefixPart = "J:" ' + \
-	'and t._Refs_key *= a2._Object_key ' + \
-	'and a2._LogicalDB_Key = 29 ' + \
-	'order by jnumID', 'auto')
+results = db.sql('''
+	select b.authors, b.authors2, b.title, b.journal, b.year, 
+	       b.vol, b.issue, b.pgs, b.abstract, 
+	       a1.accID as jnumID, a2.accID as pubmedID
+	from #triage t, BIB_Refs b, ACC_Accession a1, ACC_Accession a2 
+	where t._Refs_key = b._Refs_key 
+	and b._Refs_key = a1._Object_key 
+	and a1._LogicalDB_Key = 1 
+	and a1.prefixPart = 'J:' 
+	and t._Refs_key *= a2._Object_key 
+	and a2._LogicalDB_Key = 29 
+	order by jnumID
+	''', 'auto')
 
 for r in results:
     fp.write(r['jnumID'] + TAB)

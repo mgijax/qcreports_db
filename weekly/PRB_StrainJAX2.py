@@ -70,9 +70,13 @@ def jrs():
     # Retrieve all Strains that have a JRS ID and whose Alleles are used in a Genotype
 
     db.sql('''
-	select distinct s._Strain_key, strain = substring(s.strain,1,70), accID = substring(a.accID,1,6), g._Genotype_key 
+	select distinct s._Strain_key, 
+			substring(s.strain,1,70) as strain, 
+			substring(a.accID,1,6) as accID, 
+			g._Genotype_key 
 	into #strains 
-	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
+	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, 
+	     GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
 	and s._Strain_key = a._Object_key 
 	and a._MGIType_key = 10 
@@ -80,7 +84,7 @@ def jrs():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key 
-	and g.creation_date between dateadd(day, -7, "%s") and getdate()
+	and g.creation_date between dateadd(day, -7, '%s') and getdate()
 	''' % (currentDate), None)
 
     printReport(jrsfp)
@@ -102,7 +106,10 @@ def mmrrc():
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
     db.sql('''
-	select distinct s._Strain_key, strain = substring(s.strain,1,70), a.accID, g._Genotype_key 
+	select distinct s._Strain_key, 
+			substring(s.strain,1,70) as strain, 
+			a.accID, 
+			g._Genotype_key 
 	into #strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
@@ -112,7 +119,7 @@ def mmrrc():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key
-	and g.creation_date between dateadd(day, -7, "%s") and getdate()
+	and g.creation_date between dateadd(day, -7, '%s') and getdate()
 	''' % (currentDate), None)
 
     printReport(mmrrcfp)
@@ -129,7 +136,7 @@ def printReport(fp):
 	    where s._Genotype_key = a._Object_key 
 	    and a._MGIType_key = 12 
 	    and a._LogicalDB_key = 1 
-	    and a.prefixPart = "MGI:" 
+	    and a.prefixPart = 'MGI:' 
 	    and a.preferred = 1''', 'auto')
     for r in results:
         key = r['_Strain_key']
