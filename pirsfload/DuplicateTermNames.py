@@ -22,7 +22,6 @@ import os
 import sys 
 import db
 import string
-import pdb
 import reportlib
 
 CRT = reportlib.CRT
@@ -46,19 +45,23 @@ fp.write(string.ljust('---------------------------------------------------------
 fp.write(string.ljust('---------------', 15))
 fp.write(CRT)
 
-db.sql('select v._Term_key, v.term ' + \
-   'into #dupterms ' + \
-   'from VOC_Term v ' + \
-   'where v._Vocab_key = 46 ' + \
-   'group by v.term having count(*) > 1', None)
+db.sql('''
+	select v._Term_key, v.term 
+   	into #dupterms 
+   	from VOC_Term v 
+   	where v._Vocab_key = 46 
+   	group by v.term having count(*) > 1
+	''', None)
 
 db.sql('create index idx1 on #dupterms(_Term_key)', None)
 
-results = db.sql('select d.term, a.accID ' + \
-   'from #dupterms d, ACC_Accession a ' + \
-   'where d._Term_key = a ._Object_key ' + \
-   'and a._LogicalDB_key = 78 ' + \
-   'order by d.term', 'auto')
+results = db.sql('''
+	select d.term, a.accID 
+   	from #dupterms d, ACC_Accession a 
+   	where d._Term_key = a ._Object_key 
+   	and a._LogicalDB_key = 78 
+   	order by d.term
+	''', 'auto')
 
 for r in results:
     fp.write(string.ljust(r['term'], 100) + \
