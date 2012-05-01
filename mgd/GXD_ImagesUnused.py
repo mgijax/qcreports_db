@@ -72,8 +72,8 @@ db.sql('select r._Refs_key, r.jnumID, a._ImagePane_key ' \
      'and a._AssayType_key in (1,2,3,4,5,6,8,9,10,11) ' + \
      'and a._ImagePane_key is not null', 'None')
 
-db.sql('create index idx1 on #gel(_Refs_key)', None)
-db.sql('create index idx2 on #gel(_ImagePane_key)', None)
+db.sql('create index gel_idx1 on #gel(_Refs_key)', None)
+db.sql('create index gel_idx2 on #gel(_ImagePane_key)', None)
 
 #
 # Select Specimen Image Panes that are full-coded.
@@ -97,8 +97,8 @@ db.sql('select r._Refs_key, r.jnumID, p._ImagePane_key ' + \
     'and s._Specimen_key = i._Specimen_key ' + \
     'and i._Result_key = p._Result_key', 'None')
 
-db.sql('create index idx1 on #specimen(_Refs_key)', None)
-db.sql('create index idx2 on #specimen(_ImagePane_key)', None)
+db.sql('create index specimen_idx1 on #specimen(_Refs_key)', None)
+db.sql('create index specimen_idx2 on #specimen(_ImagePane_key)', None)
 
 #
 # Select Image Panes that are full-coded.
@@ -119,8 +119,8 @@ db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane
      'and a._MGIType_key = 8 ' + \
      'and a._Image_key = aa._Image_key ', 'None')
 
-db.sql('create index idx1 on #images(jnumID)', None)
-db.sql('create index idx2 on #images(figureLabel)', None)
+db.sql('create index images_idx1 on #images(jnumID)', None)
+db.sql('create index images_idx2 on #images(figureLabel)', None)
 
 #
 # From this list of Image Panes, select those that are not used

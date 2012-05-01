@@ -248,7 +248,7 @@ db.sql('''
             and ac._MGIType_key = 8 
       ''' % (journals1, journals2, journals3), None)
 
-db.sql('create index idx1 on #refs(_Refs_key)', None)
+db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
 
 results = db.sql('''
 	select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)
@@ -345,7 +345,7 @@ db.sql('''
 	    and n._Note_key = c._Note_key)
       ''' % (journals4, journals5), None)
 
-db.sql('create index idx1 on #refs3(_Refs_key)', None)
+db.sql('create index refs3_idx1 on #refs3(_Refs_key)', None)
 
 results = db.sql('''
 	select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)

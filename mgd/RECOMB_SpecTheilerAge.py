@@ -92,13 +92,13 @@ db.sql('insert into #temp1 ' + \
 #
 
 db.sql('select distinct * into #temp2 from #temp1', None)
-db.sql('create index idx1 on #temp2(_Assay_key)', None)
-db.sql('create index idx2 on #temp2(_Specimen_key)', None)
+db.sql('create index temp2_idx1 on #temp2(_Assay_key)', None)
+db.sql('create index temp2_idx2 on #temp2(_Specimen_key)', None)
 db.sql('select t._Assay_key, t.age, t.label, t.stage, dpcMin = min(t.dpcMin), dpcMax = max(t.dpcMax) ' + \
 	'into #temp3 ' + \
 	'from #temp2 t ' + \
 	'group by t._Assay_key, t._Specimen_key ', None)
-db.sql('create index idx1 on #temp3(_Assay_key)', None)
+db.sql('create index temp3_idx1 on #temp3(_Assay_key)', None)
 
 ##
 

@@ -56,9 +56,9 @@ db.sql('select distinct a._Genotype_key, a._Marker_key, a.symbol, ' + \
         'from GXD_AllelePair_View a, GXD_Genotype g ' + \
         'where a._Genotype_key = g._Genotype_key', None)
 
-db.sql('create index idx1 on #genotypes(_Genotype_key)', None)
-db.sql('create index idx2 on #genotypes(_Marker_key)', None)
-db.sql('create index idx3 on #genotypes(_Allele_key_1)', None)
+db.sql('create index genotypes_idx1 on #genotypes(_Genotype_key)', None)
+db.sql('create index genotypes_idx2 on #genotypes(_Marker_key)', None)
+db.sql('create index genotypes_idx3 on #genotypes(_Allele_key_1)', None)
 
 #
 # retrieve MGI IDs for genes

@@ -66,7 +66,7 @@ def jrs():
 	    and sa._MGIType_key = 10 
 	    and sa._LogicalDB_key = 22 
 	    and sa.preferred = 1 ''', None)
-    db.sql('create index idx1 on #strains(_Strain_key)', None)
+    db.sql('create index strains_idx1 on #strains(_Strain_key)', None)
 
     printReport(jrsfp)
 
@@ -96,7 +96,7 @@ def mmrrc():
 	    and sa._MGIType_key = 10 
 	    and sa._LogicalDB_key = 38 
 	    and sa.preferred = 1 ''', None)
-    db.sql('create index idx1 on #strains(_Strain_key)', None)
+    db.sql('create index strains_idx2 on #strains(_Strain_key)', None)
 
     printReport(mmrrcfp)
 
@@ -107,7 +107,7 @@ def printReport(fp):
 	    'into #strains2 ' + \
 	    'from #strains s, PRB_Strain_Marker a ' + \
 	    'where s._Strain_key = a._Strain_key', None)
-    db.sql('create index idx1 on #strains2(_Strain_key)', None)
+    db.sql('create index strains2_idx1 on #strains2(_Strain_key)', None)
 
     # Strains that do not have the same Allele
     

@@ -118,7 +118,7 @@ db.sql('select cdate = convert(char(10), t.completion_date, 101), m._Marker_key,
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "MGI:" ' + \
 	'and a.preferred = 1', None)
-db.sql('create index idx1 on #goref(_Marker_key)', None)
+db.sql('create index goref_idx1 on #goref(_Marker_key)', None)
 
 #
 # select all Markers w/ GO Annotations that contains a completion date
@@ -133,7 +133,7 @@ db.sql('select cdate = convert(char(10), t.completion_date, 101), m._Marker_key,
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "MGI:" ' + \
 	'and a.preferred = 1 ', None)
-db.sql('create index idx1 on #godone(_Marker_key)', None)
+db.sql('create index godone_idx1 on #godone(_Marker_key)', None)
 
 results = db.sql('select * from #godone', 'auto')
 godone = {}

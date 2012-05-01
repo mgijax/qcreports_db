@@ -109,7 +109,7 @@ db.sql('select s._Sequence_key ' + \
 	'where s._SequenceProvider_key = 316372 ' + \
 	'and s._SequenceStatus_key = 316342 ' + \
 	'and not exists (select 1 from SEQ_Marker_Cache m where s._Sequence_key = m._Sequence_key)', None)
-db.sql('create index idx1 on #sequence(_Sequence_key)', None)
+db.sql('create index sequences_idx1 on #sequence(_Sequence_key)', None)
 
 #
 # ...NMs
@@ -121,7 +121,7 @@ db.sql('select s._Sequence_key, a.accID ' + \
 	'where s._Sequence_key = a._Object_key ' + \
 	'and a._MGIType_key = 19 ' + \
 	'and a.prefixPart = "NM_"', None)
-db.sql('create index idx1 on #acc(accID)', None)
+db.sql('create index acc_idx1 on #acc(accID)', None)
 
 #
 # cache NMs in EntrezGene
@@ -132,7 +132,7 @@ db.sql('select eg.rna, eg.geneID ' + \
 	'from %s..DP_EntrezGene_Accession eg ' % (os.environ['RADAR_DBNAME']) + \
 	'where eg.taxID = 10090 ' + \
 	'and eg.rna like "NM_%" ', None)
-db.sql('create index idx1 on #eg(rna)', None)
+db.sql('create index eg_idx1 on #eg(rna)', None)
 
 fp.write(CRT + "NM's falling into EG Buckets" + 2*CRT)
 fp.write(string.ljust('NM Acc ID', 35))

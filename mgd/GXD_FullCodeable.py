@@ -78,8 +78,8 @@ def process():
 	and not exists (select 1 from GXD_Assay a where a._Marker_key = g._Marker_key) 
 	''', None)
 
-    db.sql('create index idx1 on #refscodeable(_Marker_key)', None)
-    db.sql('create index idx2 on #refscodeable(_Refs_key)', None)
+    db.sql('create index refscodeable_idx1 on #refscodeable(_Marker_key)', None)
+    db.sql('create index refscodeable_idx2 on #refscodeable(_Refs_key)', None)
 
     #
     # count of total index records per reference
@@ -92,7 +92,7 @@ def process():
 	group by g._Refs_key
 	''', None)
 
-    db.sql('create index idx1 on #indexcount(_Refs_key)', None)
+    db.sql('create index indexcount_idx1 on #indexcount(_Refs_key)', None)
 
     #
     # those references that contain at least one E? annotation
@@ -144,7 +144,7 @@ def report1(fp):
 	and not exists (select 1 from GXD_Assay ga where ga._Marker_key = gi._Marker_key)
         ''', None)
 
-    db.sql('create index idx1 on #markers(_Marker_key)', None)
+    db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
 
     #
     # all references for the markers of interest
@@ -260,7 +260,7 @@ def report2(fp):
 	from #refscodeable g 
 	group by g._Refs_key
 	''', None)
-    db.sql('create index idx1 on #markercount(_Refs_key)', None)
+    db.sql('create index markercount_idx1 on #markercount(_Refs_key)', None)
 
     #
     # we don't want a reference if it has any assays coded
@@ -272,7 +272,7 @@ def report2(fp):
 	from #refscodeable g, GXD_Assay a
 	where g._Refs_key = a._Refs_key
 	''', None)
-    db.sql('create index idx1 on #excluded(_Refs_key)', None)
+    db.sql('create index excluded_idx1 on #excluded(_Refs_key)', None)
 
     results = db.sql('''
 	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority, r.conditional 
@@ -346,7 +346,7 @@ def report3(fp):
         group by i._Refs_key
 	''', None)
 
-    db.sql('create index idx1 on #mrk_count(_Refs_key)', None)
+    db.sql('create index mrk_count_idx1 on #mrk_count(_Refs_key)', None)
 
     #
     # get the priority
@@ -361,7 +361,7 @@ def report3(fp):
            and i._Priority_key = t._Term_key
 	   ''', None)
 
-    db.sql('create index idx1 on #priority(_Refs_key)', None)
+    db.sql('create index priority_idx1 on #priority(_Refs_key)', None)
 
     #
     # get a list of references with assay type of northern, western, RT-PCR,

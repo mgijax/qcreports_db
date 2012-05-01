@@ -57,7 +57,7 @@ db.sql('''select distinct m._Object_key, counter = count(m._Refs_key)
           and t.assocType in ('Priority Index', 'Indexed')
 	  group by m._Object_key
 	  ''', None)
-db.sql('create index idx1 on #refA(_Object_key)', None)
+db.sql('create index refA_idx1 on #refA(_Object_key)', None)
 results = db.sql('select * from #refA', 'auto')
 refA = {}
 for r in results:
@@ -71,7 +71,7 @@ db.sql('''select distinct m._Object_key, counter = count(m._Refs_key)
           and t.assocType in ('Used-FC')
 	  group by m._Object_key
 	  ''', None)
-db.sql('create index idx1 on #refB(_Object_key)', None)
+db.sql('create index refB_idx1 on #refB(_Object_key)', None)
 results = db.sql('select * from #refB', 'auto')
 refB = {}
 for r in results:

@@ -75,8 +75,8 @@ db.sql('''select a.accID, s._Sequence_key
     and a._Object_key = s._Sequence_key 
     and s._SequenceStatus_key = 316342
     ''', None)
-db.sql('create index idxAccid on #ensemblGeneModel(accID)', None)
-db.sql('create index idxSeqkey on #ensemblGeneModel(_Sequence_key)', None)
+db.sql('create index ensembl_idxAccid on #ensemblGeneModel(accID)', None)
+db.sql('create index ensembl_idxSeqkey on #ensemblGeneModel(_Sequence_key)', None)
 print "done first query and index"
 
 # get the set of Ensembl ids with marker associations

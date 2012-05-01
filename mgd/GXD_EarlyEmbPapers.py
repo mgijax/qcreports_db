@@ -84,7 +84,7 @@ db.sql('''
     and gi._ConditionalMutants_key = c._Term_key
     ''', None)
 
-db.sql('create index idx1 on #refs1(_Refs_key)', None)
+db.sql('create index refs1_idx1 on #refs1(_Refs_key)', None)
 
 #
 # delete records that have index data that is other than E0.5-7.5, A
@@ -117,7 +117,7 @@ db.sql('''
     group by r._Refs_key
     ''', None)
 
-db.sql('create index idx1 on #refs2(_Refs_key)', None)
+db.sql('create index refs2_idx1 on #refs2(_Refs_key)', None)
 
 #
 # select number of new genes (genes in index but not in expression cache)
@@ -144,7 +144,7 @@ db.sql('''
     group by r._Refs_key
     ''', None)
 
-db.sql('create index idx1 on #final(_Refs_key)', None)
+db.sql('create index final_idx1 on #final(_Refs_key)', None)
 
 #
 # final report

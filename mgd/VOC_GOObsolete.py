@@ -56,7 +56,7 @@ db.sql('select goID = a.accID, ta._Object_key ' + \
 	'and a._MGIType_key = 13 ' + \
 	'and a.preferred = 1', None)
 
-db.sql('create index idx_key on #obsolete(_Object_key)', None)
+db.sql('create index obsolete_idx_key on #obsolete(_Object_key)', None)
 
 results = db.sql('select goID, ma.accID, m.symbol ' + \
 	'from #obsolete o, ACC_Accession ma, MRK_Marker m ' + \

@@ -123,14 +123,14 @@ db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart '
 	'and a._Annot_key = e._Annot_key ' + \
 	'and e._EvidenceTerm_key != 514597) ', None)
 
-db.sql('create index idx1 on #markers(_Marker_key)', None)
+db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
 
 db.sql('select distinct m.*, r._Refs_key, r.pubmedID ' + \
 	'into #references1 ' + \
 	'from #markers m , MRK_Reference r ' + \
 	'where m._Marker_key = r._Marker_key ', None)
 
-db.sql('create index index_refs_key on #references1(_Refs_key)', None)
+db.sql('create index index_refs1_key on #references1(_Refs_key)', None)
 
 db.sql('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
 	'into #references ' + \

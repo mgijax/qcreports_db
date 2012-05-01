@@ -58,8 +58,8 @@ db.sql('''select accID, s._Sequence_key
     and a._Object_key = s._Sequence_key
     and s._SequenceStatus_key = 316342
     ''', None)
-db.sql('create index idxAccid on #vegaGeneModel(accID)', None)
-db.sql('create index idxSeqKey on #vegaGeneModel(_Sequence_key)', None)
+db.sql('create index idxAccid1 on #vegaGeneModel(accID)', None)
+db.sql('create index idxSeqKey1 on #vegaGeneModel(_Sequence_key)', None)
 
 # get the set of VEGA ids with marker associations
 db.sql('''select distinct accID 
@@ -69,7 +69,7 @@ db.sql('''select distinct accID
     and _MGIType_key = 2
     and preferred = 1
     ''', None)
-db.sql('create index idxAccid on #vegaGeneAssoc(accID)', None)
+db.sql('create index idxAccid2 on #vegaGeneAssoc(accID)', None)
 results = db.sql('''select gm.accid as vegaGeneModelNoAssoc, s.rawbiotype 
     from #vegaGeneModel gm
 	 LEFT OUTER JOIN SEQ_GeneModel s on (gm._Sequence_key = s._Sequence_key)

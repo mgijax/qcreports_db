@@ -64,12 +64,12 @@ db.sql('select s._Object_key, s._MGIType_key, synonym = substring(s.synonym,1,50
 	'where s._MGIType_key = 2 ' + \
 	'and s._SynonymType_key = st._SynonymType_key ' + \
 	'and st._Organism_key = 1', None)
-db.sql('create index idx1 on #synonyms1(synonym)', None)
-db.sql('create index idx2 on #synonyms1(_Object_key)', None)
-db.sql('create index idx3 on #synonyms1(_MGIType_key)', None)
+db.sql('create index syn1_idx1 on #synonyms1(synonym)', None)
+db.sql('create index syn1_idx2 on #synonyms1(_Object_key)', None)
+db.sql('create index syn1_idx3 on #synonyms1(_MGIType_key)', None)
 
 db.sql('select synonym into #synonyms2 from #synonyms1 group by synonym having count(*) > 1', None)
-db.sql('create index idx1 on #synonyms2(synonym)', None)
+db.sql('create index syn2_idx1 on #synonyms2(synonym)', None)
 
 results = db.sql('select distinct sym1 = m1.symbol, sym2 = m2.symbol, s.synonym ' + \
 	'from #synonyms1 s1, #synonyms1 s2, #synonyms2 s, MRK_Marker m1, MRK_Marker m2 ' + \

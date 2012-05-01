@@ -77,8 +77,8 @@ db.sql('select gr._Specimen_key, grs._Structure_key ' + \
     'and s._Specimen_key = gr._Specimen_key ' + \
     'and gr._Result_key = grs._Result_key', None)
 
-db.sql('create index idx1 on #specstructs (_Specimen_key)', None)
-db.sql('create index idx2 on #specstructs (_Structure_key)', None)
+db.sql('create index specs_idx1 on #specstructs (_Specimen_key)', None)
+db.sql('create index specs_idx2 on #specstructs (_Structure_key)', None)
 
 # get the duplicates
 
@@ -86,8 +86,8 @@ db.sql('select * into #dupspecimens ' + \
     'from #specstructs ' + \
     'group by _Specimen_key, _Structure_key having count(*) > 1', None)
 
-db.sql('create index idx1 on #dupspecimens (_Specimen_key)', None)
-db.sql('create index idx2 on #dupspecimens (_Structure_key)', None)
+db.sql('create index dupspec_idx1 on #dupspecimens (_Specimen_key)', None)
+db.sql('create index dupspec_idx2 on #dupspecimens (_Structure_key)', None)
 
 # get the specimen label _Refs_key and  _Assay_key, and structure for each dup
 
@@ -108,8 +108,8 @@ db.sql('select gr._GelLane_key, grs._Structure_key ' + \
     'and a._Assay_key = gr._Assay_key ' + \
     'and gr._GelLane_key = grs._GelLane_key', None)
 
-db.sql('create index idx1 on #gelstructs (_GelLane_key)', None)
-db.sql('create index idx2 on #gelstructs (_Structure_key)', None)
+db.sql('create index gel_idx1 on #gelstructs (_GelLane_key)', None)
+db.sql('create index gel_idx2 on #gelstructs (_Structure_key)', None)
 
 # get the duplicates
 
@@ -117,8 +117,8 @@ db.sql('select * into #dupgels ' + \
     'from #gelstructs ' + \
     'group by _GelLane_key, _Structure_key having count(*) > 1', None)
 
-db.sql('create index idx1 on #dupgels (_GelLane_key)', None)
-db.sql('create index idx2 on #dupgels (_Structure_key)', None)
+db.sql('create index dupgel_idx1 on #dupgels (_GelLane_key)', None)
+db.sql('create index dupgel_idx2 on #dupgels (_Structure_key)', None)
 
 # get the gel label _Refs_key and  _Assay_key, and structure for each dup
 

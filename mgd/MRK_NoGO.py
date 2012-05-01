@@ -135,7 +135,7 @@ def runQueries():
 	   and a._AnnotType_key = 1011
 	   and a._Term_key = 6238170)
 	   ''', None)
-    db.sql('create index idx1 on #markers(_Marker_key)', None)
+    db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
 
     # orthologies
 
@@ -161,10 +161,10 @@ def runQueries():
 	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
 	'where m._Marker_key = r._Marker_key ' + \
 	'and r._Refs_key = b._Refs_key', None)
-    db.sql('create index idx1 on #references(_Refs_key)', None)
-    db.sql('create index idx2 on #references(_Marker_key)', None)
-    db.sql('create index idx3 on #references(symbol)', None)
-    db.sql('create index idx4 on #references(numericPart)', None)
+    db.sql('create index references_idx1 on #references(_Refs_key)', None)
+    db.sql('create index references_idx2 on #references(_Marker_key)', None)
+    db.sql('create index references_idx3 on #references(symbol)', None)
+    db.sql('create index references_idx4 on #references(numericPart)', None)
 
     # check if reference is selected for GO
 

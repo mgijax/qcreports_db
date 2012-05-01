@@ -166,7 +166,7 @@ def selectNature():
 	    and i.xDim is null
 	    ''' % (string.join(journalsNature, '","')), None)
 
-    db.sql('create index idx1 on #refs(_Refs_key)', None)
+    db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
 
 def selectOther():
 
@@ -188,7 +188,7 @@ def selectOther():
 	    and i.xDim is null
 	    ''' % (string.join(journalsAll, '","')), None)
 
-    db.sql('create index idx1 on #refs(_Refs_key)', None)
+    db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
 
 #
 # Main
