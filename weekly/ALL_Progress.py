@@ -44,9 +44,20 @@
 import sys 
 import os
 import string
-import db
 import mgi_utils
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -207,13 +218,13 @@ def genotypeCounts():
 	'from GXD_Genotype g, VOC_Annot a ' + \
 	'where a._AnnotType_key = 1002 ' + \
 	'and g._Genotype_key = a._Object_key ', None)
-    db.sql('create index idx1 on #genotypes(_Genotype_key)', None)
+    db.sql('create index geneoytpes_idx1 on #genotypes(_Genotype_key)', None)
 
     db.sql('select _Genotype_key, _Annot_key into #gmonthly ' + \
 	'from #genotypes ' + \
 	'where datepart(year, creation_date) = %d ' % (year) + \
 	'and datepart(month, creation_date) = %d ' % (month), None)
-    db.sql('create index idx1 on #gmonthly(_Genotype_key)', None)
+    db.sql('create index gmonthly_idx1 on #gmonthly(_Genotype_key)', None)
 
     db.sql('select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key ' + \
 	'into #noqtl ' + \

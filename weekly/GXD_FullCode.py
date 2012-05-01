@@ -38,8 +38,19 @@
 import sys
 import os
 import string
-import db
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -87,9 +98,9 @@ def processJournal(jList, fileName):
 	       where i._Refs_key = a._Refs_key)
 	       ''' % journalTitle, None)
 
-	db.sql('create index idx1 on #markers1(_Refs_key)', None)
+	db.sql('create index markers1_idx1 on #markers1(_Refs_key)', None)
 	db.sql('select m.*, markerCount = count(*) into #mcount1 from #markers1 m group by _Refs_key', None)
-	db.sql('create index idx1 on #mcount1(_Refs_key)', None)
+	db.sql('create index mcount1_idx1 on #mcount1(_Refs_key)', None)
 
 	# get the set of references not coded with high priority,
 	# add newGeneCount column to be updated later
@@ -118,13 +129,13 @@ def processJournal(jList, fileName):
 	       and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key) 
 	       and not exists (select 1 from GXD_Assay a where i._Marker_key = a._Marker_key) 
 	       ''' % journalTitle, None)
-	db.sql('create index idx1 on #markers2(_Refs_key)', None)
+	db.sql('create index markers2_idx1 on #markers2(_Refs_key)', None)
 
 	#
 	# by reference, get the count
 	#
 	db.sql('select m.*, newGeneCount = count(*) into #mcount2 from #markers2 m group by _Refs_key', None)
-	db.sql('create index idx1 on #mcount2(_Refs_key)', None)
+	db.sql('create index mcount2_idx1 on #mcount2(_Refs_key)', None)
 
 	#
 	# by reference, set #final.newGeneCount = #mcount2.newGeneCount

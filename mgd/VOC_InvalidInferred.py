@@ -36,9 +36,20 @@ import sys
 import os
 import string
 from sets import Set
-import db
 import mgi_utils
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 #
 # Main
@@ -78,9 +89,9 @@ db.sql('''
 	and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
 	and e._EvidenceTerm_key = t._Term_key
 	''', None)
-db.sql('create nonclustered index idx1 on #annotations(_Term_key)', None)
-db.sql('create nonclustered index idx2 on #annotations(_Object_key)', None)
-db.sql('create nonclustered index idx3 on #annotations(inferredFrom)', None)
+db.sql('create index idx1 on #annotations(_Term_key)', None)
+db.sql('create index idx2 on #annotations(_Object_key)', None)
+db.sql('create index idx3 on #annotations(inferredFrom)', None)
 
 #
 # set of MGI, GO ids in 'inferredFrom'

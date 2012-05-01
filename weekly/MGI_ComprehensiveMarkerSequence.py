@@ -79,9 +79,20 @@
 import sys
 import os
 import string
-import db
 import mgi_utils
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 blankTag = '---'
 
@@ -127,13 +138,13 @@ fp.write('#\n\n')
 # deleted sequences
 
 db.sql('select s._Sequence_key into #deleted from SEQ_Sequence s where s._SequenceStatus_key = 316343', None)
-db.sql('create index idx1 on #deleted(_Sequence_key)', None)
+db.sql('create index deleted_idx1 on #deleted(_Sequence_key)', None)
 
 db.sql('''select a.accID, a._LogicalDB_key into #deletedIDs from #deleted d, ACC_Accession a
     where d._Sequence_key = a._Object_key
     and a._MGIType_key = 19''', None)
-db.sql('create index idx1 on #deletedIDs(accID)', None)
-db.sql('create index idx2 on #deletedIDs(_LogicalDB_key)', None)
+db.sql('create index deletedIDs_idx1 on #deletedIDs(accID)', None)
+db.sql('create index deletedIDs_idx2 on #deletedIDs(_LogicalDB_key)', None)
 
 # all mouse markers
 
@@ -154,9 +165,9 @@ db.sql('''select m._Marker_key, m.symbol, m.chromosome,
    and a.preferred = 1
    and m._Marker_key = c._Marker_key
    ''', None)
-db.sql('create index idx1 on #markers(_Marker_key)', None)
-db.sql('create index idx2 on #markers(symbol)', None)
-db.sql('create index idx3 on #markers(numericPart)', None)
+db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
+db.sql('create index markers_idx2 on #markers(symbol)', None)
+db.sql('create index markers_idx3 on #markers(numericPart)', None)
 
 # 3. Synonyms
 

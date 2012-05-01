@@ -23,9 +23,20 @@
 import sys
 import os
 import string
-import db
 import mgi_utils
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 CRT = reportlib.CRT
 
@@ -45,8 +56,8 @@ def monthlyCounts():
 	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
         'group by datepart(year, a.creation_date), datepart(month, a.creation_date)', None)
 
-    db.sql('create index idx1 on #assayGenes(year)', None)
-    db.sql('create index idx2 on #assayGenes(month)', None)
+    db.sql('create index assayGenes_idx1 on #assayGenes(year)', None)
+    db.sql('create index assayGenes_idx2 on #assayGenes(month)', None)
 
     #
     # Assay stats by year/month/assay type
@@ -60,9 +71,9 @@ def monthlyCounts():
 	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
 	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
 
-    db.sql('create index idx1 on #assays(year)', None)
-    db.sql('create index idx2 on #assays(month)', None)
-    db.sql('create index idx3 on #assays(_AssayType_key)', None)
+    db.sql('create index assays_idx1 on #assays(year)', None)
+    db.sql('create index assays_idx2 on #assays(month)', None)
+    db.sql('create index assays_idx3 on #assays(_AssayType_key)', None)
 
     #
     # Gel stats by year/month/assay type
@@ -79,9 +90,9 @@ def monthlyCounts():
 	'and l._GelLane_key = gls._GelLane_key ' + \
 	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
 
-    db.sql('create index idx1 on #gelresults(year)', None)
-    db.sql('create index idx2 on #gelresults(month)', None)
-    db.sql('create index idx3 on #gelresults(_AssayType_key)', None)
+    db.sql('create index gelresults_idx1 on #gelresults(year)', None)
+    db.sql('create index gelresults_idx2 on #gelresults(month)', None)
+    db.sql('create index gelresults_idx3 on #gelresults(_AssayType_key)', None)
 
     #
     # InSitu stats by year/month/assay type
@@ -98,9 +109,9 @@ def monthlyCounts():
 	'and r._Result_key = rs._Result_key ' + \
 	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
 
-    db.sql('create index idx1 on #insituresults(year)', None)
-    db.sql('create index idx2 on #insituresults(month)', None)
-    db.sql('create index idx3 on #insituresults(_AssayType_key)', None)
+    db.sql('create index insituresults_idx1 on #insituresults(year)', None)
+    db.sql('create index insituresults_idx2 on #insituresults(month)', None)
+    db.sql('create index insituresults_idx3 on #insituresults(_AssayType_key)', None)
 
     #
     # generate a list of all unique year/month values by the creation date of Assay records
@@ -145,9 +156,9 @@ def monthlyCounts():
 	'and a.month = p.month ' + \
 	'and a._AssayType_key = p._AssayType_key ', None)
 
-    db.sql('create index idx1 on #periodCounts(year)', None)
-    db.sql('create index idx2 on #periodCounts(month)', None)
-    db.sql('create index idx3 on #periodCounts(results)', None)
+    db.sql('create index period_idx1 on #periodCounts(year)', None)
+    db.sql('create index period_idx2 on #periodCounts(month)', None)
+    db.sql('create index period_idx3 on #periodCounts(results)', None)
 
     #
     # Gene and Result counts by monthly period

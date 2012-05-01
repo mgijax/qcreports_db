@@ -46,8 +46,19 @@
 import sys 
 import os
 import string
-import db
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -108,7 +119,7 @@ db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart '
 	'and a._LogicalDB_key = 1 ' + \
 	'and a.prefixPart = "MGI:" ' + \
 	'and a.preferred = 1', None)
-db.sql('create nonclustered index index_marker_key on #markers(_Marker_key)', None)
+db.sql('create index index_marker_key on #markers(_Marker_key)', None)
 
 ##
 
@@ -123,7 +134,7 @@ db.sql('select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, hasAnnotations =
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Gene Ontology" ' + \
 	'and ba.isNeverUsed = 0', None)
-db.sql('create nonclustered index index_refs_key on #references(_Refs_key)', None)
+db.sql('create index index_refs_key on #references(_Refs_key)', None)
 
 # has reference been selected for GXD
 

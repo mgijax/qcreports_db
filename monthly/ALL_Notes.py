@@ -17,8 +17,19 @@
 import sys 
 import os
 import string
-import db
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -81,7 +92,7 @@ def alleleNotes():
 	        ))
 	        ''', None)
 
-        db.sql('create index idx1 on #alleles(_Allele_key)', None)
+        db.sql('create index alleles_idx1 on #alleles(_Allele_key)', None)
 
         #
         # concatenate notes
@@ -188,7 +199,7 @@ def mpNotes():
 	   ))
 	   ''', None)
 
-    db.sql('create index idx1 on #genotypes(_Genotype_key)', None)
+    db.sql('create index genotype_idx1 on #genotypes(_Genotype_key)', None)
 
     #
     # concatenate notes

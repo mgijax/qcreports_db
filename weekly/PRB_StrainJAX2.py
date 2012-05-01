@@ -33,9 +33,20 @@
 import sys
 import os
 import string
-import db
 import mgi_utils
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
+
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
