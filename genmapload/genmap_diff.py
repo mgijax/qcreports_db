@@ -107,7 +107,7 @@ db.sql('''
     and m._Marker_key = o._Marker_key 
     and o.source = 0
     and m._Marker_Status_key in (1,3)
-    and m.chromosome != "UN"
+    and m.chromosome != 'UN'
     and m._Marker_key = a._Object_key
     and a._MGIType_key = 2
     and a._LogicalDB_key = 1
@@ -116,10 +116,10 @@ db.sql('''
     order by m.chromosome, m.symbol
     ''', None)
 
-db.sql('create index idx1 on #oldMap(_Marker_key)', None)
-db.sql('create index idx2 on #oldMap(offset)', None)
-db.sql('create index idx1 on #newMap(_Marker_key)', None)
-db.sql('create index idx2 on #newMap(offset)', None)
+db.sql('create index oldMap_idx1 on #oldMap(_Marker_key)', None)
+db.sql('create index oldMap_idx2 on #oldMap(offset)', None)
+db.sql('create index newMap_idx1 on #newMap(_Marker_key)', None)
+db.sql('create index newMap_idx2 on #newMap(offset)', None)
 
 #
 # old map offset equal to new map offset
@@ -127,7 +127,7 @@ db.sql('create index idx2 on #newMap(offset)', None)
 
 results = db.sql('''
      select o.chromosome, o.symbol, o.accID, 
-	    oldOffset = o.offset, newOffset = n.offset
+	    o.offset as oldOffset, n.offset as newOffset
      from #oldMap o, #newMap n
      where o._Marker_key = n._Marker_key
      and o.offset = n.offset
@@ -148,7 +148,7 @@ fp1.write('\n(%d rows affected)\n' % len(results))
 
 results = db.sql('''
      select o.chromosome, o.symbol, o.accID, 
-	    oldOffset = o.offset, newOffset = n.offset
+	    o.offset as oldOffset, n.offset as newOffset
      from #oldMap o, #newMap n
      where o._Marker_key = n._Marker_key
      and o.offset != n.offset
@@ -171,7 +171,7 @@ fp2.write('\n(%d rows affected)\n' % len(results))
 
 results = db.sql('''
      select o.chromosome, o.symbol, o.accID, 
-	    oldOffset = o.offset, newOffset = n.offset
+	    o.offset as oldOffset, n.offset as newOffset
      from #oldMap o, #newMap n
      where o._Marker_key = n._Marker_key
      and o.offset != n.offset
@@ -193,7 +193,7 @@ fp3.write('\n(%d rows affected)\n' % len(results))
 
 results = db.sql('''
      select o.chromosome, o.symbol, o.accID, 
-	    oldOffset = o.offset, newOffset = n.offset
+	    o.offset as oldOffset, n.offset as newOffset
      from #oldMap o, #newMap n
      where o._Marker_key = n._Marker_key
      and o.offset != n.offset
@@ -215,7 +215,7 @@ fp4.write('\n(%d rows affected)\n' % len(results))
 
 results = db.sql('''
      select o.chromosome, o.symbol, o.accID, 
-	    oldOffset = o.offset, newOffset = n.offset
+	    o.offset as oldOffset, n.offset as newOffset
      from #oldMap o, #newMap n
      where o._Marker_key = n._Marker_key
      and o.offset != n.offset
