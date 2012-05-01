@@ -56,16 +56,19 @@ synonymDict = {}
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.' + os.environ['DATE'] + '.rpt', printHeading = None)
 
-results = db.sql('''select _Object_key as alleleKey, synonym
+results = db.sql('''
+	select _Object_key as alleleKey, synonym
 	from MGI_Synonym
-	where _MGIType_key = 11''', 'auto')
+	where _MGIType_key = 11
+	''', 'auto')
 for r in results:
     key = r['alleleKey']
     if not synonymDict.has_key(key):
 	synonymDict[key] = []
     synonymDict[key].append(r['synonym'])
 
-results = db.sql('''select a._Allele_key, a.symbol, 
+results = db.sql('''
+	select a._Allele_key, a.symbol, 
 	substring(a.name,1,60) as name, 
 	substring(t1.term,1,15) as status, 
 	substring(t2.term, 1, 60) as type,
@@ -73,14 +76,14 @@ results = db.sql('''select a._Allele_key, a.symbol,
 	from ALL_Allele a, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
 	where a._Allele_Status_key = t1._Term_key
 	and a._Allele_Type_key = t2._Term_key
-	and a.creation_date between "%s" and "%s"
+	and a.creation_date between '%s' and '%s'
 	and a._Allele_key = r._Object_key
 	and r._MGIType_key = 11
 	and r._RefAssocType_key = 1011
 	and r._Refs_key = ac._Object_key 
 	and ac._MGIType_key = 1
 	and ac._LogicalDB_key = 1
-	and ac.prefixPart = "J:"
+	and ac.prefixPart = 'J:'
 	and ac.preferred = 1
 	order by a.symbol
 	''' % (fromDate, toDate), 'auto')

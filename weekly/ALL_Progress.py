@@ -82,22 +82,30 @@ def alleleCounts():
     fp.write(string.rjust('-----',  15))
     fp.write(string.rjust('--------------------',  25) + CRT)
 
-    db.sql('select _Allele_key, _Allele_Type_key, _Marker_key ' + \
-	'into #alleles from ALL_Allele where isWildType = 0 ', None)
+    db.sql('''
+	select _Allele_key, _Allele_Type_key, _Marker_key 
+	into #alleles from ALL_Allele where isWildType = 0 
+	''', None)
 
-    db.sql('select _Allele_key, _Allele_Type_key, _Marker_key ' + \
-	'into #allelesmice from ALL_Allele where isWildType = 0 and _Transmission_key != 3982953', None)
+    db.sql('''
+	select _Allele_key, _Allele_Type_key, _Marker_key 
+	into #allelesmice from ALL_Allele where isWildType = 0 and _Transmission_key != 3982953
+	''', None)
 
-    db.sql('select _Allele_key, _Allele_Type_key into #amonthly from ALL_Allele ' + \
-	'where isWildType = 0 ' + \
-	'and datepart(year, creation_date) = %d ' % (year) + \
-	'and datepart(month, creation_date) = %d ' % (month), None)
+    db.sql('''
+	select _Allele_key, _Allele_Type_key into #amonthly from ALL_Allele 
+	where isWildType = 0 
+	and datepart(year, creation_date) = %d 
+	and datepart(month, creation_date) = %d 
+	''' % (year, month), None)
 
-    db.sql('select _Allele_key, _Allele_Type_key into #amonthlymice from ALL_Allele ' + \
-	'where isWildType = 0 ' + \
-	'and _Transmission_key != 3982953 ' + \
-	'and datepart(year, creation_date) = %d ' % (year) + \
-	'and datepart(month, creation_date) = %d ' % (month), None)
+    db.sql('''
+	select _Allele_key, _Allele_Type_key into #amonthlymice from ALL_Allele 
+	where isWildType = 0 
+	and _Transmission_key != 3982953 
+	and datepart(year, creation_date) = %d 
+	and datepart(month, creation_date) = %d 
+	''' % (year, month), None)
 
     total = db.sql('select count(*) from #alleles', 'auto')[0]['']
     totalM = db.sql('select count(*) from #amonthly', 'auto')[0]['']
@@ -214,43 +222,55 @@ def genotypeCounts():
     fp.write(string.rjust('-----',  15))
     fp.write(string.rjust('--------------------',  25) + CRT)
 
-    db.sql('select g._Genotype_key, a._Annot_key, a.creation_date into #genotypes ' + \
-	'from GXD_Genotype g, VOC_Annot a ' + \
-	'where a._AnnotType_key = 1002 ' + \
-	'and g._Genotype_key = a._Object_key ', None)
+    db.sql('''
+	select g._Genotype_key, a._Annot_key, a.creation_date into #genotypes 
+	from GXD_Genotype g, VOC_Annot a 
+	where a._AnnotType_key = 1002 
+	and g._Genotype_key = a._Object_key 
+	''', None)
     db.sql('create index geneoytpes_idx1 on #genotypes(_Genotype_key)', None)
 
-    db.sql('select _Genotype_key, _Annot_key into #gmonthly ' + \
-	'from #genotypes ' + \
-	'where datepart(year, creation_date) = %d ' % (year) + \
-	'and datepart(month, creation_date) = %d ' % (month), None)
+    db.sql('''
+	select _Genotype_key, _Annot_key into #gmonthly 
+	from #genotypes 
+	where datepart(year, creation_date) = %d 
+	and datepart(month, creation_date) = %d 
+	''' % (year, month), None)
     db.sql('create index gmonthly_idx1 on #gmonthly(_Genotype_key)', None)
 
-    db.sql('select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key ' + \
-	'into #noqtl ' + \
-	'from #genotypes g, GXD_AlleleGenotype a, MRK_Marker m ' + \
-	'where g._Genotype_key = a._Genotype_key ' + \
-	'and a._Marker_key = m._Marker_key ' + \
-	'and m._Marker_Type_key != 6', None)
+    db.sql('''
+	select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key 
+	into #noqtl 
+	from #genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
+	where g._Genotype_key = a._Genotype_key 
+	and a._Marker_key = m._Marker_key 
+	and m._Marker_Type_key != 6
+	''', None)
 
-    db.sql('select _Genotype_key, _Annot_key, _Allele_key, _Marker_key ' + \
-	'into #noqtlmonthly ' + \
-	'from #noqtl ' + \
-	'where datepart(year, creation_date) = %d ' % (year) + \
-	'and datepart(month, creation_date) = %d ' % (month), None)
+    db.sql('''
+	select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
+	into #noqtlmonthly 
+	from #noqtl 
+	where datepart(year, creation_date) = %d 
+	and datepart(month, creation_date) = %d 
+	''' % (year, month), None)
 
-    db.sql('select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key ' + \
-	'into #qtl ' + \
-	'from #genotypes g, GXD_AlleleGenotype a, MRK_Marker m ' + \
-	'where g._Genotype_key = a._Genotype_key ' + \
-	'and a._Marker_key = m._Marker_key ' + \
-	'and m._Marker_Type_key = 6', None)
+    db.sql('''
+	select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key
+	into #qtl 
+	from #genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
+	where g._Genotype_key = a._Genotype_key 
+	and a._Marker_key = m._Marker_key 
+	and m._Marker_Type_key = 6
+	''', None)
 
-    db.sql('select _Genotype_key, _Annot_key, _Allele_key, _Marker_key ' + \
-	'into #qtlmonthly ' + \
-	'from #qtl ' + \
-	'where datepart(year, creation_date) = %d ' % (year) + \
-	'and datepart(month, creation_date) = %d ' % (month), None)
+    db.sql('''
+	select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
+	into #qtlmonthly 
+	from #qtl 
+	where datepart(year, creation_date) = %d 
+	and datepart(month, creation_date) = %d 
+	''' % (year, month), None)
 
     allGenotypes = db.sql('select count(distinct _Genotype_key) from #genotypes', 'auto')[0]['']
     allGenotypesM = db.sql('select count(distinct _Genotype_key) from #gmonthly', 'auto')[0]['']
@@ -313,12 +333,14 @@ def allelesnomp():
     fp.write(2*CRT + '#########################' + 2*CRT)
     fp.write('Alleles with NO MP Terms, but with other annotations' + 2*CRT)
 
-    db.sql('select n._Object_key into #other ' + \
-	'from MGI_Note n, MGI_NoteChunk nc ' + \
-	'where n._MGIType_key = 11 ' + \
-	'and n._Note_key = nc._Note_key ' + \
-	'and n._NoteType_key = 1020 ' + \
-	'and nc.note like "%J:%" ', None)
+    db.sql('''
+	select n._Object_key into #other 
+	from MGI_Note n, MGI_NoteChunk nc 
+	where n._MGIType_key = 11 
+	and n._Note_key = nc._Note_key 
+	and n._NoteType_key = 1020 
+	and nc.note like "%J:%" 
+	''', None)
 
     other = db.sql('select count(distinct _Object_key) from #other', 'auto')[0]['']
 
@@ -332,38 +354,54 @@ def genesalleles():
 
     # markers of type gene only
 
-    db.sql('select distinct a._Marker_key, a._Allele_Type_key into #genes ' + \
-	'from #alleles a, MRK_Marker m ' + \
-	'where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1', None)
+    db.sql('''
+	select distinct a._Marker_key, a._Allele_Type_key into #genes 
+	from #alleles a, MRK_Marker m 
+	where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1
+	''', None)
 
-    db.sql('select distinct a._Marker_key, a._Allele_Type_key into #genesMice ' + \
-	'from #allelesmice a, MRK_Marker m ' + \
-	'where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1', None)
+    db.sql('''
+	select distinct a._Marker_key, a._Allele_Type_key into #genesMice 
+	from #allelesmice a, MRK_Marker m 
+	where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1
+	''', None)
 
     genes = db.sql('select count(distinct _Marker_key) from #genes', 'auto')[0][''] 
     genesMice = db.sql('select count(distinct _Marker_key) from #genesMice', 'auto')[0]['']
 
-    targeted = db.sql('select count(distinct _Marker_key) from #genes ' + \
-	'where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
-    targetedMice = db.sql('select count(distinct _Marker_key) from #genesMice ' + \
-	'where _Allele_Type_key in (%s)' % (targetedKeys), 'auto')[0]['']
+    targeted = db.sql('''
+	select count(distinct _Marker_key) from #genes 
+	where _Allele_Type_key in (%s)
+	''' % (targetedKeys), 'auto')[0]['']
+    targetedMice = db.sql('''
+	select count(distinct _Marker_key) from #genesMice 
+	where _Allele_Type_key in (%s)
+	''' % (targetedKeys), 'auto')[0]['']
 
-    trapped = db.sql('select count(distinct _Marker_key) from #genes ' + \
-	'where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
-    trappedMice = db.sql('select count(distinct _Marker_key) from #genesMice ' + \
-	'where _Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    trapped = db.sql('''
+	select count(distinct _Marker_key) from #genes 
+	where _Allele_Type_key in (%s)
+	''' % (trappedKeys), 'auto')[0]['']
+    trappedMice = db.sql('''
+	select count(distinct _Marker_key) from #genesMice 
+	where _Allele_Type_key in (%s)
+	''' % (trappedKeys), 'auto')[0]['']
 
     # markers that have both targeted and trapped alleles
 
-    bothTargTrapped = db.sql('select count(distinct g1._Marker_key) from #genes g1, #genes g2 ' + \
-	'where g1._Allele_Type_key in (%s) ' % (targetedKeys) + \
-	'and g1._Marker_key = g2._Marker_key ' + \
-	'and g2._Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    bothTargTrapped = db.sql('''
+	select count(distinct g1._Marker_key) from #genes g1, #genes g2 
+	where g1._Allele_Type_key in (%s) 
+	and g1._Marker_key = g2._Marker_key 
+	and g2._Allele_Type_key in (%s)
+	''' % (targetedKeys, trappedKeys), 'auto')[0]['']
 
-    bothTargTrappedMice = db.sql('select count(distinct g1._Marker_key) from #genesMice g1, #genesMice g2 ' + \
-	'where g1._Allele_Type_key in (%s) ' % (targetedKeys) + \
-	'and g1._Marker_key = g2._Marker_key ' + \
-	'and g2._Allele_Type_key in (%s)' % (trappedKeys), 'auto')[0]['']
+    bothTargTrappedMice = db.sql('''
+	select count(distinct g1._Marker_key) from #genesMice g1, #genesMice g2 
+	where g1._Allele_Type_key in (%s) 
+	and g1._Marker_key = g2._Marker_key 
+	and g2._Allele_Type_key in (%s)
+	''' % (targetedKeys, trappedKeys), 'auto')[0]['']
 
     fp.write(string.ljust('Total Genes with Alleles:', 60))
     fp.write(string.rjust(str(genes), 10) + CRT)

@@ -79,17 +79,6 @@ cmds.append('select distinct m.symbol, mt.name ' + \
                   'mt._Marker_Type_key not in (1,2) ' + \
             'order by mt.name, m.symbol')
 
-#
-# Find the distinct markers and marker types in the expression cache.
-#
-cmds.append('select distinct m.symbol, mt.name ' + \
-            'from GXD_Expression ge, MRK_Marker m, MRK_Types mt ' + \
-            'where ge.isForGXD = 1 and ' + \
-		  'ge._Marker_key = m._Marker_key and ' + \
-                  'm._Marker_type_key = mt._Marker_Type_key and ' + \
-                  'mt._Marker_Type_key not in (1,2) ' + \
-            'order by mt.name, m.symbol')
-
 results = db.sql(cmds,'auto')
 
 fp.write(string.ljust('Symbol (in the index)', 40) + '  ' + \
@@ -106,7 +95,20 @@ fp.write(string.ljust('Symbol (in the expression cache)', 40) + '  ' + \
          string.ljust('Marker Type', 35) + CRT)
 fp.write('-'*40 + '  ' + '-'*35 + CRT)
 
-for r in results[1]:
+#
+# Find the distinct markers and marker types in the expression cache.
+#
+results = db.sql('''
+	select distinct m.symbol, mt.name 
+        from GXD_Expression ge, MRK_Marker m, MRK_Types mt 
+        where ge.isForGXD = 1 and 
+	       ge._Marker_key = m._Marker_key and 
+               m._Marker_type_key = mt._Marker_Type_key and 
+               mt._Marker_Type_key not in (1,2) 
+        order by mt.name, m.symbol
+	''', 'auto')
+
+for r in results:
     fp.write(string.ljust(r['symbol'], 40) + '  ' + \
              string.ljust(r['name'], 35) + CRT)
 

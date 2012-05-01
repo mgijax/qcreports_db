@@ -87,11 +87,11 @@ def processJournal(jList, fileName):
 	# get set of references not coded with high priority
 
 	db.sql('''
-	       select distinct i._Refs_key, i._Marker_key, conditional = t.term 
+	       select distinct i._Refs_key, i._Marker_key, t.term as conditional
 	       into #markers1 
 	       from GXD_Index i, BIB_Refs b, VOC_Term t 
 	       where i._Refs_key = b._Refs_key 
-	       and b.journal in ("%s")
+	       and b.journal in ('%s')
 	       and i._Priority_key = 74714 /* high */ 
 	       and i._ConditionalMutants_key = t._Term_key 
 	       and not exists (select 1 from GXD_Assay a 
@@ -105,12 +105,14 @@ def processJournal(jList, fileName):
 	# get the set of references not coded with high priority,
 	# add newGeneCount column to be updated later
 
-	results = db.sql('select distinct a.accID, i._Refs_key, i.markerCount, i.conditional, newGeneCount = 0 ' + \
-			 'into #final ' + \
-			 'from #mcount1 i, ACC_Accession a ' + \
-			 'where i._Refs_key = a._Object_key ' + \
-			 'and a._MGIType_key = 1 ' + \
-			 'and a.prefixPart = "J:"', None)
+	results = db.sql('''
+		select distinct a.accID, i._Refs_key, i.markerCount, i.conditional, 0 as newGeneCount
+		into #final 
+		from #mcount1 i, ACC_Accession a 
+		where i._Refs_key = a._Object_key 
+		and a._MGIType_key = 1 
+		and a.prefixPart = 'J:'
+		''', None)
 
 	#
 	# new genes
@@ -124,7 +126,7 @@ def processJournal(jList, fileName):
 	       into #markers2 
 	       from GXD_Index i, BIB_Refs b 
 	       where i._Refs_key = b._Refs_key 
-	       and b.journal in ("%s")
+	       and b.journal in ('%s')
 	       and i._Priority_key = 74714 /* high */
 	       and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key) 
 	       and not exists (select 1 from GXD_Assay a where i._Marker_key = a._Marker_key) 
