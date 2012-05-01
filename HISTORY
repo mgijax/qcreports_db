@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-0-0-?
+DATE: 05/01/2012
+STAFF: lec
+CHANGES: 
+1) TR11035/postgres cleanup
+- unique index names
+- add "try...except" block
+
 TAG: qcreports_db-5-0-0-3
 DATE: 04/23/2012
 STAFF: lec
