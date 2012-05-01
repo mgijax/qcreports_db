@@ -58,29 +58,31 @@ fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (cu
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
-db.sql('''select a.accid, t.term , t._Term_key, t.creation_date
-into #triage
-from VOC_Term t, ACC_Accession a
-where t.creation_date between "%s" and "%s"
-and t._Term_key = a._Object_key
-and a._LogicalDB_key = 34
-and a._MGIType_key = 13''' % (fromDate, currentDate), None)
+db.sql('''
+	select a.accid, t.term , t._Term_key, t.creation_date
+	into #triage
+	from VOC_Term t, ACC_Accession a
+	where t.creation_date between '%s' and '%s'
+	and t._Term_key = a._Object_key
+	and a._LogicalDB_key = 34
+	and a._MGIType_key = 13
+	''' % (fromDate, currentDate), None)
 
 db.sql('''create index idx1 on #triage(_Term_key)''', None)
 
-results = db.sql('''select distinct t.accid, 
-    t.term, s.synonym
-    from #triage t, MGI_Synonym s
-    where t._Term_key = s._Object_key
-    and s._MGIType_key = 13
-    union
-    select distinct t.accid,
-    t.term, synonym = null
-    from #triage t where not exists (
-	select 1 from MGI_Synonym s
-	where t._Term_key = s._Object_key
-	and s._MGIType_key = 13)
-    order by t.term''', 'auto')
+results = db.sql('''
+	(
+	select distinct t.accid, t.term, s.synonym
+    	from #triage t, MGI_Synonym s
+    	where t._Term_key = s._Object_key
+    	and s._MGIType_key = 13
+    	union
+    	select distinct t.accid, t.term, synonym = null
+    	from #triage t where not exists (select 1 from MGI_Synonym s
+		where t._Term_key = s._Object_key and s._MGIType_key = 13)
+	)
+    	order by t.term
+	''', 'auto')
 
 # MP ID:list of results
 rDict = {}

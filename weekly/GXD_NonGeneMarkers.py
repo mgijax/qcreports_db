@@ -66,38 +66,37 @@ fp = reportlib.init(sys.argv[0], 'Non-gene markers with GXD annotations', os.env
 
 fp.write('DNA segments are excluded' + CRT*2)
 
-cmds = []
-
 #
 # Find the distinct markers and marker types in the index.
 # exclude 'gene' and 'dna segments'
 #
-cmds.append('select distinct m.symbol, mt.name ' + \
-            'from GXD_Index gi, MRK_Marker m, MRK_Types mt ' + \
-            'where gi._Marker_key = m._Marker_key and ' + \
-                  'm._Marker_type_key = mt._Marker_Type_key and ' + \
-                  'mt._Marker_Type_key not in (1,2) ' + \
-            'order by mt.name, m.symbol')
-
-results = db.sql(cmds,'auto')
 
 fp.write(string.ljust('Symbol (in the index)', 40) + '  ' + \
          string.ljust('Marker Type', 35) + CRT)
 fp.write('-'*40 + '  ' + '-'*35 + CRT)
 
-for r in results[0]:
+results = db.sql('''
+	select distinct m.symbol, mt.name 
+        from GXD_Index gi, MRK_Marker m, MRK_Types mt 
+        where gi._Marker_key = m._Marker_key and 
+               m._Marker_type_key = mt._Marker_Type_key and 
+               mt._Marker_Type_key not in (1,2) 
+        order by mt.name, m.symbol
+	''', 'auto')
+
+for r in results:
     fp.write(string.ljust(r['symbol'], 40) + '  ' + \
              string.ljust(r['name'], 35) + CRT)
-
 fp.write(CRT + 'Row count: ' + str(len(results[0])) + CRT*3)
+
+#
+# Find the distinct markers and marker types in the expression cache.
+#
 
 fp.write(string.ljust('Symbol (in the expression cache)', 40) + '  ' + \
          string.ljust('Marker Type', 35) + CRT)
 fp.write('-'*40 + '  ' + '-'*35 + CRT)
 
-#
-# Find the distinct markers and marker types in the expression cache.
-#
 results = db.sql('''
 	select distinct m.symbol, mt.name 
         from GXD_Expression ge, MRK_Marker m, MRK_Types mt 
@@ -111,7 +110,6 @@ results = db.sql('''
 for r in results:
     fp.write(string.ljust(r['symbol'], 40) + '  ' + \
              string.ljust(r['name'], 35) + CRT)
-
 fp.write(CRT + 'Row count: ' + str(len(results[1])) + CRT)
 
 reportlib.finish_nonps(fp)
