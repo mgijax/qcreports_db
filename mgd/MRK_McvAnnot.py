@@ -75,12 +75,14 @@ fp.write('MCV ID%sMarker MGI ID%sJ:%sEvidence Code Abbreviation%sInferred From%s
 # _NoteType_key = 1008 -  General VOC_Evidence note
 # _MGIType_key = 25 # - annotation evidence
 noteLookup = {}
-results = db.sql('''select n._Object_key as annotKey, nc.note as chunk
+results = db.sql('''
+	select n._Object_key as annotKey, nc.note as chunk
         from MGI_Note n, MGI_NoteChunk nc
         where n._NoteType_key = 1008
         and n._MGIType_key = 25
         and n._Note_key = nc._Note_key
-	order by n._Object_key''', 'auto')
+	order by n._Object_key
+	''', 'auto')
 
 for r in results:
     annotKey = r['annotKey']
@@ -89,7 +91,8 @@ for r in results:
 	noteLookup[annotKey] = []
     noteLookup[annotKey].append(chunk)
 
-db.sql('''select va.*, t1.term as mcvTerm, t2.term as qualifier, a1.accid as mcvID, a2.accid as mgiID
+db.sql('''
+    select va.*, t1.term as mcvTerm, t2.term as qualifier, a1.accid as mcvID, a2.accid as mgiID
     into #mcvAnnot
     from VOC_Annot va, VOC_Term t1, VOC_Term t2, ACC_Accession a1, ACC_Accession a2
     where va._AnnotType_key = 1011
@@ -102,11 +105,13 @@ db.sql('''select va.*, t1.term as mcvTerm, t2.term as qualifier, a1.accid as mcv
     and a2._MGIType_key = 2
     and a2._LogicalDB_key = 1
     and a2.prefixPart = 'MGI:'
-    and a2.preferred = 1''', None)
+    and a2.preferred = 1
+    ''', None)
 
 db.sql('''create index idx1 on #mcvAnnot(_Annot_key)''', None)
 
-results = db.sql('''select  ma.qualifier, convert(char(10), 
+results = db.sql('''
+    select  ma.qualifier, convert(char(10), 
 	a.creation_date, 101) as creation_date, e._AnnotEvidence_key as evidKey,
 	ma.mcvTerm, ma.mcvID, ma.mgiID, a.accid as jnum, e.inferredFrom, u.login, 
 	t.term as evidCode
@@ -118,7 +123,8 @@ results = db.sql('''select  ma.qualifier, convert(char(10),
     and a._LogicalDB_key = 1
     and a.prefixPart = "J:"
     and a.preferred = 1
-    and e._EvidenceTerm_key = t._Term_key''', 'auto')
+    and e._EvidenceTerm_key = t._Term_key
+    ''', 'auto')
 
 for r in results:
     evidKey = r['evidKey']

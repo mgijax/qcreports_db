@@ -105,7 +105,6 @@ fp.write(SPACE)
 fp.write(100*'-')
 fp.write(CRT)
 
-cmds = []
 #
 # Get one gene papers that have not been full coded.  If a paper is not full
 # coded, it should be in the index, but not in any assay.

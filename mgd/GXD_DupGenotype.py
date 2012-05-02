@@ -92,48 +92,48 @@ def genoTypeCompare( geno1, geno2, numAllelePairs ):
 def formatOutput( genoTypeSet ):
     output = ''
 
-    cmds = []
+    #
+    #  Execute query and generate the "line header"  will be written with each pair of
+    #  associated alleles
+    #
 
     #
     #  Get accession id for genotype 1
     #
-    cmds.append('select accID ' +
-                'from GXD_Genotype g, ACC_Accession ac ' +
-                'where g._GenoType_key = ' + str(genoTypeSet['geno1']['key']) +
-                'and g._GenoType_key = ac._Object_key ' +
-                'and ac._MGIType_key = 12 ' + 
-                'and ac.prefixPart = "MGI:" ' +
-                'and ac.preferred = 1')
+    results = db.sql('''
+		select accID 
+                from GXD_Genotype g, ACC_Accession ac 
+                where g._GenoType_key = %s
+                and g._GenoType_key = ac._Object_key 
+                and ac._MGIType_key = 12 
+                and ac.prefixPart = 'MGI:' 
+                and ac.preferred = 1
+		''' % (str(genoTypeSet['geno1']['key'])), 'auto')
+    head = results[0]['accID'] + TAB
 
     #
     #  Get accession id for genotype 2
     #
-    cmds.append('select accID ' +
-                'from GXD_Genotype g, ACC_Accession ac ' +
-                'where g._GenoType_key = ' + str(genoTypeSet['geno2']['key']) +
-                'and g._GenoType_key = ac._Object_key ' +
-                'and ac._MGIType_key = 12 ' +
-                'and ac.prefixPart = "MGI:" ' +
-                'and ac.preferred = 1')
+    results = db.sql('''
+		select accID 
+                from GXD_Genotype g, ACC_Accession ac 
+                where g._GenoType_key = %s
+                and g._GenoType_key = ac._Object_key 
+                and ac._MGIType_key = 12 
+                and ac.prefixPart = 'MGI:' 
+                and ac.preferred = 1
+		''' % (str(genoTypeSet['geno2']['key'])), 'auto')
+    head = head + results[0]['accID'] + TAB
     
     #
     #  Get strain name associated with genotypes
     #
-    cmds.append('select strain ' +
-                'from PRB_Strain ' +
-                'where _Strain_key = ' + str(genoTypeSet['strain']))
-    #
-    #  Excecute query
-    #
-    results = db.sql(cmds, 'auto')
-
-    #
-    #  Generate the "line header"  will be written with each pair of
-    #  associated alleles
-    #
-    head = results[0][0]['accID'] + TAB +\
-           results[1][0]['accID'] + TAB +\
-           results[2][0]['strain'] + TAB
+    results = db.sql('''
+		select strain 
+		from PRB_Strain 
+		where _Strain_key = %s
+		''' % (str(genoTypeSet['strain'])), 'auto')
+    head = head + results[0]['strain'] + TAB
 
     #
     #  Get allele symbols associated with all the allele pairs.

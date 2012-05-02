@@ -116,7 +116,6 @@ db.sql('''
 	and aa._Transmission_key != 3982953)
 	group by mm._Marker_key
 	''', None)
-
 db.sql('create index mrkAlleleIndex on #mrkAlleles (_Marker_key)', None)
 
 # setup the mrk Omim annotations table
@@ -129,7 +128,6 @@ db.sql('''
 	         and annotType = 'OMIM/Genotype')
 	group by m._Marker_key
 	''', None)
-
 db.sql('create index mrkOmimIndex on #mrkOmimAnnot (_Marker_key)', None)
 
 # Setup the mrk human -> mouse orthologs relationship
@@ -142,7 +140,6 @@ db.sql('''
 	         and annotType = 'OMIM/Human Marker')
 	group by m._Marker_key
 	''', None)
-
 db.sql('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)', None)
 
 # Set up the marker has orthologs table
@@ -167,7 +164,6 @@ db.sql('''
 	from #validMarkers m
 	     LEFT OUTER JOIN #tmp_homology t on (m._Marker_key = t._Marker_key)
        ''', None)
-
 db.sql('create index mrkOrthoIndex on #mrkHomology (_Marker_key)', None)
 
 # Get the number of unused go references per marker
@@ -178,7 +174,6 @@ db.sql('''
 	from BIB_GOXRef_View r, #validMarkers vm
 	where r._Marker_key = vm._Marker_key
 	''', None)
-
 db.sql('create index vmIndex on #reduced_bibgo (_Marker_key)', None)
 
 db.sql('''
@@ -193,7 +188,6 @@ db.sql('''
 		and e._Refs_key = r._Refs_key))
 	group by vm._Marker_key 
 	''', None)
-
 db.sql('create index goRefIndex on #refGOUnused (_Marker_key)', None)
 
 # Collapse all these temp tables down to a single one, to make the subsequent queries easier
@@ -218,7 +212,6 @@ db.sql('''
 	and m._Marker_key = rgs._Marker_key
 	and m._Marker_key = moha._Marker_key
 	''', None)
-
 db.sql('create index goOverall on #goOverall (_Marker_key)', None)
 
 # Markers w/o GO Evidence Codes
@@ -379,48 +372,6 @@ resultsAllOther = db.sql('''
 	''', 'auto')	
 otherCount = len(resultsAllOther[0])
 
-# Gather all of the other statistical data.
-
-cmds = []
-
-# Total number of rows
-
-cmds.append('''
-	select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
-	where go.hasOrtholog = 'Yes' and go._Marker_key = hng._Marker_key 
-	''')
-
-# Count of markers with omim geno annotations
-
-cmds.append('''
-	select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
-	where go.hasOmim = 'Yes' and go._Marker_key = hng._Marker_key 
-	''')
-	
-# Count of markers that have alleles	
-	
-cmds.append('''
-	select count(distinct go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
-	where go.hasAlleles = 'Yes' and go._Marker_key = hng._Marker_key
-	''')	
-	
-# Count of markers marked complete in go	
-	
-cmds.append('''
-	select count(_Marker_key) as 'count' from #goOverall
-	where isComplete = 'Yes' 
-	''')
-
-# Total number of references for all markers
-	
-cmds.append('''select sum(goRefcount) as 'count' from #goOverall''')	
-
-# Count of unique references for all markers.
-	
-cmds.append('''select count(distinct jnum) as 'count' from #reduced_bibgo''')	
-
-resultsStats = db.sql(cmds,'auto')
-
 # Print out the descriptive information about the genes
 
 fp.write("Genes in this report are of type 'Gene', are for the mouse, and do not have a 'withdrawn' status.\n")
@@ -448,32 +399,46 @@ fp.write(CRT + "4. Genes with Annotations to ND Only: %d" % NDOnlyCount)
 fp.write(CRT + "5. Genes with Annotations to ND+IEA: %d" % IEAAndNDOnlyCount)
 fp.write(CRT + "6. Genes with Annotations to All other: %d" % otherCount)
 
-for r in resultsStats[0]:
+# Gather all of the other statistical data.
+results = db.sql('''
+	select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
+	where go.hasOrtholog = 'Yes' and go._Marker_key = hng._Marker_key 
+	''', 'auto')
+for r in results:
     rhHomologsYes = r['count']
-    
 fp.write(CRT + "7. Mouse Genes that have Rat/Human Homologs and NO GO annotations: %d" % rhHomologsYes)
 
-for r in resultsStats[1]:
+# Count of markers with omim geno annotations
+results = db.sql('''
+	select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
+	where go.hasOmim = 'Yes' and go._Marker_key = hng._Marker_key 
+	''', 'auto')
+for r in results:
     omimGenoYes = r['count']
-    
 fp.write(CRT + "8. Mouse Genes with Human Disease Annotations and NO GO annotations: %d" % omimGenoYes)
 
-for r in resultsStats[2]:
+# Count of markers that have alleles	
+results = db.sql('''
+	select count(distinct go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
+	where go.hasAlleles = 'Yes' and go._Marker_key = hng._Marker_key
+	''', 'auto')	
+for r in results:
     allelesYes = r['count']
-    
 fp.write(CRT + "9. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
 
-# The third report also needs this line, so print it out.
-fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
-
-for r in resultsStats[3]:
+# Count of markers marked complete in go	
+results = db.sql('''
+	select count(_Marker_key) as 'count' from #goOverall
+	where isComplete = 'Yes' 
+	''', 'auto')
+for r in results:
     completeYes = r['count']
-    
 fp.write(CRT + "10. Genes with GO Annotation Complete: %d" % completeYes)
 
-for r in resultsStats[5]:
+# Count of unique references for all markers.
+results = db.sql('''select sum(goRefcount) as 'count' from #goOverall''', 'auto')
+for r in results:
     uniqueRef = r['count']
-    
 fp.write(CRT + "11. Total number of unique references: %d" % uniqueRef)
 
 # Setup the template for rows in the report
@@ -533,6 +498,9 @@ fp2.write(CRT + CRT + CRT +
 
 # Repeat for the third report, maybe this could be factored out in the future.
 	
+# The third report also needs this line, so print it out.
+fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
+
 fp3.write(CRT + CRT + CRT + 
 	'Gene Symbol' + TAB + \
 	'MGI ID' + TAB + \

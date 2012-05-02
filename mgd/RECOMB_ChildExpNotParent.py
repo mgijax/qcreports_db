@@ -17,7 +17,7 @@
 #    4) Parent structure (with absent annotation)
 #    5) Child structure(s) (separated by a '|' if more than one)
 # 
-# Order by MGI ID, stage and parent structure.
+# Order by MGI ID, stage AND parent structure.
 # 
 # Originally requested as a custom SQL (TR 8073).
 #
@@ -55,99 +55,10 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-cmds = []
-
 #
-# Identify all cases where the parent structure has no expression, but has
-# a child that does have expression (strength > 1).
-#
-cmds.append('''
-	SELECT r._Specimen_key, 
-                   s._Structure_key as parentStructureKey, 
-                   s2._Structure_key as childStructureKey 
-            INTO #work 
-            FROM GXD_InSituResult r, GXD_InSituResult r2, 
-                 GXD_ISResultStructure s, GXD_ISResultStructure s2, 
-                 GXD_StructureClosure c, GXD_Specimen sp, 
-                 GXD_Specimen sp2, GXD_Assay a, GXD_Assay a2 
-            WHERE r._Strength_key = 1 
-                  and r._Result_key = s._Result_key 
-                  and r._Specimen_key = sp._Specimen_key 
-		  and sp._Assay_key = a._Assay_key 
-		  and a._AssayType_key in (10,11) 
-                  and r2._Strength_key > 1 
-                  and r2._Result_key = s2._Result_key 
-                  and r2._Specimen_key = sp2._Specimen_key 
-                  and sp._Assay_key = sp2._Assay_key 
-                  and sp2._Assay_key = a2._Assay_key 
-		  and a2._AssayType_key in (10,11) 
-                  and sp._Genotype_key = sp2._Genotype_key 
-                  and sp.age = sp2.age 
-                  and s._Structure_key = c._Structure_key 
-                  and s2._Structure_key = c._Descendent_key
-		  ''')
-
-#
-# Find distinct combinations of MGI ID, stage and parent structure to
-# determine the number of rows that will be written to the report.
-#
-cmds.append('''
-	SELECT distinct a.accID, d._Stage_key, d.printName 
-            FROM #work w, GXD_Specimen s, GXD_Expression e, 
-                 ACC_Accession a, ACC_Accession j, 
-                 GXD_Structure d, GXD_Structure d2 
-            WHERE w._Specimen_key = s._Specimen_key 
-                  and s._Assay_key = e._Assay_key 
-		  and e.isForGXD = 0 
-                  and e.expressed = 1 
-                  and s._Assay_key = a._Object_key 
-                  and a._MGIType_key = 8 
-                  and e._Refs_key = j._Object_key 
-                  and j._MGIType_key = 1 
-                  and j.prefixPart = 'J:' 
-                  and w.parentStructureKey = d._Structure_key 
-                  and w.childStructureKey = d2._Structure_key
-		  ''')
-
-#
-# Get all of the results for the report.  This needs to be ordered by
-# MGI ID, stage and parent structure in order to get the records to be
-# grouped properly and merge all of the child structures that share these
-# other fields in common.
-#
-cmds.append('''
-	SELECT distinct j.accID as JNumber, 
-                   a.accID as MGIID, 
-                   d._Stage_key, 
-                   d.printName as parentStructure, 
-                   d2.printName as childStructure 
-            FROM #work w, GXD_Specimen s, GXD_Expression e, 
-                 ACC_Accession a, ACC_Accession j, 
-                 GXD_Structure d, GXD_Structure d2 
-            WHERE w._Specimen_key = s._Specimen_key 
-                  and s._Assay_key = e._Assay_key 
-		  and e.isForGXD = 0 
-                  and e.expressed = 1 
-                  and s._Assay_key = a._Object_key 
-                  and a._MGIType_key = 8 
-                  and e._Refs_key = j._Object_key 
-                  and j._MGIType_key = 1 
-                  and j.prefixPart = 'J:' 
-                  and w.parentStructureKey = d._Structure_key 
-                  and w.childStructureKey = d2._Structure_key 
-            order by a.accID, d._Stage_key, d.printName
-	    ''')
-
-results = db.sql(cmds, 'auto')
-
-#
-# Create the report file and write the heading to it.
+# Create the report file AND write the heading to it.
 #
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
-
-fp.write(2*CRT)
-fp.write('Row Count: ' + str(len(results[1])))
-
 fp.write(2*CRT)
 fp.write(string.ljust('J-Number', 12))
 fp.write(SPACE)
@@ -171,9 +82,68 @@ fp.write(100*'-')
 fp.write(CRT)
 
 #
+# Identify all cases where the parent structure has no expression, but has
+# a child that does have expression (strength > 1).
+#
+db.sql('''
+	SELECT r._Specimen_key, 
+                   s._Structure_key as parentStructureKey, 
+                   s2._Structure_key as childStructureKey 
+            INTO #work 
+            FROM GXD_InSituResult r, GXD_InSituResult r2, 
+                 GXD_ISResultStructure s, GXD_ISResultStructure s2, 
+                 GXD_StructureClosure c, GXD_Specimen sp, 
+                 GXD_Specimen sp2, GXD_Assay a, GXD_Assay a2 
+            WHERE r._Strength_key = 1 
+                  AND r._Result_key = s._Result_key 
+                  AND r._Specimen_key = sp._Specimen_key 
+		  AND sp._Assay_key = a._Assay_key 
+		  AND a._AssayType_key in (10,11) 
+                  AND r2._Strength_key > 1 
+                  AND r2._Result_key = s2._Result_key 
+                  AND r2._Specimen_key = sp2._Specimen_key 
+                  AND sp._Assay_key = sp2._Assay_key 
+                  AND sp2._Assay_key = a2._Assay_key 
+		  AND a2._AssayType_key in (10,11) 
+                  AND sp._Genotype_key = sp2._Genotype_key 
+                  AND sp.age = sp2.age 
+                  AND s._Structure_key = c._Structure_key 
+                  AND s2._Structure_key = c._Descendent_key
+	''', None)
+
+#
+# Get all of the results for the report.  This needs to be ordered by
+# MGI ID, stage AND parent structure in order to get the records to be
+# grouped properly AND merge all of the child structures that share these
+# other fields in common.
+#
+results = db.sql('''
+	SELECT distinct j.accID as JNumber, 
+                   a.accID as MGIID, 
+                   d._Stage_key, 
+                   d.printName as parentStructure, 
+                   d2.printName as childStructure 
+            FROM #work w, GXD_Specimen s, GXD_Expression e, 
+                 ACC_Accession a, ACC_Accession j, 
+                 GXD_Structure d, GXD_Structure d2 
+            WHERE w._Specimen_key = s._Specimen_key 
+                  AND s._Assay_key = e._Assay_key 
+		  AND e.isForGXD = 0 
+                  AND e.expressed = 1 
+                  AND s._Assay_key = a._Object_key 
+                  AND a._MGIType_key = 8 
+                  AND e._Refs_key = j._Object_key 
+                  AND j._MGIType_key = 1 
+                  AND j.prefixPart = 'J:' 
+                  AND w.parentStructureKey = d._Structure_key 
+                  AND w.childStructureKey = d2._Structure_key 
+            ORDER BY a.accID, d._Stage_key, d.printName
+	''', 'auto')
+
+#
 # Initialize the "Last" variables that keep track of the last value for
 # each field of the report.  These are used to determine when to write the
-# next record to the report (when certain fields change) and also hold
+# next record to the report (when certain fields change) AND also hold
 # the actual strings to write.
 #
 jNumberLast = ''
@@ -185,7 +155,8 @@ childStructureList = ''
 #
 # Process each row of the results set.
 #
-for r in results[2]:
+rows = 0
+for r in results:
 
     #
     # Save the fields from the new row of the results set.
@@ -215,10 +186,11 @@ for r in results[2]:
             fp.write(CRT)
 
             #
-            # Clear the child structure list and prepare to build a new one
-            # for the next MGI ID, stage and parent structure.
+            # Clear the child structure list AND prepare to build a new one
+            # for the next MGI ID, stage AND parent structure.
             #
             childStructureList = ''
+	    rows = rows + 1
 
     #
     # Save the new fields as the "Last" fields.
@@ -230,7 +202,7 @@ for r in results[2]:
 
     #
     # Append the child structure to the '|' delimited list of child structures
-    # for this MGI ID, stage and parent structure combination.
+    # for this MGI ID, stage AND parent structure combination.
     #
     if childStructureList == '':
         childStructureList = childStructure
@@ -251,5 +223,8 @@ fp.write(string.ljust(parentStructureLast, 80))
 fp.write(SPACE)
 fp.write(string.ljust(childStructureList, 100))
 fp.write(CRT)
+rows = rows + 1
+
+fp.write('\n(%d rows affected)\n' % (rows))
 
 reportlib.finish_nonps(fp)
