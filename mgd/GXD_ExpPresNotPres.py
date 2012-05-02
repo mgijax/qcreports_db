@@ -88,11 +88,13 @@ fp.write('------------  ')
 fp.write('----------------------------------------------------------------------------------------------------' + CRT)
 
 # excluded references
-db.sql('''select _Refs_key = a._Object_key into #excludeRefs 
+db.sql('''
+	select _Refs_key = a._Object_key 
+	into #excludeRefs 
 	from ACC_Accession a 
         where a._MGIType_key = 1 
         and a._LogicalDB_key = 1 
-        and a.accID in ("J:46439","J:50869","J:91257","J:93500","J:93300","J:99307", "J:174767")
+        and a.accID in ('J:46439','J:50869','J:91257','J:93500','J:93300','J:99307', 'J:174767')
 	''', None)
 db.sql('create index excludeRefs_idx1 on #excludeRefs(_Refs_key)', None)
 
@@ -111,22 +113,26 @@ db.sql('create index excludeRefs_idx1 on #excludeRefs(_Refs_key)', None)
 # TS26;reproductive system [7651]
 # TS28;reproductive system [6950]
 
-db.sql('select _Structure_key = _Descendent_key ' + \
-	'into #excludeStructs ' + \
-	'from GXD_StructureClosure ' + \
-	'where _Structure_key in (1787,2378,3000,3715,4402,5261,6327,7648,7649,7650,7651,6950)', None)
+db.sql('''
+	select _Structure_key = _Descendent_key 
+	into #excludeStructs 
+	from GXD_StructureClosure 
+	where _Structure_key in (1787,2378,3000,3715,4402,5261,6327,7648,7649,7650,7651,6950)
+	''', None)
 db.sql('create index excludeStructs_idx1 on #excludeStructs(_Structure_key)', None)
 
 #
 # assays with expression
 #
-db.sql('select distinct e._Assay_key, e._Refs_key, e._Structure_key, e._Genotype_key, e.age ' + \
-	'into #expressed ' + \
-	'from GXD_Expression e ' + \
-	'where e.isForGXD = 1 ' + \
-	'and e.expressed = 1 ' + \
-	'and not exists (select 1 from #excludeStructs r where e._Structure_key = r._Structure_key) ' + \
-	'and not exists (select 1 from #excludeRefs r where e._Refs_key = r._Refs_key)', None)
+db.sql('''
+	select distinct e._Assay_key, e._Refs_key, e._Structure_key, e._Genotype_key, e.age 
+	into #expressed 
+	from GXD_Expression e 
+	where e.isForGXD = 1 
+	and e.expressed = 1 
+	and not exists (select 1 from #excludeStructs r where e._Structure_key = r._Structure_key) 
+	and not exists (select 1 from #excludeRefs r where e._Refs_key = r._Refs_key)
+	''', None)
 db.sql('create index expressed_idx1 on #expressed(_Assay_key)', None)
 db.sql('create index expressed_idx2 on #expressed(_Structure_key)', None)
 db.sql('create index expressed_idx3 on #expressed(_Genotype_key)', None)
@@ -135,15 +141,17 @@ db.sql('create index expressed_idx4 on #expressed(age)', None)
 #
 # compare expressed/not expressed by assay, structure, genotype, age
 #
-db.sql('select distinct e.* ' + \
-	'into #results ' + \
-	'from #expressed e, GXD_Expression n ' + \
-	'where e._Assay_key = n._Assay_key ' + \
-	'and n.isForGXD = 1 ' + \
-	'and e._Structure_key = n._Structure_key ' + \
-	'and e._Genotype_key = n._Genotype_key ' + \
-	'and e.age = n.age ' + \
-	'and n.expressed = 0 ', None)
+db.sql('''
+	select distinct e.* 
+	into #results 
+	from #expressed e, GXD_Expression n 
+	where e._Assay_key = n._Assay_key 
+	and n.isForGXD = 1 
+	and e._Structure_key = n._Structure_key 
+	and e._Genotype_key = n._Genotype_key 
+	and e.age = n.age 
+	and n.expressed = 0 
+	''', None)
 db.sql('create index results_idx1 on #results(_Assay_key)', None)
 db.sql('create index results_idx2 on #results(_Structure_key)', None)
 db.sql('create index results_idx3 on #results(_Refs_key)', None)
@@ -151,19 +159,24 @@ db.sql('create index results_idx3 on #results(_Refs_key)', None)
 #
 # final results
 #
-results = db.sql('select jnumID = ac1.accID , mgiID = ac2.accID, structure = convert(varchar(2), t.stage) + ":" + s.printName ' + \
-         'from #results r, GXD_Structure s, GXD_TheilerStage t, ACC_Accession ac1, ACC_Accession ac2 ' + \
-         'where r._Structure_key = s._Structure_key ' + \
-         'and s._Stage_key = t._Stage_key ' + \
-         'and r._Refs_key = ac1._Object_key ' + \
-         'and ac1._LogicalDB_key = 1 ' + \
-         'and ac1._MGIType_key = 1 ' + \
-         'and ac1.prefixPart = "J:" ' + \
-         'and r._Assay_key = ac2._Object_key ' + \
-         'and ac2._LogicalDB_key = 1 ' + \
-         'and ac2._MGIType_key = 8 ' + \
-         'and ac2.prefixPart = "MGI:" ' + \
-         'order by mgiID', 'auto')
+results = db.sql('''
+	select ac1.accID as jnumID, 
+	       ac2.accID as mgiID, 
+	       convert(varchar(2), t.stage) || ":" || s.printName as structure
+         from #results r, GXD_Structure s, GXD_TheilerStage t, 
+	      ACC_Accession ac1, ACC_Accession ac2 
+         where r._Structure_key = s._Structure_key 
+         and s._Stage_key = t._Stage_key 
+         and r._Refs_key = ac1._Object_key 
+         and ac1._LogicalDB_key = 1 
+         and ac1._MGIType_key = 1 
+         and ac1.prefixPart = 'J:' 
+         and r._Assay_key = ac2._Object_key 
+         and ac2._LogicalDB_key = 1 
+         and ac2._MGIType_key = 8 
+         and ac2.prefixPart = 'MGI:' 
+         order by mgiID
+	 ''', 'auto')
 
 #
 # Process each row of the results set.

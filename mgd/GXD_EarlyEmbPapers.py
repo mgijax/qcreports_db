@@ -78,7 +78,8 @@ fp.write(CRT)
 #
 
 db.sql('''
-    select distinct _Refs_key, _Priority_key, priority = p.term, conditional = c.term
+    select distinct _Refs_key, _Priority_key, 
+	   p.term as priority, c.term as conditional
     into #refs1
     from GXD_Index gi, 
          GXD_Index_Stages gis, 
@@ -121,7 +122,8 @@ db.sql('''
 #
 
 db.sql('''
-    select r._Refs_key, r._Priority_key, r.priority, r.conditional, numIndexes = count(_Index_key)
+    select r._Refs_key, r._Priority_key, 
+	   r.priority, r.conditional, count(_Index_key) as numIndexes
     into #refs2
     from #refs1 r, GXD_Index gi 
     where r._Refs_key = gi._Refs_key
@@ -136,7 +138,8 @@ db.sql('create index refs2_idx1 on #refs2(_Refs_key)', None)
 
 # those genes that are not in the cache
 db.sql('''
-    select r._Refs_key, r._Priority_key, r.priority, r.conditional, r.numIndexes, numGenes = count(_Index_key)
+    select r._Refs_key, r._Priority_key, 
+	   r.priority, r.conditional, r.numIndexes, count(_Index_key) as numGenes
     into #final
     from #refs2 r, GXD_Index gi 
     where r._Refs_key = gi._Refs_key
@@ -147,7 +150,8 @@ db.sql('''
 # those genes that are in the cache
 db.sql('''
     insert into #final
-    select r._Refs_key, r._Priority_key, r.priority, r.conditional, r.numIndexes, numGenes = 0
+    select r._Refs_key, r._Priority_key, 
+	   r.priority, r.conditional, r.numIndexes, numGenes = 0
     from #refs2 r, GXD_Index gi 
     where r._Refs_key = gi._Refs_key
     and not exists (select 1 from #final f where r._Refs_key = f._Refs_key)

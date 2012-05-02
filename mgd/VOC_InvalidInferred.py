@@ -80,7 +80,7 @@ bucketMGI = Set(mgiLookup)
 
 db.sql('''
 	select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, 
-	       evidenceCode = t.abbreviation 
+	       t.abbreviation as evidenceCode
 	into #annotations 
 	from VOC_Annot a, VOC_Evidence e, VOC_Term t 
 	where a._AnnotType_key = 1000 

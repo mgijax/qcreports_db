@@ -56,27 +56,31 @@ fp.write('MGI-ID' + TAB)
 fp.write('Gene Symbol' + TAB)
 fp.write('GO ID' + 2*CRT)
 
-db.sql('select goID = a.accID, ta._Object_key ' + \
-	'into #obsolete  ' + \
-	'from VOC_Term_ACC_View a, VOC_Term t, VOC_Annot ta ' + \
-	'where t._Vocab_key = 4  ' + \
-	'and t.isObsolete = 1  ' + \
-	'and t._Term_key = ta._Term_key ' + \
-	'and ta._AnnotType_key = 1000 ' + \
-	'and t._Term_key = a._Object_key ' + \
-	'and a._MGIType_key = 13 ' + \
-	'and a.preferred = 1', None)
+db.sql('''
+	select goID = a.accID, ta._Object_key 
+	into #obsolete  
+	from VOC_Term_ACC_View a, VOC_Term t, VOC_Annot ta 
+	where t._Vocab_key = 4  
+	and t.isObsolete = 1  
+	and t._Term_key = ta._Term_key 
+	and ta._AnnotType_key = 1000 
+	and t._Term_key = a._Object_key 
+	and a._MGIType_key = 13 
+	and a.preferred = 1
+	''', None)
 
 db.sql('create index obsolete_idx_key on #obsolete(_Object_key)', None)
 
-results = db.sql('select goID, ma.accID, m.symbol ' + \
-	'from #obsolete o, ACC_Accession ma, MRK_Marker m ' + \
-	'where o._Object_key = ma._Object_key ' + \
-	'and ma._MGIType_key = 2 ' + \
-	'and ma._LogicalDB_key = 1 ' + \
-	'and ma.prefixPart = "MGI:" ' + \
-	'and ma.preferred = 1 ' + \
-	'and ma._Object_key = m._Marker_key ', 'auto')
+results = db.sql('''
+	select goID, ma.accID, m.symbol 
+	from #obsolete o, ACC_Accession ma, MRK_Marker m 
+	where o._Object_key = ma._Object_key 
+	and ma._MGIType_key = 2 
+	and ma._LogicalDB_key = 1 
+	and ma.prefixPart = 'MGI:' 
+	and ma.preferred = 1 
+	and ma._Object_key = m._Marker_key 
+	''', 'auto')
 
 for r in results:
     fp.write(r['accID'] + TAB)
