@@ -112,14 +112,16 @@ def createDict(results, keyField, valueField):
     return d
 
 def getAssayQuery(table, value, op, year):
-    cmd = 'insert %s ' % (table) + \
-          'select count(distinct(gi._Index_key)), %d ' % (year) + \
-          'from GXD_Index gi, GXD_Index_Stages gis, VOC_Term vt ' + \
-          'where gi._Index_key = gis._Index_key ' + \
-          'and gis._IndexAssay_key = vt._Term_key ' + \
-          'and vt._Vocab_key = 12 ' + \
-          'and vt.term %s "%s" ' % (op, value) + \
-          'and datepart(year, gi.creation_date) <= %d ' % (year)
+    cmd = '''
+	insert %s 
+        select count(distinct(gi._Index_key)), %d 
+        from GXD_Index gi, GXD_Index_Stages gis, VOC_Term vt 
+        where gi._Index_key = gis._Index_key 
+        and gis._IndexAssay_key = vt._Term_key 
+        and vt._Vocab_key = 12 
+        and vt.term %s '%s"'
+        and datepart(year, gi.creation_date) <= %d 
+	''' % (table, year, op, value, year)
     return cmd
 
 def cdnas():

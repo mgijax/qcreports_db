@@ -61,11 +61,13 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 # retrieve all genotypes
 #
 
-db.sql('select distinct a._Genotype_key, a._Marker_key, a.symbol, ' + \
-        'a._Allele_key_1, a.allele1, g._Strain_key ' + \
-        'into #genotypes ' + \
-        'from GXD_AllelePair_View a, GXD_Genotype g ' + \
-        'where a._Genotype_key = g._Genotype_key', None)
+db.sql('''
+	select distinct a._Genotype_key, a._Marker_key, a.symbol, 
+        a._Allele_key_1, a.allele1, g._Strain_key 
+        into #genotypes 
+        from GXD_AllelePair_View a, GXD_Genotype g 
+        where a._Genotype_key = g._Genotype_key
+	''', None)
 
 db.sql('create index genotypes_idx1 on #genotypes(_Genotype_key)', None)
 db.sql('create index genotypes_idx2 on #genotypes(_Marker_key)', None)
@@ -75,9 +77,11 @@ db.sql('create index genotypes_idx3 on #genotypes(_Allele_key_1)', None)
 # retrieve MGI IDs for genes
 #
 
-results = db.sql('select distinct g._Marker_key, m.mgiID ' + \
-        'from #genotypes g, MRK_Mouse_View m ' + \
-        'where g._Marker_key = m._Marker_key', 'auto')
+results = db.sql('''
+	select distinct g._Marker_key, m.mgiID 
+        from #genotypes g, MRK_Mouse_View m 
+        where g._Marker_key = m._Marker_key
+	''', 'auto')
 geneID = {}
 
 for r in results:
@@ -89,9 +93,11 @@ for r in results:
 # retrieve MGI IDs for alleles
 #
 
-results = db.sql('select distinct g._Allele_key_1, a.mgiID ' + \
-        'from #genotypes g, ALL_Summary_View a ' + \
-        'where g._Allele_key_1 = a._Object_key', 'auto')
+results = db.sql('''
+	select distinct g._Allele_key_1, a.mgiID 
+        from #genotypes g, ALL_Summary_View a 
+        where g._Allele_key_1 = a._Object_key
+	''', 'auto')
 alleleID = {}
 
 for r in results:
@@ -103,9 +109,11 @@ for r in results:
 # retrieve MGI IDs for genotypes
 #
 
-results = db.sql('select distinct g._Genotype_key, v.mgiID ' + \
-        'from #genotypes g, GXD_Genotype_View v ' + \
-        'where g._Genotype_key = v._Genotype_key', 'auto')
+results = db.sql('''
+	select distinct g._Genotype_key, v.mgiID 
+        from #genotypes g, GXD_Genotype_View v 
+        where g._Genotype_key = v._Genotype_key
+	''', 'auto')
 genotypeID = {}
 
 for r in results:
@@ -117,10 +125,12 @@ for r in results:
 # retrieve strain backgrounds for genotypes
 #
 
-results = db.sql('select distinct g._Genotype_key, s.strain ' + \
-        'from #genotypes g, PRB_Strain s ' + \
-        'where g._Genotype_key = g._Genotype_key ' + \
-        'and g._Strain_key = s._Strain_key', 'auto')
+results = db.sql('''
+	select distinct g._Genotype_key, s.strain 
+        from #genotypes g, PRB_Strain s 
+        where g._Genotype_key = g._Genotype_key 
+        and g._Strain_key = s._Strain_key
+	''', 'auto')
 strain = {}
 
 for r in results:
@@ -132,11 +142,13 @@ for r in results:
 # retrieve allele combination display
 #
 
-results = db.sql('select distinct a._Genotype_key, nc.note ' + \
-        'from #genotypes a, MGI_Note n, MGI_NoteChunk nc ' + \
-        'where a._Genotype_key = n._Object_key ' + \
-        'and n._NoteType_key = 1016 ' + \
-        'and n._Note_key = nc._Note_key', 'auto')
+results = db.sql('''
+	select distinct a._Genotype_key, nc.note 
+        from #genotypes a, MGI_Note n, MGI_NoteChunk nc 
+        where a._Genotype_key = n._Object_key 
+        and n._NoteType_key = 1016 
+        and n._Note_key = nc._Note_key
+	''', 'auto')
 
 alleles = {}
 for r in results:

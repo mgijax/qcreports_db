@@ -69,15 +69,15 @@ def writeTAB(r):
     # print marker records in tab-delimited format
 
     order = [
-        r['MGI ID'], 
-        r['Symbol'], 
-        r['Marker Type'], 
-        r['Chr'], 
-        r['Start'], 
-        r['End'], 
-        r['Strand'], 
-        r['Sequence Type'], 
-        r['Sequence Provider']
+        r['mgiID'], 
+        r['symbol'], 
+        r['markerType'], 
+        r['chr'], 
+        r['startCoord'], 
+        r['endCoord'], 
+        r['strand'], 
+        r['sequenceType'], 
+        r['sequenceProvider']
     ]
     s = TAB.join(map(str,order))
 
@@ -114,15 +114,15 @@ def process():
     results = db.sql("""
             select  
             m._Marker_key, 
-            a.accID "MGI ID",
-            m.symbol "Symbol",
-            m.chromosome "Chr",
-            mt.name "Marker Type",
-            vt.term "Sequence Type",
-            vt2.term "Sequence Provider",
-            mlc.startCoordinate "Start",
-            mlc.endCoordinate "End",
-            mlc.strand "Strand"
+            a.accID as mgiID,
+            m.symbol as symbol,
+            m.chromosome as chr,
+            mt.name as markerType,
+            vt.term as sequenceType,
+            vt2.term as sequenceProvider,
+            mlc.startCoordinate as startCoord,
+            mlc.endCoordinate as endCoord,
+            mlc.strand as strand
             from
                 ACC_Accession a,
                 MRK_Marker m

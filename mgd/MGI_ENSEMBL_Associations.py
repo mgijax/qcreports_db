@@ -53,26 +53,28 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
-cmd = 'select mgiID = a1.accID, m.symbol, m.name, m.chromosome, o.offset, seqID = a2.accID, jnum = a3.accID ' + \
-      'from ACC_Accession a1, ACC_Accession a2, MRK_Marker m, MRK_Offset o, ACC_AccessionReference r, ACC_Accession a3 ' + \
-      'where a1._Object_key = a2._Object_key and ' + \
-            'a1._Object_key = m._Marker_key and ' + \
-            'm._Marker_key = o._Marker_key and ' + \
-            'a1._LogicalDB_key = 1 and ' + \
-            'a1._MGIType_key = 2 and ' + \
-            'a1.prefixPart = "MGI:" and ' + \
-            'a1.preferred = 1 and ' + \
-            'a2._LogicalDB_key = 60 and ' + \
-            'a2._MGIType_key = 2 and ' + \
-            'm._Marker_Type_key = 1 and ' + \
-            'o.source = 0 and ' + \
-	    'a2._Accession_key = r._Accession_key and ' + \
-	    'r._Refs_key = a3._Object_key and ' + \
-	    'a3._LogicalDB_key = 1 and ' + \
-	    'a3._MGIType_key = 1 and ' + \
-	    'a3.prefixPart = "J:" and ' + \
-	    'a3.preferred = 1 ' + \
-      'order by m.chromosome, m.symbol'
+cmd = '''
+      select mgiID = a1.accID, m.symbol, m.name, m.chromosome, o.offset, a2.accID as seqID, a3.accID as jnum
+      from ACC_Accession a1, ACC_Accession a2, MRK_Marker m, MRK_Offset o, ACC_AccessionReference r, ACC_Accession a3 
+      where a1._Object_key = a2._Object_key and 
+            a1._Object_key = m._Marker_key and 
+            m._Marker_key = o._Marker_key and 
+            a1._LogicalDB_key = 1 and 
+            a1._MGIType_key = 2 and 
+            a1.prefixPart = 'MGI:' and 
+            a1.preferred = 1 and 
+            a2._LogicalDB_key = 60 and 
+            a2._MGIType_key = 2 and 
+            m._Marker_Type_key = 1 and 
+            o.source = 0 and 
+	    a2._Accession_key = r._Accession_key and 
+	    r._Refs_key = a3._Object_key and 
+	    a3._LogicalDB_key = 1 and 
+	    a3._MGIType_key = 1 and 
+	    a3.prefixPart = 'J:' and 
+	    a3.preferred = 1 
+      order by m.chromosome, m.symbol
+      '''
 
 results = db.sql(cmd, 'auto')
 
