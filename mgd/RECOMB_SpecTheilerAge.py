@@ -59,34 +59,40 @@ fp = reportlib.init(sys.argv[0], 'Recombinant/transgenic specimens with incompat
 #
 # insitu specimens with "embryonic day" age; exclude TS 28
 #
-db.sql('select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'into #temp1 ' + \
-    'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where a._AssayType_key in (10,11) and ' + \
-	  'a._Assay_key = s._Assay_key and ' + \
-	  's._Specimen_key = r._Specimen_key and ' + \
-          'r._Result_key = i._Result_key and ' + \
-          'i._Structure_key = c._Structure_key and ' + \
-          'c._Stage_key = t._Stage_key and ' + \
-          's.age like "embryonic day%" ' + \
-	  'and t.stage != 28 ', None)
+db.sql('''
+    select s._Assay_key, s._Specimen_key, s.age, s.specimenLabel as label, t.stage, t.dpcMin, t.dpcMax 
+    into #temp1 
+    from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
+	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
+    where a._AssayType_key in (10,11) and 
+	  a._Assay_key = s._Assay_key and 
+	  s._Specimen_key = r._Specimen_key and 
+          r._Result_key = i._Result_key and 
+          i._Structure_key = c._Structure_key and 
+          c._Stage_key = t._Stage_key and 
+          s.age like 'embryonic day%' 
+	  and t.stage != 28 
+  ''', None)
 
 #
 # insitu specimens with "embryonic" age; include TS 28 for certain structures only
 #
-db.sql('insert into #temp1 ' + \
-    'select s._Assay_key, s._Specimen_key, s.age, label = s.specimenLabel, t.stage, t.dpcMin, t.dpcMax ' + \
-    'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t ' + \
-    'where a._AssayType_key in (10,11) and ' + \
-	  'a._Assay_key = s._Assay_key and ' + \
-          's._Specimen_key = r._Specimen_key and ' + \
-          'r._Result_key = i._Result_key and ' + \
-          'i._Structure_key = c._Structure_key and ' + \
-          'c._Stage_key = t._Stage_key and ' + \
-          's.age like "embryonic%" ' + \
-	  'and t.stage = 28 ' + \
-	  'and not exists (select 1 from GXD_StructureName sn ' + \
-	  'where c._Structure_key = sn._Structure_key and sn.structure in ("placenta", "decidua", "uterus"))', None)
+db.sql('''
+    insert into #temp1 
+    select s._Assay_key, s._Specimen_key, s.age, s.specimenLabel as label, t.stage, t.dpcMin, t.dpcMax 
+    from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
+	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
+    where a._AssayType_key in (10,11) and 
+	  a._Assay_key = s._Assay_key and 
+          s._Specimen_key = r._Specimen_key and 
+          r._Result_key = i._Result_key and 
+          i._Structure_key = c._Structure_key and 
+          c._Stage_key = t._Stage_key and 
+          s.age like 'embryonic%' 
+	  and t.stage = 28 
+	  and not exists (select 1 from GXD_StructureName sn 
+	  where c._Structure_key = sn._Structure_key and sn.structure in ('placenta', 'decidua', 'uterus'))
+    ''', None)
 
 #
 # select specimens and group by assay & specimen
@@ -105,29 +111,33 @@ db.sql('insert into #temp1 ' + \
 db.sql('select distinct * into #temp2 from #temp1', None)
 db.sql('create index temp2_idx1 on #temp2(_Assay_key)', None)
 db.sql('create index temp2_idx2 on #temp2(_Specimen_key)', None)
-db.sql('select t._Assay_key, t.age, t.label, t.stage, dpcMin = min(t.dpcMin), dpcMax = max(t.dpcMax) ' + \
-	'into #temp3 ' + \
-	'from #temp2 t ' + \
-	'group by t._Assay_key, t._Specimen_key ', None)
+db.sql('''
+	select t._Assay_key, t.age, t.label, t.stage, dpcMin = min(t.dpcMin), dpcMax = max(t.dpcMax) 
+	into #temp3 
+	from #temp2 t 
+	group by t._Assay_key, t._Specimen_key 
+	''', None)
 db.sql('create index temp3_idx1 on #temp3(_Assay_key)', None)
 
 ##
 
-results = db.sql('select distinct t._Assay_key, t.age, t.label, t.stage, t.dpcMin, t.dpcMax, ' + \
-	'a1.accID "MGI", a2.accID "J"' + \
-    'from #temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 ' + \
-    'where t._Assay_key = a._Assay_key and ' + \
-	  'a._Assay_key = a1._Object_key and ' + \
-          'a1._MGIType_key = 8 and ' + \
-          'a1._LogicalDB_key = 1 and ' + \
-          'a1.prefixPart = "MGI:" and ' + \
-          'a1.preferred = 1 and ' + \
-          'a._Refs_key = a2._Object_key and ' + \
-          'a2._MGIType_key = 1 and ' + \
-          'a2._LogicalDB_key = 1 and ' + \
-          'a2.prefixPart = "J:" and ' + \
-	  'a2.preferred = 1 ' + \
-    'order by a1.accID', 'auto')
+results = db.sql('''
+    select distinct t._Assay_key, t.age, t.label, t.stage, t.dpcMin, t.dpcMax, 
+	a1.accID as 'MGI', a2.accID as 'J'
+    from #temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 
+    where t._Assay_key = a._Assay_key and 
+	  a._Assay_key = a1._Object_key and 
+          a1._MGIType_key = 8 and 
+          a1._LogicalDB_key = 1 and 
+          a1.prefixPart = 'MGI:' and 
+          a1.preferred = 1 and 
+          a._Refs_key = a2._Object_key and 
+          a2._MGIType_key = 1 and 
+          a2._LogicalDB_key = 1 and 
+          a2.prefixPart = 'J:' and 
+	  a2.preferred = 1 
+    order by a1.accID
+    ''', 'auto')
 
 s = ''
 count = 0

@@ -80,7 +80,7 @@ def process():
 
     db.sql('''
 	select distinct g._Marker_key, g._Refs_key, g._Priority_key, 
-          priority = t.term, conditional = t2.term
+          t.term as priority, t2.term as conditional
 	into #refscodeable 
 	from GXD_Index g, VOC_Term t, VOC_Term t2
 	where g._Priority_key in (74715, 74714) 
@@ -171,7 +171,7 @@ def report1(fp):
             gi._Refs_key = a._Object_key and 
             a._MGIType_key = 1 and 
             a._LogicalDB_key = 1 and 
-            a.prefixPart = "J:"
+            a.prefixPart = 'J:'
 	''', 'auto')
 
     for r in results:
@@ -293,7 +293,7 @@ def report2(fp):
 	and r._Refs_key = a._Object_key 
 	and a._MGIType_key = 1 
 	and a._LogicalDB_key = 1 
-	and a.prefixPart = "J:" 
+	and a.prefixPart = 'J:' 
 	and not exists (select 1 from #excluded d where r._Refs_key = d._Refs_key)
 	order by r._Priority_key, m.mrk_count desc, a.numericPart desc
 	''', 'auto')
@@ -408,7 +408,7 @@ def report3(fp):
          and r._Refs_key = a._Object_key 
          and a._MGIType_key = 1 
          and a._LogicalDB_key = 1 
-         and a.prefixPart = "J:" 
+         and a.prefixPart = 'J:' 
 	 order by p._Priority_key, m.mrk_count desc, i.idx_count desc
 	 ''', 'auto')
 

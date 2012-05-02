@@ -113,11 +113,12 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
-db.sql('''select distinct r._Refs_key, r.journal, a.creation_date 
+db.sql('''
+	select distinct r._Refs_key, r.journal, a.creation_date 
 	into #refs
 	from BIB_Refs r, GXD_Assay a
 	where r.year >= 2002
-	and r.journal in ("%s")
+	and r.journal in ('%s')
 	and r._Refs_key = a._Refs_key
 	and a._AssayType_key in (10,11)
 	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key 
@@ -126,16 +127,17 @@ db.sql('''select distinct r._Refs_key, r.journal, a.creation_date
 	union
         select distinct r._Refs_key, r.journal, a.creation_date
 	from BIB_Refs r, GXD_Assay a
-	where r.journal in ("%s")
+	where r.journal in ('%s')
 	and r._Refs_key = a._Refs_key
 	and a._AssayType_key in (10,11)
 	and exists (select 1 from IMG_Image a where r._Refs_key = a._Refs_key 
 	and a._ImageType_key = 1072158
 	and a.xDim is null)
-	''' % (string.join(journals2002, '","'), string.join(journalsAll, '","')), None)
+	''' % (string.join(journals2002, "','"), string.join(journalsAll, "','")), None)
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
-results = db.sql('''select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)
+results = db.sql('''
+	select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
 	from #refs r, IMG_Image i
 	where r._Refs_key = i._Refs_key''', 'auto')
 fLabels = {}
@@ -146,8 +148,12 @@ for r in results:
 	fLabels[key] = []
     fLabels[key].append(value)
 
-results = db.sql('''select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b
-	where r._Refs_key = b._Refs_key order by r.creation_date, b.jnumID''', 'auto')
+results = db.sql('''
+	select r._Refs_key, b.jnumID, b.short_citation 
+	from #refs r, BIB_All_View b
+	where r._Refs_key = b._Refs_key 
+	order by r.creation_date, b.jnumID
+	''', 'auto')
 
 count = 0
 refprinted = []

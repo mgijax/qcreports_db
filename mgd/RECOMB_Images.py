@@ -177,38 +177,41 @@ fp.write(TAB + string.ljust('--', 12))
 fp.write(string.ljust('--------------', 75))
 fp.write(string.ljust('-------------', 50) + CRT)
 
-db.sql('select distinct a._Refs_key, a.creation_date ' + \
-      'into #refs ' + \
-      'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
-           'IMG_Image i, IMG_ImagePane p ' + \
-      'where a._AssayType_key in (10,11) and ' + \
-	    'a._ImagePane_key = p._ImagePane_key and ' + \
-            'p._Image_key = i._Image_key and ' + \
-            'i.xDim is NULL and ' + \
-            'a._Refs_key = b._Refs_key and ' + \
-	    '((b.journal in ("' + string.join(journals, '","') + '")) or ' + \
-	    '(b.journal in ("' + string.join(journals2005, '","') + '") and year >= 2005)) and ' + \
-            'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ' + \
-      'union ' + \
-      'select distinct a._Refs_key, a.creation_date ' + \
-      'from GXD_Assay a, BIB_Refs b, ACC_Accession ac, ' + \
-           'GXD_Specimen g, GXD_ISResultImage_View r ' + \
-      'where a._AssayType_key in (10,11) and ' + \
-	    'a._Assay_key = g._Assay_key and ' + \
-            'g._Specimen_key = r._Specimen_key and ' + \
-            'r.xDim is NULL and ' + \
-            'a._Refs_key = b._Refs_key and ' + \
-	    '((b.journal in ("' + string.join(journals, '","') + '")) or ' + \
-	    '(b.journal in ("' + string.join(journals2005, '","') + '") and year >= 2005)) and ' + \
-            'a._Assay_key = ac._Object_key and ' + \
-            'ac._MGIType_key = 8 ', None)
+db.sql('''
+      select distinct a._Refs_key, a.creation_date 
+      into #refs 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           IMG_Image i, IMG_ImagePane p 
+      where a._AssayType_key in (10,11) and 
+	    a._ImagePane_key = p._ImagePane_key and 
+            p._Image_key = i._Image_key and 
+            i.xDim is NULL and 
+            a._Refs_key = b._Refs_key and 
+	    ((b.journal in ('%s')) or (b.journal in ('%s') and year >= 2005)) and
+            a._Assay_key = ac._Object_key and 
+            ac._MGIType_key = 8 
+      union 
+      select distinct a._Refs_key, a.creation_date 
+      from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+           GXD_Specimen g, GXD_ISResultImage_View r 
+      where a._AssayType_key in (10,11) and 
+	    a._Assay_key = g._Assay_key and 
+            g._Specimen_key = r._Specimen_key and 
+            r.xDim is NULL and 
+            a._Refs_key = b._Refs_key and 
+	    ((b.journal in ('%s')) or (b.journal in ('%s') and year >= 2005)) and
+            a._Assay_key = ac._Object_key and 
+            ac._MGIType_key = 8 
+	''' % (string.join(journals, '","'), string.join(journals2005, '","'), \
+	       string.join(journals, '","'), string.join(journals2005, '","')), None)
 
 db.sql('create index idx1 on #refs(_Refs_key)', None)
 
-results = db.sql('select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel) ' + \
-	'from #refs r, IMG_Image i ' + \
-	'where r._Refs_key = i._Refs_key', 'auto')
+results = db.sql('''
+	select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+	from #refs r, IMG_Image i 
+	where r._Refs_key = i._Refs_key
+	''', 'auto')
 fLabels = {}
 for r in results:
     key = r['_Refs_key']
@@ -217,9 +220,12 @@ for r in results:
 	fLabels[key] = []
     fLabels[key].append(value)
 
-results = db.sql('select r._Refs_key, b.jnumID, b.short_citation from #refs r, BIB_All_View b ' + \
-	'where r._Refs_key = b._Refs_key ' + \
-        'order by r.creation_date, b.jnumID', 'auto')
+results = db.sql('''
+	select r._Refs_key, b.jnumID, b.short_citation 
+	from #refs r, BIB_All_View b 
+	where r._Refs_key = b._Refs_key 
+        order by r.creation_date, b.jnumID
+	''', 'auto')
 
 count = 0
 refprinted = []
