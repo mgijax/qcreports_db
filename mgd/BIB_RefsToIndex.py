@@ -74,10 +74,12 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 #
 # Get the dataset abbreviations to be used for the report heading.
 #
-results = db.sql('select _DataSet_key, abbreviation ' + \
-                 'from BIB_DataSet ' + \
-                 'where _DataSet_key in (' + inClause + ') ' + \
-                 'order by _DataSet_key', 'auto')
+results = db.sql('''
+	select _DataSet_key, abbreviation 
+        from BIB_DataSet 
+        where _DataSet_key in (%s)
+        order by _DataSet_key
+	''' % (inClause), 'auto')
 
 #
 # Write the report heading.
@@ -94,37 +96,27 @@ fp.write(CRT)
 # reference that has no marker association.  Only select the datasets
 # specified in the list of keys.
 #
-cmds = []
-cmds.append('select cc.jnumID, cc.pubmedID, cc.isReviewArticle, da._DataSet_key ' + \
-            'into #refds ' + \
-            'from BIB_DataSet_Assoc da, BIB_Citation_Cache cc ' + \
-            'where da._DataSet_key in (' + inClause + ') and ' + \
-                  'not exists (select 1 from MRK_Reference r ' + \
-                              'where da._Refs_key = r._Refs_key) and ' + \
-                  'da._Refs_key = cc._Refs_key and ' + \
-                  'cc.numericPart >= 121000')
+db.sql('''
+	select cc.jnumID, cc.pubmedID, cc.isReviewArticle, da._DataSet_key 
+        into #refds 
+        from BIB_DataSet_Assoc da, BIB_Citation_Cache cc 
+        where da._DataSet_key in (%s)
+              and da._Refs_key = cc._Refs_key 
+              and cc.numericPart >= 121000
+              and not exists (select 1 from MRK_Reference r where da._Refs_key = r._Refs_key) 
+	''' % (inClause), None)
 
 #
 # Get each J number/dataset pair needed to build the grid.
 #
-cmds.append('select jnumID, pubmedID, _DataSet_key ' + \
-            'from #refds ')
-
-#
-# Get the review indicator for each J number.
-#
-cmds.append('select distinct jnumID, pubmedID, isReviewArticle ' + \
-            'from #refds ' + \
-            'order by jnumID')
-
-results = db.sql(cmds, 'auto')
+results = db.sql('select jnumID, pubmedID, _DataSet_key from #refds', 'auto')
 
 #
 # Build a dictionary where the key is the J number and the value is a list
 # of datasets selected for that reference.
 #
 dict = {}
-for r in results[1]:
+for r in results:
     jnumID = r['jnumID']
     dsKey = r['_DataSet_key']
 
@@ -140,10 +132,20 @@ for r in results[1]:
         dsKeyList = [dsKey]
         dict[jnumID] = dsKeyList
 
+
+#
+# Get the review indicator for each J number.
+#
+results = db.sql('''
+	select distinct jnumID, pubmedID, isReviewArticle 
+        from #refds 
+        order by jnumID
+	''', 'auto')
+
 #
 # For each J number, get its review indicator and list of datasets.
 #
-for r in results[2]:
+for r in results:
     jnumID = r['jnumID']
     pubmedID = r['pubmedID']
     review = r['isReviewArticle']

@@ -99,7 +99,7 @@ results = db.sql('''select m._Marker_key, a.accID
 	    where m._Marker_key = a._Object_key 
 	    and a._LogicalDB_key = 1 
 	    and a._MGIType_key = 2
-	    and a.prefixPart = "MGI:"
+	    and a.prefixPart = 'MGI:'
 	    and a.preferred = 1
 	    ''', 'auto')
 for r in results:
@@ -152,7 +152,8 @@ for r in results:
 refsID = {}
 results = db.sql('''
         select distinct m._Marker_key, c.accID 
-        from #markers m, ALL_Allele aa, GXD_AlleleGenotype p, VOC_Annot v, VOC_Evidence e, ACC_Accession c
+        from #markers m, ALL_Allele aa, GXD_AlleleGenotype p, 
+	     VOC_Annot v, VOC_Evidence e, ACC_Accession c
 	where m._Marker_key =  p._Marker_key
 	and p._Allele_key = aa._Allele_key
 	and aa._Allele_Status_key = 847114
@@ -162,7 +163,7 @@ results = db.sql('''
         and e._Refs_key = c._Object_key 
         and c._LogicalDB_key = 1 
         and c._MGIType_key = 1
-        and c.prefixPart = "J:"
+        and c.prefixPart = 'J:'
         and c.preferred = 1
      ''', 'auto')
 for r in results:
@@ -173,7 +174,9 @@ for r in results:
     refsID[key].append(value)
 
 # final output to print
-results = db.sql('select distinct m._Marker_key, m.symbol from #markers m order by symbol', 'auto')
+results = db.sql('''
+	select distinct m._Marker_key, m.symbol from #markers m order by symbol
+	''', 'auto')
 
 fp.write('total # of genes:  ' + str(len(results)) + 2*CRT)
 

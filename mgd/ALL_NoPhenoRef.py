@@ -79,7 +79,7 @@ fp.write(string.ljust('-----------------------------------', 40))
 fp.write(string.ljust('---------------------', 40))
 fp.write(CRT)
 
-db.sql('''select distinct m._Object_key, counter = count(m._Refs_key)
+db.sql('''select distinct m._Object_key, count(m._Refs_key) as counter
           into #refA
           from MGI_Reference_Assoc m, MGI_RefAssocType t
           where m._MGIType_key = 11
@@ -95,8 +95,8 @@ for r in results:
 
 # only interested in the A group
 results = db.sql('''select distinct aa._Allele_key, aa.symbol, 
-		    term = substring(t.term, 1, 35),
-                    alleleType = substring(tt.term, 1, 35)
+		    substring(t.term, 1, 35) as term,
+                    substring(tt.term, 1, 35) as alleelType
              from ALL_Allele aa, GXD_AlleleGenotype g, VOC_Annot a, VOC_Term t, VOC_Term tt
              where aa._Allele_key = g._Allele_key
              and g._Genotype_key = a._Object_key
