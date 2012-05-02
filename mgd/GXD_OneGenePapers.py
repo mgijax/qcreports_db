@@ -158,13 +158,13 @@ db.sql('''
 # Add in the new gene indicator.
 #
 db.sql('''
-	select p1.*, 1 "new_gene" 
+	select p1.*, 1 as new_gene
         into #papers2 
         from #papers1 p1 
         where not exists (select 1 from GXD_Assay ga 
                           where p1._Marker_key = ga._Marker_key) 
         union 
-        select p1.*, 0 "new_gene" 
+        select p1.*, 0 as new_gene
         from #papers1 p1 
         where exists (select 1 from GXD_Assay ga 
                        where p1._Marker_key = ga._Marker_key)
@@ -174,7 +174,7 @@ db.sql('''
 # Add in the E? annotation indicator.
 #
 db.sql('''
-	select p2.*, 0 "E_annot" 
+	select p2.*, 0 as E_annot
         into #papers3 
         from #papers2 p2 
         where not exists (select 1 from GXD_Index_Stages gis 
@@ -182,7 +182,7 @@ db.sql('''
                                 gis._StageID_key = 74769 and 
                                 gis._IndexAssay_key not in (74725,74728)) 
         union 
-        select p2.*, 1 "E_annot" 
+        select p2.*, 1 as E_annot
         from #papers2 p2 
         where exists (select 1 from GXD_Index_Stages gis 
                       where gis._Index_key = p2._Index_key and 
@@ -218,7 +218,7 @@ for r in results:
 #
 results = db.sql('''
 		  select p3._Index_key, giv.symbol, p3.new_gene, vt.term, p3.E_annot, 
-                         giv.jnumID, giv.short_citation, conditional = vt2.term 
+                         giv.jnumID, giv.short_citation, vt2.term as conditional
                   from #papers3 p3, GXD_Index_View giv, VOC_Term vt, VOC_Term vt2 
                   where p3._Index_key = giv._Index_key and 
                         p3._Priority_key = vt._Term_key and 

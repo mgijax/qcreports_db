@@ -124,7 +124,7 @@ def printFields():
 def printResults():
 
     results = db.sql('''
-	    select distinct r._Refs_key, figureLabel = rtrim(i.figureLabel)
+	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
 	    from #refs r, IMG_Image i
 	    where r._Refs_key = i._Refs_key''', 'auto')
     fLabels = {}
@@ -165,17 +165,19 @@ def selectNature():
     # with full image stubs
     #
 
-    db.sql('''select distinct r._Refs_key, r.journal, i.creation_date, cdate = convert(char(10), i.creation_date, 101)
+    db.sql('''
+	    select distinct r._Refs_key, r.journal, i.creation_date, 
+		   convert(char(10), i.creation_date, 101) as cdate
 	    into #refs
 	    from BIB_Refs r, GXD_Assay a, IMG_Image i
-	    where r.journal in ("%s")
+	    where r.journal in ('%s')
 	    and r.year >= 2002
 	    and r._Refs_key = a._Refs_key
 	    and a._AssayType_key in (1,2,3,4,5,6,8,9)
 	    and r._Refs_key = i._Refs_key 
 	    and i._ImageType_key = 1072158
 	    and i.xDim is null
-	    ''' % (string.join(journalsNature, '","')), None)
+	    ''' % (string.join(journalsNature, "','")), None)
 
     db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
 
@@ -188,16 +190,18 @@ def selectOther():
     # with full image stubs
     #
 
-    db.sql('''select distinct r._Refs_key, r.journal, i.creation_date, cdate = convert(char(10), i.creation_date, 101)
+    db.sql('''
+	    select distinct r._Refs_key, r.journal, i.creation_date, 
+		   convert(char(10), i.creation_date, 101) as cdate
 	    into #refs
 	    from BIB_Refs r, GXD_Assay a, IMG_Image i
-	    where r.journal in ("%s")
+	    where r.journal in ('%s')
 	    and r._Refs_key = a._Refs_key
 	    and a._AssayType_key in (1,2,3,4,5,6,8,9)
 	    and r._Refs_key = i._Refs_key 
 	    and i._ImageType_key = 1072158
 	    and i.xDim is null
-	    ''' % (string.join(journalsAll, '","')), None)
+	    ''' % (string.join(journalsAll, "','")), None)
 
     db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
 
