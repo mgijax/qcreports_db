@@ -103,48 +103,46 @@ def genoTypeCompare( geno1, geno2, numAllelePairs ):
 def formatOutput( genoTypeSet ):
     output = ''
 
-    cmds = []
-
-    #
-    #  Get accession id for genotype 1
-    #
-    cmds.append('select accID ' +
-                'from GXD_Genotype g, ACC_Accession ac ' +
-                'where g._GenoType_key = ' + str(genoTypeSet['geno1']['key']) +
-                'and g._GenoType_key = ac._Object_key ' +
-                'and ac._MGIType_key = 12 ' + 
-                'and ac.prefixPart = "MGI:" ' +
-                'and ac.preferred = 1')
-
-    #
-    #  Get accession id for genotype 2
-    #
-    cmds.append('select accID ' +
-                'from GXD_Genotype g, ACC_Accession ac ' +
-                'where g._GenoType_key = ' + str(genoTypeSet['geno2']['key']) +
-                'and g._GenoType_key = ac._Object_key ' +
-                'and ac._MGIType_key = 12 ' +
-                'and ac.prefixPart = "MGI:" ' +
-                'and ac.preferred = 1')
-    
-    #
-    #  Get strain name associated with genotypes
-    #
-    cmds.append('select strain ' +
-                'from PRB_Strain ' +
-                'where _Strain_key = ' + str(genoTypeSet['strain']))
-    #
-    #  Excecute query
-    #
-    results = db.sql(cmds, 'auto')
-
     #
     #  Generate the "line header"  will be written with each pair of
     #  associated alleles
     #
-    head = results[0][0]['accID'] + TAB +\
-           results[1][0]['accID'] + TAB +\
-           results[2][0]['strain'] + TAB
+    #  Get accession id for genotype 1
+    #
+    results = db.sql('''
+	select accID 
+        from GXD_Genotype g, ACC_Accession ac 
+        where g._GenoType_key = %s
+        and g._GenoType_key = ac._Object_key 
+        and ac._MGIType_key = 12 
+        and ac.prefixPart = 'MGI:' 
+        and ac.preferred = 1
+	''' % (str(genoTypeSet['geno1']['key'])), 'auto')
+    head = results[0]['accID'] + TAB
+
+    #
+    #  Get accession id for genotype 2
+    #
+    results = db.sql('''
+	select accID 
+        from GXD_Genotype g, ACC_Accession ac 
+        where g._GenoType_key = %s
+        and g._GenoType_key = ac._Object_key 
+        and ac._MGIType_key = 12 
+        and ac.prefixPart = 'MGI:' 
+        and ac.preferred = 1
+	''' % (str(genoTypeSet['geno2']['key'])), 'auto')
+    head = results[0]['accID'] + TAB
+    
+    #
+    #  Get strain name associated with genotypes
+    #
+    results = db.sql('''
+	select strain
+        from PRB_Strain
+        where _Strain_key = %s
+	''', (str(genoTypeSet['strain'])), 'auto')
+    head = results[0]['strain'] + TAB
 
     #
     #  Get allele symbols associated with all the allele pairs.
@@ -182,7 +180,8 @@ fp = reportlib.init(sys.argv[0], 'Duplicate Genotypes', os.environ['QCOUTPUTDIR'
 #  strain and at least one common allele pair between them.  They should
 #  also have the same total number of associated allele pairs.
 #
-db.sql('''select g1._Genotype_key as geno1, 
+db.sql('''
+	  select g1._Genotype_key as geno1, 
                  g2._Genotype_key as geno2, 
                  g1._Strain_key as strain 
           into #pairs 
@@ -208,7 +207,8 @@ db.sql('''select g1._Genotype_key as geno1,
 #
 #  Now add entries that have the allele pairs transposed, but still match.
 #
-db.sql('''insert #pairs 
+db.sql('''
+	  insert #pairs 
           select g1._Genotype_key as geno1, 
                  g2._Genotype_key as geno2, 
                  g1._Strain_key as strain 
@@ -235,8 +235,9 @@ db.sql('''insert #pairs
 #
 #  Excecute query
 #
-results = db.sql('''select p.geno1, p.geno2, p.strain, 
-            count(distinct _AllelePair_key) as numPairs 
+results = db.sql('''
+	    select p.geno1, p.geno2, p.strain, 
+                   count(distinct _AllelePair_key) as numPairs 
             from #pairs p, GXD_AllelePair gap 
             where p.geno1 = gap._Genotype_key 
             group by p.geno1, p.geno2
@@ -282,27 +283,35 @@ for row in results:
 #  Now cycle through and get all of the allele pairs for each genotype.
 #
 for key in genoDict.keys():
+
     genotypeSet = genoDict[key]
     geno1 = genotypeSet['geno1']
     geno2 = genotypeSet['geno2']
     geno1Alleles = geno1['alleles']
     geno2Alleles = geno2['alleles']
-    cmds = []
-    cmds.append('select _Allele_key_1, _Allele_key_2 from GXD_AllelePair where _GenoType_key = ' + str(geno1['key']))
-    cmds.append('select _Allele_key_1, _Allele_key_2 from GXD_AllelePair where _GenoType_key = ' + str(geno2['key']))
-    results = db.sql(cmds, 'auto')
 
     #
     #  Turn allele pairs into tuples so that they are easier to compare later.
     #
-    for row in results[0]:
+
+    results = db.sql('''
+	select _Allele_key_1, _Allele_key_2 
+	from GXD_AllelePair 
+	where _GenoType_key = %s
+	''' % (str(geno1['key'])), 'auto')
+    for row in results:
         alleles = [row['_Allele_key_1'], row['_Allele_key_2']]
         alleles.sort()
         alleleTuple = (alleles[0], alleles[1])
         geno1Alleles.append(alleleTuple)
     geno1['alleles'] = geno1Alleles 
 
-    for row in results[1]:
+    results = db.sql('''
+	select _Allele_key_1, _Allele_key_2 
+	from GXD_AllelePair 
+	where _GenoType_key = %s
+	''' % (str(geno2['key'])), 'auto')
+    for row in results:
         alleles = [row['_Allele_key_1'], row['_Allele_key_2']]
         alleles.sort()
         alleleTuple = (alleles[0], alleles[1])
@@ -328,25 +337,28 @@ fp.write('\n(%d rows affected)\n' % (rows))
 # now do a check for the genotypes that have strains only (no genotypes)
 #
 
-db.sql('''select g._Genotype_key, g._Strain_key
+db.sql('''
+	select g._Genotype_key, g._Strain_key
 	into #genotype
 	from GXD_Genotype g
 	where not exists (select 1 from GXD_AllelePair p
 		where g._Genotype_key = p._Genotype_key)
 	''', None)
 
-db.sql('''select g.*
+db.sql('''
+	select g.*
 	into #duplicate
 	from #genotype g
 	group by g._Strain_key having count(*) > 1
 	''', None)
 
-results = db.sql('''select a.accID, s.strain
+results = db.sql('''
+	select a.accID, s.strain
 	from #duplicate d, PRB_Strain s, ACC_Accession a
 	where d._Strain_key = s._Strain_key
 	and d._Genotype_key = a._Object_key
 	and a._MGIType_key = 12
-	and a.prefixPart = "MGI:"
+	and a.prefixPart = 'MGI:'
 	and a.preferred = 1
 	''', 'auto')
 

@@ -72,7 +72,8 @@ fp.write(CRT)
 # Create a temporary table with all of the valid items from GXD_Index
 # We specifically dont want anything with certain types of comments.
 
-db.sql('''select gi.*, bcc.jnumID, vt.term, gis._IndexAssay_key, gis._StageID_key, m.symbol
+db.sql('''
+select gi.*, bcc.jnumID, vt.term, gis._IndexAssay_key, gis._StageID_key, m.symbol
 into #validIndexItems
 from GXD_Index gi, GXD_Index_Stages gis, BIB_Citation_Cache bcc, VOC_Term vt, MRK_Marker m
 where gi._Index_key = gis._Index_key
@@ -93,7 +94,8 @@ where gi._Index_key = gis._Index_key
 and gi._Refs_key = bcc._Refs_key
 and gis._IndexAssay_key = vt._Term_key
 and gi._Marker_key = m._Marker_key
-and gi.comments = null''', None)
+and gi.comments = null
+''', None)
 
 db.sql('create index idx1 on #validIndexItems(_Index_key)', None)
 
@@ -101,60 +103,86 @@ db.sql('create index idx1 on #validIndexItems(_Index_key)', None)
 # Please note we dont bring back ANY matches to the "E?" stage.
 
 results = db.sql('''
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+(
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key in (74718, 74720) and gi._StageID_key != 74769 
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 1)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key = 74722 and gi._StageID_key != 74769
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 2)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key = 74727 and gi._StageID_key != 74769 
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 3)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key = 74726 and gi._StageID_key != 74769  
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 4)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key = 74724 and gi._StageID_key != 74769 
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 5)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key in (74717, 74719) and gi._StageID_key != 74769 
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 6)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key = 74723 and gi._StageID_key != 74769  
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 8)
 
 union
-select distinct jnumID, term as 'AssayType', symbol from #validIndexItems gi
+select distinct jnumID, term as 'AssayType', symbol 
+from #validIndexItems gi
 where gi._IndexAssay_key = 74721 and gi._StageID_key != 74769  
-and exists (select 1 from GXD_Expression ge where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga where ga._Refs_key = gi._Refs_key 
+and exists (select 1 from GXD_Expression ge 
+	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
+and not exists (select 1 from GXD_Expression ga 
+	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 9)
+)
 
 order by jnumID''', 'auto')
 
