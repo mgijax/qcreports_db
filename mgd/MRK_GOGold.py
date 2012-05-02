@@ -113,51 +113,57 @@ fpD.write('mgi ID' + TAB + \
 	 'evidence codes' + CRT*2)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
-db.sql('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
-	'into #m1 ' + \
-	'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
-	'where m._Organism_key = 1 ' + \
-	'and m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e.evidenceCode in ("IDA", "IGI", "IMP", "IPI", "TAS") ' + \
-	'and a._Vocab_key = vd._Vocab_key ' +
-	'and vd._DAG_key = n._DAG_key ' + \
-	'and a._Term_key = n._Object_key ' + \
-	'and n._DAG_key = d._DAG_key '
-	'order by m.symbol', None)
+db.sql('''
+	select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation 
+	into #m1 
+	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
+	where m._Organism_key = 1 
+	and m._Marker_Type_key = 1 
+	and m._Marker_Status_key in (1,3) 
+	and m._Marker_key = a._Object_key 
+	and a._AnnotType_key = 1000 
+	and a._Annot_key = e._Annot_key 
+	and e.evidenceCode in ('IDA', 'IGI', 'IMP', 'IPI', 'TAS') 
+	and a._Vocab_key = vd._Vocab_key 
+	and vd._DAG_key = n._DAG_key 
+	and a._Term_key = n._Object_key 
+	and n._DAG_key = d._DAG_key 
+	order by m.symbol
+	''', None)
 db.sql('create index m1_idx1 on #m1(_Marker_key)', None)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI
-db.sql('select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation ' + \
-	'into #m2 ' + \
-	'from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d ' + \
-	'where m._Organism_key = 1 ' + \
-	'and m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._AnnotType_key = 1000 ' + \
-	'and a._Annot_key = e._Annot_key ' + \
-	'and e.evidenceCode in ("IDA", "IGI", "IMP", "IPI") ' + \
-	'and a._Vocab_key = vd._Vocab_key ' +
-	'and vd._DAG_key = n._DAG_key ' + \
-	'and a._Term_key = n._Object_key ' + \
-	'and n._DAG_key = d._DAG_key '
-	'order by m.symbol', None)
+db.sql('''
+	select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation 
+	into #m2 
+	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
+	where m._Organism_key = 1 
+	and m._Marker_Type_key = 1 
+	and m._Marker_Status_key in (1,3) 
+	and m._Marker_key = a._Object_key 
+	and a._AnnotType_key = 1000 
+	and a._Annot_key = e._Annot_key 
+	and e.evidenceCode in ('IDA', 'IGI', 'IMP', 'IPI') 
+	and a._Vocab_key = vd._Vocab_key 
+	and vd._DAG_key = n._DAG_key 
+	and a._Term_key = n._Object_key 
+	and n._DAG_key = d._DAG_key 
+	order by m.symbol
+	''', None)
 db.sql('create index m2_idx1 on #m2(_Marker_key)', None)
 
 # select MGI accession ids for mouse genes from set 1
 # this will also suffice for set 2 which is a subset of set 1
 
-results = db.sql('select distinct m._Marker_key, ma.accID ' + \
-	'from #m1 m, ACC_Accession ma ' + \
-	'where m._Marker_key = ma._Object_key ' + \
-	'and ma._MGIType_key = 2 ' + \
-	'and ma.prefixPart = "MGI:" ' + \
-	'and ma._LogicalDB_key = 1 ' + \
-	'and ma.preferred = 1 ', 'auto')
+results = db.sql('''
+	select distinct m._Marker_key, ma.accID 
+	from #m1 m, ACC_Accession ma 
+	where m._Marker_key = ma._Object_key 
+	and ma._MGIType_key = 2 
+	and ma.prefixPart = 'MGI:' 
+	and ma._LogicalDB_key = 1 
+	and ma.preferred = 1 
+	''', 'auto')
 accid = {}
 for r in results:
 	accid[r['_Marker_key']] = r['accID']

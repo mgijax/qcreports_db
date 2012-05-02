@@ -69,7 +69,7 @@ results = db.sql('''
     and a._MGIType_key = 2 
     and a._LogicalDB_key = 1 
     and a.preferred = 1 
-    and a.prefixPart = "MGI:" 
+    and a.prefixPart = 'MGI:' 
     and (exists (select 1 from GXD_Index gi where m._Marker_key = gi._Marker_key)
          or 
          exists (select 1 from GXD_Assay ga 
@@ -107,14 +107,14 @@ fp.write(30*'-')
 fp.write(CRT)
 
 results = db.sql('''
-    select distinct m.symbol, a.accID, abaID = aa.accID
+    select distinct m.symbol, a.accID, aa.accID as abaID
     from MRK_Marker_View m, ACC_Accession a , ACC_Accession aa
     where m._Marker_Status_key = 2 
     and m._Marker_key = a._Object_key 
     and a._MGIType_key = 2 
     and a._LogicalDB_key = 1 
     and a.preferred = 1 
-    and a.prefixPart = "MGI:" 
+    and a.prefixPart = 'MGI:' 
     and m._Marker_key = aa._Object_key 
     and aa._MGIType_key = 2 
     and aa._LogicalDB_key = 107

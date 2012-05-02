@@ -109,51 +109,59 @@ for r in results:
 
 # select all genes
 
-db.sql('select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart ' + \
-	'into #markers ' + \
-	'from MRK_Marker m, ACC_Accession a ' + \
-	'where m._Marker_Type_key = 1 ' + \
-	'and m._Marker_Status_key in (1,3) ' + \
-	'and m._Marker_key = a._Object_key ' + \
-	'and a._MGIType_key = 2 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1', None)
+db.sql('''
+	select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart 
+	into #markers 
+	from MRK_Marker m, ACC_Accession a 
+	where m._Marker_Type_key = 1 
+	and m._Marker_Status_key in (1,3) 
+	and m._Marker_key = a._Object_key 
+	and a._MGIType_key = 2 
+	and a._LogicalDB_key = 1 
+	and a.prefixPart = 'MGI:' 
+	and a.preferred = 1
+	''', None)
 db.sql('create index index_marker_key on #markers(_Marker_key)', None)
 
 ##
 
 # select all genes with references selected for GO
 
-db.sql('select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, hasAnnotations = "N" ' + \
-	'into #references ' + \
-	'from #markers m , MRK_Reference r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where m._Marker_key = r._Marker_key ' + \
-	'and r._Refs_key = b._Refs_key ' + \
-	'and b._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Gene Ontology" ' + \
-	'and ba.isNeverUsed = 0', None)
+db.sql('''
+	select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, 'N' as hasAnnotations
+	into #references 
+	from #markers m , MRK_Reference r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	where m._Marker_key = r._Marker_key 
+	and r._Refs_key = b._Refs_key 
+	and b._Refs_key = ba._Refs_key 
+	and ba._DataSet_key = bd._DataSet_key 
+	and bd.dataSet = 'Gene Ontology' 
+	and ba.isNeverUsed = 0
+	''', None)
 db.sql('create index index_refs_key on #references(_Refs_key)', None)
 
 # has reference been selected for GXD
 
-results = db.sql('select distinct r._Refs_key ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where r._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Expression" ' + \
-	'and ba.isNeverUsed = 0', 'auto')
+results = db.sql('''
+	select distinct r._Refs_key 
+	from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	where r._Refs_key = ba._Refs_key 
+	and ba._DataSet_key = bd._DataSet_key 
+	and bd.dataSet = 'Expression' 
+	and ba.isNeverUsed = 0
+	''', 'auto')
 gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
 
 # does marker have GO annotations
 
-db.sql('update #references set hasAnnotations = "Y" ' + \
-	'from #references r, VOC_Annot a ' + \
-	'where a._AnnotType_key = 1000 ' + \
-	'and r._Marker_key = a._Object_key', None)
+db.sql('''
+	update #references set hasAnnotations = 'Y' 
+	from #references r, VOC_Annot a 
+	where a._AnnotType_key = 1000 
+	and r._Marker_key = a._Object_key
+	''', None)
 
 # number of unique genes
 results = db.sql('select distinct r._Marker_key from #references r', 'auto')
@@ -168,25 +176,31 @@ results = db.sql('select r._Marker_key from #references r', 'auto')
 fp.write('Number of total rows:  %s\n' % (len(results)))
 
 # number of GO annotation "yes"
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, ' + \
-	'r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations ' + \
-	'from #references r ' + \
-	'where r.hasAnnotations = "Y"', 'auto')
+results = db.sql('''
+	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
+	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
+	from #references r 
+	where r.hasAnnotations = 'Y'
+	''', 'auto')
 fp.write('Number of "GO annotation?" for Y:  %s\n' % (len(results)))
 
 # number of GO annotation "no"
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, ' + \
-	'r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations ' + \
-	'from #references r ' + \
-	'where r.hasAnnotations = "N"', 'auto')
+results = db.sql('''
+	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
+	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
+	from #references r 
+	where r.hasAnnotations = 'N'
+	''', 'auto')
 fp.write('Number of "GO annotation?" for N:  %s\n\n' % (len(results)))
 
 # records
 
-results = db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, ' + \
-	'r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations ' + \
-	'from #references r ' + \
-	'order by r.hasAnnotations desc, r.numericPart', 'auto')
+results = db.sql('''
+	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
+	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
+	from #references r 
+	order by r.hasAnnotations desc, r.numericPart
+	''', 'auto')
 
 for r in results:
 	writeRecord(fp, r)
