@@ -49,20 +49,24 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 
 # Retrieve MGI Accession number
 
-results = db.sql('select distinct a._Object_key, a.accID from ACC_Accession a ' + \
-	'where a._MGIType_key = 10 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a.preferred = 1', 'auto')
+results = db.sql('''
+	select distinct a._Object_key, a.accID from ACC_Accession a 
+	where a._MGIType_key = 10 
+	and a._LogicalDB_key = 1 
+	and a.prefixPart = 'MGI:' 
+	and a.preferred = 1
+	''', 'auto')
 mgiIDs = {}
 for r in results:
 	mgiIDs[r['_Object_key']] = r['accID']
 
 # External Accession IDs
 
-results = db.sql('select distinct a._Object_key, a.accID from ACC_Accession a ' + \
-	'where a._LogicalDB_key != 1 ' + \
-	'and a._MGIType_key = 10 ', 'auto')
+results = db.sql('''
+	select distinct a._Object_key, a.accID from ACC_Accession a 
+	where a._LogicalDB_key != 1 
+	and a._MGIType_key = 10 
+	''', 'auto')
 externalIDs = {}
 for r in results:
 	if externalIDs.has_key(r['_Object_key']):

@@ -52,16 +52,18 @@ fp.write(string.ljust('------------------------------', 35))
 fp.write(string.ljust('--------------------------------------------------------------------------------', 85))
 fp.write('--------------------------------------------------' + reportlib.CRT)
 
-db.sql('select s._Strain_key, strain = substring(s.strain,1,80), sy.synonym, a.accID ' + \
-	'into #strains ' + \
-	'from PRB_Strain s, MGI_Synonym sy, ACC_Accession a ' + \
-	'where s._Strain_key = sy._Object_key ' + \
-	'and sy._MGIType_key = 10 ' + \
-	'and sy._SynonymType_key != 1001 ' + \
-	'and s._Strain_key = a._Object_key ' + \
-	'and a._MGIType_key = 10 ' + \
-	'and a._LogicalDB_key = 1 '+ \
-	'and a.preferred = 1', None)
+db.sql('''
+	select s._Strain_key, substring(s.strain,1,80) as strain, sy.synonym, a.accID 
+	into #strains 
+	from PRB_Strain s, MGI_Synonym sy, ACC_Accession a 
+	where s._Strain_key = sy._Object_key 
+	and sy._MGIType_key = 10 
+	and sy._SynonymType_key != 1001 
+	and s._Strain_key = a._Object_key 
+	and a._MGIType_key = 10 
+	and a._LogicalDB_key = 1 
+	and a.preferred = 1
+	''', None)
 
 syns = {}
 results = db.sql('select _Strain_key, synonym from #strains', 'auto')

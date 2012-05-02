@@ -57,22 +57,26 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
-db.sql('select m._Nomen_key, m.symbol, m.name, m.statusNote, mgiID = a.accID, ' + \
-	'cdate = convert(char(10), m.creation_date, 101) ' + \
-	'into #nomen ' + \
-	'from NOM_Marker_View m, ACC_Accession a ' + \
-	'where m.status = "Reserved" ' + \
-	'and m._Nomen_key = a._Object_key ' + \
-	'and a._MGIType_key = 21 ' + \
-	'and a._LogicalDB_Key = 1 ', None)
+db.sql('''
+	select m._Nomen_key, m.symbol, m.name, m.statusNote, a.accID as mgiID, 
+	convert(char(10), m.creation_date, 101) as cdate
+	into #nomen 
+	from NOM_Marker_View m, ACC_Accession a 
+	where m.status = 'Reserved' 
+	and m._Nomen_key = a._Object_key 
+	and a._MGIType_key = 21 
+	and a._LogicalDB_Key = 1 
+	''', None)
 
 db.sql('create index idx1 on #nomen(_Nomen_key)', None)
 
-results = db.sql('select n._Nomen_key, a.accID ' + \
-	'from #nomen n, ACC_Accession a ' + \
-	'where n._Nomen_key = a._Object_key ' + \
-	'and a._MGIType_key = 21 ' + \
-	'and a._LogicalDB_Key != 1 ', 'auto')
+results = db.sql('''
+	select n._Nomen_key, a.accID 
+	from #nomen n, ACC_Accession a 
+	where n._Nomen_key = a._Object_key 
+	and a._MGIType_key = 21 
+	and a._LogicalDB_Key != 1 
+	''', 'auto')
 
 accids = {}
 for r in results:

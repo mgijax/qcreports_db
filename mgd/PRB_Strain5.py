@@ -47,23 +47,27 @@ CRT = reportlib.CRT
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 'Strains where any of their IDs contain an "O"')
 
-db.sql('select distinct s._Strain_key, s.strain ' + \
-	'into #strains ' + \
-	'from PRB_Strain s, ACC_Accession a ' + \
-	'where s._Strain_key = a._Object_key ' + \
-	'and a._MGIType_key = 10 ' + \
-	'and a._LogicalDB_key != 1 ' + \
-	'and a.accID like "%O%" ', None)
+db.sql('''
+	select distinct s._Strain_key, s.strain 
+	into #strains 
+	from PRB_Strain s, ACC_Accession a 
+	where s._Strain_key = a._Object_key 
+	and a._MGIType_key = 10 
+	and a._LogicalDB_key != 1 
+	and a.accID like '%O%' 
+	''', None)
 db.sql('create index idx1 on #strains(_Strain_key)', None)
 
 # external accession IDs
 
-results = db.sql('select distinct s._Strain_key, a.accID, l.name ' + \
-	'from #strains s, ACC_Accession a, ACC_LogicalDB l ' + \
-	'where s._Strain_key = a._Object_key ' + \
-	'and a._LogicalDB_key != 1 ' + \
-	'and a._MGIType_key = 10 ' + \
-	'and a._LogicalDB_key = l._LogicalDB_key', 'auto')
+results = db.sql('''
+	select distinct s._Strain_key, a.accID, l.name 
+	from #strains s, ACC_Accession a, ACC_LogicalDB l 
+	where s._Strain_key = a._Object_key 
+	and a._LogicalDB_key != 1 
+	and a._MGIType_key = 10 
+	and a._LogicalDB_key = l._LogicalDB_key
+	''', 'auto')
 externalIDs = {}
 for r in results:
 	key = r['_Strain_key']

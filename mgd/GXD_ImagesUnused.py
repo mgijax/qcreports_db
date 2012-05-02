@@ -76,12 +76,14 @@ fp = reportlib.init(sys.argv[0], 'Unused image panes from full coded references'
 # 	Images that are "not null"
 #
 
-db.sql('select r._Refs_key, r.jnumID, a._ImagePane_key ' \
-     'into #gel ' + \
-     'from GXD_Assay a, BIB_Citation_Cache r ' \
-     'where a._Refs_key = r._Refs_key ' \
-     'and a._AssayType_key in (1,2,3,4,5,6,8,9,10,11) ' + \
-     'and a._ImagePane_key is not null', 'None')
+db.sql('''
+     select r._Refs_key, r.jnumID, a._ImagePane_key 
+     into #gel 
+     from GXD_Assay a, BIB_Citation_Cache r 
+     where a._Refs_key = r._Refs_key 
+     and a._AssayType_key in (1,2,3,4,5,6,8,9,10,11) 
+     and a._ImagePane_key is not null
+     ''', 'None')
 
 db.sql('create index gel_idx1 on #gel(_Refs_key)', None)
 db.sql('create index gel_idx2 on #gel(_ImagePane_key)', None)
@@ -98,15 +100,17 @@ db.sql('create index gel_idx2 on #gel(_ImagePane_key)', None)
 #
 #
 
-db.sql('select r._Refs_key, r.jnumID, p._ImagePane_key ' + \
-    'into #specimen ' + \
-    'from GXD_Assay a, BIB_Citation_Cache r, ' + \
-    'GXD_Specimen s, GXD_InSituResult i, GXD_InSituResultImage p ' + \
-    'where a._Refs_key = r._Refs_key ' + \
-    'and a._AssayType_key in (1,6,9,10,11) ' + \
-    'and a._Assay_key = s._Assay_key ' + \
-    'and s._Specimen_key = i._Specimen_key ' + \
-    'and i._Result_key = p._Result_key', 'None')
+db.sql('''
+    select r._Refs_key, r.jnumID, p._ImagePane_key 
+    into #specimen 
+    from GXD_Assay a, BIB_Citation_Cache r, 
+    GXD_Specimen s, GXD_InSituResult i, GXD_InSituResultImage p 
+    where a._Refs_key = r._Refs_key 
+    and a._AssayType_key in (1,6,9,10,11) 
+    and a._Assay_key = s._Assay_key 
+    and s._Specimen_key = i._Specimen_key 
+    and i._Result_key = p._Result_key
+    ''', 'None')
 
 db.sql('create index specimen_idx1 on #specimen(_Refs_key)', None)
 db.sql('create index specimen_idx2 on #specimen(_ImagePane_key)', None)
@@ -119,16 +123,18 @@ db.sql('create index specimen_idx2 on #specimen(_ImagePane_key)', None)
 #
 #
 
-db.sql('select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, ' + \
-     'cdate = convert(char(10), aa.creation_date, 101) ' + \
-     'into #images ' + \
-     'from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa ' + \
-     'where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key ' + \
-     'and assay._AssayType_key in (1,2,3,4,5,6,8,9)) ' +
-     'and a._Refs_key = r._Refs_key ' + \
-     'and a._ImageType_key = 1072158 ' + \
-     'and a._MGIType_key = 8 ' + \
-     'and a._Image_key = aa._Image_key ', 'None')
+db.sql('''
+     select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, 
+     convert(char(10), aa.creation_date, 101) as cdate
+     into #images 
+     from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa 
+     where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key 
+     and assay._AssayType_key in (1,2,3,4,5,6,8,9)) 
+     and a._Refs_key = r._Refs_key 
+     and a._ImageType_key = 1072158 
+     and a._MGIType_key = 8 
+     and a._Image_key = aa._Image_key 
+     ''', 'None')
 
 db.sql('create index images_idx1 on #images(jnumID)', None)
 db.sql('create index images_idx2 on #images(figureLabel)', None)
@@ -148,18 +154,20 @@ db.sql('create index images_idx2 on #images(figureLabel)', None)
 #     Creation date of Image Pane
 #
 
-results = db.sql('select a.accID, i.jnumID, i.figureLabel, i.paneLabel, i.cdate ' + \
-    'from #images i, ACC_Accession a ' + \
-    'where not exists (select 1 from #specimen s ' + \
-    'where i._Refs_key = s._Refs_key ' + \
-    'and i._ImagePane_key = s._ImagePane_key) ' + \
-    'and not exists (select 1 from #gel s ' + \
-    'where i._Refs_key = s._Refs_key ' + \
-    'and i._ImagePane_key = s._ImagePane_key) ' + \
-    'and i._Image_key = a._Object_key ' + \
-    'and a._MGIType_key = 9 ' + \
-    'and a._LogicalDB_key = 1 ' + \
-    'order by a.accID, i.jnumID, i.figureLabel', 'auto')
+results = db.sql('''
+    select a.accID, i.jnumID, i.figureLabel, i.paneLabel, i.cdate 
+    from #images i, ACC_Accession a 
+    where not exists (select 1 from #specimen s 
+    where i._Refs_key = s._Refs_key 
+    and i._ImagePane_key = s._ImagePane_key) 
+    and not exists (select 1 from #gel s 
+    where i._Refs_key = s._Refs_key 
+    and i._ImagePane_key = s._ImagePane_key) 
+    and i._Image_key = a._Object_key 
+    and a._MGIType_key = 9 
+    and a._LogicalDB_key = 1 
+    order by a.accID, i.jnumID, i.figureLabel
+    ''', 'auto')
 
 for r in results:
     fp.write(r['accID'] + TAB)

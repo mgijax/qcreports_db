@@ -49,25 +49,29 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 
 
 # strains with MGI IDs
 
-db.sql('select distinct a._Object_key, a.accID, s.strain ' + \
-	'into #strains ' + \
-	'from ACC_Accession a, PRB_Strain s ' + \
-	'where a._MGIType_key = 10 ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.prefixPart = "MGI:" ' + \
-	'and a._LogicalDB_key = 1 ' + \
-	'and a.preferred = 1 ' + \
-	'and a._Object_key = s._Strain_key', None)
+db.sql('''
+	select distinct a._Object_key, a.accID, s.strain 
+	into #strains 
+	from ACC_Accession a, PRB_Strain s 
+	where a._MGIType_key = 10 
+	and a._LogicalDB_key = 1 
+	and a.prefixPart = 'MGI:' 
+	and a._LogicalDB_key = 1 
+	and a.preferred = 1 
+	and a._Object_key = s._Strain_key
+	''', None)
 db.sql('create index idx1 on #strains(_Object_key)', None)
 
 # external accession IDs
 
-results = db.sql('select distinct a._Object_key, a.accID, l.name ' + \
-	'from #strains s, ACC_Accession a, ACC_LogicalDB l ' + \
-	'where s._Object_key = a._Object_key ' + \
-	'and a._LogicalDB_key != 1 ' + \
-	'and a._MGIType_key = 10 ' + \
-	'and a._LogicalDB_key = l._LogicalDB_key', 'auto')
+results = db.sql('''
+	select distinct a._Object_key, a.accID, l.name 
+	from #strains s, ACC_Accession a, ACC_LogicalDB l 
+	where s._Object_key = a._Object_key 
+	and a._LogicalDB_key != 1 
+	and a._MGIType_key = 10 
+	and a._LogicalDB_key = l._LogicalDB_key
+	''', 'auto')
 externalIDs = {}
 for r in results:
 	key = r['_Object_key']
