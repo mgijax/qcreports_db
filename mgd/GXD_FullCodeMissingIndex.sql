@@ -3,7 +3,7 @@ print ''
 print 'Full Coded References that are missing a Gene in the Index'
 print ''
 
-select distinct b.accID, m.symbol
+select distinct b.accID, m.symbol, b.numericPart
 from GXD_Assay a, MRK_Marker m, ACC_Accession b
 where a._AssayType_key in (1,2,3,4,5,6,8,9)
 and not exists (select 1 from GXD_Index i

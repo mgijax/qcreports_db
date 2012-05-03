@@ -59,7 +59,7 @@ print 'Displayed Image Panes annotated to >2 assays (if Immunohistochemistry), >
 print 'Excludes J:80502'
 print ''
 
-select distinct imageID = i.accID, refID = r.accID 
+select distinct i.accID as imageID, r.accID as refID
 from #final f, ACC_Accession i, ACC_Accession r  
 where f._Image_key = i._Object_key 
 and i._MGIType_key = 9 

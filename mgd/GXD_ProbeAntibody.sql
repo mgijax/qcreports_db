@@ -96,9 +96,11 @@ where c._Sequence_key = s._Sequence_key
 and s._SequenceStatus_key = 316345
 go
 
-create index idx1 on #probedummy(_Probe_key)
-create index idx2 on #probedummy(_Sequence_key)
-create index idx3 on #probedummy(_CreatedBy_key)
+create index probedummy_idx1 on #probedummy(_Probe_key)
+go
+create index probedummy_idx2 on #probedummy(_Sequence_key)
+go
+create index probedummy_idx3 on #probedummy(_CreatedBy_key)
 go
 
 select p.*
@@ -109,9 +111,11 @@ and pp._Source_key = s._Source_key
 and s._Organism_key = 1
 go
 
-create index idx1 on #probedummy2(_Probe_key)
-create index idx2 on #probedummy2(_Sequence_key)
-create index idx3 on #probedummy2(_CreatedBy_key)
+create index probedummy2_idx1 on #probedummy2(_Probe_key)
+go
+create index probedummy2_idx2 on #probedummy2(_Sequence_key)
+go
+create index probedummy2_idx3 on #probedummy2(_CreatedBy_key)
 go
 
 set nocount off
@@ -148,7 +152,7 @@ from SEQ_Sequence s
 where s._SequenceStatus_key = 316343
 go
 
-create index idx1 on #deleted1(_Sequence_key)
+create index deleted1_idx1 on #deleted1(_Sequence_key)
 go
 
 select a.accID, d._Sequence_key
@@ -158,8 +162,9 @@ where d._Sequence_key = a._Object_key
 and a._MGIType_key = 19
 go
 
-create index idx1 on #deleted2(accID)
-create index idx2 on #deleted2(_Sequence_key)
+create index deleted2_idx1 on #deleted2(accID)
+go
+create index deleted2_idx2 on #deleted2(_Sequence_key)
 go
 
 select d.accID as seqID, pa2.accID as mgiID, substring(p.name,1,30) as name
@@ -175,7 +180,7 @@ and pa._Probe_key = p._Probe_key
 and pa._Probe_key = g._Probe_key
 go
 
-create index idx1 on #pdeleted(seqID)
+create index pdeleted_idx1 on #pdeleted(seqID)
 go
 
 set nocount off
@@ -192,6 +197,7 @@ select seqID, mgiID, name from #pdeleted
 go
 
 set nocount on
+go
 
 select distinct pm._Probe_key, pm._Marker_key
 into #encodes
@@ -203,8 +209,9 @@ go
 select * into #multencodes from #encodes group by _Probe_key having count(*) > 1
 go
 
-create index idx1 on #multencodes(_Probe_key)
-create index idx2 on #multencodes(_Marker_key)
+create index multencodes_idx1 on #multencodes(_Probe_key)
+go
+create index multencodes_idx2 on #multencodes(_Marker_key)
 go
 
 set nocount off
@@ -291,9 +298,9 @@ and s.description is not null
 go
 
 set nocount off
+go
 
-select mgiID, cDNAname
-from #probes
+select mgiID, cDNAname from #probes
 go
 
 drop table #probe

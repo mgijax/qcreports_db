@@ -1,5 +1,6 @@
 
 set nocount on
+go
 
 /* select all Gel Assays with Image Panes that have JPGs (xDim is not null) */
 
@@ -26,26 +27,27 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-create index idx1 on #assays(_ImagePane_key)
+create index assays_idx1 on #assays(_ImagePane_key)
 go
 
 set nocount off
+go
 
 print ''
 print 'GXD Image Figure Labels Beginning ''Fig''.'
 print ''
 
-select distinct i.jnumID + ';' + i.figureLabel
+select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i
 where i.figureLabel like 'Fig%'
-order by i.jnum
+order by i.jnumID
 go
 
 print ''
 print 'GXD Images with Copyright containing ''(||)'''
 print ''
 
-select distinct i.jnumID || ';' || i.figureLabel
+select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
 where i._MGIType_key = 8
 and i._Image_key = n._Object_key
@@ -53,17 +55,17 @@ and n._MGIType_key = 9
 and n._NoteType_key = 1023
 and n._Note_key = nc._Note_key
 and nc.note like '%(||)%'
-order by i.jnum
+order by i.jnumID
 go
 
 print ''
 print 'GXD Image Pane Labels containing ',''
 print ''
 
-select distinct i.jnumID || ';' || i.figureLabel
+select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i, IMG_ImagePane p
 where p.paneLabel like '%,%' and p._Image_key = i._Image_key
-order by i.jnum
+order by i.jnumID
 go
 
 print ''
@@ -75,7 +77,7 @@ from IMG_Image_View i, MGI_Note_Image_View n
 where i._MGIType_key = 8
 and n._NoteType_key = 1023
 and n.note like 'reprinted with permission from elsevier%'
-and n.note not like '%' + i.jnumID + '%'
+and n.note not like '%' || i.jnumID || '%'
 and n._Object_key = i._Image_key
 order by i.jnumID
 go
@@ -85,6 +87,8 @@ print 'non-Elsevier: the first author in the copyright does not match the first 
 print ''
 
 set nocount on
+go
+
 select distinct i.jnumID, i.mgiID, r._primary, 
        n.note, substring(r._primary, 1, charindex(' ', r._primary) - 1) as p
 into #a
@@ -95,11 +99,13 @@ and n.note like 'this image is from%'
 and i._Refs_key = r._Refs_key
 and n._Object_key = i._Image_key
 go
+
 set nocount off
+go
 
 select jnumID, mgiID, _primary
 from #a
-where note not like '%' + p + '%'
+where note not like '%' || p || '%'
 order by jnumID
 go
 
