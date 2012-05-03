@@ -32,6 +32,7 @@ order by seqID
 go
 
 drop table #split1
+go
 drop table #split2
 go
 

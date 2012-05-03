@@ -75,5 +75,6 @@ order by imageID
 go
 
 drop table #assays 
+go
 drop table #final
 go

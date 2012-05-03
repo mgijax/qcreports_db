@@ -181,18 +181,31 @@ order by mgiID, jnumID
 go
 
 drop table #temp1
+go
 drop table #temp2
+go
 drop table #temp3
+go
 drop table #temp4
+go
 drop table #repro
+go
 drop table #child
+go
 drop table #reproF
+go
 drop table #fChild
+go
 drop table #allFStruct
+go
 drop table #fSpecimens
+go
 drop table #reproM
+go
 drop table #mChild
+go
 drop table #allMStruct
+go
 drop table #mSpecimens
 go
 

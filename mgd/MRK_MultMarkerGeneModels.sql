@@ -38,6 +38,7 @@ order by s.provider, s.accID
 go
 
 drop table #coord
+go
 drop table #dups
 go
 

@@ -33,5 +33,6 @@ order by strain
 go
 
 drop table #strains
+go
 drop table #multiples
 go

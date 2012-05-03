@@ -85,7 +85,9 @@ order by m.category, m.symbol
 go
 
 drop table #markers
+go
 drop table #sequences1
+go
 drop table #sequencesFinal
 go
 

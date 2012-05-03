@@ -62,6 +62,7 @@ and a._AssayType_key in (10,11)
 go
 
 drop table #spec1
+go
 drop table #temp1
 go
 

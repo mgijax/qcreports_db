@@ -80,8 +80,11 @@ order by hstatus desc, creation_date
 go
 
 drop table #mutants
+go
 drop table #marker
+go
 drop table #homology
+go
 drop table #results
 go
 

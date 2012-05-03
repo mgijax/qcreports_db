@@ -38,5 +38,6 @@ order by s.provider, m.symbol
 go
 
 drop table #coord
+go
 drop table #dups
 go

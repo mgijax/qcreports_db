@@ -67,6 +67,7 @@ order by s.strain
 go
 
 drop table #strains
+go
 drop table #singles
 go
 

@@ -70,7 +70,9 @@ order by ma.egID, m.symbol
 go
 
 drop table #markers1
+go
 drop table #markers
+go
 drop table #final
 go
 

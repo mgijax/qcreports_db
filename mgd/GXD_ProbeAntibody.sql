@@ -297,15 +297,25 @@ from #probes
 go
 
 drop table #probe
+go
 drop table #antibody
+go
 drop table #proberef
+go
 drop table #probedummy
+go
 drop table #probedummy2
+go
 drop table #deleted1
+go
 drop table #deleted2
+go
 drop table #pdeleted
+go
 drop table #multencodes
+go
 drop table #antigens 
+go
 drop table #probes 
 go
 

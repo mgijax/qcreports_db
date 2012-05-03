@@ -107,7 +107,9 @@ and s._Assay_key = a._Assay_key
 go
 
 drop table #missing
+go
 drop table #imissingstructs
+go
 drop table #imissingresults
 go
 

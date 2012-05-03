@@ -148,17 +148,29 @@ order by t.jnum
 go
 
 drop table #gxd
+go
 drop table #ap
+go
 drop table #shareRef
+go
 drop table #uniqueGXD 
+go
 drop table #uniqueAP 
+go
 drop table #gxdAlleles
+go
 drop table #apAlleles
+go
 drop table #gxdCount
+go
 drop table #apCount
+go
 drop table #sameCount
+go
 drop table #diffAlleles
+go
 drop table #sameStrain
+go
 drop table #toPrint1
 go
 

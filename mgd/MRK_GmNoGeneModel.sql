@@ -48,5 +48,6 @@ order by m.symbol
 go
 
 drop table #markers
+go
 drop table #history
 go
