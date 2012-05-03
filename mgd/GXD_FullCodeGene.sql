@@ -1,8 +1,8 @@
 
 /* TR 7370 */
 /* TR 9563 */
-/* TR 9646: add 'binding' and 'rocket' to exclusion list */
-/* TR 10642 add '%quantitative RT%' to exclusion list */
+/* TR 9646: add ''binding'' and ''rocket'' to exclusion list */
+/* TR 10642 add ''%quantitative RT%'' to exclusion list */
 
 set nocount on
 go
@@ -53,12 +53,12 @@ print 'Full Coded References that contain indexed Genes that have not been full 
 print ''
 print 'excluded:'
 print '     index records that contain only cDNA or primer extension assays'
-print '     index records that contain only age 'E?''
+print '     index records that contain only age ''E?'''
 print '     index records that have a note that contains: '
-print '     'ot blot', 'fraction', 'reverse', 'immunoprecip', 'binding', 'rocket', 'quantitative RT''
+print '     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket'', ''quantitative RT'''
 print ''
 
-select distinct b.accID, m.symbol
+select distinct b.accID, m.symbol, b.numericPart
 from GXD_Index i, MRK_Marker m, ACC_Accession b
 where not exists (select 1 from #excluded e where i._Index_key = e._Index_key)
 and exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key and a._AssayType_key in (1,2,3,4,5,6,8,9))

@@ -1,7 +1,7 @@
 
 print ''
 print 'Germline Transmission Checks'
-print '  only includes alleles of status 'Approved' or 'Autoload''
+print '  only includes alleles of status ''Approved'' or ''Autoload'''
 print ''
 
 print ''

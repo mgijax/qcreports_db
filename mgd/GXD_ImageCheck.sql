@@ -32,7 +32,7 @@ go
 set nocount off
 
 print ''
-print 'GXD Image Figure Labels Beginning 'Fig'.'
+print 'GXD Image Figure Labels Beginning ''Fig''.'
 print ''
 
 select distinct i.jnumID + ';' + i.figureLabel
@@ -42,10 +42,10 @@ order by i.jnum
 go
 
 print ''
-print 'GXD Images with Copyright containing '(||)''
+print 'GXD Images with Copyright containing ''(||)'''
 print ''
 
-select distinct i.jnumID + ';' + i.figureLabel
+select distinct i.jnumID || ';' || i.figureLabel
 from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
 where i._MGIType_key = 8
 and i._Image_key = n._Object_key
@@ -60,7 +60,7 @@ print ''
 print 'GXD Image Pane Labels containing ',''
 print ''
 
-select distinct i.jnumID + ';' + i.figureLabel
+select distinct i.jnumID || ';' || i.figureLabel
 from IMG_Image_View i, IMG_ImagePane p
 where p.paneLabel like '%,%' and p._Image_key = i._Image_key
 order by i.jnum

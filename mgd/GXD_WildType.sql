@@ -1,6 +1,6 @@
 
 print ''
-print 'Genotypes where Allele 1 is 'wild type''
+print 'Genotypes where Allele 1 is ''wild type'''
 print ''
 
 select ga.accID, substring(g.strain, 1, 50) as strain, a.symbol

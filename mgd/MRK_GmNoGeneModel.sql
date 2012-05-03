@@ -33,8 +33,8 @@ go
 print ''
 print 'Gm Markers without Gene Model Associations'
 print ''
-print '   where name begins 'predicted gene''
-print '   and status = 'official' or 'interim''
+print '   where name begins ''predicted gene'''
+print '   and status = ''official'' or ''interim'''
 print ''
 
 select m.accID, m.symbol, h.symbol as "old symbol", h.name
