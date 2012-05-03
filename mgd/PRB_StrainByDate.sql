@@ -16,10 +16,10 @@ go
 
 print ''
 print 'Strains - Non Standard - Sorted by Creation Date'
-print '(do not include any strains flagged as needing review by Janan's load)'
+print '(do not include any strains flagged as needing review by Janan''s load)'
 print''
 print 'excludes /Mmcd from 06/07/2011'
-print 'excludes created-by = 'strainautoload''
+print 'excludes created-by = ''strainautoload'''
 print ''
 
 (
@@ -58,7 +58,7 @@ go
 
 print ''
 print 'Strains - Non Standard - Sorted by Creation Date'
-print '(do not include any strains flagged as needing review by Janan's load)'
+print '(do not include any strains flagged as needing review by Janan''s load)'
 print ''
 print 'includes /Mmcd from 06/07/2011'
 print ''

@@ -14,7 +14,7 @@ set nocount off
 go
 
 print ''
-print 'Strains containing '<>' '
+print 'Strains containing ''<>'' '
 print 'with any number of Markers and Marker has no Allele'
 print 'and Allele symbol embedded in Strain is in MGD'
 print ''

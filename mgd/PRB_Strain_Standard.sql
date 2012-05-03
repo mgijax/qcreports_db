@@ -1,6 +1,6 @@
 
 print ''
-print 'STOCK or 'semicolon' strains marked standard'
+print '''STOCK'' or ''semicolon'' strains marked standard'
 print ''
 
 select s.strain

@@ -23,7 +23,7 @@ set nocount off
 go
 
 print ''
-print 'Strains ending with '>' '
+print 'Strains ending with ''>'''
 print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
 print 'with at most one Marker and Marker has no Allele'
 print 'and Allele symbol is in MGD'
