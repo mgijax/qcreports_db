@@ -19,12 +19,12 @@ go
 set nocount off
 go
 
-print ""
-print "Split Sequences"
-print ""
-print "A row in this report represents a Sequence that is designated as Split"
-print "by the Sequence Provider."
-print ""
+print ''
+print 'Split Sequences'
+print ''
+print 'A row in this report represents a Sequence that is designated as Split'
+print 'by the Sequence Provider.'
+print ''
 
 select s.accID as seqID
 from #split2 s

@@ -12,7 +12,7 @@ and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and s._StructureName_key = sn._StructureName_key
 and not (t.stage = 28 
-and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis"))
+and sn.structure in ('placenta','decidua','decidua basalis','decidua capsularis'))
 go
 
 select distinct _Specimen_key 
@@ -26,13 +26,13 @@ select distinct i._GelLane_key, t.stage
 into #temp3
 from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t,
 GXD_StructureName sn
-where i.age not like "%-%"
-and i.age not like "%,%"
+where i.age not like '%-%'
+and i.age not like '%,%'
 and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and s._StructureName_key = sn._StructureName_key
-and not (t.stage = 28 and sn.structure in ("placenta","decidua","decidua basalis","decidua capsularis","uterus", "mesometrium"))
+and not (t.stage = 28 and sn.structure in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium'))
 go
 
 select distinct _GelLane_key 
@@ -45,10 +45,10 @@ go
 set nocount off
 go
 
-print ""
-print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)"
-print ""
+print ''
+print 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
+print '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
@@ -57,10 +57,10 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-print ""
-print "Gel Lane Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)"
-print ""
+print ''
+print 'Gel Lane Specimens annotated to structures of > 1 Theiler Stage'
+print '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #temp4 t, GXD_GelLane s, GXD_Assay_View a
@@ -78,10 +78,10 @@ go
 select distinct _Structure_key
 into #repro
 from GXD_StructureName
-where structure = "reproductive system"
+where structure = 'reproductive system'
 go
 
-/* get all children of "reproductive system" */
+/* get all children of 'reproductive system' */
 select distinct _Descendent_key
 into #child
 from GXD_StructureClosure
@@ -90,15 +90,15 @@ select _Structure_key
 from #repro)
 go
 
-/* get the structure key for "female" */
+/* get the structure key for 'female' */
 select distinct _Structure_key
 into #reproF
 from #child c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
-and sn.structure = "female"
+and sn.structure = 'female'
 go
 
-/* get all children of "female" */
+/* get all children of 'female' */
 select distinct _Descendent_key
 into #fChild
 from GXD_StructureClosure
@@ -115,7 +115,7 @@ select _Descendent_key as _Structure_key
 from #fChild
 go
 
-/* get info about "reproductive system;female" and children */
+/* get info about 'reproductive system;female' and children */
 select distinct s._Specimen_key, s.specimenLabel, a.jnumID, a.mgiID
 into #fSpecimens
 from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs
@@ -133,7 +133,7 @@ select distinct _Structure_key
 into #reproM
 from #child c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
-and sn.structure = "male"
+and sn.structure = 'male'
 go
 
 select distinct _Descendent_key
@@ -167,15 +167,15 @@ go
 set nocount off
 go
 
-print ""
-print "InSitu Specimens and Gel Lanes with > 1 Sex" 
-print "(excludes J:80502)"
-print ""
+print ''
+print 'InSitu Specimens and Gel Lanes with > 1 Sex' 
+print '(excludes J:80502)'
+print ''
 
 /* report all specimens with annotated to both male and female structures */
 select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel
 from #fSpecimens f, #mSpecimens m
 where f._Specimen_key = m._Specimen_key
-and f.jnumID != "J:80502"
+and f.jnumID != 'J:80502'
 order by mgiID, jnumID
 go

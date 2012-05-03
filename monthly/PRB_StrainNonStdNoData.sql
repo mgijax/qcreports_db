@@ -40,35 +40,40 @@ go
 set nocount off
 go
 
-print ""
-print "Non-Standard Strains with no external IDs, no data attached and no notes in any notes field"
-print ""
+print ''
+print 'Non-Standard Strains with no external IDs, no data attached and no notes in any notes field'
+print ''
 
-select s.strain, null as accID, accType = "Other"
+(
+select s.strain, null as accID, 'Other' as accType
 from #strains s
 where not exists (select 1 from PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key in (37, 38, 39, 40))
 union
-select s.strain, a.accID, accType = "EMMA"
+select s.strain, a.accID, 'EMMA' as accType
 from #strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 37
 union
-select s.strain, a.accID, accType = "MMRRC"
+select s.strain, a.accID, 'MMRRC' as accType
 from #strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 38
 union
-select s.strain, a.accID, accType = "Harwell"
+select s.strain, a.accID, 'Harwell' as accType
 from #strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 39
 union
-select s.strain, a.accID, accType = "ORNL"
+select s.strain, a.accID, 'ORNL' as accType
 from #strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 40
-order by s.strain
+)
+order by strain
+go
+
+drop table #strains
 go
 

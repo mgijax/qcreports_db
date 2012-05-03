@@ -9,7 +9,7 @@ where i._Result_key = r._Result_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and s._StructureName_key = sn._StructureName_key
-and not (t.stage = 28 and (sn.structure = "placenta" or sn.structure = "decidua"))
+and not (t.stage = 28 and (sn.structure = 'placenta' or sn.structure = 'decidua'))
 go
 
 select distinct _Specimen_key 
@@ -22,10 +22,10 @@ go
 set nocount off
 go
 
-print ""
-print "InSitu Specimens annotated to structures of > 1 Theiler Stage"
-print "(excludes TS28:placenta, TS28:decidua)"
-print ""
+print ''
+print 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
+print '(excludes TS28:placenta, TS28:decidua)'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
@@ -43,10 +43,10 @@ go
 select distinct _Structure_key
 into #repro
 from GXD_StructureName
-where structure = "reproductive system"
+where structure = 'reproductive system'
 go
 
-/* get all children of "reproductive system" */
+/* get all children of 'reproductive system' */
 select distinct _Descendent_key
 into #child
 from GXD_StructureClosure
@@ -55,15 +55,15 @@ select _Structure_key
 from #repro)
 go
 
-/* get the structure key for "female" */
+/* get the structure key for 'female' */
 select distinct _Structure_key
 into #reproF
 from #child c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
-and sn.structure = "female"
+and sn.structure = 'female'
 go
 
-/* get all children of "female" */
+/* get all children of 'female' */
 select distinct _Descendent_key
 into #fChild
 from GXD_StructureClosure
@@ -80,7 +80,7 @@ select _Descendent_key as _Structure_key
 from #fChild
 go
 
-/* get info about "reproductive system;female" and children */
+/* get info about 'reproductive system;female' and children */
 select distinct s._Specimen_key, s.specimenLabel, a.jnumID, a.mgiID
 into #fSpecimens
 from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs
@@ -98,7 +98,7 @@ select distinct _Structure_key
 into #reproM
 from #child c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
-and sn.structure = "male"
+and sn.structure = 'male'
 go
 
 select distinct _Descendent_key
@@ -132,9 +132,9 @@ go
 set nocount off
 go
 
-print ""
-print "InSitu Specimens with > 1 Sex" 
-print ""
+print ''
+print 'InSitu Specimens with > 1 Sex' 
+print ''
 
 /* report all specimens with annotated to both male and female structures */
 select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel

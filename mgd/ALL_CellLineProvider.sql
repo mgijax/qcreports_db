@@ -2,20 +2,20 @@
 set nocount on
 go
 
-print ""
-print "Cases where the cell line creator has been entered"
-print "but the Accession ID of the mutant cell line has not been attached."
-print "(See the EI Mutant Cell Line Module)"
-print ""
+print ''
+print 'Cases where the cell line creator has been entered'
+print 'but the Accession ID of the mutant cell line has not been attached.'
+print '(See the EI Mutant Cell Line Module)'
+print ''
 
-select substring(ac.creator,1,25) as "creator", acc.accID, 
-substring(a.symbol,1,35) as "symbol", 
-substring(ac.cellLine,1,25) as "mutant cell line ID"
+select substring(ac.creator,1,25) as 'creator', acc.accID, 
+substring(a.symbol,1,35) as 'symbol', 
+substring(ac.cellLine,1,25) as 'mutant cell line ID'
 from ALL_Allele a, ALL_Allele_CellLine c, ALL_CellLine_View ac, ACC_Accession acc
 where a._Allele_key = c._Allele_key
 and c._MutantCellLine_key = ac._CellLine_key
 and ac.creator is not null
-and ac.creator != "Not Specified"
+and ac.creator != 'Not Specified'
 and a._Allele_key = acc._Object_key
 and acc._MGIType_key = 11
 and acc._LogicalDB_key = 1
@@ -53,16 +53,16 @@ and ac._CellLine_key = aa._Object_key
 and ac.cellLine = aa.accID
 go
 
-print ""
-print "Cases where the cell line creator has been entered"
-print "and the Accession ID of the mutant cell line has been attached,"
-print "but the mutant cell line name is not the same as the name of the Accession ID."
-print "(See the EI Mutant Cell Line Module)"
-print ""
+print ''
+print 'Cases where the cell line creator has been entered'
+print 'and the Accession ID of the mutant cell line has been attached,'
+print 'but the mutant cell line name is not the same as the name of the Accession ID.'
+print '(See the EI Mutant Cell Line Module)'
+print ''
 
-select substring(ac.creator,1,25) as "creator", acc.accID, 
-substring(a.symbol,1,35) as "symbol", 
-substring(ac.cellLine,1,25) as "mutant cell line ID", e.accID "accession id"
+select substring(ac.creator,1,25) as 'creator', acc.accID, 
+substring(a.symbol,1,35) as 'symbol', 
+substring(ac.cellLine,1,25) as 'mutant cell line ID', e.accID 'accession id'
 from ALL_Allele a, ALL_Allele_CellLine c, ALL_CellLine_View ac, ACC_Accession acc, #notexists e
 where a._Allele_key = c._Allele_key
 and c._MutantCellLine_key = ac._CellLine_key

@@ -11,9 +11,9 @@ go
 set nocount off
 go
 
-print ""
-print "MCL's that are associated with more than one Allele"
-print ""
+print ''
+print 'MCL's that are associated with more than one Allele'
+print ''
 
 select substring(c.cellLine,1,50) as cellLine, 
        substring(aa.symbol,1,50) as symbol, aa.modification_date

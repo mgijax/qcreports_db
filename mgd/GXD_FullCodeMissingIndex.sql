@@ -1,7 +1,7 @@
 
-print ""
-print "Full Coded References that are missing a Gene in the Index"
-print ""
+print ''
+print 'Full Coded References that are missing a Gene in the Index'
+print ''
 
 select distinct b.accID, m.symbol
 from GXD_Assay a, MRK_Marker m, ACC_Accession b
@@ -13,7 +13,7 @@ and a._Marker_key = m._Marker_key
 and a._Refs_key = b._Object_key
 and b._MGIType_key = 1
 and b._LogicalDB_key = 1
-and b.prefixPart = "J:"
+and b.prefixPart = 'J:'
 order by b.numericPart
 go
 

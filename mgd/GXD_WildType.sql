@@ -1,7 +1,7 @@
 
-print ""
-print "Genotypes where Allele 1 is 'wild type'"
-print ""
+print ''
+print 'Genotypes where Allele 1 is 'wild type''
+print ''
 
 select ga.accID, substring(g.strain, 1, 50) as strain, a.symbol
 from ACC_Accession ga, GXD_Genotype_View g, GXD_AllelePair ap, ALL_Allele a

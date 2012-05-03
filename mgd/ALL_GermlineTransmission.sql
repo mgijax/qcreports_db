@@ -1,16 +1,16 @@
 
-print ""
-print "Germline Transmission Checks"
-print "  only includes alleles of status 'Approved' or 'Autoload'"
-print ""
+print ''
+print 'Germline Transmission Checks'
+print '  only includes alleles of status 'Approved' or 'Autoload''
+print ''
 
-print ""
-print "transmission status is germline or chimeric and transmission reference does not exist"
-print ""
+print ''
+print 'transmission status is germline or chimeric and transmission reference does not exist'
+print ''
 
-select acc.accID, substring(a.symbol,1,35) as "symbol", 
-substring(t.term,1,25) as "trans status", 
-substring(t2.term,1,25) as "allele type"
+select acc.accID, substring(a.symbol,1,35) as 'symbol', 
+substring(t.term,1,25) as 'trans status', 
+substring(t2.term,1,25) as 'allele type'
 from ALL_Allele a, VOC_Term t, VOC_Term t2, ACC_Accession acc
 where a._Allele_Status_key in (847114,3983021)
 and a._Transmission_key = t._Term_key
@@ -27,13 +27,13 @@ and r._RefAssocType_key = 1023)
 order by a.symbol
 go
 
-print ""
-print "transmission status is not germline or chimeric and transmission reference does exist"
-print ""
+print ''
+print 'transmission status is not germline or chimeric and transmission reference does exist'
+print ''
 
-select acc.accID, substring(a.symbol,1,35) as "symbol", 
-substring(t.term,1,25) as "trans status", 
-substring(t2.term,1,25) as "allele type"
+select acc.accID, substring(a.symbol,1,35) as 'symbol', 
+substring(t.term,1,25) as 'trans status', 
+substring(t2.term,1,25) as 'allele type'
 from ALL_Allele a, VOC_Term t, VOC_Term t2, ACC_Accession acc
 where a._Allele_Status_key in (847114,3983021)
 and a._Transmission_key = t._Term_key
@@ -50,13 +50,13 @@ and r._RefAssocType_key = 1023)
 order by a.symbol
 go
 
-print ""
-print "there is no mutant cell line and the transmission status != not applicable"
-print ""
+print ''
+print 'there is no mutant cell line and the transmission status != not applicable'
+print ''
 
-select acc.accID, substring(a.symbol,1,35) as "symbol", 
-substring(t.term,1,25) as "trans status", 
-substring(t2.term,1,25) as "allele type"
+select acc.accID, substring(a.symbol,1,35) as 'symbol', 
+substring(t.term,1,25) as 'trans status', 
+substring(t2.term,1,25) as 'allele type'
 from ALL_Allele a, VOC_Term t, VOC_Term t2, ACC_Accession acc
 where a._Allele_Status_key in (847114,3983021)
 and a._Transmission_key = t._Term_key
@@ -71,13 +71,13 @@ where a._Allele_key = c._Allele_key)
 order by a.symbol
 go
 
-print ""
-print "there is a mutant cell line and the transmission status = not applicable"
-print ""
+print ''
+print 'there is a mutant cell line and the transmission status = not applicable'
+print ''
 
-select acc.accID, substring(a.symbol,1,35) as "symbol", 
-substring(t.term,1,25) as "trans status", 
-substring(t2.term,1,25) as "allele type"
+select acc.accID, substring(a.symbol,1,35) as 'symbol', 
+substring(t.term,1,25) as 'trans status', 
+substring(t2.term,1,25) as 'allele type'
 from ALL_Allele a, VOC_Term t, VOC_Term t2, ACC_Accession acc
 where a._Allele_Status_key in (847114,3983021)
 and a._Transmission_key = t._Term_key

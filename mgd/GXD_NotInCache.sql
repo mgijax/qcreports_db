@@ -12,20 +12,20 @@ go
 set nocount off
 go
 
-print ""
-print "GXD Assays entirely missing from GXD Expression Cache Table"
-print "(and therefore not visible in Web interface)"
-print ""
+print ''
+print 'GXD Assays entirely missing from GXD Expression Cache Table'
+print '(and therefore not visible in Web interface)'
+print ''
 
 select mgiID, jnumID, assayType
 from #missing m, GXD_Assay_View v
 where m._Assay_key = v._Assay_key
 go
 
-print ""
-print "Gel GXD Assays entirely missing from GXD Expression Cache Table"
-print "(due to missing Gel Lane Structures)"
-print ""
+print ''
+print 'Gel GXD Assays entirely missing from GXD Expression Cache Table'
+print '(due to missing Gel Lane Structures)'
+print ''
 
 select a.mgiID, a.jnumID, a.assayType
 from #missing m, GXD_Assay_View a
@@ -35,10 +35,10 @@ and not exists (select gl.* from GXD_GelLaneStructure_View gl
 where a._Assay_key = gl._Assay_key)
 go
 
-print ""
-print "InSitu GXD Assays entirely missing from GXD Expression Cache Table"
-print "(due to missing Specimen Results)"
-print ""
+print ''
+print 'InSitu GXD Assays entirely missing from GXD Expression Cache Table'
+print '(due to missing Specimen Results)'
+print ''
 
 select a.mgiID, a.jnumID, a.assayType
 from #missing m, GXD_Assay_View a
@@ -49,10 +49,10 @@ where a._Assay_key = s._Assay_key
 and s._Specimen_key = r._Specimen_key)
 go
 
-print ""
-print "InSitu GXD Assays entirely missing from GXD Expression Cache Table"
-print "(due to missing Specimen Results or Results Structures)"
-print ""
+print ''
+print 'InSitu GXD Assays entirely missing from GXD Expression Cache Table'
+print '(due to missing Specimen Results or Results Structures)'
+print ''
 
 select a.mgiID, a.jnumID, a.assayType
 from #missing m, GXD_Assay_View a
@@ -78,9 +78,9 @@ go
 set nocount off
 go
 
-print ""
-print "InSitu Results missing Structures"
-print ""
+print ''
+print 'InSitu Results missing Structures'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #imissingstructs r, GXD_Specimen s, GXD_Assay_View a
@@ -105,9 +105,9 @@ go
 set nocount off
 go
 
-print ""
-print "InSitu Specimens missing Results"
-print ""
+print ''
+print 'InSitu Specimens missing Results'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #imissingresults r, GXD_Specimen s, GXD_Assay_View a
@@ -131,9 +131,9 @@ go
 set nocount off
 go
 
-print ""
-print "Gel Results missing Structures"
-print ""
+print ''
+print 'Gel Results missing Structures'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
@@ -154,9 +154,9 @@ go
 set nocount off
 go
 
-print ""
-print "Gel Results missing Bands"
-print ""
+print ''
+print 'Gel Results missing Bands'
+print ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #gmissingbands r, GXD_GelLane s, GXD_Assay_View a

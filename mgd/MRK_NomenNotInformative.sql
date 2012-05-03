@@ -68,15 +68,15 @@ go
 set nocount off
 go
 
-print ""
-print "MGI Markers with Uninformative Nomenclature"
-print "where symbol is:"
-print "   a) GenBank Accession ID"
-print "   b) RIKEN symbol"
-print "   c) DNA segment"
-print "where symbol has acquired a Sequence Accession ID from EntrezGene"
-print "where symbol has no homology entry in MGI"
-print ""
+print ''
+print 'MGI Markers with Uninformative Nomenclature'
+print 'where symbol is:'
+print '   a) GenBank Accession ID'
+print '   b) RIKEN symbol'
+print '   c) DNA segment'
+print 'where symbol has acquired a Sequence Accession ID from EntrezGene'
+print 'where symbol has no homology entry in MGI'
+print ''
 
 select m.symbol, m.category
 from #sequencesFinal m

@@ -1,7 +1,7 @@
 
-print ""
-print "ACC Actual DB"
-print ""
+print ''
+print 'ACC Actual DB'
+print ''
 
 select a._LogicalDB_key, l.name, a._ActualDB_Key, a.name, a.url
 from ACC_ActualDB a, ACC_LogicalDB l

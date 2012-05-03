@@ -12,12 +12,12 @@ go
 set nocount off
 go
 
-print ""
-print "Mouse Symbols with nomenclature changes which contain Rat homologs with unofficial nomenclature"
-print "(meaning the Rat symbol has no EntrezGene ID)"
-print ""
+print ''
+print 'Mouse Symbols with nomenclature changes which contain Rat homologs with unofficial nomenclature'
+print '(meaning the Rat symbol has no EntrezGene ID)'
+print ''
 
-select distinct m.current_symbol as "New Mouse Symbol", m2.symbol as "Rat Symbol"
+select distinct m.current_symbol as 'New Mouse Symbol', m2.symbol as 'Rat Symbol'
 from #markers m, 
 MRK_Homology_Cache hm1, MRK_Homology_Cache hm2, MRK_Marker m2
 where m._Current_key = hm1._Marker_key

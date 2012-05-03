@@ -1,7 +1,7 @@
 
-print ""
-print "Hemizygous Genotype Check"
-print ""
+print ''
+print 'Hemizygous Genotype Check'
+print ''
 
 set nocount on
 go
@@ -24,15 +24,15 @@ go
 set nocount off
 go
 
-print ""
-print "specimens"
-print "genotypes that have 2 alleles and pair state = heterozygous or homozygous"
-print "mutated gene on X or Y"
-print "sex = male"
-print ""
+print ''
+print 'specimens'
+print 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
+print 'mutated gene on X or Y'
+print 'sex = male'
+print ''
 
-select distinct a1.accID as 'J number of assay', a2.accID as 'MGI ID of assay', 
-	substring(g.name, 1, 30) as 'name of allele1 of genotype'
+select distinct a1.accID as "J number of assay", a2.accID as "MGI ID of assay", 
+	substring(g.name, 1, 30) as "name of allele1 of genotype", a1.numericPart
 from #genotypes g, GXD_Assay a, GXD_Specimen s, ACC_Accession a1, ACC_Accession a2
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'
@@ -46,15 +46,15 @@ and a2._MGIType_key = 8
 order by a1.numericPart
 go
 
-print ""
-print "gels"
-print "genotypes that have 2 alleles and pair state = heterozygous or homozygous"
-print "mutated gene on X or Y"
-print "sex = male"
-print ""
+print ''
+print 'gels'
+print 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
+print 'mutated gene on X or Y'
+print 'sex = male'
+print ''
 
-select distinct a1.accID as 'J number of assay', a2.accID as 'MGI ID of assay', 
-	substring(g.name, 1, 30) as 'name of allele1 of genotype'
+select distinct a1.accID as "J number of assay", a2.accID as "MGI ID of assay", 
+	substring(g.name, 1, 30) as "name of allele1 of genotype", a1.numericPart
 from #genotypes g, GXD_Assay a, GXD_GelLane s, ACC_Accession a1, ACC_Accession a2
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'
@@ -66,5 +66,8 @@ and a1.prefixPart = 'J:'
 and s._Assay_key = a2._Object_key
 and a2._MGIType_key = 8
 order by a1.numericPart
+go
+
+drop table #genotypes
 go
 

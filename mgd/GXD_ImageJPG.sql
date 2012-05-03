@@ -47,29 +47,29 @@ create index idx1 on #final(_Refs_key)
 create index idx2 on #final(_Image_key)
 go
 
-print ""
-select count(distinct _Image_key) as "rows affected" from #final
+print ''
+select count(distinct _Image_key) as 'rows affected' from #final
 go
 
 set nocount off
 go
 
-print ""
-print "Displayed Image Panes annotated to >2 assays (if Immunohistochemistry), >1 assay for all others."
-print "Excludes J:80502"
-print ""
+print ''
+print 'Displayed Image Panes annotated to >2 assays (if Immunohistochemistry), >1 assay for all others.'
+print 'Excludes J:80502'
+print ''
 
 select distinct imageID = i.accID, refID = r.accID 
 from #final f, ACC_Accession i, ACC_Accession r  
 where f._Image_key = i._Object_key 
 and i._MGIType_key = 9 
 and i._LogicalDB_key = 1 
-and i.prefixPart = "MGI:" 
+and i.prefixPart = 'MGI:' 
 and i.preferred = 1
 and f._Refs_key = r._Object_key 
 and r._MGIType_key = 1 
 and r._LogicalDB_key = 1 
-and r.prefixPart = "J:" 
+and r.prefixPart = 'J:' 
 and r.preferred = 1
 order by imageID
 go

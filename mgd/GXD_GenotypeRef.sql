@@ -128,18 +128,18 @@ and not exists (select 1 from #sameStrain a where s.genoGXD = a.genoGXD and s._R
 and s._Refs_key = a._Object_key
 and a._MGIType_key = 1
 and a._LogicalDB_key = 1
-and a.prefixPart = "J:"
+and a.prefixPart = 'J:'
 go
 
 set nocount off
 go
 
-print ""
-print "References where GXD and Pheno differ in Genotype"
-print ""
+print ''
+print 'References where GXD and Pheno differ in Genotype'
+print ''
 
-select t.jnum, substring(t.gxdStrain, 1, 75) as "GXD Strain", 
-substring(t.apStrain, 1, 75) as "A&P Strain", a1.symbol, a2.symbol
+select t.jnum, substring(t.gxdStrain, 1, 75) as 'GXD Strain', 
+substring(t.apStrain, 1, 75) as 'A&P Strain', a1.symbol, a2.symbol
 from #toPrint1 t, GXD_AllelePair a, ALL_Allele a1, ALL_Allele a2
 where t.genoGXD = a._Genotype_key
 and a._Allele_key_1 = a1._Allele_key

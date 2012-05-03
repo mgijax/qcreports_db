@@ -1,6 +1,6 @@
-print ""
-print "Cell Lines"
-print ""
+print ''
+print 'Cell Lines'
+print ''
 
 select distinct term
 from VOC_Term where _Vocab_key = 18

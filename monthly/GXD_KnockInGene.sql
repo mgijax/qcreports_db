@@ -14,9 +14,9 @@ go
 set nocount off
 go
 
-print ""
-print "GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype"
-print ""
+print ''
+print 'GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype'
+print ''
 
 select a.accID as "Assay", b.accID as "J:", k.specimenLabel
 from #knockin k, ACC_Accession a, ACC_Accession b
@@ -25,6 +25,9 @@ and a._MGIType_key = 8
 and k._Refs_key = b._Object_key
 and b._MGIType_key = 1
 and b._LogicalDB_key = 1
-and b.prefixPart = "J:"
+and b.prefixPart = 'J:'
+go
+
+drop table #knockin
 go
 

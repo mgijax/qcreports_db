@@ -1,6 +1,6 @@
-print ""
-print "Orphan Genotypes (can be deleted)"
-print ""
+print ''
+print 'Orphan Genotypes (can be deleted)'
+print ''
 
 select a.accID, substring(s.strain, 1, 65) as strain
 from GXD_Genotype g, PRB_Strain s, ACC_Accession a

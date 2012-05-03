@@ -1,6 +1,6 @@
 print ''
 print 'Reference selected for GXD which have been not been used.'
-print 'Those that have also been statused as 'Never Used' are so noted.'
+print 'Those that have also been statused as ''Never Used'' are so noted.'
 print ''
 
 select r.jnumID, 

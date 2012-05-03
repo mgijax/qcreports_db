@@ -27,9 +27,9 @@ go
 set nocount off
 go
 
-print ""
-print "Ensembl, VEGA Gene Models, or NCBI Gene Model w/ > 1 Marker Association"
-print ""
+print ''
+print 'Ensembl, VEGA Gene Models, or NCBI Gene Model w/ > 1 Marker Association'
+print ''
 
 select s.accID, m.symbol, substring(s.provider,1,40) as provider
 from #dups s, MRK_Marker m

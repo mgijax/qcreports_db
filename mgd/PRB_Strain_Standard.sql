@@ -1,7 +1,7 @@
 
-print ""
-print "STOCK or 'semicolon' strains marked standard"
-print ""
+print ''
+print 'STOCK or 'semicolon' strains marked standard'
+print ''
 
 select s.strain
 from PRB_Strain s

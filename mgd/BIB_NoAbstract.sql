@@ -36,9 +36,9 @@ go
 set nocount off
 go
 
-print ""
-print "References w/ PubMed ID and No Abstract (where publication year >= 1975)"
-print ""
+print ''
+print 'References w/ PubMed ID and No Abstract (where publication year >= 1975)'
+print ''
 
 select distinct r.accID, c.jnum, substring(c.short_citation, 1, 50) as short_citation
 from #refs3 r, BIB_All_View c

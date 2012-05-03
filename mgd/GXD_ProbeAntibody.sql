@@ -11,11 +11,11 @@ go
 set nocount off
 go
 
-print ""
-print "GXD Assay Probe/Marker Pairs No Longer Found in Master Probe Table"
-print ""
+print ''
+print 'GXD Assay Probe/Marker Pairs No Longer Found in Master Probe Table'
+print ''
 
-select a.accID as "Assay", pb.name as "Probe", m.symbol as "Marker"
+select a.accID as 'Assay', pb.name as 'Probe', m.symbol as 'Marker'
 from #probe p, PRB_Probe pb, MRK_Marker m, ACC_Accession a
 where p._Probe_key = pb._Probe_key
 and p._Marker_key = m._Marker_key
@@ -39,11 +39,11 @@ go
 set nocount off
 go
 
-print ""
-print "GXD Assay Antibody/Marker Pairs No Longer Found in Master Antibody Table"
-print ""
+print ''
+print 'GXD Assay Antibody/Marker Pairs No Longer Found in Master Antibody Table'
+print ''
 
-select m.symbol as "Marker", substring(b.antibodyName,1,75) as "Antibody", a.accID as "Assay"
+select m.symbol as 'Marker', substring(b.antibodyName,1,75) as 'Antibody', a.accID as 'Assay'
 from #antibody p, GXD_Antibody b, MRK_Marker m, ACC_Accession a
 where p._Antibody_key = b._Antibody_key
 and p._Marker_key = m._Marker_key
@@ -70,18 +70,18 @@ go
 set nocount off
 go
 
-print ""
-print "GXD Assay Probes with no corresponding entry in the Probe Reference Table"
-print ""
+print ''
+print 'GXD Assay Probes with no corresponding entry in the Probe Reference Table'
+print ''
 
-select a.accID as "Assay", b.accID as "J Number", pb.name as "Probe"
+select a.accID as 'Assay', b.accID as 'J Number', pb.name as 'Probe'
 from #proberef p, ACC_Accession a, ACC_Accession b, PRB_Probe pb
 where p._Assay_key = a._Object_key
 and a._MGIType_key = 8
 and p._Refs_key = b._Object_key
 and b._MGIType_key = 1
 and b._LogicalDB_key = 1 
-and b.prefixPart = "J:"
+and b.prefixPart = 'J:'
 and p._Probe_key = pb._Probe_key
 order by pb.name, a.accID
 go
@@ -117,19 +117,19 @@ go
 set nocount off
 go
 
-print ""
-print "Dummy Sequence Records Annotated to GXD Mouse Molecular Segments"
-print ""
+print ''
+print 'Dummy Sequence Records Annotated to GXD Mouse Molecular Segments'
+print ''
 
-select distinct ma.accID as "MGI ID", substring(p.name,1,30) as "Molecular Segment", 
-sa.accID as "Sequence", substring(l.name, 1, 25), u.login, d.annotation_date
+select distinct ma.accID as 'MGI ID', substring(p.name,1,30) as 'Molecular Segment', 
+sa.accID as 'Sequence', substring(l.name, 1, 25), u.login, d.annotation_date
 from #probedummy2 d, PRB_Probe p, GXD_ProbePrep g, ACC_Accession ma, ACC_Accession sa, ACC_LogicalDB l, MGI_User u
 where d._Probe_key = p._Probe_key
 and d._Probe_key = g._Probe_key
 and d._Probe_key = ma._Object_key
 and ma._MGIType_key = 3
 and ma._LogicalDB_key = 1
-and ma.prefixPart = "MGI:"
+and ma.prefixPart = 'MGI:'
 and ma.preferred = 1
 and d._Sequence_key = sa._Object_key
 and sa._MGIType_key = 19
@@ -181,12 +181,12 @@ go
 set nocount off
 go
 
-print ""
-print "Deleted Sequences with GXD Associations"
-print ""
-print "A row in this report represents a Sequence that is designated as Deleted"
-print "by the Sequence provider and contains associations to a GXD Molecular Segment."
-print ""
+print ''
+print 'Deleted Sequences with GXD Associations'
+print ''
+print 'A row in this report represents a Sequence that is designated as Deleted'
+print 'by the Sequence provider and contains associations to a GXD Molecular Segment.'
+print ''
 
 select seqID, mgiID, name from #pdeleted
 go
@@ -197,7 +197,7 @@ select distinct pm._Probe_key, pm._Marker_key
 into #encodes
 from PRB_Marker pm, GXD_ProbePrep g
 where g._Probe_key = pm._Probe_key
-and pm.relationship = "E"
+and pm.relationship = 'E'
 go
 
 select * into #multencodes from #encodes group by _Probe_key having count(*) > 1
@@ -209,9 +209,9 @@ go
 
 set nocount off
 
-print ""
-print "Probe w/ more than one encodes relationship"
-print ""
+print ''
+print 'Probe w/ more than one encodes relationship'
+print ''
 
 select distinct a.accid, p.name, m.symbol
 from #multencodes e, PRB_Probe p, MRK_Marker m, ACC_Accession a
@@ -219,15 +219,15 @@ where e._Probe_key = p._Probe_key
 and e._Probe_key = a._Object_key
 and a._MGIType_key = 3
 and a._Logicaldb_key = 1
-and a.prefixPart = "MGI:"
+and a.prefixPart = 'MGI:'
 and a.preferred = 1
 and e._Marker_key = m._Marker_key
 order by a.accid
 go
 
-print ""
-print "Antigens with source information but both tissue and cell line are Not specified"
-print ""
+print ''
+print 'Antigens with source information but both tissue and cell line are Not specified'
+print ''
 
 set nocount on
 
@@ -247,7 +247,7 @@ from GXD_Antigen_View
 where _Organism_key = 1
 and _CellLine_key = 316335 
 and _Tissue_key = -1 
-and (age != "Not Specified" 
+and (age != 'Not Specified' 
 or _Strain_key != -1 
 or _Gender_key != 315167)
 go
@@ -258,9 +258,9 @@ select mgiID, antigenName
 from #antigens
 go
 
-print ""
-print "Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified"
-print ""
+print ''
+print 'Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified'
+print ''
 
 set nocount on
 
@@ -273,7 +273,7 @@ and s._CellLine_key = 316335
 and s._Tissue_key = -1 
 and s._Source_key = p._Source_key 
 and p._Probe_key = m._Probe_key 
-and (s.age != "Not Specified" 
+and (s.age != 'Not Specified' 
 or s._Strain_key != -1 
 or s._Gender_key != 315167)
 go

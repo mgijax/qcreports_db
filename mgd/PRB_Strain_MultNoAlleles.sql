@@ -20,11 +20,11 @@ go
 set nocount off
 go
 
-print ""
-print "Strains ending with '>'"
-print "with Strain Attribute of mutant stock, mutant strain or targeted mutation "
-print "with Multiple Markers and at least one Marker has no Alleles"
-print ""
+print ''
+print 'Strains ending with '>''
+print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
+print 'with Multiple Markers and at least one Marker has no Alleles'
+print ''
 
 select distinct strain, symbol
 from #multiples

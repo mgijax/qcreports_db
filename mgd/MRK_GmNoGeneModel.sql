@@ -14,7 +14,7 @@ and c._LogicalDB_key in (59,60,85))
 and m._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_Key = 1
-and a.prefixPart = "MGI:"
+and a.prefixPart = 'MGI:'
 and a.preferred = 1
 go
 
@@ -30,14 +30,14 @@ go
 set nocount off
 go
 
-print ""
-print "Gm Markers without Gene Model Associations"
-print ""
-print "   where name begins 'predicted gene'"
-print "   and status = 'official' or 'interim'"
-print ""
+print ''
+print 'Gm Markers without Gene Model Associations'
+print ''
+print '   where name begins 'predicted gene''
+print '   and status = 'official' or 'interim''
+print ''
 
-select m.accID, m.symbol, h.symbol as "old symbol", h.name
+select m.accID, m.symbol, h.symbol as 'old symbol', h.name
 from #markers m, #history h
 where m._Marker_key = h._Marker_key
 union

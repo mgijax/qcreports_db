@@ -21,7 +21,7 @@ into #markers2
 from #markers1 m, ACC_Accession a
 where m._Marker_key = a._Object_key
 and a._MGIType_key = 2
-and a.prefixPart = "MGI:"
+and a.prefixPart = 'MGI:'
 and a._LogicalDB_key = 1
 and a.preferred = 1
 go
@@ -48,30 +48,30 @@ where hm1._Class_key = hm3._Class_key
 and hm3._Organism_key not in (1,2))
 go
 
-print ""
-print "Mouse Genes that have Rat Homologs but no GO associations"
-print ""
+print ''
+print 'Mouse Genes that have Rat Homologs but no GO associations'
+print ''
 
-select "Number of unique MGI Gene IDs:  ", count(distinct accID) from #markersA
+select 'Number of unique MGI Gene IDs:  ', count(distinct accID) from #markersA
 union
-select "Number of total rows:  ", count(*) from #markersA
+select 'Number of total rows:  ', count(*) from #markersA
 go
 
-print ""
+print ''
 
 select * from #markersA order by symbol
 go
 
-print ""
-print "Mouse Genes that have Human Homologs Only but no GO associations"
-print ""
+print ''
+print 'Mouse Genes that have Human Homologs Only but no GO associations'
+print ''
 
-select "Number of unique MGI Gene IDs:  ", count(distinct accID) from #markersB
+select 'Number of unique MGI Gene IDs:  ', count(distinct accID) from #markersB
 union
-select "Number of total rows:  ", count(*) from #markersB
+select 'Number of total rows:  ', count(*) from #markersB
 go
 
-print ""
+print ''
 
 select * from #markersB order by symbol
 go

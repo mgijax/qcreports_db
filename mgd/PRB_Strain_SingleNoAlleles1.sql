@@ -2,7 +2,7 @@ set nocount on
 go
 
 select distinct s._Strain_key, substring(s.strain,1,85) as strain, 
-substring(strain, charindex("-", strain) + 1, char_length(s.strain)) as alleleSymbol,
+substring(strain, charindex('-', strain) + 1, char_length(s.strain)) as alleleSymbol,
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
 from PRB_Strain s, PRB_Strain_Attribute_View st, PRB_Strain_Marker_View sm
@@ -22,12 +22,12 @@ go
 set nocount off
 go
 
-print ""
-print "Strains ending with '>' "
-print "with Strain Attribute of mutant stock, mutant strain or targeted mutation "
-print "with at most one Marker and Marker has no Allele"
-print "and Allele symbol is in MGD"
-print ""
+print ''
+print 'Strains ending with '>' '
+print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
+print 'with at most one Marker and Marker has no Allele'
+print 'and Allele symbol is in MGD'
+print ''
 
 select s.strain, s.symbol, substring(s.alleleSymbol, 1, 35) as alleleSymbol
 from #singles s, ALL_Allele a

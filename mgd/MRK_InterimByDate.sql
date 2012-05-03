@@ -53,7 +53,7 @@ into #results
 from #homology h, radar..DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606
 union
-select h.*, hstatus = "?"
+select h.*, hstatus = '?'
 from #homology h
 where not exists (select 1 from radar..DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606)
@@ -65,12 +65,12 @@ go
 set nocount off
 go
 
-print ""
-print "Interim Markers"
-print "(sorted by human symbol status (if applicable) and date)"
-print ""
+print ''
+print 'Interim Markers'
+print '(sorted by human symbol status (if applicable) and date)'
+print ''
 
-select msymbol as "Mouse Symbol", hstatus as "Status", hsymbol as "Human Symbol", name as "Mouse Name", creation_date
+select msymbol as 'Mouse Symbol', hstatus as 'Status', hsymbol as 'Human Symbol', name as 'Mouse Name', creation_date
 from #results
 order by hstatus desc, creation_date
 go

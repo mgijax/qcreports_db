@@ -63,15 +63,15 @@ go
 set nocount off
 go
 
-print ""
-print "    Deleted Sequences with MGI Associations"
-print ""
-print "A row in this report represents a Sequence that is designated as Deleted"
-print "by the Sequence provider and contains associations to Marker and/or Molecular Segment."
-print ""
-print "Includes: all marker statuses (interim, official, withdrawn)"
-print "Includes: all marker types (gene, DNA segment, etc.)"
-print ""
+print ''
+print '    Deleted Sequences with MGI Associations'
+print ''
+print 'A row in this report represents a Sequence that is designated as Deleted'
+print 'by the Sequence provider and contains associations to Marker and/or Molecular Segment.'
+print ''
+print 'Includes: all marker statuses (interim, official, withdrawn)'
+print 'Includes: all marker types (gene, DNA segment, etc.)'
+print ''
 
 select seqID, mgiID, name from #mdeleted
 union

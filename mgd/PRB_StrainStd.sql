@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select s._Strain_key, a.accID as mgiID, dataExists = "y"
+select s._Strain_key, a.accID as mgiID, dataExists = 'y'
 into #strains
 from PRB_Strain s, ACC_Accession a
 where s.standard = 1
@@ -25,7 +25,7 @@ or exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 go
 
 insert into #strains
-select s._Strain_key, a.accID as mgiID, dataExists = "n"
+select s._Strain_key, a.accID as mgiID, dataExists = 'n'
 from PRB_Strain s, ACC_Accession a
 where s.standard = 1
 and s._Strain_key = a._Object_key
@@ -50,12 +50,12 @@ go
 set nocount off
 go
 
-print ""
-print "Standard Strains"
-print ""
+print ''
+print 'Standard Strains'
+print ''
 
-select n.dataExists as "data attached", substring(l.name,1,20) as "external db", 
-a.accID as "external id", n.mgiID as "MGI id", substring(s.strain,1,80) as "strain"
+select n.dataExists as 'data attached', substring(l.name,1,20) as 'external db', 
+a.accID as 'external id', n.mgiID as 'MGI id', substring(s.strain,1,80) as 'strain'
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
@@ -64,8 +64,8 @@ and a._MGIType_key = 10
 and a._LogicalDB_key != 1
 and a._LogicalDB_key = l._LogicalDB_key
 union
-select n.dataExists as "data attached", null, null, n.mgiID as "MGI id", 
-substring(s.strain,1,80) as "strain"
+select n.dataExists as 'data attached', null, null, n.mgiID as 'MGI id', 
+substring(s.strain,1,80) as 'strain'
 from PRB_Strain s, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
