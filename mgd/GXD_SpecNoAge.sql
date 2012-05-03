@@ -109,3 +109,9 @@ where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
+
+drop table #spec1
+drop table #spec2
+drop table #temp1
+drop table #temp2
+go

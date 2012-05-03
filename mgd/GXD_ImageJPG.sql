@@ -48,7 +48,7 @@ create index idx2 on #final(_Image_key)
 go
 
 print ''
-select count(distinct _Image_key) as 'rows affected' from #final
+select count(distinct _Image_key) as "rows affected" from #final
 go
 
 set nocount off
@@ -74,3 +74,6 @@ and r.preferred = 1
 order by imageID
 go
 
+drop table #assays 
+drop table #final
+go

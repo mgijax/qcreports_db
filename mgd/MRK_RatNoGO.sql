@@ -76,3 +76,9 @@ print ''
 select * from #markersB order by symbol
 go
 
+drop table #markers1
+drop table #markers2
+drop table #markersA
+drop table #markersB
+go
+

@@ -12,7 +12,7 @@ set nocount off
 go
 
 print ''
-print 'MCL's that are associated with more than one Allele'
+print 'MCL''s that are associated with more than one Allele'
 print ''
 
 select substring(c.cellLine,1,50) as cellLine, 
@@ -24,3 +24,5 @@ and m._MutantCellLine_key = c._CellLine_key
 order by aa.modification_date desc, c.cellLine
 go
 
+drop table #mutant
+go

@@ -15,7 +15,7 @@ print ''
 print 'GXD Assay Probe/Marker Pairs No Longer Found in Master Probe Table'
 print ''
 
-select a.accID as 'Assay', pb.name as 'Probe', m.symbol as 'Marker'
+select a.accID as "Assay", pb.name as "Probe", m.symbol as "Marker"
 from #probe p, PRB_Probe pb, MRK_Marker m, ACC_Accession a
 where p._Probe_key = pb._Probe_key
 and p._Marker_key = m._Marker_key
@@ -43,7 +43,7 @@ print ''
 print 'GXD Assay Antibody/Marker Pairs No Longer Found in Master Antibody Table'
 print ''
 
-select m.symbol as 'Marker', substring(b.antibodyName,1,75) as 'Antibody', a.accID as 'Assay'
+select m.symbol as "Marker", substring(b.antibodyName,1,75) as "Antibody", a.accID as "Assay"
 from #antibody p, GXD_Antibody b, MRK_Marker m, ACC_Accession a
 where p._Antibody_key = b._Antibody_key
 and p._Marker_key = m._Marker_key
@@ -74,7 +74,7 @@ print ''
 print 'GXD Assay Probes with no corresponding entry in the Probe Reference Table'
 print ''
 
-select a.accID as 'Assay', b.accID as 'J Number', pb.name as 'Probe'
+select a.accID as "Assay", b.accID as "J Number", pb.name as "Probe"
 from #proberef p, ACC_Accession a, ACC_Accession b, PRB_Probe pb
 where p._Assay_key = a._Object_key
 and a._MGIType_key = 8
@@ -121,8 +121,8 @@ print ''
 print 'Dummy Sequence Records Annotated to GXD Mouse Molecular Segments'
 print ''
 
-select distinct ma.accID as 'MGI ID', substring(p.name,1,30) as 'Molecular Segment', 
-sa.accID as 'Sequence', substring(l.name, 1, 25), u.login, d.annotation_date
+select distinct ma.accID as "MGI ID", substring(p.name,1,30) as "Molecular Segment", 
+sa.accID as "Sequence", substring(l.name, 1, 25), u.login, d.annotation_date
 from #probedummy2 d, PRB_Probe p, GXD_ProbePrep g, ACC_Accession ma, ACC_Accession sa, ACC_LogicalDB l, MGI_User u
 where d._Probe_key = p._Probe_key
 and d._Probe_key = g._Probe_key
@@ -295,3 +295,17 @@ set nocount off
 select mgiID, cDNAname
 from #probes
 go
+
+drop table #probe
+drop table #antibody
+drop table #proberef
+drop table #probedummy
+drop table #probedummy2
+drop table #deleted1
+drop table #deleted2
+drop table #pdeleted
+drop table #multencodes
+drop table #antigens 
+drop table #probes 
+go
+

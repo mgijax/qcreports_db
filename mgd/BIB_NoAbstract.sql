@@ -46,3 +46,8 @@ where r._Refs_key = c._Refs_key
 order by c.year, c._primary
 go
  
+drop table #refs1
+drop table #refs2
+drop table #refs3
+go
+

@@ -69,3 +69,8 @@ where ma._Object_key = m._Marker_key
 order by ma.egID, m.symbol
 go
 
+drop table #markers1
+drop table #markers
+drop table #final
+go
+

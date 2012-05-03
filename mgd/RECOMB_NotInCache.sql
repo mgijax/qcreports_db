@@ -106,3 +106,8 @@ where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
 go
 
+drop table #missing
+drop table #imissingstructs
+drop table #imissingresults
+go
+

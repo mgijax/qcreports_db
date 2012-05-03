@@ -31,3 +31,7 @@ from #split2 s
 order by seqID
 go
 
+drop table #split1
+drop table #split2
+go
+

@@ -35,7 +35,7 @@ print ''
 print 'Thumbnails with JPGs'
 print ''
 
-select distinct c.accID as 'MGI ID'
+select distinct c.accID as "MGI ID"
 from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158
@@ -48,5 +48,8 @@ and c._MGIType_key = 9
 and c._LogicalDB_key = 1
 and c.prefixPart = 'MGI:'
 order by accID
+go
+
+drop table #assays 
 go
 

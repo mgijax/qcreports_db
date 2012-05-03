@@ -78,3 +78,9 @@ union
 select seqID, mgiID, name from #pdeleted
 go
 
+drop table #deleted1
+drop table #deleted2
+drop table #mdeleted
+drop table #pdeleted
+go
+

@@ -165,3 +165,9 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
+drop table #missing
+drop table #imissingstructs
+drop table #imissingresults
+drop table #gmissingstructs
+drop table #gmissingbands
+go

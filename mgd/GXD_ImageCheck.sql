@@ -108,7 +108,7 @@ print 'Images with JPGs whose Thumbnails have no JPGs'
 print '(this only includes GXD assays and exclucdes recombinase assays)'
 print ''
 
-select distinct c.accID as 'MGI ID'
+select distinct c.accID as "MGI ID"
 from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158
@@ -128,7 +128,7 @@ print 'Images with JPGs whose Thumbnails have JPGs with incorrect X dimension (n
 print '(this only includes GXD assays and excludes recombinase assays)'
 print ''
 
-select distinct c.accID as 'MGI ID'
+select distinct c.accID as "MGI ID"
 from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
 where a._MGIType_key = 8 
 and a._ImageType_key = 1072158
@@ -159,3 +159,6 @@ and mn._MGIType_key = 9
 and mn._NoteType_key = 1023)
 go
 
+drop table #assays 
+drop table #a
+go

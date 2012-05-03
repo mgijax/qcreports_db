@@ -72,3 +72,6 @@ and b.prefixPart = 'J:'
 order by b.numericPart
 go
 
+drop table #excluded
+go
+

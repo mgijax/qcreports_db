@@ -32,3 +32,6 @@ where _Allele_key is null
 order by strain
 go
 
+drop table #strains
+drop table #multiples
+go

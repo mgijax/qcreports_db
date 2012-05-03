@@ -37,7 +37,7 @@ print '   where name begins 'predicted gene''
 print '   and status = 'official' or 'interim''
 print ''
 
-select m.accID, m.symbol, h.symbol as 'old symbol', h.name
+select m.accID, m.symbol, h.symbol as "old symbol", h.name
 from #markers m, #history h
 where m._Marker_key = h._Marker_key
 union
@@ -47,3 +47,6 @@ where not exists (select 1 from #history h where m._Marker_key = h._Marker_key)
 order by m.symbol
 go
 
+drop table #markers
+drop table #history
+go

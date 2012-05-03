@@ -179,3 +179,20 @@ where f._Specimen_key = m._Specimen_key
 and f.jnumID != 'J:80502'
 order by mgiID, jnumID
 go
+
+drop table #temp1
+drop table #temp2
+drop table #temp3
+drop table #temp4
+drop table #repro
+drop table #child
+drop table #reproF
+drop table #fChild
+drop table #allFStruct
+drop table #fSpecimens
+drop table #reproM
+drop table #mChild
+drop table #allMStruct
+drop table #mSpecimens
+go
+

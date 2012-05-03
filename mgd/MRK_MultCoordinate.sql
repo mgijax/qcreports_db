@@ -36,3 +36,7 @@ from #dups s, MRK_Marker m
 where s._Marker_key = m._Marker_key
 order by s.provider, m.symbol
 go
+
+drop table #coord
+drop table #dups
+go

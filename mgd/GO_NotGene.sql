@@ -51,3 +51,8 @@ print ''
 select * from #toPrint order by name
 go
 
+drop table #nongene
+drop table #nongeneout
+drop table #toPrint
+go
+

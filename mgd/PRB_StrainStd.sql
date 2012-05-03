@@ -54,8 +54,8 @@ print ''
 print 'Standard Strains'
 print ''
 
-select n.dataExists as 'data attached', substring(l.name,1,20) as 'external db', 
-a.accID as 'external id', n.mgiID as 'MGI id', substring(s.strain,1,80) as 'strain'
+select n.dataExists as "data attached", substring(l.name,1,20) as "external db", 
+a.accID as "external id", n.mgiID as "MGI id", substring(s.strain,1,80) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
@@ -64,8 +64,8 @@ and a._MGIType_key = 10
 and a._LogicalDB_key != 1
 and a._LogicalDB_key = l._LogicalDB_key
 union
-select n.dataExists as 'data attached', null, null, n.mgiID as 'MGI id', 
-substring(s.strain,1,80) as 'strain'
+select n.dataExists as "data attached", null, null, n.mgiID as "MGI id", 
+substring(s.strain,1,80) as "strain"
 from PRB_Strain s, #strains n
 where s.standard = 1
 and s._Strain_key = n._Strain_key
@@ -74,5 +74,8 @@ where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1)
 order by s.strain
+go
+
+drop table #strains
 go
 

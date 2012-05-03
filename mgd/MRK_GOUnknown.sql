@@ -134,3 +134,8 @@ go
 select * from #temp3 order by tag, symbol
 go
 
+drop table #temp1
+drop table #temp2
+drop table #temp3
+go
+

@@ -28,3 +28,6 @@ and s.alleleSymbol = a.symbol)
 order by s.strain
 go
 
+drop table #strains
+go
+

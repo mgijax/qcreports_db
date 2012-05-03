@@ -23,7 +23,7 @@ print ''
 print 'Nomenclature In Progress Symbols'
 print ''
 
-select t.symbol, t.chromosome, t.login, jnumID = a.accID
+select t.symbol, t.chromosome, t.login, a.accID as jnumID
 from #temp1 t, ACC_Accession a
 where t._Refs_key = a._Object_key
 and a._MGIType_key = 1
@@ -32,3 +32,7 @@ and a.prefixPart = 'J:'
 and a.preferred = 1
 order by t.login, t.symbol
 go
+
+drop table #temp1
+go
+

@@ -70,8 +70,18 @@ print 'Interim Markers'
 print '(sorted by human symbol status (if applicable) and date)'
 print ''
 
-select msymbol as 'Mouse Symbol', hstatus as 'Status', hsymbol as 'Human Symbol', name as 'Mouse Name', creation_date
+select msymbol as "Mouse Symbol", 
+       hstatus as "Status", 
+       hsymbol as "Human Symbol", 
+       name as "Mouse Name", 
+       creation_date
 from #results
 order by hstatus desc, creation_date
+go
+
+drop table #mutants
+drop table #marker
+drop table #homology
+drop table #results
 go
 

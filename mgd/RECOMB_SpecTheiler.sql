@@ -142,3 +142,18 @@ from #fSpecimens f, #mSpecimens m
 where f._Specimen_key = m._Specimen_key
 order by mgiID, jnumID
 go
+
+drop table #temp1
+drop table #temp2
+drop table #repro
+drop table #child
+drop table #reproF
+drop table #fChild
+drop table #allFStruct
+drop table #fSpecimens
+drop table #reproM
+drop table #mChild
+drop table #allMStruct
+drop table #mSpecimens
+go
+

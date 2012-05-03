@@ -31,9 +31,9 @@ print 'mutated gene on X or Y'
 print 'sex = male'
 print ''
 
-select distinct a1.accID as 'J number of assay', 
-a2.accID as 'MGI ID of assay', 
-substring(g.name, 1, 30) as 'name of allele1 of genotype'
+select distinct a1.accID as "J number of assay", 
+a2.accID as "MGI ID of assay", 
+substring(g.name, 1, 30) as "name of allele1 of genotype"
 from #genotypes g, GXD_Assay a, GXD_Specimen s, ACC_Accession a1, ACC_Accession a2
 where g._Genotype_key = s._Genotype_key
 and s.sex = 'Male'
@@ -45,5 +45,8 @@ and a1.prefixPart = 'J:'
 and s._Assay_key = a2._Object_key
 and a2._MGIType_key = 8
 order by a1.numericPart
+go
+
+drop table #genotypes
 go
 

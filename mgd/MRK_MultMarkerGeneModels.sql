@@ -37,4 +37,7 @@ where s._Marker_key = m._Marker_key
 order by s.provider, s.accID
 go
 
+drop table #coord
+drop table #dups
+go
 
