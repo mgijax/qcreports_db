@@ -125,8 +125,12 @@ print ''
 print 'Dummy Sequence Records Annotated to GXD Mouse Molecular Segments'
 print ''
 
-select distinct ma.accID as "MGI ID", substring(p.name,1,30) as "Molecular Segment", 
-sa.accID as "Sequence", substring(l.name, 1, 25), u.login, d.annotation_date
+select distinct ma.accID as "MGI ID", 
+       p.name as "Molecular Segment", 
+       sa.accID as "Sequence", 
+       l.name,
+       u.login, 
+       d.annotation_date
 from #probedummy2 d, PRB_Probe p, GXD_ProbePrep g, ACC_Accession ma, ACC_Accession sa, ACC_LogicalDB l, MGI_User u
 where d._Probe_key = p._Probe_key
 and d._Probe_key = g._Probe_key
@@ -319,10 +323,11 @@ drop table #deleted2
 go
 drop table #pdeleted
 go
-drop table #multencodes
+drop table #encodes
+go
+drop table #multencodes from #encodes group by _Probe_key having count(*) > 1
 go
 drop table #antigens 
 go
 drop table #probes 
 go
-
