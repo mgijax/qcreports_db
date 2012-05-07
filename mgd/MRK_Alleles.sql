@@ -7,7 +7,9 @@ print ''
 select m.symbol as "Marker", a.symbol as "Allele"
 from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
+and m._Organism_key = 1
 and a.symbol != '+'
+and m.symbol not in ('a', 'A')
 and a.symbol not like '%' || m.symbol || '%'
 go
 
@@ -16,19 +18,13 @@ go
 
 /* duplicate alleles by symbol */
 select symbol
-into #duplicates1
+into #duplicates
 from ALL_Allele
 where symbol != '+'
 group by symbol having count(*) > 1
 go
 
-create index dups_idx1 on #duplicates1(symbol)
-go
-
-select a._Allele_key, a.symbol
-into #duplicates
-from ALL_Allele a, #duplicates1 d
-where d.symbol = a.symbol
+create index dups_idx1 on #duplicates(symbol)
 go
 
 set nocount off
@@ -40,7 +36,8 @@ print ''
 
 select a.symbol, a.markerSymbol
 from #duplicates d, ALL_Allele_View a
-where d._Allele_key = a._Allele_key
+where d.symbol = a.symbol
+and a.symbol not in ('a', 'A')
 order by creation_date desc
 go
 
@@ -64,8 +61,6 @@ go
 
 commit;
 
-drop table duplicates1
-go
 drop table duplicates
 go
 

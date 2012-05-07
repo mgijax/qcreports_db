@@ -210,15 +210,9 @@ where g._Probe_key = pm._Probe_key
 and pm.relationship = 'E'
 go
 
-select _Probe_key into #probeone from #encodes group by _Probe_key having count(*) > 1
-go
-create index probeone_idx1 on #probeone(_Probe_key)
-go
-select e.* into #multencodes from #encodes e, #probeone p where p._Probe_key = e._Probe_key
+select _Probe_key into #multencodes from #encodes group by _Probe_key having count(*) > 1
 go
 create index multencodes_idx1 on #multencodes(_Probe_key)
-go
-create index multencodes_idx2 on #multencodes(_Marker_key)
 go
 
 set nocount off
@@ -228,14 +222,15 @@ print 'Probe w/ more than one encodes relationship'
 print ''
 
 select distinct a.accid, p.name, m.symbol
-from #multencodes e, PRB_Probe p, MRK_Marker m, ACC_Accession a
+from #multencodes e, #encodes ee, PRB_Probe p, MRK_Marker m, ACC_Accession a
 where e._Probe_key = p._Probe_key
 and e._Probe_key = a._Object_key
 and a._MGIType_key = 3
 and a._Logicaldb_key = 1
 and a.prefixPart = 'MGI:'
 and a.preferred = 1
-and e._Marker_key = m._Marker_key
+and e._Probe_key = ee._Probe_key
+and ee._Marker_key = m._Marker_key
 order by a.accid
 go
 
@@ -327,8 +322,6 @@ go
 drop table #pdeleted
 go
 drop table #encodes
-go
-drop table #probeone
 go
 drop table #multencodes
 go
