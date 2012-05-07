@@ -210,9 +210,12 @@ where g._Probe_key = pm._Probe_key
 and pm.relationship = 'E'
 go
 
-select * into #multencodes from #encodes group by _Probe_key having count(*) > 1
+select _Probe_key into #probeone from #encodes group by _Probe_key having count(*) > 1
 go
-
+create index probeone_idx1 on #probeone(_Probe_key)
+go
+select e.* into #multencodes from #encodes e, #probeone p where p._Probe_key = e._Probe_key
+go
 create index multencodes_idx1 on #multencodes(_Probe_key)
 go
 create index multencodes_idx2 on #multencodes(_Marker_key)
@@ -325,7 +328,9 @@ drop table #pdeleted
 go
 drop table #encodes
 go
-drop table #multencodes from #encodes group by _Probe_key having count(*) > 1
+drop table #probeone
+go
+drop table #multencodes
 go
 drop table #antigens 
 go
