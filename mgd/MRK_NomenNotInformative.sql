@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select m._Marker_key, m.symbol, category = 'a'
+select m._Marker_key, m.symbol, 'a' as category
 into #markers
 from MRK_Marker m
 where m._Organism_key = 1
@@ -9,21 +9,21 @@ and m._Marker_Status_key in (1,3)
 and (m.symbol like '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
 or m.symbol like '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]')
 union
-select m._Marker_key, m.symbol, category = 'b'
+select m._Marker_key, m.symbol, 'b' as category
 from MRK_Marker m
 where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m.symbol like '%Rik'
 and m.name like 'RIKEN%'
 union
-select m._Marker_key, m.symbol, category = 'c'
+select m._Marker_key, m.symbol, 'c' as category
 from MRK_Marker m
 where m._Organism_key = 1
 and m._Marker_Status_key in (1,3)
 and m.name like 'DNA segment%'
 go
 
-create index idx1 on #markers(_Marker_key)
+create index markers_idx1 on #markers(_Marker_key)
 go
 
 select m.*
@@ -37,7 +37,7 @@ and a._Accession_key = r._Accession_key
 and r._Refs_key = 64047)
 go
 
-create index idx1 on #sequences1(_Marker_key)
+create index sequence1_idx1 on #sequences1(_Marker_key)
 go
 
 /* find pubmed ids by EntrezGene ID */
@@ -62,7 +62,7 @@ and not exists (select 1 from radar..DP_EntrezGene_PubMed c
 where a.accID = c.geneID))
 go
 
-create index idx1 on #sequencesFinal(_Marker_key)
+create index sequenceFinal_idx1 on #sequencesFinal(_Marker_key)
 go
 
 set nocount off
