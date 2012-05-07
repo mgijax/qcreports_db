@@ -11,7 +11,7 @@ and st.term in ('mutant stock', 'mutant strain', 'targeted mutation')
 and s._Strain_key = sm._Strain_key
 go
 
-select *
+select _Strain_key
 into #multiples
 from #strains
 group by _Strain_key having count(*) > 1
@@ -26,10 +26,11 @@ print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation
 print 'with Multiple Markers and at least one Marker has no Alleles'
 print ''
 
-select distinct strain, symbol
-from #multiples
-where _Allele_key is null
-order by strain
+select distinct s.strain, s.symbol
+from #multiples m, #strains s
+where m._Strain_key = s._Strain_key
+and s._Allele_key is null
+order by s.strain
 go
 
 drop table #strains

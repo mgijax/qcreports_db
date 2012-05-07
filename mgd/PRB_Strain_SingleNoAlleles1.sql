@@ -13,7 +13,7 @@ and st.term in ('mutant stock', 'mutant strain', 'targeted mutation')
 and s._Strain_key = sm._Strain_key
 go
 
-select *
+select _Strain_key
 into #singles
 from #strains
 group by _Strain_key having count(*) = 1
@@ -30,8 +30,9 @@ print 'and Allele symbol is in MGD'
 print ''
 
 select s.strain, s.symbol, substring(s.alleleSymbol, 1, 35) as alleleSymbol
-from #singles s, ALL_Allele a
-where s._Allele_key is null
+from #singles ss, #strains s, ALL_Allele a
+where ss._Strain_key = s._Strain_key
+and s._Allele_key is null
 and s._Marker_key = a._Marker_key
 and s.alleleSymbol = a.symbol
 order by s.strain

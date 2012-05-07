@@ -13,7 +13,7 @@ and st.term in ('mutant stock', 'mutant strain', 'targeted mutation')
 and s._Strain_key = sm._Strain_key
 go
 
-select *
+select _Strain_key
 into #singles
 from #strains
 group by _Strain_key having count(*) = 1
@@ -31,8 +31,9 @@ print ''
 
 select substring(l.name, 1, 20) as externalDB, a.accID, s.strain, s.symbol, 
 substring(s.alleleSymbol, 1, 35) as alleleSymbol
-from #singles s, ACC_Accession a, ACC_LogicalDB l
-where s._Allele_key is null
+from #singles ss, #strains s, ACC_Accession a, ACC_LogicalDB l
+where ss._Strain_key = s._Strain_key
+and s._Allele_key is null
 and s.private = 1
 and s._Strain_key = a._Object_key
 and a._MGIType_key = 10
@@ -53,8 +54,9 @@ print ''
 
 select substring(l.name, 1, 20) as externalDB, a.accID, s.strain, s.symbol, 
 substring(s.alleleSymbol, 1, 35) as alleleSymbol
-from #singles s, ACC_Accession a, ACC_LogicalDB l
-where s._Allele_key is null
+from #singles ss, #strains s, ACC_Accession a, ACC_LogicalDB l
+where ss._Strain_key = s._Strain_key
+and s._Allele_key is null
 and s.private = 0
 and s._Strain_key = a._Object_key
 and a._MGIType_key = 10
