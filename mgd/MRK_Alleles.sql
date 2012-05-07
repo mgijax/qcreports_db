@@ -6,13 +6,13 @@ select m.symbol as "Marker", a.symbol as "Allele"
 from ALL_Allele a, MRK_Marker m
 where a._Marker_key = m._Marker_key
 and a.symbol != '+'
-and a.symbol not like '%' + m.symbol + '%'
+and a.symbol not like '%' || m.symbol || '%'
 go
 
 set nocount on
 go
 
-select _Allele_key
+select _Allele_key, symbol
 into #duplicates
 from ALL_Allele
 where symbol != '+'

@@ -14,8 +14,9 @@ where s._GelControl_key = 1
 and (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 go
 
-create index idx1 on #spec1(_Assay_key)
-create index idx1 on #spec2(_Assay_key)
+create index spec1_idx1 on #spec1(_Assay_key)
+go
+create index spec2_idx1 on #spec2(_Assay_key)
 go
 
 set nocount off
