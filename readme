@@ -1,0 +1,34 @@
+
+ALL_CellLineProvider.sql
+	. delete
+
+BIB_NoAbstract.sql
+	. datalength
+
+PRB_StrainDup.sql
+	. group by
+
+GXD_ImageCheck.sql
+PRB_Strain_NoAlleles1.sql
+PRB_Strain_SingleNoAlleles1.sql
+PRB_Strain_SingleNoAlleles2.sql
+	. charindex
+
+GXD_SpecTheiler.sql
+RECOMB_SpecTheiler.sql
+	. re-write
+
+MRK_GOUnknown.sql
+PRB_StrainStd.sql
+	. 'unknown' data type
+
+MRK_Withdrawn.sql
+	. declare
+
+NOMEN_Broadcast.sql
+PRB_StrainByDate.sql
+	. dateadd
+
+PRB_StrainStd.sql
+	. long time
+
