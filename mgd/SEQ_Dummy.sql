@@ -9,10 +9,13 @@ and c._Sequence_key = s._Sequence_key
 and s._SequenceStatus_key = 316345
 go
 
-create index idx1 on #markerdummy(_Marker_key)
-create index idx2 on #markerdummy(_Sequence_key)
-create index idx3 on #markerdummy(_CreatedBy_key)
-create index idx4 on #markerdummy(_LogicalDB_key)
+create index markerdummy_idx1 on #markerdummy(_Marker_key)
+go
+create index markerdummy_idx2 on #markerdummy(_Sequence_key)
+go
+create index markerdummy_idx3 on #markerdummy(_CreatedBy_key)
+go
+create index markerdummy_idx4 on #markerdummy(_LogicalDB_key)
 go
 
 select c._Probe_key, s._Sequence_key, c._CreatedBy_key, c.annotation_date
@@ -22,9 +25,11 @@ where c._Sequence_key = s._Sequence_key
 and s._SequenceStatus_key = 316345
 go
 
-create index idx1 on #probedummy(_Probe_key)
-create index idx2 on #probedummy(_Sequence_key)
-create index idx3 on #probedummy(_CreatedBy_key)
+create index probedummy_idx1 on #probedummy(_Probe_key)
+go
+create index probedummy_idx2 on #probedummy(_Sequence_key)
+go
+create index probedummy_idx3 on #probedummy(_CreatedBy_key)
 go
 
 set nocount off

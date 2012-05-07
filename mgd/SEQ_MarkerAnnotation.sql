@@ -14,8 +14,9 @@ and ma._MGIType_key = 2
 and ma._LogicalDB_key = sa._LogicalDB_key
 go
 
-create nonclustered index idx_mkey on #markers1(_Object_key)
-create nonclustered index idx_skey on #markers1(sequenceKey)
+create index markers1_idx1 on #markers1(_Object_key)
+go
+create index markers1_idx2 on #markers1(sequenceKey)
 go
 
 /* select all where the primary is not annotated */
@@ -32,7 +33,7 @@ and ma.accID = sa.accID
 and sa.preferred = 1)
 go
 
-create nonclustered index idx_mkey on #markers(_Object_key)
+create index markers_idx on #markers(_Object_key)
 go
 
 select m.*, a.accID as egID
@@ -50,7 +51,7 @@ and a._MGIType_key = 2
 and a._LogicalDB_key = 55)
 go
 
-create nonclustered index idx_mkey on #final(_Object_key)
+create index final_idx on #final(_Object_key)
 go
 
 set nocount off
