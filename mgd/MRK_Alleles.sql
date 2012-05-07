@@ -1,3 +1,5 @@
+begin;
+
 print ''
 print 'Markers which contain Alleles which do not match the Marker Symbol'
 print ''
@@ -12,11 +14,21 @@ go
 set nocount on
 go
 
-select _Allele_key, symbol
-into #duplicates
+/* duplicate alleles by symbol */
+select symbol
+into #duplicates1
 from ALL_Allele
 where symbol != '+'
 group by symbol having count(*) > 1
+go
+
+create index dups_idx1 on #duplicates1(symbol)
+go
+
+select a._Allele_key, a.symbol
+into #duplicates
+from ALL_Allele a, #duplicates1 d
+where d.symbol = a.symbol
 go
 
 set nocount off
@@ -50,6 +62,10 @@ and (a.symbol != m.symbol or a.name != m.name)
 order by m.symbol
 go
 
-drop table #duplicates
+commit;
+
+drop table duplicates1
+go
+drop table duplicates
 go
 
