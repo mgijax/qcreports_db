@@ -23,6 +23,6 @@ and a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22
 )
-order by s.standard desc, s.strain
+order by standard desc, strain
 go
 

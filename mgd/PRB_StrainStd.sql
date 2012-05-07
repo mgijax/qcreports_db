@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select s._Strain_key, a.accID as mgiID, dataExists = 'y'
+select s._Strain_key, a.accID as mgiID, 'y' as dataExists
 into #strains
 from PRB_Strain s, ACC_Accession a
 where s.standard = 1
@@ -25,7 +25,7 @@ or exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 go
 
 insert into #strains
-select s._Strain_key, a.accID as mgiID, dataExists = 'n'
+select s._Strain_key, a.accID as mgiID, 'n' as dataExists
 from PRB_Strain s, ACC_Accession a
 where s.standard = 1
 and s._Strain_key = a._Object_key
