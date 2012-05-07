@@ -15,10 +15,18 @@ go
 create index coord_idx2 on #coord(provider)
 go
 
-select _Sequence_key, _Marker_key, accID, provider
-into #dups
+select provider, _Marker_key
+into #dups1
 from #coord
 group by provider, _Marker_key having count(*) > 1
+go
+create index dups1_idx1 on #dups1(_Marker_key)
+go
+
+select c._Sequence_key, c._Marker_key, c.accID, c.provider
+into #dups
+from #coord c, #dups1 d
+where c._Marker_key = d._Marker_key
 go
 
 create index dups_idx1 on #dups(_Marker_key)
@@ -40,6 +48,8 @@ order by s.provider, m.symbol
 go
 
 drop table #coord
+go
+drop table #dups1
 go
 drop table #dups
 go
