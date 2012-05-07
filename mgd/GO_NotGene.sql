@@ -2,7 +2,7 @@
 set nocount on
 go
 
-select v._Object_key, substring(m.name,1,50) as name, substring(m.symbol,1,25) as symbol, m._Marker_Type_key
+select v._Object_key, substring(m.name,1,50) as name, m.symbol, m._Marker_Type_key
 into #nongene
 from VOC_Annot v, MRK_Marker m
 where v._AnnotType_key = 1000
@@ -10,13 +10,12 @@ and v._Object_key = m._Marker_key
 and m._Marker_Type_key != 1
 go
 
-create index idx1 on #nongene(_Object_key)
+create index nongene_idx1 on #nongene(_Object_key)
 go
 
-select distinct _Object_key, name, symbol, _Marker_Type_key, count(_object_key) as annotations
+select distinct _Object_key, name, symbol, _Marker_Type_key, count(_Object_key) as annotations
 into #nongeneout
 from #nongene 
-group by _Object_key
 go
 
 create index idx1 on #nongeneout(_Object_key)

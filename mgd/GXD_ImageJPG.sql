@@ -33,18 +33,37 @@ and a._Refs_key not in (81463,154591)
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-create index idx1 on #assays(_ImagePane_key)
+create index assays_idx1 on #assays(_ImagePane_key)
+go
+
+/* assays that contain > 2 image panes */
+select _ImagePane_key into #imagepane1 from #assays where _AssayType_key = 6 group by _ImagePane_key having count(*) > 2
+go
+
+select _ImagePane_key into #imagepane2 from #assays where _AssayType_key != 6 group by _ImagePane_key having count(*) > 1
+go
+
+create index imagepane1_idx1 on #imagepane1(_ImagePane_key)
+go
+create index imagepane2_idx1 on #imagepane2(_ImagePane_key)
 go
 
 /* select those that are annotated to more than 2 assays */
 
-select * into #final from #assays where _AssayType_key = 6 group by _ImagePane_key having count(*) > 2
+select a.* into #final 
+from #assays a, #imagepane1 i 
+where a._AssayType_key = 6
+and a._ImagePane_key = i._ImagePane_key
 union
-select * from #assays where _AssayType_key != 6 group by _ImagePane_key having count(*) > 1
+select a.* 
+from #assays a, #imagepane2 i 
+where a._AssayType_key != 6
+and a._ImagePane_key = i._ImagePane_key
 go
 
-create index idx1 on #final(_Refs_key)
-create index idx2 on #final(_Image_key)
+create index final_idx1 on #final(_Refs_key)
+go
+create index final_idx2 on #final(_Image_key)
 go
 
 print ''
@@ -75,6 +94,10 @@ order by imageID
 go
 
 drop table #assays 
+go
+drop table #imagepane1
+go
+drop table #imagepane2
 go
 drop table #final
 go

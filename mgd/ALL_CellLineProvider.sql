@@ -45,7 +45,7 @@ create index idx_allele on #notexists(_Allele_key)
 go
 
 delete #notexists
-from #notexists e, ALL_Allele_CellLine c, ALL_CellLine ac, ACC_Accession aa
+from #noteexists e, ALL_Allele_CellLine c, ALL_CellLine ac, ACC_Accession aa
 where e._Allele_key = c._Allele_key
 and c._MutantCellLine_key = ac._CellLine_key
 and aa._MGIType_key = 28
