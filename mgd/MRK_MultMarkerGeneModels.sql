@@ -10,8 +10,9 @@ and s._Sequence_key = c._Sequence_key
 and c.provider in ('Ensembl Gene Model', 'VEGA Gene Model', 'NCBI Gene Model')
 go
 
-create index idx1 on #coord(_Sequence_key)
-create index idx2 on #coord(provider)
+create index coord_idx1 on #coord(_Sequence_key)
+go
+create index coord_idx2 on #coord(provider)
 go
 
 select _Sequence_key, _Marker_key, accID, provider
@@ -20,8 +21,9 @@ from #coord
 group by provider, _Sequence_key having count(*) > 1
 go
 
-create index idx1 on #dups(_Marker_key)
-create index idx2 on #dups(_Sequence_key)
+create index dups_idx1 on #dups(_Marker_key)
+go
+create index dups_idx2 on #dups(_Sequence_key)
 go
 
 set nocount off

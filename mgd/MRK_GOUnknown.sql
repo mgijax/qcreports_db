@@ -17,10 +17,10 @@ and m._Marker_key = r._Marker_key
 and r.pubmedID not in ('11217851', '12466851', '14621295', '11125038', '12466854', '12466855', '12693553')
 go
 
-create index idx1 on #temp1(_Marker_key)
+create index temp1_idx1 on #temp1(_Marker_key)
 go
 
-create index idx2 on #temp1(_Refs_key)
+create index temp1_idx2 on #temp1(_Refs_key)
 go
 
 /* grab the marker accession ids */
@@ -35,7 +35,7 @@ and ma._LogicalDB_key = 1
 and ma.preferred = 1 
 go
 
-create index idx1 on #temp2(_Refs_key)
+create index temp2_idx1 on #temp2(_Refs_key)
 go
 
 /* grab the pubmed ids */
