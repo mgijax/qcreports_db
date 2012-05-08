@@ -19,7 +19,6 @@ go
 
 create index temp1_idx1 on #temp1(_Marker_key)
 go
-
 create index temp1_idx2 on #temp1(_Refs_key)
 go
 
