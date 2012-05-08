@@ -17,7 +17,7 @@ go
 
 /* select those that share the same reference */
 /* exclude Not Specified genotype */
-select genoGXD = g._Genotype_key, a._Object_key as genoAP, g._Refs_key
+select g._Genotype_key as genoGXD, a._Object_key as genoAP, g._Refs_key
 into #shareRef
 from #gxd g, #ap a
 where g._Refs_key = a._Refs_key
