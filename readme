@@ -3,10 +3,8 @@ BIB_NoAbstract.sql
 GO_NotGene.sql
 GXD_GenotypeRef.sql
 GXD_ImageCheck.sql
-MRK_GOUnknown.sql
 MRK_Withdrawn.sql
 PRB_Strain_NoAlleles1.sql
 PRB_Strain_SingleNoAlleles1.sql
 PRB_Strain_SingleNoAlleles2.sql
 PRB_StrainByDate.sql
-PRB_StrainDup.sql
