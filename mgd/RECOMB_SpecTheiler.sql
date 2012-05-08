@@ -15,8 +15,7 @@ go
 select distinct _Specimen_key 
 into #temp2
 from #temp1
-group by _Specimen_key
-having count(*) > 1
+group by _Specimen_key having count(*) > 1
 go
 
 set nocount off
@@ -39,94 +38,62 @@ go
 
 /* Added 8/16/2007 TR8389 */
 
-/* get the structure key for reproductive system */
-select distinct _Structure_key
-into #repro
-from GXD_StructureName
-where structure = 'reproductive system'
-go
-
 /* get all children of 'reproductive system' */
-select distinct _Descendent_key
-into #child
-from GXD_StructureClosure
-where _Structure_key in (
-select _Structure_key
-from #repro)
-go
-
-/* get the structure key for 'female' */
-select distinct _Structure_key
-into #reproF
-from #child c, GXD_StructureName sn
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female'
+select distinct sc._Descendent_key
+into #repChild
+from GXD_StructureName sn, GXD_StructureClosure sc
+where sn.structure = 'reproductive system'
+and sn._Structure_key = sc._Structure_key
 go
 
 /* get all children of 'female' */
-select distinct _Descendent_key
-into #fChild
-from GXD_StructureClosure
-where _Structure_key in (
-select _Structure_key
-from  #reproF)
-
-/* union female and its childrend */ 
-select _Structure_key
-into #allFStruct
-from #reproF
+select distinct sn._Structure_key
+into #femaleChild
+from ##repChild c, GXD_StructureName sn
+where c._Descendent_key = sn._Structure_key
+and sn.structure = 'female'
 union
-select _Descendent_key as _Structure_key
-from #fChild
+select distinct sc._Descendent_key
+from #repChild c, GXD_StructureName sn, GXD_StructureClosure sc
+where c._Descendent_key = sn._Structure_key
+and sn.structure = 'female'
+and sn._Structure_key = sc._Structure_key
+go
+
+/* get all children of 'male' */
+select distinct sn._Structure_key
+into #maleChild
+from ##repChild c, GXD_StructureName sn
+where c._Descendent_key = sn._Structure_key
+and sn.structure = 'male'
+union
+select distinct sc._Descendent_key
+from #repChild c, GXD_StructureName sn, GXD_StructureClosure sc
+where c._Descendent_key = sn._Structure_key
+and sn.structure = 'male'
+and sn._Structure_key = sc._Structure_key
 go
 
 /* get info about 'reproductive system;female' and children */
 select distinct s._Specimen_key, s.specimenLabel, a.jnumID, a.mgiID
 into #fSpecimens
-from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs
+from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs, #femaleChild f
 where s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
-and irs._Structure_key in (
-select distinct _Structure_key
-from #allFStruct)
+and irs._Structure_key = f._Structure_key
 go
 
-/* do same as above for male */
-select distinct _Structure_key
-into #reproM
-from #child c, GXD_StructureName sn
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male'
-go
-
-select distinct _Descendent_key
-into #mChild
-from GXD_StructureClosure
-where _Structure_key in (
-select _Structure_key
-from  #reproM)
-
-select _Structure_key
-into #allMStruct
-from #reproM
-union
-select _Descendent_key as _Structure_key
-from #mChild
-go
-
+/* get info about 'reproductive system;male' and children */
 select distinct s._Specimen_key
 into #mSpecimens
-from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs
+from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs, #maleChild m
 where s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
-and irs._Structure_key in (
-select distinct _Structure_key
-from #allMStruct)
-
+and irs._Structure_key = m._Structure_key
 go
 
 set nocount off
@@ -147,23 +114,13 @@ drop table #temp1
 go
 drop table #temp2
 go
-drop table #repro
+drop table #repChild
 go
-drop table #child
+drop table #femaleChild
 go
-drop table #reproF
-go
-drop table #fChild
-go
-drop table #allFStruct
+drop table #maleChild
 go
 drop table #fSpecimens
-go
-drop table #reproM
-go
-drop table #mChild
-go
-drop table #allMStruct
 go
 drop table #mSpecimens
 go
