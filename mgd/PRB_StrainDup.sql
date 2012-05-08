@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select _Strain_key, strain
+select strain
 into #strains
 from PRB_Strain
 group by strain having count(*) > 1
@@ -14,27 +14,33 @@ print 'Duplicate Strains'
 print ''
 
 (
-select null as jr, substring(t.term,1,30) as straintype, 
+select null as jr, 
+substring(t.term,1,30) as straintype, 
 substring(s.strain,1,125) as strain
-from #strains s
-     LEFT OUTER JOIN PRB_Strain_Attribute_View t on (s._Strain_key = t._Strain_key)
+from #strains s,
+     PRB_Strain ss
+     	LEFT OUTER JOIN PRB_Strain_Attribute_View t on (ss._Strain_key = t._Strain_key)
 where s.strain not like '%)F1%'
+and s.strain = ss.strain
 and not exists (select 1 from ACC_Accession a
-where a._Object_key = s._Strain_key
+where ss._Strain_key = a._Object_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22)
 union
-select a.accID as jr, substring(t.term,1,30) as straintype, 
+select a.accID as jr, 
+substring(t.term,1,30) as straintype, 
 substring(s.strain,1,125) as strain
-from #strains s
-     LEFT OUTER JOIN PRB_Strain_Attribute_View t on (s._Strain_key = t._Strain_key), 
+from #strains s,
+     PRB_Strain ss
+     	LEFT OUTER JOIN PRB_Strain_Attribute_View t on (ss._Strain_key = t._Strain_key), 
      ACC_Accession a
 where s.strain not like '%)F1%'
-and a._Object_key = s._Strain_key
+and s.strain = ss.strain
+and ss._Strain_key = a._Object_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22
 )
-order by s.strain
+order by strain
 go
 
 drop table #strains
