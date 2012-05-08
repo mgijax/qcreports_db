@@ -13,19 +13,20 @@ go
 create index nongene_idx1 on #nongene(_Object_key)
 go
 
-select distinct _Object_key, name, symbol, _Marker_Type_key, count(_Object_key) as annotations
+select _Object_key, count(_Object_key) as annotations
 into #nongeneout
 from #nongene 
+group by _Object_key
 go
 
 create index idx1 on #nongeneout(_Object_key)
-create index idx2 on #nongeneout(_Marker_Type_key)
 go
 
-select a.accID, substring(t.name,1,25) as type, m.symbol, m.name, m.annotations
+select distinct a.accID, substring(t.name,1,25) as type, g.symbol, g.name, m.annotations
 into #toPrint
-from #nongeneout m, ACC_Accession a, MRK_Types t
-where m._Marker_Type_key = t._Marker_Type_key
+from #nongeneout m, #nongene g, ACC_Accession a, MRK_Types t
+where m._Object_key = g._Object_key
+and g._Marker_Type_key = t._Marker_Type_key
 and m._Object_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 1
