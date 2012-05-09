@@ -32,3 +32,6 @@ where t._Refs_key = v._Refs_key
 order by v.jnum
 go
 
+drop table #triage
+go
+
