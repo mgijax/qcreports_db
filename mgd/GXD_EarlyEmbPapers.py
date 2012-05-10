@@ -104,7 +104,7 @@ db.sql('create index refs1_idx1 on #refs1(_Refs_key)', None)
 #
 
 db.sql('''
-    delete #refs1
+    delete
     from #refs1 r
     where exists (select 1
      from GXD_Index gi, 

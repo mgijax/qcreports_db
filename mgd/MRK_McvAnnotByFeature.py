@@ -80,6 +80,6 @@ results = db.sql('''
 
 for r in results:
     fp.write('%s%s%s%s%s%s' % (r['feature'], TAB, TAB, TAB, r['featureCount'], CRT))
-fp.write('\n(%d rows affected)\n' % (len(results[2])))
+fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
 

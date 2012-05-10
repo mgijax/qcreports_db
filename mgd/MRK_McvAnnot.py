@@ -32,7 +32,7 @@
 #	          are for curation purposes and ignored by the load. Be mindful
 #	          of this when editing this report.
 # Usage:
-#       "MRK_McvAnnot.py
+#       MRK_McvAnnot.py
 #
 # Notes:
 #
@@ -100,7 +100,7 @@ db.sql('''
     and va._Qualifier_key = t2._term_key
     and va._Term_key = a1._Object_key
     and a1._MGIType_key = 13
-    and a1.prefixPart = "MCV:"
+    and a1.prefixPart = 'MCV:'
     and va._Object_key = a2._Object_key
     and a2._MGIType_key = 2
     and a2._LogicalDB_key = 1
@@ -121,7 +121,7 @@ results = db.sql('''
     and e._Refs_key = a._Object_key
     and a._MGIType_key = 1
     and a._LogicalDB_key = 1
-    and a.prefixPart = "J:"
+    and a.prefixPart = 'J:'
     and a.preferred = 1
     and e._EvidenceTerm_key = t._Term_key
     ''', 'auto')

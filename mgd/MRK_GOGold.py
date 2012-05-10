@@ -114,7 +114,7 @@ fpD.write('mgi ID' + TAB + \
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
 db.sql('''
-	select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation 
+	select m._Marker_key, m.symbol, m.name, a.term, a.accID as goID, e.evidenceCode, d.abbreviation 
 	into #m1 
 	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
 	where m._Organism_key = 1 
@@ -134,7 +134,7 @@ db.sql('create index m1_idx1 on #m1(_Marker_key)', None)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI
 db.sql('''
-	select m._Marker_key, m.symbol, m.name, a.term, goID = a.accID, e.evidenceCode, d.abbreviation 
+	select m._Marker_key, m.symbol, m.name, a.term, a.accID as goID, e.evidenceCode, d.abbreviation 
 	into #m2 
 	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
 	where m._Organism_key = 1 
