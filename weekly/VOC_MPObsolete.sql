@@ -11,7 +11,7 @@ and a._LogicalDB_key = 34
 and a.preferred = 1
 go
 
-create clustered index idx_key on #obsolete(_Object_key)
+create index idx_key on #obsolete(_Object_key)
 go
 
 set nocount off
