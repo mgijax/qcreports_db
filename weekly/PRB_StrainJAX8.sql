@@ -3,13 +3,13 @@ set nocount on
 go
 
 declare @printDate varchar(255)
-select @printDate = "MMRRC JR#s with alleles added between " + 
-	convert(char(10), dateadd(day, -7, getdate()), 101) + 
-	" and " + convert(char(10), getdate(), 101)
+select @printDate = 'MMRRC JR#s with alleles added between ' || 
+	convert(char(10), dateadd(day, -7, getdate()), 101) || 
+	' and ' || convert(char(10), getdate(), 101)
 
-print ""
+print ''
 print @printDate
-print ""
+print ''
 
 set nocount off
 go

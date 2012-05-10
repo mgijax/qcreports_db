@@ -20,9 +20,9 @@ and a._DataSet_key = 1001
 
 create index idx1 on #triage(_Refs_key)
 
-print ""
-print "Papers Selected For Mapping from %1! to %2!", @bdate, @edate
-print ""
+print ''
+print 'Papers Selected For Mapping from %1! to %2!', @bdate, @edate
+print ''
 
 set nocount off
 

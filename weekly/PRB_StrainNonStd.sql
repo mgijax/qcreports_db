@@ -1,14 +1,14 @@
 set nocount on
 go
 
-select s._Strain_key, dataExists = "y", inIMSR = "n"
+select s._Strain_key, 'y' as dataExists, 'n' as inIMSR
 into #strains
 from PRB_Strain s
 where 1 = 2
 go
 
 insert into #strains
-select s._Strain_key, dataExists = "y", inIMSR = "n"
+select s._Strain_key, 'y' as dataExists, 'n' as inIMSR
 from PRB_Strain s
 where s.standard = 0
 and s.strain not like '%)F1%'
@@ -19,7 +19,7 @@ create unique index index_strain_key on #strains(_Strain_key)
 go
 
 update #strains 
-set dataExists = "n"
+set dataExists = 'n'
 from #strains s
 where
 not exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)
@@ -43,7 +43,7 @@ create index index_imsr_accID on #IMSR_Accession (accID)
 go
 
 update #strains
-set inIMSR = "y"
+set inIMSR = 'y'
 from #strains s, ACC_Accession a, #IMSR_Accession ac
 where s._Strain_key = a._Object_key
 and a._MGIType_key = 10
@@ -53,11 +53,11 @@ go
 set nocount off
 go
 
-print ""
-print "Non Standard Strains (excluding F1 and F2): data attached = yes"
-print ""
+print ''
+print 'Non Standard Strains (excluding F1 and F2): data attached = yes'
+print ''
 
-select substring(l.name,1,20) as "external db", a.accID as "external id", 
+select substring(l.name,1,20) as 'external db', a.accID as "external id", 
 n.inIMSR, substring(s.strain,1,125) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 0
@@ -84,9 +84,9 @@ and a._LogicalDB_key != 1)
 order by s.strain
 go
 
-print ""
-print "Non Standard Strains (excluding F1 and F2): data attached = no"
-print ""
+print ''
+print 'Non Standard Strains (excluding F1 and F2): data attached = no'
+print ''
 
 select substring(l.name,1,20) as "external db", a.accID as "external id", 
 n.inIMSR, substring(s.strain,1,125) as "strain"

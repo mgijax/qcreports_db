@@ -19,9 +19,9 @@ go
 set nocount off
 go
 
-print ""
-print "Duplicate MP Annotations"
-print ""
+print ''
+print 'Duplicate MP Annotations'
+print ''
 
 select a.accID, ta.accID, substring(t.term,1,50) as term
 from #dup d, ACC_Accession a, ACC_Accession ta, VOC_Term t

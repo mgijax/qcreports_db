@@ -22,10 +22,10 @@ create index idx1 on #triageA(_Refs_key)
 
 set nocount off
 
-print ""
-print "Papers Selected For Expression from %1! to %2!", @bdate, @edate
-print "by Data Set creation date"
-print ""
+print ''
+print 'Papers Selected For Expression from %1! to %2!', @bdate, @edate
+print 'by Data Set creation date'
+print ''
 
 select v.jnumID, substring(v.short_citation, 1, 50) as short_citation
 from #triageA t, BIB_All_View v

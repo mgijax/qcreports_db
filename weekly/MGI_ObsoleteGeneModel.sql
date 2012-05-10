@@ -1,9 +1,9 @@
 
-print ""
-print "Obsolete Gene Models associated with Markers"
-print ""
-print "This report lists Markers that have an association to NCBI Gene Model (ldb 59) but have no association to Entrez Gene (ldb 55)"
-print ""
+print ''
+print 'Obsolete Gene Models associated with Markers'
+print ''
+print 'This report lists Markers that have an association to NCBI Gene Model (ldb 59) but have no association to Entrez Gene (ldb 55)'
+print ''
 
 select distinct smc.accID as "NCBI Gene Model", a.accID as "MGI ID", m.symbol
 from SEQ_Marker_Cache smc, ACC_Accession a, MRK_Marker m

@@ -17,9 +17,9 @@ go
 set nocount off
 go
 
-print ""
-print "Genotype Annotations to Obsolete OMIM Terms"
-print ""
+print ''
+print 'Genotype Annotations to Obsolete OMIM Terms'
+print ''
 
 select g.accID as "Genotype ID", o.accID as "OMIM ID", substring(o.term , 1, 100) as "Term"
 from #obsolete o, VOC_Annot a, ACC_Accession g
@@ -28,7 +28,7 @@ and a._Term_key = o._Object_key
 and a._Object_key = g._Object_key 
 and g._MGIType_key = 12
 and g._LogicalDB_key = 1 
-and g.prefixPart = "MGI:" 
+and g.prefixPart = 'MGI:' 
 and g.preferred = 1
 go
 
