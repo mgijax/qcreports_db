@@ -49,7 +49,3 @@ where not exists (select 1 from #history h where m._Marker_key = h._Marker_key)
 order by symbol
 go
 
-drop table #markers
-go
-drop table #history
-go

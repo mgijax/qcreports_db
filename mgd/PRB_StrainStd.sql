@@ -76,6 +76,3 @@ and a._LogicalDB_key != 1)
 order by s.strain
 go
 
-drop table #strains
-go
-

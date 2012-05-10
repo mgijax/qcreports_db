@@ -38,7 +38,3 @@ and s._Marker_key = m._Marker_key
 order by c.provider, m.symbol
 go
 
-drop table #coord
-go
-drop table #dups
-go

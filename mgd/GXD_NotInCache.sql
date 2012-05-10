@@ -165,13 +165,3 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-drop table #missing
-go
-drop table #imissingstructs
-go
-drop table #imissingresults
-go
-drop table #gmissingstructs
-go
-drop table #gmissingbands
-go

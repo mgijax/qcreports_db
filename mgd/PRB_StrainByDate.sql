@@ -97,6 +97,3 @@ and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 order by creation_date desc, s.strain
 go
 
-drop table #exclude
-go
-

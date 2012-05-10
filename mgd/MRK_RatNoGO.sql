@@ -76,12 +76,3 @@ print ''
 select * from #markersB order by symbol
 go
 
-drop table #markers1
-go
-drop table #markers2
-go
-drop table #markersA
-go
-drop table #markersB
-go
-

@@ -5,6 +5,7 @@ CHANGES:
 1) TR11035/postgres cleanup
 - unique index names
 - add "try...except" block
+2) TR11066/GXD_GelBank.sql
 
 TAG: qcreports_db-5-0-0-3
 DATE: 04/23/2012

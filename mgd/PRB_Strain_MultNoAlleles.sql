@@ -33,7 +33,3 @@ and s._Allele_key is null
 order by s.strain
 go
 
-drop table #strains
-go
-drop table #multiples
-go

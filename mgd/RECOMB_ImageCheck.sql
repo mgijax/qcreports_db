@@ -50,6 +50,3 @@ and c.prefixPart = 'MGI:'
 order by accID
 go
 
-drop table #assays 
-go
-

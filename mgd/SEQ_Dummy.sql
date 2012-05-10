@@ -80,8 +80,3 @@ and d._CreatedBy_key = u._User_key
 order by l.name, d.annotation_date, p.name
 go
 
-drop table #markerdummy
-go
-drop table #probedummy
-go
-

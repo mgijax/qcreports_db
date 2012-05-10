@@ -55,8 +55,3 @@ and a2.preferred = 1
 order by d.creation_date desc, d.primer1
 go
 
-drop table #primers
-go
-drop table #gxd
-go
-

@@ -30,6 +30,3 @@ and not exists (select 1 from GXD_GelLane l, GXD_GelBand b
 order by a.jnum
 go
 
-drop table #assay
-go
-

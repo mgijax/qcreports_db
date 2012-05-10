@@ -34,7 +34,3 @@ and d._Term_key = t._Term_key
 order by ta.accID
 go
 
-drop table #a
-go
-drop table #dup
-go

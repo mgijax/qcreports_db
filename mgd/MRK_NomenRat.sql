@@ -32,6 +32,3 @@ and ma._LogicalDB_key = 55)
 order by m.current_symbol
 go
 
-drop table #markers
-go
-

@@ -24,5 +24,3 @@ and m._MutantCellLine_key = c._CellLine_key
 order by aa.modification_date desc, c.cellLine
 go
 
-drop table #mutant
-go

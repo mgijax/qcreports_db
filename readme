@@ -1,7 +1,8 @@
+#
+# need sybase-to-postgres conversion
+#
 ALL_CellLineProvider.sql
 BIB_NoAbstract.sql
-GO_NotGene.sql
-GXD_GenotypeRef.sql
 GXD_ImageCheck.sql
 MRK_Withdrawn.sql
 PRB_Strain_NoAlleles1.sql

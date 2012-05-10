@@ -43,5 +43,3 @@ and a._LogicalDB_key = 22
 order by strain
 go
 
-drop table #strains
-go

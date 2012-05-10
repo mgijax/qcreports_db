@@ -110,18 +110,3 @@ where f._Specimen_key = m._Specimen_key
 order by mgiID, jnumID
 go
 
-drop table #temp1
-go
-drop table #temp2
-go
-drop table #repChild
-go
-drop table #femaleChild
-go
-drop table #maleChild
-go
-drop table #fSpecimens
-go
-drop table #mSpecimens
-go
-

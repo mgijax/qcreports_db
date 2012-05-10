@@ -33,6 +33,3 @@ and a.preferred = 1
 order by t.login, t.symbol
 go
 
-drop table #temp1
-go
-

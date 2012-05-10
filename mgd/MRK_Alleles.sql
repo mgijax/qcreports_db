@@ -1,5 +1,3 @@
-begin;
-
 print ''
 print 'Markers which contain Alleles which do not match the Marker Symbol'
 print ''
@@ -57,10 +55,5 @@ and am._Marker_key = m._Marker_key
 and m._Marker_Type_key = 12
 and (a.symbol != m.symbol or a.name != m.name)
 order by m.symbol
-go
-
-commit;
-
-drop table duplicates
 go
 

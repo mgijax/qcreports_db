@@ -24,6 +24,3 @@ and pm._Marker_key = m._Marker_key
 order by p.name, m.symbol
 go
 
-drop table #probes
-go
-

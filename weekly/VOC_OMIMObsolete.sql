@@ -32,6 +32,3 @@ and g.prefixPart = "MGI:"
 and g.preferred = 1
 go
 
-drop table #obsolete 
-go
-

@@ -36,7 +36,3 @@ from #gomarker
 group by evidenceCode
 go
 
-drop table #goevidence
-go
-drop table #gomarker
-go

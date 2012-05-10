@@ -24,6 +24,3 @@ group by jnumID, short_citation
 order by short_citation
 go
 
-drop table #reference
-go
-

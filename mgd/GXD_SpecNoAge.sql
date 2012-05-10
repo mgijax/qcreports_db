@@ -111,11 +111,3 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-drop table #spec1
-go
-drop table #spec2
-go
-drop table #temp1
-go
-drop table #temp2
-go

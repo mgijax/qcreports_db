@@ -47,6 +47,3 @@ and a2._MGIType_key = 8
 order by a1.numericPart
 go
 
-drop table #genotypes
-go
-

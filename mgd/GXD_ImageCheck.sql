@@ -165,7 +165,3 @@ and mn._MGIType_key = 9
 and mn._NoteType_key = 1023)
 go
 
-drop table #assays 
-go
-drop table #a
-go

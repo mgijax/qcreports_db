@@ -93,11 +93,3 @@ and r.preferred = 1
 order by imageID
 go
 
-drop table #assays 
-go
-drop table #imagepane1
-go
-drop table #imagepane2
-go
-drop table #final
-go

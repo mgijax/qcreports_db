@@ -38,8 +38,3 @@ and c._Marker_key = m._marker_key
 order by c.provider, c.accID
 go
 
-drop table #coord
-go
-drop table #dups
-go
-

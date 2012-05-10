@@ -28,6 +28,3 @@ and b._LogicalDB_key = 1
 and b.prefixPart = 'J:'
 go
 
-drop table #knockin
-go
-

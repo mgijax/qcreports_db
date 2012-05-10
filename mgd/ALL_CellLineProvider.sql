@@ -75,6 +75,3 @@ and a._Allele_key = e._Allele_key
 order by ac.creator
 go
 
-drop table #notexists
-go
-
