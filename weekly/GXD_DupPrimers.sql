@@ -18,7 +18,9 @@ where _SegmentType_key = 63473
 go
 
 create index idx1 on #primers(_Probe_key)
+go
 create index idx2 on #primers(primer1sequence)
+go
 create index idx3 on #primers(primer2sequence)
 go
 
@@ -35,9 +37,9 @@ go
 set nocount off
 go
 
-print ""
-print "Primer Sets whose Sequences are identical"
-print ""
+print ''
+print 'Primer Sets whose Sequences are identical'
+print ''
 
 select substring(a1.accID,1,15) as accID1, d.name as primer1, 
 substring(a2.accID,1,15) as accID2, d.primer2, d.primer1sequence, d.primer2sequence
@@ -45,13 +47,13 @@ from #gxd d, ACC_Accession a1, ACC_Accession a2
 where d._Probe_key = a1._Object_key
 and a1._MGIType_key = 3
 and a1._LogicalDB_key = 1
-and a1.prefixPart = "MGI:"
+and a1.prefixPart = 'MGI:'
 and a1.preferred = 1
 and d.probeKey2 = a2._Object_key
 and a2._MGIType_key = 3
 and a2._LogicalDB_key = 1
-and a2.prefixPart = "MGI:"
+and a2.prefixPart = 'MGI:'
 and a2.preferred = 1
-order by d.creation_date desc, d.primer1
+order by d.creation_date desc, primer1
 go
 

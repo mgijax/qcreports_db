@@ -10,15 +10,15 @@ and l._GelLane_key = b._GelLane_key
 and b._Strength_key = -2
 go
 
-create index assay_idx1 on #assay(_Assay_key)
+create index idx1 on #assay(_Assay_key)
 go
 
 set nocount off
 go
 
-print ""
-print "GXD Blot w/ Control = No and Strength = Not Applicable"
-print ""
+print ''
+print 'GXD Blot w/ Control = No and Strength = Not Applicable'
+print ''
 
 select distinct a.jnumID, a.mgiID, s._Assay_key
 from #assay s, GXD_Assay_View a

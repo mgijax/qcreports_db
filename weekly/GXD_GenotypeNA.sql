@@ -1,7 +1,7 @@
 
-print ""
-print "References which have GXD Annotations to 'Not Applicable' Genotype (MGI:2166309)"
-print ""
+print ''
+print 'References which have GXD Annotations to 'Not Applicable' Genotype (MGI:2166309)'
+print ''
 
 select b.accID
 from ACC_Accession a, GXD_Expression ge, ACC_Accession b
