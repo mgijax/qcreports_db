@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-0-0-7
+DATE: 05/15/2012
+STAFF: lec
+CHANGES: 
+1) TR11062/GXD_SpecNoAge.sql
+
 TAG: qcreports_db-5-0-0-6
 TAG: qcreports_db-5-0-0-5
 TAG: qcreports_db-5-0-0-4
@@ -7,7 +13,7 @@ CHANGES:
 1) TR11035/postgres cleanup
 - unique index names
 - add "try...except" block
-2) TR11066/GXD_GelBank.sql
+2) TR11066/GXD_GelBand.sql
 
 TAG: qcreports_db-5-0-0-3
 DATE: 04/23/2012
