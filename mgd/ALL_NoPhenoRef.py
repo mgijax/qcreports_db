@@ -96,7 +96,7 @@ for r in results:
 # only interested in the A group
 results = db.sql('''select distinct aa._Allele_key, aa.symbol, 
 		    substring(t.term, 1, 35) as term,
-                    substring(tt.term, 1, 35) as alleelType
+                    substring(tt.term, 1, 35) as alleleType
              from ALL_Allele aa, GXD_AlleleGenotype g, VOC_Annot a, VOC_Term t, VOC_Term tt
              where aa._Allele_key = g._Allele_key
              and g._Genotype_key = a._Object_key
