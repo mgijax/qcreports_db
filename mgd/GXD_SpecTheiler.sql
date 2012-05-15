@@ -83,7 +83,7 @@ go
 /* get all children of 'female' */
 select distinct sn._Structure_key
 into #femaleChild
-from ##repChild c, GXD_StructureName sn
+from #repChild c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
 and sn.structure = 'female'
 union
@@ -97,7 +97,7 @@ go
 /* get all children of 'male' */
 select distinct sn._Structure_key
 into #maleChild
-from ##repChild c, GXD_StructureName sn
+from #repChild c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
 and sn.structure = 'male'
 union
