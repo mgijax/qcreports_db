@@ -87,7 +87,7 @@ results = db.sql('''
 for r in results:
     fp.write(string.ljust(r['symbol'], 40) + '  ' + \
              string.ljust(r['name'], 35) + CRT)
-fp.write(CRT + 'Row count: ' + str(len(results[0])) + CRT*3)
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 #
 # Find the distinct markers and marker types in the expression cache.
@@ -110,7 +110,7 @@ results = db.sql('''
 for r in results:
     fp.write(string.ljust(r['symbol'], 40) + '  ' + \
              string.ljust(r['name'], 35) + CRT)
-fp.write(CRT + 'Row count: ' + str(len(results[1])) + CRT)
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 reportlib.finish_nonps(fp)
 
