@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-0-0-10
+DATE: 05/22/2012
+STAFF: lec
+CHANGES: 
+1) RECOMB_SpecTheiler.sql; fix bug
+
 TAG: qcreports_db-5-0-0-9
 DATE: 05/21/2012
 STAFF: lec
