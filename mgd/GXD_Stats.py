@@ -119,7 +119,7 @@ def getAssayQuery(table, value, op, year):
         where gi._Index_key = gis._Index_key 
         and gis._IndexAssay_key = vt._Term_key 
         and vt._Vocab_key = 12 
-        and vt.term %s '%s"'
+        and vt.term %s '%s'
         and datepart(year, gi.creation_date) <= %d 
 	''' % (table, year, op, value, year)
     return cmd
