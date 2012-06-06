@@ -23,7 +23,3 @@ and a._Object_key = s._Strain_key
 order by a.accID
 go
 
-quit
-
-END
-

@@ -22,7 +22,3 @@ and a.creation_date between dateadd(day, -7, getdate()) and getdate()
 order by a.accID
 go
 
-quit
-
-END
-

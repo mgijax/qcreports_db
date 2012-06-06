@@ -29,7 +29,3 @@ where a._MGIType_key = 10 and
 order by a.accID
 go
 
-quit
-
-END
-
