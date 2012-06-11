@@ -15,6 +15,9 @@
 #
 # History:
 #
+# lec	06/11/2012
+#	- TR11105/retire Dev Biol and Development
+#
 # lec	09/23/2009
 #	- TR 9806/add "Conditional" column
 #	  change "new" gene definition
@@ -58,7 +61,7 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 # The list of journals; one report for the set of papers within each sub list
-journals = [ ['Dev Biol', 'Development'], ['Dev Dyn'], ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns'] ]
+journals = [ ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns'] ]
 
 def processJournal(jList, fileName):
 

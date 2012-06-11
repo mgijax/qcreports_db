@@ -1,3 +1,12 @@
+TAG: qcreports_db-5-0-0-13
+DATE: 06/11/2012
+STAFF: lec
+CHANGES: 
+1) GXD_FullCodeable.py (GXD_FullCodable3)
+2) GXD_OneGenePapers.py
+3) GXD_EarlyEmbPapers.py
+4) GXD_FullCode.py (GXD_DevBiolandDevelopment, GXD_DevDyn)
+
 TAG: qcreports_db-5-0-0-12
 DATE: 06/05/2012
 STAFF: lec

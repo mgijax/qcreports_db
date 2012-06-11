@@ -13,6 +13,9 @@
 #
 # History:
 #
+# 06/11/2012	lec
+#	- TR11105/remove GXD_FullCodable3 (retire)
+#
 # 12/21/2011	lec
 #	- convert to outer join
 #
@@ -441,13 +444,13 @@ def report3(fp):
 
 fp1 = reportlib.init(sys.argv[0], 'Markers that have no full coded data', outputdir = os.environ['QCOUTPUTDIR'])
 fp2 = reportlib.init('GXD_FullCodeable2.py', 'Papers containing genes that are not in the full coded portion of the database', outputdir = os.environ['QCOUTPUTDIR'])
-fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
+#fp3 = reportlib.init('GXD_FullCodeable3.py', 'Blot-only papers that have not been fully coded', outputdir = os.environ['QCOUTPUTDIR'])
 
 process()
 report1(fp1)
 report2(fp2)
-report3(fp3)
+#report3(fp3)
 reportlib.finish_nonps(fp1)
 reportlib.finish_nonps(fp2)
-reportlib.finish_nonps(fp3)
+#reportlib.finish_nonps(fp3)
 

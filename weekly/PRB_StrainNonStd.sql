@@ -4,12 +4,6 @@ go
 select s._Strain_key, 'y' as dataExists, 'n' as inIMSR
 into #strains
 from PRB_Strain s
-where 1 = 2
-go
-
-insert into #strains
-select s._Strain_key, 'y' as dataExists, 'n' as inIMSR
-from PRB_Strain s
 where s.standard = 0
 and s.strain not like '%)F1%'
 and s.strain not like '%)F2%'
@@ -39,7 +33,7 @@ into #IMSR_Accession
 from imsr..Accession
 go
 
-create index index_imsr_accID on #IMSR_Accession (accID)
+create index index_accID on #IMSR_Accession (accID)
 go
 
 update #strains
@@ -57,7 +51,7 @@ print ''
 print 'Non Standard Strains (excluding F1 and F2): data attached = yes'
 print ''
 
-select substring(l.name,1,20) as 'external db', a.accID as "external id", 
+select substring(l.name,1,20) as "external db", a.accID as "external id", 
 n.inIMSR, substring(s.strain,1,125) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 0
@@ -81,7 +75,7 @@ and not exists (select 1 from ACC_Accession a
 where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1)
-order by s.strain
+order by strain
 go
 
 print ''
@@ -112,6 +106,6 @@ and not exists (select 1 from ACC_Accession a
 where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1)
-order by s.strain
+order by strain
 go
 
