@@ -34,7 +34,7 @@ where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22)
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
-where s._Strain_key = n._Strain_key
+where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
 and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 union
@@ -49,7 +49,7 @@ and a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
-where s._Strain_key = n._Strain_key
+where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
 and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 )
@@ -75,7 +75,7 @@ where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22)
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
-where s._Strain_key = n._Strain_key
+where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
 and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 union
@@ -90,7 +90,7 @@ and a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key = 22
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
-where s._Strain_key = n._Strain_key
+where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
 and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 )

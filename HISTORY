@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-0-0-15
+DATE: 06/19/2012
+STAFF: lec
+CHANGES: 
+1) T11110
+mgd/PRB_StrainByDate.sql
+mgd/MLP_Nomenclature.sql
+
 TAG: qcreports_db-5-0-0-14
 DATE: 06/18/2012
 STAFF: lec
