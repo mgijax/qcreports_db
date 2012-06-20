@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-0-0-16
+DATE: 06/19/2012
+STAFF: lec
+CHANGES: 
+1) TR11035/postgres cleanup/GXD_Stats.py
+
 TAG: qcreports_db-5-0-0-15
 DATE: 06/19/2012
 STAFF: lec
