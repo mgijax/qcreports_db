@@ -171,11 +171,9 @@ results = db.sql('''
 	where a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
 	and e._Refs_key = b._Refs_key) 
- 	union
-        select b._Marker_key, b.jnumID 
- 	from BIB_GOXRef_View b, #godone g
- 	where b._Marker_key = g._Marker_key
- 	and b.creation_date > dateadd(day,1,g.cdate)
+	and exists (select 1 from BIB_GOXRef_View b, #godone g
+ 		where b._Marker_key = g._Marker_key
+ 		and b.creation_date > dateadd(day,1,g.cdate))
 	''', 'auto')
 
 jnums = {}
