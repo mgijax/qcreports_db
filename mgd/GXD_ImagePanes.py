@@ -3,7 +3,7 @@
 '''
 #
 # Report:
-#       TR10909/characteristics of all images panes in GXD
+#       TR10909/panes lacking coordinates
 #
 #
 #	J# (of stub)
@@ -52,7 +52,7 @@ PAGE = reportlib.PAGE
 
 db.useOneConnection(1)
 
-fp = reportlib.init(sys.argv[0], 'Characteristics of All Image Panes in GXD', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], 'Panes Lacking Coordinates', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 fp.write('includes: full-size images (no thumbnails)\n')
 fp.write('includes: images that have pix ids\n')
