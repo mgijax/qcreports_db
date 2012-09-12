@@ -18,9 +18,6 @@ umask 002
 # set this variable to either 'sybase' or 'postgres'
 setenv DB_TYPE                  sybase
 
-# report output main directory
-setenv QCREPORTDIR		/data/reports/qcreports_db
-
 # report output directory
 setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 
