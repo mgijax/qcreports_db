@@ -15,6 +15,9 @@
 #
 # History:
 #
+# 09/17/2012
+#	- TR11173/changed J:171498/"J Am Soc Nephrol" to "GUDMAP"
+#
 # 11/14/2011	lec
 #	- TR10901; add J:177549/EuReGene
 #
@@ -83,7 +86,7 @@ endYear = string.atoi(mgi_utils.date('%Y'))
 elect_ref1 = 'J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, J:85124 Sousa-Nunes,'
 elect_ref2 = 'J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen, J:122989 Eichele, J:140465 Robson'
 elect_ref3 = 'J:141291 Tamplin1, J:143778 Tamplin2, J:153498 Eurexpress, J:157819 Blackshaw2, J:162220 BGEM'
-elect_ref4 = 'J:171409 J Am Soc Nephrol, J:177549 EuReGene'
+elect_ref4 = 'J:171409 GUDMAP, J:177549 EuReGene'
 
 # _Refs_key for all electronic references
 electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316,172505,178645)"
