@@ -4,8 +4,10 @@ go
 
 select s._Strain_key into #exclude
 from PRB_Strain s
-where s.strain like '%/Mmcd%'
-and s.creation_date between '06/07/2011' and dateadd(day,1,'06/07/2011')
+where 
+(s.strain like '%/Mmcd%' and s.creation_date between '06/07/2011' and dateadd(day,1,'06/07/2011'))
+or
+(s.strain like '%/Mmucd%' and s.creation_date between '09/24/2012' and dateadd(day,1,'09/24/2012'))
 go
 
 create index idx1 on #exclude(_Strain_key)
@@ -19,6 +21,7 @@ print 'Strains - Non Standard - Sorted by Creation Date'
 print '(do not include any strains flagged as needing review by Janan''s load)'
 print''
 print 'excludes /Mmcd from 06/07/2011'
+print 'excludes /Mmucd from 09/24/2012'
 print 'excludes created-by = ''strainautoload'''
 print ''
 
@@ -61,6 +64,7 @@ print 'Strains - Non Standard - Sorted by Creation Date'
 print '(do not include any strains flagged as needing review by Janan''s load)'
 print ''
 print 'includes /Mmcd from 06/07/2011'
+print 'includes /Mmucd from 09/24/2012'
 print ''
 
 (
