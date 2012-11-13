@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-0-4
+DATE: 11/13/2012
+STAFF: lec
+CHANGES:
+mgd/GXD_ImageCheck.sql;update print statement
+
 TAG: qcreports_db-5-1-0-3
 DATE: 10/04/2012
 STAFF: lec
