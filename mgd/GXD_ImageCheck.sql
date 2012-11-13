@@ -59,7 +59,7 @@ order by i.jnumID
 go
 
 print ''
-print 'GXD Image Pane Labels containing ',''
+print 'GXD Image Pane Labels containing a comma'
 print ''
 
 select distinct i.jnumID, i.figureLabel
