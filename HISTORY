@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-0-5
+DATE: 11/14/2012
+STAFF: lec
+CHANGES:
+TR11201/GXD_References.sql/move from monthly to weekly
+TR11218/MRK_GOUnknown.sql
+
 TAG: qcreports_db-5-1-0-4
 DATE: 11/13/2012
 STAFF: lec
