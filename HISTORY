@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-1-1
+DATE: 12/11/2012
+STAFF: dbm
+CHANGES:
+MRK_GeneNoMcvAnnot.py: fixed bug in printing row count of results set
+
 TAG: qcreports_db-5-1-0-6
 DATE: 11/16/2012
 STAFF: lec
