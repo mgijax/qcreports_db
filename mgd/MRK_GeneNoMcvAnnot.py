@@ -76,5 +76,5 @@ results = db.sql('''
 
 for r in results:
     fp.write('%s%s%s%s' % (r['accid'], TAB, r['symbol'], CRT))
-fp.write('\n(%d rows affected)\n' % (len(results[1])))
+fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
