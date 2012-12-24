@@ -15,6 +15,9 @@
 #
 # History:
 #
+# lec	12/24/2012
+#	- TR11206/re-open Dev Biol and Development
+#
 # lec	06/11/2012
 #	- TR11105/retire Dev Biol and Development
 #
@@ -61,7 +64,7 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 # The list of journals; one report for the set of papers within each sub list
-journals = [ ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns'] ]
+journals = [ ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns' ] , ['Dev Biol'], ['Development'] ]
 
 def processJournal(jList, fileName):
 
