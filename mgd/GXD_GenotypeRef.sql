@@ -138,8 +138,11 @@ print ''
 print 'References where GXD and Pheno differ in Genotype'
 print ''
 
-select t.jnum, substring(t.gxdStrain, 1, 75) as "GXD Strain", 
-substring(t.apStrain, 1, 75) as "A&P Strain", a1.symbol, a2.symbol
+select substring(t.jnum,1,10) as jnum, 
+substring(t.gxdStrain, 1, 75) as "GXD Strain", 
+substring(t.apStrain, 1, 75) as "A&P Strain", 
+substring(a1.symbol,1,30) as symbol1, 
+substring(a2.symbol,1,30) as symbol2
 from #toPrint1 t, GXD_AllelePair a, ALL_Allele a1, ALL_Allele a2
 where t.genoGXD = a._Genotype_key
 and a._Allele_key_1 = a1._Allele_key

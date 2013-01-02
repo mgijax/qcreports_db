@@ -16,7 +16,7 @@
 # History:
 #
 # lec	12/24/2012
-#	- TR11206/re-open Dev Biol and Development
+#	- TR11206/re-open Dev Biol and Development and Dev Dyn
 #
 # lec	06/11/2012
 #	- TR11105/retire Dev Biol and Development
@@ -64,7 +64,7 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 # The list of journals; one report for the set of papers within each sub list
-journals = [ ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns' ] , ['Dev Biol'], ['Development'] ]
+journals = [ ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns' ] , ['Dev Biol'], ['Development'], ['Dev Dyn'] ]
 
 def processJournal(jList, fileName):
 
@@ -80,6 +80,10 @@ def processJournal(jList, fileName):
 	fp.write(string.ljust('newGeneCount', 12))
 	fp.write(SPACE)
 	fp.write(string.ljust('Conditional', 20))
+	fp.write(SPACE)
+	fp.write(string.ljust('Priorty', 10))
+	fp.write(SPACE)
+	fp.write(string.ljust('Short Citation', 20))
 	fp.write(CRT)
 	fp.write(string.ljust('-----', 30))
 	fp.write(SPACE)
@@ -88,18 +92,25 @@ def processJournal(jList, fileName):
 	fp.write(string.ljust('-----------', 12))
 	fp.write(SPACE)
 	fp.write(string.ljust('---------', 20))
+	fp.write(SPACE)
+	fp.write(string.ljust('---------', 10))
+	fp.write(SPACE)
+	fp.write(string.ljust('---------', 20))
 	fp.write(CRT)
 
-	# get set of references not coded with high priority
+	# get set of references not coded with high/medium priority
 
 	db.sql('''
-	       select distinct i._Refs_key, i._Marker_key, t.term as conditional
+	       select distinct i._Refs_key, i._Marker_key, 
+                               t1.term as conditional,
+                               t2.term as priority
 	       into #markers1 
-	       from GXD_Index i, BIB_Refs b, VOC_Term t 
+	       from GXD_Index i, BIB_Refs b, VOC_Term t1, VOC_Term t2
 	       where i._Refs_key = b._Refs_key 
 	       and b.journal in ('%s')
-	       and i._Priority_key = 74714 /* high */ 
-	       and i._ConditionalMutants_key = t._Term_key 
+	       and i._Priority_key in (74714, 74715) /* high/medium */
+	       and i._Priority_key = t2._Term_key 
+	       and i._ConditionalMutants_key = t1._Term_key 
 	       and not exists (select 1 from GXD_Assay a 
 	       where i._Refs_key = a._Refs_key)
 	       ''' % journalTitle, None)
@@ -112,28 +123,29 @@ def processJournal(jList, fileName):
 	# add newGeneCount column to be updated later
 
 	results = db.sql('''
-		select distinct a.accID, i._Refs_key, i.markerCount, i.conditional, 0 as newGeneCount
+		select distinct a.jnumID, i._Refs_key, i.markerCount, 
+                                i.conditional, i.priority, 
+                                a.short_citation,
+                                0 as newGeneCount
 		into #final 
-		from #mcount1 i, ACC_Accession a 
-		where i._Refs_key = a._Object_key 
-		and a._MGIType_key = 1 
-		and a.prefixPart = 'J:'
+		from #mcount1 i, BIB_Citation_Cache a 
+		where i._Refs_key = a._Refs_key 
 		''', None)
 
 	#
 	# new genes
 	#
-	# the set of references/markers = high priorty
+	# the set of references/markers = high/medium priorty
 	# and references/markers are not referenced in the assay module
 	#
 
 	db.sql('''
-	       select distinct i._Refs_key, i._Marker_key 
+	       select distinct i._Refs_key, i._Marker_key
 	       into #markers2 
-	       from GXD_Index i, BIB_Refs b 
+	       from GXD_Index i, BIB_Refs b
 	       where i._Refs_key = b._Refs_key 
 	       and b.journal in ('%s')
-	       and i._Priority_key = 74714 /* high */
+	       and i._Priority_key in (74714, 74715) /* high/medium */
 	       and not exists (select 1 from GXD_Assay a where i._Refs_key = a._Refs_key) 
 	       and not exists (select 1 from GXD_Assay a where i._Marker_key = a._Marker_key) 
 	       ''' % journalTitle, None)
@@ -156,16 +168,20 @@ def processJournal(jList, fileName):
 	       ''', None)
 
 	# now write the report
-	results = db.sql('select * from #final order by newGeneCount desc, markerCount desc', 'auto')
+	results = db.sql('select * from #final order by priority, newGeneCount desc, markerCount desc', 'auto')
 
 	for r in results:
-	    fp.write(string.ljust(str(r['accID']), 30))
+	    fp.write(string.ljust(str(r['jnumID']), 30))
 	    fp.write(SPACE)
 	    fp.write(string.ljust(str(r['markerCount']), 12))
 	    fp.write(SPACE)
 	    fp.write(string.ljust(str(r['newGeneCount']), 12))
 	    fp.write(SPACE)
 	    fp.write(string.ljust(str(r['conditional']), 20))
+	    fp.write(SPACE)
+	    fp.write(string.ljust(str(r['priority']), 10))
+	    fp.write(SPACE)
+	    fp.write(string.ljust(str(r['short_citation']), 50))
 	    fp.write(CRT)
 
 	fp.write('%s(%d rows affected)%s%s' % (CRT, len(results), CRT, CRT))

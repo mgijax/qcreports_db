@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-1-1-2
+DATE: 01/02/2013
+STAFF: lec
+CHANGES:
+TR11185/monthly/PRB_References.sql
+TR11206/weekly/GXD_FullCode.py
+TR11254/mgd/GXD_GenotypeRef.sql
+
 TAG: qcreports_db-5-1-1-1
 DATE: 12/11/2012
 STAFF: dbm
