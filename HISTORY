@@ -5,6 +5,7 @@ CHANGES:
 TR11185/monthly/PRB_References.sql
 TR11206/weekly/GXD_FullCode.py
 TR11254/mgd/GXD_GenotypeRef.sql
+--TR11169/GXD_ImageJPG.sql/this change was only made in the TR directory
 
 TAG: qcreports_db-5-1-1-1
 DATE: 12/11/2012
