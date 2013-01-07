@@ -8,6 +8,8 @@ where
 (s.strain like '%/Mmcd%' and s.creation_date between '06/07/2011' and dateadd(day,1,'06/07/2011'))
 or
 (s.strain like '%/Mmucd%' and s.creation_date between '09/24/2012' and dateadd(day,1,'09/24/2012'))
+or
+(s._CreatedBy_key = 1421 and s.creation_date between '01/04/2013' and dateadd(day,1,'01/04/2013'))
 go
 
 create index idx1 on #exclude(_Strain_key)
@@ -22,6 +24,7 @@ print '(do not include any strains flagged as needing review by Janan''s load)'
 print''
 print 'excludes /Mmcd from 06/07/2011'
 print 'excludes /Mmucd from 09/24/2012'
+print 'excludes ''mberry'' from 01/04/2013'
 print 'excludes created-by = ''strainautoload'''
 print ''
 
@@ -65,6 +68,7 @@ print '(do not include any strains flagged as needing review by Janan''s load)'
 print ''
 print 'includes /Mmcd from 06/07/2011'
 print 'includes /Mmucd from 09/24/2012'
+print 'includes ''mberry'' from 01/04/2013'
 print ''
 
 (
