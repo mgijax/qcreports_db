@@ -1,8 +1,9 @@
-TAG: qcreports_db-5-1-2-?
+TAG: qcreports_db-5-1-2-1
 DATE: 01/07/2013
 STAFF: lec
 CHANGES:
 mgd/PRB_StrainByDate.sql: add 'mberry'/01/04/2013 to exclusion list
+added missing GXD_FullCode.py reports to qcr.html
 
 TAG: qcreports_db-5-1-1-2
 DATE: 01/02/2013
