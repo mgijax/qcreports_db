@@ -70,7 +70,7 @@ print '(do not include any strains flagged as needing review by Janan''s load)'
 print ''
 print 'includes /Mmcd from 06/07/2011'
 print 'includes /Mmucd from 09/24/2012'
-print 'includes ''mberry'' from 01/04/2013'
+print 'includes ''mberry'' from 01/04/2013, 01/09/2013'
 print ''
 
 (
