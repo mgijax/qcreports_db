@@ -6,7 +6,7 @@
 #
 # Report:
 #
-#       Classes for which there are >n genes from a single species
+#       Classes for which there are > n genes from a single species
 #
 # Usage:
 #       MRK_Homology_Class1.py
@@ -52,7 +52,7 @@ DOG_KEY = 13
 #
 MAX = 10
 db.useOneConnection(1)
-fp = reportlib.init(sys.argv[0], 'Homology classes for which there are >n genes from a single species ', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Homology classes for which there are > 10 genes from a single species ', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('HomoloGeneID%sHuman gene count%sMouse gene count%sRat gene count%sCattle gene count%sChimp gene count%sDog gene count%s' % (TAB, TAB, TAB, TAB, TAB, TAB, CRT))
 
