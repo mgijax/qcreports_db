@@ -50,7 +50,7 @@ DOG_KEY = 13
 # we want to report homolog clusters where any individual organism has
 # greater than this number of members in a cluster
 #
-MAX = 9
+MAX = 10
 db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'Homology classes for which there are >n genes from a single species ', outputdir = os.environ['QCOUTPUTDIR'])
 
@@ -90,17 +90,17 @@ for r in results:
 idList = sorted(clusterDict.keys() )
 for id in idList:
     reportHomology = 0
-    if clusterDict[id]['mouse'] == MAX:
+    if clusterDict[id]['mouse'] > MAX:
 	reportHomology = 1
-    elif clusterDict[id]['human'] == MAX:
+    elif clusterDict[id]['human'] > MAX:
         reportHomology = 1
-    elif clusterDict[id]['rat'] == MAX:
+    elif clusterDict[id]['rat'] > MAX:
         reportHomology = 1
-    elif clusterDict[id]['cattle'] == MAX:
+    elif clusterDict[id]['cattle'] > MAX:
         reportHomology = 1
-    elif clusterDict[id]['chimp'] == MAX:
+    elif clusterDict[id]['chimp'] > MAX:
         reportHomology = 1
-    elif clusterDict[id]['dog'] == MAX:
+    elif clusterDict[id]['dog'] > MAX:
         reportHomology = 1
 
     if reportHomology == 1:
