@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-2-5
+DATE: 02/19/2013
+STAFF: lec
+CHANGES: TR11253
+mgd/PRB_StrainByDate.sql: add 'mberry'/02/20/2013 to exclusion list
+
 TAG: qcreports_db-5-1-2-4
 DATE: 01/30/2013
 STAFF: lec
@@ -13,7 +19,7 @@ TAG: qcreports_db-5-1-2-2
 TAG: qcreports_db-5-1-2-1
 DATE: 01/07/2013, 01/09/2013, 01/14/2013
 STAFF: lec
-CHANGES:
+CHANGES: TR11253
 mgd/PRB_StrainByDate.sql: add 'mberry'/01/15/2013 to exclusion list
 mgd/PRB_StrainByDate.sql: add 'mberry'/01/04/2013 to exclusion list
 added missing GXD_FullCode.py reports to qcr.html
