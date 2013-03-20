@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-2-6
+DATE: 03/20/2013
+STAFF: lec
+CHANGES: TR11253
+mgd/PRB_StrainByDate.sql: add 'mberry'/03/21/2013 to exclusion list
+
 TAG: qcreports_db-5-1-2-5
 DATE: 02/19/2013
 STAFF: lec
