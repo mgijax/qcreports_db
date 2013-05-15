@@ -62,8 +62,7 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-# journals for Nature Publishing group papers, year >= 2002
-journalsNature = [
+journalsAll = [
 'Biotechnology', 
 'Cell Death Differ', 
 'Nat Biotechnol', 
@@ -81,22 +80,8 @@ journalsNature = [
 'Nat Rev Neurosci',
 'Nat Struct Biol', 
 'Nature',
-'Oncogene']
-
-# journals for all
-journalsAll = ['Genes Dev']
-
-def printNature():
-
-    count = 0
-    fp.write(TAB + 'Nature Publishing group journals where year >= 2002:' + CRT + 2*TAB)
-    for j in journalsNature:
-        fp.write(string.ljust(j, 25) + TAB)
-        count = count + 1
-        if count > 2:
-          fp.write(CRT + 2*TAB)
-          count = 0
-    fp.write(2*CRT)
+'Oncogene',
+'Genes Dev']
 
 def printAll():
 
@@ -156,31 +141,6 @@ def printResults():
 
     db.sql('drop table #refs', None)
 
-def selectNature():
-
-    #
-    # for journalsNature
-    # select references >= year 2002
-    # for given assays (see below)
-    # with full image stubs
-    #
-
-    db.sql('''
-	    select distinct r._Refs_key, r.journal, i.creation_date, 
-		   convert(char(10), i.creation_date, 101) as cdate
-	    into #refs
-	    from BIB_Refs r, GXD_Assay a, IMG_Image i
-	    where r.journal in ('%s')
-	    and r.year >= 2002
-	    and r._Refs_key = a._Refs_key
-	    and a._AssayType_key in (1,2,3,4,5,6,8,9)
-	    and r._Refs_key = i._Refs_key 
-	    and i._ImageType_key = 1072158
-	    and i.xDim is null
-	    ''' % (string.join(journalsNature, "','")), None)
-
-    db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
-
 def selectOther():
 
     #
@@ -210,11 +170,6 @@ def selectOther():
 #
 
 fp = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
-
-printNature()
-printFields()
-selectNature()
-printResults()
 
 printAll()
 printFields()

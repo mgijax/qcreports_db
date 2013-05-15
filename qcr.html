@@ -187,11 +187,11 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/NOMEN_Broadcast.sql.rpt">Nomenclature Symbols Broadcast Within Last 3 Days</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/NOMEN_Pending.sql.rpt">Nomenclature In Progress Symbols</A> <B>(dlb,mmh)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/NOMEN_Reserved.rpt">Nomenclature Reserved</A> <B>(dlb, bobs, mmh)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/NOMEN_Reserved.rpt">Nomenclature Reserved</A> <B>(dlb,mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_SymbolDiffs1.rpt">MGI Symbols differing from Human Ortholog Symbols, excludes RIKEN (#1)</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_SymbolDiffs3.rpt">MGI Symbols differing from Human Ortholog Symbols, RIKEN only (#1)</A> <B>(mmh)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A> <B>(bobs)</B> <B>(mmh)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_InterimByDate.sql.rpt">Interim Markers (sorted by human symbol status/date)</A> <B>(bobs, mmh)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A> <B>(?)</B> <B>(mmh)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_InterimByDate.sql.rpt">Interim Markers (sorted by human symbol status/date)</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NomenNotInformative.sql.rpt">MGI Markers with Uninformative Nomenclature #1</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_RefsToIndex.rpt">References to be indexed</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/archive/nomen">Archived Nomenclature Reports</A> <B>(mmh)</B>
@@ -238,28 +238,27 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX8.sql.current.rpt">MMRRC JR#s with alleles added within the past week</A>
 </OL>
 
-<A NAME="sequencegroup"><B>Sequence Group (rmb, cjb, djr, bobs, yz)</B></A>
+<A NAME="sequencegroup"><B>Sequence Group (rmb, cjb, djr, yz)</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_ComprehensiveMarkerSequence.rpt">Comprehensive Marker/Sequence</A> <B>(bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz, djr, bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_VEGA_Associations.rpt">VEGA Associations</A> <B>(bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(bobs)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz, djr)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(?)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(?)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_VEGA_Associations.rpt">VEGA Associations</A> <B>(?)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz, djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz, djr)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GeneNoMcvAnnot.rpt">Genes with no MCV Annotation</A> <B>(yz, bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>(djr, bobs)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnot.rpt">Marker MCV Annotations</A> <B>(yz, djr, bobs)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A> <B>(djr, bobs)</B>
-<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A>  <B>(djr, bobs)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GeneNoMcvAnnot.rpt">Genes with no MCV Annotation</A> <B>(yz)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>(djr)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnot.rpt">Marker MCV Annotations</A> <B>(yz, djr)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A> <B>(djr)</B>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A>  <B>(djr)</B>
 <BR>This report contains the following sections:
     <OL>
     <LI>Markers  with conflict between the Marker Type and the MCV Marker Type
     <LI>Markers Annotated to Grouping Terms
     <LI>Markers with Multiple MCV Annotations
     </OL>
-<LI>The following logs report: <B>(djr, bobs)</B>
+<LI>The following logs report: <B>(djr)</B>
     <BR>* Gene Models in MGI that have been obsoleted by the provider 
     <BR> * Gene Model biotypes not loaded because unable to translate biotype. 
     <OL>
@@ -272,7 +271,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/reports_db/output/MGI_BioTypeConflict.rpt">MGI Biotype Conflict Public Report</A> <B>(cjb)</B>
 </OL>
 
-<A NAME="sequence"><B>Sequences (rmb, cjb, djr, bobs, yz)</B></A>
+<A NAME="sequence"><B>Sequences (rmb, cjb, djr, yz)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Deleted.sql.rpt">Deleted Sequences with MGI Associations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Split.sql.rpt">Split Sequences</A>
@@ -283,7 +282,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz,djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoVEGA.rpt">VEGA Gene Models with no Marker Association</A> <B>(yz,djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,djr)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/SEQ_RepTransGenomic.rpt">Representative Transcript and Genomic Sequences</A> <B>(bobs)</B>
 </OL>
 
 <A NAME="homology"><B>Homology (jblake, mdolan) </B></A>
