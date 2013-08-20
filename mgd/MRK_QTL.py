@@ -259,5 +259,6 @@ reportlib.finish_nonps(fp2)	# non-postscript file
 reportlib.finish_nonps(fp3)	# non-postscript file
 reportlib.finish_nonps(fp4)	# non-postscript file
 reportlib.finish_nonps(fp5)	# non-postscript file
+
 db.useOneConnection(0)
 

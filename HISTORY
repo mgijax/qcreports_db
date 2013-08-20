@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-4-5
+DATE: 08/20/2013
+STAFF: lec
+CHANGES: 
+TR11349/mgd/GXD_ImageCheck.sql: remove thumbnail
+TR11373/mgd/MRK_QTL.py : new qtl reports
+
 TAG: qcreports_db-5-1-4-4
 DATE: 08/08/2013
 STAFF: lec

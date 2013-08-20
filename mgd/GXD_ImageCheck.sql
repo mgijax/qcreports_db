@@ -110,46 +110,6 @@ order by jnumID
 go
 
 print ''
-print 'Images with JPGs whose Thumbnails have no JPGs'
-print '(this only includes GXD assays and exclucdes recombinase assays)'
-print ''
-
-select distinct c.accID as "MGI ID"
-from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
-where a._MGIType_key = 8 
-and a._ImageType_key = 1072158
-and a.xDim is not null
-and a._Image_key = aa._Image_key
-and a._ThumbnailImage_key = b._Image_key
-and b.xDim is null
-and a._Image_key = c._Object_key
-and c._MGIType_key = 9
-and c._LogicalDB_key = 1
-and c.prefixPart = 'MGI:'
-order by accID
-go
-
-print ''
-print 'Images with JPGs whose Thumbnails have JPGs with incorrect X dimension (not = 150 pixels)'
-print '(this only includes GXD assays and excludes recombinase assays)'
-print ''
-
-select distinct c.accID as "MGI ID"
-from #assays aa, IMG_Image a, IMG_Image b, ACC_Accession c
-where a._MGIType_key = 8 
-and a._ImageType_key = 1072158
-and a.xDim is not null
-and a._Image_key = aa._Image_key
-and a._ThumbnailImage_key = b._Image_key
-and b.xDim != 150
-and a._Image_key = c._Object_key
-and c._MGIType_key = 9
-and c._LogicalDB_key = 1
-and c.prefixPart = 'MGI:'
-order by accID
-go
-
-print ''
 print 'JPGs but no Copyright Statement'
 print ''
 
