@@ -26,6 +26,8 @@ or
 (s._CreatedBy_key = 1421 and s.creation_date = '08/08/2013')
 or
 (s._CreatedBy_key = 1421 and s.creation_date = '09/17/2013')
+or
+(s._CreatedBy_key = 1421 and s.creation_date = '10/08/2013')
 go
 
 create index idx1 on #exclude(_Strain_key)
@@ -41,7 +43,7 @@ print''
 print 'excludes /Mmcd from 06/07/2011'
 print 'excludes /Mmucd from 09/24/2012'
 print 'excludes ''mberry'' from 01/04/2013, 01/09/2013, 01/15/2013, 02/20/2013, 03/22/2013, 06/10/2013, 07/16/2013, 08/08/2013'
-print 'excludes ''mberry'' from 09/17/2013'
+print 'excludes ''mberry'' from 09/17/2013, 10/08/2013'
 print 'excludes created-by = ''strainautoload'''
 print ''
 
