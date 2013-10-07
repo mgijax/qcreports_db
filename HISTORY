@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-1-5-3
+DATE: 10/07/2013
+STAFF: lec
+CHANGES: TR11423/disease-portal/omim-cluster reports
+qcr.html : added omim-cluster reports
+these reports will *not* exist until the human-disease-cluster project
+is installed on production
+
 TAG: qcreports_db-5-1-5-2
 DATE: 09/16/2013
 STAFF: lec
