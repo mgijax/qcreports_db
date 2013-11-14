@@ -28,7 +28,7 @@ select acc.accId from MGI_EMAPS_Mapping mem LEFT OUTER JOIN ACC_Accession acc on
 go
 
 print ''
-print 'MGI Id''s that do not map to GXD Structure terms'
+print 'EMAPS Id''s that do not map to Vocabulary Terms'
 print ''
 
 select mem.emapsId, ty1.tableName from MGI_EMAPS_Mapping mem, ACC_MGIType ty1, ACC_Accession acc LEFT OUTER JOIN VOC_Term voc on (acc._Object_key = voc._Term_key) where mem.emapsId = acc.accId and voc._Term_key is NULL and acc._MGIType_key = ty1._MGIType_key
