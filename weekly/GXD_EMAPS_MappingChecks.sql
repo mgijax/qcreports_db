@@ -24,7 +24,7 @@ print ''
 print 'EMAPS Id''s that have no entry in the Accession Table'
 print ''
 
-select acc.accId from MGI_EMAPS_Mapping mem LEFT OUTER JOIN ACC_Accession acc on (mem.emapsId = acc.accID) where acc.accId is NULL
+select mem.emapsId from MGI_EMAPS_Mapping mem LEFT OUTER JOIN ACC_Accession acc on (mem.emapsId = acc.accID) where acc.accId is NULL
 go
 
 print ''
