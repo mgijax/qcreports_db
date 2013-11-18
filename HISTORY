@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-5-6
+DATE: 11/18/2013
+STAFF: lec
+CHANGES: TR11522/
+moved 'ALL_Notes.py' from monthly to weekly
+
 TAG: qcreports_db-5-1-5-5
 DATE: 11/18/2013
 STAFF: lec
