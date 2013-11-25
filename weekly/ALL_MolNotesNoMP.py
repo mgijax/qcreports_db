@@ -28,6 +28,11 @@
 #
 # History:
 #
+# 11/25/2013	lec
+#	- TR11544/exclude J:157064, J:157065, J:165963, J:165964, 
+#		J:173534, J:188991, J:200814
+#		J:161922, J:164356, J:171883, J:174268, J:201630
+#
 # 01/26/2010	lec
 #	- TR10040
 #	- exclude J:136110, J:148605, J:155845
@@ -81,8 +86,10 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no MP Annotations', os.environ['QCOUTPUTDIR'])
 fp.write('\texcludes allele types: Transgenic (random, expressed), Transgenic (Cre/Flp), Transgenic (Reporter)\n')
 fp.write('\texcludes allele types: QTL, Not Applicable\n')
-fp.write('\texcludes allele status: Autload\n')
-fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n\n')
+fp.write('\texcludes allele status: Autoload\n')
+fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n')
+fp.write('\texcludes J:157064, J:157065, J:165963, J:165964, J:173534, J:188991, J:200814\n')
+fp.write('\texcludes J:161922, J:164356, J:171883, J:174268, J:201630\n\n')
 
 fp.write(string.ljust('Approval', 15) + \
          string.ljust('Acc ID', 15) + \
@@ -123,7 +130,7 @@ results = db.sql('''
     	and a1._MGIType_key = 1 
     	and a1._LogicalDB_key = 1 
     	and a1.prefixPart = 'J:' 
-    	and a1.numericPart not in (94077,94338,136110,148605,155845) 
+    	and a1.numericPart not in (94077,94338,136110,148605,155845,157064,157065,165963,165964,173534,188991,200814,161922,164356,171883,174268,201630)
     	and a1.preferred = 1 
     	order by a._Allele_key, a1.numericPart desc
 	''', 'auto')
