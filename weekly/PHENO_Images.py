@@ -16,6 +16,9 @@
 #
 # History:
 #
+# 12/02/2013	lec
+#	- TR11457/fix error in query
+#
 # 09/08/2011	lec
 #	- TR 10835; copied from GXD_Images.py
 #
@@ -36,7 +39,6 @@ try:
         import db
 except:
     import db
-
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -104,22 +106,55 @@ fp.write(string.ljust('--------------', 75) + CRT)
 #   a) have genotype annotations (_AnnotType_key = 1002)
 #   b) journal in journal list
 #   c) year > 2008
-#   d) genotype is not associated with a phenotype image
+#   d) genotype is not associated with a phenotype image via the allele
 #
 
+#
+# all references that contain journals with genotype annotations, etc.
+# where there exists an image/pane association to the genotype/allele
+#
 db.sql('''
       select distinct b._Refs_key
-      into #refs 
-      from VOC_Annot a, VOC_Evidence e, BIB_Refs b
+      into #exists
+      from VOC_Annot a, VOC_Evidence e, BIB_Refs b, GXD_AlleleGenotype g
       where a._AnnotType_key = 1002
 	    and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-	    and b.journal in ("'%s'") 
+	    and b.journal in ("%s") 
 	    and b.year > 2008
-	    and not exists (select 1 from IMG_ImagePane_Assoc_View v
-	    where v._MGIType_key = 12
+	    and a._Object_key = g._Genotype_key
+	    and exists (select 1 from IMG_ImagePane_Assoc_View v
+	    where v._MGIType_key = 11
 	    and v._ImageClass_key in (6481782)
-	    and a._Object_key = v._Object_key)
+	    and g._Allele_key = v._Object_key)
+	''' % (string.join(journals, '","')), None)
+
+db.sql('create index idx1 on #exists(_Refs_key)', None)
+
+#
+# all references that contain journals with genotype annotations, etc.
+# where the references does *not* exist in the "exists" temp table
+# where there does *not* exists an image/pane association to the genotype/allele
+#
+# references may appear in more than one genotype/allele combination
+# but not in others.  we are only interested in those where the reference
+# does not appear in *any* image pane/genotype/allele association.
+#
+db.sql('''
+      select distinct b._Refs_key
+      into #refs 
+      from VOC_Annot a, VOC_Evidence e, BIB_Refs b, GXD_AlleleGenotype g
+      where a._AnnotType_key = 1002
+	    and a._Annot_key = e._Annot_key
+            and e._Refs_key = b._Refs_key
+	    and b.journal in ("%s") 
+	    and b.year > 2008
+	    and a._Object_key = g._Genotype_key
+	    and not exists (select 1 from #exists r where b._Refs_key = r._Refs_key)
+	    and not exists (select 1 from IMG_ImagePane_Assoc_View v
+	    where v._MGIType_key = 11
+	    and v._ImageClass_key in (6481782)
+	    and g._Allele_key = v._Object_key)
 	''' % (string.join(journals, '","')), None)
 
 db.sql('create index idx1 on #refs(_Refs_key)', None)
