@@ -64,8 +64,8 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-transgenicKeys = '847128,847127,847126,847129'
-targetedKeys = '847118,847117,847116,847120,847119'
+transgenicKeys = '847126'
+targetedKeys = '847116'
 trappedKeys = '847121'
 qtlKeys = '847130'
 spontKeys = '847115'

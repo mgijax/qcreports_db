@@ -1,3 +1,13 @@
+TAG: qcreports_db-tr11515-?
+DATE: 12/31/2013
+STAFF: lec
+CHANGES: 
+1) changes to _Allele_Type_key
+mgd/ALL_NoMCL.sql
+monthly/GXD_Transgenic.py
+weekly/ALL_MolNotesNoMP.py
+weekly/ALL_Progress.py
+
 TAG: qcreports_db-tr11515-BP
 DATE: 12/31/2013
 STAFF: lec

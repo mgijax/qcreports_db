@@ -64,11 +64,8 @@ fp.write(CRT)
 # Assays
 #
 # undesirable allele types:
-# Transgenic (random, gene discruption)
-# Transgenic (random, expressed)
-# Transgenic (Cre/Flp)
-# Transgenic (reporter)
-# Transgenic (Transposase)
+# Transgenic
+# Transposase
 #
 
 db.sql('''
@@ -79,7 +76,7 @@ db.sql('''
     and a._Assay_key = e._Assay_key
     and e._Genotype_key = g._Genotype_key
     and g._Allele_key = aa._Allele_key
-    and aa._Allele_Type_key in (847126, 847127, 847128, 847129, 2327160)
+    and aa._Allele_Type_key in (847126, 2327160)
     ''', None)
 
 db.sql('create index idx1 on #final(_Refs_key)', None)
