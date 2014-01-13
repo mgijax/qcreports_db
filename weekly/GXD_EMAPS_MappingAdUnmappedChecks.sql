@@ -1,5 +1,5 @@
 
-print ''
+print 'Check 9'
 print 'AD Terms that do not map to EMAPS Id''s'
 print ''
 
@@ -36,6 +36,8 @@ where
 			acc.prefixPart = "MGI:" and
 			mem.accId is NULL
 	)
+order by 
+	vacc.annotCount desc
 go
 
 
