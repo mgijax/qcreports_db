@@ -94,7 +94,7 @@ order by
        ''', 'auto')
 
 for r in results:
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (r['accId'], TAB, r['stage'], TAB, r['acount'], TAB, r['printname'], CRT))
+    fp.write('%s%s%s%s%s%s%s%s' % (r['accId'], TAB, r['stage'], TAB, r['acount'], TAB, r['printname'], CRT))
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)	# non-postscript file

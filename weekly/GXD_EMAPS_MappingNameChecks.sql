@@ -5,7 +5,7 @@ print 'AD Term names and EMAPS Term names that do not match'
 print ''
 select
 	substring(mem.accId, 1, 15) as "AD ID",
-	string(gts.stage) as "AD TS",
+	gts.stage as "AD TS",
 	substring(gs.printName, 1,80) as "AD PrintName",
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
 	vte.stage as "EMAPS TS",
