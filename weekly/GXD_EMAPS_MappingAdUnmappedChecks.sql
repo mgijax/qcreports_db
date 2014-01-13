@@ -6,7 +6,7 @@ print ''
 
 select
 	substring(acc.accId, 1, 15) as "AD ID",
-	substring(gts.stage, 1, 5) as "TS",
+	gts.stage as "TS",
 	(case when vacc.annotCount = NULL then 0 else vacc.annotCount end) as "Annot Ct",
 	substring(gs.printname, 1,80) as "Print Name"
 from
