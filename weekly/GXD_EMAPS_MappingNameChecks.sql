@@ -1,4 +1,5 @@
 
+print ''
 print 'Check 10'
 print 'AD Term names and EMAPS Term names that do not match'
 print ''

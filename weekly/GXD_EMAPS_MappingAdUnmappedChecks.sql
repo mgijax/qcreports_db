@@ -1,4 +1,5 @@
 
+print ''
 print 'Check 9'
 print 'AD Terms that do not map to EMAPS Id''s'
 print ''

@@ -1,4 +1,5 @@
 
+print ''
 print 'Check 1'
 print 'Duplicate MGI and EMAPS entries in the Mapping Table'
 print 'by only looking at the mapping table'
@@ -15,6 +16,7 @@ having
 	count(*) > 1
 go
 
+print ''
 print 'Check 2'
 print 'MGI Id''s that are not valid in the system'
 print 'by not having an entry in the Accession Table'
@@ -30,6 +32,7 @@ where
 	acc.accId is NULL
 go
 
+print ''
 print 'Check 3'
 print 'MGI Id''s that do not map to GXD Structures in the GXD_Structure table'
 print 'May have multiple entries if MGI Id maps to other objects'
@@ -51,6 +54,7 @@ where
 	gs._Structure_key is NULL and
 	acc._MGIType_key = ty1._MGIType_key
 
+print ''
 print 'Check 4'
 print 'EMAPS Id''s that are not valid in the system'
 print 'by not having an entry in the Accession Table'
@@ -66,6 +70,7 @@ where
 	acc.accId is NULL
 go
 
+print ''
 print 'Check 5'
 print 'EMAPS Id''s that do not map to Vocabulary Terms in the VOC_Term table'
 print 'May have multiple entries if EMAPS Id maps to other objects'
@@ -86,6 +91,7 @@ where
 	acc._MGIType_key = ty1._MGIType_key
 go
 
+print ''
 print 'Check 6'
 print 'EMAPS terms that are mapped to two AD terms'
 print ''
@@ -138,6 +144,7 @@ where
 	)
 go
 
+print ''
 print 'Check 7'
 print 'AD terms that are mapped to two EMAPS terms'
 print ''
@@ -190,6 +197,7 @@ where
 	)
 go
 
+print ''
 print 'Check 8'
 print 'AD Stage and EMAPS Stage that are not the same'
 print ''
