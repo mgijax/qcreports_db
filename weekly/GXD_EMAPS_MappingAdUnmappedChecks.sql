@@ -5,10 +5,9 @@ print 'AD Terms that do not map to EMAPS Id''s'
 print ''
 
 select
-	acc.accId as "AD ID",
-	gts.stage as "AD TS",
-	(case when vacc.annotCount = NULL then 0 else vacc.annotCount end) as "Annotation Count",
-	gs._Structure_key as "SKEY",
+	substring(acc.accId, 1, 15) as "AD ID",
+	substring(gts.stage, 1, 5) as "TS",
+	(case when vacc.annotCount = NULL then 0 else vacc.annotCount end) as "Annot Ct",
 	substring(gs.printname, 1,80) as "Print Name"
 from
 	ACC_Accession acc,

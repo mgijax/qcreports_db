@@ -42,7 +42,7 @@ select
 	distinct
 	mem.accId,
 	acc._MGIType_key,
-	ty1.tableName
+	substring(ty1.tableName, 1, 20) as "Object Name"
 from
 	MGI_EMAPS_Mapping mem,
 	ACC_MGIType ty1,
