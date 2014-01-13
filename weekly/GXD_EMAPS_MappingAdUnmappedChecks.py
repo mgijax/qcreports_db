@@ -53,7 +53,7 @@ PAGE = reportlib.PAGE
 title = 'AD Terms test do not map to EMAPS Id''s'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('AD MGI ID%sAD Theiler Stage%sAnnotation Count%sPrint Name%s' % (TAB, TAB, TAB, TAB, TAB, CRT))
+fp.write('AD MGI ID%sAD Theiler Stage%sAnnotation Count%sPrint Name%s' % (TAB, TAB, TAB, CRT))
 
 results = db.sql('''
 
