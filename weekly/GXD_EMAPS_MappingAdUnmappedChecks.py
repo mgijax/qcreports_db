@@ -50,7 +50,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-title = 'AD Terms test do not map to EMAPS Id''s'
+title = 'AD Terms test do not map to EMAPS Ids'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('AD MGI ID%sAD Theiler Stage%sAnnotation Count%sPrint Name%s' % (TAB, TAB, TAB, CRT))

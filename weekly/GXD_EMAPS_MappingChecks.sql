@@ -2,7 +2,6 @@
 print ''
 print 'Check 1'
 print 'Duplicate MGI and EMAPS entries in the Mapping Table'
-print 'by only looking at the mapping table'
 print ''
 
 select
@@ -18,8 +17,7 @@ go
 
 print ''
 print 'Check 2'
-print 'MGI Id''s that are not valid in the system'
-print 'by not having an entry in the Accession Table'
+print 'MGI Id''s that do not have an entry in the Accession Table'
 print ''
 
 select
@@ -55,8 +53,7 @@ where
 
 print ''
 print 'Check 4'
-print 'EMAPS Id''s that are not valid in the system'
-print 'by not having an entry in the Accession Table'
+print 'Id''s in the EMAPS Field that do not have an entry in the Accession Table'
 print ''
 
 select
@@ -71,8 +68,7 @@ go
 
 print ''
 print 'Check 5'
-print 'EMAPS Id''s that do not map to Vocabulary Terms in the VOC_Term table'
-print 'May have multiple entries if EMAPS Id maps to other objects'
+print 'Non EMAPS Id''s in the EMAPS Field'
 print ''
 
 select
