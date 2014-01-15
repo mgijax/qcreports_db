@@ -15,7 +15,7 @@ from
 	GXD_StructureName gsn,
 	GXD_Structure gs
 LEFT OUTER JOIN
-	VOC_Annot_Count_Cache vacc on (gs._Structure_key = vacc._Term_key and vacc.annotType = 'AD')
+	VOC_Annot_Count_Cache vacc on (gs._Structure_key = vacc._Term_key and vacc.annotType = 'AD' and vacc._MGIType_key = 38)
 where
 	acc._MGIType_key = 38 and
 	acc.prefixPart = "MGI:" and
@@ -35,12 +35,8 @@ where
 			acc._MGIType_key = 38 and
 			acc.prefixPart = "MGI:" and
 			mem.accId is NULL
-	)
+	) and
+	acc.accId = "MGI:4850902"
 order by 
 	vacc.annotCount desc
 go
-
-
-
-
-

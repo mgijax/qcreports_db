@@ -79,10 +79,10 @@ from
 	ACC_MGIType ty1,
 	ACC_Accession acc
 LEFT OUTER JOIN
-	VOC_Term voc on (acc._Object_key = voc._Term_key)
+	VOC_Term_EMAPS vte on (acc._Object_key = vte._Term_key)
 where
 	mem.emapsId = acc.accId and
-	voc._Term_key is NULL and
+	vte._Term_key is NULL and
 	acc._MGIType_key = ty1._MGIType_key
 go
 
