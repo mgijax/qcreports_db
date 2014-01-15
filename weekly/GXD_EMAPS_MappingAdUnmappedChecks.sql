@@ -35,8 +35,7 @@ where
 			acc._MGIType_key = 38 and
 			acc.prefixPart = "MGI:" and
 			mem.accId is NULL
-	) and
-	acc.accId = "MGI:4850902"
+	)
 order by 
 	vacc.annotCount desc
 go
