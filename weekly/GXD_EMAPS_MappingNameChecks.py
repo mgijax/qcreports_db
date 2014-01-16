@@ -52,17 +52,17 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-title = 'AD Term names and EMAPS Term names that do not match'
+title = 'Check 10 - AD Term names and EMAPS Term names that do not match'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('AD MGI ID%sAD Theiler Stage%sAD term name%sEMAPS ID%sEMAPS Theiler Stage%sEMAPS term name%s' % (TAB, TAB, TAB, TAB, TAB, CRT))
 
 results = db.sql('''select mem.accID, 
 	    gts.stage as adStage, 
-	    substring(gs.printName, 1,80) as adName, 
+	    gs.printName as adName, 
 	    mem.emapsID,
 	    vte.stage as emapsStage,
-	    substring(voct.term, 1,80) as emapsName
+	    voct.term as emapsName
 	from GXD_Structure gs, GXD_TheilerStage gts, GXD_StructureName gsn, 
 	    ACC_Accession aa1, ACC_MGIType ty1, MGI_EMAPS_Mapping mem, 
 	    ACC_Accession aa2, ACC_MGIType ty2, VOC_Term voct, 
@@ -79,6 +79,7 @@ results = db.sql('''select mem.accID,
 	and aa2._Object_key = voct._Term_key 
 	and voct._Term_key = vte._Term_key 
 	and (case when voct.term = gsn.structure then 1 else 0 end) = 0
+	order by gs.printName, gts.stage
        ''', 'auto')
 
 for r in results:
