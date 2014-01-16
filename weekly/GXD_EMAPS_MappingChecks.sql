@@ -68,7 +68,7 @@ go
 
 print ''
 print 'Check 5'
-print 'Non EMAPS Id''s in the EMAPS Field'
+print 'IDs in the EMAPS field that are not valid EMAPS IDs'
 print ''
 
 select
@@ -93,11 +93,11 @@ print 'EMAPS terms that are mapped to two AD terms'
 print ''
 
 select
-	mem.emapsId as "EMAPS ID",
-	vte.stage as "EMAPS TS",
+	substring(mem.emapsId, 1, 15) as "EMAPS ID",
+	substring(vte.stage, 1, 5) as "EMAPS TS",
 	substring(voct.term, 1, 20) as "EMAPS Term Name",
-	mem.accId as "AD ID",
-	gts.stage "AD TS",
+	substring(mem.accId, 1, 15) as "AD ID",
+	convert(varchar(5), gts.stage) as "AD TS",
 	substring(gs.printName, 1,20) as "AD Printname"
 from
 	GXD_Structure gs,
@@ -146,11 +146,11 @@ print 'AD terms that are mapped to two EMAPS terms'
 print ''
 
 select
-	mem.accId as "AD ID",
-	gts.stage "AD TS",
+	substring(mem.accId, 1, 15) as "AD ID",
+	convert(varchar(5), gts.stage)  "AD TS",
 	substring(gs.printName, 1,20) as "AD Printname",
-	mem.emapsId as "EMAPS ID",
-	vte.stage as "EMAPS TS",
+	substring(mem.emapsId, 1, 15) as "EMAPS ID",
+	substring(vte.stage, 1, 5) as "EMAPS TS",
 	substring(voct.term, 1,20) as "EMAPS Term Name"
 from
 	GXD_Structure gs,
@@ -199,11 +199,11 @@ print 'AD Stage and EMAPS Stage that are not the same'
 print ''
 
 select
-	mem.accId as "AD ID",
-	gts.stage "AD TS",
+	substring(mem.accId, 1, 15) as "AD ID",
+	convert(varchar(5), gts.stage) "AD TS",
 	substring(gs.printName, 1,20) as "AD Printname",
-	mem.emapsId as "EMAPS ID",
-	vte.stage as "EMAPS TS",
+	substring(mem.emapsId, 1, 15) as "EMAPS ID",
+	substring(vte.stage, 1, 5) as "EMAPS TS",
 	substring(voct.term, 1,20) as "EMAPS Term Name"
 from
 	GXD_Structure gs,
