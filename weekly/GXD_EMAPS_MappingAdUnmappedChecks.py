@@ -65,7 +65,6 @@ select
 from
 	ACC_Accession acc,
 	GXD_TheilerStage gts,
-	GXD_StructureName gsn,
 	GXD_Structure gs
 LEFT OUTER JOIN
 	VOC_Annot_Count_Cache vacc on (gs._Structure_key = vacc._Term_key and vacc.annotType = 'AD')
@@ -83,8 +82,6 @@ where
 			MGI_EMAPS_Mapping mem on (acc.accId = mem.accId)
 		where
 			gs._Structure_key = acc._Object_key and
-			gs._Stage_key = gts._Stage_key and
-			gs._StructureName_key = gsn._StructureName_key and
 			acc._MGIType_key = 38 and
 			acc.prefixPart = "MGI:" and
 			mem.accId is NULL
