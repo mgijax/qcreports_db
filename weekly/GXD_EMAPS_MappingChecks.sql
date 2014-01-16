@@ -74,7 +74,7 @@ print ''
 select
 	distinct
 	mem.emapsId,
-	ty1.tableName
+	substring(ty1.tableName, 1, 25) as "Object type"
 from
 	MGI_EMAPS_Mapping mem,
 	ACC_MGIType ty1,
@@ -95,10 +95,10 @@ print ''
 select
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
 	substring(vte.stage, 1, 5) as "EMAPS TS",
-	substring(voct.term, 1, 20) as "EMAPS Term Name",
+	substring(voct.term, 1, 35) as "EMAPS Term Name",
 	substring(mem.accId, 1, 15) as "AD ID",
 	convert(varchar(5), gts.stage) as "AD TS",
-	substring(gs.printName, 1,20) as "AD Printname"
+	substring(gs.printName, 1,35) as "AD Printname"
 from
 	GXD_Structure gs,
 	GXD_TheilerStage gts,
@@ -148,10 +148,10 @@ print ''
 select
 	substring(mem.accId, 1, 15) as "AD ID",
 	convert(varchar(5), gts.stage)  "AD TS",
-	substring(gs.printName, 1,20) as "AD Printname",
+	substring(gs.printName, 1,35) as "AD Printname",
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
 	substring(vte.stage, 1, 5) as "EMAPS TS",
-	substring(voct.term, 1,20) as "EMAPS Term Name"
+	substring(voct.term, 1,35) as "EMAPS Term Name"
 from
 	GXD_Structure gs,
 	GXD_TheilerStage gts,
@@ -201,10 +201,10 @@ print ''
 select
 	substring(mem.accId, 1, 15) as "AD ID",
 	convert(varchar(5), gts.stage) "AD TS",
-	substring(gs.printName, 1,20) as "AD Printname",
+	substring(gs.printName, 1,35) as "AD Printname",
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
 	substring(vte.stage, 1, 5) as "EMAPS TS",
-	substring(voct.term, 1,20) as "EMAPS Term Name"
+	substring(voct.term, 1,35) as "EMAPS Term Name"
 from
 	GXD_Structure gs,
 	GXD_TheilerStage gts,
