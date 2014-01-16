@@ -71,6 +71,7 @@ LEFT OUTER JOIN
 where
 	acc._MGIType_key = 38 and
 	acc.prefixPart = "MGI:" and
+   gs._Stage_key = gts._Stage_key and
 	gs._Structure_key = acc._Object_key and
 	gs._Structure_key in (
 		select
@@ -87,7 +88,8 @@ where
 			mem.accId is NULL
 	)
 order by 
-	vacc.annotCount desc
+	vacc.annotCount desc,accId
+
        ''', 'auto')
 
 for r in results:
