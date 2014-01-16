@@ -72,6 +72,7 @@ print 'Non EMAPS Id''s in the EMAPS Field'
 print ''
 
 select
+	distinct
 	mem.emapsId,
 	ty1.tableName
 from
