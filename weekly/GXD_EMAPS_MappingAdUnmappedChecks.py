@@ -95,7 +95,9 @@ union
 		ge._Structure_key is NULL
 	group by
 		gs._Structure_key
+       ''', 'auto')
 
+results = db.sql('''
 select
 	acc.accId,
 	gts.stage,
@@ -114,13 +116,14 @@ where
 	acc.prefixPart = "MGI:"
 order by
 	olin.SCount desc, "Term"
-
-drop table #tmp_olin
-
        ''', 'auto')
 
 for r in results:
-    fp.write('%s%s%s%s%s%s%s%s' % (r['accId'], TAB, r['stage'], TAB, r['acount'], TAB, r['printname'], CRT))
+    fp.write('%s%s%s%s%s%s%s%s' % (r['accId'], TAB, r['stage'], TAB, r['Scount'], TAB, r['printname'], CRT))
+
+results = db.sql('''
+drop table #tmp_olin
+       ''', 'auto')
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)	# non-postscript file
