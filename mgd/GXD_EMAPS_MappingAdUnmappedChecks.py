@@ -121,9 +121,8 @@ order by
 for r in results:
     fp.write('%s%s%s%s%s%s%s%s' % (r['accId'], TAB, r['stage'], TAB, r['Scount'], TAB, r['printname'], CRT))
 
-results = db.sql('''
-drop table #tmp_olin
-       ''', 'auto')
-
 fp.write('\n(%d rows affected)\n' % (len(results)))
+
+results = db.sql(''' drop table #tmp_olin ''', 'auto')
+
 reportlib.finish_nonps(fp)	# non-postscript file
