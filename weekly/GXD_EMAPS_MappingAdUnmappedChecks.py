@@ -115,7 +115,7 @@ where
 	acc._MGIType_key = 38 and
 	acc.prefixPart = "MGI:"
 order by
-	olin.SCount desc, "Term"
+	olin.SCount desc, gs.printname
        ''', 'auto')
 
 for r in results:
