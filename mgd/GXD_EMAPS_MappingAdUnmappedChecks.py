@@ -67,7 +67,7 @@ results = db.sql('''
 	LEFT OUTER JOIN
 		MGI_EMAPS_Mapping mem on (acc.accId = mem.accId)
 	LEFT OUTER JOIN
-		GXD_Expression ge on (acc._Object_key = ge._Structure_key and isForGXD = 1)
+		GXD_Expression ge on (acc._Object_key = ge._Structure_key)
 	where
 		gs._Structure_key = acc._Object_key and
 		acc._MGIType_key = 38 and
@@ -86,7 +86,7 @@ union
 	LEFT OUTER JOIN
 		MGI_EMAPS_Mapping mem on (acc.accId = mem.accId)
 	LEFT OUTER JOIN
-		GXD_Expression ge on (acc._Object_key = ge._Structure_key and isForGXD = 1)
+		GXD_Expression ge on (acc._Object_key = ge._Structure_key)
 	where
 		gs._Structure_key = acc._Object_key and
 		acc._MGIType_key = 38 and
