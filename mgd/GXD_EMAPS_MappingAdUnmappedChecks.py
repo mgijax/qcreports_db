@@ -19,6 +19,9 @@
 #
 # History:
 #
+# sc 01/27/2014
+#	- US175 GXD Anatomy project, include CRE
+#
 # oblod	01/10/2014
 #	- TR11468 GXD Anatomy Project 
 #

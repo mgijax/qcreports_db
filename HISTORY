@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-7-2
+DATE: 1/27/2014
+STAFF: sc
+CHANGES: TR11468, US175
+1) GXD_EMAPS_MappingAdUnmappedChecks.py - include CRE
+
 TAG: qcreports_db-5-1-7-1
 DATE: 1/22/2014
 STAFF: oblod
