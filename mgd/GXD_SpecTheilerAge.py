@@ -21,6 +21,9 @@
 #
 # History:
 #
+# sc 	
+#	- TR11543; Updated GXD_TheilerStage to TS27 dpcMin=21.01, dpcMax=24.0; TS28 dpcMin=21.01
+#
 # lec	09/08/2010
 #	- TR 10344; exclude J:153498/Eurexpress
 #

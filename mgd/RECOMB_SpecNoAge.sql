@@ -44,14 +44,15 @@ and s._Specimen_key = i._Specimen_key
 and i._Result_key = r._Result_key
 and r._Structure_key = c._Structure_key
 and c._Stage_key = t._Stage_key
-and t.stage != 28
+and t.stage != 28 
+and t.stage != 27
 go
 
 set nocount off
 go
 
 print ''
-print 'InSitu Specimens with Adult Specimens annotated to embryonic structures'
+print 'TS 27 and TS 28 InSitu Specimens annotated to embryonic structures'
 print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel

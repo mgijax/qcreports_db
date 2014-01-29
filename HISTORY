@@ -1,3 +1,19 @@
+TAG: qcreports_db-5-1-7-3
+DATE: 1/28/2014
+STAFF: sc
+CHANGES: TR11507
+1) GXD_AssayInIndexNotInCache.py - exclude Nuclease S1 and RNase protection 
+2) GXD_FullCodeGene.sql - exclude RNAse prot (74727) and S1 nuc (74726) 
+CHANGES: TR11347
+1) GXD_FullCodeable.py - removed OMIM column (and queries) from report 1
+2) weekly/GXD_FullCodeableIndexed.py - removed OMIM column (and queries)
+CHANGES: TR11543 - updated TS 27/28 min/max values in db
+1) GXD_SpecNoAge.sql - add exclusion of TS 27 when querying for InSitu 
+    and Gel Lanes where age like 'postnatal%'.
+2) RECOMB_SpecNoAge.sql - add exclusion of TS 27 when querying for InSitu 
+    where age like 'postnatal%'. 
+3) GXD_SpecTheilerAge.py - made a note about TS 27/28 max/min changing in the db
+
 TAG: qcreports_db-5-1-7-2
 DATE: 1/27/2014
 STAFF: sc

@@ -11,6 +11,9 @@
 #
 # History:
 #
+# sc 01/28/2014
+#	- TR11347 remove OMIM column
+#
 # lec	08/06/2012
 #	- copied from GXD_FullCodeable.py
 #
@@ -43,8 +46,6 @@ fp = reportlib.init(sys.argv[0], 'Indexed-Full-Coded gene list', outputdir = os.
 fp.write(string.ljust('acc id', 25))
 fp.write(SPACE)
 fp.write(string.ljust('symbol', 35))
-fp.write(SPACE)
-fp.write(string.ljust('OMIM', 8))
 fp.write(SPACE)
 fp.write(string.ljust('index records', 20))
 fp.write(SPACE)
@@ -109,31 +110,6 @@ for r in results:
     fullcodedrecords[key].append(value)
 
 #
-#
-# all markers with a human ortholog that has an OMIM annotation
-#
-
-omim = {}		# key = Marker key, value = 1
-results = db.sql('''
-	select distinct h1._Marker_key 
-        from MRK_Homology_Cache h1
-        where h1._Organism_key = 1 
-	and exists (select 1 from MRK_Homology_Cache h2, 
-             MRK_Marker m1, MRK_Marker m2, ACC_Accession a, 
-             #allgenes g 
-        where h1._Class_key = h2._Class_key 
-        and h1._Marker_key = m1._Marker_key 
-        and h2._Marker_key = m2._Marker_key 
-        and m2._Marker_key = a._Object_key 
-        and a._MGIType_key = 2 
-        and a._LogicalDB_key = 15 
-        and m1._Marker_key = g._Marker_key)
-       ''', 'auto')
-
-for r in results:
-    omim[r['_Marker_key']] = 1
-
-#
 # to print...
 #
 results = db.sql('select * from #allgenes order by idx_count, symbol', 'auto')
@@ -145,12 +121,6 @@ for r in results:
     fp.write(string.ljust(r['accID'], 25))
     fp.write(SPACE)
     fp.write(string.ljust(r['symbol'], 35))
-    fp.write(SPACE)
-
-    if omim.has_key(key):
-        fp.write(string.ljust('Yes', 8))
-    else:
-        fp.write(string.ljust('No', 8))
     fp.write(SPACE)
 
     fp.write(string.ljust(str(r['idx_count']), 20))

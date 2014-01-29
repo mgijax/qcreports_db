@@ -13,6 +13,9 @@
 #
 # History:
 #
+# sc 01/28/2014
+#       - TR11347 remove OMIM column
+#
 # 06/11/2012	lec
 #	- TR11105/remove GXD_FullCodable3 (retire)
 #
@@ -129,8 +132,6 @@ def report1(fp):
 
     fp.write(string.ljust('symbol', 35))
     fp.write(SPACE)
-    fp.write(string.ljust('OMIM', 8))
-    fp.write(SPACE)
     fp.write(string.ljust('index records', 20))
     fp.write(SPACE)
     fp.write(string.ljust('codeable papers', 25))
@@ -185,29 +186,6 @@ def report1(fp):
         jnums[key].append(value)
 
     #
-    #
-    # all markers with a human ortholog that has an OMIM annotation
-    #
-
-    omim = {}	# key = Marker key, value = 1
-
-    results = db.sql('select distinct h1._Marker_key ' + \
-                     'from MRK_Homology_Cache h1, MRK_Homology_Cache h2, ' + \
-                          'MRK_Marker m1, MRK_Marker m2, ACC_Accession a, ' + \
-                          '#markers tm ' + \
-                     'where h1._Organism_key = 1 ' + \
-                           'and h1._Class_key = h2._Class_key ' + \
-                           'and h1._Marker_key = m1._Marker_key ' + \
-                           'and h2._Marker_key = m2._Marker_key ' + \
-                           'and m2._Marker_key = a._Object_key ' + \
-                           'and a._MGIType_key = 2 ' + \
-                           'and a._LogicalDB_key = 15 ' + \
-                           'and m1._Marker_key = tm._Marker_key', 'auto')
-
-    for r in results:
-        omim[r['_Marker_key']] = 1
-
-    #
     # number of index records for the markers of interest
     #
 
@@ -221,10 +199,6 @@ def report1(fp):
     for r in results:
         fp.write(string.ljust(r['symbol'], 35))
         fp.write(SPACE)
-        if omim.has_key(r['_Marker_key']):
-            fp.write(string.ljust('Yes', 8))
-        else:
-            fp.write(string.ljust('No', 8))
         fp.write(SPACE)
         fp.write(string.ljust(str(r['idx_count']), 20))
         fp.write(SPACE)

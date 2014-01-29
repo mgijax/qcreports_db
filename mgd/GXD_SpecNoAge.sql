@@ -73,7 +73,8 @@ and s._Specimen_key = i._Specimen_key
 and i._Result_key = r._Result_key
 and r._Structure_key = c._Structure_key
 and c._Stage_key = t._Stage_key
-and t.stage != 28
+and t.stage != 28 
+and t.stage != 27 
 go
 
 select distinct i._GelLane_key
@@ -83,14 +84,15 @@ where i.age like 'postnatal%'
 and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
-and t.stage != 28
+and t.stage != 28 
+and t.stage != 27 
 go
 
 set nocount off
 go
 
 print ''
-print 'InSitu Specimens with Adult Specimens annotated to embryonic structures'
+print 'TS 27 and TS 28 InSitu Specimens annotated to embryonic structures'
 print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
@@ -101,7 +103,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 print ''
-print 'Gel Lane Specimens with Adult Specimens annotated to embryonic structures'
+print 'TS 27 and TS 28 Gel Lanes annotated to embryonic structures'
 print ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
@@ -130,7 +132,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 print ''
-print 'Gel Lane Speciments with Age either ''postnatal'', ''postnatal adult'', ''postnatal newborn'' but age range entered'
+print 'Gel Lane Specimens with Age either ''postnatal'', ''postnatal adult'', ''postnatal newborn'' but age range entered'
 print ''
 
 select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel

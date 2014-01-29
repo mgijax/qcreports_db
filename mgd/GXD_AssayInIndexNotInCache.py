@@ -17,6 +17,9 @@
 #
 # History:
 #
+# sc 01/28/2014
+#	TR11507 - exclude Nuclease S1 and RNase protection
+#
 # lec	03/24/2011
 #	- TR 10642/add '%quantitative RT%' to exclusion list
 #
@@ -63,7 +66,7 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('Full coded references that contain indexed assays that have not been full coded' + CRT)
 fp.write('excluded:' + CRT)
-fp.write('     index records that contain only cDNA or primer extension assays' + CRT)
+fp.write('     index records that contain only cDNA, primer extension, RNase protection or Nuclease S1 assays' + CRT)
 fp.write('     index records that contain only age ''E?''' + CRT)
 fp.write('     index records that have a note that contains: ' + CRT)
 fp.write('     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket'', ''quantitative RT''' + CRT)
@@ -122,26 +125,6 @@ and exists (select 1 from GXD_Expression ge
 and not exists (select 1 from GXD_Expression ga 
 	where ga._Refs_key = gi._Refs_key 
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 2)
-
-union
-select distinct jnumID, term as 'AssayType', symbol 
-from #validIndexItems gi
-where gi._IndexAssay_key = 74727 and gi._StageID_key != 74769 
-and exists (select 1 from GXD_Expression ge 
-	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga 
-	where ga._Refs_key = gi._Refs_key 
-and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 3)
-
-union
-select distinct jnumID, term as 'AssayType', symbol 
-from #validIndexItems gi
-where gi._IndexAssay_key = 74726 and gi._StageID_key != 74769  
-and exists (select 1 from GXD_Expression ge 
-	where ge._Refs_key = gi._Refs_key and ge._Marker_key = gi._Marker_key)
-and not exists (select 1 from GXD_Expression ga 
-	where ga._Refs_key = gi._Refs_key 
-and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 4)
 
 union
 select distinct jnumID, term as 'AssayType', symbol 

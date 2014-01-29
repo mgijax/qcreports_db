@@ -1,4 +1,4 @@
-
+/* TR11507 exclude nuclease S1 and RNase protection */
 /* TR 7370 */
 /* TR 9563 */
 /* TR 9646: add ''binding'' and ''rocket'' to exclusion list */
@@ -8,15 +8,16 @@ set nocount on
 go
 
 /* exclude cDNA (74725) and primer extension (74728) */
+/* 1/28/14 exclude RNAse prot (74727) and S1 nuc (74726) */
 
 select distinct gi._Index_key
 into #excluded
 from GXD_Index gi, GXD_Index_Stages gs 
 where gi._Index_key = gs._Index_key
-and gs._IndexAssay_key in (74725, 74728)
+and gs._IndexAssay_key in (74725, 74726, 74727, 74728)
 and not exists (select 1 from GXD_Index_Stages gs2
 where gi._Index_key = gs2._Index_key
-and gs2._IndexAssay_key not in (74725, 74728))
+and gs2._IndexAssay_key not in (74725,  74726, 74727, 74728))
 go
 
 /* exclude E? */
@@ -52,7 +53,7 @@ print ''
 print 'Full Coded References that contain indexed Genes that have not been full coded'
 print ''
 print 'excluded:'
-print '     index records that contain only cDNA or primer extension assays'
+print '     index records that contain only cDNA, primer extension, nuclease S1 and RNase protection assays'
 print '     index records that contain only age ''E?'''
 print '     index records that have a note that contains: '
 print '     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket'', ''quantitative RT'''
