@@ -17,8 +17,7 @@
 #	exclude non-approved Alleles
 #	exclude not-applicable Alleles
 #	exclude Alleles of type QTL
-#	exclude Alleles of type "transgenic (cre/flp)"
-#	exclude Alleles of type "transgenic (reporter)"
+#	exclude Alleles of type all "transgenic"
 #	exclude Alleles of type "gene trapped" and status = 'Autoload'
 #
 # Usage:
@@ -102,7 +101,7 @@ db.sql('''
     	into #alleles  
     	from ALL_Allele a, VOC_Term t 
     	where a.approval_date is not NULL 
-    	and a._Allele_Type_key not in (847130, 847128, 847129, 847127, 847131) 
+    	and a._Allele_Type_key not in (847130, 847126, 847131) 
     	and a._Allele_Status_key != 3983021 
     	and a._Allele_Type_key = t._Term_key 
     	and exists (select 1 from MGI_Note n, MGI_NoteType nt  
