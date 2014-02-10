@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-7-4
+DATE: 02/10/2014
+STAFF: sc
+CHANGES: TR11589
+1) added mgd/GXD_Mouse_Developmental_Anatomy.py
+2) qcr.html added GXD_Mouse_Developmental_Anatomy.rpt
+
 TAG: qcreports_db-5-1-7-3
 DATE: 1/28/2014
 STAFF: sc
