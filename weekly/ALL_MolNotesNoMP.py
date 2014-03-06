@@ -83,8 +83,7 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no MP Annotations', os.environ['QCOUTPUTDIR'])
-fp.write('\texcludes allele types: Transgenic (random, expressed), Transgenic (Cre/Flp), Transgenic (Reporter)\n')
-fp.write('\texcludes allele types: QTL, Not Applicable\n')
+fp.write('\texcludes allele types: Transgenic, QTL, Not Applicable\n')
 fp.write('\texcludes allele status: Autoload\n')
 fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n')
 fp.write('\texcludes J:157064, J:157065, J:165963, J:165964, J:173534, J:188991, J:200814\n')
