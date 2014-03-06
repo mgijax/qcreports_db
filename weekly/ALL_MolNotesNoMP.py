@@ -17,8 +17,7 @@
 #	exclude non-approved Alleles
 #	exclude not-applicable Alleles
 #	exclude Alleles of type QTL
-#	exclude Alleles of type "transgenic (cre/flp)"
-#	exclude Alleles of type "transgenic (reporter)"
+#	exclude Alleles of type all "transgenic"
 #	exclude Alleles of type "gene trapped" and status = 'Autoload'
 #
 # Usage:
@@ -84,8 +83,7 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no MP Annotations', os.environ['QCOUTPUTDIR'])
-fp.write('\texcludes allele types: Transgenic (random, expressed), Transgenic (Cre/Flp), Transgenic (Reporter)\n')
-fp.write('\texcludes allele types: QTL, Not Applicable\n')
+fp.write('\texcludes allele types: Transgenic, QTL, Not Applicable\n')
 fp.write('\texcludes allele status: Autoload\n')
 fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n')
 fp.write('\texcludes J:157064, J:157065, J:165963, J:165964, J:173534, J:188991, J:200814\n')
@@ -102,7 +100,7 @@ db.sql('''
     	into #alleles  
     	from ALL_Allele a, VOC_Term t 
     	where a.approval_date is not NULL 
-    	and a._Allele_Type_key not in (847130, 847128, 847129, 847127, 847131) 
+    	and a._Allele_Type_key not in (847130, 847126, 847131) 
     	and a._Allele_Status_key != 3983021 
     	and a._Allele_Type_key = t._Term_key 
     	and exists (select 1 from MGI_Note n, MGI_NoteType nt  

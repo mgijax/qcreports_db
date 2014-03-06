@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-8-?
+DATE: 03/06/2014
+STAFF: lec
+CHANGES: 
+1) merge to trunk : branch point tag for TR11515/allele stuff
+
 TAG: qcreports_db-5-1-7-4
 DATE: 02/10/2014
 STAFF: sc
@@ -32,6 +38,16 @@ DATE: 1/22/2014
 STAFF: oblod
 CHANGES: TR11468
 Added QC reports for EMAPA/S mapping table.
+
+TAG: qcreports_db-tr11515-1
+DATE: 12/31/2013, 03/06/2014
+STAFF: lec
+CHANGES: 
+1) changes to _Allele_Type_key
+mgd/ALL_NoMCL.sql
+monthly/GXD_Transgenic.py
+weekly/ALL_MolNotesNoMP.py
+weekly/ALL_Progress.py
 
 TAG: qcreports_db-tr11515-BP
 DATE: 12/31/2013
