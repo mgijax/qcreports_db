@@ -92,7 +92,8 @@ fp.write('2. insitu specimens with "embryonic" age; include TS 28 for certain st
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
 fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 28\n')
 fp.write('4. gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only\n')
-fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n\n')
+fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
+fp.write('5. excludes J:153498/Eurexpress\n\n')
 
 fp.write('select specimens/gel lanes and group by assay & specimen\n')
 fp.write('take the mininum stage dpc value and maximum stage dpc value from all structures annotated to \n')

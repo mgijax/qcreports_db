@@ -24,6 +24,9 @@
 #
 # History:
 #
+# lec	03/11/2014
+#	- TR11597/
+#
 # sc 02/10/2014
 #	- added to QC reports
 #
@@ -58,7 +61,7 @@ db.set_sqlPasswordFromFile(passwordFileName)
 db.useOneConnection(1)
 
 # tab delim file
-fp1 = reportlib.init(sys.argv[0], 'Mouse Developmental Anatomy', os.environ['QCOUTPUTDIR'])
+fp1 = reportlib.init(sys.argv[0], 'Anatomical Dictionary Terms', os.environ['QCOUTPUTDIR'])
 
 # {structureKey:name, ...}
 structureNameDict = {}
@@ -80,11 +83,12 @@ emapPrefix = 'EMAP:'
 
 # root node info
 rootKey = ''
+# note that this accID doesn't actually exist? (lec/3/11/2014)
 rootID = 'MGI:4880586'
 rootName = 'mouse developmental anatomy'
 
 # write out column header
-fp1.write('Structure MGI ID%sStructure Term%sParent MGI ID%sParent Term%sEMAP ID%sSynonyms%sSystem%s%s' % (TAB, TAB, TAB, TAB, TAB, TAB, CRT, CRT))
+fp1.write('Structure Key%sStructure MGI ID%sStructure Term%sParent MGI ID%sParent Term%sEMAP ID%sSynonyms%sSystem%s%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT, CRT))
 
 # write the root node to tab-delim
 fp1.write('%s%s%s%s%s%s%s%s%s%s' % (rootKey, TAB, rootID, TAB, rootName, TAB , TAB, TAB, TAB, CRT))
