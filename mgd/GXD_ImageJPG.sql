@@ -90,6 +90,6 @@ and r._MGIType_key = 1
 and r._LogicalDB_key = 1 
 and r.prefixPart = 'J:' 
 and r.preferred = 1
-order by imageID
+order by imageID desc
 go
 

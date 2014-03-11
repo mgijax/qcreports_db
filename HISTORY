@@ -1,3 +1,14 @@
+TAG: qcreports_db-5-1-8-?
+DATE: 03/11/2014
+STAFF: lec
+CHANGES: 
+a) TR11544/weekly/ALL_MolNotesNoMP.py : add J:204739 to excluded list
+b) TR11597/mgd/GXD_SpecTheilerAge
+c) TR11597/mgd/GXD_ExpPresNotPres.py
+d) TR11597/mgd/GXD_ChildExpNotParent.py
+e) TR11597/mgd/GXD_ImageJPG.sql
+f) TR11597/mgd/GXD_ImageSpecimen.py
+
 TAG: qcreports_db-5-1-8-1
 DATE: 03/06/2014
 STAFF: lec

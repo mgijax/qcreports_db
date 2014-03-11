@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec   03/11/2014
+#       - TR11597/sort by mgiID desc
+#
 # dbm	05/13/2013
 #	- new
 #
@@ -101,7 +104,7 @@ cmds.append('''
           r._LogicalDB_key = 1 and
           r.prefixPart = "J:" and
           r.preferred = 1
-    order by imageID''')
+    order by imageID desc''')
 
 results = db.sql(cmds, 'auto')
 

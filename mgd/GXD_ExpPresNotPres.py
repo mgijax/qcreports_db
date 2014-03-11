@@ -31,6 +31,9 @@
 #
 # History:
 #
+# lec	03/11/2014
+#	- TR11597/sort by mgiID desc
+#
 # lec	10/12/2011
 #	- TR10877; exclude J:174767 [Surani load; TR10840]
 #
@@ -175,7 +178,7 @@ results = db.sql('''
          and ac2._LogicalDB_key = 1 
          and ac2._MGIType_key = 8 
          and ac2.prefixPart = 'MGI:' 
-         order by mgiID
+         order by mgiID desc
 	 ''', 'auto')
 
 #

@@ -30,6 +30,9 @@
 #
 # History:
 #
+# lec   03/11/2014
+#       - TR11597/sort by mgiID desc
+#
 # lec	05/01/2008
 #	- TR 8775; on select GXD assay types
 #
@@ -189,7 +192,7 @@ results = db.sql('''
               and j.accID not in (%s)
               and w.parentStructureKey = d._Structure_key 
               and w.childStructureKey = d2._Structure_key 
-        order by a.accID, d._Stage_key, d.printName
+        order by a.accID desc, d._Stage_key, d.printName
 	''' % (excluded), 'auto')
 
 #

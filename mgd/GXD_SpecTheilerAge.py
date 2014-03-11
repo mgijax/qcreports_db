@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	03/11/2014
+#	- TR11597/sort by mgiID desc
+#
 # sc 	
 #	- TR11543; Updated GXD_TheilerStage to TS27 dpcMin=21.01, dpcMax=24.0; TS28 dpcMin=21.01
 #
@@ -234,7 +237,7 @@ results = db.sql('''
           a2._LogicalDB_key = 1 and 
           a2.prefixPart = 'J:' and 
 	  a2.preferred = 1 
-    	order by a1.accID
+    	order by a1.accID desc
     	''', 'auto')
 
 s = ''
