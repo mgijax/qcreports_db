@@ -10,20 +10,6 @@
 # Usage:
 #       MTB_Triage.py
 #
-# Notes:
-#	- all reports use mgireport directory for output file
-#	- all reports use db default of public login
-#	- all reports use server/database default of environment
-#	- use lowercase for all SQL commands (i.e. select not SELECT)
-#	- use proper case for all table and column names e.g. 
-#         use MRK_Marker not mrk_marker
-#	- all public SQL reports require the header and footer
-#	- all private SQL reports require the header
-#
-# History:
-# 	- minor modifications to use the modification date, rather than the
-#	  creation date for this report.
-#
 # 03/18/2014	lec
 #	- TR11621/add reference information to this report
 #
