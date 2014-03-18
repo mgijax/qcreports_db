@@ -24,6 +24,9 @@
 # 	- minor modifications to use the modification date, rather than the
 #	  creation date for this report.
 #
+# 03/18/2014	lec
+#	- TR11621/add reference information to this report
+#
 '''
  
 import sys 
@@ -72,55 +75,56 @@ db.sql('''
 db.sql('create index idx1 on #triage(_Refs_key)', None)
 
 results = db.sql('''
-	select b.authors, b.authors2, b.title, b.journal, b.year, 
+	select b.authors, b.authors2, b.title, b.title2, b._primary, 
+	       b.journal, b.year, 
 	       b.vol, b.issue, b.pgs, b.abstract, 
-	       a1.accID as jnumID, a2.accID as pubmedID
-	from #triage t, BIB_Refs b, ACC_Accession a1, ACC_Accession a2 
+	       a2.accID as pubmedID,
+	       c.jnumID, c.citation, c.short_citation, c.reviewStatus
+	from #triage t, BIB_Refs b, ACC_Accession a2, BIB_Citation_Cache c
 	where t._Refs_key = b._Refs_key 
-	and b._Refs_key = a1._Object_key 
-	and a1._LogicalDB_Key = 1 
-	and a1.prefixPart = 'J:' 
 	and t._Refs_key *= a2._Object_key 
 	and a2._LogicalDB_Key = 29 
+	and b._Refs_key = c._Refs_key
 	order by jnumID
 	''', 'auto')
 
 for r in results:
+
     fp.write(r['jnumID'] + TAB)
 
     pubmedID = r['pubmedID']
     if pubmedID == None:
 	pubmedID = 'Null'
-    fp.write(pubmedID  + TAB)
-   
-    author1 = r['authors']
-    author2 = r['authors2']
-    # if author empty, no authors
-    if author1 == None:
-        authors = 'Null'
-    # if author not empty and author2 empty
-    elif author2 == None:
-	authors = author1
-    # both author and author2 not empty
-    else:
-	authors = author1 + author2
-     
-    fp.write(authors + TAB)
+    fp.write(pubmedID + TAB)
 
     title = r['title']
     if title == None:
-        title = 'Null'
+	title = 'Null'
     fp.write(title + TAB)
+
+    title2 = r['title2']
+    if title2 == None:
+	title2 = 'Null'
+    fp.write(title2 + TAB)
+
+    authors = r['authors']
+    if authors == None:
+	authors = 'Null'
+    fp.write(authors + TAB)
+
+    authors2 = r['authors2']
+    if authors2 == None:
+	authors2 = 'Null'
+    fp.write(authors2 + TAB)
+
+    fp.write(r['_primary'] + TAB)
+    fp.write(r['citation'] + TAB)
+    fp.write(r['short_citation'] + TAB)
 
     journal = r['journal']
     if journal == None:
         journal = 'Null'
     fp.write(journal + TAB)
-
-    year = str(r['year'])
-    if year == None:
-        year = 'Null'
-    fp.write(year + TAB)
 
     vol = r['vol']
     if vol == None:
@@ -136,6 +140,13 @@ for r in results:
     if pgs == None:
         pgs = 'Null'
     fp.write(pgs + TAB)
+
+    year = str(r['year'])
+    if year == None:
+        year = 'Null'
+    fp.write(year + TAB)
+
+    fp.write(r['reviewStatus'] + TAB)
 
     abstract = r['abstract']
     if abstract == None:
