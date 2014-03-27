@@ -21,6 +21,11 @@
 #	- all private SQL reports require the header
 #
 # History:
+# lnh   03/19/2014
+#       TR 11361
+#       - Only include Alleles with status "autoload",and "approved" to "Allele Counts"
+#       - rename category name "Genes annotated, excluding QTL" to "Markers annotated, excluding QTL" 
+#       - Add a new category called "Genes annotated, excluding QTL" for genes only 
 #
 # lec   07/14/2009
 #	- in "Allele category"
@@ -71,10 +76,12 @@ qtlKeys = '847130'
 spontKeys = '847115'
 chemicalKeys = '847122'
 otherKeys = '847124,847123,847131,847132,847125'
+#Including to the counts only alleles that have a "autoload" or "approved" status
+statusKeys='847114,3983021'
 
 def alleleCounts():
 
-    fp.write('Allele Counts (excluding wild types)' + 2*CRT)
+    fp.write('Allele Counts (excluding wild types and private data)' + 2*CRT)
     fp.write(string.ljust('Allele category',  35))
     fp.write(string.rjust('Total',  15))
     fp.write(string.rjust('Previous Month Total',  25) + CRT)
@@ -85,27 +92,31 @@ def alleleCounts():
     db.sql('''
 	select _Allele_key, _Allele_Type_key, _Marker_key 
 	into #alleles from ALL_Allele where isWildType = 0 
-	''', None)
+        and _Allele_status_key in (%s)
+	''' % (statusKeys), None)
 
     db.sql('''
 	select _Allele_key, _Allele_Type_key, _Marker_key 
 	into #allelesmice from ALL_Allele where isWildType = 0 and _Transmission_key != 3982953
-	''', None)
+        and _Allele_status_key in (%s)
+	''' % (statusKeys), None)
 
     db.sql('''
 	select _Allele_key, _Allele_Type_key into #amonthly from ALL_Allele 
 	where isWildType = 0 
+        and _Allele_status_key in (%s)
 	and datepart(year, creation_date) = %d 
 	and datepart(month, creation_date) = %d 
-	''' % (year, month), None)
+	''' % (""+statusKeys+"",year, month), None)
 
     db.sql('''
 	select _Allele_key, _Allele_Type_key into #amonthlymice from ALL_Allele 
 	where isWildType = 0 
+        and _Allele_status_key in (%s)
 	and _Transmission_key != 3982953 
 	and datepart(year, creation_date) = %d 
 	and datepart(month, creation_date) = %d 
-	''' % (year, month), None)
+	''' % (""+statusKeys+"",year, month), None)
 
     total = db.sql('select count(*) from #alleles', 'auto')[0]['']
     totalM = db.sql('select count(*) from #amonthly', 'auto')[0]['']
@@ -246,6 +257,15 @@ def genotypeCounts():
 	and a._Marker_key = m._Marker_key 
 	and m._Marker_Type_key != 6
 	''', None)
+    
+    db.sql('''
+        select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key 
+        into #genenoqtl 
+        from #genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
+        where g._Genotype_key = a._Genotype_key 
+        and a._Marker_key = m._Marker_key 
+        and m._Marker_Type_key = 1
+        ''', None)
 
     db.sql('''
 	select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
@@ -254,6 +274,14 @@ def genotypeCounts():
 	where datepart(year, creation_date) = %d 
 	and datepart(month, creation_date) = %d 
 	''' % (year, month), None)
+    
+    db.sql('''
+        select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
+        into #genenoqtlmonthly 
+        from #genenoqtl 
+        where datepart(year, creation_date) = %d 
+        and datepart(month, creation_date) = %d 
+        ''' % (year, month), None)
 
     db.sql('''
 	select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key
@@ -287,8 +315,11 @@ def genotypeCounts():
     allelenoQTL = db.sql('select count(distinct _Allele_key) from #noqtl', 'auto')[0]['']
     allelenoQTLM = db.sql('select count(distinct _Allele_key) from #noqtlmonthly', 'auto')[0]['']
 
-    genenoQTL = db.sql('select count(distinct _Marker_key) from #noqtl', 'auto')[0]['']
-    genenoQTLM = db.sql('select count(distinct _Marker_key) from #noqtlmonthly', 'auto')[0]['']
+    markernoQTL = db.sql('select count(distinct _Marker_key) from #noqtl', 'auto')[0]['']
+    markernoQTLM = db.sql('select count(distinct _Marker_key) from #noqtlmonthly', 'auto')[0]['']
+    
+    genenoQTL = db.sql('select count(distinct _Marker_key) from #genenoqtl', 'auto')[0]['']
+    genenoQTLM = db.sql('select count(distinct _Marker_key) from #genenoqtlmonthly', 'auto')[0]['']
 
     qtl = db.sql('select count(distinct _Marker_key) from #qtl', 'auto')[0]['']
     qtlM = db.sql('select count(distinct _Marker_key) from #qtlmonthly', 'auto')[0]['']
@@ -318,7 +349,12 @@ def genotypeCounts():
     fp.write(string.rjust(str(allelenoQTLM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Genes Annotated, excluding QTL', 35))
+    fp.write(string.ljust('Markers Annotated, excluding QTL', 35))
+    fp.write(string.rjust(str(markernoQTL), 15))
+    fp.write(string.rjust(str(markernoQTLM), 25))
+    fp.write(CRT)
+    
+    fp.write(string.ljust('Genes Annotated, including HMP', 35))
     fp.write(string.rjust(str(genenoQTL), 15))
     fp.write(string.rjust(str(genenoQTLM), 25))
     fp.write(CRT)
@@ -452,9 +488,15 @@ def omim():
 #
 # Main
 #
+#outputdir="/home/lnh/projects/implementing/qcReports/qcreports_db/weekly"
+
+#fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir,fileExt = '.' + os.environ['DATE'] + '.rpt')
+
+#fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
+#        fileExt = '.' + os.environ['DATE'] + '.rpt')
 
 fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
-	fileExt = '.' + os.environ['DATE'] + '.rpt')
+        fileExt = '.' + '.rpt')
 
 currentDate = mgi_utils.date('%m/%d/%Y')
 fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
@@ -471,7 +513,8 @@ else:
 
 alleleCounts()
 genotypeCounts()
-allelesnomp()
+#Please remove the section titled "Alleles with NO MP Terms, but with other annotations"  It is no longer needed.
+#allelesnomp()
 genesalleles()
 vocab()
 omim()
