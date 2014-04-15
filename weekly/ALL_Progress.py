@@ -21,6 +21,7 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
 # lnh   03/19/2014
 #       TR 11361
 #       - Only include Alleles with status "autoload",and "approved" to "Allele Counts"
@@ -62,7 +63,6 @@ try:
         import db
 except:
     import db
-
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -364,25 +364,6 @@ def genotypeCounts():
     fp.write(string.rjust(str(qtlM), 25))
     fp.write(CRT)
 
-def allelesnomp():
-
-    fp.write(2*CRT + '#########################' + 2*CRT)
-    fp.write('Alleles with NO MP Terms, but with other annotations' + 2*CRT)
-
-    db.sql('''
-	select n._Object_key into #other 
-	from MGI_Note n, MGI_NoteChunk nc 
-	where n._MGIType_key = 11 
-	and n._Note_key = nc._Note_key 
-	and n._NoteType_key = 1020 
-	and nc.note like "%J:%" 
-	''', None)
-
-    other = db.sql('select count(distinct _Object_key) from #other', 'auto')[0]['']
-
-    fp.write(string.ljust('J# in the Notes:', 60))
-    fp.write(string.rjust(str(other), 10) + CRT)
-
 def genesalleles():
 
     fp.write(2*CRT + '#########################' + 2*CRT)
@@ -488,15 +469,9 @@ def omim():
 #
 # Main
 #
-#outputdir="/home/lnh/projects/implementing/qcReports/qcreports_db/weekly"
-
-#fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir,fileExt = '.' + os.environ['DATE'] + '.rpt')
-
-#fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
-#        fileExt = '.' + os.environ['DATE'] + '.rpt')
 
 fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
-        fileExt = '.' + '.rpt')
+        fileExt = '.' + 'rpt')
 
 currentDate = mgi_utils.date('%m/%d/%Y')
 fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
@@ -513,8 +488,6 @@ else:
 
 alleleCounts()
 genotypeCounts()
-#Please remove the section titled "Alleles with NO MP Terms, but with other annotations"  It is no longer needed.
-#allelesnomp()
 genesalleles()
 vocab()
 omim()
