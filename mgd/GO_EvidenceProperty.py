@@ -39,6 +39,7 @@ from datetime import datetime
 #
 sender = "mgiadmin@lindon.informatics.jax.org"
 receiver = "Mgi-go@jax.org"
+#receiver = "lnh@jax.org"
 
 try:
     if os.environ['DB_TYPE'] == 'postgres':
@@ -75,7 +76,7 @@ def printNoExtResults(cmd):
 
 def printBadExtResults(cmd):
     results = db.sql(cmd, 'auto')
-    fp.write('\nTotal number with bad formatted external ref value: %s\n\n' % (len(results)))
+    fp.write('\nTotal number with missing PMID in external ref value: %s\n\n' % (len(results)))
     fp.write('MGI-ID' + TAB)
     fp.write('Gene Symbol' + TAB)
     fp.write('GO-ID' + TAB)
@@ -89,6 +90,36 @@ def printBadExtResults(cmd):
         fp.write(r['pValue'] + TAB)
         fp.write(r['dbuser'] + CRT)
         badCount+=1
+    return badCount
+
+def printMissEvCodeResults(cmd,evidenceMap):
+    results = db.sql(cmd, 'auto')
+    fp.write('\nCases with missing evidence code in external ref value: \n\n' + TAB)
+    fp.write('MGI-ID' + TAB)
+    fp.write('Gene Symbol' + TAB)
+    fp.write('GO-ID' + TAB)
+    fp.write('EvidencePropertyValue' + TAB)
+    fp.write('User' + 2*CRT)
+    badCount=0
+    for r in results:
+        fields=r['pValue'].split('|')
+        if len(fields)>1:
+           ecode=fields[1].strip()
+           if ecode not in evidenceMap:
+              fp.write(r['accID'] + TAB)
+              fp.write(r['symbol'] + TAB)
+              fp.write(r['goaccID'] + TAB)
+              fp.write(r['pValue'] + TAB)
+              fp.write(r['dbuser'] + CRT)
+              badCount+=1
+        else:
+              fp.write(r['accID'] + TAB)
+              fp.write(r['symbol'] + TAB)
+              fp.write(r['goaccID'] + TAB)
+              fp.write(r['pValue'] + TAB)
+              fp.write(r['dbuser'] + CRT)
+              badCount+=1
+
     return badCount
 
 #
@@ -157,6 +188,15 @@ db.sql('''
         ''', None)
 db.sql('create index evidenceproperty_idx1 on #evidenceproperty(_annotevidence_key)', None)
 
+#
+#Get GO evidence codes
+#
+db.sql('''
+        select abbreviation
+        into #goevidencecode
+        from voc_term
+        where _vocab_key=3
+        ''', None)
 
 cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser from #gomarkersIDs "
 cmd +=" where _annotevidence_key not in (select _annotevidence_key from #evidenceproperty)"
@@ -168,6 +208,22 @@ cmd+="from #gomarkersIDs g, #evidenceproperty e WHERE  g._annotevidence_key=e._a
 cmd +=" and value not like 'PMID:%'"
 
 badCount=printBadExtResults(cmd)
+
+#
+# get the list of current go evidence code
+#
+evidenceMap={}
+cmd=" select abbreviation from #goevidencecode "
+results = db.sql(cmd, 'auto')
+
+for r in results:
+    evidenceMap[r['abbreviation'].strip()]=1
+
+#get all evidence that begins with PMID but are missing the evidence code
+cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser,value as pValue "
+cmd+="from #gomarkersIDs g, #evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
+cmd +=" and value like 'PMID:%'"
+badCount += printMissEvCodeResults(cmd,evidenceMap)
 
 # Create message container - the correct MIME type is multipart/alternative.
 message = """
@@ -181,7 +237,7 @@ cmd="echo \""+message+"\" | mailx -r \""+sender+"\" -s \"J:73065 GO Annotations 
 mes="Missing External Ref total: %s  Bad format Total: %s" % (missCount,badCount)
 
 print mes
-if missCount>0 or badCount>0 :
+if missCount>0 or badCount>0:
    try:
        os.system(cmd)
        print "Successfully sent email"
