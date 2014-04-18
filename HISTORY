@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-8-8
+DATE: 04/18/2014
+STAFF: lnh
+CHANGES: TR11332
+Added a new qc repport - mgd/GO_EvidenceProperty.py
+A report that inspects J:73065 GO annotations 
+
 TAG: qcreports_db-5-1-8-7
 DATE: 04/15/2014
 STAFF: lec
