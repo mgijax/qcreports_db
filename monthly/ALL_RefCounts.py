@@ -5,15 +5,17 @@
 # Report:
     Steve Rockwood (steve.rockwood@jax.org) is requesting a report.  
 
-    He would like a list of alleles in MGI that have attached to them more than 10 
-    references with a publication year of equal to or later than 2010. These 
-    alleles may have additional references prior to 2010.
-
     The report should contain:
-    1)allele symbol
-    2)allele MGI ID
-    3)number of allele references current year -1 or later
-    4)total number of allele references
+
+    1) allele symbol
+
+    2) allele MGI ID
+
+    3) number of allele references with MGI-creation-date within 2 years of the run date of this report
+
+    4) total number of allele references
+
+    5) IMSR facilities : JAX always comes first
 
     This is to prioritize and solicit new strains to JAX that may be of interest to 
     multiple users.
@@ -21,7 +23,11 @@
     Is it possible to then take this list of alleles and compare it to the IMSR 
     database and list in a fifth column if this allele exists already in a 
     repository strain?
+
 # History:
+#
+# lec	04/28/2014
+#	- TR11667/see TR for details
 #
 # sc	06/27/2012
 #	- created
@@ -72,13 +78,20 @@ results = db.sql('''select distinct a._Allele_key, f.abbrevName
         and sga._Strain_key = sfa._Strain_key 
         and sfa._Facility_key = f._Facility_key''', 'auto')
 # and sfa._StrainState_key <> 2
-imsrDict = {}
+imsrDict1 = {}
+imsrDict2 = {}
 for r in results:
     aKey = r['_Allele_key']
     facility = r['abbrevName']
-    if not imsrDict.has_key(aKey):
-	imsrDict[aKey] = []
-    imsrDict[aKey].append(facility)
+
+    if facility == 'JAX':
+        if not imsrDict1.has_key(aKey):
+	    imsrDict1[aKey] = []
+        imsrDict1[aKey].append(facility)
+    else:
+        if not imsrDict2.has_key(aKey):
+	    imsrDict2[aKey] = []
+        imsrDict2[aKey].append(facility)
 
 # 
 # get all allele references 
@@ -111,8 +124,9 @@ db.sql('''select a._Allele_key, count(a._Refs_key) as refsCount
     into #dCounts
     from #aRefs a, BIB_Refs b
     where a._Refs_key = b._Refs_key
-    and b.year >= (%s - 1)
-    group by a._Allele_key''' % (currentDate), None)
+    and datepart(year, b.creation_date) between (%s - 1) and %s
+    and b.journal != "Database Download"
+    group by a._Allele_key''' % (currentDate, currentDate), None)
 
 #
 # get the set that has at least 10 references >= currentDate - 1
@@ -139,23 +153,36 @@ results = db.sql('''select ar.*, a.accid, aa.symbol
 
 fp.write('Allele Symbol' + TAB)
 fp.write('Allele MGI ID' + TAB)
-fp.write('Number of Allele Refs >= %s' % (int(currentDate) - 1) + TAB)
+fp.write('Number of Allele Refs between %s and %s' % (int(currentDate) - 1, int(currentDate)) + TAB)
 fp.write('Total Allele Refs' + TAB)
 fp.write('Facilities with strains carrying this mutation' + CRT)
 
 for r in results:
+
     symbol = r['symbol']
     mgiID = r['accid']
     aKey = r['_Allele_key']
+
     allCt = 0
     if allRefsDict.has_key(aKey):
 	allCt = allRefsDict[aKey]
+
     refsCount = r['refsCount']
+
     facilities = []
-    if imsrDict.has_key(aKey):
-	facilities = imsrDict[aKey]
-    f = string.join(facilities, ', ')
-    fp.write('%s%s%s%s%s%s%s%s%s%s' % (symbol, TAB, mgiID, TAB, refsCount, TAB, allCt, TAB, f, CRT) )
+    if imsrDict1.has_key(aKey):
+	facilities = imsrDict1[aKey]
+    f1 = string.join(facilities, ', ')
+
+    facilities = []
+    if imsrDict2.has_key(aKey):
+	facilities = imsrDict2[aKey]
+    f2 = string.join(facilities, ', ')
+
+    if len(f1) > 0 and len(f2) > 0:
+	f1 = f1 + ', '
+
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s' % (symbol, TAB, mgiID, TAB, refsCount, TAB, allCt, TAB, f1, f2, CRT) )
 
 reportlib.finish_nonps(fp)	# non-postscript file
 db.useOneConnection(0)
