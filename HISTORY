@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-8-10
+DATE: 05/15/2014
+STAFF: lec
+CHANGES: 
+mgd/PRB_StrainByDate.sql: fix bug
+
 TAG: qcreports_db-5-1-8-9
 DATE: 04/30/2014
 STAFF: lec
