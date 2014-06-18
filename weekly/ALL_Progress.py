@@ -471,7 +471,7 @@ def omim():
 #
 
 fp = reportlib.init(sys.argv[0], title = 'Weekly Allele Progress Report', outputdir = os.environ['QCOUTPUTDIR'],
-        fileExt = '.' + 'rpt')
+        fileExt = '.'+ os.environ['DATE'] + '.rpt')
 
 currentDate = mgi_utils.date('%m/%d/%Y')
 fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
