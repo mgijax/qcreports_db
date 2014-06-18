@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-8-11
+DATE: 06/18/2014
+STAFF: lnh
+CHANGES: TR 11687/ALL_Progress.py
+added date to report file name
+
 TAG: qcreports_db-5-1-8-10
 DATE: 05/15/2014
 STAFF: lec
