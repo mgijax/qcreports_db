@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-8-12
+DATE: 07/17/2014
+STAFF: lec
+CHANGES:
+a) TR11544/weekly/ALL_MolNotesNoMP.py : add J:204812 to excluded list
+b) TR11708/weekly/GXD_EMAPS_Terms.py : remove secondary ids 
+
 TAG: qcreports_db-5-1-8-11
 DATE: 06/18/2014
 STAFF: lnh
