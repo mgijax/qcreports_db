@@ -5,7 +5,9 @@
 # GO_stats.py
 #
 # Report:
-#       
+#
+# 08/04/2015
+#	- TR 11745/add 'GO Central' to the GO_CLAUSE
 #
 # 11/03/2010	lec
 #	- TR 10437/marker type = 'gene' only
@@ -93,7 +95,7 @@ GOC_CLAUSE="'GOC'"
 GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
 REFGENOME_CLAUSE="'RefGenome'"
-GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB') "
+GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB', 'GO Central') "
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
