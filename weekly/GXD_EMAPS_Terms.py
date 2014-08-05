@@ -7,9 +7,6 @@
 #
 # History:
 #
-# lec	07/17/2014
-#	- TR11708/remove seconday ids
-#
 # lec	03/11/2014
 #	- TR11597/make this a weekly report
 #
@@ -71,7 +68,6 @@ results = db.sql('''select t._Term_key, t.term, a.accid as emapsID,
     and t._Term_key = a._Object_key
     and a._MGIType_key = 13
     and a._LogicalDB_key = 170
-    and a.preferred = 1
     and t._Term_key = emaps._Term_key
     order by t.term''', 'auto')
 

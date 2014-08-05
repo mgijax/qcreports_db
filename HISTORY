@@ -1,8 +1,10 @@
+TAG: qcreports_db-5-1-8-14
 TAG: qcreports_db-5-1-8-13
 DATE: 08/05/2014
 STAFF: lec
 CHANGES:
 a) TR11745/mgd/GO_stats.py/add 'GO Central' to the GO_CLAUSE
+b) TR11708/weekly/GXD_EMAPA_Terms.py : remove secondary ids 
 
 TAG: qcreports_db-5-1-8-12
 DATE: 07/17/2014
