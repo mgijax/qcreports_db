@@ -98,21 +98,6 @@ for r in results:
 	fp.write(r['accID'] + CRT)
 
 #
-# PRB_Allele_Strain
-#
-
-fp.write('\n**PRB_Allele_Strain\n\n')
-results = db.sql('''
-	select s.strain, a.symbol
-	from #strains s, PRB_Allele_Strain p, ALL_Allele a
-	where s._Strain_key = p._Strain_key
-	and p._Allele_key = a._Allele_key
-	''', 'auto')
-for r in results:
-	fp.write(r['strain'] + TAB)
-	fp.write(r['symbol'] + CRT)
-
-#
 # CRS_Cross
 #
 

@@ -24,8 +24,6 @@ and not exists (select 1 from MLD_FISH a
 where s._Strain_key = a._Strain_key)
 and not exists (select 1 from MLD_InSitu a
 where s._Strain_key = a._Strain_key)
-and not exists (select 1 from PRB_Allele_Strain a
-where s._Strain_key = a._Strain_key)
 and not exists (select 1 from PRB_Source a
 where s._Strain_key = a._Strain_key)
 and not exists (select 1 from RI_RISet a

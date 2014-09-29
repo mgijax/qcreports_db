@@ -1,9 +1,10 @@
-TAG: qcreports_db-5-2-0-?
-DATE: 09/19/2014
+TAG: qcreports_db-5-1-9-1
+DATE: 09/29/2014
 STAFF: lec
 CHANGES:
 a) TR11652/converting HMD tables to MRK_Cluster
 b) MRK_NomenRat.sql should have been archived earlier (qcreports_db-4-4-0-19)
+c) removing PRB_Allele_Strain calls (see TR11789)
 
 TAG: qcreports_db-5-1-8-14
 TAG: qcreports_db-5-1-8-13
