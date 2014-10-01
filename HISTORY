@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-9-2
+DATE: 10/1/2014
+STAFF: dbm
+CHANGES: TR11652
+1) weekly/MGI_EGNomenUpdate.sql - New
+2) qcr.html - Added link to MGI_EGNomenUpdate.sql.rpt in nomen section
+
 TAG: qcreports_db-5-1-9-1
 DATE: 09/29/2014
 STAFF: lec
