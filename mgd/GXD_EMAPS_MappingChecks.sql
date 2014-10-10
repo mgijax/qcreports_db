@@ -10,7 +10,7 @@ select
 from
 	MGI_EMAPS_Mapping
 group by
-	accid + emapsid
+	accid , emapsid
 having
 	count(*) > 1
 go
@@ -50,6 +50,8 @@ where
 	mem.accId = acc.accId and
 	gs._Structure_key is NULL and
 	acc._MGIType_key = ty1._MGIType_key
+
+go
 
 print ''
 print 'Check 4'
@@ -97,7 +99,7 @@ select
 	substring(vte.stage, 1, 5) as "EMAPS TS",
 	substring(voct.term, 1, 35) as "EMAPS Term Name",
 	substring(mem.accId, 1, 15) as "AD ID",
-	convert(varchar(5), gts.stage) as "AD TS",
+	gts.stage as "AD TS",
 	substring(gs.printName, 1,35) as "AD Printname"
 from
 	GXD_Structure gs,
@@ -147,7 +149,7 @@ print ''
 
 select
 	substring(mem.accId, 1, 15) as "AD ID",
-	convert(varchar(5), gts.stage)  "AD TS",
+	gts.stage as  "AD TS",
 	substring(gs.printName, 1,35) as "AD Printname",
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
 	substring(vte.stage, 1, 5) as "EMAPS TS",
@@ -200,7 +202,7 @@ print ''
 
 select
 	substring(mem.accId, 1, 15) as "AD ID",
-	convert(varchar(5), gts.stage) "AD TS",
+	gts.stage as "AD TS",
 	substring(gs.printName, 1,35) as "AD Printname",
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
 	substring(vte.stage, 1, 5) as "EMAPS TS",
