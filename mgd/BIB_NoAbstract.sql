@@ -5,7 +5,7 @@ select r._Refs_key
 into #refs1
 from BIB_Refs r
 where r.year >= 1975
-and datalength(r.abstract) = 0
+and datalength(r.abstract) = 0 
 go
 
 create index idx1 on #refs1(_Refs_key)
@@ -40,9 +40,10 @@ print ''
 print 'References w/ PubMed ID and No Abstract (where publication year >= 1975)'
 print ''
 
-select distinct r.accID, c.jnum, substring(c.short_citation, 1, 50) as short_citation
+select r.accID, c.jnum, substring(c.short_citation, 1, 50) as short_citation
 from #refs3 r, BIB_All_View c
 where r._Refs_key = c._Refs_key
-order by c.year, c._primary
+group by r.accID, c.jnum, short_citation
+order by min(c.year), min(c._primary)
 go
  
