@@ -144,14 +144,14 @@ go
 
 /* set hasOMIM */
 
-select t.*, hasOMIM = 'Y'
+select t.*, 'Y' as hasOMIM
 into #temp4
 from #temp3 t
 where exists (select 1 from #omim o where t._Marker_key = o._Marker_key)
 go
 
 insert into #temp4
-select t.*, hasOMIM = 'N'
+select t.*, 'N' as hasOMIM
 from #temp3 t
 where not exists (select 1 from #omim o where t._Marker_key = o._Marker_key)
 go
