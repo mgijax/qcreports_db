@@ -46,13 +46,13 @@ go
 
 print ''
 print 'Strains - Non Standard - Sorted by Creation Date'
-print '(do not include any strains flagged as needing review by Janan''s load)'
-print''
+print '(do not include any strains flagged as needing review by Janans load)'
+print ''
 print 'excludes /Mmcd from 06/07/2011'
 print 'excludes /Mmucd from 09/24/2012'
-print 'excludes ''mberry'' from 01/04/2013, 01/09/2013, 01/15/2013, 02/20/2013, 03/22/2013, 06/10/2013, 07/16/2013, 08/08/2013'
-print 'excludes ''mberry'' from 09/17/2013, 10/08/2013, 11/19/2013, 12/09/2013, 01/21/2014, 04/09/2014'
-print 'excludes created-by = ''strainautoload'''
+print 'excludes "mberry" from 01/04/2013, 01/09/2013, 01/15/2013, 02/20/2013, 03/22/2013, 06/10/2013, 07/16/2013, 08/08/2013'
+print 'excludes "mberry" from 09/17/2013, 10/08/2013, 11/19/2013, 12/09/2013, 01/21/2014, 04/09/2014'
+print 'excludes created-by = "strainautoload"'
 print ''
 
 (
@@ -86,16 +86,16 @@ where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
 and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 )
-order by creation_date desc, s.strain
+order by creation_date desc, strain
 go
 
 print ''
 print 'Strains - Non Standard - Sorted by Creation Date'
-print '(do not include any strains flagged as needing review by Janan''s load)'
+print '(do not include any strains flagged as needing review by Janans load)'
 print ''
 print 'includes /Mmcd from 06/07/2011'
 print 'includes /Mmucd from 09/24/2012'
-print 'includes ''mberry'' excluded list (see above)'
+print 'includes "mberry" excluded list (see above)'
 print ''
 
 (
@@ -129,6 +129,6 @@ where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
 and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 )
-order by creation_date desc, s.strain
+order by creation_date desc, strain
 go
 
