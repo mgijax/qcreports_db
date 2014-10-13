@@ -4,7 +4,7 @@ go
 select _Nomen_key
 into #nomen
 from NOM_Marker
-where broadcast_date between dateadd(day, -3, getdate()) and dateadd(day, -0, getdate())
+where broadcast_date between dateadd(day, -3, getdate()) and getdate()
 go
 
 set nocount off
