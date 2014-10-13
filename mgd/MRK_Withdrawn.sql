@@ -1,19 +1,15 @@
-declare @startDate char(10)
-declare @endDate char(10)
-
-select @startDate = convert(char(10), dateadd(day, -3, getdate()), 101)
-select @endDate = convert(char(10), getdate(), 101)
 
 print ''
-print 'Withdrawals Processed %1! - %2!', @startDate, @endDate
+print 'Withdrawals Processed within 3 days'
 print ''
 
 select substring(history,1,30) as "Old Symbol", 
 substring(symbol,1,30) as "New Symbol", 
-substring(markerName,1,50) as "New Name"
+substring(markerName,1,50) as "New Name",
+convert(char(10), event_date, 101) as "Event Date"
 from MRK_History_View
 where _Marker_Event_key in (2,3,4,5,6)
-and event_date between @startDate and @endDate
+and event_date >= dateadd(day, -3, getdate()) and event_date <= getdate()
 order by symbol
 go
 
