@@ -71,6 +71,6 @@ and not exists (select 1 from ACC_Accession a
 where a._Object_key = s._Strain_key
 and a._MGIType_key = 10
 and a._LogicalDB_key != 1)
-order by s.strain
+order by strain
 go
 
