@@ -17,6 +17,8 @@ go
 create index idx1_probes on #probes(_Probe_key)
 go
 create index idx1_probes2 on #probes2(_Probe_key)
+
+go
 create index idx2_probes2 on #probes2(_Refs_key)
 go
 
