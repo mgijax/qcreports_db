@@ -39,18 +39,15 @@ where c._MutantCellLine_key = ac._CellLine_key
 and aa._MGIType_key = 28
 and ac._CellLine_key = aa._Object_key
 and ac.cellLine != aa.accID
+and not exists (select 1 from ALL_Allele_CellLine c2, ALL_CellLine ac2, ACC_Accession aa2
+	where c2._allele_key = c._allele_key
+		and c2._mutantcellline_key = ac2._cellline_key
+		and aa2._object_key = ac2._cellline_key
+		and aa2._mgitype_key = 28
+		and aa2.accID = ac2.cellline)
 go
 
 create index idx_allele on #notexists(_Allele_key)
-go
-
-delete #notexists
-from #notexists e, ALL_Allele_CellLine c, ALL_CellLine ac, ACC_Accession aa
-where e._Allele_key = c._Allele_key
-and c._MutantCellLine_key = ac._CellLine_key
-and aa._MGIType_key = 28
-and ac._CellLine_key = aa._Object_key
-and ac.cellLine = aa.accID
 go
 
 print ''
