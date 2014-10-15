@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	10/15/2014
+#	- fixed bug with formating the "in" query
+#
 # lec	08/20/2009
 #	- TR9770; Neural Develop changed to Neural Dev
 #	  Breast Cancer Res
@@ -187,7 +190,7 @@ db.sql('''
             p._Image_key = i._Image_key and 
             i.xDim is NULL and 
             a._Refs_key = b._Refs_key and 
-	    ((b.journal in ('%s')) or (b.journal in ('%s') and year >= 2005)) and
+	    ((b.journal in ("%s")) or (b.journal in ("%s") and year >= 2005)) and
             a._Assay_key = ac._Object_key and 
             ac._MGIType_key = 8 
       union 
@@ -199,7 +202,7 @@ db.sql('''
             g._Specimen_key = r._Specimen_key and 
             r.xDim is NULL and 
             a._Refs_key = b._Refs_key and 
-	    ((b.journal in ('%s')) or (b.journal in ('%s') and year >= 2005)) and
+	    ((b.journal in ("%s")) or (b.journal in ("%s") and year >= 2005)) and
             a._Assay_key = ac._Object_key and 
             ac._MGIType_key = 8 
 	''' % (string.join(journals, '","'), string.join(journals2005, '","'), \
