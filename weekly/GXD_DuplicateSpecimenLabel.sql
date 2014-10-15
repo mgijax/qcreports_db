@@ -29,6 +29,6 @@ select distinct substring(bc.jnumid, 1, 12) as jnumID, substring(m.symbol, 1, 25
 	and a._refs_key=bc._refs_key
 	and a._assay_key=gaav._object_key
 	and a._marker_key=m._marker_key
-	order by bc.jnumid,m.symbol,s.specimenlabel
+	order by jnumID,symbol,specimenlabel
 go
 
