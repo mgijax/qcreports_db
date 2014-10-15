@@ -133,8 +133,8 @@ totalAllele = {}
 totalAnnot = {}
 results = db.sql('''
 	select m._Marker_key, 
-	       totalAllele = count(distinct aa._Allele_key),
-	       totalAnnot = count(distinct v._Annot_key)
+	       count(distinct aa._Allele_key) as totalAllele,
+	       count(distinct v._Annot_key) as totalAnnot
         from #markers m, ALL_Allele aa, GXD_AlleleGenotype p, VOC_Annot v
             where m._Marker_key =  p._Marker_key
 	    and p._Allele_key = aa._Allele_key
