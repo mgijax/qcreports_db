@@ -2,13 +2,8 @@
 set nocount on
 go
 
-declare @printDate varchar(255)
-select @printDate = 'New MMRRC JR#s created between ' || 
-	convert(char(10), dateadd(day, -7, getdate()), 101) || 
-	' and ' || convert(char(10), getdate(), 101)
-
 print ''
-print @printDate
+print 'New MMRRC JR#s created in past week'
 print ''
 
 set nocount off

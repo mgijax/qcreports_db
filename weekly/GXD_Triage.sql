@@ -3,27 +3,23 @@
 
 set nocount on
 
-declare @cdate char(10)
-declare @bdate char(10)
-declare @edate char(10)
-
-select @cdate = convert(char(10), getdate(), 101)
-select @bdate = convert(char(10), dateadd(day, -7, @cdate), 101)
-select @edate = convert(char(10), dateadd(day, -1, @cdate), 101)
-
 select r._Refs_key, r.creation_date
 into #triageA
 from BIB_Refs r, BIB_DataSet_Assoc a
-where a.creation_date between @bdate and @edate
+where a.creation_date between dateadd(day, -7, getdate()) and dateadd(day, -1, getdate())
 and r._Refs_key = a._Refs_key
 and a._DataSet_key = 1004
 
+go
+
 create index idx1 on #triageA(_Refs_key)
+
+go
 
 set nocount off
 
 print ''
-print 'Papers Selected For Expression from %1! to %2!', @bdate, @edate
+print 'Papers Selected For Expression in past week '
 print 'by Data Set creation date'
 print ''
 
