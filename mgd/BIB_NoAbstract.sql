@@ -27,7 +27,7 @@ into #refs3
 from #refs2 r
 where not exists
 (select n.* from BIB_Notes n
-where r._Refs_key = n._Refs_key and n.note like '%No Abstract Available%')
+where r._Refs_key = n._Refs_key and lower(n.note) like '%no abstract available%')
 go
 
 create index idx1 on #refs3(_Refs_key)
