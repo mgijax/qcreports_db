@@ -105,7 +105,7 @@ byEvidenceCode = 'and e._EvidenceTerm_key %s'
 # count by gene
 #
 byGene1 = '''
-select count(distinct a._Object_key)
+select count(distinct a._Object_key) as cnt
 from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
 where a._AnnotType_key  = 1000
 and a._Object_key = m._Marker_key
@@ -121,7 +121,7 @@ and e._CreatedBy_key = u._User_Key
 # count by gene, grouped by dag name
 #
 byGene2 = '''
-select d.name, terms = convert (char(6), count(distinct a._Object_key))
+select d.name, count(distinct a._Object_key) as terms
 from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, MRK_Marker m
 where a._AnnotType_key = 1000
 and a._Term_key = n._Object_key
@@ -140,7 +140,7 @@ group by d.name
 # count by annotation
 #
 byAnnot1 = '''
-select count(a._Annot_key)
+select count(a._Annot_key) as cnt
 from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
 where a._AnnotType_key  = 1000
 and a._Annot_key = e._Annot_key
@@ -156,7 +156,7 @@ and e._CreatedBy_key = u._User_Key
 # count by annotation, group by dag name
 #
 byAnnot2 = '''
-select d.name, terms = convert (char(6), count(a._Annot_key))
+select d.name, count(a._Annot_key) as terms
 from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, MRK_Marker m
 where a._AnnotType_key = 1000
 and a._Term_key = n._Object_key
@@ -185,16 +185,16 @@ def goSummary1():
     fp.write(string.ljust('---------------', 25) + CRT)
 
     results = db.sql('''
-           select name = substring(d.name,1,30), terms = count(n._Object_key)
+           select substring(d.name,1,30) as name, count(n._Object_key) as terms
            from DAG_DAG d, DAG_Node n
            where d._DAG_key in (1,2,3)
            and d._DAG_key = n._DAG_key
-           group by d._DAG_key
+           group by d.name
 	   ''', 'auto')
 
     for r in results:
 	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(`r['terms']`, 25) + CRT)
+	fp.write(string.ljust(str(r['terms']), 25) + CRT)
 
     fp.write('\n*********************************************************************\n')
 
@@ -212,17 +212,17 @@ def goSummary2():
     fp.write(string.ljust('---------------', 25) + CRT)
 
     results = db.sql('''
-	   select name = substring(d.name,1,30), terms = count(n._Object_key)
+	   select substring(d.name,1,30) as name, count(n._Object_key) as terms
 	   from DAG_DAG d, DAG_Node n
 	   where d._DAG_key in (1,2,3)
 	   and d._DAG_key = n._DAG_key
 	   and exists (select 1 from VOC_Annot a where n._Object_key = a._Term_key)
-	   group by d._DAG_key
+	   group by d.name
 	   ''', 'auto')
 
     for r in results:
 	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(`r['terms']`, 35) + CRT)
+	fp.write(string.ljust(str(r['terms']), 35) + CRT)
 
     fp.write('\n*********************************************************************\n')
 
@@ -408,26 +408,26 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
 
    # total by gene
-   fp.write('Total Number of Genes Annotated to:' + TAB + str(results1[0]['']) + '\n')
+   fp.write('Total Number of Genes Annotated to:' + TAB + str(results1[0]['cnt']) + '\n')
 
    # breakdown by ontology/dag
    fp.write('Breakdown by OntologyName:\n')
 
    for r in results2:
 	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(r['terms'], 45) + CRT)
+	fp.write(string.ljust(str(r['terms']), 45) + CRT)
 
    fp.write('---------------------------------------------------------------------\n')
 
    # total by annotation
-   fp.write('Total Number of Annotations:' + TAB + str(results3[0]['']) + '\n')
+   fp.write('Total Number of Annotations:' + TAB + str(results3[0]['cnt']) + '\n')
 
    # breakdown by ontology/dag
    fp.write('Breakdown by OntologyName:\n')
 
    for r in results4:
 	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(r['terms'], 45) + CRT)
+	fp.write(string.ljust(str(r['terms']), 45) + CRT)
 
    fp.write('*********************************************************************\n')
 
