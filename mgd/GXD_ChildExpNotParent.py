@@ -172,11 +172,11 @@ childStructureList = ''
 # other fields in common.
 #
 results = db.sql('''
-	SELECT distinct j.accID as 'JNumber', 
-               a.accID as 'MGIID', 
+	SELECT distinct j.accID as JNumber, 
+               a.accID as MGIID, 
                d._Stage_key, 
-               d.printName as 'parentStructure', 
-               d2.printName as 'childStructure' 
+               d.printName as parentStructure, 
+               d2.printName as childStructure 
         FROM #work w, GXD_Specimen s, GXD_Expression e, 
              ACC_Accession a, ACC_Accession j, 
              GXD_Structure d, GXD_Structure d2 
