@@ -107,7 +107,7 @@ db.sql('create index idx1 on #validIndexItems(_Index_key)', None)
 
 results = db.sql('''
 (
-select distinct jnumID, term as 'AssayType', symbol 
+select distinct jnumID, term as AssayType, symbol 
 from #validIndexItems gi
 where gi._IndexAssay_key in (74718, 74720) and gi._StageID_key != 74769 
 and exists (select 1 from GXD_Expression ge 
@@ -117,7 +117,7 @@ and not exists (select 1 from GXD_Expression ga
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 1)
 
 union
-select distinct jnumID, term as 'AssayType', symbol 
+select distinct jnumID, term as AssayType, symbol 
 from #validIndexItems gi
 where gi._IndexAssay_key = 74722 and gi._StageID_key != 74769
 and exists (select 1 from GXD_Expression ge 
@@ -127,7 +127,7 @@ and not exists (select 1 from GXD_Expression ga
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 2)
 
 union
-select distinct jnumID, term as 'AssayType', symbol 
+select distinct jnumID, term as AssayType, symbol 
 from #validIndexItems gi
 where gi._IndexAssay_key = 74724 and gi._StageID_key != 74769 
 and exists (select 1 from GXD_Expression ge 
@@ -137,7 +137,7 @@ and not exists (select 1 from GXD_Expression ga
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 5)
 
 union
-select distinct jnumID, term as 'AssayType', symbol 
+select distinct jnumID, term as AssayType, symbol 
 from #validIndexItems gi
 where gi._IndexAssay_key in (74717, 74719) and gi._StageID_key != 74769 
 and exists (select 1 from GXD_Expression ge 
@@ -147,7 +147,7 @@ and not exists (select 1 from GXD_Expression ga
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 6)
 
 union
-select distinct jnumID, term as 'AssayType', symbol 
+select distinct jnumID, term as AssayType, symbol 
 from #validIndexItems gi
 where gi._IndexAssay_key = 74723 and gi._StageID_key != 74769  
 and exists (select 1 from GXD_Expression ge 
@@ -157,7 +157,7 @@ and not exists (select 1 from GXD_Expression ga
 and ga._Marker_key = gi._Marker_key and ga._AssayType_key = 8)
 
 union
-select distinct jnumID, term as 'AssayType', symbol 
+select distinct jnumID, term as AssayType, symbol 
 from #validIndexItems gi
 where gi._IndexAssay_key = 74721 and gi._StageID_key != 74769  
 and exists (select 1 from GXD_Expression ge 
