@@ -103,7 +103,7 @@ def process():
     #
 
     db.sql('''
-	select g._Refs_key, idx_count = count(*) 
+	select g._Refs_key, count(*) as idx_count
 	into #indexcount 
 	from GXD_Index g 
 	group by g._Refs_key
@@ -189,7 +189,7 @@ def report1(fp):
     # number of index records for the markers of interest
     #
 
-    results = db.sql('select m._Marker_key, m.symbol, idx_count = count(*) ' + \
+    results = db.sql('select m._Marker_key, m.symbol, count(*) as idx_count ' + \
                      'from GXD_Index gi, MRK_Marker m, #markers tm ' + \
                      'where gi._Marker_key = tm._Marker_key and ' + \
                            'gi._Marker_key = m._Marker_key ' + \
@@ -243,7 +243,7 @@ def report2(fp):
     #
 
     db.sql('''
-	select g._Refs_key, mrk_count = count(*) 
+	select g._Refs_key, count(*) as mrk_count
 	into #markercount 
 	from #refscodeable g 
 	group by g._Refs_key
@@ -263,7 +263,8 @@ def report2(fp):
     db.sql('create index excluded_idx1 on #excluded(_Refs_key)', None)
 
     results = db.sql('''
-	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority, r.conditional 
+	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority, r.conditional,
+		r._priority_key, a.numericpart
 	from #refscodeable r, #indexcount i, #markercount m, ACC_Accession a 
 	where r._Refs_key = i._Refs_key 
 	and r._Refs_key = m._Refs_key 
@@ -327,7 +328,7 @@ def report3(fp):
     #
 
     db.sql('''
-	select i._Refs_key, mrk_count = count(*) 
+	select i._Refs_key, count(*) as mrk_count
         into #mrk_count 
         from GXD_Index i 
         where not exists (select 1 from GXD_Assay a where a._Marker_key = i._Marker_key) 
@@ -342,7 +343,7 @@ def report3(fp):
     #
 
     db.sql('''
-       select distinct i._Marker_key, i._Refs_key, i._Priority_key, priority = t.term 
+       select distinct i._Marker_key, i._Refs_key, i._Priority_key, t.term as priority
            into #priority 
            from GXD_Index i, VOC_Term t 
 	   where i._Priority_key in (74715, 74714) 
