@@ -34,8 +34,18 @@
 import sys
 import os
 import string
-import db
 import reportlib
+
+try:
+    if os.environ['DB_TYPE'] == 'postgres':
+        import pg_db
+        db = pg_db
+        db.setTrace()
+        db.setAutoTranslateBE()
+    else:
+        import db
+except:
+    import db
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -197,7 +207,7 @@ db.sql('''select g1._Genotype_key as geno1,
 #
 #  Now add entries that have the allele pairs transposed, but still match.
 #
-db.sql('''insert #pairs 
+db.sql('''insert into #pairs 
           select g1._Genotype_key as geno1, 
                  g2._Genotype_key as geno2, 
                  g1._Strain_key as strain 
@@ -228,7 +238,7 @@ results = db.sql('''select p.geno1, p.geno2, p.strain,
             count(distinct _AllelePair_key) as numPairs 
             from #pairs p, GXD_AllelePair gap 
             where p.geno1 = gap._Genotype_key 
-            group by p.geno1, p.geno2
+            group by p.geno1, p.geno2, p.strain
 	    ''', 'auto')
 
 #
@@ -325,9 +335,12 @@ db.sql('''select g._Genotype_key, g._Strain_key
 	''', None)
 
 db.sql('''select g.*
-	into #duplicate
-	from #genotype g
-	group by g._Strain_key having count(*) > 1
+        into #duplicate
+        from #genotype g
+	where exists (select g2._strain_key from
+		#genotype g2
+		group by g2._Strain_key having count(*) > 1
+		)
 	''', None)
 
 results = db.sql('''select a.accID, s.strain
