@@ -62,7 +62,7 @@ results = db.sql('''
 
 	select
 		gs._Structure_key,
-		count(gs._Structure_key) as "SCount"
+		count(gs._Structure_key) as SCount
 	into #tmp_olin
 	from
 		GXD_Structure gs,
@@ -82,7 +82,7 @@ results = db.sql('''
 union
 	select
 		gs._Structure_key,
-		0 as "SCount"
+		0 as SCount
 	from
 		GXD_Structure gs,
 		ACC_Accession acc
