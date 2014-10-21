@@ -339,6 +339,7 @@ db.sql('''select g.*
         from #genotype g
 	where exists (select g2._strain_key from
 		#genotype g2
+		where g._strain_key = g2._strain_key
 		group by g2._Strain_key having count(*) > 1
 		)
 	''', None)
