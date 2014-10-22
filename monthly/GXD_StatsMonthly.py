@@ -17,6 +17,7 @@
 #
 # lec   10/22/2014
 #       - TR11750/postres complient
+#	note : counts are not correct in postgres
 #
 # 04/30/2008	lec
 #	- TR 8747; taken from GXD_Stats
@@ -199,19 +200,20 @@ def monthlyCounts():
 
     results = db.sql('''select g.year, g.month, 
 	avg(g.genes) as genes, 
-	sum(r.results) as results, 
+	sum(r.results) as sumresults, 
 	avg(g.refs) as ref
 	from #assayGenes g, #periodCounts r 
 	where g.year = r.year 
 	and g.month = r.month 
 	group by g.year, g.month
+	order by g.year, g.month
 	''', 'auto')
 
     for r in results:
 	fp.write(string.ljust(str(r['year']), 10))
 	fp.write(string.ljust(str(r['month']), 10))
 	fp.write(string.ljust(str(r['genes']), 10))
-	fp.write(string.ljust(str(r['results']), 10))
+	fp.write(string.ljust(str(r['sumresults']), 10))
 	fp.write(string.ljust(str(r['ref']), 15) + CRT)
 
     #
