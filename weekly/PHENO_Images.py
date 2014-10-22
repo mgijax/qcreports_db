@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 12/02/2013	lec
 #	- TR11457/fix error in query
 #
@@ -129,7 +132,7 @@ db.sql('''
 	    and g._Allele_key = v._Object_key)
 	''' % (string.join(journals, '","')), None)
 
-db.sql('create index idx1 on #exists(_Refs_key)', None)
+db.sql('create index exists_idx1 on #exists(_Refs_key)', None)
 
 #
 # all references that contain journals with genotype annotations, etc.
@@ -157,7 +160,7 @@ db.sql('''
 	    and g._Allele_key = v._Object_key)
 	''' % (string.join(journals, '","')), None)
 
-db.sql('create index idx1 on #refs(_Refs_key)', None)
+db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
 
 results = db.sql('''
 	select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID

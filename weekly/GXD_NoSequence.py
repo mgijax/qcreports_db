@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # lec	10/26/2010
 #	- TR10401
 #
@@ -77,7 +80,7 @@ fp.write(string.ljust('-----------', 30) + \
 # select genes with no sequences that exist in GXD index
 #
 db.sql('''
-       select m._Marker_key, m.symbol, markerType = t.name
+       select m._Marker_key, m.symbol, t.name as markerType
        into #markers 
        from MRK_Marker m, MRK_Types t
        where m._Organism_key = 1 
@@ -95,10 +98,11 @@ db.sql('create index idx1 on #markers(_Marker_key)', None)
 #
 # select number of GXD index references for each marker
 #
-results = db.sql('select m._Marker_key, gxd = count(i._Refs_key) ' + \
-        'from #markers m, GXD_Index i ' + \
-        'where m._Marker_key = i._Marker_key ' + \
-        'group by m._Marker_key', 'auto')
+results = db.sql('''select m._Marker_key, count(i._Refs_key) as gxd
+        from #markers m, GXD_Index i 
+        where m._Marker_key = i._Marker_key 
+        group by m._Marker_key
+	''', 'auto')
 gxd = {}
 for r in results:
         key = r['_Marker_key']
