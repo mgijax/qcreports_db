@@ -217,9 +217,9 @@ db.sql('''
 		  max(t.dpcMax) as dpcMax
 	into #temp3 
 	from #temp2 t 
-	group by t._Assay_key, t._Specimen_key 
+	group by t._Assay_key, t._Specimen_key, t.age, t.label, t.stage
 	''', None)
-db.sql('create index idx1 on #temp3(_Assay_key)', None)
+db.sql('create index idx3 on #temp3(_Assay_key)', None)
 
 ##
 
