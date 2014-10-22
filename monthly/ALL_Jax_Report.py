@@ -63,11 +63,11 @@ db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'All Jax Report', outputdir = os.environ['QCOUTPUTDIR'])
 
-results = db.sql('''select distinct gag._Allele_key as 'key', vt.term 
-	from VOC_AnnotHeader vah, voc_term vt, GXD_AlleleGenotype gag
+results = db.sql('''select distinct gag._Allele_key as key, vt.term 
+	from VOC_AnnotHeader vah, VOC_Term vt, GXD_AlleleGenotype gag
 	where vah.isNormal = 0 and vah._Term_key = vt._Term_key 
 	and vah._Object_key = gag._Genotype_key
-	order by vah._Object_key''', 'auto')
+	''', 'auto')
 
 phenoTerms = {}
 
@@ -86,7 +86,7 @@ cmds.append('''select a._Allele_key, gag._Genotype_key
 	''')
 
 
-cmds.append('''select distinct tg._Allele_key as 'key', vt.term + ' ' + aa.accID as 'term' 
+cmds.append('''select distinct tg._Allele_key as key, vt.term || ' ' || aa.accID as term 
 	from #tmp_geno tg, voc_annot va, voc_term vt, acc_accession aa
 	where va._Object_key = tg._Genotype_key and va._AnnotType_key = 1005 and va._Term_key != null
 	and va._Term_key = vt._Term_key and va._Term_key = aa._Object_key and aa._MGIType_key = 13
@@ -103,7 +103,7 @@ for row in results[1]:
 		omimTerms[row['key']] = omimTerms[row['key']] + ', ' + row['term']
 
 
-results = db.sql('''select _Object_key as 'key', count (distinct _Refs_key) as 'term'
+results = db.sql('''select _Object_key as key, count (distinct _Refs_key) as term
 	from MGI_Reference_Assoc where _MGIType_key = 11 group by _Object_key ''', 'auto')
 
 refCount = {}
@@ -114,7 +114,7 @@ for row in results:
 	else:
 		refCount[row['key']] = refCount[row['key']] + ', ' + row['term']
 		
-results = db.sql('''select a._Allele_key as 'key', f.abbrevName as 'term'
+results = db.sql('''select a._Allele_key as key, f.abbrevName as term
 	from all_allele a, acc_accession aa, imsr..StrainAGAccCache isac, imsr..StrainFacilityAssoc sfa,
 	imsr..Facility f
 	where a._Transmission_key != 3982953
@@ -133,8 +133,8 @@ for row in results:
 	else:
 		facility[row['key']] = facility[row['key']] + ', ' + row['term']		
 
-results = db.sql('''select a.accID, aa.symbol as 'asymbol', aa.name as 'aname',
-	vt.term as 'alltype',  mm.symbol as 'msymbol', mm.name as 'mname', aa._Allele_key, convert(char(20), aa.creation_date, 107) as create_date 
+results = db.sql('''select a.accID, aa.symbol as asymbol, aa.name as aname,
+	vt.term as alltype,  mm.symbol as msymbol, mm.name as mname, aa._Allele_key, convert(char(20), aa.creation_date, 107) as create_date 
 	from all_allele aa, voc_term vt, mrk_marker mm, ACC_Accession a
 	where aa._allele_type_key = vt._term_key and aa._Transmission_key != 3982953
 	and aa._Marker_key = mm._Marker_key and aa._Allele_key = a._Object_key and aa.name != 'wild type'
