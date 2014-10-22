@@ -15,6 +15,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 04/30/2008	lec
 #	- TR 8747; taken from GXD_Stats
 #
@@ -48,13 +51,15 @@ def monthlyCounts():
 
     # Gene stats by year/month
 
-    db.sql('select year = datepart(year, a.creation_date), month = datepart(month, a.creation_date), ' + \
-	'genes = count (distinct a._Marker_key),' + \
-	'refs  = count (distinct a._Refs_key)' + \
-    	'into #assayGenes ' + \
-        'from GXD_Assay a ' + \
-	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
-        'group by datepart(year, a.creation_date), datepart(month, a.creation_date)', None)
+    db.sql('''select datepart(year, a.creation_date) as year, 
+	datepart(month, a.creation_date) as month, 
+	count (distinct a._Marker_key) as genes,
+	count (distinct a._Refs_key) as refs
+    	into #assayGenes 
+        from GXD_Assay a 
+	where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+        group by datepart(year, a.creation_date), datepart(month, a.creation_date)
+	''', None)
 
     db.sql('create index assayGenes_idx1 on #assayGenes(year)', None)
     db.sql('create index assayGenes_idx2 on #assayGenes(month)', None)
@@ -63,13 +68,14 @@ def monthlyCounts():
     # Assay stats by year/month/assay type
     #
 
-    db.sql('select year = datepart(year, a.creation_date), month = datepart(month, a.creation_date), ' + \
-	'a._AssayType_key, ' + \
-	'assays = count(*) ' + \
-	'into #assays ' + \
-	'from GXD_Assay a ' + \
-	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
-	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
+    db.sql('''select datepart(year, a.creation_date) as year, datepart(month, a.creation_date) as month, 
+	a._AssayType_key, 
+	count(*) as assays
+	into #assays 
+	from GXD_Assay a 
+	where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key
+	''', None)
 
     db.sql('create index assays_idx1 on #assays(year)', None)
     db.sql('create index assays_idx2 on #assays(month)', None)
@@ -79,16 +85,18 @@ def monthlyCounts():
     # Gel stats by year/month/assay type
     #
 
-    db.sql('select year = datepart(year, a.creation_date), month = datepart(month, a.creation_date), ' + \
-	'a._AssayType_key, ' + \
-	'results = count(*) ' + \
-	'into #gelresults ' + \
-	'from GXD_Assay a, GXD_GelLane l, GXD_GelLaneStructure gls ' + \
-	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
-	'and a._Assay_key = l._Assay_key ' + \
-	'and l._GelControl_key = 1 ' + \
-	'and l._GelLane_key = gls._GelLane_key ' + \
-	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
+    db.sql('''select datepart(year, a.creation_date) as year, 
+	datepart(month, a.creation_date) as month, 
+	a._AssayType_key, 
+	count(*) as results
+	into #gelresults 
+	from GXD_Assay a, GXD_GelLane l, GXD_GelLaneStructure gls 
+	where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	and a._Assay_key = l._Assay_key 
+	and l._GelControl_key = 1 
+	and l._GelLane_key = gls._GelLane_key 
+	group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key
+	''', None)
 
     db.sql('create index gelresults_idx1 on #gelresults(year)', None)
     db.sql('create index gelresults_idx2 on #gelresults(month)', None)
@@ -98,16 +106,18 @@ def monthlyCounts():
     # InSitu stats by year/month/assay type
     #
 
-    db.sql('select year = datepart(year, a.creation_date), month = datepart(month, a.creation_date), ' + \
-	'a._AssayType_key, ' + \
-	'results = count(*) ' + \
-	'into #insituresults ' + \
-	'from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure rs ' + \
-	'where a._AssayType_key in (1,2,3,4,5,6,8,9) ' + \
-	'and a._Assay_key = s._Assay_key ' + \
-	'and s._Specimen_key = r._Specimen_key ' + \
-	'and r._Result_key = rs._Result_key ' + \
-	'group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key', None)
+    db.sql('''select datepart(year, a.creation_date) as year, 
+	datepart(month, a.creation_date) as month, 
+	a._AssayType_key, 
+	count(*) as results
+	into #insituresults 
+	from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultStructure rs 
+	where a._AssayType_key in (1,2,3,4,5,6,8,9) 
+	and a._Assay_key = s._Assay_key 
+	and s._Specimen_key = r._Specimen_key 
+	and r._Result_key = rs._Result_key 
+	group by datepart(year, a.creation_date), datepart(month, a.creation_date), a._AssayType_key
+	''', None)
 
     db.sql('create index insituresults_idx1 on #insituresults(year)', None)
     db.sql('create index insituresults_idx2 on #insituresults(month)', None)
@@ -117,44 +127,50 @@ def monthlyCounts():
     # generate a list of all unique year/month values by the creation date of Assay records
     #
 
-    db.sql('select distinct year = datepart(year, creation_date), ' + \
-	'month = datepart(month, creation_date) into #periods from GXD_Assay', None)
+    db.sql('''select distinct datepart(year, creation_date) as year, 
+	datepart(month, creation_date) as month
+	into #periods from GXD_Assay
+	''', None)
 
     # initialize a table of periodCounts with all assay types for each year/month
     # and set "assays = 0", "results = 0"
     # subsequent updates will increment the assays and results counts
 
-    db.sql('select p.year, p.month, t._AssayType_key, assayType = substring(t.assayType,1,25), ' + \
-	'assays = 0, results = 0 ' + \
-	'into #periodCounts ' +  \
-	'from #periods p, GXD_AssayType t where t._AssayType_key in (1,2,3,4,5,6,8,9)', None)
+    db.sql('''select p.year, p.month, t._AssayType_key, substring(t.assayType,1,25) as assayType, 
+	assays = 0, results = 0 
+	into #periodCounts 
+	from #periods p, GXD_AssayType t where t._AssayType_key in (1,2,3,4,5,6,8,9)
+	''', None)
 
     # update the Assay count
 
-    db.sql('update #periodCounts ' + \
-	'set assays = a.assays ' + \
-	'from #periodCounts p, #assays a ' + \
-	'where a.year = p.year ' + \
-	'and a.month = p.month ' + \
-	'and a._AssayType_key = p._AssayType_key ', None)
+    db.sql('''update #periodCounts 
+	set assays = a.assays
+	from #periodCounts p, #assays a 
+	where a.year = p.year 
+	and a.month = p.month 
+	and a._AssayType_key = p._AssayType_key 
+	''', None)
 
     # update Gel Results count
 
-    db.sql('update #periodCounts ' + \
-	'set results = p.results + a.results ' + \
-	'from #periodCounts p, #gelresults a ' + \
-	'where a.year = p.year ' + \
-	'and a.month = p.month ' + \
-	'and a._AssayType_key = p._AssayType_key ', None)
+    db.sql('''update #periodCounts 
+	set results = p.results + a.results 
+	from #periodCounts p, #gelresults a 
+	where a.year = p.year 
+	and a.month = p.month 
+	and a._AssayType_key = p._AssayType_key 
+	''', None)
 
     # update InSitu count
 
-    db.sql('update #periodCounts ' + \
-	'set results = p.results + a.results ' + \
-	'from #periodCounts p, #insituresults a ' + \
-	'where a.year = p.year ' + \
-	'and a.month = p.month ' + \
-	'and a._AssayType_key = p._AssayType_key ', None)
+    db.sql('''update #periodCounts 
+	set results = p.results + a.results 
+	from #periodCounts p, #insituresults a 
+	where a.year = p.year 
+	and a.month = p.month 
+	and a._AssayType_key = p._AssayType_key 
+	''', None)
 
     db.sql('create index period_idx1 on #periodCounts(year)', None)
     db.sql('create index period_idx2 on #periodCounts(month)', None)
@@ -181,11 +197,15 @@ def monthlyCounts():
     # use avg(gene) & avg(refs) to get a single value from #assayGenes
     #
 
-    results = db.sql('select g.year, g.month, genes = avg(g.genes), results = sum(r.results), ref = avg(g.refs) ' + \
-	'from #assayGenes g, #periodCounts r ' + \
-	'where g.year = r.year ' + \
-	'and g.month = r.month ' + \
-	'group by g.year, g.month', 'auto')
+    results = db.sql('''select g.year, g.month, 
+	avg(g.genes) as genes, 
+	sum(r.results) as results, 
+	avg(g.refs) as ref
+	from #assayGenes g, #periodCounts r 
+	where g.year = r.year 
+	and g.month = r.month 
+	group by g.year, g.month
+	''', 'auto')
 
     for r in results:
 	fp.write(string.ljust(str(r['year']), 10))
@@ -198,9 +218,9 @@ def monthlyCounts():
     # Total Results
     #
 
-    results = db.sql('select sum(results) from #periodCounts', 'auto')
+    results = db.sql('select sum(results) as totalresults from #periodCounts', 'auto')
     for r in results:
-	fp.write(CRT + 'Total Results: ' + str(r['']) + CRT)
+	fp.write(CRT + 'Total Results: ' + str(r['totalresults']) + CRT)
 
     #
     # Assays and results by Assay Type and month/year
@@ -214,15 +234,17 @@ def monthlyCounts():
 
     asummary = {}
     rsummary = {}
-    results = db.sql('select assayType, asum = sum(assays), rsum = sum(results) ' + \
-	'from #periodCounts group by assayType', 'auto')
+    results = db.sql('''select assayType, sum(assays) as asum, sum(results) as rsum
+	from #periodCounts group by assayType
+	''', 'auto')
     for r in results:
 	asummary[r['assayType']] = r['asum']
 	rsummary[r['assayType']] = r['rsum']
 
-    results = db.sql('select assayType, year, month, assays, results ' + \
-    	'from #periodCounts ' + \
-    	'order by assayType, year, month', 'auto')
+    results = db.sql('''select assayType, year, month, assays, results 
+    	from #periodCounts 
+    	order by assayType, year, month
+	''', 'auto')
 
     fp.write(2*CRT + string.ljust('Assay Type', 30))
     fp.write(string.ljust('Year', 10))
