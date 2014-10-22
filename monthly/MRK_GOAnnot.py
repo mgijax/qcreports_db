@@ -33,6 +33,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 01/31/2011	lec
 #       - created; monthly report
 #
@@ -135,7 +138,7 @@ for r in results:
 totalAnnot = {}
 results = db.sql('''
 	select m._Marker_key, 
-	       totalAnnot = count(distinct v._Annot_key)
+	       count(distinct v._Annot_key) as totalAnnot
         from #markers m, VOC_Annot v
             where m._Marker_key = v._Object_key
             and v._AnnotType_key = 1000
@@ -152,7 +155,7 @@ for r in results:
 totalEvi = {}
 results = db.sql('''
 	select m._Marker_key, 
-	       totalEvi = count(distinct v._Annot_key)
+	       count(distinct v._Annot_key) as totalEvi
         from #markers m, VOC_Annot v, VOC_Evidence e
             where m._Marker_key = v._Object_key
             and v._AnnotType_key = 1000
@@ -175,7 +178,7 @@ for r in results:
 #
 totalNotUsed = {}
 results = db.sql('''
-	select m._Marker_key, totalNotUsed = count(distinct r._Refs_key)
+	select m._Marker_key, count(distinct r._Refs_key) as totalNotused
 	from #markers m, BIB_GOXRef_View r
 	where m._Marker_key = r._Marker_key
 	and not exists (select 1 from VOC_Annot a, VOC_Evidence e
@@ -196,7 +199,7 @@ for r in results:
 #   exclude evidence codes (IEA, ND)
 totalUsed = {}
 results = db.sql('''
-	select m._Marker_key, totalUsed = count(distinct e._Refs_key)
+	select m._Marker_key, count(distinct e._Refs_key) as totalUsed
 	from #markers m, VOC_Annot a, VOC_Evidence e, MGI_User u
 	where a._AnnotType_key = 1000
 	and m._Marker_key = a._Object_key
