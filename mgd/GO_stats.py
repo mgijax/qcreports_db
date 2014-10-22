@@ -6,6 +6,9 @@
 #
 # Report:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 08/04/2015
 #	- TR 11745/add 'GO Central' to the GO_CLAUSE
 #
@@ -190,6 +193,7 @@ def goSummary1():
            where d._DAG_key in (1,2,3)
            and d._DAG_key = n._DAG_key
            group by d.name
+	   order by d.name
 	   ''', 'auto')
 
     for r in results:
@@ -218,6 +222,7 @@ def goSummary2():
 	   and d._DAG_key = n._DAG_key
 	   and exists (select 1 from VOC_Annot a where n._Object_key = a._Term_key)
 	   group by d.name
+	   order by d.name
 	   ''', 'auto')
 
     for r in results:
