@@ -83,7 +83,7 @@ db.sql('''
      where a._Refs_key = r._Refs_key 
      and a._AssayType_key in (1,2,3,4,5,6,8,9,10,11) 
      and a._ImagePane_key is not null
-     ''', 'None')
+     ''', None)
 
 db.sql('create index gel_idx1 on #gel(_Refs_key)', None)
 db.sql('create index gel_idx2 on #gel(_ImagePane_key)', None)
@@ -110,7 +110,7 @@ db.sql('''
     and a._Assay_key = s._Assay_key 
     and s._Specimen_key = i._Specimen_key 
     and i._Result_key = p._Result_key
-    ''', 'None')
+    ''', None)
 
 db.sql('create index specimen_idx1 on #specimen(_Refs_key)', None)
 db.sql('create index specimen_idx2 on #specimen(_ImagePane_key)', None)
@@ -134,7 +134,7 @@ db.sql('''
      and a._ImageType_key = 1072158 
      and a._MGIType_key = 8 
      and a._Image_key = aa._Image_key 
-     ''', 'None')
+     ''', None)
 
 db.sql('create index images_idx1 on #images(jnumID)', None)
 db.sql('create index images_idx2 on #images(figureLabel)', None)
