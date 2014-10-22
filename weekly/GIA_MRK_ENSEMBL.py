@@ -19,6 +19,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # lec   02/09/2011
 #	- this is similar to the report on public, but specific for Sophia
 #	  and the ${MGD_DBUTILS}/bin/generateGIAssoc.csh product
@@ -67,7 +70,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 cmd = '''
-	select a1.accID 'MGI', m.symbol, m.name, m.chromosome, o.offset, a2.accID 'Ensembl' 
+	select a1.accID as mgiID, m.symbol, m.name, m.chromosome, o.offset, a2.accID as ensemblID
         from ACC_Accession a1, ACC_Accession a2, MRK_Marker m, MRK_Offset o 
         where a1._Object_key = a2._Object_key 
             and a1._Object_key = m._Marker_key 
@@ -86,9 +89,9 @@ cmd = '''
 results = db.sql(cmd, 'auto')
 
 for r in results:
-    fp.write(r['MGI'] + TAB + r['symbol'] + TAB + r['name'] + TAB +
+    fp.write(r['mgiID'] + TAB + r['symbol'] + TAB + r['name'] + TAB +
 	     str(r['offset']) + TAB +
              r['chromosome'] + TAB + 
-             r['Ensembl'] + CRT)
+             r['ensemblID'] + CRT)
 
 reportlib.finish_nonps(fp)

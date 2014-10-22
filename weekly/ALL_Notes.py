@@ -9,6 +9,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # lec	09/30/2010-10/05/2010
 #	- created
 #
@@ -69,9 +72,9 @@ def alleleNotes():
 
         sql = '''
 	        select a._Allele_key, a.symbol, aa.accID, t.term, 
-		       cdate = convert(char(10), a.creation_date, 101),
-		       mdate = convert(char(10), a.modification_date, 101),
-		       clogin = u1.login, mlogin = u2.login
+		       convert(char(10), a.creation_date, 101) as cdate,
+		       convert(char(10), a.modification_date, 101) as mdate,
+		       u1.login as clogin, u2.login as mlogin
 	        into #alleles
 	        from ALL_Allele a, ACC_Accession aa, VOC_Term t, MGI_User u1, MGI_User u2
 	        where a._Allele_key = aa._Object_key
@@ -178,9 +181,9 @@ def mpNotes():
 
     db.sql('''
 	   select a._Genotype_key, aa.accID,
-		       cdate = convert(char(10), a.creation_date, 101),
-		       mdate = convert(char(10), a.modification_date, 101),
-		       clogin = u1.login, mlogin = u2.login
+		       convert(char(10), a.creation_date, 101) as cdate,
+		       convert(char(10), a.modification_date, 101) as mdate,
+		       u1.login as clogin, u2.login as mlogin
 	   into #genotypes
 	   from GXD_Genotype a, ACC_Accession aa, MGI_User u1, MGI_User u2
 	   where a._Genotype_key = aa._Object_key
@@ -275,8 +278,8 @@ def markerNotes():
 
     db.sql('''
           select a._Marker_key, a.symbol, aa.accID,
-                cdate = convert(char(10), a.creation_date, 101),
-                mdate = convert(char(10), a.modification_date, 101)
+                convert(char(10), a.creation_date, 101) cdate,
+                convert(char(10), a.modification_date, 101) mdate
           into #markers
           from MRK_Marker a, ACC_Accession aa
           where a._Marker_key = aa._Object_key
