@@ -20,6 +20,9 @@
 #
 # History:
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 08/14/2008	lec
 #	- TR9187
 #	   only list alleles with status = "approved"
@@ -96,8 +99,8 @@ for r in results:
     notes[key].append(value)
 
 results = db.sql('''
-	select a._Allele_key, ac.accID, aa.symbol, alleleType = t.term, 
-	modDate = convert(char(10), aa.modification_date, 101) 
+	select a._Allele_key, ac.accID, aa.symbol, t.term as alleleType, 
+	convert(char(10), aa.modification_date, 101) as modDate 
 	from #alleles a, ACC_Accession ac, ALL_Allele aa, VOC_Term t 
 	where a._Allele_key = ac._Object_key 
         and ac._MGIType_key = 11 
