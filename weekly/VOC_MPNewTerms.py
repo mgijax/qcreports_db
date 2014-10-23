@@ -105,7 +105,7 @@ for r in results:
 mpIds = rDict.keys()
 mpIds.sort()
 
-fp.write( 'MP Terms Added From %s to %s%s%s' % (fromDate, currentDate, CRT, CRT) )
+fp.write( 'MP Terms Added From %s to %s%s%s' % (fromDate, toDate, CRT, CRT) )
 
 fp.write(string.ljust('MP ID', 15))
 fp.write(string.ljust('MP Term', 75))
