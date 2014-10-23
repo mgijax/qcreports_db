@@ -21,6 +21,10 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 	- sc 4/7/2011 new
 #
 '''
@@ -47,14 +51,20 @@ CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
-#reportlib.column_width = 150
 
 #
 # Main
 #
 
 currentDate = mgi_utils.date('%m/%d/%Y')
-fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+
+if os.environ['DB_TYPE'] == 'postgres':
+	fromDate = "current_date - interval '7 days'"
+	toDate = "current_date"
+else:
+	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+	fromDate = "'" + fromDate + "'"
+	toDate = "'" + currentDate + "'"
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
@@ -62,11 +72,11 @@ db.sql('''
 	select a.accid, t.term , t._Term_key, t.creation_date
 	into #triage
 	from VOC_Term t, ACC_Accession a
-	where t.creation_date between '%s' and '%s'
+	where t.creation_date between %s and %s
 	and t._Term_key = a._Object_key
 	and a._LogicalDB_key = 34
 	and a._MGIType_key = 13
-	''' % (fromDate, currentDate), None)
+	''' % (fromDate, toDate), None)
 
 db.sql('''create index idx1 on #triage(_Term_key)''', None)
 
@@ -77,11 +87,11 @@ results = db.sql('''
     	where t._Term_key = s._Object_key
     	and s._MGIType_key = 13
     	union
-    	select distinct t.accid, t.term, synonym = null
+    	select distinct t.accid, t.term, null
     	from #triage t where not exists (select 1 from MGI_Synonym s
 		where t._Term_key = s._Object_key and s._MGIType_key = 13)
 	)
-    	order by t.term
+    	order by term
 	''', 'auto')
 
 # MP ID:list of results
