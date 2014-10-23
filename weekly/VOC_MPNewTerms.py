@@ -56,12 +56,11 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-currentDate = mgi_utils.date('%m/%d/%Y')
-
 if os.environ['DB_TYPE'] == 'postgres':
 	fromDate = "current_date - interval '7 days'"
 	toDate = "current_date"
 else:
+	currentDate = mgi_utils.date('%m/%d/%Y')
 	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
 	fromDate = "'" + fromDate + "'"
 	toDate = "'" + currentDate + "'"
