@@ -184,8 +184,10 @@ def qtl5():
 		substring(t.term,1,10) as term,
 	  	a1.accID as mgiID, r.jnumID as refID, m.symbol, m.name, m.statusNote
 	  into #marker
-          from NOM_Marker m, ACC_Accession a1, 
-		MGI_Reference_Nomen_View r, VOC_Term t
+          from ACC_Accession a1, 
+		VOC_Term t,
+		NOM_Marker m left join
+		MGI_Reference_Nomen_View r on (m._nomen_key = r._object_key and r.assocType = 'Primary')
           where m._Marker_Type_key = 6
           and m._NomenStatus_key not in (166903, 166904)
           and m._Nomen_key = a1._Object_key
@@ -193,7 +195,6 @@ def qtl5():
           and a1._Logicaldb_key = 1
           and a1.prefixpart = 'MGI:'
           and a1.preferred = 1
-          and m._Nomen_key *= r._Object_key and r.assocType = 'Primary'
 	  and m._NomenStatus_key = t._Term_key
         ''', None)
 
