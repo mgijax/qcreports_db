@@ -51,7 +51,12 @@ except:
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-currentDate = mgi_utils.date('%m/%d/%Y')
+if os.environ['DB_TYPE'] == 'postgres':
+	fromDate = "current_date - interval '7 days'"
+else:
+	currentDate = mgi_utils.date('%m/%d/%Y')
+	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+	fromDate = "'" + fromDate + "'"
 
 def jrs():
 
@@ -84,8 +89,8 @@ def jrs():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key 
-	and g.creation_date between dateadd(day, -7, '%s') and getdate()
-	''' % (currentDate), None)
+	and g.creation_date between %s and getdate()
+	''' % (fromDate), None)
 
     printReport(jrsfp)
 
@@ -105,6 +110,8 @@ def mmrrc():
     
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
+    db.sql('drop table #strains', None)
+
     db.sql('''
 	select distinct s._Strain_key, 
 			substring(s.strain,1,70) as strain, 
@@ -119,8 +126,8 @@ def mmrrc():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key
-	and g.creation_date between dateadd(day, -7, '%s') and getdate()
-	''' % (currentDate), None)
+	and g.creation_date between %s and getdate()
+	''' % (fromDate), None)
 
     printReport(mmrrcfp)
 
