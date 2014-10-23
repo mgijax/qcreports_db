@@ -10,6 +10,9 @@
 # Usage:
 #       MTB_Triage.py
 #
+# lec   10/22/2014
+#       - TR11750/postres complient
+#
 # 03/18/2014	lec
 #	- TR11621/add reference information to this report
 #
@@ -42,9 +45,15 @@ reportlib.column_width = 150
 # Main
 #
 
-currentDate = mgi_utils.date('%m/%d/%Y')
-fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
-toDate = db.sql('select convert(char(10), dateadd(day, -1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+if os.environ['DB_TYPE'] == 'postgres':
+	fromDate = "current_date - interval '7 days'"
+	toDate = "current_date - interval '1 day'"
+else:
+	currentDate = mgi_utils.date('%m/%d/%Y')
+	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+	fromDate = "'" + fromDate + "'"
+	toDate = db.sql('select convert(char(10), dateadd(day, -1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+	toDate = "'" + toDate + "'"
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.' + os.environ['DATE'] + '.txt', printHeading = None)
 
@@ -52,7 +61,7 @@ db.sql('''
 	select r._Refs_key 
 	into #triage 
 	from BIB_Refs r, BIB_DataSet_Assoc a 
-	where r.modification_date between '%s' and '%s' 
+	where r.modification_date between %s and %s 
 	and r._Refs_key = a._Refs_key 
 	and a._DataSet_key = 1007
 	''' % (fromDate, toDate), None)
@@ -65,12 +74,13 @@ results = db.sql('''
 	       b.vol, b.issue, b.pgs, b.abstract, 
 	       a2.accID as pubmedID,
 	       c.jnumID, c.citation, c.short_citation, c.reviewStatus
-	from #triage t, BIB_Refs b, ACC_Accession a2, BIB_Citation_Cache c
+	from #triage t
+		LEFT OUTER JOIN ACC_Accession a2 on (t._Refs_key = a2._Object_key
+					and a2._LogicalDB_Key = 29),
+	     BIB_Refs b, BIB_Citation_Cache c
 	where t._Refs_key = b._Refs_key 
-	and t._Refs_key *= a2._Object_key 
-	and a2._LogicalDB_Key = 29 
 	and b._Refs_key = c._Refs_key
-	order by jnumID
+	order by c.jnumID
 	''', 'auto')
 
 for r in results:

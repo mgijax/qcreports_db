@@ -49,9 +49,16 @@ TAB = reportlib.TAB
 # Main
 #
 
-currentDate = mgi_utils.date('%m/%d/%Y')
-fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
-toDate = db.sql('select convert(char(10), dateadd(day, -1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+if os.environ['DB_TYPE'] == 'postgres':
+	fromDate = "current_date - interval '7 days'"
+	toDate = "current_date - interval '1 day'"
+else:
+	currentDate = mgi_utils.date('%m/%d/%Y')
+	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+	fromDate = "'" + fromDate + "'"
+	toDate = db.sql('select convert(char(10), dateadd(day, -1, "%s"), 101) ' % (currentDate), 'auto')[0]['']
+	toDate = "'" + toDate + "'"
+
 synonymDict = {}
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.' + os.environ['DATE'] + '.rpt', printHeading = None)
@@ -76,7 +83,7 @@ results = db.sql('''
 	from ALL_Allele a, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
 	where a._Allele_Status_key = t1._Term_key
 	and a._Allele_Type_key = t2._Term_key
-	and a.creation_date between '%s' and '%s'
+	and a.creation_date between %s and %s
 	and a._Allele_key = r._Object_key
 	and r._MGIType_key = 11
 	and r._RefAssocType_key = 1011
