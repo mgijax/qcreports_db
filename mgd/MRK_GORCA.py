@@ -144,15 +144,15 @@ db.sql('select distinct m.*, r._Refs_key, r.pubmedID ' + \
 db.sql('create index index_refs1_key on #references1(_Refs_key)', None)
 
 db.sql('select r.*, b.jnum, b.jnumID, b.short_citation ' + \
-	'into #references ' + \
+	'into #references2 ' + \
 	'from #references1 r, BIB_All_View b ' + \
 	'where r._Refs_key = b._Refs_key', None)
 
-db.sql('create index index_refs_key on #references(_Refs_key)', None)
+db.sql('create index index_refs_key on #references2(_Refs_key)', None)
 
 # has reference been chosen for GXD
 results = db.sql('select distinct r._Refs_key ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'from #references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Expression" ' + \
@@ -164,7 +164,7 @@ for r in results:
 db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, ' + \
 	'r.jnumID, r.jnum, r.numericPart, r.pubmedID ' + \
 	'into #fpA ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'from #references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Gene Ontology" ' + \
