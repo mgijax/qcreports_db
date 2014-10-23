@@ -112,10 +112,10 @@ db.sql('select distinct * into #temp2 from #temp1', None)
 db.sql('create index temp2_idx1 on #temp2(_Assay_key)', None)
 db.sql('create index temp2_idx2 on #temp2(_Specimen_key)', None)
 db.sql('''
-	select t._Assay_key, t.age, t.label, t.stage, dpcMin = min(t.dpcMin), dpcMax = max(t.dpcMax) 
+	select t._Assay_key, t.age, t.label, t.stage, min(t.dpcMin) as dpcMin, max(t.dpcMax) as dpcMax 
 	into #temp3 
 	from #temp2 t 
-	group by t._Assay_key, t._Specimen_key 
+	group by t._Assay_key, t._Specimen_key, t.age, t.label, t.stage, dpcMin, dpcMax
 	''', None)
 db.sql('create index temp3_idx1 on #temp3(_Assay_key)', None)
 
@@ -123,7 +123,7 @@ db.sql('create index temp3_idx1 on #temp3(_Assay_key)', None)
 
 results = db.sql('''
     select distinct t._Assay_key, t.age, t.label, t.stage, t.dpcMin, t.dpcMax, 
-	a1.accID as 'MGI', a2.accID as 'J'
+	a1.accID as MGI, a2.accID as J
     from #temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 
     where t._Assay_key = a._Assay_key and 
 	  a._Assay_key = a1._Object_key and 

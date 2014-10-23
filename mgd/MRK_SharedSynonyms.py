@@ -69,7 +69,7 @@ fp.write(string.ljust('synonym', 50) + \
 fp.write('-' * 50 + '  ' + \
 	 '-' * 50 + CRT)
 
-db.sql('select s._Object_key, s._MGIType_key, synonym = substring(s.synonym,1,50) ' + \
+db.sql('select s._Object_key, s._MGIType_key, substring(s.synonym,1,50) as synonym ' + \
 	'into #synonyms1 ' + \
 	'from MGI_Synonym s, MGI_SynonymType st ' + 
 	'where s._MGIType_key = 2 ' + \
