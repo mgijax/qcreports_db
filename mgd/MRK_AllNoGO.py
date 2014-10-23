@@ -168,23 +168,25 @@ db.sql('''
 	''', None)
 
 db.sql('create index idx2_hasAnnotations on #references1(hasAnnotations)', None)
+db.sql('create index idx2_pubmedID on #references1(pubmedID)', None)
+db.sql('create index idx2_numericPart on #references1(numericPart)', None)
 
 # number of unique genes
-results = db.sql('select distinct r._Marker_key from #references1 r', 'auto')
-fp.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
+c = db.sql('select count(distinct r._Marker_key) as c from #references1 r', 'auto')[0]['c']
+fp.write('Number of unique MGI Gene IDs:  %s\n' % (c))
 
 # number of unique J:
-results = db.sql('select distinct r._Refs_key from #references1 r', 'auto')
-fp.write('Number of unique J: IDs:  %s\n' % (len(results)))
+c = db.sql('select count(distinct r._Refs_key) as c from #references1 r', 'auto')[0]['c']
+fp.write('Number of unique J: IDs:  %s\n' % (c))
 
 # number of total rows
-results = db.sql('select r._Marker_key from #references1 r', 'auto')
-fp.write('Number of total rows:  %s\n' % (len(results)))
+c = db.sql('select count(r._Marker_key) as c from #references1 r', 'auto')[0]['c']
+fp.write('Number of total rows:  %s\n' % (c))
 
 # number of GO annotation "yes"
 results = db.sql('''
 	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
-	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
+	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations
 	from #references1 r 
 	where r.hasAnnotations = 'Y'
 	''', 'auto')
@@ -193,7 +195,7 @@ fp.write('Number of "GO annotation?" for Y:  %s\n' % (len(results)))
 # number of GO annotation "no"
 results = db.sql('''
 	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
-	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
+	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations
 	from #references1 r 
 	where r.hasAnnotations = 'N'
 	''', 'auto')
@@ -205,7 +207,7 @@ results = db.sql('''
 	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
 	from #references1 r 
-	order by r.hasAnnotations desc, r.numericPart
+	order by r.hasAnnotations desc, r.numericPart, r.pubmedID
 	''', 'auto')
 
 for r in results:
