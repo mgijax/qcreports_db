@@ -123,7 +123,7 @@ def runQueries():
     # exclude markers that contain feature 'heritable phenotypic marker' (6238170)
 
     db.sql('''
-	   select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart, hasOrthology = "no " 
+	   select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart, 'no ' as hasOrthology
 	   into #markers 
 	   from MRK_Marker m, ACC_Accession a 
 	   where m._Marker_Type_key = 1 
@@ -168,14 +168,14 @@ def runQueries():
 
     db.sql('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, ' + \
 	'r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal ' + \
-	'into #references ' + \
+	'into #references1 ' + \
 	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
 	'where m._Marker_key = r._Marker_key ' + \
 	'and r._Refs_key = b._Refs_key', None)
-    db.sql('create index references_idx1 on #references(_Refs_key)', None)
-    db.sql('create index references_idx2 on #references(_Marker_key)', None)
-    db.sql('create index references_idx3 on #references(symbol)', None)
-    db.sql('create index references_idx4 on #references(numericPart)', None)
+    db.sql('create index references_idx1 on #references1(_Refs_key)', None)
+    db.sql('create index references_idx2 on #references1(_Marker_key)', None)
+    db.sql('create index references_idx3 on #references1(symbol)', None)
+    db.sql('create index references_idx4 on #references1(numericPart)', None)
 
     # check if reference is selected for GO
 
@@ -189,7 +189,7 @@ def runQueries():
     # has reference been chosen for GXD
 
     results = db.sql('select distinct r._Refs_key ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Expression" ' + \
@@ -227,7 +227,7 @@ def reportD():
     db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
 	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology ' + \
 	'into #fpD ' + \
-	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Gene Ontology" ' + \
