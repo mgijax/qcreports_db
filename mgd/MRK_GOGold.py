@@ -134,7 +134,7 @@ db.sql('create index m1_idx1 on #m1(_Marker_key)', None)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI
 db.sql('''
-	select m._Marker_key, m.symbol, m.name, a.term, a.accID as goID, e.evidenceCode, d.abbreviation 
+	select m._Marker_key, m.symbol, m.name, a.term, a.accID as goID, e.evidenceCode, d.abbreviation, a._annot_key 
 	into #m2 
 	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
 	where m._Organism_key = 1 
@@ -151,6 +151,8 @@ db.sql('''
 	order by m.symbol
 	''', None)
 db.sql('create index m2_idx1 on #m2(_Marker_key)', None)
+db.sql('create index m2_idx_goid on #m2(goID)', None)
+db.sql('create index m2_idx_annot_key on #m2(_annot_key)', None)
 
 # select MGI accession ids for mouse genes from set 1
 # this will also suffice for set 2 which is a subset of set 1
@@ -185,7 +187,12 @@ for r in results:
 ## Report D
 
 # select all records from set 2 which have multiple annotations to the same GO term
-db.sql('select * into #m4 from #m2 group by _Marker_key, goID having count(*) > 1', None)
+db.sql('''select * into #m4 from #m2 m2_1
+	where exists (select 1 from #m2 m2_2 
+		where m2_1._marker_key = m2_2._marker_key
+			and m2_1.goID = m2_2.goID
+			and m2_1._annot_key != m2_2._annot_key
+	)''', None)
 db.sql('create index m4_idx1 on #m4(_Marker_key)', None)
 db.sql('create index m4_idx2 on #m4(symbol)', None)
 
