@@ -32,6 +32,9 @@
 #
 # History:
 #
+# lec   10/23/2014
+#       - TR11750/postres complient
+#
 # lec	07/08/2008
 #	- TR 8945
 #	show number of unique MGI gene ids
@@ -121,7 +124,7 @@ db.sql('''
 	and a.prefixPart = 'MGI:' 
 	and a.preferred = 1
 	''', None)
-db.sql('create index index_marker_key on #markers(_Marker_key)', None)
+db.sql('create index idx1_marker_key on #markers(_Marker_key)', None)
 
 ##
 
@@ -129,7 +132,7 @@ db.sql('create index index_marker_key on #markers(_Marker_key)', None)
 
 db.sql('''
 	select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, 'N' as hasAnnotations
-	into #references 
+	into #references1 
 	from #markers m , MRK_Reference r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd 
 	where m._Marker_key = r._Marker_key 
 	and r._Refs_key = b._Refs_key 
@@ -138,13 +141,14 @@ db.sql('''
 	and bd.dataSet = 'Gene Ontology' 
 	and ba.isNeverUsed = 0
 	''', None)
-db.sql('create index index_refs_key on #references(_Refs_key)', None)
+db.sql('create index idx2_refs_key on #references1(_Refs_key)', None)
+db.sql('create index idx2_marker_key on #references1(_Marker_key)', None)
 
 # has reference been selected for GXD
 
 results = db.sql('''
 	select distinct r._Refs_key 
-	from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
 	where r._Refs_key = ba._Refs_key 
 	and ba._DataSet_key = bd._DataSet_key 
 	and bd.dataSet = 'Expression' 
@@ -157,29 +161,31 @@ for r in results:
 # does marker have GO annotations
 
 db.sql('''
-	update #references set hasAnnotations = 'Y' 
-	from #references r, VOC_Annot a 
-	where a._AnnotType_key = 1000 
-	and r._Marker_key = a._Object_key
+	update #references1
+	set hasAnnotations = 'Y'
+	from VOC_Annot a
+	where a._AnnotType_key = 1000 and #references1._Marker_key = a._Object_key
 	''', None)
 
+db.sql('create index idx2_hasAnnotations on #references1(hasAnnotations)', None)
+
 # number of unique genes
-results = db.sql('select distinct r._Marker_key from #references r', 'auto')
+results = db.sql('select distinct r._Marker_key from #references1 r', 'auto')
 fp.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # number of unique J:
-results = db.sql('select distinct r._Refs_key from #references r', 'auto')
+results = db.sql('select distinct r._Refs_key from #references1 r', 'auto')
 fp.write('Number of unique J: IDs:  %s\n' % (len(results)))
 
 # number of total rows
-results = db.sql('select r._Marker_key from #references r', 'auto')
+results = db.sql('select r._Marker_key from #references1 r', 'auto')
 fp.write('Number of total rows:  %s\n' % (len(results)))
 
 # number of GO annotation "yes"
 results = db.sql('''
 	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
-	from #references r 
+	from #references1 r 
 	where r.hasAnnotations = 'Y'
 	''', 'auto')
 fp.write('Number of "GO annotation?" for Y:  %s\n' % (len(results)))
@@ -188,7 +194,7 @@ fp.write('Number of "GO annotation?" for Y:  %s\n' % (len(results)))
 results = db.sql('''
 	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
-	from #references r 
+	from #references1 r 
 	where r.hasAnnotations = 'N'
 	''', 'auto')
 fp.write('Number of "GO annotation?" for N:  %s\n\n' % (len(results)))
@@ -198,7 +204,7 @@ fp.write('Number of "GO annotation?" for N:  %s\n\n' % (len(results)))
 results = db.sql('''
 	select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, 
 	       r.mgiID, r.jnumID, r.numericPart, r.pubmedID, r.hasAnnotations 
-	from #references r 
+	from #references1 r 
 	order by r.hasAnnotations desc, r.numericPart
 	''', 'auto')
 
