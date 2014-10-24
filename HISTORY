@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-1-9-4
+DATE: 10/24/2014
+STAFF: sc
+CHANGES: TR11674 - HDP-2 projects; expressed component epic
+1)new: weekly/ALL_ExpressedComp.sql
+2) added above to alleles section of qcr.html
+
 TAG: qcreports_db-5-1-9-3
 DATE: 10/15/2014
 STAFF: lec
