@@ -1,11 +1,11 @@
 set nocount on
 go
 
-select distinct mgiSymbol = substring(e.mgiSymbol,1,25), 
-       mgiName = substring(e.mgiName,1,50), 
-       egSymbol = substring(e.egSymbol,1,25), 
-       symbol = substring(m2.symbol,1,25), 
-       egName = substring(e.egName,1,50)
+select distinct substring(e.mgiSymbol,1,25) as mgiSymbol, 
+       substring(e.mgiName,1,50) as mgiName, 
+       substring(e.egSymbol,1,25) as egSymbol, 
+       substring(m2.symbol,1,25) as symbol, 
+       substring(e.egName,1,50) as egName
 into #results
 from radar..WRK_EntrezGene_Nomen e,
      MRK_Marker m1, HMD_Homology_Marker hm1, HMD_Homology h1,
