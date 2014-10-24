@@ -93,7 +93,7 @@ def runQueries(includeRiken):
         and h1._Class_key = h2._Class_key 
         and h2._Organism_key = 2 
         and h2._Marker_key = m2._Marker_key 
-        and m1.symbol != m2.symbol 
+        and lower(m1.symbol) != lower(m2.symbol)
 	''' + riken, None)
 
     db.sql('create index idx1 on #homology(m_Marker_key)', None)
@@ -270,8 +270,8 @@ runQueries(includeRiken = 0)
 report1(fp1, includeRiken = 0)
 reportlib.finish_nonps(fp1)
 
-fp3 = reportlib.init('HMD_SymbolDiffs3', outputdir = os.environ['QCOUTPUTDIR'])
-runQueries(includeRiken = 1)
-report1(fp3, includeRiken = 1)
-reportlib.finish_nonps(fp3)
+#fp3 = reportlib.init('HMD_SymbolDiffs3', outputdir = os.environ['QCOUTPUTDIR'])
+#runQueries(includeRiken = 1)
+#report1(fp3, includeRiken = 1)
+#reportlib.finish_nonps(fp3)
 
