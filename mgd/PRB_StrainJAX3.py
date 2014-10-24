@@ -19,6 +19,9 @@
 #
 # History:
 #
+# lec   10/24/2014
+#       - TR11750/postres complient
+#
 # 07/22/2010	lec
 #	- TR10136 revisited; retrieve all MMRRC not just Mmnc subset
 #
@@ -68,7 +71,7 @@ def jrs():
     # JR Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
 	    select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key
-	    into #strains 
+	    into #strains
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
 	    where s._Strain_key = g._Strain_key 
 	    and g._Genotype_key = a._Genotype_key 
@@ -95,6 +98,19 @@ def mmrrc():
     mmrrcfp.write('Strain' + reportlib.TAB)
     mmrrcfp.write('Genotypes' + reportlib.TAB)
     mmrrcfp.write(reportlib.CRT)
+
+    try:
+    	db.sql('drop table #strains', None)
+    except:
+	pass
+    try:
+	db.sql('drop table #strains2', None)
+    except:
+	pass
+    try:
+	db.sql('drop table #strainsToProcess', None)
+    except:
+	pass
 
     # MMNC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
