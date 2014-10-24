@@ -44,6 +44,7 @@ try:
     else:
         import db
         RADAR = os.environ['RADAR_DBNAME'] + '..'
+
 except:
     import db
     RADAR = os.environ['RADAR_DBNAME'] + '..'
@@ -68,10 +69,8 @@ def runQueries(includeRiken):
     #
     # select mouse/humanql('drop table #refs', None)
 
-    try:
+    if os.environ['DB_TYPE'] == 'postgres':
     	db.sql('drop table #homology', None)
-    except:
-	pass
 
     db.sql('''
 	select distinct 
@@ -145,10 +144,8 @@ def runQueries(includeRiken):
 	    synonym[key] = []
 	synonym[key].append(value)
 
-    try:
+    if os.environ['DB_TYPE'] == 'postgres':
     	db.sql('drop table #results', None)
-    except:
-	pass
 
     db.sql('''
 	select h.*, e.status as hstatus

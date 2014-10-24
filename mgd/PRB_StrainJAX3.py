@@ -99,18 +99,10 @@ def mmrrc():
     mmrrcfp.write('Genotypes' + reportlib.TAB)
     mmrrcfp.write(reportlib.CRT)
 
-    try:
+    if os.environ['DB_TYPE'] == 'postgres':
     	db.sql('drop table #strains', None)
-    except:
-	pass
-    try:
 	db.sql('drop table #strains2', None)
-    except:
-	pass
-    try:
 	db.sql('drop table #strainsToProcess', None)
-    except:
-	pass
 
     # MMNC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
