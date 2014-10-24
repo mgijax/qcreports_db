@@ -23,7 +23,7 @@ set nocount off
 go
 
 print ''
-print 'Private Strains ending with '>' '
+print 'Private Strains ending with >'
 print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
 print 'with at most one Marker and Marker has no Allele'
 print 'and Allele symbol is *not* in MGD'
@@ -46,7 +46,7 @@ order by s.strain
 go
 
 print ''
-print 'Public Strains ending with '>' '
+print 'Public Strains ending with > '
 print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
 print 'with at most one Marker and Marker has no Allele'
 print 'and Allele symbol is *not* in MGD'
