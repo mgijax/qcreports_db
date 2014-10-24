@@ -17,6 +17,12 @@
 #
 # History:
 #
+# lec   10/24/2014
+#       - TR11750/postres complient
+#
+# lec	09/19/2014
+#	- TR11652/convert to new MRK_Cluster tables
+#
 # lec	06/10/2005
 #	- TR 6858
 #
@@ -34,15 +40,16 @@ try:
         db = pg_db
         db.setTrace()
         db.setAutoTranslateBE()
+        RADAR = ''
     else:
         import db
+        RADAR = os.environ['RADAR_DBNAME'] + '..'
 except:
     import db
-
+    RADAR = os.environ['RADAR_DBNAME'] + '..'
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
-RADAR = os.environ['RADAR_DBNAME']
 
 mgiID = {}
 egID = {}
@@ -59,8 +66,12 @@ def runQueries(includeRiken):
 	riken = 'and m1.symbol not like "%Rik"'
 
     #
-    # select mouse/human orthologs
-    #
+    # select mouse/humanql('drop table #refs', None)
+
+    try:
+    	db.sql('drop table #homology', None)
+    except:
+	pass
 
     db.sql('''
 	select distinct 
@@ -134,15 +145,20 @@ def runQueries(includeRiken):
 	    synonym[key] = []
 	synonym[key].append(value)
 
+    try:
+    	db.sql('drop table #results', None)
+    except:
+	pass
+
     db.sql('''
 	select h.*, e.status as hstatus
 	into #results 
-        from #homology h, %s..DP_EntrezGene_Info e 
+        from #homology h, %sDP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606 
         union 
         select h.*, '?' as hstatus
         from #homology h 
-        where not exists (select 1 from %s..DP_EntrezGene_Info e 
+        where not exists (select 1 from %sDP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606)
 	''' % (RADAR, RADAR), None)
 
