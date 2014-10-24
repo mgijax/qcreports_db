@@ -113,7 +113,7 @@ def mmrrc():
     
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
-    db.sql('drop table if exists #strains', None)
+    db.sql('drop table #strains', None)
 
     db.sql('''
 	select distinct s._Strain_key, 
