@@ -15,6 +15,9 @@
 #
 # History:
 #
+# lec   10/24/2014
+#       - TR11750/postres complient
+#
 # lec	12/24/2012
 #	- TR11206/re-open Dev Biol and Development and Dev Dyn
 #
@@ -116,7 +119,24 @@ def processJournal(jList, fileName):
 	       ''' % journalTitle, None)
 
 	db.sql('create index markers1_idx1 on #markers1(_Refs_key)', None)
-	db.sql('select m.*, markerCount = count(*) into #mcount1 from #markers1 m group by _Refs_key', None)
+
+    	if os.environ['DB_TYPE'] == 'postgres':
+		db.sql('''WITH ref_counts1 AS (
+			SELECT _Refs_key, count(*) AS markerCount
+			FROM #markers1
+			GROUP BY _Refs_key
+			)
+			select m.*, r.markerCount
+			into mcount1 
+			from #markers1 m , ref_counts1 r
+			where m._Refs_key = r._Refs_key
+			''', None)
+	else:
+		db.sql('''select m.*, count(*) as markerCount 
+			into #mcount1 from #markers1 m 
+			group by _Refs_key
+			''', None)
+
 	db.sql('create index mcount1_idx1 on #mcount1(_Refs_key)', None)
 
 	# get the set of references not coded with high priority,
@@ -154,7 +174,24 @@ def processJournal(jList, fileName):
 	#
 	# by reference, get the count
 	#
-	db.sql('select m.*, newGeneCount = count(*) into #mcount2 from #markers2 m group by _Refs_key', None)
+    	if os.environ['DB_TYPE'] == 'postgres':
+		db.sql('''WITH ref_counts2 AS (
+			SELECT _Refs_key, count(*) AS newGeneCount
+			FROM #markers2
+			GROUP BY _Refs_key
+			)
+			select m.*, r.newGeneCount
+			into mcount2
+			from #markers2 m , ref_counts2 r
+			where m._Refs_key = r._Refs_key
+			''', None)
+	else:
+		db.sql('''select m.*, count(*) as newGeneCount 
+			into #mcount2 
+			from #markers2 m 
+			group by _Refs_key
+			''', None)
+
 	db.sql('create index mcount2_idx1 on #mcount2(_Refs_key)', None)
 
 	#
@@ -163,8 +200,8 @@ def processJournal(jList, fileName):
 	db.sql('''
 	       update #final 
 	       set newGeneCount = m.newGeneCount
-	       from #final f, #mcount2 m
-	       where f._Refs_key = m._Refs_key
+	       from #mcount2 m
+	       where #final._Refs_key = m._Refs_key
 	       ''', None)
 
 	# now write the report
