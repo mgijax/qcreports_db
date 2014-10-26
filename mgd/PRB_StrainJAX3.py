@@ -101,7 +101,6 @@ def mmrrc():
 
     if os.environ['DB_TYPE'] == 'postgres':
     	db.sql('drop table #strains', None)
-	db.sql('drop table #strains2', None)
 	db.sql('drop table #strainsToProcess', None)
 
     # MMNC Strains w/ Genotype Associations; exclude wild type alleles
