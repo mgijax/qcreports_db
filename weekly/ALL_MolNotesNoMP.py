@@ -27,6 +27,9 @@
 #
 # History:
 #
+# lec	10/27/2014
+#	- TR11544/add J;141210
+#
 # lec   10/22/2014
 #       - TR11750/postres complient
 #
@@ -97,7 +100,7 @@ fp.write('\texcludes allele status: Autoload\n')
 fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n')
 fp.write('\texcludes J:157064, J:157065, J:165963, J:165964, J:173534, J:188991, J:200814\n')
 fp.write('\texcludes J:161922, J:164356, J:171883, J:174268, J:201630\n')
-fp.write('\texcludes J:204739, J:204812\n\n')
+fp.write('\texcludes J:204739, J:204812, J:141210\n\n')
 
 fp.write(string.ljust('Approval', 15) + \
          string.ljust('Acc ID', 15) + \
@@ -138,7 +141,7 @@ results = db.sql('''
     	and a1._MGIType_key = 1 
     	and a1._LogicalDB_key = 1 
     	and a1.prefixPart = 'J:' 
-    	and a1.numericPart not in (94077,94338,136110,148605,155845,157064,157065,165963,165964,173534,188991,200814,161922,164356,171883,174268,201630,204739,204812)
+    	and a1.numericPart not in (94077,94338,136110,148605,155845,157064,157065,165963,165964,173534,188991,200814,161922,164356,171883,174268,201630,204739,204812,141210)
     	and a1.preferred = 1 
     	order by a._Allele_key, a1.numericPart desc
 	''', 'auto')
