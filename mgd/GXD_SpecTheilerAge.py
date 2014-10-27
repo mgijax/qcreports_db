@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	10/27/2014
+#	- add 'stage' to output so user can clearly see "duplicate" entries
+#
 # lec	03/11/2014
 #	- TR11597/sort by mgiID desc
 #
@@ -212,7 +215,7 @@ db.sql('select distinct * into #temp2 from #temp1', None)
 db.sql('create index idx1 on #temp2(_Assay_key)', None)
 db.sql('create index idx2 on #temp2(_Specimen_key)', None)
 db.sql('''
-	select t._Assay_key, t.age, t.label, t.stage, 
+	select distinct t._Assay_key, t.age, t.label, t.stage, 
 		  min(t.dpcMin) as dpcMin, 
 		  max(t.dpcMax) as dpcMax
 	into #temp3 
@@ -224,7 +227,7 @@ db.sql('create index idx3 on #temp3(_Assay_key)', None)
 ##
 
 results = db.sql('''
-	select distinct t._Assay_key, t.age, t.label, t.stage, t.dpcMin, t.dpcMax, 
+	select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, 
 	                a1.accID as mgi, a2.accID as jnum
         from #temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 
         where t._Assay_key = a._Assay_key and 
@@ -245,8 +248,6 @@ s = ''
 count = 0
 
 for r in results:
-
-    stage = r['stage']
 
     age = r['age']
     m = re.search('[0-9]',age)
@@ -279,7 +280,7 @@ for r in results:
     # if the age min is below the dpc min or age max is above the dpc max, print
 
     if (minAge < dpcMin or maxAge > dpcMax):
-       	s = s + r['mgi'] + TAB + r['jnum'] + TAB + mgi_utils.prvalue(r['label']) + CRT
+       	s = s + r['mgi'] + TAB + r['jnum'] + TAB + mgi_utils.prvalue(r['label']) + TAB + str(r['stage']) + CRT
        	count = count + 1
 
 fp.write(CRT + 'Number of specimens: ' + str(count) + 2*CRT)
