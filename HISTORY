@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-1-9-no tag
+DATE: 10/27/2014
+STAFF: lec
+CHANGES:
+a) mgd/GXD_SpecTheilerAge.py
+quick fix for Connie/did not tag/this will get installed
+when the next tag is installed
+
 TAG: qcreports_db-5-1-9-6
 DATE: 10/27/2014
 STAFF: lec
