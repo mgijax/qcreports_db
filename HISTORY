@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-1-9-6
+DATE: 10/27/2014
+STAFF: lec
+CHANGES:
+a) TR11544/weekly/ALL_MolNotesNoMP.py : add J:141210 to excluded list
+
 TAG: qcreports_db-5-1-9-5
 DATE: 10/27/2014
 STAFF: lec, ks
