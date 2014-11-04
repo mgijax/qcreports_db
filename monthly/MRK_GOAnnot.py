@@ -178,7 +178,7 @@ for r in results:
 #
 totalNotUsed = {}
 results = db.sql('''
-	select m._Marker_key, count(distinct r._Refs_key) as totalNotused
+	select m._Marker_key, count(distinct r._Refs_key) as totalNotUsed
 	from #markers m, BIB_GOXRef_View r
 	where m._Marker_key = r._Marker_key
 	and not exists (select 1 from VOC_Annot a, VOC_Evidence e

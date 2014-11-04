@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-2-0-1
+DATE: 11/04/2014
+STAFF: lec
+CHANGES:
+a) TR11750/postgres
+ALL_Jax_Report.py, MRK_GOAnnot.py 
+
 TAG: qcreports_db-5-1-9-no tag
 DATE: 10/27/2014
 STAFF: lec

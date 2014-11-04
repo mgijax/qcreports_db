@@ -63,7 +63,7 @@ db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'All Jax Report', outputdir = os.environ['QCOUTPUTDIR'])
 
-results = db.sql('''select distinct gag._Allele_key as key, vt.term 
+results = db.sql('''select distinct gag._Allele_key as akey, vt.term 
 	from VOC_AnnotHeader vah, VOC_Term vt, GXD_AlleleGenotype gag
 	where vah.isNormal = 0 and vah._Term_key = vt._Term_key 
 	and vah._Object_key = gag._Genotype_key
@@ -72,10 +72,10 @@ results = db.sql('''select distinct gag._Allele_key as key, vt.term
 phenoTerms = {}
 
 for row in results:
-	if row['key'] not in phenoTerms:
-		phenoTerms[row['key']] = row['term']
+	if row['akey'] not in phenoTerms:
+		phenoTerms[row['akey']] = row['term']
 	else:
-		phenoTerms[row['key']] = phenoTerms[row['key']] + ', ' + row['term']
+		phenoTerms[row['akey']] = phenoTerms[row['akey']] + ', ' + row['term']
 
 cmds = []
 
@@ -86,7 +86,7 @@ cmds.append('''select a._Allele_key, gag._Genotype_key
 	''')
 
 
-cmds.append('''select distinct tg._Allele_key as key, vt.term || ' ' || aa.accID as term 
+cmds.append('''select distinct tg._Allele_key as akey, vt.term || ' ' || aa.accID as term 
 	from #tmp_geno tg, voc_annot va, voc_term vt, acc_accession aa
 	where va._Object_key = tg._Genotype_key and va._AnnotType_key = 1005 and va._Term_key != null
 	and va._Term_key = vt._Term_key and va._Term_key = aa._Object_key and aa._MGIType_key = 13
@@ -97,24 +97,24 @@ results = db.sql(cmds, 'auto')
 omimTerms = {}
 
 for row in results[1]:
-	if row['key'] not in omimTerms:
-		omimTerms[row['key']] = row['term']
+	if row['akey'] not in omimTerms:
+		omimTerms[row['akey']] = row['term']
 	else:
-		omimTerms[row['key']] = omimTerms[row['key']] + ', ' + row['term']
+		omimTerms[row['akey']] = omimTerms[row['akey']] + ', ' + row['term']
 
 
-results = db.sql('''select _Object_key as key, count (distinct _Refs_key) as term
+results = db.sql('''select _Object_key as okey, count (distinct _Refs_key) as term
 	from MGI_Reference_Assoc where _MGIType_key = 11 group by _Object_key ''', 'auto')
 
 refCount = {}
 
 for row in results:
-	if row['key'] not in refCount:
-		refCount[row['key']] = row['term']
+	if row['okey'] not in refCount:
+		refCount[row['okey']] = row['term']
 	else:
-		refCount[row['key']] = refCount[row['key']] + ', ' + row['term']
+		refCount[row['okey']] = refCount[row['okey']] + ', ' + row['term']
 		
-results = db.sql('''select a._Allele_key as key, f.abbrevName as term
+results = db.sql('''select a._Allele_key as akey, f.abbrevName as term
 	from all_allele a, acc_accession aa, imsr..StrainAGAccCache isac, imsr..StrainFacilityAssoc sfa,
 	imsr..Facility f
 	where a._Transmission_key != 3982953
@@ -128,10 +128,10 @@ results = db.sql('''select a._Allele_key as key, f.abbrevName as term
 facility = {}
 
 for row in results:
-	if row['key'] not in facility:
-		facility[row['key']] = row['term']
+	if row['akey'] not in facility:
+		facility[row['akey']] = row['term']
 	else:
-		facility[row['key']] = facility[row['key']] + ', ' + row['term']		
+		facility[row['akey']] = facility[row['akey']] + ', ' + row['term']		
 
 results = db.sql('''select a.accID, aa.symbol as asymbol, aa.name as aname,
 	vt.term as alltype,  mm.symbol as msymbol, mm.name as mname, aa._Allele_key, convert(char(20), aa.creation_date, 107) as create_date 
