@@ -24,7 +24,7 @@ from #strains s
 where s._Allele_key is null
 and exists (select 1 from ALL_Allele a
 where s._Marker_key = a._Marker_key
-and s.alleleSymbol = a.symbol)
+and lower(s.alleleSymbol) = lower(a.symbol))
 order by s.strain
 go
 

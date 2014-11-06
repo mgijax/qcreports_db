@@ -145,32 +145,32 @@ def monthlyCounts():
 
     # update the Assay count
 
-    db.sql('''update #periodCounts 
+    db.sql('''update #periodCounts
 	set assays = a.assays
-	from #periodCounts p, #assays a 
-	where a.year = p.year 
-	and a.month = p.month 
-	and a._AssayType_key = p._AssayType_key 
+	from #assays a 
+	where a.year = #periodCounts.year 
+	and a.month = #periodCounts.month 
+	and a._AssayType_key = #periodCounts._AssayType_key 
 	''', None)
 
     # update Gel Results count
 
-    db.sql('''update #periodCounts 
-	set results = p.results + a.results 
-	from #periodCounts p, #gelresults a 
-	where a.year = p.year 
-	and a.month = p.month 
-	and a._AssayType_key = p._AssayType_key 
+    db.sql('''update #periodCounts
+	set results = #periodCounts.results + a.results 
+	from #gelresults a 
+	where a.year = #periodCounts.year 
+	and a.month = #periodCounts.month 
+	and a._AssayType_key = #periodCounts._AssayType_key 
 	''', None)
 
     # update InSitu count
 
-    db.sql('''update #periodCounts 
-	set results = p.results + a.results 
-	from #periodCounts p, #insituresults a 
-	where a.year = p.year 
-	and a.month = p.month 
-	and a._AssayType_key = p._AssayType_key 
+    db.sql('''update #periodCounts
+	set results = #periodCounts.results + a.results 
+	from #insituresults a 
+	where a.year = #periodCounts.year 
+	and a.month = #periodCounts.month 
+	and a._AssayType_key = #periodCounts._AssayType_key 
 	''', None)
 
     db.sql('create index period_idx1 on #periodCounts(year)', None)
@@ -200,7 +200,7 @@ def monthlyCounts():
 
     results = db.sql('''select g.year, g.month, 
 	avg(g.genes) as genes, 
-	sum(r.results) as sumresults, 
+	sum(r.results) as sumresults,
 	avg(g.refs) as ref
 	from #assayGenes g, #periodCounts r 
 	where g.year = r.year 
@@ -210,11 +210,11 @@ def monthlyCounts():
 	''', 'auto')
 
     for r in results:
-	fp.write(string.ljust(str(r['year']), 10))
-	fp.write(string.ljust(str(r['month']), 10))
-	fp.write(string.ljust(str(r['genes']), 10))
-	fp.write(string.ljust(str(r['sumresults']), 10))
-	fp.write(string.ljust(str(r['ref']), 15) + CRT)
+	fp.write(string.ljust(str(int(r['year'])), 10))
+	fp.write(string.ljust(str(int(r['month'])), 10))
+	fp.write(string.ljust(str(int(r['genes'])), 10))
+	fp.write(string.ljust(str(int(r['sumresults'])), 10))
+	fp.write(string.ljust(str(int(r['ref'])), 15) + CRT)
 
     #
     # Total Results
@@ -222,7 +222,7 @@ def monthlyCounts():
 
     results = db.sql('select sum(results) as totalresults from #periodCounts', 'auto')
     for r in results:
-	fp.write(CRT + 'Total Results: ' + str(r['totalresults']) + CRT)
+	fp.write(CRT + 'Total Results: ' + str(int(r['totalresults'])) + CRT)
 
     #
     # Assays and results by Assay Type and month/year
@@ -278,10 +278,10 @@ def monthlyCounts():
             fp.write(string.ljust('-------', 10) + CRT)
 
 	fp.write(string.ljust(r['assayType'], 30))
-	fp.write(string.ljust(str(r['year']), 10))
-	fp.write(string.ljust(str(r['month']), 10))
-	fp.write(string.ljust(str(r['assays']), 10))
-	fp.write(string.ljust(str(r['results']), 10) + CRT)
+	fp.write(string.ljust(str(int(r['year'])), 10))
+	fp.write(string.ljust(str(int(r['month'])), 10))
+	fp.write(string.ljust(str(int(r['assays'])), 10))
+	fp.write(string.ljust(str(int(r['results'])), 10) + CRT)
 	prevAssay = r['assayType']
 
     fp.write(CRT + 'Total Assays: ' + str(asummary[prevAssay]) + CRT)
