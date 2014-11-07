@@ -151,16 +151,14 @@ def runQueries():
     # orthologies
 
     db.sql('update #markers set hasOrthology = "yes" ' + \
-	'from #markers m ' + \
 	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
-	'where m._Marker_key = hm1._Marker_key ' + \
+	'where #markers._Marker_key = hm1._Marker_key ' + \
 	'and hm1._Class_key = hm2._Class_key ' + \
 	'and hm2._Organism_key = 2) ', None)
 
     db.sql('update #markers set hasOrthology = "yes" ' + \
-	'from #markers m ' + \
 	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
-	'where m._Marker_key = hm1._Marker_key ' + \
+	'where #markers._Marker_key = hm1._Marker_key ' + \
 	'and hm1._Class_key = hm2._Class_key ' + \
 	'and hm2._Organism_key = 40) ', None)
 
