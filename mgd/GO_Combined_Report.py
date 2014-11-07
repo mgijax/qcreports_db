@@ -100,12 +100,12 @@ db.sql('''
 	or smc._logicalDB_key in (13, 41)) 
 	''', None)
 
-db.sql('create index vmIndex on #validMarkers (_Marker_key)', None)
+db.sql('create index vmIndex3 on #validMarkers (_Marker_key)', None)
 
 # Setup the alleles count -> markers table
 
 db.sql('''
-	select mm._Marker_key, count(_Allele_key) as 'hasAlleles'
+	select mm._Marker_key, count(_Allele_key) as hasAlleles
 	into #mrkAlleles
 	from #validMarkers mm
 	     LEFT OUTER JOIN ALL_Allele aa on (mm._Marker_key = aa._Marker_key
@@ -121,7 +121,7 @@ db.sql('create index mrkAlleleIndex on #mrkAlleles (_Marker_key)', None)
 # setup the mrk Omim annotations table
 
 db.sql('''
-	select m._Marker_key, count(vmc._Term_key) as 'hasOmim'
+	select m._Marker_key, count(vmc._Term_key) as hasOmim
 	into #mrkOmimAnnot
 	from #validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
@@ -133,7 +133,7 @@ db.sql('create index mrkOmimIndex on #mrkOmimAnnot (_Marker_key)', None)
 # Setup the mrk human -> mouse orthologs relationship
 
 db.sql('''
-	select m._Marker_key, count(vmc._Term_key) as 'hasOmimHuman'
+	select m._Marker_key, count(vmc._Term_key) as hasOmimHuman
 	into #mrkOmimHumanAnnot
 	from #validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
@@ -146,7 +146,7 @@ db.sql('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)', Non
 
 db.sql('''
 	select mm._Marker_key,
-	count(hm._Marker_key) as 'hasOrtholog'
+	count(hm._Marker_key) as hasOrtholog
 	into #tmp_homology
 	from MRK_Homology_Cache mh, MRK_Homology_Cache hh,
 	#validMarkers mm, MRK_Marker hm
@@ -159,7 +159,7 @@ db.sql('''
 	''', None)
 
 db.sql('''
-	select m._Marker_key, t.hasOrtholog as 'hasOrtholog'
+	select m._Marker_key, t.hasOrtholog as hasOrtholog
 	into #mrkHomology
 	from #validMarkers m
 	     LEFT OUTER JOIN #tmp_homology t on (m._Marker_key = t._Marker_key)
@@ -174,10 +174,10 @@ db.sql('''
 	from BIB_GOXRef_View r, #validMarkers vm
 	where r._Marker_key = vm._Marker_key
 	''', None)
-db.sql('create index vmIndex on #reduced_bibgo (_Marker_key)', None)
+db.sql('create index vmIndex2 on #reduced_bibgo (_Marker_key)', None)
 
 db.sql('''
-	select vm._Marker_key, count(r._Refs_key) as 'goRefcount'
+	select vm._Marker_key, count(r._Refs_key) as goRefcount
 	into #refGOUnused
 	from #validMarkers vm
 	     LEFT OUTER JOIN #reduced_bibgo r on (vm._Marker_key = r._Marker_key
@@ -195,11 +195,11 @@ db.sql('create index goRefIndex on #refGOUnused (_Marker_key)', None)
 
 db.sql('''
 	select m._Marker_key,
-	case when gt.completion_date != null then 'Yes' else 'No' end as 'isComplete',
-	case when ma.hasAlleles > 0 then 'Yes' else 'No' end as 'hasAlleles',
-	case when moa.hasOmim > 0 then 'Yes' else 'No' end as 'hasOmim',
-	case when moha.hasOmimHuman > 0 then 'Yes' else 'No' end as 'hasHumanOmim',
-	case when mho.hasOrtholog > 0 then 'Yes' else 'No' end as 'hasOrtholog',
+	case when gt.completion_date != null then 'Yes' else 'No' end as isComplete,
+	case when ma.hasAlleles > 0 then 'Yes' else 'No' end as hasAlleles,
+	case when moa.hasOmim > 0 then 'Yes' else 'No' end as hasOmim,
+	case when moha.hasOmimHuman > 0 then 'Yes' else 'No' end as hasHumanOmim,
+	case when mho.hasOrtholog > 0 then 'Yes' else 'No' end as hasOrtholog,
 	rgs.goRefcount 
 	into #goOverall
 	from #validMarkers m
@@ -212,7 +212,7 @@ db.sql('''
 	and m._Marker_key = rgs._Marker_key
 	and m._Marker_key = moha._Marker_key
 	''', None)
-db.sql('create index goOverall on #goOverall (_Marker_key)', None)
+db.sql('create index goOverall_idx on #goOverall (_Marker_key)', None)
 
 # Markers w/o GO Evidence Codes
 
@@ -401,44 +401,44 @@ fp.write(CRT + "6. Genes with Annotations to All other: %d" % otherCount)
 
 # Gather all of the other statistical data.
 results = db.sql('''
-	select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
+	select count(go._Marker_key) as cnt from #goOverall go, #hasNoGO hng
 	where go.hasOrtholog = 'Yes' and go._Marker_key = hng._Marker_key 
 	''', 'auto')
 for r in results:
-    rhHomologsYes = r['count']
+    rhHomologsYes = r['cnt']
 fp.write(CRT + "7. Mouse Genes that have Rat/Human Homologs and NO GO annotations: %d" % rhHomologsYes)
 
 # Count of markers with omim geno annotations
 results = db.sql('''
-	select count(go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
+	select count(go._Marker_key) as cnt from #goOverall go, #hasNoGO hng
 	where go.hasOmim = 'Yes' and go._Marker_key = hng._Marker_key 
 	''', 'auto')
 for r in results:
-    omimGenoYes = r['count']
+    omimGenoYes = r['cnt']
 fp.write(CRT + "8. Mouse Genes with Human Disease Annotations and NO GO annotations: %d" % omimGenoYes)
 
 # Count of markers that have alleles	
 results = db.sql('''
-	select count(distinct go._Marker_key) as 'count' from #goOverall go, #hasNoGO hng
+	select count(distinct go._Marker_key) as cnt from #goOverall go, #hasNoGO hng
 	where go.hasAlleles = 'Yes' and go._Marker_key = hng._Marker_key
 	''', 'auto')	
 for r in results:
-    allelesYes = r['count']
+    allelesYes = r['cnt']
 fp.write(CRT + "9. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
 
 # Count of markers marked complete in go	
 results = db.sql('''
-	select count(_Marker_key) as 'count' from #goOverall
+	select count(_Marker_key) as cnt from #goOverall
 	where isComplete = 'Yes' 
 	''', 'auto')
 for r in results:
-    completeYes = r['count']
+    completeYes = r['cnt']
 fp.write(CRT + "10. Genes with GO Annotation Complete: %d" % completeYes)
 
 # Count of unique references for all markers.
-results = db.sql('''select sum(goRefcount) as 'count' from #goOverall''', 'auto')
+results = db.sql('''select sum(goRefcount) as cnt from #goOverall''', 'auto')
 for r in results:
-    uniqueRef = r['count']
+    uniqueRef = r['cnt']
 fp.write(CRT + "11. Total number of unique references: %d" % uniqueRef)
 
 # Setup the template for rows in the report

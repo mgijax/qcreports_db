@@ -95,7 +95,7 @@ def printResults(cmd, isReferenceGene):
         fp.write(r['symbol'] + TAB)
         fp.write(r['accID'] + TAB)
         fp.write(isReferenceGene + TAB)
-        fp.write(cdate + TAB)
+        fp.write(str(cdate) + TAB)
         fp.write(numRefs + TAB)
         fp.write(numJnums + TAB)
 
@@ -120,7 +120,7 @@ fp.write('J numbers' + 2*CRT)
 # select all Markers w/ GO Annotations that are Reference genes
 #
 db.sql('''
-	select convert(char(10), t.completion_date, 101) as cdate, 
+	select t.completion_date as cdate, 
 	       m._Marker_key, m.symbol, a.accID 
 	into #goref 
 	from GO_Tracking t, MRK_Marker m, ACC_Accession a 
@@ -138,7 +138,7 @@ db.sql('create index goref_idx1 on #goref(_Marker_key)', None)
 # select all Markers w/ GO Annotations that contains a completion date
 #
 db.sql('''
-	select convert(char(10), t.completion_date, 101) as cdate, 
+	select t.completion_date as cdate, 
 	       m._Marker_key, m.symbol, a.accID 
 	into #godone 
 	from GO_Tracking t, MRK_Marker m, ACC_Accession a 
@@ -173,7 +173,7 @@ results = db.sql('''
 	and e._Refs_key = b._Refs_key) 
 	and exists (select 1 from BIB_GOXRef_View b, #godone g
  		where b._Marker_key = g._Marker_key
- 		and b.creation_date > dateadd(day,1,g.cdate))
+ 		and b.creation_date > dateadd(day, 1, g.cdate))
 	''', 'auto')
 
 jnums = {}
@@ -222,13 +222,13 @@ printResults('''
 	order by d.symbol
 	''', 'n')
 
-referenceGenes = db.sql('select count(*) from #goref', 'auto')[0]['']
-completedGenes = db.sql('select count(*) from #godone', 'auto')[0]['']
+referenceGenes = db.sql('select count(*) as cnt from #goref', 'auto')[0]['cnt']
+completedGenes = db.sql('select count(*) as cnt from #godone', 'auto')[0]['cnt']
 refcompletedGenes = db.sql('''
-	select count(r._Marker_key) 
+	select count(r._Marker_key) as cnt 
 	from #goref r, #godone d 
 	where r._Marker_key = d._Marker_key
-	''', 'auto')[0]['']
+	''', 'auto')[0]['cnt']
 
 fp.write(CRT * 2)
 fp.write('total number of completed genes: %s\n' % (completedGenes))

@@ -3,28 +3,32 @@
 '''
 #
 # Report:
-    Steve Rockwood (steve.rockwood@jax.org) is requesting a report.  
-
-    The report should contain:
-
-    1) allele symbol
-
-    2) allele MGI ID
-
-    3) number of allele references with MGI-creation-date within 2 years of the run date of this report
-
-    4) total number of allele references
-
-    5) IMSR facilities : JAX always comes first
-
-    This is to prioritize and solicit new strains to JAX that may be of interest to 
-    multiple users.
-
-    Is it possible to then take this list of alleles and compare it to the IMSR 
-    database and list in a fifth column if this allele exists already in a 
-    repository strain?
-
+#    Steve Rockwood (steve.rockwood@jax.org) is requesting a report.  
+#
+#    The report should contain:
+#
+#    1) allele symbol
+#
+#    2) allele MGI ID
+#
+#    3) number of allele references with MGI-creation-date within 2 years of the run date of this report
+#
+#    4) total number of allele references
+#
+#    5) IMSR facilities : JAX always comes first
+#
+#    This is to prioritize and solicit new strains to JAX that may be of interest to 
+#    multiple users.
+#
+#    Is it possible to then take this list of alleles and compare it to the IMSR 
+#    database and list in a fifth column if this allele exists already in a 
+#    repository strain?
+#
 # History:
+#
+# lec   10/22/2014
+#       - TR11750/postres complient
+#	contains calls to IMSR
 #
 # lec	04/28/2014
 #	- TR11667/see TR for details

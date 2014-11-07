@@ -21,6 +21,7 @@ echo `date`: strainChanges.csh | tee -a ${LOG}
 
 cd ${QCMGD}
 
+echo "db settings = ${MGD_DBSERVER}.${MGD_DBNAME}"
 foreach i (*.sql)
     echo `date`: $i | tee -a ${LOG}
     reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
