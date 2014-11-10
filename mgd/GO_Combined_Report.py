@@ -91,8 +91,8 @@ db.sql('''
 	and m.name not like 'gene model %' 
 	and m.name not like 'gene trap %' 
 	and m.name not like 'predicted gene%' 
-	and m.symbol not like '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
-	and m.symbol not like '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
+	and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" 
+	and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" 
 	and m.symbol not like 'ORF%' 
 	and m._Organism_key = 1
 	and m._Marker_key = smc._Marker_key
