@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	11/18/2014
+#	- TR11828/remove "," from report; this is an allowed value
+#
 # lec	12/28/2011
 #	- TR10934/replace any commas in WITH field with pipe
 #
@@ -56,7 +59,7 @@ except:
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('Invalid "Inferred From" Values in GO Annotations (MGI, GO, ",", ";")' + 2 * reportlib.CRT)
+fp.write('Invalid "Inferred From" Values in GO Annotations (MGI, GO, ";")' + 2 * reportlib.CRT)
 rows = 0
 
 # use for Mol Segs...quicker than mgiLookup method due to number of Mol Segs
@@ -169,7 +172,7 @@ for t in theDiffs:
           rows = rows + 1
 
 #
-# include list of inferred-from values that contain ','  or ';'
+# include list of inferred-from values that contain ';'
 #
 
 results = db.sql('''
@@ -177,7 +180,7 @@ results = db.sql('''
 	from VOC_Annot a, VOC_Evidence e, VOC_Term t, ACC_Accession aa, MRK_Marker m
 	where a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
-	and (e.inferredFrom like '%,%' or e.inferredFrom like '%;%')
+	and e.inferredFrom like '%;%'
 	and e._EvidenceTerm_key = t._Term_key
 	and t._Term_key = aa._Object_key 
 	and aa._MGIType_key = 13 
