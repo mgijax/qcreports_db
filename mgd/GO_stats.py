@@ -6,10 +6,13 @@
 #
 # Report:
 #
+# lec	11/20/2014
+#	- TR11863/add "GO Central" to REFGENOME_CLAUSE
+#
 # lec   10/22/2014
 #       - TR11750/postres complient
 #
-# 08/04/2015
+# 08/04/2014
 #	- TR 11745/add 'GO Central' to the GO_CLAUSE
 #
 # 11/03/2010	lec
@@ -97,7 +100,7 @@ GOA_CLAUSE="'GOA_%'"
 GOC_CLAUSE="'GOC'"
 GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
-REFGENOME_CLAUSE="'RefGenome'"
+REFGENOME_CLAUSE="('RefGenome', 'GO Central')"
 GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB', 'GO Central') "
 
 byReference = 'and e._Refs_key %s'
@@ -326,16 +329,16 @@ def writeCount(name):
 	# in "RefGenome" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
 			''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
 			''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
 			''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + REFGENOME_CLAUSE), \
+			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
 			''), 'auto')
 
    elif name == "GO/Rat":
