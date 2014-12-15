@@ -1,3 +1,12 @@
+TAG: qcreports_db-5-2-1-2
+DATE: 12/8/2014
+STAFF: sc
+CHANGES: 
+1) TR11749 - GXD_EMAPS_Terms.py: use official structure name on GXD QC report
+2) TR11829 - brute force monitoring of TS27
+a) GXD_SpecNoAge.sql
+b) RECOMB_SpecNoAge.sql
+
 TAG: qcreports_db-5-2-1-1
 DATE: 12/8/2014
 STAFF: sc

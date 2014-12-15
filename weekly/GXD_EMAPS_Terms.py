@@ -7,6 +7,9 @@
 #
 # History:
 #
+# sc	12/15/2014
+#	- TR11749/use official structure name on GXD QC report
+#
 # lec	03/11/2014
 #	- TR11597/make this a weekly report
 #
@@ -52,10 +55,12 @@ for r in results:
 # EMAPS mappings 1-1
 mappingDict = {}
 results = db.sql('''select mem.emapsId, mem.accId, gs.structure
-	from MGI_EMAPS_Mapping mem, ACC_Accession a, GXD_StructureName gs
+	from MGI_EMAPS_Mapping mem, ACC_Accession a, GXD_StructureName gs, 
+	    GXD_Structure g
 	where mem.accId = a.accId
 	and a._MGIType_key = 38
-	and a._Object_key = gs._Structure_key''', 'auto')
+	and a._Object_key = gs._Structure_key
+	and gs._StructureName_key = g._Structure_key''', 'auto')
 for r in results:
     mappingDict[r['emapsId']] = [r['accId']]
     mappingDict[r['emapsId']].append(r['structure'])
