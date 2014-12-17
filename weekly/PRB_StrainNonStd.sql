@@ -1,7 +1,7 @@
 set nocount on
 go
 
-select s._Strain_key, 'y' as dataExists, 'n' as inIMSR
+select s._Strain_key, 'y' as dataExists
 into #strains
 from PRB_Strain s
 where s.standard = 0
@@ -27,22 +27,6 @@ and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 go
 
-select accID
-into #IMSR_Accession
-from imsr..Accession
-go
-
-create index index_accID on #IMSR_Accession (accID)
-go
-
-update #strains
-set inIMSR = 'y'
-from #strains s, ACC_Accession a, #IMSR_Accession ac
-where s._Strain_key = a._Object_key
-and a._MGIType_key = 10
-and a.accID = ac.accID
-go
-
 set nocount off
 go
 
@@ -51,7 +35,7 @@ print 'Non Standard Strains (excluding F1 and F2): data attached = yes'
 print ''
 
 select substring(l.name,1,20) as "external db", a.accID as "external id", 
-n.inIMSR, substring(s.strain,1,125) as "strain"
+substring(s.strain,1,125) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
@@ -63,7 +47,7 @@ and a._MGIType_key = 10
 and a._LogicalDB_key != 1
 and a._LogicalDB_key = l._LogicalDB_key
 union
-select null, null, n.inIMSR, substring(s.strain,1,125)
+select null, null,substring(s.strain,1,125)
 from PRB_Strain s, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
@@ -82,7 +66,7 @@ print 'Non Standard Strains (excluding F1 and F2): data attached = no'
 print ''
 
 select substring(l.name,1,20) as "external db", a.accID as "external id", 
-n.inIMSR, substring(s.strain,1,125) as "strain"
+substring(s.strain,1,125) as "strain"
 from PRB_Strain s, ACC_Accession a, ACC_LogicalDB l, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
@@ -94,7 +78,7 @@ and a._MGIType_key = 10
 and a._LogicalDB_key != 1
 and a._LogicalDB_key = l._LogicalDB_key
 union
-select null, null, n.inIMSR, substring(s.strain,1,125) as "strain"
+select null, null, substring(s.strain,1,125) as "strain"
 from PRB_Strain s, #strains n
 where s.standard = 0
 and s.strain not like '%)F1%'
