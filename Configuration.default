@@ -63,5 +63,8 @@ setenv EILOGFILES		/userhome
 # EI Log Name
 setenv EILOGNAME		.ei-log
 
+# set IMSR csv file
+setenv IMSR_STRAINS_CSV         ${DATADOWNLOADS}/emnet.informatics.jax.org/allStrains.csv
+
 # Date
 setenv DATE `date '+%Y-%m-%d'`
