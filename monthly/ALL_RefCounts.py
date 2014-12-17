@@ -26,6 +26,9 @@
 #
 # History:
 #
+# kstone 12/17/2014
+#	Replaced IMSR query with IMSR strains file from solr
+#
 # lec   10/22/2014
 #       - TR11750/postres complient
 #	contains calls to IMSR
@@ -38,6 +41,7 @@
 #
 '''
  
+import csv
 import sys 
 import os
 import db
@@ -61,45 +65,53 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+IMSR_CSV = os.environ['IMSR_STRAINS_CSV']
+
+# functions
+
+def createImsrDict1():
+	"""
+	Returns dictionary of allele IDs to facility abbreviation
+	for JAX only
+	"""
+	facilityMap = {}
+	csvfile = open(IMSR_CSV, 'r')
+	reader = csv.reader(csvfile)
+	for row in reader:
+		allele_ids = row[0]
+		provider = row[3]
+		if allele_ids and provider == 'JAX':
+			for id in  allele_ids.split(','):
+				facilityMap[id] = ['JAX']
+	
+	return facilityMap
+
+def createImsrDict2():
+	"""
+	Returns dictionary of allele IDs to facility abbreviation
+	for non-JAX 
+	"""
+	facilityMap = {}
+	csvfile = open(IMSR_CSV, 'r')
+	reader = csv.reader(csvfile)
+	for row in reader:
+		allele_ids = row[0]
+		provider = row[3]
+		if allele_ids and provider != 'JAX':
+			for id in  allele_ids.split(','):
+				facilityMap.setdefault(id, []).append(provider)
+	
+	return facilityMap
+
 currentDate = mgi_utils.date('%Y')
 
 db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 
-#
-# First create a lookup of alleles, to their Facilities in imsr
-#
-# TODO (kstone): This query and the two imsrDict 1 and 2 are all we need to 
-# reproduce from the IMSR Solr report
-# I.e. a list of all alleles in imsr to their facility names (abbrevName)
-#
-results = db.sql('''select distinct a._Allele_key, f.abbrevName
-        from ALL_Allele a, imsr..StrainFacilityAssoc sfa, imsr..SGAAssoc sga, imsr..Accession ac, imsr..Facility f, ACC_Accession ma 
-        where a._Allele_key = ma._Object_key 
-        and ma._LogicalDB_key = 1  
-        and ma._MGIType_key = 11  
-        and ma.private = 0  
-        and ma.accID = ac.accID 
-        and ac._IMSRType_key = 3 
-        and ac._Object_key = sga._Allele_key 
-        and sga._Strain_key = sfa._Strain_key 
-        and sfa._Facility_key = f._Facility_key''', 'auto')
-# and sfa._StrainState_key <> 2
-imsrDict1 = {}
-imsrDict2 = {}
-for r in results:
-    aKey = r['_Allele_key']
-    facility = r['abbrevName']
-
-    if facility == 'JAX':
-        if not imsrDict1.has_key(aKey):
-	    imsrDict1[aKey] = []
-        imsrDict1[aKey].append(facility)
-    else:
-        if not imsrDict2.has_key(aKey):
-	    imsrDict2[aKey] = []
-        imsrDict2[aKey].append(facility)
+# create the mappings of allele MGI ID to facility abbreviation
+imsrDict1 = createImsrDict1()
+imsrDict2 = createImsrDict2()
 
 # 
 # get all allele references 
@@ -178,13 +190,15 @@ for r in results:
     refsCount = r['refsCount']
 
     facilities = []
-    if imsrDict1.has_key(aKey):
-	facilities = imsrDict1[aKey]
+    if imsrDict1.has_key(mgiID):
+	facilities = imsrDict1[mgiID]
     f1 = string.join(facilities, ', ')
 
     facilities = []
-    if imsrDict2.has_key(aKey):
-	facilities = imsrDict2[aKey]
+    if imsrDict2.has_key(mgiID):
+	# need to unique and sort the list of providers
+	facilities = list(set(imsrDict2[mgiID]))
+	facilities.sort()
     f2 = string.join(facilities, ', ')
 
     if len(f1) > 0 and len(f2) > 0:
