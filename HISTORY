@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-2-1-3
+DATE: 12/17/2014
+STAFF: kstone
+CHANGES: replaced IMSR query in ALL_RefCounts with IMSR csv file from Solr
+2) Removed IMSR column from PRB_StrainNonStd.sql
+
 TAG: qcreports_db-5-2-1-2
 DATE: 12/8/2014
 STAFF: sc
