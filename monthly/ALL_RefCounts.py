@@ -70,6 +70,10 @@ fp = reportlib.init(sys.argv[0], printHeading = None, outputdir = os.environ['QC
 #
 # First create a lookup of alleles, to their Facilities in imsr
 #
+# TODO (kstone): This query and the two imsrDict 1 and 2 are all we need to 
+# reproduce from the IMSR Solr report
+# I.e. a list of all alleles in imsr to their facility names (abbrevName)
+#
 results = db.sql('''select distinct a._Allele_key, f.abbrevName
         from ALL_Allele a, imsr..StrainFacilityAssoc sfa, imsr..SGAAssoc sga, imsr..Accession ac, imsr..Facility f, ACC_Accession ma 
         where a._Allele_key = ma._Object_key 
