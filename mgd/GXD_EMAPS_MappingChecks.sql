@@ -1,4 +1,7 @@
 
+/* Changes: */
+/* TR11915 - Update to Check 4 - 01/23/2015 - sc */
+
 print ''
 print 'Check 1'
 print 'Duplicate MGI and EMAPS entries in the Mapping Table'
@@ -58,14 +61,42 @@ print 'Check 4'
 print 'Id''s in the EMAPS Field that do not have an entry in the Accession Table'
 print ''
 
+set nocount on
+go
+
 select
-	mem.emapsId
+	mem.emapsId, mem.accID as adID
+into
+	#invalid
 from
 	MGI_EMAPS_Mapping mem
 LEFT OUTER JOIN
 	ACC_Accession acc on (mem.emapsId = acc.accID)
 where
 	acc.accId is NULL
+go
+
+create index idx1 on #invalid(adID)
+go
+
+select _Structure_key, count(_Structure_key) as aCt
+into #annotCt
+from GXD_Expression
+group by _structure_key
+go
+
+create index idx1 on #annotCt(_Structure_key)
+go
+
+set nocount off
+go
+
+select i.adID, i.emapsId, ac.aCt
+from #invalid i, ACC_Accession a, #annotCt ac
+where i.adID = a.accID
+and a._MGIType_key = 38
+and a._LOgicalDB_key = 1
+and a._Object_key = ac._Structure_key
 go
 
 print ''
