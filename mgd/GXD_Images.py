@@ -359,7 +359,7 @@ db.sql('''
 db.sql('create index refs3_idx1 on #refs3(_Refs_key)', None)
 
 results = db.sql('''
-	select distinct r._Refs_key, rtrim(i.figureLabel) figure_label
+	select distinct r._Refs_key, rtrim(i.figureLabel) figureLabel
 	from #refs3 r, IMG_Image i
 	where r._Refs_key = i._Refs_key
 	''', 'auto')
