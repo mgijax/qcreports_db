@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-2-1-5
+DATE: 01/26/2015
+STAFF: dbm
+CHANGES:
+1) mgd/GXD_Images.py: bug fix - changed figure_label to figureLabel
+
 TAG: qcreports_db-5-2-1-4
 DATE: 01/23/2015
 STAFF: sc
