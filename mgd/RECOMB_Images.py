@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	03/03/2015
+#	- TR11891/new journals
+#
 # lec	10/15/2014
 #	- fixed bug with formating the "in" query
 #
@@ -146,7 +149,27 @@ journals = [
 'PLoS Genet', 
 'PLoS Med', 
 'PLoS ONE' ,
-'Proc Natl Acad Sci U S A'
+'Proc Natl Acad Sci U S A',
+'Cell Death Dis',
+'Nat Commun',
+'Sci Rep',
+'Elife',
+'Vasc Cell',
+'PLoS Comput Biol',
+'PLoS Curr',
+'PLoS Negl Trop Dis',
+'PLoS Pathog',
+'PeerJ',
+'BMC Bioinformatics',
+'BMC Blood Disord',
+'BMC Gastroenterol',
+'BMC Immunol',
+'BMC Med Genet',
+'BMC Nephrol',
+'BMC Pharmacol Toxicol',
+'BMC Physiol',
+'BMC Struct Biol',
+'BMC Syst Biol'
 ]
 
 # journals where year >= 2005

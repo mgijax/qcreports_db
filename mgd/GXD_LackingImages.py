@@ -16,6 +16,10 @@
 #
 # History:
 #
+# lec	03/03/2015
+#	- TR11891/new journals
+#	- RECOMB_LackingImages is exactly the same, except for query
+#
 # lec	10/07/2009
 #	- TR 9876
 #	1) split into two sections:  Genes&Development, Nature Publishing group
@@ -81,9 +85,42 @@ journalsAll = [
 'Nat Struct Biol', 
 'Nature',
 'Oncogene',
-'Genes Dev']
+'Genes Dev',
+'Acta Pharmacol Sin',
+'Bone Marrow Transplant',
+'Br J Cancer',
+'Cancer Gene Ther',
+'Cell Mol Immunol',
+'Cell Res',
+'Eur J Clin Nutr',
+'Eur J Hum Genet',
+'Exp Mol Med',
+'Eye (Lond)',
+'Gene Ther',
+'Genes Immun',
+'Heredity (Edinb)',
+'Hypertens Res',
+'Immunol Cell Biol',
+'Int J Obes (Lond)',
+'Int J Oral Sci',
+'J Cereb Blood Flow Metab',
+'J Hum Genet',
+'J Invest Dermatol',
+'Kidney Int',
+'Lab Invest',
+'Leukemia',
+'Mol Psychiatry',
+'Mucosal Immunol',
+'Nat Chem Biol',
+'Nat Rev Drug Discov',
+'Nat Struct Mol Biol',
+'Pediatr Res',
+'Pharmacogenomics J',
+'Prostate Cancer Prostatic Dis',
+'Spinal Cord',
+]
 
-def printAll():
+def printAll(fp):
 
     count = 0
     fp.write(TAB + 'Journals for all years:' + CRT + 2*TAB)
@@ -95,7 +132,7 @@ def printAll():
           count = 0
     fp.write(2*CRT)
 
-def printFields():
+def printFields(fp):
 
     fp.write(TAB + string.ljust('J#', 12))
     fp.write(string.ljust('short_citation', 60))
@@ -106,7 +143,7 @@ def printFields():
     fp.write(string.ljust('------------', 15))
     fp.write(string.ljust('-------------', 50) + CRT)
 
-def printResults():
+def printResults(fp):
 
     results = db.sql('''
 	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
@@ -165,16 +202,45 @@ def selectOther():
 
     db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
 
+def selectOther2():
+
+    #
+    # for journalsAll
+    # select references of any year
+    # for given assays (see below)
+    # with full image stubs
+    #
+
+    db.sql('''
+	    select distinct r._Refs_key, r.journal, i.creation_date, 
+		   convert(char(10), i.creation_date, 101) as cdate
+	    into #refs
+	    from BIB_Refs r, GXD_Assay a, IMG_Image i
+	    where r.journal in ('%s')
+	    and r._Refs_key = a._Refs_key
+	    and a._AssayType_key not in (1,2,3,4,5,6,8,9)
+	    and r._Refs_key = i._Refs_key 
+	    and i._ImageType_key = 1072158
+	    and i.xDim is null
+	    ''' % (string.join(journalsAll, "','")), None)
+
+    db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
+
 #
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
-
-printAll()
-printFields()
+fp1 = reportlib.init(sys.argv[0], 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
+printAll(fp1)
+printFields(fp1)
 selectOther()
-printResults()
+printResults(fp1)
+reportlib.finish_nonps(fp1)
 
-reportlib.finish_nonps(fp)
+fp2 = reportlib.init('RECOMB_LackingImages', 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
+printAll(fp2)
+printFields(fp2)
+selectOther2()
+printResults(fp2)
+reportlib.finish_nonps(fp2)
 
