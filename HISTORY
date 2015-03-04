@@ -1,3 +1,12 @@
+TAG: qcreports_db-5-2-1-?
+DATE: 03/04/2015
+STAFF: lec
+CHANGES:
+1) TR11891: 
+GXD_LackingImages.py 
+RECOMB_Images.py 
+GXD_Images.py
+
 TAG: qcreports_db-5-2-1-5
 DATE: 01/26/2015
 STAFF: dbm
