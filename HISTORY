@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-2-1-7
+DATE: 03/06/2015
+STAFF: lnh
+CHANGES:
+qcr.html: removed IMSR load link from qcr.html file 
+
 TAG: qcreports_db-5-2-1-6
 DATE: 03/04/2015
 STAFF: lec
