@@ -35,6 +35,7 @@
 '''
  
 import sys 
+import os
 import string
 import reportlib
 
@@ -43,6 +44,7 @@ try:
         import pg_db
         db = pg_db
         db.setTrace()
+        db.setAutoTranslate()
         db.setAutoTranslateBE()
     else:
         import db
@@ -84,8 +86,8 @@ db.set_sqlServer(server)
 db.set_sqlDatabase(mgdDB)
 
 cmd = []
-cmd.append('select q._QCRecord_key, q.accID, db.name "logicalDB", ' + \
-                  'a.accID "mgiID", m.name "mgiType", ' + \
+cmd.append('select q._QCRecord_key, q.accID, db.name as logicalDB, ' + \
+                  'a.accID as mgiID, m.name as mgiType, ' + \
                   'q.expectedType, q.message ' + \
            'from ' + radarDB + '..QC_AssocLoad_Target_Discrep q, ' + \
                 'ACC_Accession a, ' + \
@@ -99,15 +101,15 @@ cmd.append('select q._QCRecord_key, q.accID, db.name "logicalDB", ' + \
                  'q._MGIType_key = m._MGIType_key and ' + \
                  'q._JobStream_key = ' + jobKey + ' ' + \
            'union ' + \
-           'select q._QCRecord_key, q.accID, db.name "logicalDB", ' + \
-                  'null "mgiID", null "mgiType", ' + \
+           'select q._QCRecord_key, q.accID, db.name as logicalDB, ' + \
+                  'null as mgiID, null as mgiType, ' + \
                   'q.expectedType, q.message ' + \
            'from ' + radarDB + '..QC_AssocLoad_Target_Discrep q, ' + \
                 'ACC_LogicalDB db ' + \
            'where q._LogicalDB_key = db._LogicalDB_key and ' + \
                  'q._MGIType_key is null and ' + \
                  'q._JobStream_key = ' + jobKey + ' ' + \
-           'order by q.accID, db.name')
+           'order by accID, logicalDB')
 
 results = db.sql(cmd, 'auto')
 

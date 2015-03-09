@@ -39,6 +39,7 @@
 '''
  
 import sys 
+import os
 import string
 import reportlib
 
@@ -47,6 +48,7 @@ try:
         import pg_db
         db = pg_db
         db.setTrace()
+        db.setAutoTranslate()
         db.setAutoTranslateBE()
     else:
         import db
@@ -93,10 +95,10 @@ db.set_sqlDatabase(mgdDB)
 
 cmd = []
 cmd.append('select q._QCRecord_key, ' + \
-                  'q.tgtAccID "tgtAccID", db1.name "tgtLogicalDB", ' + \
-                  'm1.name "tgtMGIType", ' + \
-                  'q.accID "accID", db2.name "logicalDB", ' + \
-                  'm2.name "mgiType", ' + \
+                  'q.tgtAccID as tgtAccID, db1.name as tgtLogicalDB, ' + \
+                  'm1.name as tgtMGIType, ' + \
+                  'q.accID as accID, db2.name as logicalDB, ' + \
+                  'm2.name as mgiType, ' + \
                   'q.message ' + \
            'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
                 'ACC_LogicalDB db1, ' + \
@@ -110,7 +112,7 @@ cmd.append('select q._QCRecord_key, ' + \
                  'q._JobStream_key = ' + jobKey + ' ' + \
            'order by q.tgtAccID, db1.name')
 
-cmd.append('select q._QCRecord_key, a.accID "mgiID" ' + \
+cmd.append('select q._QCRecord_key, a.accID as mgiID ' + \
            'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
                 'ACC_Accession a ' + \
            'where q._TgtMGIType_key = a._MGIType_key and ' + \
@@ -119,7 +121,7 @@ cmd.append('select q._QCRecord_key, a.accID "mgiID" ' + \
                  'a.preferred = 1 and ' + \
                  'q._JobStream_key = ' + jobKey)
 
-cmd.append('select q._QCRecord_key, a.accID "mgiID" ' + \
+cmd.append('select q._QCRecord_key, a.accID as mgiID ' + \
            'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
                 'ACC_Accession a ' + \
            'where q._MGIType_key = a._MGIType_key and ' + \
