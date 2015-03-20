@@ -14,17 +14,18 @@ setenv LOG ${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
-echo `date`: Start nightly QC reports | tee -a ${LOG}
+if ( ${DB_TYPE} == "postgres" ) then
+    setenv MGD_DBSERVER ${PG_DBSERVER}
+    setenv MGD_DBNAME ${PG_DBNAME}
+endif
 
-echo `date`: strainChanges.csh | tee -a ${LOG}
-./strainChanges.csh >>& ${LOG}
+echo `date`: Start nightly QC reports | tee -a ${LOG}
 
 cd ${QCMGD}
 
-echo "db settings = ${MGD_DBSERVER}.${MGD_DBNAME}"
 foreach i (*.sql)
     echo `date`: $i | tee -a ${LOG}
-    reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+    ${MGI_DBUTILS}/bin/reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 foreach i (*.py)

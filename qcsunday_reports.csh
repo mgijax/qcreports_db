@@ -17,13 +17,18 @@ setenv LOG ${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
+if ( ${DB_TYPE} == "postgres" ) then
+    setenv MGD_DBSERVER ${PG_DBSERVER}
+    setenv MGD_DBNAME ${PG_DBNAME}
+endif
+
 echo `date`: Start Sunday QC reports | tee -a ${LOG}
 
 cd ${QCMGD}
 
 foreach i (GXD_ProbeAntibody.sql GXD_EMAPS_MappingChecks.sql)
     echo `date`: $i | tee -a ${LOG}
-    reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+    ${MGI_DBUTILS}/bin/reportisql.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 foreach i (GXD_EMAPS_MappingAdUnmappedChecks.py)
