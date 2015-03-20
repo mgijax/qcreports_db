@@ -108,7 +108,7 @@ db.sql('''
     and a2.preferred = 1
     ''', None)
 
-db.sql('''create index idx1 on #mcvAnnot(_Annot_key)''', None)
+db.sql('''create index mcvAnnot_idx on #mcvAnnot(_Annot_key)''', None)
 
 results = db.sql('''
     select  ma.qualifier, convert(char(10), 

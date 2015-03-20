@@ -8,7 +8,7 @@ where r.year >= 1975
 and datalength(r.abstract) = 0 
 go
 
-create index idx1 on #refs1(_Refs_key)
+create index refs1_idx on #refs1(_Refs_key)
 go
 
 select r._Refs_key, a.accID
@@ -19,7 +19,7 @@ and a._MGIType_key = 1
 and a._LogicalDB_key = 29
 go
 
-create index idx1 on #refs2(_Refs_key)
+create index refs2_idx on #refs2(_Refs_key)
 go
 
 select r.*
@@ -30,7 +30,7 @@ where not exists
 where r._Refs_key = n._Refs_key and lower(n.note) like '%no abstract available%')
 go
 
-create index idx1 on #refs3(_Refs_key)
+create index refs3_idx on #refs3(_Refs_key)
 go
 
 set nocount off

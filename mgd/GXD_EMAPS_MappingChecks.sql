@@ -76,7 +76,7 @@ where
 	acc.accId is NULL
 go
 
-create index idx1 on #invalid(adID)
+create index invalid_idx on #invalid(adID)
 go
 
 select _Structure_key, count(_Structure_key) as aCt
@@ -85,7 +85,7 @@ from GXD_Expression
 group by _structure_key
 go
 
-create index idx1 on #annotCt(_Structure_key)
+create index annotCt_idx on #annotCt(_Structure_key)
 go
 
 set nocount off

@@ -68,7 +68,7 @@ db.sql('''
 	and a._LogicalDB_Key = 1 
 	''', None)
 
-db.sql('create index idx1 on #nomen(_Nomen_key)', None)
+db.sql('create index nomen_idx on #nomen(_Nomen_key)', None)
 
 results = db.sql('''
 	select n._Nomen_key, a.accID 

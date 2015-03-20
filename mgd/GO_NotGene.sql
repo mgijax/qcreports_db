@@ -19,7 +19,7 @@ from #nongene
 group by _Object_key
 go
 
-create index idx1 on #nongeneout(_Object_key)
+create index nongeneout_idx on #nongeneout(_Object_key)
 go
 
 select distinct a.accID, substring(t.name,1,25) as type, g.symbol, g.name, m.annotations

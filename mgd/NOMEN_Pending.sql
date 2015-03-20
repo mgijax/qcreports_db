@@ -13,7 +13,7 @@ and r._RefAssocType_key = rt._RefAssocType_key
 and rt.assocType = 'Primary'
 go
 
-create index idx1 on #temp1(_Refs_key)
+create index temp1_idx on #temp1(_Refs_key)
 go
 
 set nocount off

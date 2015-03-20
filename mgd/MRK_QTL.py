@@ -73,8 +73,8 @@ def getRefs():
 	and h.sequenceNum = 1
 	''', None)
 
-	db.sql('create index idx1 on #refs(_Marker_key)', None)
-	db.sql('create index idx2 on #refs(_Refs_key)', None)
+	db.sql('create index refs_idx1 on #refs(_Marker_key)', None)
+	db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
 
 def qtl1():
 

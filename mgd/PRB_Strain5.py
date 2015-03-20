@@ -56,7 +56,7 @@ db.sql('''
 	and a._LogicalDB_key != 1 
 	and a.accID like '%O%' 
 	''', None)
-db.sql('create index idx1 on #strains(_Strain_key)', None)
+db.sql('create index strains_idx on #strains(_Strain_key)', None)
 
 # external accession IDs
 

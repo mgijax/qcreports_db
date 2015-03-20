@@ -7,7 +7,7 @@ from GXD_Specimen s
 where (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 go
 
-create index idx1 on #spec1(_Assay_key)
+create index spec1_idx on #spec1(_Assay_key)
 go
 
 set nocount off
@@ -63,8 +63,7 @@ and a._AssayType_key in (10,11)
 go
 
 print ''
-print 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'',
- ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
+print 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
 print ''
 
 set nocount on
@@ -80,7 +79,7 @@ and c._Stage_key = t._Stage_key
 and t.stage = 27
 go
 
-create index idx1 on #temp3(_Specimen_key )
+create index temp3_idx on #temp3(_Specimen_key )
 go
 
 set nocount off

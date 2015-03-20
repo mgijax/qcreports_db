@@ -92,9 +92,9 @@ db.sql('''
 	and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
 	and e._EvidenceTerm_key = t._Term_key
 	''', None)
-db.sql('create index idx1 on #annotations(_Term_key)', None)
-db.sql('create index idx2 on #annotations(_Object_key)', None)
-db.sql('create index idx3 on #annotations(inferredFrom)', None)
+db.sql('create index annotations_idx1 on #annotations(_Term_key)', None)
+db.sql('create index annotations_idx2 on #annotations(_Object_key)', None)
+db.sql('create index annotations_idx3 on #annotations(inferredFrom)', None)
 
 #
 # set of MGI, GO ids in 'inferredFrom'

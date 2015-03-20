@@ -95,8 +95,8 @@ def runQueries(includeRiken):
         and lower(m1.symbol) != lower(m2.symbol)
 	''' + riken, None)
 
-    db.sql('create index idx1 on #homology(m_Marker_key)', None)
-    db.sql('create index idx2 on #homology(h_Marker_key)', None)
+    db.sql('create index homology_idx1 on #homology(m_Marker_key)', None)
+    db.sql('create index homology_idx2 on #homology(h_Marker_key)', None)
 
     #
     # select mouse MGI ids

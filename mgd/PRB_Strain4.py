@@ -60,7 +60,7 @@ db.sql('''
 	and a.preferred = 1 
 	and a._Object_key = s._Strain_key
 	''', None)
-db.sql('create index idx1 on #strains(_Object_key)', None)
+db.sql('create index strains_idx on #strains(_Object_key)', None)
 
 # external accession IDs
 

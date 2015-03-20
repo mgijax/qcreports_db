@@ -43,7 +43,7 @@ or comments like '%rocket%'
 or comments like '%quantitative RT%'
 go
 
-create index idx1 on #excluded(_Index_key)
+create index excluded_idx on #excluded(_Index_key)
 go
 
 set nocount off

@@ -87,7 +87,7 @@ db.sql('''select distinct m._Object_key, count(m._Refs_key) as counter
           and t.assocType in ('Priority Index', 'Indexed')
 	  group by m._Object_key
 	  ''', None)
-db.sql('create index idx1 on #refA(_Object_key)', None)
+db.sql('create index refA_idx on #refA(_Object_key)', None)
 results = db.sql('select * from #refA', 'auto')
 refA = {}
 for r in results:

@@ -103,8 +103,8 @@ db.sql('''
                      where gi._Marker_key = c._Marker_key)
 	''', None)
 
-db.sql('create index idx1 on #markerref(_Marker_key)', None)
-db.sql('create index idx2 on #markerref(_Refs_key)', None)
+db.sql('create index markerref_idx1 on #markerref(_Marker_key)', None)
+db.sql('create index markerref_idx2 on #markerref(_Refs_key)', None)
 
 #
 # Get the additional details for the report for each gene and each paper

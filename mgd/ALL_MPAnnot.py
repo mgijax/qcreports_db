@@ -89,7 +89,7 @@ db.sql('''
             and p._Genotype_key = v._Object_key
             and v._AnnotType_key = 1002)
        ''', None)
-db.sql('create index idx1 on #markers(_Marker_key)', None)
+db.sql('create index markers_idx on #markers(_Marker_key)', None)
 
 # marker ids
 

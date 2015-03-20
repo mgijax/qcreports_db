@@ -166,7 +166,7 @@ and c._Stage_key = t._Stage_key
 and t.stage = 27
 go
 
-create index idx1 on #temp3(_Specimen_key )
+create index temp3_idx on #temp3(_Specimen_key )
 go
 
 set nocount off
@@ -209,7 +209,7 @@ and s._Stage_key = t._Stage_key
 and t.stage = 27
 go
 
-create index idx1 on #temp4(_GelLane_key )
+create index temp4_idx on #temp4(_GelLane_key )
 go
 
 set nocount off

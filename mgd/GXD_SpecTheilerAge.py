@@ -212,8 +212,8 @@ db.sql('''
 #
 
 db.sql('select distinct * into #temp2 from #temp1', None)
-db.sql('create index idx1 on #temp2(_Assay_key)', None)
-db.sql('create index idx2 on #temp2(_Specimen_key)', None)
+db.sql('create index temp2_idx1 on #temp2(_Assay_key)', None)
+db.sql('create index temp2_idx2 on #temp2(_Specimen_key)', None)
 db.sql('''
 	select distinct t._Assay_key, t.age, t.label, t.stage, 
 		  min(t.dpcMin) as dpcMin, 
@@ -222,7 +222,7 @@ db.sql('''
 	from #temp2 t 
 	group by t._Assay_key, t._Specimen_key, t.age, t.label, t.stage
 	''', None)
-db.sql('create index idx3 on #temp3(_Assay_key)', None)
+db.sql('create index temp3_idx on #temp3(_Assay_key)', None)
 
 ##
 

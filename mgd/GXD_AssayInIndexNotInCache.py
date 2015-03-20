@@ -100,7 +100,7 @@ and gi._Marker_key = m._Marker_key
 and gi.comments = null
 ''', None)
 
-db.sql('create index idx1 on #validIndexItems(_Index_key)', None)
+db.sql('create index validIndexItems_idx on #validIndexItems(_Index_key)', None)
 
 # Match these types against the items in GXD_Expression versus its comparable types.
 # Please note we dont bring back ANY matches to the "E?" stage.

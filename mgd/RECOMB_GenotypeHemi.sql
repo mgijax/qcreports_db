@@ -18,7 +18,7 @@ and a._Marker_key = m._Marker_key
 and m.chromosome in ('X','Y')
 go
 
-create index idx1 on #genotypes(_Genotype_key)
+create index genotypes_idx on #genotypes(_Genotype_key)
 go
 
 set nocount on

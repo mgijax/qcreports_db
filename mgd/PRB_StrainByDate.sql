@@ -38,7 +38,7 @@ or
 (s._CreatedBy_key = 1421 and s.creation_date = '04/09/2014')
 go
 
-create index idx1 on #exclude(_Strain_key)
+create index exclude_idx on #exclude(_Strain_key)
 go
 
 set nocount off
