@@ -15,9 +15,6 @@ source ${MGICONFIG}/master.config.csh
 
 umask 002
 
-# set this variable to either 'sybase' or 'postgres'
-setenv DB_TYPE                  sybase
-
 # report output directory
 setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 
