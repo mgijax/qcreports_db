@@ -64,16 +64,12 @@ print ''
 set nocount on
 go
 
-select
-	mem.emapsId, mem.accID as adID
-into
-	#invalidIDs
-from
-	MGI_EMAPS_Mapping mem
-LEFT OUTER JOIN
+select mem.emapsId, mem.accID as adID
+into #invalidIDs
+from MGI_EMAPS_Mapping mem
+	LEFT OUTER JOIN
 	ACC_Accession acc on (mem.emapsId = acc.accID)
-where
-	acc.accId is NULL
+where acc.accId is NULL
 go
 
 create index invalidIDs_idx on #invalidIDs(adID)
