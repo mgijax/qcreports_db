@@ -99,10 +99,6 @@ def mmrrc():
     mmrrcfp.write('Genotypes' + reportlib.TAB)
     mmrrcfp.write(reportlib.CRT)
 
-    if os.environ['DB_TYPE'] == 'postgres':
-    	db.sql('drop table #strains', None)
-	db.sql('drop table #strainsToProcess', None)
-
     # MMNC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
 	    select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
@@ -170,6 +166,11 @@ def printReport(fp):
         fp.write(string.join(mgiIDs[key], ',') + reportlib.CRT)
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
+
+    if os.environ['DB_TYPE'] == 'postgres':
+    	db.sql('drop table #strains', None)
+    	db.sql('drop table #strains2', None)
+	db.sql('drop table #strainsToProcess', None)
 
     reportlib.finish_nonps(fp)
 
