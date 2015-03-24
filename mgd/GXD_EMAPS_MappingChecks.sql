@@ -67,7 +67,7 @@ go
 select
 	mem.emapsId, mem.accID as adID
 into
-	#invalid
+	#invalidIDs
 from
 	MGI_EMAPS_Mapping mem
 LEFT OUTER JOIN
@@ -76,7 +76,7 @@ where
 	acc.accId is NULL
 go
 
-create index invalid_idx on #invalid(adID)
+create index invalidIDs_idx on #invalidIDs(adID)
 go
 
 select _Structure_key, count(_Structure_key) as aCt
@@ -92,7 +92,7 @@ set nocount off
 go
 
 select i.adID, i.emapsId, ac.aCt
-from #invalid i, ACC_Accession a, #annotCt ac
+from #invalidIDs i, ACC_Accession a, #annotCt ac
 where i.adID = a.accID
 and a._MGIType_key = 38
 and a._LOgicalDB_key = 1
