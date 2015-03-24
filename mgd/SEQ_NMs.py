@@ -37,10 +37,13 @@ try:
         db = pg_db
         db.setTrace()
         db.setAutoTranslateBE()
+        RADAR = ''
     else:
         import db
+        RADAR = os.environ['RADAR_DBNAME'] + '..'
 except:
     import db
+    RADAR = os.environ['RADAR_DBNAME'] + '..'
 
 
 TAB = reportlib.TAB
@@ -145,8 +148,8 @@ db.sql('create index acc_idx1 on #acc(accID)', None)
 sql = '''
 	select eg.rna, eg.geneID 
 	into #eg 
-	from %s..DP_EntrezGene_Accession eg
-	''' % (os.environ['RADAR_DBNAME'])
+	from %sDP_EntrezGene_Accession eg
+	''' % (RADAR)
 sql = sql + '''
 	where eg.taxID = 10090
 	and eg.rna like 'NM_%' 
