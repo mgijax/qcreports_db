@@ -410,6 +410,9 @@ def runreport(fp, assayType):
     
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
+    db.sql('drop table #refs',None)
+    db.sql('drop table #refs3',None)
+
 #
 # main
 #
