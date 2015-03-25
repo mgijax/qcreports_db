@@ -1,3 +1,4 @@
+TAG: qcreports_db-5-2-1-9
 TAG: qcreports_db-5-2-1-8
 DATE: 03/25/2015
 STAFF: dbm
@@ -32,6 +33,7 @@ CHANGES:
 14) mgd/SEQ_NMs.py: Handle RADAR database reference for sybase or postgres
 15) mgd/GXD_EMAPS_MappingChecks.sql: Change temp table name from "invalid" to
                                      "invalidIDs" to make Postgres happy
+16) mgd/HMD_SymbolDiffs.py: Uncomment call to create HMD_SymbolDiffs3.rpt
 
 TAG: qcreports_db-5-2-1-7
 DATE: 03/06/2015
