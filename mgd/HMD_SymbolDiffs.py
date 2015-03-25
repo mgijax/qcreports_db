@@ -267,8 +267,8 @@ runQueries(includeRiken = 0)
 report1(fp1, includeRiken = 0)
 reportlib.finish_nonps(fp1)
 
-#fp3 = reportlib.init('HMD_SymbolDiffs3', outputdir = os.environ['QCOUTPUTDIR'])
-#runQueries(includeRiken = 1)
-#report1(fp3, includeRiken = 1)
-#reportlib.finish_nonps(fp3)
+fp3 = reportlib.init('HMD_SymbolDiffs3', outputdir = os.environ['QCOUTPUTDIR'])
+runQueries(includeRiken = 1)
+report1(fp3, includeRiken = 1)
+reportlib.finish_nonps(fp3)
 
