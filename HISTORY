@@ -1,3 +1,38 @@
+TAG: qcreports_db-5-2-1-8
+DATE: 03/25/2015
+STAFF: dbm
+CHANGES:
+1) qcmonthly_reports.csh: Changed for Linux/Postgres
+2) qcnightly_reports.csh: Changed for Linux/Postgres
+3) qcsunday_reports.csh: Changed for Linux/Postgres
+4) qcweekly_reports.csh: Changed for Linux/Postgres
+5) qcr.html: Remove link to PRB_Strain_NameChanges.rpt (retired)
+6) strainChanges.csh: Retired
+7) Install: Change perms on *.csh (not *.sh)
+8) Configuration.default: removed DB_TYPE because it is set in mgiconfig
+9) mgd/ALL_MPAnnot.py, mgd/ALL_NoPhenoRef.py,
+   mgd/ALL_NoPhenoRef.py, mgd/GO_NotGene.sql,
+   mgd/GXD_AssayInIndexNotInCache.py, mgd/GXD_EMAPS_MappingChecks.sql,
+   mgd/GXD_EarlyPapers.py, mgd/GXD_FullCodeGene.sql,
+   mgd/GXD_SpecNoAge.sql, mgd/GXD_SpecTheilerAge.py,
+   mgd/HMD_SymbolDiffs.py, mgd/MRK_McvAnnot.py,
+   mgd/MRK_QTL.py, mgd/NOMEN_Pending.sql,
+   mgd/NOMEN_Reserved.py, mgd/PRB_Strain4.py,
+   mgd/PRB_Strain5.py, mgd/PRB_StrainByDate.sql,
+   mgd/RECOMB_GenotypeHemi.sql, mgd/RECOMB_SpecNoAge.sql,
+   mgd/VOC_InvalidInferred.py: Make sure all indexes are unique
+10) mgd/GO_EvidenceProperty.py: Don't use "#!/usr/bin/env python" to invoke
+                                python because it get the wrong version from
+                                the path
+11) mgd/GXD_Images.py: Drop temp tables before the method is called a
+                       second time.
+12) mgd/GXD_Mouse_Developmental_Anatomy.py: Convert to handle Postgres
+13) mgd/PRB_StrainJAX3.py: Drop temp tables in printReport() method before
+                           second call
+14) mgd/SEQ_NMs.py: Handle RADAR database reference for sybase or postgres
+15) mgd/GXD_EMAPS_MappingChecks.sql: Change temp table name from "invalid" to
+                                     "invalidIDs" to make Postgres happy
+
 TAG: qcreports_db-5-2-1-7
 DATE: 03/06/2015
 STAFF: lnh
