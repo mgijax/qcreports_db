@@ -43,11 +43,4 @@ foreach i (*.py)
     endif
 end
 
-echo `date`: Copy reports | tee -a ${LOG}
-cd ${QCOUTPUTDIR}
-foreach i (NOMEN_Reserved.rpt NOMEN_Pending.sql.rpt)
-    scp -q $i ${HUGOWEBDIR}
-    cp $i ${HUGOFTPDIR}
-end
-
 echo `date`: End nightly QC reports | tee -a ${LOG}
