@@ -1,3 +1,12 @@
+TAG: qcreports_db-5-2-1-11
+DATE: 04/8/2015
+STAFF: dbm
+CHANGES:
+1) mgd/NOMEN_Pending.sql: obsolete report
+2) mgd/NOMEN_Reserved.py: obsolete report
+3) qcr.html: remove link to above reports
+4) qcnightly_reports.csh: don't copy above reports to HUGO directories
+
 TAG: qcreports_db-5-2-1-10
 DATE: 04/8/2015
 STAFF: lec
