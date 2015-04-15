@@ -6,6 +6,10 @@
 #
 # Report:
 #
+# kstone 04/15/2015
+#	- TR11932 GO Central -> GO_Central
+#
+#
 # lec	11/20/2014
 #	- TR11863/add "GO Central" to REFGENOME_CLAUSE
 #
@@ -100,8 +104,8 @@ GOA_CLAUSE="'GOA_%'"
 GOC_CLAUSE="'GOC'"
 GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
-REFGENOME_CLAUSE="('RefGenome', 'GO Central')"
-GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB', 'GO Central') "
+REFGENOME_CLAUSE="('RefGenome', 'GO_Central')"
+GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB', 'GO_Central') "
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
