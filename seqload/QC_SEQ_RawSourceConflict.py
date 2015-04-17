@@ -53,6 +53,9 @@ server = os.environ['RADAR_DBSERVER']
 db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)
 
+if os.environ['DB_TYPE'] == 'postgres':
+	mgdDB = 'mgd'
+
 #
 # Main
 #
@@ -77,14 +80,14 @@ fp.write(string.ljust('-------------', 35))
 fp.write(string.ljust('------------------', 35))
 fp.write(CRT)
 
-results = db.sql('select seqID = a.accID, qc.attrName, ' + \
-	    'newRaw = qc.incomingValue, oldRaw = sr.rawLibrary, oldResolved = ps.name ' + \
+results = db.sql('select a.accID as seqID, qc.attrName, ' + \
+	    'qc.incomingValue as newRaw, sr.rawLibrary as oldRaw, ps.name as oldResolved ' + \
 	    'from QC_SEQ_RawSourceConflict qc, ' + \
 	    '%s..ACC_Accession a, %s..SEQ_Sequence s, %s..SEQ_Sequence_Raw sr, ' % (mgdDB, mgdDB, mgdDB) + \
 	    '%s..SEQ_Source_Assoc sa, %s..PRB_Source ps ' % (mgdDB, mgdDB) + \
             'where qc._JobStream_key = %s ' % (jobStreamKey) + \
 	    'and qc._Sequence_key = a._Object_key ' + \
-	    'and attrName = "library" ' + \
+	    'and attrName = \'library\' ' + \
 	    'and a._MGIType_key = 19 ' + \
 	    'and a.preferred = 1 ' + \
 	    'and qc._Sequence_key = s._Sequence_key ' + \
@@ -92,14 +95,14 @@ results = db.sql('select seqID = a.accID, qc.attrName, ' + \
 	    'and s._Sequence_key = sr._Sequence_key ' + \
 	    'and sa._Source_key = ps._Source_key ' + \
 	    'union ' + \
-            'select seqID = a.accID, qc.attrName, ' + \
-	    'newRaw = qc.incomingValue, oldRaw = sr.rawOrganism, oldResolved = o.commonName ' + \
+            'select a.accID as seqID, qc.attrName, ' + \
+	    'qc.incomingValue as newRaw, sr.rawOrganism as oldRaw, o.commonName as oldResolved ' + \
 	    'from QC_SEQ_RawSourceConflict qc, %s..ACC_Accession a, %s..SEQ_Sequence s, ' % (mgdDB, mgdDB) + \
 	    '%s..SEQ_Sequence_Raw sr, ' % mgdDB + \
 	    '%s..SEQ_Source_Assoc sa, %s..PRB_Source ps, %s..MGI_Organism o ' % (mgdDB, mgdDB, mgdDB) + \
             'where qc._JobStream_key = %s ' % (jobStreamKey) + \
 	    'and qc._Sequence_key = a._Object_key ' + \
-	    'and attrName = "organism" ' + \
+	    'and attrName = \'organism\' ' + \
 	    'and a._MGIType_key = 19 ' + \
 	    'and a.preferred = 1 ' + \
 	    'and qc._Sequence_key = s._Sequence_key ' + \

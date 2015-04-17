@@ -53,6 +53,9 @@ server = os.environ['RADAR_DBSERVER']
 db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)
 
+if os.environ['DB_TYPE'] == 'postgres':
+	mgdDB = 'mgd'
+
 #
 # Main
 #
