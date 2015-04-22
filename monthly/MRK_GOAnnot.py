@@ -79,7 +79,7 @@ fp.write('field 5: # of GO annotations that are IPI, IGI, IDA, ISS, ISO, ISA, IM
 fp.write('field 6: # of papers selected for GO but "not used"\n')
 fp.write('  . includes a reference even if it is "used" by another marker\n')
 fp.write('field 7: # of papers selected for GO but "used"\n')
-fp.write('  . excludes GO GAF loads (GOA, RGD, RefGenome, etc.)\n')
+fp.write('  . excludes GO GAF loads (GOA, RGD, GO_Central, etc.)\n')
 fp.write('  . excludes evidence codes IEA, ND\n')
 fp.write('\n')
 
@@ -208,7 +208,7 @@ results = db.sql('''
 	and e._EvidenceTerm_key not in (115,118)
 	and e._CreatedBy_key = u._User_key
 	and u.login not like ('GOA_%')
-	and u.login not in ('GOC', 'RefGenome', 'UniProtKB')
+	and u.login not in ('GOC', 'GO_Central', 'UniProtKB')
 	group by m._Marker_key
      ''', 'auto')
 for r in results:

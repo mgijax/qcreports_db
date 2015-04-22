@@ -1,3 +1,11 @@
+TAG: qcreports_db-5-2-1-15
+DATE: 04/22/2015
+STAFF: lec
+CHANGE: 
+1) TR11932 : RefGenome -> GO_Central
+mgd/GO_stats.py
+monthly/MRK_GOAnnot.py
+
 TAG: qcreport_db-5-2-1-13, qcreport_db-5-2-1-14
 DATE: 04/15/2015
 STAFF: kstone

@@ -104,8 +104,8 @@ GOA_CLAUSE="'GOA_%'"
 GOC_CLAUSE="'GOC'"
 GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
-REFGENOME_CLAUSE="('RefGenome', 'GO_Central')"
-GO_CLAUSE="('GOC', 'RefGenome', 'UniProtKB', 'GO_Central') "
+REFGENOME_CLAUSE="('GO_Central')"
+GO_CLAUSE="('GOC', 'UniProtKB', 'GO_Central') "
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
@@ -328,9 +328,9 @@ def writeCount(name):
 			byCreatedBy % ('= ' + GOC_CLAUSE), \
 			''), 'auto')
 
-   elif name == "RefGenome":
+   elif name == "GO/PAINT":
 	# not in IEA references
-	# in "RefGenome" user
+	# in "GO_Central" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
 			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
@@ -459,7 +459,7 @@ writeCount('GOA')
 writeCount('GO/Rat')
 writeCount('GOA/Human')
 writeCount('ORTHOLOGY')
-writeCount('RefGenome')
+writeCount('GO/PAINT')
 writeCount('Total IEA')
 writeCount('SWISS_PROT')
 writeCount('INTERPRO')
