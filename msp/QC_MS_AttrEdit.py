@@ -23,12 +23,18 @@ import sys
 import string
 import reportlib
 
+outputDir = os.environ['OUTPUTDIR']
+jobStreamKey = os.environ['JOBSTREAM']
+mgdDB = os.environ['MGD_DBNAME']
+radarDB = os.environ['RADAR_DBNAME']
+server = os.environ['RADAR_DBSERVER']
 try:
     if os.environ['DB_TYPE'] == 'postgres':
         import pg_db
         db = pg_db
         db.setTrace()
         db.setAutoTranslateBE()
+	mgdDB = 'mgd'
     else:
         import db
 except:
@@ -44,11 +50,6 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-outputDir = os.environ['OUTPUTDIR']
-jobStreamKey = os.environ['JOBSTREAM']
-mgdDB = os.environ['MGD_DBNAME']
-radarDB = os.environ['RADAR_DBNAME']
-server = os.environ['RADAR_DBSERVER']
 db.set_sqlServer(server)
 db.set_sqlDatabase(radarDB)
 
