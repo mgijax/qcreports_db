@@ -1,3 +1,4 @@
+TAG: qcreports_db-5-2-1-20
 TAG: qcreports_db-5-2-1-19
 DATE: 05/05/2015
 STAFF: lec
@@ -5,6 +6,7 @@ CHANGES:
 TR12014 - obsolete gbcdnaload/cloneload
 1) qcr.html - remove links to gbcdnaload
 2) removed gbcdnaload, cloneload directories
+3) removed mgcload
 
 TAG: qcreports_db-5-2-1-18
 DATE: 05/05/2015
