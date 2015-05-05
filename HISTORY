@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-2-1-18
+DATE: 05/05/2015
+STAFF: sc
+CHANGES:
+1) qcr.html - remove links to gbseqload, refseqload and spseqload
+
 TAG: qcreports_db-5-2-1-17
 DATE: 04/29/2015
 STAFF: dbm
