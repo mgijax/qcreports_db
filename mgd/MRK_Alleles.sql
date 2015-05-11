@@ -48,10 +48,9 @@ print ''
 
 select m.symbol as "Marker Symbol", substring(m.name,1,60) as "Marker Name", 
        a.symbol as "Allele Symbol", substring(a.name,1,60) as "Allele Name"
-from ALL_Allele a, ALL_Marker_Assoc am, MRK_Marker m
+from ALL_Allele a, MRK_Marker m
 where a._Allele_Status_key = 847114
-and a._Allele_key = am._Allele_key
-and am._Marker_key = m._Marker_key
+and a._Marker_key = m._Marker_key
 and m._Marker_Type_key = 12
 and (a.symbol != m.symbol or a.name != m.name)
 order by m.symbol
