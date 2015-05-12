@@ -1,8 +1,10 @@
+TAG: qcreports_db-5-2-1-22
 TAG: qcreports_db-5-2-1-21
-DATE: 05/11/2015
+DATE: 05/11/2015, 05/12/2015
 STAFF: lec
 CHANGES:
 TR12020/mgd/MRK_Alleles.sql
+weekly/MGI_EGNomenUpdate.sql : per Monica; obsolete
 
 TAG: qcreports_db-5-2-1-20
 TAG: qcreports_db-5-2-1-19
