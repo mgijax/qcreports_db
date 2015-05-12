@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-2-1-23
+DATE: 05/12/2015
+STAFF: dbm
+CHANGES:
+1) qcr.html: removed link to index page for genetrapload
+
 TAG: qcreports_db-5-2-1-22
 TAG: qcreports_db-5-2-1-21
 DATE: 05/11/2015, 05/12/2015
