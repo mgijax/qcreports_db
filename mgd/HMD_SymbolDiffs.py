@@ -17,11 +17,11 @@
 #
 # History:
 #
+# lec   05/15/2015
+#	- TR11652/convert to new MRK_Cluster tables/other changes per Monica
+#
 # lec   10/24/2014
 #       - TR11750/postres complient
-#
-# lec	09/19/2014
-#	- TR11652/convert to new MRK_Cluster tables
 #
 # lec	06/10/2005
 #	- TR 6858
@@ -53,13 +53,11 @@ CRT = reportlib.CRT
 TAB = reportlib.TAB
 
 mgiID = {}
-egID = {}
-synonym = {}
 hstatus = {}
 
 def runQueries(includeRiken):
 
-    global mgID, egID, synonym, hstatus
+    global mgID, hstatus
 
     if includeRiken:
 	riken = 'and m1.symbol like "%Rik"'
@@ -76,22 +74,24 @@ def runQueries(includeRiken):
 	select distinct 
                m1._Marker_key as m_Marker_key, 
 	       substring(m1.symbol,1,30) as msymbol, 
-	       substring(m1.name, 1, 40) as mname, 
                substring(upper(ms.status), 1, 1) as mstatus, 
                m2._Marker_key as h_Marker_key, 
 	       substring(m2.symbol,1,30) as hsymbol, 
-	       substring(m2.name, 1, 40) as hname, 
-               m2.modification_date 
+	       m1.modification_date,
+	       convert(char(10), m1.modification_date, 101) as mdate
         into #homology 
-        from MRK_Homology_Cache h1, 
-             MRK_Homology_Cache h2, 
+        from MRK_Cluster mc,
+	     MRK_ClusterMember h1, 
+             MRK_ClusterMember h2, 
              MRK_Marker m1, MRK_Marker m2, MRK_Status ms 
-        where m1._Organism_key = 1 
+	where mc._ClusterSource_key = 9272151
+	and mc._Cluster_key = h1._Cluster_key
+        and h1._Marker_key = m1._Marker_key 
+        and m1._Organism_key = 1 
         and m1._Marker_Status_key = ms._Marker_Status_key 
-        and m1._Marker_key = h1._Marker_key 
-        and h1._Class_key = h2._Class_key 
-        and h2._Organism_key = 2 
+        and h1._Cluster_key = h2._Cluster_key 
         and h2._Marker_key = m2._Marker_key 
+        and m2._Organism_key = 2 
         and lower(m1.symbol) != lower(m2.symbol)
 	''' + riken, None)
 
@@ -113,36 +113,6 @@ def runQueries(includeRiken):
 	''', 'auto')
     for r in results:
 	mgiID[r['m_Marker_key']] = r['accID']
-
-    results = db.sql('''
-	 select h.m_Marker_key, a.accID 
-	 from #homology h, ACC_Accession a 
-	 where h.m_Marker_key = a._Object_key 
-	 and a._MGITYpe_key = 2 
-         and a._LogicalDB_key = 55 
-	 ''', 'auto')
-    for r in results:
-	egID[r['m_Marker_key']] = r['accID']
-
-    #
-    # select mouse synonyms
-    #
-
-    results = db.sql('''
-	select h.m_Marker_key, substring(s.synonym,1,50) as synonym
-        from #homology h, MGI_Synonym s, MGI_SynonymType st 
-        where h.m_Marker_key = s._Object_key 
-        and s.synonym not like '%Rik' 
-        and s.synonym not like 'MGC:%' 
-        and s._SynonymType_key = st._SynonymType_key 
-        and st.synonymType = 'exact' 
-	''', 'auto')
-    for r in results:
-	key = r['m_Marker_key']
-	value = r['synonym']
-	if not synonym.has_key(key):
-	    synonym[key] = []
-	synonym[key].append(value)
 
     if os.environ['DB_TYPE'] == 'postgres':
     	db.sql('drop table #results', None)
@@ -172,26 +142,20 @@ def report1(fp, includeRiken = 0):
     fp.write(string.ljust('MGI Symbol', 32))
     fp.write(string.ljust('MGI Status', 12))
     fp.write(string.ljust('MGI Human Symbol', 32))
+    fp.write(string.ljust('Date', 12))
     fp.write(string.ljust('Human Status', 15))
     fp.write(string.ljust('MGI ID', 32))
-    fp.write(string.ljust('MGI Name', 42))
-    fp.write(string.ljust('EntrezGene ID', 32))
-    fp.write(string.ljust('Human Name', 42))
-    fp.write(string.ljust('MGI Synonym', 42))
     fp.write(CRT)
     fp.write(string.ljust('-' * 30, 32))
     fp.write(string.ljust('-' * 10, 12))
     fp.write(string.ljust('-' * 30, 32))
+    fp.write(string.ljust('-' * 10, 12))
     fp.write(string.ljust('-' * 12, 15))
     fp.write(string.ljust('-' * 30, 32))
-    fp.write(string.ljust('-' * 40, 42))
-    fp.write(string.ljust('-' * 30, 32))
-    fp.write(string.ljust('-' * 40, 42))
-    fp.write(string.ljust('-' * 40, 42))
     fp.write(CRT)
 
 
-    results = db.sql('select * from #results order by modification_date, hstatus desc, msymbol', 'auto')
+    results = db.sql('select * from #results order by modification_date desc, hstatus desc, msymbol', 'auto')
 
     for r in results:
 	key = r['m_Marker_key']
@@ -199,19 +163,9 @@ def report1(fp, includeRiken = 0):
 	fp.write(string.ljust(r['msymbol'], 32) + \
 		 string.ljust(r['mstatus'], 12) + \
 		 string.ljust(r['hsymbol'], 32) + \
+		 string.ljust(r['mdate'], 12) + \
 		 string.ljust(r['hstatus'], 15) + \
-		 string.ljust(mgiID[key], 32) + \
-		 string.ljust(r['mname'], 42))
-
-        if egID.has_key(key):
-	    fp.write(string.ljust(egID[key], 32))
-        else:
-	    fp.write(string.ljust('', 32))
-
-        fp.write(string.ljust(r['hname'], 42))
-
-	if synonym.has_key(key):
-	    fp.write(string.ljust(string.join(synonym[key],','), 32))
+		 string.ljust(mgiID[key], 32))
 
         fp.write(CRT)
 
@@ -231,13 +185,11 @@ def report2(fp, includeRiken):
     fp.write(string.ljust('MGI Status', 12))
     fp.write(string.ljust('MGI Human Symbol', 32))
     fp.write(string.ljust('Human Status', 15))
-    fp.write(string.ljust('MGI Synonym', 42))
     fp.write(CRT)
     fp.write(string.ljust('-' * 30, 32))
     fp.write(string.ljust('-' * 10, 12))
     fp.write(string.ljust('-' * 30, 32))
     fp.write(string.ljust('-' * 12, 15))
-    fp.write(string.ljust('-' * 40, 42))
     fp.write(CRT)
 
 
@@ -250,9 +202,6 @@ def report2(fp, includeRiken):
 		 string.ljust(r['mstatus'], 12) + \
 		 string.ljust(r['hsymbol'], 32) + \
 		 string.ljust(r['hstatus'], 15))
-
-	if synonym.has_key(key):
-	    fp.write(string.ljust(string.join(synonym[key],','), 32))
 
         fp.write(CRT)
 
