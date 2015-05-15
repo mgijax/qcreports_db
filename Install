@@ -65,6 +65,10 @@ if ( ! -d ${QCMTBARCHIVE} ) then
 	mkdir -p ${QCMTBARCHIVE}
 endif
 
+if ( ! -d ${QCMLDARCHIVE} ) then
+        mkdir -p ${QCMLDARCHIVE}
+endif
+
 #
 # Link the GO stats report into the weekly directory so it runs weekly too.
 #

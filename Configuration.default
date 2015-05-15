@@ -39,6 +39,9 @@ setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 # GXD-specific reports directory
 setenv QCGXDARCHIVE		${QCARCHIVEDIR}/gxd
 
+# MLD-specific reports directory
+setenv QCMLDARCHIVE  
+
 # daily reports directory
 setenv QCMGD			${QCRPTS}/mgd
 
