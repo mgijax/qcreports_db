@@ -2,7 +2,7 @@
 set nocount on
 go
 
-select m._Marker_key, m.symbol, substring(m.name,1,100) as name
+select m._Marker_key, m._Organism_key, m.symbol, substring(m.name,1,100) as name
 into #markers1
 from MRK_Marker m
 where m._Organism_key = 1
@@ -31,21 +31,29 @@ go
 
 select distinct m.accID, m.symbol, m.name
 into #markersA
-from #markers2 m, MRK_Homology_Cache hm1, MRK_Homology_Cache hm2
-where m._Marker_key = hm1._Marker_key
-and hm1._Class_key = hm2._Class_key
-and hm2._Organism_key = 40
+from #markers2 m, MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker m2
+where mc._ClusterSource_key = 9272151
+and mc._Cluster_key = hm1._Cluster_key
+and m._Marker_key = hm1._Marker_key
+and hm1._Cluster_key = hm2._Cluster_key
+and hm2._Marker_key = m2._Marker_key
+and m2._Organism_key = 40
 go
 
 select distinct m.accID, m.symbol, m.name
 into #markersB
-from #markers2 m, MRK_Homology_Cache hm1, MRK_Homology_Cache hm2
-where m._Marker_key = hm1._Marker_key
-and hm1._Class_key = hm2._Class_key
-and hm2._Organism_key = 2
-and not exists (select 1 from MRK_Homology_Cache hm3
-where hm1._Class_key = hm3._Class_key
-and hm3._Organism_key not in (1,2))
+from #markers2 m, MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker m2
+where mc._ClusterSource_key = 9272151
+and mc._Cluster_key = hm1._Cluster_key
+and m._Marker_key = hm1._Marker_key
+and hm1._Cluster_key = hm2._Cluster_key
+and hm2._Marker_key = m2._Marker_key
+and m2._Organism_key = 2
+and not exists (select 1 from MRK_ClusterMember hm3, MRK_Marker m3
+where hm1._Cluster_key = hm3._Cluster_key
+and hm3._Marker_key = m3._Marker_key
+and m._Organism_key = 2
+and m3._Organism_key not in (1,2))
 go
 
 print ''

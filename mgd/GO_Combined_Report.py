@@ -145,16 +145,17 @@ db.sql('create index mrkOmimHumanIndex on #mrkOmimHumanAnnot (_Marker_key)', Non
 # Set up the marker has orthologs table
 
 db.sql('''
-	select mm._Marker_key,
-	count(hm._Marker_key) as hasOrtholog
+	select mm._Marker_key, count(hm._Marker_key) as hasOrtholog
 	into #tmp_homology
-	from MRK_Homology_Cache mh, MRK_Homology_Cache hh,
-	#validMarkers mm, MRK_Marker hm
-	where mh._Class_key = hh._Class_key
-	and hm._Marker_key = hh._Marker_key
+	from MRK_Cluster mc, MRK_ClusterMember mh, MRK_ClusterMember hh,
+		#validMarkers mm, MRK_Marker hm
+	where mc._ClusterSource_key = 9272151
+	and mc._Cluster_key = mh._Cluster_key
+	and mh._Cluster_key = hh._Cluster_key
 	and mh._Marker_key = mm._Marker_key
-	and mh._Organism_key = 1
-	and hh._Organism_key in (2, 40)
+	and hh._Marker_key = hm._Marker_key
+	and mm._Organism_key = 1
+	and hm._Organism_key in (2, 40)
 	group by (mm._Marker_key)
 	''', None)
 

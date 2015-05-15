@@ -1,3 +1,4 @@
+TAG: qcreports_db-5-2-1-25
 TAG: qcreports_db-5-2-1-24
 DATE: 05/15/2015
 STAFF: lec
@@ -5,6 +6,9 @@ CHANGES:
 1) TR11652/convert from HMD to MRK_Cluster
 mgd/HMD_SymbolDiffs.py
 mgd/MRK_InterimByDate.sql
+mgd/GO_Combined_Report.py
+mgd/MRK_NoGO.py
+mgd/MRK_RatNoGO.sql
 
 TAG: qcreports_db-5-2-1-23
 DATE: 05/12/2015

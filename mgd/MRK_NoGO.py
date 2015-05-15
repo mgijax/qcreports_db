@@ -151,16 +151,22 @@ def runQueries():
     # orthologies
 
     db.sql('update #markers set hasOrthology = "yes" ' + \
-	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
-	'where #markers._Marker_key = hm1._Marker_key ' + \
-	'and hm1._Class_key = hm2._Class_key ' + \
-	'and hm2._Organism_key = 2) ', None)
+	'where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh ' + \
+	'where mc._ClusterSource_key = 9272151 ' + \
+        'and mc._Cluster_key = hm1._Cluster_key ' + \
+	'and hm1._Marker_key = #markers._Marker_key ' + \
+	'and hm1._Cluster_key = hm2._Cluster_key ' + \
+	'and hm2._Marker_key = mh._Marker_key ' + \
+	'and mh._Organism_key = 2) ', None)
 
     db.sql('update #markers set hasOrthology = "yes" ' + \
-	'where exists (select 1 from MRK_Homology_Cache hm1, MRK_Homology_Cache hm2 ' + \
-	'where #markers._Marker_key = hm1._Marker_key ' + \
-	'and hm1._Class_key = hm2._Class_key ' + \
-	'and hm2._Organism_key = 40) ', None)
+	'where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh ' + \
+	'where mc._ClusterSource_key = 9272151 ' + \
+        'and mc._Cluster_key = hm1._Cluster_key ' + \
+	'and hm1._Marker_key = #markers._Marker_key ' + \
+	'and hm1._Cluster_key = hm2._Cluster_key ' + \
+	'and hm2._Marker_key = mh._Marker_key ' + \
+	'and mh._Organism_key = 40) ', None)
 
     # references
 
