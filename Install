@@ -53,10 +53,6 @@ if ( ! -d ${QCALLELEARCHIVE} ) then
 	mkdir -p ${QCALLELEARCHIVE}
 endif
 
-if ( ! -d ${QCNOMENARCHIVE} ) then
-	mkdir -p ${QCNOMENARCHIVE}
-endif
-
 if ( ! -d ${QCGOARCHIVE} ) then
 	mkdir -p ${QCGOARCHIVE}
 endif

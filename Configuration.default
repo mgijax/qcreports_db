@@ -33,9 +33,6 @@ setenv QCSTRAINARCHIVE		${QCARCHIVEDIR}/strain
 # mtb-specific reports directory
 setenv QCMTBARCHIVE		${QCARCHIVEDIR}/mtb
 
-# nomen-specific reports directory
-setenv QCNOMENARCHIVE		${QCARCHIVEDIR}/nomen
-
 # GO-specific reports directory
 setenv QCGOARCHIVE		${QCARCHIVEDIR}/go
 
