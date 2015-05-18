@@ -112,7 +112,11 @@ for r in results:
 	authors2 = 'Null'
     fp.write(authors2 + TAB)
 
-    fp.write(r['_primary'] + TAB)
+    _primary = r['_primary']
+    if _primary == None:
+	_primary = 'Null'
+    fp.write(_primary + TAB)
+
     fp.write(r['citation'] + TAB)
     fp.write(r['short_citation'] + TAB)
 
