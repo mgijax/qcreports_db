@@ -1,3 +1,10 @@
+TAG: qcreports_db-5-2-2-1
+DATE: 05/21/2015
+STAFF: lec
+CHANGES:
+1) qcr.html/Mapping tab is obsolete
+2) weekly/MLD_Triage.sql
+
 TAG: qcreports_db-5-2-1-27
 DATE: 05/18/2015
 STAFF: dbm
