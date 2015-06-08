@@ -5,14 +5,54 @@ select s._Strain_key
 into #strains1
 from PRB_Strain s
 where exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)
-or exists (select 1 from ALL_CellLine a where s._Strain_key = a._Strain_key)
-or exists (select 1 from GXD_Genotype a where s._Strain_key = a._Strain_key)
-or exists (select 1 from MLD_Fish a where s._Strain_key = a._Strain_key)
-or exists (select 1 from PRB_Source a where s._Strain_key = a._Strain_key)
-or exists (select 1 from CRS_Cross a where s._Strain_key = a._femaleStrain_key)
-or exists (select 1 from CRS_Cross a where s._Strain_key = a._maleStrain_key)
-or exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
-or exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from ALL_CellLine a where s._Strain_key = a._Strain_key)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from GXD_Genotype a where s._Strain_key = a._Strain_key)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from MLD_Fish a where s._Strain_key = a._Strain_key)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from PRB_Source a where s._Strain_key = a._Strain_key)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from CRS_Cross a where s._Strain_key = a._femaleStrain_key)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from CRS_Cross a where s._Strain_key = a._maleStrain_key)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
+go
+
+insert into #strains1
+select s._Strain_key
+from PRB_Strain s
+where exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 go
 
 create index idx1 on #strains1(_Strain_key)
