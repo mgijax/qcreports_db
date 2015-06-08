@@ -8,7 +8,7 @@
 #       
 # Generate a report that notes  all instances of the ECO code 
 # mapping to more than one "base" code (IDA, IMP, IPI, IGI, IC, any of the codes currently used)
-# This report will run monthly
+# This report will run weekly
 #
 #
 #
