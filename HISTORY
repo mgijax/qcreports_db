@@ -1,8 +1,11 @@
+TAG: qcreports_db-5-2-2-5
 TAG: qcreports_db-5-2-2-4
 DATE: 06/08/2015
 STAFF: lnh
 CHANGES:
 1) Added a new QC report weekly/GO_eco_multipleEvidence.py - TR12045
+2) weekly/GO_eco_multipleEvidence.py: Changed python path in the shebang 
+           from /usr/bin/env python to /usr/local/bin/python
 
 TAG: qcreports_db-5-2-2-3
 TAG: qcreports_db-5-2-2-2
