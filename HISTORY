@@ -1,3 +1,9 @@
+TAG: qcreports_db-5-2-2-7
+DATE: 07/06/2015
+STAFF: lec
+CHANGES: TR11740
+1) mgd/GXD_EMAPS_MappingNameChecks.py
+
 TAG: qcreports_db-5-2-2-6
 DATE: 6/30/15
 STAFF: pf
