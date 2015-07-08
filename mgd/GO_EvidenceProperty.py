@@ -37,9 +37,8 @@ from datetime import datetime
 #
 #Set up email contact
 #
-sender = "mgiadmin@lindon.informatics.jax.org"
-receiver = "Mgi-go@jax.org"
-#receiver = "lnh@jax.org"
+sender = os.environ['GEN_WEBSHARE_EMAIL']
+receiver = "mgi-go@jax.org"
 
 try:
     if os.environ['DB_TYPE'] == 'postgres':
