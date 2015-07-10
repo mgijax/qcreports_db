@@ -128,7 +128,8 @@ def printMissEvCodeResults(cmd,evidenceMap):
 #     When he changes his mind, we will set outputdir=os.environ['QCOUTPUTDIR']
 #
 
-fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir = '/mgi/all/wts_projects/11300/11332/', printHeading = None)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+
 i = datetime.now()
 fp.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
 
