@@ -138,9 +138,9 @@ def printResults(eco_main_map):
 # Main
 #
 #
-#fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir=os.environ['REPORTOUTPUTDIR'], printHeading = None)
-fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir = '/mgi/all/wts_projects/12000/12045/', printHeading = None)
-log = reportlib.init(sys.argv[0], fileExt = '.log', outputdir = '/mgi/all/wts_projects/12000/12045/', printHeading = None)
+fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+log = reportlib.init(sys.argv[0], fileExt = '.log', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+#fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir = '/mgi/all/wts_projects/12000/12045/', printHeading = None)
 
 i = datetime.now()
 log.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
