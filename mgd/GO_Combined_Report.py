@@ -196,7 +196,7 @@ db.sql('create index goRefIndex on #refGOUnused (_Marker_key)', None)
 
 db.sql('''
 	select m._Marker_key,
-	case when gt.completion_date != null then 'Yes' else 'No' end as isComplete,
+	case when gt.completion_date is not null then 'Yes' else 'No' end as isComplete,
 	case when ma.hasAlleles > 0 then 'Yes' else 'No' end as hasAlleles,
 	case when moa.hasOmim > 0 then 'Yes' else 'No' end as hasOmim,
 	case when moha.hasOmimHuman > 0 then 'Yes' else 'No' end as hasHumanOmim,
