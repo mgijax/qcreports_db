@@ -39,6 +39,16 @@ import os
 import string
 import reportlib
 
+setComments = '''
+and lower(gi.comments) not like '%ot blot%'
+and lower(gi.comments) not like '%fraction%'
+and lower(gi.comments) not like '%reverse%'
+and lower(gi.comments) not like '%immunoprecip%'
+and lower(gi.comments) not like '%rocket%'
+and lower(gi.comments) not like '%binding%'
+and lower(gi.comments) not like '%quantitative RT%'
+'''
+
 try:
     if os.environ['DB_TYPE'] == 'postgres':
         import pg_db
@@ -46,29 +56,21 @@ try:
         #db.setTrace()
         db.setAutoTranslateBE()
 
-	setComments = '''
-		and lower(gi.comments) not like '%ot blot%'
-		and lower(gi.comments) not like '%fraction%'
-		and lower(gi.comments) not like '%reverse%'
-		and lower(gi.comments) not like '%immunoprecip%'
-		and lower(gi.comments) not like '%rocket%'
-		and lower(gi.comments) not like '%binding%'
-		and lower(gi.comments) not like '%quantitative RT%'
-		'''
     else:
         import db
+
+	setComments = '''
+	and gi.comments not like '%ot blot%'
+	and gi.comments not like '%fraction%'
+	and gi.comments not like '%reverse%'
+	and gi.comments not like '%immunoprecip%'
+	and gi.comments not like '%rocket%'
+	and gi.comments not like '%binding%'
+	and gi.comments not like '%quantitative RT%'
+	'''
+
 except:
     import db
-
-    setComments = '''
-		and gi.comments not like '%ot blot%'
-		and gi.comments not like '%fraction%'
-		and gi.comments not like '%reverse%'
-		and gi.comments not like '%immunoprecip%'
-		and gi.comments not like '%rocket%'
-		and gi.comments not like '%binding%'
-		and gi.comments not like '%quantitative RT%'
-		'''
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
