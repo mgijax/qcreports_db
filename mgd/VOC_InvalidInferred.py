@@ -88,7 +88,7 @@ db.sql('''
 	from VOC_Annot a, VOC_Evidence e, VOC_Term t 
 	where a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
-	and e.inferredFrom != null 
+	and e.inferredFrom is not null 
 	and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
 	and e._EvidenceTerm_key = t._Term_key
 	''', None)
