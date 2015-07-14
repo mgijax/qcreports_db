@@ -132,7 +132,8 @@ for r in results:
 results =  db.sql('''select s._Structure_key, s._Parent_key,
     s.edinburghKey, s._Stage_key, s.printName, t.term as systemTerm
     from GXD_Structure s, VOC_Term t
-    where s._System_key = t._Term_key''', 'auto')
+    where s._System_key = t._Term_key
+    order by s._Structure_key''', 'auto')
 
 for r in results:
 
