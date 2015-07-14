@@ -39,17 +39,6 @@ import os
 import string
 import reportlib
 
-# clean this up as part of post-PG cleanup
-setComments = '''
-and lower(gi.comments) not like '%ot blot%'
-and lower(gi.comments) not like '%fraction%'
-and lower(gi.comments) not like '%reverse%'
-and lower(gi.comments) not like '%immunoprecip%'
-and lower(gi.comments) not like '%rocket%'
-and lower(gi.comments) not like '%binding%'
-and lower(gi.comments) not like '%quantitative RT%'
-'''
-
 try:
     if os.environ['DB_TYPE'] == 'postgres':
         import pg_db
@@ -59,16 +48,6 @@ try:
 
     else:
         import db
-
-	setComments = '''
-	and gi.comments not like '%ot blot%'
-	and gi.comments not like '%fraction%'
-	and gi.comments not like '%reverse%'
-	and gi.comments not like '%immunoprecip%'
-	and gi.comments not like '%rocket%'
-	and gi.comments not like '%binding%'
-	and gi.comments not like '%quantitative RT%'
-	'''
 
 except:
     import db
@@ -105,7 +84,13 @@ where gi._Index_key = gis._Index_key
 and gi._Refs_key = bcc._Refs_key
 and gis._IndexAssay_key = vt._Term_key
 and gi._Marker_key = m._Marker_key
-%s
+and lower(gi.comments) not like '%ot blot%'
+and lower(gi.comments) not like '%fraction%'
+and lower(gi.comments) not like '%reverse%'
+and lower(gi.comments) not like '%immunoprecip%'
+and lower(gi.comments) not like '%rocket%'
+and lower(gi.comments) not like '%binding%'
+and lower(gi.comments) not like '%quantitative RT%'
 union
 select gi.*, bcc.jnumID, vt.term, gis._IndexAssay_key, gis._StageID_key, m.symbol
 from GXD_Index gi, GXD_Index_Stages gis, BIB_Citation_Cache bcc, VOC_Term vt, MRK_Marker m
@@ -114,7 +99,7 @@ and gi._Refs_key = bcc._Refs_key
 and gis._IndexAssay_key = vt._Term_key
 and gi._Marker_key = m._Marker_key
 and gi.comments is null
-'''% (setComments), None)
+''', None)
 
 db.sql('create index idx1 on #validIndexItems(_Index_key)', None)
 db.sql('create index idx2 on #validIndexItems(_IndexAssay_key)', None)
