@@ -39,6 +39,7 @@ import os
 import string
 import reportlib
 
+# clean this up as part of post-PG cleanup
 setComments = '''
 and lower(gi.comments) not like '%ot blot%'
 and lower(gi.comments) not like '%fraction%'
