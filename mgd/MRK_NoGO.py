@@ -123,20 +123,20 @@ def runQueries():
     # exclude markers that contain feature 'heritable phenotypic marker' (6238170)
 
     db.sql('''
-	   select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart, 'no ' as hasOrthology
+	   select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart, 'no ' as hasOrthology
 	   into #markers 
 	   from MRK_Marker m, ACC_Accession a 
 	   where m._Marker_Type_key = 1 
 	   and m._Marker_Status_key in (1,3) 
-	   and m.name not like "gene model %" 
-	   and m.name not like "gene trap %" 
-	   and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]" 
-	   and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]" 
-	   and m.symbol not like "ORF%" 
+	   and m.name !~ 'gene model %' 
+	   and m.name !~ 'gene trap %' 
+	   and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
+	   and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
+	   and m.symbol !~ 'ORF%' 
 	   and m._Marker_key = a._Object_key 
 	   and a._MGIType_key = 2 
 	   and a._LogicalDB_key = 1 
-	   and a.prefixPart = "MGI:" 
+	   and a.prefixPart = 'MGI:' 
 	   and a.preferred = 1 
 	   and not exists (select 1 from  VOC_Annot a 
 	   where m._Marker_key = a._Object_key 
@@ -150,32 +150,35 @@ def runQueries():
 
     # orthologies
 
-    db.sql('update #markers set hasOrthology = "yes" ' + \
-	'where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh ' + \
-	'where mc._ClusterSource_key = 9272151 ' + \
-        'and mc._Cluster_key = hm1._Cluster_key ' + \
-	'and hm1._Marker_key = #markers._Marker_key ' + \
-	'and hm1._Cluster_key = hm2._Cluster_key ' + \
-	'and hm2._Marker_key = mh._Marker_key ' + \
-	'and mh._Organism_key = 2) ', None)
+    db.sql('''update #markers set hasOrthology = 'yes'
+	where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
+	where mc._ClusterSource_key = 9272151 
+        and mc._Cluster_key = hm1._Cluster_key 
+	and hm1._Marker_key = #markers._Marker_key 
+	and hm1._Cluster_key = hm2._Cluster_key 
+	and hm2._Marker_key = mh._Marker_key 
+	and mh._Organism_key = 2) 
+	''', None)
 
-    db.sql('update #markers set hasOrthology = "yes" ' + \
-	'where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh ' + \
-	'where mc._ClusterSource_key = 9272151 ' + \
-        'and mc._Cluster_key = hm1._Cluster_key ' + \
-	'and hm1._Marker_key = #markers._Marker_key ' + \
-	'and hm1._Cluster_key = hm2._Cluster_key ' + \
-	'and hm2._Marker_key = mh._Marker_key ' + \
-	'and mh._Organism_key = 40) ', None)
+    db.sql('''update #markers set hasOrthology = 'yes' 
+	where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
+	where mc._ClusterSource_key = 9272151 
+        and mc._Cluster_key = hm1._Cluster_key 
+	and hm1._Marker_key = #markers._Marker_key 
+	and hm1._Cluster_key = hm2._Cluster_key 
+	and hm2._Marker_key = mh._Marker_key 
+	and mh._Organism_key = 40) 
+	''', None)
 
     # references
 
-    db.sql('select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, ' + \
-	'r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal ' + \
-	'into #references1 ' + \
-	'from #markers m , MRK_Reference r, BIB_Refs b ' + \
-	'where m._Marker_key = r._Marker_key ' + \
-	'and r._Refs_key = b._Refs_key', None)
+    db.sql('''select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, 
+	r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal 
+	into #references1 
+	from #markers m , MRK_Reference r, BIB_Refs b 
+	where m._Marker_key = r._Marker_key 
+	and r._Refs_key = b._Refs_key
+	''', None)
     db.sql('create index references_idx1 on #references1(_Refs_key)', None)
     db.sql('create index references_idx2 on #references1(_Marker_key)', None)
     db.sql('create index references_idx3 on #references1(symbol)', None)
@@ -192,12 +195,13 @@ def runQueries():
 
     # has reference been chosen for GXD
 
-    results = db.sql('select distinct r._Refs_key ' + \
-	'from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where r._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Expression" ' + \
-	'and ba.isNeverUsed = 0', 'auto')
+    results = db.sql('''select distinct r._Refs_key 
+	from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	where r._Refs_key = ba._Refs_key 
+	and ba._DataSet_key = bd._DataSet_key 
+	and bd.dataSet = 'Expression" 
+	and ba.isNeverUsed = 0
+	''', 'auto')
     for r in results:
 	gxd.append(r['_Refs_key'])
 

@@ -121,11 +121,11 @@ select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLa
 from GXD_Specimen s, GXD_Assay_View a
 where
 (
-s.age like 'postnatal [0-9]%'
+s.age ~ 'postnatal [0-9]'
 or
-s.age like 'postnatal adult [0-9]%'
+s.age ~ 'postnatal adult [0-9]'
 or
-s.age like 'postnatal newborn [0-9]%'
+s.age ~ 'postnatal newborn [0-9]'
 )
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
@@ -139,11 +139,11 @@ select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from GXD_GelLane s, GXD_Assay_View a
 where
 (
-s.age like 'postnatal [0-9]%'
+s.age ~ 'postnatal [0-9]'
 or
-s.age like 'postnatal adult [0-9]%'
+s.age ~ 'postnatal adult [0-9]'
 or
-s.age like 'postnatal newborn [0-9]%'
+s.age ~ 'postnatal newborn [0-9]'
 )
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)

@@ -164,14 +164,14 @@ db.sql('''select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart
 	from MRK_Marker m, ACC_Accession a
 	where m._Marker_Type_key = 1
 	and m._Marker_Status_key in (1,3)
-	and m.name not like "gene model %"
-	and m.symbol not like "[A-Z][0-9][0-9][0-9][0-9][0-9]"
-	and m.symbol not like "[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]"
-	and m.symbol not like "ORF%"
+	and m.name !~ 'gene model %'
+	and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]'
+	and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]'
+	and m.symbol not like 'ORF%'
 	and m._Marker_key = a._Object_key
 	and a._MGIType_key = 2
 	and a._LogicalDB_key = 1
-	and a.prefixPart = "MGI:"
+	and a.prefixPart = 'MGI:'
 	and a.preferred = 1
 	and exists (select 1 from  VOC_Annot a, VOC_Evidence e
 	where m._Marker_key = a._Object_key

@@ -1,3 +1,14 @@
+TAG: qcreports_db-6-0-0-?
+DATE: 
+STAFF: lec
+CHANGES: 
+PG-only changes:
+GO_Combined_Report.py
+GXD_SpecNoAge.sql
+MRK_GOIEA.py
+MRK_GORCA.py
+MRK_NoGO.py
+
 TAG: qcreports_db-5-2-2-11
 DATE: 7/14/15
 STAFF: pf
