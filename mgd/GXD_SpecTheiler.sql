@@ -85,12 +85,12 @@ select distinct sn._Structure_key
 into #femaleChild
 from #repChild c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female'
+and sn.structure = 'female reproductive system'
 union
 select distinct sc._Descendent_key
 from #repChild c, GXD_StructureName sn, GXD_StructureClosure sc
 where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female'
+and sn.structure = 'female reproductive system'
 and sn._Structure_key = sc._Structure_key
 go
 
@@ -99,12 +99,12 @@ select distinct sn._Structure_key
 into #maleChild
 from #repChild c, GXD_StructureName sn
 where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male'
+and sn.structure = 'male reproductive system'
 union
 select distinct sc._Descendent_key
 from #repChild c, GXD_StructureName sn, GXD_StructureClosure sc
 where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male'
+and sn.structure = 'male reproductive system'
 and sn._Structure_key = sc._Structure_key
 go
 
