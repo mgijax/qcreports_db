@@ -349,7 +349,7 @@ results = db.sql('''select a.accID, s.strain
 	where d._Strain_key = s._Strain_key
 	and d._Genotype_key = a._Object_key
 	and a._MGIType_key = 12
-	and a.prefixPart = "MGI:"
+	and a.prefixPart = 'MGI:'
 	and a.preferred = 1
 	''', 'auto')
 

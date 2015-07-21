@@ -60,9 +60,9 @@ def runQueries(includeRiken):
     global mgID, hstatus
 
     if includeRiken:
-	riken = 'and m1.symbol like "%Rik"'
+	riken = 'and m1.symbol like \'%Rik\''
     else:
-	riken = 'and m1.symbol not like "%Rik"'
+	riken = 'and m1.symbol not like \'%Rik\''
 
     #
     # select mouse/humanql('drop table #refs', None)

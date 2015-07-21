@@ -105,17 +105,17 @@ results = db.sql('''
     where f._Image_key = i._Object_key and
           i._MGIType_key = 9 and
           i._LogicalDB_key = 1 and
-          i.prefixPart = "MGI:" and
+          i.prefixPart = 'MGI:' and
           i.preferred = 1 and
           f._Assay_key = a._Object_key and
           a._MGIType_key = 8 and
           a._LogicalDB_key = 1 and
-          a.prefixPart = "MGI:" and
+          a.prefixPart = 'MGI:' and
           a.preferred = 1 and
           f._Refs_key = r._Object_key and
           r._MGIType_key = 1 and
           r._LogicalDB_key = 1 and
-          r.prefixPart = "J:" and
+          r.prefixPart = 'J:' and
           r.preferred = 1
     order by imageID desc
     ''', 'auto')

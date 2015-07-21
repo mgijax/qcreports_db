@@ -63,7 +63,7 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-excluded = '"J:80501","J:80502","J:91257","J:93300","J:101679","J:122989"'
+excluded = "'J:80501','J:80502','J:91257','J:93300','J:101679','J:122989'"
 
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 

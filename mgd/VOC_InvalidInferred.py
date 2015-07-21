@@ -71,7 +71,7 @@ findID = 'select _Object_key from ACC_Accession where accID = "%s"'
 # this is the list of valid accession ids
 
 mgiLookup = []
-results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = "MGI:"', 'auto')
+results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = \'MGI:\'', 'auto')
 for r in results:
     mgiLookup.append(r['accID'])
 results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart in ("GO:")', 'auto')

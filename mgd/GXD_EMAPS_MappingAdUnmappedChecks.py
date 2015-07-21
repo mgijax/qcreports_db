@@ -74,7 +74,7 @@ results = db.sql('''
 	where
 		gs._Structure_key = acc._Object_key and
 		acc._MGIType_key = 38 and
-		acc.prefixPart = "MGI:" and
+		acc.prefixPart = 'MGI:' and
 		mem.accId is NULL and
 		ge._Structure_key is not NULL
 	group by
@@ -93,7 +93,7 @@ union
 	where
 		gs._Structure_key = acc._Object_key and
 		acc._MGIType_key = 38 and
-		acc.prefixPart = "MGI:" and
+		acc.prefixPart = 'MGI:' and
 		mem.accId is NULL and
 		ge._Structure_key is NULL
 	group by
@@ -116,7 +116,7 @@ where
 	gs._Structure_key = acc._Object_key and
 	gs._Stage_key = gts._Stage_key and
 	acc._MGIType_key = 38 and
-	acc.prefixPart = "MGI:"
+	acc.prefixPart = 'MGI:'
 order by
 	olin.SCount desc, gs.printname
        ''', 'auto')

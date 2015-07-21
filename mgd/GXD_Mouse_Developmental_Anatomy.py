@@ -103,7 +103,7 @@ results = db.sql('''select accid, _Object_key as _Structure_key
     from ACC_Accession
     where _MGIType_key = 38
     and _LogicalDB_key = 1
-    and prefixPart = "MGI:"
+    and prefixPart = 'MGI:'
     and preferred = 1''', 'auto')
 
 for r in results:
