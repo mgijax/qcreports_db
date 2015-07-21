@@ -90,7 +90,7 @@ set nocount off
 go
 
 print ''
-print 'TS 27 and TS 28 InSitu Specimens annotated to embryonic structures'
+print 'Postnatal Age InSitu Specimens annotated to embryonic structures'
 print ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
@@ -101,7 +101,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 print ''
-print 'TS 27 and TS 28 Gel Lanes annotated to embryonic structures'
+print 'Postnatal Age Gel Lanes annotated to embryonic structures'
 print ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
