@@ -34,7 +34,7 @@ try:
     if os.environ['DB_TYPE'] == 'postgres':
         import pg_db
         db = pg_db
-        db.setTrace()
+        #db.setTrace()
         db.setAutoTranslateBE()
     else:
         import db

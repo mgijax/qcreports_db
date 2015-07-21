@@ -14,11 +14,6 @@ setenv LOG ${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
-if ( ${DB_TYPE} == "postgres" ) then
-    setenv MGD_DBSERVER ${PG_DBSERVER}
-    setenv MGD_DBNAME ${PG_DBNAME}
-endif
-
 echo `date`: Start nightly QC reports | tee -a ${LOG}
 
 cd ${QCMGD}

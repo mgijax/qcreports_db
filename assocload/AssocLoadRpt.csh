@@ -47,8 +47,6 @@
 
 cd `dirname $0` && source ../Configuration
 
-echo "DB_TYPE = $DB_TYPE"
-
 #
 #  Verify the argument(s) to the shell script.
 #

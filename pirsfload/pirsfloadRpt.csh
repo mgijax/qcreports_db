@@ -54,28 +54,8 @@ else
     setenv JOBKEY $2
 endif
 
-#
-#  Handle DB Flipping
-#
-if ( ${DB_TYPE} == "postgres" ) then
-	setenv MGD_DBSERVER ${PG_DBSERVER}
-	setenv MGD_DBNAME ${PG_DBNAME}
-endif
-
-
-#
-# DB-Specific files - remove sybase logic/file when removing flipibility
-#
-if ( ${DB_TYPE} == "postgres" ) then
-  DuplicateTermNames.py ${OUTPUTDIR} ${JOBKEY}
-else
-  DuplicateTermNamesSybase.py ${OUTPUTDIR} ${JOBKEY}
-endif
-
+DuplicateTermNames.py ${OUTPUTDIR} ${JOBKEY}
 OtherMarkerTypes.py ${OUTPUTDIR} ${JOBKEY}
-
-
-
 
 foreach RPT (*.sql)
    ${MGI_DBUTILS}/bin/reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
