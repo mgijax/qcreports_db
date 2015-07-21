@@ -34,13 +34,13 @@ go
 
 insert into #excluded
 select _Index_key from GXD_Index
-where comments like '%ot blot%'
-or comments like '%fraction%'
-or comments like '%reverse%'
-or comments like '%immunoprecip%'
-or comments like '%binding%'
-or comments like '%rocket%'
-or comments like '%quantitative RT%'
+where lower(comments) like '%ot blot%'
+or lower(comments) like '%fraction%'
+or lower(comments) like '%reverse%'
+or lower(comments) like '%immunoprecip%'
+or lower(comments) like '%binding%'
+or lower(comments) like '%rocket%'
+or lower(comments) like '%quantitative RT%'
 go
 
 create index excluded_idx on #excluded(_Index_key)
