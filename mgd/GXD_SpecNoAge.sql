@@ -73,8 +73,7 @@ and s._Specimen_key = i._Specimen_key
 and i._Result_key = r._Result_key
 and r._Structure_key = c._Structure_key
 and c._Stage_key = t._Stage_key
-and t.stage != 28 
-and t.stage != 27 
+and t.stage not in (27, 28)
 go
 
 select distinct i._GelLane_key
@@ -84,8 +83,7 @@ where i.age like 'postnatal%'
 and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
-and t.stage != 28 
-and t.stage != 27 
+and t.stage not in (27, 28)
 go
 
 set nocount off
