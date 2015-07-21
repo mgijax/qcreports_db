@@ -76,7 +76,7 @@ select distinct i.jnumID, i.mgiID
 from IMG_Image_View i, MGI_Note_Image_View n
 where i._MGIType_key = 8
 and n._NoteType_key = 1023
-and n.note like 'reprinted with permission from elsevier%'
+and n.note like 'Reprinted with permission from Elsevier%'
 and n.note not like '%' || i.jnumID || '%'
 and n._Object_key = i._Image_key
 order by i.jnumID
@@ -95,7 +95,7 @@ into #a
 from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._MGIType_key = 8
 and n._NoteType_key = 1023
-and n.note like 'this image is from%'
+and n.note like 'This image is from%'
 and i._Refs_key = r._Refs_key
 and n._Object_key = i._Image_key
 go
