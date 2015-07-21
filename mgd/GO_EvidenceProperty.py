@@ -40,6 +40,12 @@ from datetime import datetime
 sender = os.environ['GEN_WEBSHARE_EMAIL']
 receiver = "mgi-go@jax.org"
 
+#
+#Set report url
+#
+
+report_url="http://prodwww.informatics.jax.org/data/reports/qcreports_db/output/GO_EvidenceProperty.rpt"
+
 try:
     if os.environ['DB_TYPE'] == 'postgres':
         import pg_db
@@ -64,14 +70,12 @@ def printNoExtResults(cmd):
     fp.write('Gene Symbol' + TAB)
     fp.write('GO-ID' + TAB)
     fp.write('User' + 2*CRT)
-    missCount=0
     for r in results:
         fp.write(r['accID'] + TAB)
         fp.write(r['symbol'] + TAB)
         fp.write(r['goaccID'] + TAB)
         fp.write(r['dbuser'] + CRT)
-        missCount+=1
-    return missCount
+    return len(results) 
 
 def printBadExtResults(cmd):
     results = db.sql(cmd, 'auto')
@@ -81,19 +85,17 @@ def printBadExtResults(cmd):
     fp.write('GO-ID' + TAB)
     fp.write('EvidencePropertyValue' + TAB)
     fp.write('User' + 2*CRT)
-    badCount=0
     for r in results:
         fp.write(r['accID'] + TAB)
         fp.write(r['symbol'] + TAB)
         fp.write(r['goaccID'] + TAB)
         fp.write(r['pValue'] + TAB)
         fp.write(r['dbuser'] + CRT)
-        badCount+=1
-    return badCount
+    return len(results)
 
 def printMissEvCodeResults(cmd,evidenceMap):
     results = db.sql(cmd, 'auto')
-    fp.write('\nCases with missing evidence code in external ref value: \n\n' + TAB)
+    fp.write('\nCases with missing evidence code in external ref value: \n\n')
     fp.write('MGI-ID' + TAB)
     fp.write('Gene Symbol' + TAB)
     fp.write('GO-ID' + TAB)
@@ -201,13 +203,16 @@ db.sql('''
 cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser from #gomarkersIDs "
 cmd +=" where _annotevidence_key not in (select _annotevidence_key from #evidenceproperty)"
 
+missCount=0
 missCount=printNoExtResults(cmd)
 
 cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser,value as pValue "
 cmd+="from #gomarkersIDs g, #evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
 cmd +=" and value not like 'PMID:%'"
 
-badCount=printBadExtResults(cmd)
+badCount=0
+
+badExtResCount=printBadExtResults(cmd)
 
 #
 # get the list of current go evidence code
@@ -223,21 +228,24 @@ for r in results:
 cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser,value as pValue "
 cmd+="from #gomarkersIDs g, #evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
 cmd +=" and value like 'PMID:%'"
-badCount += printMissEvCodeResults(cmd,evidenceMap)
+missEvCodeCount = printMissEvCodeResults(cmd,evidenceMap)
 
+badCount=missEvCodeCount + badExtResCount
 # Create message container - the correct MIME type is multipart/alternative.
 message = """
   You have made one or more annotations using J:73065 and have not filled in the external 
-  reference properties box. Or the external reference properties box was not filled properly(should have a PMID followed by pipe and an evidence code).
- Please correct this information today -(http://prodwww.informatics.jax.org/all/wts_projects/11300/11332/)
-
- Note: This report runs daily
+  reference properties box. Or the external reference properties box 
+  was not filled properly(should have a PMID followed by pipe and an evidence code).
+  Please correct this information today -(
 """
+message+=report_url
+message+=")\nNote: This report runs daily"
+
 cmd="echo \""+message+"\" | mailx -r \""+sender+"\" -s \"J:73065 GO Annotations Alert - External Ref\" \""+receiver+"\""
 mes="Missing External Ref total: %s  Bad format Total: %s" % (missCount,badCount)
 
 print mes
-if missCount>0 or badCount>0:
+if (missCount > 0) or (badCount > 0):
    try:
        os.system(cmd)
        print "Successfully sent email"
