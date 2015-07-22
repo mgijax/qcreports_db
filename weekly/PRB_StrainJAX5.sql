@@ -1,6 +1,6 @@
 
 \echo ''
-\echo 'JR#s with alleles added in past week'
+\echo 'JRs with alleles added in past week'
 \echo ''
 
 select a.accID
@@ -17,5 +17,5 @@ where a._MGIType_key = 10 and
                     (sm.modification_date between
                         dateadd(day, -7, getdate()) and getdate())))
 order by a.accID
-go
+;
 

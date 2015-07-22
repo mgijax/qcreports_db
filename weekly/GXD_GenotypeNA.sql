@@ -10,4 +10,4 @@ and a._Object_key = ge._Genotype_key
 and ge._Refs_key = b._Object_key
 and b._MGIType_key = 1
 and b.prefixPart = 'J:'
-go
+;

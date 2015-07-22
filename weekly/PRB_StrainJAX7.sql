@@ -1,6 +1,6 @@
 
 \echo ''
-\echo 'New MMRRC JR#s created in past week'
+\echo 'New MMRRC JRs created in past week'
 \echo ''
 
 select a.accID
@@ -10,5 +10,5 @@ and a._LogicalDB_key = 38
 and a.creation_date between dateadd(day, -7, getdate()) and getdate()
 and a._Object_key = s._Strain_key
 order by a.accID
-go
+;
 

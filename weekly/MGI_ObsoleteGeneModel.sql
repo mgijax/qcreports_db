@@ -18,5 +18,5 @@ and not exists (select 1 from ACC_Accession aa
                 and aa._MGIType_key = 2
                 and smc.accID = aa.accID)
 order by m.symbol
-go
+;
 

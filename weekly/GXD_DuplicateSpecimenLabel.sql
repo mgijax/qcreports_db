@@ -27,5 +27,5 @@ select distinct substring(bc.jnumid, 1, 12) as jnumID, substring(m.symbol, 1, 25
 	and a._assay_key=gaav._object_key
 	and a._marker_key=m._marker_key
 	order by jnumID,symbol,specimenlabel
-go
+;
 

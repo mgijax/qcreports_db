@@ -7,7 +7,7 @@ select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i
 where i.figureLabel like 'Fig%'
 order by i.jnumID
-go
+;
 
 \echo ''
 \echo 'Images with Copyright containing ''(||)'''
@@ -21,7 +21,7 @@ and n._NoteType_key = 1023
 and n._Note_key = nc._Note_key
 and nc.note like '%(||)%'
 order by i.jnumID
-go
+;
 
 \echo ''
 \echo 'Image Pane Labels containing '','''
@@ -31,10 +31,10 @@ select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i,IMG_ImagePane p
 where p.paneLabel like '%,%' and p._Image_key = i._Image_key
 order by i.jnumID
-go
+;
 
 \echo ''
-\echo 'Elsevier: where the J# in the copyright does not match the J# of the stub'
+\echo 'Elsevier: where the J in the copyright does not match the J of the stub'
 \echo ''
 
 select distinct i.jnumID, i.mgiID
@@ -45,7 +45,7 @@ and lower(n.note) like 'reprinted with permission from elsevier%'
 and n.note not like '%' || i.jnumID || '%'
 and n._Object_key = i._Image_key
 order by i.jnumID
-go
+;
 
 \echo ''
 \echo 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
@@ -64,7 +64,7 @@ and exists (select 1 from ACC_Accession a where r._Refs_key = a._Object_key
 and a._MGIType_key = 1
 and a._LogicalDB_key = 29)
 order by i.jnumID
-go
+;
 
 \echo ''
 \echo 'Images with JPGs whose Thumbnails have no JPGs'
@@ -82,7 +82,7 @@ and c._MGIType_key = 9
 and c._LogicalDB_key = 1
 and c.prefixPart = 'MGI:'
 order by accID
-go
+;
 
 \echo ''
 \echo 'JPGs but no Copyright Statement'
@@ -98,7 +98,7 @@ and not exists
 where i._Image_key = mn._Object_key
 and mn._MGIType_key = 9
 and mn._NoteType_key = 1023)
-go
+;
 
 \echo ''
 \echo 'All phenotype images (either full size or thumbnail) that lack a caption'
@@ -115,5 +115,5 @@ and not exists (select 1 from MGI_Note n
 where a._Image_key = n._Object_key
 and n._NoteType_key = 1024)
 order by accID
-go
+;
 

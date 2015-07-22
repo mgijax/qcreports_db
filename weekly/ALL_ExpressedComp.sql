@@ -20,4 +20,4 @@ from VOC_Annot v
 where v._AnnotType_key = 1014
 and r._Object_key_1 = v._Object_key
 and v._Term_key = 11025597)
-go
+;
