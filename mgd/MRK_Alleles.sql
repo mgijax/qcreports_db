@@ -9,29 +9,29 @@ and m._Organism_key = 1
 and a.symbol != '+'
 and m.symbol not in ('a', 'A')
 and a.symbol not like '%' || m.symbol || '%'
-go
+;
 
 /* duplicate alleles by symbol */
 select symbol
-into #duplicates
+INTO TEMPORARY TABLE duplicates
 from ALL_Allele
 where symbol != '+'
 group by symbol having count(*) > 1
-go
+;
 
-create index dups_idx1 on #duplicates(symbol)
-go
+create index dups_idx1 on duplicates(symbol)
+;
 
 \echo ''
 \echo 'Duplicate Allele Symbols'
 \echo ''
 
 select a.symbol, a.markerSymbol
-from #duplicates d, ALL_Allele_View a
+from duplicates d, ALL_Allele_View a
 where d.symbol = a.symbol
 and a.symbol not in ('a', 'A')
 order by creation_date desc
-go
+;
 
 \echo ''
 \echo 'Approved Transgenes where :'
@@ -48,5 +48,5 @@ and a._Marker_key = m._Marker_key
 and m._Marker_Type_key = 12
 and (a.symbol != m.symbol or a.name != m.name)
 order by m.symbol
-go
+;
 

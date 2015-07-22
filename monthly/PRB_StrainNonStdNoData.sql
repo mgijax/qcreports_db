@@ -1,5 +1,5 @@
 select s._Strain_key, substring(s.strain,1,100) as strain
-into #strains
+INTO TEMPORARY TABLE strains
 from PRB_Strain s
 where s.standard = 0
 and not exists (select 1 from PRB_Strain_Acc_View a
@@ -30,7 +30,7 @@ and not exists (select 1 from MGI_Note n
 where s._Strain_key = n._Object_key
 and n._MGIType_key = 10
 and n._NoteType_key in (1011,1012,1013))
-go
+;
 
 \echo ''
 \echo 'Non-Standard Strains with no external IDs, no data attached and no notes in any notes field'
@@ -38,31 +38,31 @@ go
 
 (
 select s.strain, null as accID, 'Other' as accType
-from #strains s
+from strains s
 where not exists (select 1 from PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key in (37, 38, 39, 40))
 union
 select s.strain, a.accID, 'EMMA' as accType
-from #strains s, PRB_Strain_Acc_View a
+from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 37
 union
 select s.strain, a.accID, 'MMRRC' as accType
-from #strains s, PRB_Strain_Acc_View a
+from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 38
 union
 select s.strain, a.accID, 'Harwell' as accType
-from #strains s, PRB_Strain_Acc_View a
+from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 39
 union
 select s.strain, a.accID, 'ORNL' as accType
-from #strains s, PRB_Strain_Acc_View a
+from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 40
 )
 order by strain
-go
+;
 

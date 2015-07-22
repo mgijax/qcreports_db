@@ -1,5 +1,5 @@
 
-select s._Strain_key into #exclude
+select s._Strain_key INTO TEMPORARY TABLE exclude
 from PRB_Strain s
 where 
 (s.strain like '%/Mmcd%' and s.creation_date = '06/07/2011')
@@ -33,10 +33,10 @@ or
 (s._CreatedBy_key = 1421 and s.creation_date = '01/21/2014')
 or
 (s._CreatedBy_key = 1421 and s.creation_date = '04/09/2014')
-go
+;
 
-create index exclude_idx on #exclude(_Strain_key)
-go
+create index exclude_idx on exclude(_Strain_key)
+;
 
 \echo ''
 \echo 'Strains - Non Standard - Sorted by Creation Date'
@@ -63,7 +63,7 @@ and a._LogicalDB_key = 22)
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
 where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
-and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
+and not exists (select 1 from exclude e where s._Strain_key = e._Strain_key)
 union
 select a.accID as jr, substring(t.term,1,30) as strainattribute, 
 substring(s.strain,1,125) as strain, s.creation_date
@@ -78,10 +78,10 @@ and a._LogicalDB_key = 22
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
 where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
-and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
+and not exists (select 1 from exclude e where s._Strain_key = e._Strain_key)
 )
 order by creation_date desc, strain
-go
+;
 
 \echo ''
 \echo 'Strains - Non Standard - Sorted by Creation Date'
@@ -106,7 +106,7 @@ and a._LogicalDB_key = 22)
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
 where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
-and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
+and exists (select 1 from exclude e where s._Strain_key = e._Strain_key)
 union
 select a.accID as jr, substring(t.term,1,30) as strainattribute, 
 substring(s.strain,1,125) as strain, s.creation_date
@@ -121,8 +121,8 @@ and a._LogicalDB_key = 22
 and not exists (select 1 from PRB_Strain_NeedsReview_View n
 where s._Strain_key = n._Object_key
 and n.term = 'Needs Review - load')
-and exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
+and exists (select 1 from exclude e where s._Strain_key = e._Strain_key)
 )
 order by creation_date desc, strain
-go
+;
 

@@ -25,7 +25,7 @@ where a._Allele_key = r._Object_key
 and r._MGIType_key = 11
 and r._RefAssocType_key = 1023)
 order by a.symbol
-go
+;
 
 \echo ''
 \echo 'transmission status is not germline or chimeric and transmission reference does exist'
@@ -48,7 +48,7 @@ where a._Allele_key = r._Object_key
 and r._MGIType_key = 11
 and r._RefAssocType_key = 1023)
 order by a.symbol
-go
+;
 
 \echo ''
 \echo 'there is no mutant cell line and the transmission status != not applicable'
@@ -69,7 +69,7 @@ and acc.preferred = 1
 and not exists (select 1 from ALL_Allele_CellLine c
 where a._Allele_key = c._Allele_key)
 order by a.symbol
-go
+;
 
 \echo ''
 \echo 'there is a mutant cell line and the transmission status = not applicable'
@@ -90,5 +90,5 @@ and acc.preferred = 1
 and exists (select 1 from ALL_Allele_CellLine c
 where a._Allele_key = c._Allele_key)
 order by a.symbol
-go
+;
 

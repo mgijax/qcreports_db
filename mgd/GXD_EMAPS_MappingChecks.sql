@@ -16,7 +16,7 @@ group by
 	accid , emapsid
 having
 	count(*) > 1
-go
+;
 
 \echo ''
 \echo 'Check 2'
@@ -31,7 +31,7 @@ LEFT OUTER JOIN
 	ACC_Accession acc on (mem.accId = acc.accID)
 where
 	acc.accId is NULL
-go
+;
 
 \echo ''
 \echo 'Check 3'
@@ -54,7 +54,7 @@ where
 	gs._Structure_key is NULL and
 	acc._MGIType_key = ty1._MGIType_key
 
-go
+;
 
 \echo ''
 \echo 'Check 4'
@@ -62,32 +62,32 @@ go
 \echo ''
 
 select mem.emapsId, mem.accID as adID
-into #invalidIDs
+INTO TEMPORARY TABLE invalidIDs
 from MGI_EMAPS_Mapping mem
 	LEFT OUTER JOIN
 	ACC_Accession acc on (mem.emapsId = acc.accID)
 where acc.accId is NULL
-go
+;
 
-create index invalidIDs_idx on #invalidIDs(adID)
-go
+create index invalidIDs_idx on invalidIDs(adID)
+;
 
 select _Structure_key, count(_Structure_key) as aCt
-into #annotCt
+INTO TEMPORARY TABLE annotCt
 from GXD_Expression
 group by _structure_key
-go
+;
 
-create index annotCt_idx on #annotCt(_Structure_key)
-go
+create index annotCt_idx on annotCt(_Structure_key)
+;
 
 select i.adID, i.emapsId, ac.aCt
-from #invalidIDs i, ACC_Accession a, #annotCt ac
+from invalidIDs i, ACC_Accession a, annotCt ac
 where i.adID = a.accID
 and a._MGIType_key = 38
 and a._LOgicalDB_key = 1
 and a._Object_key = ac._Structure_key
-go
+;
 
 \echo ''
 \echo 'Check 5'
@@ -108,7 +108,7 @@ where
 	mem.emapsId = acc.accId and
 	vte._Term_key is NULL and
 	acc._MGIType_key = ty1._MGIType_key
-go
+;
 
 \echo ''
 \echo 'Check 6'
@@ -161,7 +161,7 @@ where
 		having
 			count(mem.emapsId) > 1
 	)
-go
+;
 
 \echo ''
 \echo 'Check 7'
@@ -214,7 +214,7 @@ where
 		having
 			count(mem.accId) > 1
 	)
-go
+;
 
 \echo ''
 \echo 'Check 8'
@@ -251,6 +251,6 @@ where
 	ty2.tableName = 'VOC_Term' and
 	aa2._Object_key = voct._Term_key and
 	voct._Term_key = vte._Term_key and
-	(case when convert(INT, vte.stage) = gts.stage then 1 else 0 end) = 0
-go
+	(case when vte.stage::int = gts.stage then 1 else 0 end) = 0
+;
 

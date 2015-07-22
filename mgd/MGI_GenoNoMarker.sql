@@ -12,5 +12,5 @@ select distinct aa.symbol
         and ac._LogicalDB_key = 1 
         and ac.prefixPart = 'MGI:' 
         and ac.preferred = 1)
-go
+;
 

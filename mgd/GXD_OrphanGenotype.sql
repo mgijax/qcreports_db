@@ -14,4 +14,4 @@ and g._Strain_key = s._Strain_key
 and g._Genotype_key = a._Object_key
 and a._MGIType_key = 12
 order by s.strain
-go
+;

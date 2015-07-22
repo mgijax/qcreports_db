@@ -24,5 +24,5 @@ and a._MGIType_key = 10
 and a._LogicalDB_key = 22
 )
 order by standard desc, strain
-go
+;
 

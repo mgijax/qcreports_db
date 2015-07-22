@@ -10,6 +10,6 @@ and not exists (select 1 from VOC_Annot a where p._Term_key = a._Term_key and a.
 and p._Term_key = a._Object_key
 and a._MGIType_key = 13
 order by a.accID
-go
+;
 
 

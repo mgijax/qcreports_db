@@ -19,5 +19,5 @@ and a2._Marker_key = m2._Marker_key
 and m1.symbol != m2.symbol
 and g._Genotype_key = a._Object_key
 and a._MGIType_key = 12
-go
+;
 

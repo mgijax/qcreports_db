@@ -10,5 +10,5 @@ and not exists (select 1 from ALL_Allele_Cellline c
 	where a._Allele_key = c._Allele_key)
 order by a.symbol
 
-go
+;
 

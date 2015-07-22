@@ -1,17 +1,17 @@
 
 select s._Sequence_key
-into #split1
+INTO TEMPORARY TABLE split1
 from SEQ_Sequence s
 where s._SequenceStatus_key = 316344
-go
+;
 
 select a.accID
-into #split2
-from #split1 s, ACC_Accession a
+INTO TEMPORARY TABLE split2
+from split1 s, ACC_Accession a
 where s._Sequence_key = a._Object_key
 and a._MGIType_key = 19
 and a.preferred = 1
-go
+;
 
 \echo ''
 \echo 'Split Sequences'
@@ -21,7 +21,7 @@ go
 \echo ''
 
 select s.accID as seqID
-from #split2 s
+from split2 s
 order by seqID
-go
+;
 

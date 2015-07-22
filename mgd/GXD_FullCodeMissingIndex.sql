@@ -15,5 +15,5 @@ and b._MGIType_key = 1
 and b._LogicalDB_key = 1
 and b.prefixPart = 'J:'
 order by b.numericPart
-go
+;
 

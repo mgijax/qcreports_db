@@ -16,5 +16,5 @@ from PRB_Strain s
      LEFT OUTER JOIN MRK_Marker m on (sm._Marker_key = m._Marker_key)
      LEFT OUTER JOIN ALL_Allele a on (sm._Allele_key = a._Allele_key)
 order by s.modification_date desc, strain
-go
+;
 

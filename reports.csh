@@ -42,13 +42,11 @@ echo "#" >> ${OUTPUTFILE}
 # last:  pipe to psql
 #
 #sed "s/^print/\\echo/g" ${INPUTFILE} | \
-sed "s/^go/;/g" ${INPUTFILE} | \
-sed "s/insert into #/INSERT INTO /g" | \
-sed "s/into #/INTO TEMPORARY TABLE /g" | \
-sed "s/#//g" | \
-sed "s/datalength(r.abstract) = 0/r.abstract is null/g" | \
-sed "s/convert(INT, vte.stage)/vte.stage::int/g" | \
-sed "s/convert(char(10),/to_char(/g" | \
+#sed "s/^go/;/g" ${INPUTFILE} | \
+#sed "s/insert into #/INSERT INTO /g" ${INPUTFILE}| \
+#sed "s/into #/INTO TEMPORARY TABLE /g" | \
+#sed "s/#//g" | \
+sed "s/convert(char(10),/to_char(/g" ${INPUTFILE} | \
 sed "s/, 101)/, 'MM\/dd\/yyyy')/g" | \
 sed "s/dateadd(day, -1, getdate())/(now() + interval '-1 day')/g" | \
 sed "s/dateadd(day, -3, getdate())/(now() + interval '-3 day')/g" | \

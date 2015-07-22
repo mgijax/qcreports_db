@@ -11,5 +11,5 @@ from MRK_History_View
 where _Marker_Event_key in (2,3,4,5,6)
 and event_date >= dateadd(day, -3, getdate()) and event_date <= getdate()
 order by symbol
-go
+;
 
