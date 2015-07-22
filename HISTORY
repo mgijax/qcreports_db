@@ -1,13 +1,8 @@
-TAG: qcreports_db-6-0-0-?
-DATE: 
+TAG: qcreports_db-6-0-0-1
+DATE: 07/22/2015
 STAFF: lec
 CHANGES: 
-PG-only changes:
-GO_Combined_Report.py
-GXD_SpecNoAge.sql
-MRK_GOIEA.py
-MRK_GORCA.py
-MRK_NoGO.py
+1) TR11750/postgres
 
 TAG: qcreports_db-5-2-2-11
 DATE: 7/14/15
