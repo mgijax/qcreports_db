@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select p._Probe_key, p.name 
 into #probes
 from PRB_Probe p
@@ -22,9 +19,6 @@ go
 create index idx2_probes2 on #probes2(_Refs_key)
 go
 
-
-set nocount off
-go
 
 print ''
 print 'Probes/Primers w/out References'

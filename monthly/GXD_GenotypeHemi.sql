@@ -3,9 +3,6 @@ print ''
 print 'Hemizygous Genotype Check'
 print ''
 
-set nocount on
-go
-
 /* genotypes that have 2 alleles and pair state = heterozygous or homozygous and chromosome is X or Y */
 
 select g._Genotype_key, a.name
@@ -19,9 +16,6 @@ and m.chromosome in ('X','Y')
 go
 
 create index idx1 on #genotypes(_Genotype_key)
-go
-
-set nocount off
 go
 
 print ''

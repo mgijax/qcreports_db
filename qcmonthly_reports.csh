@@ -20,7 +20,7 @@ cd ${QCMONTHLY}
 
 foreach i (*.sql)
     echo `date`: $i | tee -a ${LOG}
-    ${PG_DBUTILS}/bin/reportisql.csh $i $QCOUTPUTDIR/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+    ${QCRPTS}/reports.csh $i $QCOUTPUTDIR/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 foreach i (*.py)

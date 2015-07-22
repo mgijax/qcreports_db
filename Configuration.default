@@ -15,6 +15,10 @@ source ${MGICONFIG}/master.config.csh
 
 umask 002
 
+# '-q' : quiet
+# '-e' echo
+setenv PSQL_ECHO "-q"
+
 # report output directory
 setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 

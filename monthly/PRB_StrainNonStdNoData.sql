@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select s._Strain_key, substring(s.strain,1,100) as strain
 into #strains
 from PRB_Strain s
@@ -33,9 +30,6 @@ and not exists (select 1 from MGI_Note n
 where s._Strain_key = n._Object_key
 and n._MGIType_key = 10
 and n._NoteType_key in (1011,1012,1013))
-go
-
-set nocount off
 go
 
 print ''
