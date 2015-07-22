@@ -1,7 +1,7 @@
 
-print ''
-print 'New MMRRC JR#s created in past week'
-print ''
+\echo ''
+\echo 'New MMRRC JR#s created in past week'
+\echo ''
 
 select a.accID
 from ACC_Accession a, PRB_Strain s

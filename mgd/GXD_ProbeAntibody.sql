@@ -5,9 +5,9 @@ where a._ProbePrep_key = p._ProbePrep_key
 and a._AssayType_key in (1,2,3,4,5,6,8)
 go
 
-print ''
-print 'GXD Assay Probe/Marker Pairs No Longer Found in Master Probe Table'
-print ''
+\echo ''
+\echo 'GXD Assay Probe/Marker Pairs No Longer Found in Master Probe Table'
+\echo ''
 
 select a.accID as "Assay", pb.name as "Probe", m.symbol as "Marker"
 from #probe p, PRB_Probe pb, MRK_Marker m, ACC_Accession a
@@ -27,9 +27,9 @@ where a._AntibodyPrep_key = p._AntibodyPrep_key
 and a._AssayType_key in (1,2,3,4,5,6,8)
 go
 
-print ''
-print 'GXD Assay Antibody/Marker Pairs No Longer Found in Master Antibody Table'
-print ''
+\echo ''
+\echo 'GXD Assay Antibody/Marker Pairs No Longer Found in Master Antibody Table'
+\echo ''
 
 select m.symbol as "Marker", substring(b.antibodyName,1,75) as "Antibody", a.accID as "Assay"
 from #antibody p, GXD_Antibody b, MRK_Marker m, ACC_Accession a
@@ -52,9 +52,9 @@ and not exists (select 1 from PRB_Reference r
                 and a._Refs_key = r._Refs_key)
 go
 
-print ''
-print 'GXD Assay Probes with no corresponding entry in the Probe Reference Table'
-print ''
+\echo ''
+\echo 'GXD Assay Probes with no corresponding entry in the Probe Reference Table'
+\echo ''
 
 select a.accID as "Assay", b.accID as "J Number", pb.name as "Probe"
 from #proberef p, ACC_Accession a, ACC_Accession b, PRB_Probe pb
@@ -97,9 +97,9 @@ go
 create index probedummy2_idx3 on #probedummy2(_CreatedBy_key)
 go
 
-print ''
-print 'Dummy Sequence Records Annotated to GXD Mouse Molecular Segments'
-print ''
+\echo ''
+\echo 'Dummy Sequence Records Annotated to GXD Mouse Molecular Segments'
+\echo ''
 
 select distinct ma.accID as "MGI ID", 
        p.name as "Molecular Segment", 
@@ -160,12 +160,12 @@ go
 create index pdeleted_idx1 on #pdeleted(seqID)
 go
 
-print ''
-print 'Deleted Sequences with GXD Associations'
-print ''
-print 'A row in this report represents a Sequence that is designated as Deleted'
-print 'by the Sequence provider and contains associations to a GXD Molecular Segment.'
-print ''
+\echo ''
+\echo 'Deleted Sequences with GXD Associations'
+\echo ''
+\echo 'A row in this report represents a Sequence that is designated as Deleted'
+\echo 'by the Sequence provider and contains associations to a GXD Molecular Segment.'
+\echo ''
 
 select seqID, mgiID, name from #pdeleted
 go
@@ -182,9 +182,9 @@ go
 create index multencodes_idx1 on #multencodes(_Probe_key)
 go
 
-print ''
-print 'Probe w/ more than one encodes relationship'
-print ''
+\echo ''
+\echo 'Probe w/ more than one encodes relationship'
+\echo ''
 
 select distinct a.accid, p.name, m.symbol
 from #multencodes e, #encodes ee, PRB_Probe p, MRK_Marker m, ACC_Accession a
@@ -199,9 +199,9 @@ and ee._Marker_key = m._Marker_key
 order by a.accid
 go
 
-print ''
-print 'Antigens with source information but both tissue and cell line are Not specified'
-print ''
+\echo ''
+\echo 'Antigens with source information but both tissue and cell line are Not specified'
+\echo ''
 
 select distinct _Antigen_key, antigenName, mgiID 
 into #antigens 
@@ -228,9 +228,9 @@ select mgiID, antigenName
 from #antigens
 go
 
-print ''
-print 'Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified'
-print ''
+\echo ''
+\echo 'Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified'
+\echo ''
 
 select distinct m._Probe_key, m.name as cDNAname, p.mgiID 
 into #probes 

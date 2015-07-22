@@ -51,12 +51,12 @@ go
 create index final_idx on #final(_Object_key)
 go
 
-print ''
-print 'Markers Annotated to a Secondary Sequence Accession ID'
-print ''
-print 'Includes: all marker statuses (interim, official, withdrawn)'
-print 'Includes: all marker types (gene, DNA segment, etc.)'
-print ''
+\echo ''
+\echo 'Markers Annotated to a Secondary Sequence Accession ID'
+\echo ''
+\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker types (gene, DNA segment, etc.)'
+\echo ''
 
 select distinct m.symbol, ma.accID, ma.egID
 from #final ma, MRK_Marker m

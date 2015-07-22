@@ -41,8 +41,8 @@ echo "#" >> ${OUTPUTFILE}
 # next: pipe to the next sed
 # last:  pipe to psql
 #
-sed "s/^print/\\echo/g" ${INPUTFILE} | \
-sed "s/^go/;/g" | \
+#sed "s/^print/\\echo/g" ${INPUTFILE} | \
+sed "s/^go/;/g" ${INPUTFILE} | \
 sed "s/insert into #/INSERT INTO /g" | \
 sed "s/into #/INTO TEMPORARY TABLE /g" | \
 sed "s/#//g" | \

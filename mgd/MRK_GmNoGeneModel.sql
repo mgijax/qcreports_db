@@ -24,12 +24,12 @@ and h._History_key = hm._Marker_key
 and m.symbol != hm.symbol
 go
 
-print ''
-print 'Gm Markers without Gene Model Associations'
-print ''
-print '   where name begins ''predicted gene'''
-print '   and status = ''official'' or ''interim'''
-print ''
+\echo ''
+\echo 'Gm Markers without Gene Model Associations'
+\echo ''
+\echo '   where name begins ''predicted gene'''
+\echo '   and status = ''official'' or ''interim'''
+\echo ''
 
 (
 select m.accID, m.symbol, h.symbol as "old symbol", h.name

@@ -31,16 +31,16 @@ and a.prefixPart = 'MGI:'
 and a.preferred = 1
 go
 
-print ''
-print 'Non-Gene Markers with GO Annotations'
-print ''
+\echo ''
+\echo 'Non-Gene Markers with GO Annotations'
+\echo ''
 
 select 'Number of unique MGI Gene IDs:  ', count(distinct accID) from #toPrint
 union
 select 'Number of total rows:  ', count(*) from #toPrint
 go
 
-print ''
+\echo ''
 
 select * from #toPrint order by name
 go

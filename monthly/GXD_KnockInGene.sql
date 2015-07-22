@@ -8,9 +8,9 @@ where s._Genotype_key = g._Genotype_key
 and a._Marker_key = g._Marker_key)
 go
 
-print ''
-print 'GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype'
-print ''
+\echo ''
+\echo 'GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype'
+\echo ''
 
 select a.accID as "Assay", b.accID as "J:", k.specimenLabel
 from #knockin k, ACC_Accession a, ACC_Accession b

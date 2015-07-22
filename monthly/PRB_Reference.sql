@@ -20,9 +20,9 @@ create index idx2_probes2 on #probes2(_Refs_key)
 go
 
 
-print ''
-print 'Probes/Primers w/out References'
-print ''
+\echo ''
+\echo 'Probes/Primers w/out References'
+\echo ''
 
 select p.name, m.symbol, p._Probe_key 
 from #probes p, PRB_Marker pm, MRK_Marker m
@@ -31,9 +31,9 @@ and pm._Marker_key = m._Marker_key
 order by p.name, m.symbol
 go
 
-print ''
-print 'Probes/Primers with duplicate References'
-print ''
+\echo ''
+\echo 'Probes/Primers with duplicate References'
+\echo ''
 
 select pp.name, r.jnumID
 from #probes2 p, PRB_Probe pp, BIB_Citation_Cache r

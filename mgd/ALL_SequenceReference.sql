@@ -8,9 +8,9 @@ and t.assocType = 'Sequence'
 and m._Refs_key = b._Refs_key
 go
 
-print ''
-print 'Reference associations created by the gene trap load'
-print ''
+\echo ''
+\echo 'Reference associations created by the gene trap load'
+\echo ''
 
 select jnumID, substring(short_citation, 1, 75) as citation, count(_Object_key) as "number of allele records"
 from #reference

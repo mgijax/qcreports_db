@@ -1,7 +1,7 @@
 
-print ''
-print 'New JR#s created in past week'
-print ''
+\echo ''
+\echo 'New JR#s created in past week'
+\echo ''
 
 select substring(a.accID,1,8) as accID, substring(s.strain,1,70) as strain
 from ACC_Accession a, PRB_Strain s

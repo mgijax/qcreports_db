@@ -21,9 +21,9 @@ go
 create index dups_idx1 on #dups(_Sequence_key)
 go
 
-print ''
-print 'Ensembl, VEGA Gene Models, or NCBI Gene Model w/ > 1 Marker Association'
-print ''
+\echo ''
+\echo 'Ensembl, VEGA Gene Models, or NCBI Gene Model w/ > 1 Marker Association'
+\echo ''
 
 select c.accID, m.symbol, c.provider
 from #dups s, #coord c, MRK_Marker m

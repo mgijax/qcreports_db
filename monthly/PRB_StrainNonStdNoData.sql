@@ -32,9 +32,9 @@ and n._MGIType_key = 10
 and n._NoteType_key in (1011,1012,1013))
 go
 
-print ''
-print 'Non-Standard Strains with no external IDs, no data attached and no notes in any notes field'
-print ''
+\echo ''
+\echo 'Non-Standard Strains with no external IDs, no data attached and no notes in any notes field'
+\echo ''
 
 (
 select s.strain, null as accID, 'Other' as accType

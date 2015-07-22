@@ -158,11 +158,11 @@ go
 create index temp4_idx2 on #temp4(tag)
 go
 
-print ''
-print 'All genes with ''unknown'' annotations with new indexed literature'
-print '(J: creation date >= Annotation creation date)'
-print 'and if reference is selected for GO and ''not used'' for any GO annotation'
-print '(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)'
+\echo ''
+\echo 'All genes with ''unknown'' annotations with new indexed literature'
+\echo '(J: creation date >= Annotation creation date)'
+\echo 'and if reference is selected for GO and ''not used'' for any GO annotation'
+\echo '(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)'
 
 select 'Number of unique MGI Gene IDs:  ', count(distinct mgiID) from #temp4
 union
@@ -171,11 +171,11 @@ union
 select 'Number of total rows:  ', count(*) from #temp4
 go
 
-print ''
-print ' tag 1 = only for GO'
-print ' tag 2 = only for GO and AP'
-print ' tag 3 = any GO'
-print ''
+\echo ''
+\echo ' tag 1 = only for GO'
+\echo ' tag 2 = only for GO and AP'
+\echo ' tag 3 = any GO'
+\echo ''
 
 select distinct symbol, mgiID, jnumID, pubmedID, tag, hasOMIM, jnumDate, annotDate
 from #temp4 

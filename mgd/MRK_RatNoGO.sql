@@ -53,30 +53,30 @@ and m._Organism_key = 2
 and m3._Organism_key not in (1,2))
 go
 
-print ''
-print 'Mouse Genes that have Rat Homologs but no GO associations'
-print ''
+\echo ''
+\echo 'Mouse Genes that have Rat Homologs but no GO associations'
+\echo ''
 
 select 'Number of unique MGI Gene IDs:  ', count(distinct accID) from #markersA
 union
 select 'Number of total rows:  ', count(*) from #markersA
 go
 
-print ''
+\echo ''
 
 select * from #markersA order by symbol
 go
 
-print ''
-print 'Mouse Genes that have Human Homologs Only but no GO associations'
-print ''
+\echo ''
+\echo 'Mouse Genes that have Human Homologs Only but no GO associations'
+\echo ''
 
 select 'Number of unique MGI Gene IDs:  ', count(distinct accID) from #markersB
 union
 select 'Number of total rows:  ', count(*) from #markersB
 go
 
-print ''
+\echo ''
 
 select * from #markersB order by symbol
 go

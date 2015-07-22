@@ -128,9 +128,9 @@ and a._LogicalDB_key = 1
 and a.prefixPart = 'J:'
 go
 
-print ''
-print 'References where GXD and Pheno differ in Genotype'
-print ''
+\echo ''
+\echo 'References where GXD and Pheno differ in Genotype'
+\echo ''
 
 select substring(t.jnum,1,10) as jnum, 
 substring(t.gxdStrain, 1, 75) as "GXD Strain", 

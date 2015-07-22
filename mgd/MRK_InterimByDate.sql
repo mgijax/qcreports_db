@@ -65,10 +65,10 @@ go
 create index results_idx1 on #results(hstatus)
 go
 
-print ''
-print 'Interim Markers'
-print '(sorted by human symbol status (if applicable) and date)'
-print ''
+\echo ''
+\echo 'Interim Markers'
+\echo '(sorted by human symbol status (if applicable) and date)'
+\echo ''
 
 select msymbol as "Mouse Symbol", 
        hstatus as "Status", 

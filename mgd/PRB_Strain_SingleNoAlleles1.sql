@@ -17,12 +17,12 @@ from #strains
 group by _Strain_key having count(*) = 1
 go
 
-print ''
-print 'Strains ending with ''>'''
-print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
-print 'with at most one Marker and Marker has no Allele'
-print 'and Allele symbol is in MGD'
-print ''
+\echo ''
+\echo 'Strains ending with ''>'''
+\echo 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
+\echo 'with at most one Marker and Marker has no Allele'
+\echo 'and Allele symbol is in MGD'
+\echo ''
 
 select s.strain, s.symbol, substring(s.alleleSymbol, 1, 35) as alleleSymbol
 from #singles ss, #strains s, ALL_Allele a

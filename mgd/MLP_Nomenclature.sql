@@ -1,9 +1,9 @@
-print ''
-print 'Strains Affected by Recent Nomenclature Changes'
-print ''
-print 'These Strains have their ''Needs Review - nomen'' flag set to ''Yes''.'
-print 'To remove a Strain from this report, set the flag to ''No''.'
-print ''
+\echo ''
+\echo 'Strains Affected by Recent Nomenclature Changes'
+\echo ''
+\echo 'These Strains have their ''Needs Review - nomen'' flag set to ''Yes''.'
+\echo 'To remove a Strain from this report, set the flag to ''No''.'
+\echo ''
 
 select substring(s.strain,1,60) as strain, 
        substring(m.symbol,1,25) as marker, 

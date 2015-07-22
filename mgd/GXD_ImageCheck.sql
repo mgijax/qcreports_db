@@ -27,9 +27,9 @@ go
 create index assays_idx1 on #assays(_ImagePane_key)
 go
 
-print ''
-print 'GXD Image Figure Labels Beginning ''Fig''.'
-print ''
+\echo ''
+\echo 'GXD Image Figure Labels Beginning ''Fig''.'
+\echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i
@@ -37,9 +37,9 @@ where i.figureLabel like 'Fig%'
 order by i.jnumID
 go
 
-print ''
-print 'GXD Images with Copyright containing ''(||)'''
-print ''
+\echo ''
+\echo 'GXD Images with Copyright containing ''(||)'''
+\echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
@@ -52,9 +52,9 @@ and nc.note like '%(||)%'
 order by i.jnumID
 go
 
-print ''
-print 'GXD Image Pane Labels containing a comma'
-print ''
+\echo ''
+\echo 'GXD Image Pane Labels containing a comma'
+\echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i, IMG_ImagePane p
@@ -62,9 +62,9 @@ where p.paneLabel like '%,%' and p._Image_key = i._Image_key
 order by i.jnumID
 go
 
-print ''
-print 'Elsevier: where the J# in the copyright does not match the J# of the stub'
-print ''
+\echo ''
+\echo 'Elsevier: where the J# in the copyright does not match the J# of the stub'
+\echo ''
 
 select distinct i.jnumID, i.mgiID
 from IMG_Image_View i, MGI_Note_Image_View n
@@ -76,9 +76,9 @@ and n._Object_key = i._Image_key
 order by i.jnumID
 go
 
-print ''
-print 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
-print ''
+\echo ''
+\echo 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
+\echo ''
 
 select distinct i.jnumID, i.mgiID, r._primary, 
        n.note, substring(r._primary, 1, charindex(' ', r._primary) - 1) as p
@@ -97,9 +97,9 @@ where note not like '%' || p || '%'
 order by jnumID
 go
 
-print ''
-print 'JPGs but no Copyright Statement'
-print ''
+\echo ''
+\echo 'JPGs but no Copyright Statement'
+\echo ''
 
 select i.mgiID, i.jnumID
 from IMG_Image_View i 

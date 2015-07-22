@@ -15,10 +15,10 @@ from #temp1
 group by _Specimen_key having count(*) > 1
 go
 
-print ''
-print 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
-print '(excludes TS28:placenta, TS28:decidua)'
-print ''
+\echo ''
+\echo 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
+\echo '(excludes TS28:placenta, TS28:decidua)'
+\echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
@@ -87,9 +87,9 @@ and ir._Result_key = irs._Result_key
 and irs._Structure_key = m._Structure_key
 go
 
-print ''
-print 'InSitu Specimens with > 1 Sex' 
-print ''
+\echo ''
+\echo 'InSitu Specimens with > 1 Sex' 
+\echo ''
 
 /* report all specimens with annotated to both male and female structures */
 select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel

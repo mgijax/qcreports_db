@@ -1,7 +1,7 @@
 
-print ''
-print 'Alleles of type Targeted or Gene Trap that have no MCL association'
-print ''
+\echo ''
+\echo 'Alleles of type Targeted or Gene Trap that have no MCL association'
+\echo ''
 
 select a.symbol
 from ALL_Allele a

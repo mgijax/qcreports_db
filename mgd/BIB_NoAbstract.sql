@@ -30,9 +30,9 @@ go
 create index refs3_idx on #refs3(_Refs_key)
 go
 
-print ''
-print 'References w/ PubMed ID and No Abstract (where publication year >= 1975)'
-print ''
+\echo ''
+\echo 'References w/ PubMed ID and No Abstract (where publication year >= 1975)'
+\echo ''
 
 select r.accID, c.jnum, substring(c.short_citation, 1, 50) as short_citation
 from #refs3 r, BIB_All_View c

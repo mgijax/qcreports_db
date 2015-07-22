@@ -1,7 +1,7 @@
 
-print ''
-print ' GXD duplicate specimen label report '
-print ''
+\echo ''
+\echo ' GXD duplicate specimen label report '
+\echo ''
 select distinct substring(bc.jnumid, 1, 12) as jnumID, substring(m.symbol, 1, 25) as symbol, substring(gaav.accid, 1, 12) assayID, substring(s.specimenlabel, 1, 25) as specimenLabel
 	from bib_citation_cache bc, gxd_assay a,gxd_assay_acc_view gaav,
 	gxd_specimen s,

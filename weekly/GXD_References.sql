@@ -1,7 +1,7 @@
-print ''
-print 'Reference selected for GXD which have been not been used.'
-print 'Those that have also been statused as ''Never Used'' are so noted.'
-print ''
+\echo ''
+\echo 'Reference selected for GXD which have been not been used.'
+\echo 'Those that have also been statused as ''Never Used'' are so noted.'
+\echo ''
 
 select r.jnumID, 
 case when isNeverUsed = 1 then 'Never Used' else '' end as catetory

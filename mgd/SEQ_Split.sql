@@ -13,12 +13,12 @@ and a._MGIType_key = 19
 and a.preferred = 1
 go
 
-print ''
-print 'Split Sequences'
-print ''
-print 'A row in this report represents a Sequence that is designated as Split'
-print 'by the Sequence Provider.'
-print ''
+\echo ''
+\echo 'Split Sequences'
+\echo ''
+\echo 'A row in this report represents a Sequence that is designated as Split'
+\echo 'by the Sequence Provider.'
+\echo ''
 
 select s.accID as seqID
 from #split2 s

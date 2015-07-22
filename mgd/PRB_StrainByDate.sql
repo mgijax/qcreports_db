@@ -38,16 +38,16 @@ go
 create index exclude_idx on #exclude(_Strain_key)
 go
 
-print ''
-print 'Strains - Non Standard - Sorted by Creation Date'
-print '(do not include any strains flagged as needing review by Janans load)'
-print ''
-print 'excludes /Mmcd from 06/07/2011'
-print 'excludes /Mmucd from 09/24/2012'
-print 'excludes "mberry" from 01/04/2013, 01/09/2013, 01/15/2013, 02/20/2013, 03/22/2013, 06/10/2013, 07/16/2013, 08/08/2013'
-print 'excludes "mberry" from 09/17/2013, 10/08/2013, 11/19/2013, 12/09/2013, 01/21/2014, 04/09/2014'
-print 'excludes created-by = "strainautoload"'
-print ''
+\echo ''
+\echo 'Strains - Non Standard - Sorted by Creation Date'
+\echo '(do not include any strains flagged as needing review by Janans load)'
+\echo ''
+\echo 'excludes /Mmcd from 06/07/2011'
+\echo 'excludes /Mmucd from 09/24/2012'
+\echo 'excludes "mberry" from 01/04/2013, 01/09/2013, 01/15/2013, 02/20/2013, 03/22/2013, 06/10/2013, 07/16/2013, 08/08/2013'
+\echo 'excludes "mberry" from 09/17/2013, 10/08/2013, 11/19/2013, 12/09/2013, 01/21/2014, 04/09/2014'
+\echo 'excludes created-by = "strainautoload"'
+\echo ''
 
 (
 select null as jr, substring(t.term,1,30) as strainattribute, 
@@ -83,14 +83,14 @@ and not exists (select 1 from #exclude e where s._Strain_key = e._Strain_key)
 order by creation_date desc, strain
 go
 
-print ''
-print 'Strains - Non Standard - Sorted by Creation Date'
-print '(do not include any strains flagged as needing review by Janans load)'
-print ''
-print 'includes /Mmcd from 06/07/2011'
-print 'includes /Mmucd from 09/24/2012'
-print 'includes "mberry" excluded list (see above)'
-print ''
+\echo ''
+\echo 'Strains - Non Standard - Sorted by Creation Date'
+\echo '(do not include any strains flagged as needing review by Janans load)'
+\echo ''
+\echo 'includes /Mmcd from 06/07/2011'
+\echo 'includes /Mmucd from 09/24/2012'
+\echo 'includes "mberry" excluded list (see above)'
+\echo ''
 
 (
 select null as jr, substring(t.term,1,30) as strainattribute, 

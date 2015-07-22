@@ -10,9 +10,9 @@ go
 create index idx1 on #assay(_Assay_key)
 go
 
-print ''
-print 'GXD Blot w/ Control = No and Strength = Not Applicable for all bands'
-print ''
+\echo ''
+\echo 'GXD Blot w/ Control = No and Strength = Not Applicable for all bands'
+\echo ''
 
 select distinct a.jnum, a.mgiID
 from #assay s, GXD_Assay_View a

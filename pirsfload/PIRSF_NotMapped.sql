@@ -1,7 +1,7 @@
 
-print ""
-print "PIRSFLoad - Superfamilies not mapped to MGI"
-print ""
+\echo ""
+\echo "PIRSFLoad - Superfamilies not mapped to MGI"
+\echo ""
 
 select a.accID "Superfamily ID", substring(p.term,1,50) "Superfamily Name"
 from VOC_Term p, ACC_Accession a

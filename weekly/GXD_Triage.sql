@@ -14,10 +14,10 @@ create index idx1 on #triageA(_Refs_key)
 
 go
 
-print ''
-print 'Papers Selected For Expression in past week '
-print 'by Data Set creation date'
-print ''
+\echo ''
+\echo 'Papers Selected For Expression in past week '
+\echo 'by Data Set creation date'
+\echo ''
 
 select v.jnumID, substring(v.short_citation, 1, 50) as short_citation
 from #triageA t, BIB_All_View v

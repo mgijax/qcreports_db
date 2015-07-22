@@ -1,7 +1,7 @@
 
-print ''
-print 'Withdrawals Processed within 3 days'
-print ''
+\echo ''
+\echo 'Withdrawals Processed within 3 days'
+\echo ''
 
 select substring(history,1,30) as "Old Symbol", 
 substring(symbol,1,30) as "New Symbol", 

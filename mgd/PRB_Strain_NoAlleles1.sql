@@ -7,11 +7,11 @@ where s.strain like '%<%>%'
 and s._Strain_key = sm._Strain_key
 go
 
-print ''
-print 'Strains containing ''<>'' '
-print 'with any number of Markers and Marker has no Allele'
-print 'and Allele symbol embedded in Strain is in MGD'
-print ''
+\echo ''
+\echo 'Strains containing ''<>'' '
+\echo 'with any number of Markers and Marker has no Allele'
+\echo 'and Allele symbol embedded in Strain is in MGD'
+\echo ''
 
 select s.strain, s.symbol, substring(s.alleleSymbol, 1, 35) as alleleSymbol
 from #strains s

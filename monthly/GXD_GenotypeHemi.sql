@@ -1,7 +1,7 @@
 
-print ''
-print 'Hemizygous Genotype Check'
-print ''
+\echo ''
+\echo 'Hemizygous Genotype Check'
+\echo ''
 
 /* genotypes that have 2 alleles and pair state = heterozygous or homozygous and chromosome is X or Y */
 
@@ -18,12 +18,12 @@ go
 create index idx1 on #genotypes(_Genotype_key)
 go
 
-print ''
-print 'specimens'
-print 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
-print 'mutated gene on X or Y'
-print 'sex = male'
-print ''
+\echo ''
+\echo 'specimens'
+\echo 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
+\echo 'mutated gene on X or Y'
+\echo 'sex = male'
+\echo ''
 
 select distinct a1.accID as "J number of assay", a2.accID as "MGI ID of assay", 
 	substring(g.name, 1, 30) as "name of allele1 of genotype", a1.numericPart
@@ -40,12 +40,12 @@ and a2._MGIType_key = 8
 order by a1.numericPart
 go
 
-print ''
-print 'gels'
-print 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
-print 'mutated gene on X or Y'
-print 'sex = male'
-print ''
+\echo ''
+\echo 'gels'
+\echo 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
+\echo 'mutated gene on X or Y'
+\echo 'sex = male'
+\echo ''
 
 select distinct a1.accID as "J number of assay", a2.accID as "MGI ID of assay", 
 	substring(g.name, 1, 30) as "name of allele1 of genotype", a1.numericPart

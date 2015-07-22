@@ -13,9 +13,9 @@ group by _Term_key, _Object_key, _Qualifier_key, _EvidenceTerm_key, _Refs_key
 having count(*) > 1
 go
 
-print ''
-print 'Duplicate MP Annotations'
-print ''
+\echo ''
+\echo 'Duplicate MP Annotations'
+\echo ''
 
 select a.accID, ta.accID, substring(t.term,1,50) as term
 from #dup d, ACC_Accession a, ACC_Accession ta, VOC_Term t

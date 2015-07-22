@@ -2,10 +2,10 @@
 /* Changes: */
 /* TR11915 - Update to Check 4 - 01/23/2015 - sc */
 
-print ''
-print 'Check 1'
-print 'Duplicate MGI and EMAPS entries in the Mapping Table'
-print ''
+\echo ''
+\echo 'Check 1'
+\echo 'Duplicate MGI and EMAPS entries in the Mapping Table'
+\echo ''
 
 select
 	accId,
@@ -18,10 +18,10 @@ having
 	count(*) > 1
 go
 
-print ''
-print 'Check 2'
-print 'MGI Id''s that do not have an entry in the Accession Table'
-print ''
+\echo ''
+\echo 'Check 2'
+\echo 'MGI Id''s that do not have an entry in the Accession Table'
+\echo ''
 
 select
 	mem.accId
@@ -33,11 +33,11 @@ where
 	acc.accId is NULL
 go
 
-print ''
-print 'Check 3'
-print 'MGI Id''s that do not map to GXD Structures in the GXD_Structure table'
-print 'May have multiple entries if MGI Id maps to other objects'
-print ''
+\echo ''
+\echo 'Check 3'
+\echo 'MGI Id''s that do not map to GXD Structures in the GXD_Structure table'
+\echo 'May have multiple entries if MGI Id maps to other objects'
+\echo ''
 
 select
 	distinct
@@ -56,10 +56,10 @@ where
 
 go
 
-print ''
-print 'Check 4'
-print 'Id''s in the EMAPS Field that do not have an entry in the Accession Table'
-print ''
+\echo ''
+\echo 'Check 4'
+\echo 'Id''s in the EMAPS Field that do not have an entry in the Accession Table'
+\echo ''
 
 select mem.emapsId, mem.accID as adID
 into #invalidIDs
@@ -89,10 +89,10 @@ and a._LOgicalDB_key = 1
 and a._Object_key = ac._Structure_key
 go
 
-print ''
-print 'Check 5'
-print 'IDs in the EMAPS field that are not valid EMAPS IDs'
-print ''
+\echo ''
+\echo 'Check 5'
+\echo 'IDs in the EMAPS field that are not valid EMAPS IDs'
+\echo ''
 
 select
 	distinct
@@ -110,10 +110,10 @@ where
 	acc._MGIType_key = ty1._MGIType_key
 go
 
-print ''
-print 'Check 6'
-print 'EMAPS terms that are mapped to two AD terms'
-print ''
+\echo ''
+\echo 'Check 6'
+\echo 'EMAPS terms that are mapped to two AD terms'
+\echo ''
 
 select
 	substring(mem.emapsId, 1, 15) as "EMAPS ID",
@@ -163,10 +163,10 @@ where
 	)
 go
 
-print ''
-print 'Check 7'
-print 'AD terms that are mapped to two EMAPS terms'
-print ''
+\echo ''
+\echo 'Check 7'
+\echo 'AD terms that are mapped to two EMAPS terms'
+\echo ''
 
 select
 	substring(mem.accId, 1, 15) as "AD ID",
@@ -216,10 +216,10 @@ where
 	)
 go
 
-print ''
-print 'Check 8'
-print 'AD Stage and EMAPS Stage that are not the same'
-print ''
+\echo ''
+\echo 'Check 8'
+\echo 'AD Stage and EMAPS Stage that are not the same'
+\echo ''
 
 select
 	substring(mem.accId, 1, 15) as "AD ID",

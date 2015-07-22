@@ -1,6 +1,6 @@
-print ''
-print 'Allele Missing Expressed Component Attribute'
-print ''
+\echo ''
+\echo 'Allele Missing Expressed Component Attribute'
+\echo ''
 
 select substring(a1.accID,1, 15) as alleleID, aa.symbol as alleleSymbol, substring(a2.accID, 1, 15) as markerID, m.symbol as markerSymbol
 from MGI_Relationship r, ACC_Accession a1, ALL_Allele aa, ACC_Accession a2, MRK_Marker m

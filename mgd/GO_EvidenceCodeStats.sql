@@ -12,18 +12,18 @@ where a._AnnotType_key = 1000
 and a._Annot_key = e._Annot_key
 go
 
-print ''
-print 'Total # of Annotations by GO Evidence Code'
-print ''
+\echo ''
+\echo 'Total # of Annotations by GO Evidence Code'
+\echo ''
 
 select count(_Annot_key) as "# of Annotations", evidenceCode
 from #goevidence
 group by evidenceCode
 go
 
-print ''
-print 'Number of Markers Per GO Evidence Code'
-print ''
+\echo ''
+\echo 'Number of Markers Per GO Evidence Code'
+\echo ''
 
 select count(_Object_key) as "# of Markers", evidenceCode
 from #gomarker

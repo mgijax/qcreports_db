@@ -1,6 +1,6 @@
-print ''
-print 'Markers which contain Alleles which do not match the Marker Symbol'
-print ''
+\echo ''
+\echo 'Markers which contain Alleles which do not match the Marker Symbol'
+\echo ''
 
 select m.symbol as "Marker", a.symbol as "Allele"
 from ALL_Allele a, MRK_Marker m
@@ -22,9 +22,9 @@ go
 create index dups_idx1 on #duplicates(symbol)
 go
 
-print ''
-print 'Duplicate Allele Symbols'
-print ''
+\echo ''
+\echo 'Duplicate Allele Symbols'
+\echo ''
 
 select a.symbol, a.markerSymbol
 from #duplicates d, ALL_Allele_View a
@@ -33,12 +33,12 @@ and a.symbol not in ('a', 'A')
 order by creation_date desc
 go
 
-print ''
-print 'Approved Transgenes where :'
-print '    the marker name and the allele name are not identical'
-print '    or'
-print '    the marker symbol and the allele symbol are not identical'
-print ''
+\echo ''
+\echo 'Approved Transgenes where :'
+\echo '    the marker name and the allele name are not identical'
+\echo '    or'
+\echo '    the marker symbol and the allele symbol are not identical'
+\echo ''
 
 select m.symbol as "Marker Symbol", substring(m.name,1,60) as "Marker Name", 
        a.symbol as "Allele Symbol", substring(a.name,1,60) as "Allele Name"

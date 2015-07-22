@@ -29,12 +29,12 @@ go
 create index probedummy_idx3 on #probedummy(_CreatedBy_key)
 go
 
-print ''
-print 'Dummy Sequence Records Annotated to Mouse Markers'
-print ''
-print 'Includes: all marker statuses (interim, official, withdrawn)'
-print 'Includes: all marker types (gene, DNA segment, etc.)'
-print ''
+\echo ''
+\echo 'Dummy Sequence Records Annotated to Mouse Markers'
+\echo ''
+\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker types (gene, DNA segment, etc.)'
+\echo ''
 
 select ma.accID as "MGI ID", substring(m.symbol,1,30) as "Marker", 
 d.accID as "Sequence", substring(l.name, 1, 25) as "LogicalDB Name", u.login, d.annotation_date
@@ -50,12 +50,12 @@ and d._CreatedBy_key = u._User_key
 order by l.name, d.annotation_date, m.symbol
 go
 
-print ''
-print 'Dummy Sequence Records Annotated to Mouse Molecular Segments'
-print ''
-print 'Includes: all marker statuses (interim, official, withdrawn)'
-print 'Includes: all marker types (gene, DNA segment, etc.)'
-print ''
+\echo ''
+\echo 'Dummy Sequence Records Annotated to Mouse Molecular Segments'
+\echo ''
+\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker types (gene, DNA segment, etc.)'
+\echo ''
 
 select ma.accID as "MGI ID", substring(p.name,1,30) as "Molecular Segment", 
 sa.accID as "Sequence", substring(l.name, 1, 25) as "LogicalDB Name", u.login, d.annotation_date

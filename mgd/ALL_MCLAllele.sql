@@ -5,9 +5,9 @@ from ALL_Allele_Cellline a
 group by a._MutantCellLine_key having count(*) > 1
 go
 
-print ''
-print 'MCL''s that are associated with more than one Allele'
-print ''
+\echo ''
+\echo 'MCL''s that are associated with more than one Allele'
+\echo ''
 
 select substring(c.cellLine,1,50) as cellLine, 
        substring(aa.symbol,1,50) as symbol, aa.modification_date

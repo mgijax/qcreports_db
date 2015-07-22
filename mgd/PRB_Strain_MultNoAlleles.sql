@@ -15,11 +15,11 @@ from #strains
 group by _Strain_key having count(*) > 1
 go
 
-print ''
-print 'Strains ending with ''>'''
-print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
-print 'with Multiple Markers and at least one Marker has no Alleles'
-print ''
+\echo ''
+\echo 'Strains ending with ''>'''
+\echo 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
+\echo 'with Multiple Markers and at least one Marker has no Alleles'
+\echo ''
 
 select distinct s.strain, s.symbol
 from #multiples m, #strains s

@@ -63,14 +63,14 @@ go
 create index final_idx2 on #final(_Image_key)
 go
 
-print ''
+\echo ''
 select count(distinct _Image_key) as "rows affected" from #final
 go
 
-print ''
-print 'Displayed Image Panes annotated to >2 assays (if Immunohistochemistry), >1 assay for all others.'
-print 'Excludes J:80502'
-print ''
+\echo ''
+\echo 'Displayed Image Panes annotated to >2 assays (if Immunohistochemistry), >1 assay for all others.'
+\echo 'Excludes J:80502'
+\echo ''
 
 select distinct i.accID as imageID, r.accID as refID
 from #final f, ACC_Accession i, ACC_Accession r  

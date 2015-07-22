@@ -3,9 +3,9 @@ into #strains
 from PRB_Strain
 group by strain having count(*) > 1
 
-print ''
-print 'Duplicate Strains'
-print ''
+\echo ''
+\echo 'Duplicate Strains'
+\echo ''
 
 (
 select null as jr, 

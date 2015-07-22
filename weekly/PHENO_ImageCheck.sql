@@ -1,7 +1,7 @@
 
-print ''
-print 'Image Figure Labels Beginning ''Fig''.'
-print ''
+\echo ''
+\echo 'Image Figure Labels Beginning ''Fig''.'
+\echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i
@@ -9,9 +9,9 @@ where i.figureLabel like 'Fig%'
 order by i.jnumID
 go
 
-print ''
-print 'Images with Copyright containing ''(||)'''
-print ''
+\echo ''
+\echo 'Images with Copyright containing ''(||)'''
+\echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
@@ -23,9 +23,9 @@ and nc.note like '%(||)%'
 order by i.jnumID
 go
 
-print ''
-print 'Image Pane Labels containing '','''
-print ''
+\echo ''
+\echo 'Image Pane Labels containing '','''
+\echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i,IMG_ImagePane p
@@ -33,9 +33,9 @@ where p.paneLabel like '%,%' and p._Image_key = i._Image_key
 order by i.jnumID
 go
 
-print ''
-print 'Elsevier: where the J# in the copyright does not match the J# of the stub'
-print ''
+\echo ''
+\echo 'Elsevier: where the J# in the copyright does not match the J# of the stub'
+\echo ''
 
 select distinct i.jnumID, i.mgiID
 from IMG_Image_View i,MGI_Note_Image_View n
@@ -47,10 +47,10 @@ and n._Object_key = i._Image_key
 order by i.jnumID
 go
 
-print ''
-print 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
-print 'includes references with pubmed ids (i.e. excludes data submission references)'
-print ''
+\echo ''
+\echo 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
+\echo 'includes references with pubmed ids (i.e. excludes data submission references)'
+\echo ''
 
 select distinct i.jnumID, i.mgiID, r._primary
 from IMG_Image_View i,MGI_Note_Image_View n, BIB_Refs r
@@ -66,9 +66,9 @@ and a._LogicalDB_key = 29)
 order by i.jnumID
 go
 
-print ''
-print 'Images with JPGs whose Thumbnails have no JPGs'
-print ''
+\echo ''
+\echo 'Images with JPGs whose Thumbnails have no JPGs'
+\echo ''
 
 select distinct c.accID as "MGI ID"
 from IMG_Image a, IMG_Image b, ACC_Accession c
@@ -84,9 +84,9 @@ and c.prefixPart = 'MGI:'
 order by accID
 go
 
-print ''
-print 'JPGs but no Copyright Statement'
-print ''
+\echo ''
+\echo 'JPGs but no Copyright Statement'
+\echo ''
 
 select i.mgiID, i.jnumID
 from IMG_Image_View i 
@@ -100,9 +100,9 @@ and mn._MGIType_key = 9
 and mn._NoteType_key = 1023)
 go
 
-print ''
-print 'All phenotype images (either full size or thumbnail) that lack a caption'
-print ''
+\echo ''
+\echo 'All phenotype images (either full size or thumbnail) that lack a caption'
+\echo ''
 
 select distinct c.accID as "MGI ID"
 from IMG_Image a, ACC_Accession c

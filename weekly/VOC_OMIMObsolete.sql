@@ -11,9 +11,9 @@ go
 create index idx_key on #obsolete(_Object_key)
 go
 
-print ''
-print 'Genotype Annotations to Obsolete OMIM Terms'
-print ''
+\echo ''
+\echo 'Genotype Annotations to Obsolete OMIM Terms'
+\echo ''
 
 select g.accID as "Genotype ID", o.accID as "OMIM ID", substring(o.term , 1, 100) as "Term"
 from #obsolete o, VOC_Annot a, ACC_Accession g

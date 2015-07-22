@@ -1,7 +1,7 @@
 
-print ''
-print 'Full Coded References that are missing a Gene in the Index'
-print ''
+\echo ''
+\echo 'Full Coded References that are missing a Gene in the Index'
+\echo ''
 
 select distinct b.accID, m.symbol, b.numericPart
 from GXD_Assay a, MRK_Marker m, ACC_Accession b

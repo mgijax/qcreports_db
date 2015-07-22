@@ -17,12 +17,12 @@ from #strains
 group by _Strain_key having count(*) = 1
 go
 
-print ''
-print 'Private Strains ending with >'
-print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
-print 'with at most one Marker and Marker has no Allele'
-print 'and Allele symbol is *not* in MGD'
-print ''
+\echo ''
+\echo 'Private Strains ending with >'
+\echo 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
+\echo 'with at most one Marker and Marker has no Allele'
+\echo 'and Allele symbol is *not* in MGD'
+\echo ''
 
 select substring(l.name, 1, 20) as externalDB, a.accID, s.strain, s.symbol, 
 substring(s.alleleSymbol, 1, 35) as alleleSymbol
@@ -40,12 +40,12 @@ and s.alleleSymbol = a.symbol)
 order by s.strain
 go
 
-print ''
-print 'Public Strains ending with > '
-print 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
-print 'with at most one Marker and Marker has no Allele'
-print 'and Allele symbol is *not* in MGD'
-print ''
+\echo ''
+\echo 'Public Strains ending with > '
+\echo 'with Strain Attribute of mutant stock, mutant strain or targeted mutation '
+\echo 'with at most one Marker and Marker has no Allele'
+\echo 'and Allele symbol is *not* in MGD'
+\echo ''
 
 select substring(l.name, 1, 20) as externalDB, a.accID, s.strain, s.symbol, 
 substring(s.alleleSymbol, 1, 35) as alleleSymbol

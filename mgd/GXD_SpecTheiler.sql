@@ -37,10 +37,10 @@ from #temp3
 group by _GelLane_key having count(*) > 1
 go
 
-print ''
-print 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
-print '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)'
-print ''
+\echo ''
+\echo 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
+\echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)'
+\echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp2 t, GXD_Specimen s, GXD_Assay_View a
@@ -49,10 +49,10 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-print ''
-print 'Gel Lane Specimens annotated to structures of > 1 Theiler Stage'
-print '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)'
-print ''
+\echo ''
+\echo 'Gel Lane Specimens annotated to structures of > 1 Theiler Stage'
+\echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)'
+\echo ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from #temp4 t, GXD_GelLane s, GXD_Assay_View a
@@ -121,10 +121,10 @@ and ir._Result_key = irs._Result_key
 and irs._Structure_key = m._Structure_key
 go
 
-print ''
-print 'InSitu Specimens and Gel Lanes with > 1 Sex' 
-print '(excludes J:80502)'
-print ''
+\echo ''
+\echo 'InSitu Specimens and Gel Lanes with > 1 Sex' 
+\echo '(excludes J:80502)'
+\echo ''
 
 /* report all specimens with annotated to both male and female structures */
 select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel

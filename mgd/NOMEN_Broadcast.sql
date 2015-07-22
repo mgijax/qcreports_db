@@ -4,9 +4,9 @@ from NOM_Marker
 where broadcast_date between dateadd(day, -3, getdate()) and getdate()
 go
 
-print ''
-print 'Nomenclature Symbols Broadcast Within Last 3 Days'
-print ''
+\echo ''
+\echo 'Nomenclature Symbols Broadcast Within Last 3 Days'
+\echo ''
 
 select v.symbol, substring(v.name, 1, 50) as name, substring(v.status,1,25) as status, 
 v.chromosome, v.createdBy, v.broadcastBy, r.jnumID, 

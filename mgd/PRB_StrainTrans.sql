@@ -1,6 +1,6 @@
-print ''
-print 'Strains - Transgenic or Targeted Mutation'
-print ''
+\echo ''
+\echo 'Strains - Transgenic or Targeted Mutation'
+\echo ''
 
 select a.accID as jr, substring(t.term,1,30) as straintype, 
 substring(s.strain,1,125) as strain

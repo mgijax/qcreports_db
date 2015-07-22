@@ -1,6 +1,6 @@
-print ''
-print 'Strains containing F1 and F2'
-print ''
+\echo ''
+\echo 'Strains containing F1 and F2'
+\echo ''
 
 (
 select s.standard, null as jr, substring(t.term,1,30) as straintype, 

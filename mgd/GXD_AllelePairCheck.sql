@@ -3,9 +3,9 @@
 /* all allele pairs that are attached to different markers */
 
 
-print ''
-print 'Genotypes where Allele Pairs are associated with different Markers'
-print ''
+\echo ''
+\echo 'Genotypes where Allele Pairs are associated with different Markers'
+\echo ''
 
 select a.accID, a1.symbol, a2.symbol, m1.symbol, m2.symbol
 from GXD_AllelePair g, 

@@ -24,9 +24,9 @@ and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 go
 
-print ''
-print 'Non Standard Strains (excluding F1 and F2): data attached = yes'
-print ''
+\echo ''
+\echo 'Non Standard Strains (excluding F1 and F2): data attached = yes'
+\echo ''
 
 select substring(l.name,1,20) as "external db", a.accID as "external id", 
 substring(s.strain,1,125) as "strain"
@@ -55,9 +55,9 @@ and a._LogicalDB_key != 1)
 order by strain
 go
 
-print ''
-print 'Non Standard Strains (excluding F1 and F2): data attached = no'
-print ''
+\echo ''
+\echo 'Non Standard Strains (excluding F1 and F2): data attached = no'
+\echo ''
 
 select substring(l.name,1,20) as "external db", a.accID as "external id", 
 substring(s.strain,1,125) as "strain"

@@ -58,15 +58,15 @@ go
 create index pdeleted_idx1 on #pdeleted(seqID)
 go
 
-print ''
-print '    Deleted Sequences with MGI Associations'
-print ''
-print 'A row in this report represents a Sequence that is designated as Deleted'
-print 'by the Sequence provider and contains associations to Marker and/or Molecular Segment.'
-print ''
-print 'Includes: all marker statuses (interim, official, withdrawn)'
-print 'Includes: all marker types (gene, DNA segment, etc.)'
-print ''
+\echo ''
+\echo '    Deleted Sequences with MGI Associations'
+\echo ''
+\echo 'A row in this report represents a Sequence that is designated as Deleted'
+\echo 'by the Sequence provider and contains associations to Marker and/or Molecular Segment.'
+\echo ''
+\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker types (gene, DNA segment, etc.)'
+\echo ''
 
 select seqID, mgiID, name from #mdeleted
 union

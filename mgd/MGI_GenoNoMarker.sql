@@ -1,7 +1,7 @@
 
-print ''
-print 'Genotype Alleles that Contain No Markers'
-print ''
+\echo ''
+\echo 'Genotype Alleles that Contain No Markers'
+\echo ''
 
 select distinct aa.symbol
         from GXD_AlleleGenotype g, ALL_Allele aa

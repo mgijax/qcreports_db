@@ -80,9 +80,9 @@ go
 create unique index idx2 on #strains2(_Strain_key)
 go
 
-print ''
-print 'Standard Strains'
-print ''
+\echo ''
+\echo 'Standard Strains'
+\echo ''
 
 select n.dataExists as "data attached", substring(l.name,1,20) as "external db", 
 a.accID as "external id", n.mgiID as "MGI id", substring(s.strain,1,80) as "strain"

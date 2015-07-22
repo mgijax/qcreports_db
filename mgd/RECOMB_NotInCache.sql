@@ -6,20 +6,20 @@ and not exists (select e.* from GXD_Expression e
 where a._Assay_key = e._Assay_key)
 go
 
-print ''
-print 'Assays entirely missing from cache table'
-print '(and therefore not visible in Web interface)'
-print ''
+\echo ''
+\echo 'Assays entirely missing from cache table'
+\echo '(and therefore not visible in Web interface)'
+\echo ''
 
 select mgiID, jnumID, assayType
 from #missing m, GXD_Assay_View v
 where m._Assay_key = v._Assay_key
 go
 
-print ''
-print 'Recombinant/transgenic assays entirely missing from cache table'
-print '(due to missing Specimen Results)'
-print ''
+\echo ''
+\echo 'Recombinant/transgenic assays entirely missing from cache table'
+\echo '(due to missing Specimen Results)'
+\echo ''
 
 select a.mgiID, a.jnumID, a.assayType
 from #missing m, GXD_Assay_View a
@@ -30,10 +30,10 @@ where a._Assay_key = s._Assay_key
 and s._Specimen_key = r._Specimen_key)
 go
 
-print ''
-print 'Recombinant/transgenic assays entirely missing from cache table'
-print '(due to missing Specimen Results or Results Structures)'
-print ''
+\echo ''
+\echo 'Recombinant/transgenic assays entirely missing from cache table'
+\echo '(due to missing Specimen Results or Results Structures)'
+\echo ''
 
 select a.mgiID, a.jnumID, a.assayType
 from #missing m, GXD_Assay_View a
@@ -56,9 +56,9 @@ and not exists
 where r._Result_key = i._Result_key)
 go
 
-print ''
-print 'InSitu Results missing Structures'
-print ''
+\echo ''
+\echo 'InSitu Results missing Structures'
+\echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #imissingstructs r, GXD_Specimen s, GXD_Assay_View a
@@ -78,9 +78,9 @@ and not exists
 (select 1 from #missing m where r._Assay_key = m._Assay_key)
 go
 
-print ''
-print 'InSitu Specimens missing Results'
-print ''
+\echo ''
+\echo 'InSitu Specimens missing Results'
+\echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #imissingresults r, GXD_Specimen s, GXD_Assay_View a

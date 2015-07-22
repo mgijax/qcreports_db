@@ -1,12 +1,12 @@
 
-print ''
-print 'Germline Transmission Checks'
-print '  only includes alleles of status ''Approved'' or ''Autoload'''
-print ''
+\echo ''
+\echo 'Germline Transmission Checks'
+\echo '  only includes alleles of status ''Approved'' or ''Autoload'''
+\echo ''
 
-print ''
-print 'transmission status is germline or chimeric and transmission reference does not exist'
-print ''
+\echo ''
+\echo 'transmission status is germline or chimeric and transmission reference does not exist'
+\echo ''
 
 select acc.accID, substring(a.symbol,1,35) as symbol, 
 substring(t.term,1,25) as "trans status", 
@@ -27,9 +27,9 @@ and r._RefAssocType_key = 1023)
 order by a.symbol
 go
 
-print ''
-print 'transmission status is not germline or chimeric and transmission reference does exist'
-print ''
+\echo ''
+\echo 'transmission status is not germline or chimeric and transmission reference does exist'
+\echo ''
 
 select acc.accID, substring(a.symbol,1,35) as symbol, 
 substring(t.term,1,25) as "trans status", 
@@ -50,9 +50,9 @@ and r._RefAssocType_key = 1023)
 order by a.symbol
 go
 
-print ''
-print 'there is no mutant cell line and the transmission status != not applicable'
-print ''
+\echo ''
+\echo 'there is no mutant cell line and the transmission status != not applicable'
+\echo ''
 
 select acc.accID, substring(a.symbol,1,35) as symbol, 
 substring(t.term,1,25) as "trans status", 
@@ -71,9 +71,9 @@ where a._Allele_key = c._Allele_key)
 order by a.symbol
 go
 
-print ''
-print 'there is a mutant cell line and the transmission status = not applicable'
-print ''
+\echo ''
+\echo 'there is a mutant cell line and the transmission status = not applicable'
+\echo ''
 
 select acc.accID, substring(a.symbol,1,35) as symbol, 
 substring(t.term,1,25) as "trans status", 

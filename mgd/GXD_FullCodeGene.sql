@@ -43,15 +43,15 @@ go
 create index excluded_idx on #excluded(_Index_key)
 go
 
-print ''
-print 'Full Coded References that contain indexed Genes that have not been full coded'
-print ''
-print 'excluded:'
-print '     index records that contain only cDNA, primer extension, nuclease S1 and RNase protection assays'
-print '     index records that contain only age ''E?'''
-print '     index records that have a note that contains: '
-print '     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket'', ''quantitative RT'''
-print ''
+\echo ''
+\echo 'Full Coded References that contain indexed Genes that have not been full coded'
+\echo ''
+\echo 'excluded:'
+\echo '     index records that contain only cDNA, primer extension, nuclease S1 and RNase protection assays'
+\echo '     index records that contain only age ''E?'''
+\echo '     index records that have a note that contains: '
+\echo '     ''ot blot'', ''fraction'', ''reverse'', ''immunoprecip'', ''binding'', ''rocket'', ''quantitative RT'''
+\echo ''
 
 select distinct b.accID, m.symbol, b.numericPart
 from GXD_Index i, MRK_Marker m, ACC_Accession b

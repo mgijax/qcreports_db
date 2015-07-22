@@ -31,9 +31,9 @@ and p1.primer2sequence = p2.primer2sequence
 and p1._Probe_key != p2._Probe_key
 go
 
-print ''
-print 'Primer Sets whose Sequences are identical'
-print ''
+\echo ''
+\echo 'Primer Sets whose Sequences are identical'
+\echo ''
 
 select substring(a1.accID,1,15) as accID1, d.name as primer1, 
 substring(a2.accID,1,15) as accID2, d.primer2, d.primer1sequence, d.primer2sequence

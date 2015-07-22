@@ -7,9 +7,9 @@ go
 create index spec1_idx on #spec1(_Assay_key)
 go
 
-print ''
-print 'InSitu Specimens with Not Applicable, Not Specified'
-print ''
+\echo ''
+\echo 'InSitu Specimens with Not Applicable, Not Specified'
+\echo ''
 
 select a1.accID as mgiID, a2.accID as jnumID, s.specimenLabel
 from #spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
@@ -39,9 +39,9 @@ and t.stage != 28
 and t.stage != 27
 go
 
-print ''
-print 'TS 27 and TS 28 InSitu Specimens annotated to embryonic structures'
-print ''
+\echo ''
+\echo 'TS 27 and TS 28 InSitu Specimens annotated to embryonic structures'
+\echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from #temp1 t, GXD_Specimen s, GXD_Assay_View a
@@ -50,9 +50,9 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 go
 
-print ''
-print 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
-print ''
+\echo ''
+\echo 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
+\echo ''
 
 select distinct s._Specimen_key
 into #temp3

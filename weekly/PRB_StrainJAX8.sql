@@ -1,7 +1,7 @@
 
-print ''
-print 'MMRRC JR#s with alleles added in past week'
-print ''
+\echo ''
+\echo 'MMRRC JR#s with alleles added in past week'
+\echo ''
 
 select a.accID
 from ACC_Accession a, PRB_Strain s

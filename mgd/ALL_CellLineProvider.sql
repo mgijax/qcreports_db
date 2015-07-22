@@ -1,9 +1,9 @@
 
-print ''
-print 'Cases where the cell line creator has been entered'
-print 'but the Accession ID of the mutant cell line has not been attached.'
-print '(See the EI Mutant Cell Line Module)'
-print ''
+\echo ''
+\echo 'Cases where the cell line creator has been entered'
+\echo 'but the Accession ID of the mutant cell line has not been attached.'
+\echo '(See the EI Mutant Cell Line Module)'
+\echo ''
 
 select substring(ac.creator,1,25) as creator, acc.accID, 
 substring(a.symbol,1,35) as symbol, 
@@ -47,12 +47,12 @@ go
 create index idx_allele on #notexists(_Allele_key)
 go
 
-print ''
-print 'Cases where the cell line creator has been entered'
-print 'and the Accession ID of the mutant cell line has been attached,'
-print 'but the mutant cell line name is not the same as the name of the Accession ID.'
-print '(See the EI Mutant Cell Line Module)'
-print ''
+\echo ''
+\echo 'Cases where the cell line creator has been entered'
+\echo 'and the Accession ID of the mutant cell line has been attached,'
+\echo 'but the mutant cell line name is not the same as the name of the Accession ID.'
+\echo '(See the EI Mutant Cell Line Module)'
+\echo ''
 
 select substring(ac.creator,1,25) as creator, acc.accID, 
 substring(a.symbol,1,35) as symbol, 
