@@ -55,7 +55,7 @@ where exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
 create index idx1 on strains1(_Strain_key)
 ;
 
-select s._Strain_key, a.accID as mgiID, 'y' as dataExists
+select s._Strain_key, a.accID as mgiID, 'y'::text as dataExists
 INTO TEMPORARY TABLE strains2
 from PRB_Strain s, ACC_Accession a
 where s.standard = 1
@@ -67,7 +67,7 @@ and exists (select 1 from strains1 ss where ss._Strain_key = s._Strain_key)
 ;
 
 INSERT INTO strains2
-select s._Strain_key, a.accID as mgiID, 'n' as dataExists
+select s._Strain_key, a.accID as mgiID, 'n'::text as dataExists
 from PRB_Strain s, ACC_Accession a
 where s.standard = 1
 and s._Strain_key = a._Object_key

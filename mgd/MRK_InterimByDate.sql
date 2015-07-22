@@ -56,7 +56,7 @@ INTO TEMPORARY TABLE results
 from homology h, radar.DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606
 union
-select h.*, '?' as hstatus
+select h.*, '?'::text as hstatus
 from homology h
 where not exists (select 1 from radar.DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606)

@@ -1,4 +1,4 @@
-select s._Strain_key, 'y' as dataExists
+select s._Strain_key, 'y'::text as dataExists
 INTO TEMPORARY TABLE strains
 from PRB_Strain s
 where s.standard = 0

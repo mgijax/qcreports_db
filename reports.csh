@@ -41,13 +41,10 @@ echo "#" >> ${OUTPUTFILE}
 # next: pipe to the next sed
 # last:  pipe to psql
 #
-sed "s/convert(char(10),/to_char(/g" ${INPUTFILE} | \
-sed "s/, 101)/, 'MM\/dd\/yyyy')/g" | \
-sed "s/dateadd(day, -1, getdate())/(now() + interval '-1 day')/g" | \
+sed "s/dateadd(day, -1, getdate())/(now() + interval '-1 day')/g" ${INPUTFILE} | \
 sed "s/dateadd(day, -3, getdate())/(now() + interval '-3 day')/g" | \
 sed "s/dateadd(day, -7, getdate())/(now() + interval '-7 day')/g" | \
 sed "s/getdate()/now()/g" | \
 sed "s/charindex('-',/position('-' in /g" | \
 sed "s/charindex(' ',/position(' ' in /g" | \
-sed "s/' as /'::text as /g" | \
 psql -h ${PG_DBSERVER} -U ${PG_DBUSER} -d ${PG_DBNAME} ${PSQL_ECHO} >> ${OUTPUTFILE}

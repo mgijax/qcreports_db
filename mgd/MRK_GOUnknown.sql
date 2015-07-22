@@ -6,8 +6,8 @@
 select distinct substring(m.symbol,1,25) as symbol, m._Marker_key, r._Refs_key,
 substring(r.jnumID,1,20) as jnumID,
 substring(r.pubmedID,1,20) as pubmedID, 
-convert(char(10), rr.creation_date, 101) as jnumDate,
-convert(char(10), a.creation_date, 101) as annotDate
+to_char(rr.creation_date, 'MM/dd/yyyy') as jnumDate,
+to_char(a.creation_date, 'MM/dd/yyyy') as annotDate
 INTO TEMPORARY TABLE temp1
 from MRK_Marker m, VOC_Annot_View a, MRK_Reference r, BIB_Refs rr
 where m._Organism_key = 1 
@@ -69,7 +69,7 @@ create index omim_idx1 on omim(_Marker_key)
 /* for those without GO annotations */
 
 /* tag 1: for those with GO annotations only */
-select t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, t.annotDate, '1' as tag
+select t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, t.annotDate, '1'::text as tag
 INTO TEMPORARY TABLE temp3
 from temp2 t
 where exists (select 1 from BIB_DataSet_Assoc a, BIB_DataSet d
@@ -91,7 +91,7 @@ and e._Refs_key = t._Refs_key)
 /* tag 2: for those with GO and A&P annotations only */
 /* and not in tag 1 */
 INSERT INTO temp3
-select t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, t.annotDate, '2' as tag
+select t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, t.annotDate, '2'::text as tag
 from temp2 t
 where not exists (select 1 from temp3 t3 
 where t.symbol = t3.symbol
@@ -120,7 +120,7 @@ and e._Refs_key = t._Refs_key)
 /* tag 3: any GO annotations */
 /* and not in tag 1 or 2 */
 INSERT INTO temp3
-select t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, t.annotDate, '3' as tag
+select t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, t.annotDate, '3'::text as tag
 from temp2 t
 where not exists (select 1 from temp3 t3 
 where t.symbol = t3.symbol
@@ -141,14 +141,14 @@ create index temp3_idx1 on temp3(_Marker_key)
 
 /* set hasOMIM */
 
-select t.*, 'Y' as hasOMIM
+select t.*, 'Y'::text as hasOMIM
 INTO TEMPORARY TABLE temp4
 from temp3 t
 where exists (select 1 from omim o where t._Marker_key = o._Marker_key)
 ;
 
 INSERT INTO temp4
-select t.*, 'N' as hasOMIM
+select t.*, 'N'::text as hasOMIM
 from temp3 t
 where not exists (select 1 from omim o where t._Marker_key = o._Marker_key)
 ;

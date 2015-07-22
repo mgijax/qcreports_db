@@ -37,28 +37,28 @@ and n._NoteType_key in (1011,1012,1013))
 \echo ''
 
 (
-select s.strain, null as accID, 'Other' as accType
+select s.strain, null as accID, 'Other'::text as accType
 from strains s
 where not exists (select 1 from PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key in (37, 38, 39, 40))
 union
-select s.strain, a.accID, 'EMMA' as accType
+select s.strain, a.accID, 'EMMA'::text as accType
 from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 37
 union
-select s.strain, a.accID, 'MMRRC' as accType
+select s.strain, a.accID, 'MMRRC'::text as accType
 from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 38
 union
-select s.strain, a.accID, 'Harwell' as accType
+select s.strain, a.accID, 'Harwell'::text as accType
 from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 39
 union
-select s.strain, a.accID, 'ORNL' as accType
+select s.strain, a.accID, 'ORNL'::text as accType
 from strains s, PRB_Strain_Acc_View a
 where s._Strain_key = a._Object_key
 and a._LogicalDB_key = 40

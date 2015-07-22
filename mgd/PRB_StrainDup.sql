@@ -2,6 +2,7 @@ select strain
 INTO TEMPORARY TABLE strains
 from PRB_Strain
 group by strain having count(*) > 1
+;
 
 \echo ''
 \echo 'Duplicate Strains'
