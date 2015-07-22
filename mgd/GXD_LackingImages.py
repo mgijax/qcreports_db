@@ -146,7 +146,9 @@ def printResults(fp):
     results = db.sql('''
 	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
 	    from #refs r, IMG_Image i
-	    where r._Refs_key = i._Refs_key''', 'auto')
+	    where r._Refs_key = i._Refs_key
+            order by figureLabel
+	    ''', 'auto')
     fLabels = {}
     for r in results:
         key = r['_Refs_key']

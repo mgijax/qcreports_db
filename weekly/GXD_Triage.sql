@@ -1,6 +1,7 @@
 
 /* papers selected for Expression in the past week */
 
+select r._Refs_key, r.creation_date
 into #triageA
 from BIB_Refs r, BIB_DataSet_Assoc a
 where a.creation_date between dateadd(day, -7, getdate()) and dateadd(day, -1, getdate())
@@ -13,6 +14,7 @@ create index idx1 on #triageA(_Refs_key)
 
 go
 
+print ''
 print 'Papers Selected For Expression in past week '
 print 'by Data Set creation date'
 print ''

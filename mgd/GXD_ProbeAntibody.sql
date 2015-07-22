@@ -182,6 +182,7 @@ go
 create index multencodes_idx1 on #multencodes(_Probe_key)
 go
 
+print ''
 print 'Probe w/ more than one encodes relationship'
 print ''
 
@@ -202,6 +203,7 @@ print ''
 print 'Antigens with source information but both tissue and cell line are Not specified'
 print ''
 
+select distinct _Antigen_key, antigenName, mgiID 
 into #antigens 
 from GXD_Antigen_View  g, PRB_Source s 
 where s._Source_key = g._Source_key 
@@ -222,6 +224,7 @@ or _Strain_key != -1
 or _Gender_key != 315167)
 go
 
+select mgiID, antigenName
 from #antigens
 go
 
@@ -229,6 +232,7 @@ print ''
 print 'Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified'
 print ''
 
+select distinct m._Probe_key, m.name as cDNAname, p.mgiID 
 into #probes 
 from PRB_Source s, PRB_Probe_View p, PRB_Marker_View m
 where s._Organism_key = 1 
