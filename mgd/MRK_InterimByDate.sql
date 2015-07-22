@@ -1,6 +1,3 @@
-set nocount on
-go
-
 /* select phenotypic mutants */
 select distinct m._Marker_key
 into #mutants
@@ -56,19 +53,16 @@ go
 
 select h.*, e.status as hstatus
 into #results
-from #homology h, radar..DP_EntrezGene_Info e
+from #homology h, radar.DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606
 union
 select h.*, '?' as hstatus
 from #homology h
-where not exists (select 1 from radar..DP_EntrezGene_Info e
+where not exists (select 1 from radar.DP_EntrezGene_Info e
 where h.hsymbol = e.symbol and e.taxID = 9606)
 go
 
 create index results_idx1 on #results(hstatus)
-go
-
-set nocount off
 go
 
 print ''

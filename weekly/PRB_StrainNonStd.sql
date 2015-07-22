@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select s._Strain_key, 'y' as dataExists
 into #strains
 from PRB_Strain s
@@ -25,9 +22,6 @@ and not exists (select 1 from CRS_Cross a where s._Strain_key = a._femaleStrain_
 and not exists (select 1 from CRS_Cross a where s._Strain_key = a._maleStrain_key)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
-go
-
-set nocount off
 go
 
 print ''

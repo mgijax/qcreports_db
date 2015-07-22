@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 /* select all where the a secondary id is annotated */
 
 select ma._Object_key, ma.accID, sa._Object_key as sequenceKey
@@ -52,9 +49,6 @@ and a._LogicalDB_key = 55)
 go
 
 create index final_idx on #final(_Object_key)
-go
-
-set nocount off
 go
 
 print ''

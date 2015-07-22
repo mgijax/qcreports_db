@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 /* GO Annotations to unknown terms */
 /* only include non-FANTOM references */
 /* and J: creation date >= Annotation creation date */
@@ -179,9 +176,6 @@ print ' tag 1 = only for GO'
 print ' tag 2 = only for GO and AP'
 print ' tag 3 = any GO'
 print ''
-
-set nocount off
-go
 
 select distinct symbol, mgiID, jnumID, pubmedID, tag, hasOMIM, jnumDate, annotDate
 from #temp4 

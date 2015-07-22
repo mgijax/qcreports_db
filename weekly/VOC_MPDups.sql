@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select a._Term_key, a._Object_key, a._Qualifier_key, e._EvidenceTerm_key, e._Refs_key
 into #a
 from VOC_Annot a, VOC_Evidence e
@@ -14,9 +11,6 @@ into #dup
 from #a a
 group by _Term_key, _Object_key, _Qualifier_key, _EvidenceTerm_key, _Refs_key
 having count(*) > 1
-go
-
-set nocount off
 go
 
 print ''

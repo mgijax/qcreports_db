@@ -3,9 +3,6 @@
 /* TR 9949: remove gxd assay check */
 /*        : sort by creation_date */
 
-set nocount on
-go
-
 /* all primers */
 
 select _Probe_key, substring(name, 1, 50) as name, 
@@ -32,9 +29,6 @@ from #primers p1, #primers p2
 where p1.primer1sequence = p2.primer1sequence
 and p1.primer2sequence = p2.primer2sequence
 and p1._Probe_key != p2._Probe_key
-go
-
-set nocount off
 go
 
 print ''

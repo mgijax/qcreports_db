@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select l._Assay_key, l._GelLane_key
 into #assay
 from GXD_GelLane l, GXD_GelBand b
@@ -11,9 +8,6 @@ and b._Strength_key = -2
 go
 
 create index idx1 on #assay(_Assay_key)
-go
-
-set nocount off
 go
 
 print ''

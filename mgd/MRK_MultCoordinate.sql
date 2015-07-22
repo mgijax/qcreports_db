@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select s._Sequence_key, s._Marker_key, s.accID, c.provider
 into #coord
 from SEQ_Marker_Cache s, SEQ_Coord_Cache c
@@ -22,9 +19,6 @@ group by provider, _Marker_key having count(*) > 1
 go
 
 create index dups_idx1 on #dups(_Marker_key)
-go
-
-set nocount off
 go
 
 print ''

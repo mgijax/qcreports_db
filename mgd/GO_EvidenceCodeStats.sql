@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select e._Annot_key, e.evidenceCode
 into #goevidence
 from VOC_Annot a, VOC_Evidence_View e
@@ -13,9 +10,6 @@ into #gomarker
 from VOC_Annot a, VOC_Evidence_View e
 where a._AnnotType_key = 1000
 and a._Annot_key = e._Annot_key
-go
-
-set nocount off
 go
 
 print ''

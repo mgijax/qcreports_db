@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select a._Assay_key, a._Refs_key, substring(specimenLabel, 1, 50) as specimenLabel
 into #knockin
 from GXD_Assay a, GXD_Specimen s

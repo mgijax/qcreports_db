@@ -1,15 +1,9 @@
-set nocount on
-go
-
 select a._Assay_key
 into #missing
 from GXD_Assay a
 where a._AssayType_key in (1,2,3,4,5,6,8,9)
 and not exists (select e.* from GXD_Expression e
 where a._Assay_key = e._Assay_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -64,18 +58,12 @@ and s._Specimen_key = r._Specimen_key
 and r._Result_key = rs._Result_key)
 go
 
-set nocount on
-go
-
 select r._Result_key, r._Specimen_key
 into #imissingstructs
 from GXD_InSituResult r
 where not exists
 (select 1 from GXD_ISResultStructure s
 where r._Result_key = s._Result_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -89,9 +77,6 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-set nocount on
-go
-
 select r._Specimen_key
 into #imissingresults
 from GXD_Specimen r
@@ -100,9 +85,6 @@ where not exists
 where r._Specimen_key = s._Specimen_key)
 and not exists
 (select 1 from #missing m where r._Assay_key = m._Assay_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -116,9 +98,6 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
-set nocount on
-go
-
 select g._GelLane_key
 into #gmissingstructs
 from GXD_GelLane g
@@ -126,9 +105,6 @@ where g._GelControl_key = 1
 and not exists
 (select 1 from GXD_GelLaneStructure s
 where g._GelLane_key = s._GelLane_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -149,9 +125,6 @@ where g._GelControl_key = 1
 and not exists
 (select 1 from GXD_GelBand b
 where g._GelLane_key = b._GelLane_key)
-go
-
-set nocount off
 go
 
 print ''

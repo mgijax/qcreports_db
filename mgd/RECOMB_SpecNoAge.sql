@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select s._Assay_key, substring(s.specimenLabel, 1, 50) as specimenLabel
 into #spec1
 from GXD_Specimen s
@@ -8,9 +5,6 @@ where (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 go
 
 create index spec1_idx on #spec1(_Assay_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -33,9 +27,6 @@ and a2.prefixPart = 'J:'
 and a2.preferred = 1
 go
 
-set nocount on
-go
-
 select distinct s._Specimen_key
 into #temp1
 from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure c, GXD_TheilerStage t
@@ -46,9 +37,6 @@ and r._Structure_key = c._Structure_key
 and c._Stage_key = t._Stage_key
 and t.stage != 28 
 and t.stage != 27
-go
-
-set nocount off
 go
 
 print ''
@@ -66,9 +54,6 @@ print ''
 print 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
 print ''
 
-set nocount on
-go
-
 select distinct s._Specimen_key
 into #temp3
 from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure c, GXD_TheilerStage t
@@ -80,9 +65,6 @@ and t.stage = 27
 go
 
 create index temp3_idx on #temp3(_Specimen_key )
-go
-
-set nocount off
 go
 
 select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel

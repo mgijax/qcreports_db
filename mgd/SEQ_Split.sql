@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select s._Sequence_key
 into #split1
 from SEQ_Sequence s
@@ -14,9 +11,6 @@ from #split1 s, ACC_Accession a
 where s._Sequence_key = a._Object_key
 and a._MGIType_key = 19
 and a.preferred = 1
-go
-
-set nocount off
 go
 
 print ''

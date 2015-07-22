@@ -30,7 +30,7 @@ setenv OUTPUTFILE $2
 setenv DBSERVER $3
 setenv DBNAME $4
 
-echo "#" >> ${OUTPUTFILE}
+echo "#" > ${OUTPUTFILE}
 echo "# Date Generated:  `date`" >> ${OUTPUTFILE}
 echo "# (server = ${DBSERVER}, database = ${DBNAME})" >> ${OUTPUTFILE}
 echo "#" >> ${OUTPUTFILE}
@@ -42,9 +42,6 @@ echo "#" >> ${OUTPUTFILE}
 # last:  pipe to psql
 #
 sed "s/^print/\\echo/g" ${INPUTFILE} | \
-sed "s/set nocount off//g" | \
-sed "s/set nocount on//g" | \
-sed "s/radar../radar./g" | \
 sed "s/^go/;/g" | \
 sed "s/insert into #/INSERT INTO /g" | \
 sed "s/into #/INTO TEMPORARY TABLE /g" | \

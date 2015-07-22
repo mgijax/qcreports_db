@@ -1,13 +1,7 @@
 
-set nocount on
-go
-
 print ''
 print 'New MMRRC JR#s created in past week'
 print ''
-
-set nocount off
-go
 
 select a.accID
 from ACC_Accession a, PRB_Strain s

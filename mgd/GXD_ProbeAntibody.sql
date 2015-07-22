@@ -1,14 +1,8 @@
-set nocount on
-go
-
 select a._Assay_key, a._Marker_key, p._Probe_key
 into #probe
 from GXD_Assay a, GXD_ProbePrep p
 where a._ProbePrep_key = p._ProbePrep_key
 and a._AssayType_key in (1,2,3,4,5,6,8)
-go
-
-set nocount off
 go
 
 print ''
@@ -26,17 +20,11 @@ and not exists (select 1 from PRB_Marker pm
                 and p._Marker_key = pm._Marker_key)
 go
 
-set nocount on
-go
-
 select a._Assay_key, a._Marker_key, p._Antibody_key
 into #antibody
 from GXD_Assay a, GXD_AntibodyPrep p
 where a._AntibodyPrep_key = p._AntibodyPrep_key
 and a._AssayType_key in (1,2,3,4,5,6,8)
-go
-
-set nocount off
 go
 
 print ''
@@ -54,9 +42,6 @@ and not exists (select 1 from GXD_AntibodyMarker bm
                 and p._Marker_key = bm._Marker_key)
 go
 
-set nocount on
-go
-
 select a._Assay_key, a._Refs_key, p._Probe_key
 into #proberef
 from GXD_Assay a, GXD_ProbePrep p
@@ -65,9 +50,6 @@ and a._AssayType_key in (1,2,3,4,5,6,8)
 and not exists (select 1 from PRB_Reference r
 		where p._Probe_key = r._Probe_key
                 and a._Refs_key = r._Refs_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -84,9 +66,6 @@ and b._LogicalDB_key = 1
 and b.prefixPart = 'J:'
 and p._Probe_key = pb._Probe_key
 order by pb.name, a.accID
-go
-
-set nocount on
 go
 
 select distinct c._Probe_key, s._Sequence_key, c._CreatedBy_key, c.annotation_date
@@ -118,9 +97,6 @@ go
 create index probedummy2_idx3 on #probedummy2(_CreatedBy_key)
 go
 
-set nocount off
-go
-
 print ''
 print 'Dummy Sequence Records Annotated to GXD Mouse Molecular Segments'
 print ''
@@ -145,9 +121,6 @@ and sa.preferred = 1
 and sa._LogicalDB_key = l._LogicalDB_key
 and d._CreatedBy_key = u._User_key
 order by l.name, d.annotation_date, p.name
-go
-
-set nocount on
 go
 
 select s._Sequence_key
@@ -187,9 +160,6 @@ go
 create index pdeleted_idx1 on #pdeleted(seqID)
 go
 
-set nocount off
-go
-
 print ''
 print 'Deleted Sequences with GXD Associations'
 print ''
@@ -198,9 +168,6 @@ print 'by the Sequence provider and contains associations to a GXD Molecular Seg
 print ''
 
 select seqID, mgiID, name from #pdeleted
-go
-
-set nocount on
 go
 
 select distinct pm._Probe_key, pm._Marker_key
@@ -215,9 +182,6 @@ go
 create index multencodes_idx1 on #multencodes(_Probe_key)
 go
 
-set nocount off
-
-print ''
 print 'Probe w/ more than one encodes relationship'
 print ''
 
@@ -238,9 +202,6 @@ print ''
 print 'Antigens with source information but both tissue and cell line are Not specified'
 print ''
 
-set nocount on
-
-select distinct _Antigen_key, antigenName, mgiID 
 into #antigens 
 from GXD_Antigen_View  g, PRB_Source s 
 where s._Source_key = g._Source_key 
@@ -261,9 +222,6 @@ or _Strain_key != -1
 or _Gender_key != 315167)
 go
 
-set nocount off
-
-select mgiID, antigenName
 from #antigens
 go
 
@@ -271,9 +229,6 @@ print ''
 print 'Mouse cDNAs with gene associations and source information but both tissue and cell line are Not specified'
 print ''
 
-set nocount on
-
-select distinct m._Probe_key, m.name as cDNAname, p.mgiID 
 into #probes 
 from PRB_Source s, PRB_Probe_View p, PRB_Marker_View m
 where s._Organism_key = 1 
@@ -297,9 +252,6 @@ and s._Tissue_key = -1
 and s._Source_key = p._Source_key 
 and p._Probe_key = m._Probe_key 
 and s.description is not null
-go
-
-set nocount off
 go
 
 select mgiID, cDNAname from #probes

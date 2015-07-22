@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select c._Marker_key, c.accID, c._LogicalDB_key, s._Sequence_key, c._CreatedBy_key, c.annotation_date
 into #markerdummy
 from SEQ_Marker_Cache c, SEQ_Sequence s
@@ -30,9 +27,6 @@ go
 create index probedummy_idx2 on #probedummy(_Sequence_key)
 go
 create index probedummy_idx3 on #probedummy(_CreatedBy_key)
-go
-
-set nocount off
 go
 
 print ''

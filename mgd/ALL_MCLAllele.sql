@@ -1,14 +1,8 @@
 
-set nocount on
-go
-
 select a._MutantCellLine_key
 into #mutant
 from ALL_Allele_Cellline a
 group by a._MutantCellLine_key having count(*) > 1
-go
-
-set nocount off
 go
 
 print ''

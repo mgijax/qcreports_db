@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select distinct s._Strain_key, substring(s.strain,1,85) as strain, 
 sm.symbol, sm._Marker_key, sm._Allele_key
 into #strains
@@ -16,9 +13,6 @@ select _Strain_key
 into #multiples
 from #strains
 group by _Strain_key having count(*) > 1
-go
-
-set nocount off
 go
 
 print ''

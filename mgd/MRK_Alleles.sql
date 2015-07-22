@@ -11,9 +11,6 @@ and m.symbol not in ('a', 'A')
 and a.symbol not like '%' || m.symbol || '%'
 go
 
-set nocount on
-go
-
 /* duplicate alleles by symbol */
 select symbol
 into #duplicates
@@ -23,9 +20,6 @@ group by symbol having count(*) > 1
 go
 
 create index dups_idx1 on #duplicates(symbol)
-go
-
-set nocount off
 go
 
 print ''

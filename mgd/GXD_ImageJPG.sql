@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 /* select all Gel Assays with Image Panes that have JPGs (xDim is not null) */
 /* exclude J:80502 */
 /* exclude J:153498/Eurexpress */
@@ -68,9 +65,6 @@ go
 
 print ''
 select count(distinct _Image_key) as "rows affected" from #final
-go
-
-set nocount off
 go
 
 print ''

@@ -1,6 +1,3 @@
-set nocount on
-go
-
 /* select all GXD Genotype annotations */
 select distinct e._Genotype_key, e._Refs_key
 into #gxd
@@ -129,9 +126,6 @@ and s._Refs_key = a._Object_key
 and a._MGIType_key = 1
 and a._LogicalDB_key = 1
 and a.prefixPart = 'J:'
-go
-
-set nocount off
 go
 
 print ''

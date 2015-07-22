@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select s._Assay_key, substring(s.specimenLabel, 1, 50) as specimenLabel
 into #spec1
 from GXD_Specimen s
@@ -22,9 +19,6 @@ go
 print ''
 print 'InSitu Specimens with Not Applicable, Not Specified'
 print ''
-
-set nocount off
-go
 
 select a1.accID as mgiID, a2.accID as jnumID, s.specimenLabel
 from #spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
@@ -62,9 +56,6 @@ and a2.prefixPart = 'J:'
 and a2.preferred = 1
 go
 
-set nocount on
-go
-
 select distinct s._Specimen_key
 into #temp1
 from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure c, GXD_TheilerStage t
@@ -84,9 +75,6 @@ and i._GelLane_key = r._GelLane_key
 and r._Structure_key = s._Structure_key
 and s._Stage_key = t._Stage_key
 and t.stage not in (27, 28)
-go
-
-set nocount off
 go
 
 print ''
@@ -151,9 +139,6 @@ print ''
 print 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
 print ''
 
-set nocount on
-go
-
 select distinct s._Specimen_key
 into #temp3
 from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure c, GXD_TheilerStage t
@@ -165,9 +150,6 @@ and t.stage = 27
 go
 
 create index temp3_idx on #temp3(_Specimen_key )
-go
-
-set nocount off
 go
 
 select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
@@ -194,9 +176,6 @@ print ''
 print 'Gel Lane Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
 print ''
 
-set nocount on
-go
-
 select distinct i._GelLane_key
 into #temp4
 from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t
@@ -208,9 +187,6 @@ and t.stage = 27
 go
 
 create index temp4_idx on #temp4(_GelLane_key )
-go
-
-set nocount off
 go
 
 select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel

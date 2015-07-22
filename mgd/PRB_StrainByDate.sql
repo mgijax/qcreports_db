@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select s._Strain_key into #exclude
 from PRB_Strain s
 where 
@@ -39,9 +36,6 @@ or
 go
 
 create index exclude_idx on #exclude(_Strain_key)
-go
-
-set nocount off
 go
 
 print ''

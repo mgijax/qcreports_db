@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select s._Strain_key
 into #strains1
 from PRB_Strain s
@@ -81,9 +78,6 @@ and not exists (select 1 from #strains1 ss where ss._Strain_key = s._Strain_key)
 go
 
 create unique index idx2 on #strains2(_Strain_key)
-go
-
-set nocount off
 go
 
 print ''

@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select a.accID, a._Object_key, t.term 
 into #obsolete 
 from VOC_Term_ACC_View a, VOC_Term t 
@@ -12,9 +9,6 @@ and a.preferred = 1
 go
 
 create index idx_key on #obsolete(_Object_key)
-go
-
-set nocount off
 go
 
 print ''

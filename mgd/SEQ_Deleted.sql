@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 /* delete Sequences */
 
 select s._Sequence_key
@@ -59,9 +56,6 @@ and pa._Probe_key = p._Probe_key
 go
 
 create index pdeleted_idx1 on #pdeleted(seqID)
-go
-
-set nocount off
 go
 
 print ''

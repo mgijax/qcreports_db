@@ -1,8 +1,5 @@
 /* TR10731/added 'mesometrium' */
 
-set nocount on
-go
-
 select distinct i._Specimen_key, t.stage
 into #temp1
 from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t,
@@ -40,9 +37,6 @@ from #temp3
 group by _GelLane_key having count(*) > 1
 go
 
-set nocount off
-go
-
 print ''
 print 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
 print '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)'
@@ -65,9 +59,6 @@ from #temp4 t, GXD_GelLane s, GXD_Assay_View a
 where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
-go
-
-set nocount on
 go
 
 /* Added 8/16/2007 TR8389 */
@@ -128,9 +119,6 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
 and irs._Structure_key = m._Structure_key
-go
-
-set nocount off
 go
 
 print ''

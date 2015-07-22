@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select r._Refs_key
 into #refs1
 from BIB_Refs r
@@ -31,9 +28,6 @@ where r._Refs_key = n._Refs_key and lower(n.note) like '%no abstract available%'
 go
 
 create index refs3_idx on #refs3(_Refs_key)
-go
-
-set nocount off
 go
 
 print ''

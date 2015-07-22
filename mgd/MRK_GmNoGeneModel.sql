@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select distinct m._Marker_key, a.accID, m.symbol, m.name
 into #markers
 from MRK_Marker m, ACC_Accession a
@@ -25,9 +22,6 @@ where m._Marker_key = h._Marker_key
 and m.name != h.name
 and h._History_key = hm._Marker_key
 and m.symbol != hm.symbol
-go
-
-set nocount off
 go
 
 print ''

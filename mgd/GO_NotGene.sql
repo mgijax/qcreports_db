@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select v._Object_key, substring(m.name,1,50) as name, m.symbol, m._Marker_Type_key
 into #nongene
 from VOC_Annot v, MRK_Marker m
@@ -41,9 +38,6 @@ print ''
 select 'Number of unique MGI Gene IDs:  ', count(distinct accID) from #toPrint
 union
 select 'Number of total rows:  ', count(*) from #toPrint
-go
-
-set nocount off
 go
 
 print ''

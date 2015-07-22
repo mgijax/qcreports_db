@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 print ''
 print 'Cases where the cell line creator has been entered'
 print 'but the Accession ID of the mutant cell line has not been attached.'

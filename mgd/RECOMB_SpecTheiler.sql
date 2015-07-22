@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select distinct i._Specimen_key, t.stage
 into #temp1
 from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t,
@@ -18,9 +15,6 @@ from #temp1
 group by _Specimen_key having count(*) > 1
 go
 
-set nocount off
-go
-
 print ''
 print 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
 print '(excludes TS28:placenta, TS28:decidua)'
@@ -31,9 +25,6 @@ from #temp2 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
-go
-
-set nocount on
 go
 
 /* Added 8/16/2007 TR8389 */
@@ -94,9 +85,6 @@ and a._AssayType_key in (10,11)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
 and irs._Structure_key = m._Structure_key
-go
-
-set nocount off
 go
 
 print ''

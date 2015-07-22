@@ -1,13 +1,7 @@
-set nocount on
-go
-
 select strain
 into #strains
 from PRB_Strain
 group by strain having count(*) > 1
-
-set nocount off
-go
 
 print ''
 print 'Duplicate Strains'

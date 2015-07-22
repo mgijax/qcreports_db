@@ -61,9 +61,6 @@ print 'Check 4'
 print 'Id''s in the EMAPS Field that do not have an entry in the Accession Table'
 print ''
 
-set nocount on
-go
-
 select mem.emapsId, mem.accID as adID
 into #invalidIDs
 from MGI_EMAPS_Mapping mem
@@ -82,9 +79,6 @@ group by _structure_key
 go
 
 create index annotCt_idx on #annotCt(_Structure_key)
-go
-
-set nocount off
 go
 
 select i.adID, i.emapsId, ac.aCt

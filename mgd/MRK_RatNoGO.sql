@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 select m._Marker_key, m._Organism_key, m.symbol, substring(m.name,1,100) as name
 into #markers1
 from MRK_Marker m

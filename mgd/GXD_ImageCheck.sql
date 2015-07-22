@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 /* select all Gel Assays with Image Panes that have JPGs (xDim is not null) */
 
 select distinct a._Assay_key, a._ImagePane_key, ip._Image_key
@@ -28,9 +25,6 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 go
 
 create index assays_idx1 on #assays(_ImagePane_key)
-go
-
-set nocount off
 go
 
 print ''
@@ -86,9 +80,6 @@ print ''
 print 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
 print ''
 
-set nocount on
-go
-
 select distinct i.jnumID, i.mgiID, r._primary, 
        n.note, substring(r._primary, 1, charindex(' ', r._primary) - 1) as p
 into #a
@@ -98,9 +89,6 @@ and n._NoteType_key = 1023
 and lower(n.note) like 'this image is from%'
 and i._Refs_key = r._Refs_key
 and n._Object_key = i._Image_key
-go
-
-set nocount off
 go
 
 select jnumID, mgiID, _primary

@@ -1,6 +1,3 @@
-set nocount on
-go
-
 select distinct s._Strain_key, substring(s.strain,1,85) as strain,
 substring(strain, charindex('-', strain) + 1, char_length(s.strain)) as alleleSymbol,
 sm.symbol, sm._Marker_key, sm._Allele_key
@@ -8,9 +5,6 @@ into #strains
 from PRB_Strain s, PRB_Strain_Marker_View sm
 where s.strain like '%<%>%'
 and s._Strain_key = sm._Strain_key
-go
-
-set nocount off
 go
 
 print ''

@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 print ''
 print ' GXD duplicate specimen label report '
 print ''

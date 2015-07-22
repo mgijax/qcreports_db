@@ -1,13 +1,8 @@
 
-set nocount on
-go
-
 print ''
 print 'JR#s with alleles added in past week'
 print ''
 
-set nocount off
-go
 select a.accID
 from ACC_Accession a, PRB_Strain s
 where a._MGIType_key = 10 and

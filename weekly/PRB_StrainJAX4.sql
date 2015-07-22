@@ -1,13 +1,7 @@
 
-set nocount on
-go
-
 print ''
 print 'New JR#s created in past week'
 print ''
-
-set nocount off
-go
 
 select substring(a.accID,1,8) as accID, substring(s.strain,1,70) as strain
 from ACC_Accession a, PRB_Strain s

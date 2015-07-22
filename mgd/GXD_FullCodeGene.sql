@@ -4,9 +4,6 @@
 /* TR 9646: add ''binding'' and ''rocket'' to exclusion list */
 /* TR 10642 add ''%quantitative RT%'' to exclusion list */
 
-set nocount on
-go
-
 /* exclude cDNA (74725) and primer extension (74728) */
 /* 1/28/14 exclude RNAse prot (74727) and S1 nuc (74726) */
 
@@ -44,9 +41,6 @@ or lower(comments) like '%quantitative RT%'
 go
 
 create index excluded_idx on #excluded(_Index_key)
-go
-
-set nocount off
 go
 
 print ''

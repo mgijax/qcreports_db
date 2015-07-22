@@ -1,7 +1,4 @@
 
-set nocount on
-go
-
 print ""
 select count(*) "# of unique PIRSF Terms" from VOC_Term where _Vocab_key = 46
 go
