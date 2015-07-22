@@ -58,7 +58,7 @@ DuplicateTermNames.py ${OUTPUTDIR} ${JOBKEY}
 OtherMarkerTypes.py ${OUTPUTDIR} ${JOBKEY}
 
 foreach RPT (*.sql)
-   ${MGI_DBUTILS}/bin/reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+   ${PG_DBUTILS}/bin/reportisql.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
 end
 
 # this is klunky...we just want to sort this report
