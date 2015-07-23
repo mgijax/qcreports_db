@@ -54,7 +54,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -114,7 +115,7 @@ fp.write('J numbers' + 2*CRT)
 db.sql('''
 	select t.completion_date as cdate, 
 	       m._Marker_key, m.symbol, a.accID 
-	into #goref 
+	into temporary table goref 
 	from GO_Tracking t, MRK_Marker m, ACC_Accession a 
 	where t.isReferenceGene = 1 
 	and t._Marker_key = m._Marker_key 
@@ -124,7 +125,7 @@ db.sql('''
 	and a.prefixPart = 'MGI:' 
 	and a.preferred = 1
 	''', None)
-db.sql('create index goref_idx1 on #goref(_Marker_key)', None)
+db.sql('create index goref_idx1 on goref(_Marker_key)', None)
 
 #
 # select all Markers w/ GO Annotations that contains a completion date
@@ -132,7 +133,7 @@ db.sql('create index goref_idx1 on #goref(_Marker_key)', None)
 db.sql('''
 	select t.completion_date as cdate, 
 	       m._Marker_key, m.symbol, a.accID 
-	into #godone 
+	into temporary table godone 
 	from GO_Tracking t, MRK_Marker m, ACC_Accession a 
 	where t.completion_date is not null 
 	and t._Marker_key = m._Marker_key 
@@ -142,9 +143,9 @@ db.sql('''
 	and a.prefixPart = 'MGI:' 
 	and a.preferred = 1 
 	''', None)
-db.sql('create index godone_idx1 on #godone(_Marker_key)', None)
+db.sql('create index godone_idx1 on godone(_Marker_key)', None)
 
-results = db.sql('select * from #godone', 'auto')
+results = db.sql('select * from godone', 'auto')
 godone = {}
 for r in results:
     key = r['_Marker_key']
@@ -157,15 +158,15 @@ for r in results:
 #
 results = db.sql('''
 	select b._Marker_key, b.jnumID 
-	from BIB_GOXRef_View b, #goref g
+	from BIB_GOXRef_View b, goref g
 	where b._Marker_key = g._Marker_key
 	and not exists (select 1 from VOC_Annot a, VOC_Evidence e 
 	where a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
 	and e._Refs_key = b._Refs_key) 
-	and exists (select 1 from BIB_GOXRef_View b, #godone g
+	and exists (select 1 from BIB_GOXRef_View b, godone g
  		where b._Marker_key = g._Marker_key
- 		and b.creation_date > dateadd(day, 1, g.cdate))
+		and b.creation_date > (g.cdate + interval '1 day'))
 	''', 'auto')
 
 jnums = {}
@@ -183,14 +184,14 @@ for r in results:
 
 results = db.sql('''
 	select distinct m._Marker_key, e._Refs_key 
-	from #goref m, VOC_Annot a, VOC_Evidence e 
+	from goref m, VOC_Annot a, VOC_Evidence e 
 	where m._Marker_key = a._Object_key 
 	and a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
 	and e._Refs_key not in (61933,73197,73199,74017,80961,100707) 
 	union 
 	select distinct m._Marker_key, e._Refs_key 
-	from #godone m, VOC_Annot a, VOC_Evidence e 
+	from godone m, VOC_Annot a, VOC_Evidence e 
 	where m._Marker_key = a._Object_key 
 	and a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
@@ -205,20 +206,20 @@ for r in results:
     gorefs[key].append(value)
 
 # reference genes first
-printResults('select * from #goref order by symbol', 'y')
+printResults('select * from goref order by symbol', 'y')
 
 # dones that are not reference genes
 printResults('''
-	select d.* from #godone d 
-	where not exists (select 1 from #goref r where d._Marker_key = r._Marker_key) 
+	select d.* from godone d 
+	where not exists (select 1 from goref r where d._Marker_key = r._Marker_key) 
 	order by d.symbol
 	''', 'n')
 
-referenceGenes = db.sql('select count(*) as cnt from #goref', 'auto')[0]['cnt']
-completedGenes = db.sql('select count(*) as cnt from #godone', 'auto')[0]['cnt']
+referenceGenes = db.sql('select count(*) as cnt from goref', 'auto')[0]['cnt']
+completedGenes = db.sql('select count(*) as cnt from godone', 'auto')[0]['cnt']
 refcompletedGenes = db.sql('''
 	select count(r._Marker_key) as cnt 
-	from #goref r, #godone d 
+	from goref r, godone d 
 	where r._Marker_key = d._Marker_key
 	''', 'auto')[0]['cnt']
 

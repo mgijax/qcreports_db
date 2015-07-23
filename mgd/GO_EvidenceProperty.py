@@ -31,12 +31,13 @@
 import sys 
 import os
 import string
+import mgi_utils
 import reportlib
 import db
-from datetime import datetime
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 #
 #Set up email contact
@@ -118,9 +119,7 @@ def printMissEvCodeResults(cmd,evidenceMap):
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
-
-i = datetime.now()
-fp.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
+fp.write("Date: %s\n\n" % (mgi_utils.date()))
 
 #
 # Get all GO/Marker evidence annotations records for J:73065 -> _refs_key=74017
@@ -128,7 +127,7 @@ fp.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
 #
 db.sql('''
         select ve._annotevidence_key,va._term_key,va._object_key,m.login
-        into #goevidence
+        into temporary table goevidence
         from  voc_evidence ve,voc_annot va, mgi_user m
         where ve._refs_key=74017
         and   ve._createdby_key= m._user_key
@@ -136,65 +135,65 @@ db.sql('''
         and   ve._annot_key=va._annot_key
         and   va._annottype_key=1000
         ''', None)
-db.sql('create index goevidence_idx1 on #goevidence(_object_key)', None)
+db.sql('create index goevidence_idx1 on goevidence(_object_key)', None)
 
 #
 # Add marker symbol and marker accession id
 #
 db.sql('''
         select distinct va._term_key,va._annotevidence_key,va.login,m.symbol,ac.accID as mgiID 
-        into #gomarkers
-        from #goevidence va , mrk_marker m,acc_accession ac
+        into temporary table gomarkers
+        from goevidence va , mrk_marker m,acc_accession ac
         where va._object_key=m._marker_key
         and va._object_key=ac._object_key
         and ac._mgitype_key=2  
         and ac._logicaldb_key=1
         and ac.preferred=1 
 	''', None)
-db.sql('create index gormarkers_idx1 on #gomarkers(_term_key)', None)
+db.sql('create index gormarkers_idx1 on gomarkers(_term_key)', None)
 
 #
 # Add GO IDS to the list
 #
 db.sql('''
         select gm._annotevidence_key,gm.login,gm.symbol,gm.mgiID,ac.accID as GOID
-        into #gomarkersIDs
-        from #gomarkers gm,acc_accession ac
+        into temporary table gomarkersIDs
+        from gomarkers gm,acc_accession ac
         where gm._term_key=ac._object_key
         and ac._mgitype_key=13 and  ac._logicaldb_key=31
         and ac.preferred = 1 
         ''', None)
-db.sql('create index gormarkersIDs_idx1 on #gomarkersIDs(_annotevidence_key)', None)
+db.sql('create index gormarkersIDs_idx1 on gomarkersIDs(_annotevidence_key)', None)
 
 #
 #Get all evidences records with evidence property term="external ref" _propertyterm_key=6481778
 #
 db.sql('''
         select _annotevidence_key,value
-        into #evidenceproperty
+        into temporary table evidenceproperty
         from voc_evidence_property
         where _propertyterm_key=6481778
         ''', None)
-db.sql('create index evidenceproperty_idx1 on #evidenceproperty(_annotevidence_key)', None)
+db.sql('create index evidenceproperty_idx1 on evidenceproperty(_annotevidence_key)', None)
 
 #
 #Get GO evidence codes
 #
 db.sql('''
         select abbreviation
-        into #goevidencecode
+        into temporary table goevidencecode
         from voc_term
         where _vocab_key=3
         ''', None)
 
-cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser from #gomarkersIDs "
-cmd +=" where _annotevidence_key not in (select _annotevidence_key from #evidenceproperty)"
+cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser from gomarkersIDs "
+cmd +=" where _annotevidence_key not in (select _annotevidence_key from evidenceproperty)"
 
 missCount=0
 missCount=printNoExtResults(cmd)
 
 cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser,value as pValue "
-cmd+="from #gomarkersIDs g, #evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
+cmd+="from gomarkersIDs g, evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
 cmd +=" and value not like 'PMID:%'"
 
 badCount=0
@@ -205,7 +204,7 @@ badExtResCount=printBadExtResults(cmd)
 # get the list of current go evidence code
 #
 evidenceMap={}
-cmd=" select abbreviation from #goevidencecode "
+cmd=" select abbreviation from goevidencecode "
 results = db.sql(cmd, 'auto')
 
 for r in results:
@@ -213,7 +212,7 @@ for r in results:
 
 #get all evidence that begins with PMID but are missing the evidence code
 cmd ="  select mgiID as accID,symbol,GOID as goaccID,login as dbuser,value as pValue "
-cmd+="from #gomarkersIDs g, #evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
+cmd+="from gomarkersIDs g, evidenceproperty e WHERE  g._annotevidence_key=e._annotevidence_key"
 cmd +=" and value like 'PMID:%'"
 missEvCodeCount = printMissEvCodeResults(cmd,evidenceMap)
 
@@ -239,6 +238,5 @@ if (missCount > 0) or (badCount > 0):
    except  OSError,e:
        print "Error: unable to send email"
 
-print "\nProgram Complete\n"
 reportlib.finish_nonps(fp)
 
