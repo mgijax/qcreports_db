@@ -344,6 +344,5 @@ fp = reportlib.init(sys.argv[0], 'Allele Notes with HTML errors', os.environ['QC
 markerNotes()
 mpNotes()
 alleleNotes()
-db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file
 

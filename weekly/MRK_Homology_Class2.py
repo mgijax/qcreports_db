@@ -41,7 +41,6 @@ CATTLE_KEY = 11
 CHIMP_KEY = 10
 DOG_KEY = 13
 
-db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'Homology classes with no mouse genes ', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('HomoloGeneID%sHuman gene count%sMouse gene count%sRat gene count%sCattle gene count%sChimp gene count%sDog gene count%s' % (TAB, TAB, TAB, TAB, TAB, TAB, CRT))

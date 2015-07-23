@@ -163,8 +163,6 @@ def printReport(fp):
 # main
 #
 
-db.useOneConnection(1)
 jrs()
 mmrrc()
-db.useOneConnection(0)
 
