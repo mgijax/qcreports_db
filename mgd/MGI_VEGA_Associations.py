@@ -32,7 +32,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -46,7 +47,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 results = db.sql('''
-      select a1.accID as mgiID, m.symbol, m.name, m.chromosome, o.offset, 
+      select a1.accID as mgiID, m.symbol, m.name, m.chromosome, o.cmoffset, 
 	     a2.accID as seqID, a3.accID as jnum
       from ACC_Accession a1, ACC_Accession a2, MRK_Marker m, MRK_Offset o, ACC_AccessionReference r, ACC_Accession a3 
       where a1._Object_key = a2._Object_key and 
@@ -72,7 +73,7 @@ for r in results:
     fp.write(r['mgiID'] + TAB + 
 	     r['symbol'] + TAB + 
 	     r['name'] + TAB +
-	     str(r['offset']) + TAB +
+	     str(r['cmoffset']) + TAB +
              r['chromosome'] + TAB + 
              r['seqID'] + TAB + \
 	     r['jnum'] + CRT)

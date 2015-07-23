@@ -36,7 +36,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -53,10 +54,7 @@ def runQueries(includeRiken):
     else:
 	riken = 'and m1.symbol not like \'%Rik\''
 
-    #
-    # select mouse/humanql('drop table #refs', None)
-
-    db.sql('drop table #homology', None)
+    db.sql('drop table if exists homology', None)
 
     db.sql('''
 	select distinct 
@@ -66,8 +64,8 @@ def runQueries(includeRiken):
                m2._Marker_key as h_Marker_key, 
 	       substring(m2.symbol,1,30) as hsymbol, 
 	       m1.modification_date,
-	       convert(char(10), m1.modification_date, 101) as mdate
-        into #homology 
+	       to_char(m1.modification_date, 'MM/dd/yyyy') as mdate
+        into temporary table homology 
         from MRK_Cluster mc,
 	     MRK_ClusterMember h1, 
              MRK_ClusterMember h2, 
@@ -83,8 +81,8 @@ def runQueries(includeRiken):
         and lower(m1.symbol) != lower(m2.symbol)
 	''' + riken, None)
 
-    db.sql('create index homology_idx1 on #homology(m_Marker_key)', None)
-    db.sql('create index homology_idx2 on #homology(h_Marker_key)', None)
+    db.sql('create index homology_idx1 on homology(m_Marker_key)', None)
+    db.sql('create index homology_idx2 on homology(h_Marker_key)', None)
 
     #
     # select mouse MGI ids
@@ -92,7 +90,7 @@ def runQueries(includeRiken):
 
     results = db.sql('''
 	select h.m_Marker_key, a.accID 
-	from #homology h, ACC_Accession a 
+	from homology h, ACC_Accession a 
 	where h.m_Marker_key = a._Object_key 
 	and a._MGITYpe_key = 2 
         and a._LogicalDB_key = 1 
@@ -102,16 +100,16 @@ def runQueries(includeRiken):
     for r in results:
 	mgiID[r['m_Marker_key']] = r['accID']
 
-    db.sql('drop table #results', None)
+    db.sql('drop table if exists results', None)
 
     db.sql('''
 	select h.*, e.status as hstatus
-	into #results 
-        from #homology h, radar.DP_EntrezGene_Info e 
+	into temporary table results 
+        from homology h, radar.DP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606 
         union 
         select h.*, '?' as hstatus
-        from #homology h 
+        from homology h 
         where not exists (select 1 from radar.DP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606)
 	''', None)
@@ -142,7 +140,7 @@ def report1(fp, includeRiken = 0):
     fp.write(CRT)
 
 
-    results = db.sql('select * from #results order by modification_date desc, hstatus desc, msymbol', 'auto')
+    results = db.sql('select * from results order by modification_date desc, hstatus desc, msymbol', 'auto')
 
     for r in results:
 	key = r['m_Marker_key']
@@ -180,7 +178,7 @@ def report2(fp, includeRiken):
     fp.write(CRT)
 
 
-    results = db.sql('select * from #results order by hstatus desc, mstatus desc, msymbol', 'auto')
+    results = db.sql('select * from results order by hstatus desc, mstatus desc, msymbol', 'auto')
 
     for r in results:
 	key = r['m_Marker_key']
