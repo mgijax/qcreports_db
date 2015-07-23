@@ -23,6 +23,9 @@ import os
 import db
 import reportlib
 
+db.setTrace()
+db.setAutoTranslateBE()
+
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
@@ -31,8 +34,6 @@ PAGE = reportlib.PAGE
 #
 # Main
 #
-
-db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'EMAPA Terms', os.environ['QCOUTPUTDIR'], printHeading = None)
 
@@ -82,5 +83,4 @@ for r in results:
 fp.write('%sTotal results: %s' % (CRT, numResults))
 
 reportlib.finish_nonps(fp)	# non-postscript file
-db.useOneConnection(0)
 

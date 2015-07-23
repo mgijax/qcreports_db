@@ -37,18 +37,10 @@ import os
 import string
 import mgi_utils
 import reportlib
+import db
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
+db.setTrace()
+db.setAutoTranslateBE()
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -59,14 +51,8 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-if os.environ['DB_TYPE'] == 'postgres':
-	fromDate = "current_date - interval '7 days'"
-	toDate = "current_date"
-else:
-	currentDate = mgi_utils.date('%m/%d/%Y')
-	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
-	fromDate = "'" + fromDate + "'"
-	toDate = "'" + currentDate + "'"
+fromDate = "current_date - interval '7 days'"
+toDate = "current_date"
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 

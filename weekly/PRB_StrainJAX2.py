@@ -38,28 +38,15 @@ import os
 import string
 import mgi_utils
 import reportlib
+import db
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
+db.setTrace()
+db.setAutoTranslateBE()
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-if os.environ['DB_TYPE'] == 'postgres':
-	fromDate = "current_date - interval '7 days'"
-else:
-	currentDate = mgi_utils.date('%m/%d/%Y')
-	fromDate = db.sql('select convert(char(10), dateadd(day, -7, "%s"), 101) ' % (currentDate), 'auto')[0]['']
-	fromDate = "'" + fromDate + "'"
+fromDate = "current_date - interval '7 days'"
 
 def jrs():
 
@@ -113,8 +100,7 @@ def mmrrc():
     
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
-    if os.environ['DB_TYPE'] == 'postgres':
-    	db.sql('drop table #strains', None)
+    db.sql('drop table #strains', None)
 
     db.sql('''
 	select distinct s._Strain_key, 

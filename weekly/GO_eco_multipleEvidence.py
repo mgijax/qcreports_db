@@ -42,28 +42,20 @@
 import sys, os
 import string,re
 import reportlib
+import db
 from datetime import datetime
+
+db.setTrace()
+db.setAutoTranslateBE()
+
+CRT = reportlib.CRT
+TAB = reportlib.TAB
 
 #
 #Set up email contact
 #
 sender = os.environ['GEN_WEBSHARE_EMAIL']
 receiver = "mgi-go@jax.org"
-
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
-
-CRT = reportlib.CRT
-TAB = reportlib.TAB
 
 def parseEco(cmd):
     results = db.sql(cmd, 'auto')

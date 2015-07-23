@@ -37,18 +37,10 @@ import sys
 import os 
 import string
 import reportlib
+import db
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
+db.setTrace()
+db.setAutoTranslateBE()
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -65,7 +57,7 @@ fp.write('list last modication date in descending order\n')
 fp.write('\n')
 
 db.sql('''
-	select a._Allele_key into #alleles 
+	select a._Allele_key into temporary table alleles 
 	from ALL_Allele a, VOC_Term t 
 	where a._Allele_Status_key = 847114 
 		and a._Allele_Type_key = t._Term_key 
@@ -78,11 +70,11 @@ db.sql('''
 	and not exists (select 1 from ALL_Allele_Mutation m where a._Allele_key = m._Allele_key)
 	''', None)
 
-db.sql('create index idex1 on #alleles(_Allele_key)', None)
+db.sql('create index idex1 on alleles(_Allele_key)', None)
 
 results = db.sql('''
 	select a._Allele_key, nc.note 
-	from #alleles a, MGI_Note n, MGI_NoteType nt, MGI_NoteChunk nc 
+	from alleles a, MGI_Note n, MGI_NoteType nt, MGI_NoteChunk nc 
 	where a._Allele_key = n._Object_key 
 	and n._MGIType_key = 11 
 	and n._NoteType_key = nt._NoteType_key 
@@ -100,8 +92,8 @@ for r in results:
 
 results = db.sql('''
 	select a._Allele_key, ac.accID, aa.symbol, t.term as alleleType, 
-	convert(char(10), aa.modification_date, 101) as modDate 
-	from #alleles a, ACC_Accession ac, ALL_Allele aa, VOC_Term t 
+	to_char( aa.modification_date, 'MM/dd/yyyy') as modDate
+	from alleles a, ACC_Accession ac, ALL_Allele aa, VOC_Term t 
 	where a._Allele_key = ac._Object_key 
         and ac._MGIType_key = 11 
         and ac._LogicalDB_key = 1 
