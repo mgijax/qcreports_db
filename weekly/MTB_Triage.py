@@ -20,7 +20,6 @@
  
 import sys 
 import os
-import mgi_utils
 import reportlib
 import db
 

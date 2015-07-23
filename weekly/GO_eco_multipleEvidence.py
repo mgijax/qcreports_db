@@ -39,8 +39,10 @@
 #
 '''
  
-import sys, os
-import string,re
+import sys
+import os
+import string
+import re
 import reportlib
 import db
 import mgi_utils
