@@ -44,14 +44,14 @@
 import csv
 import sys 
 import os
-import db
-import reportlib
 import string
 import mgi_utils
+import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -110,17 +110,17 @@ imsrDict2 = createImsrDict2()
 # get all allele references 
 #
 db.sql('''select distinct mra._Refs_key, mra._Object_key as _Allele_key
-    into #aRefs
+    into temporary table aRefs
     from MGI_Reference_Assoc mra
     where mra._MGIType_key = 11
     order by mra._Object_key''', None)
-db.sql('''create index idx1 on #aRefs(_Refs_key)''', None)
+db.sql('''create index idx1 on aRefs(_Refs_key)''', None)
 
 #
 # get refernece counts for each allele
 #
 results = db.sql(''' select _Allele_key, count(_Refs_key) as refsCount
-    from #aRefs
+    from aRefs
     group by _Allele_key''', 'auto')
 
 #
@@ -134,27 +134,27 @@ for r in results:
 # get counts of allele references whose publication date is >= currentDate - 1
 #
 db.sql('''select a._Allele_key, count(a._Refs_key) as refsCount
-    into #dCounts
-    from #aRefs a, BIB_Refs b
+    into temporary table dCounts
+    from aRefs a, BIB_Refs b
     where a._Refs_key = b._Refs_key
-    and datepart(year, b.creation_date) between (%s - 1) and %s
-    and b.journal != "Database Download"
+    and date_part('year', b.creation_date) between (%s - 1) and %s
+    and b.journal != 'Database Download'
     group by a._Allele_key''' % (currentDate, currentDate), None)
 
 #
 # get the set that has at least 10 references >= currentDate - 1
 #
 db.sql('''select * 
-    into #d10Counts
-    from #dCounts
+    into temporary table d10Counts
+    from dCounts
     where refsCount >= 10''', None)
-db.sql('''create index idx3 on #d10Counts(_Allele_key)''', None)
+db.sql('''create index idx3 on d10Counts(_Allele_key)''', None)
 
 #
 # get allele accid and symbol, exclude wild type
 #
 results = db.sql('''select ar.*, a.accid, aa.symbol
-    from #d10Counts ar, ACC_Accession a, ALL_Allele aa
+    from d10Counts ar, ACC_Accession a, ALL_Allele aa
     where ar._Allele_key = a._Object_key
     and a._MGIType_key = 11
     and a._LogicalDB_key = 1

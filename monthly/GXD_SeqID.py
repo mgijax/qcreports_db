@@ -43,7 +43,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -67,17 +68,17 @@ fp.write('------------    ------------------------------    ------------' + CRT)
 # relationship with a marker.
 #
 db.sql('''select a.accID as mgiID, p._Probe_key, p.name as probeName, pm._Marker_key
-    into #prbmrk
+    into temporary table prbmrk
     from PRB_Probe p, PRB_Marker pm, ACC_Accession a
     where exists (select 1 
                   from GXD_ProbePrep gp 
                   where gp._Probe_key = p._Probe_key) and 
           p._Probe_key = pm._Probe_key and 
-          pm.relationship = "E" and 
+          pm.relationship = 'E' and 
           p._Probe_key = a._Object_key and 
           a._MGIType_key = 3 and 
           a._LogicalDB_key = 1 and 
-          a.prefixPart = "MGI:" and 
+          a.prefixPart = 'MGI:' and 
           a.preferred = 1
 	  ''', None)
 
@@ -86,8 +87,8 @@ db.sql('''select a.accID as mgiID, p._Probe_key, p.name as probeName, pm._Marker
 # seq ID association.
 #
 db.sql('''select pm.*, a1.accID as seqID, a2._Object_key as _Sequence_key
-    into #prbseq 
-    from ACC_Accession a1, ACC_Accession a2, #prbmrk pm 
+    into temporary table prbseq 
+    from ACC_Accession a1, ACC_Accession a2, prbmrk pm 
     where pm._Probe_key = a1._Object_key and 
           a1._MGIType_key = 3 and 
           a1._LogicalDB_key = 9 and 
@@ -102,7 +103,7 @@ db.sql('''select pm.*, a1.accID as seqID, a2._Object_key as _Sequence_key
 # the seq ID is also associated with a different marker.
 #
 results = db.sql('''select distinct ps.mgiID, ps.probeName, ps.seqID 
-    from #prbseq ps, SEQ_Marker_Cache sm 
+    from prbseq ps, SEQ_Marker_Cache sm 
     where ps._Sequence_key = sm._Sequence_key and 
           ps._Marker_key != sm._Marker_key
 	  ''', 'auto')
