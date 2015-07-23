@@ -58,7 +58,7 @@ where i._MGIType_key = 11
 and n._NoteType_key = 1023
 and lower(n.note) like 'this image is from%'
 and i._Refs_key = r._Refs_key
-and n.note not like '%' || substring(r._primary, 1, charindex(' ', r._primary) - 1) || '%'
+and n.note not like '%' || substring(r._primary, 1, position(' ' in r._primary) - 1) || '%'
 and n._Object_key = i._Image_key
 and exists (select 1 from ACC_Accession a where r._Refs_key = a._Object_key
 and a._MGIType_key = 1

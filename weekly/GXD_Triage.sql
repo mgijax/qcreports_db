@@ -4,7 +4,7 @@
 select r._Refs_key, r.creation_date
 INTO TEMPORARY TABLE triageA
 from BIB_Refs r, BIB_DataSet_Assoc a
-where a.creation_date between dateadd(day, -7, getdate()) and dateadd(day, -1, getdate())
+where a.creation_date between (now() + interval '-7 day') and now()
 and r._Refs_key = a._Refs_key
 and a._DataSet_key = 1004
 

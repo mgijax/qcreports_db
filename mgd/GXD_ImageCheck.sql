@@ -81,7 +81,7 @@ order by i.jnumID
 \echo ''
 
 select distinct i.jnumID, i.mgiID, r._primary, 
-       n.note, substring(r._primary, 1, charindex(' ', r._primary) - 1) as p
+       n.note, substring(r._primary, 1, position(' ' in r._primary) - 1) as p
 INTO TEMPORARY TABLE a
 from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._MGIType_key = 8

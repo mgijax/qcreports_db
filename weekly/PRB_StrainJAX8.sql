@@ -12,10 +12,9 @@ where a._MGIType_key = 10 and
       exists (select 1 from PRB_Strain_Marker sm
               where sm._Strain_key = s._Strain_key and
                     sm._Qualifier_key = 615427 and
-                    ((sm.creation_date between
-                        dateadd(day, -7, getdate()) and getdate()) or
-                    (sm.modification_date between
-                        dateadd(day, -7, getdate()) and getdate())))
+                    ((sm.creation_date between (now() + interval '-7 day') and now())
+                        or
+                    (sm.modification_date between (now() + interval '-7 day') and now())))
 order by a.accID
 ;
 

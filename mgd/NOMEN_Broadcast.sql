@@ -1,7 +1,7 @@
 select _Nomen_key
 INTO TEMPORARY TABLE nomen
 from NOM_Marker
-where broadcast_date between dateadd(day, -3, getdate()) and getdate()
+where broadcast_date between (now() + interval '-3 day') and now()
 ;
 
 \echo ''

@@ -9,7 +9,7 @@ substring(markerName,1,50) as "New Name",
 to_char(event_date, 'MM/dd/yyyy') as "Event Date"
 from MRK_History_View
 where _Marker_Event_key in (2,3,4,5,6)
-and event_date >= dateadd(day, -3, getdate()) and event_date <= getdate()
+and event_date >= (now() + interval '-3 day') and event_date <= now()
 order by symbol
 ;
 

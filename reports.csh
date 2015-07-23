@@ -11,6 +11,9 @@
 #
 # HISTORY
 #
+# 07/23/2015
+#	- TR11750/Postgres only
+#
 # 05/03/2011-05/09/2012	lec
 #	- TR11035/add DB_TYPE/postgres option
 #
@@ -35,16 +38,4 @@ echo "# Date Generated:  `date`" >> ${OUTPUTFILE}
 echo "# (server = ${DBSERVER}, database = ${DBNAME})" >> ${OUTPUTFILE}
 echo "#" >> ${OUTPUTFILE}
 
-#
-# translate INPUTFILE sybase sql to postgres sql
-# the first 'sed' needs to contain the input file name
-# next: pipe to the next sed
-# last:  pipe to psql
-#
-sed "s/dateadd(day, -1, getdate())/(now() + interval '-1 day')/g" ${INPUTFILE} | \
-sed "s/dateadd(day, -3, getdate())/(now() + interval '-3 day')/g" | \
-sed "s/dateadd(day, -7, getdate())/(now() + interval '-7 day')/g" | \
-sed "s/getdate()/now()/g" | \
-sed "s/charindex('-',/position('-' in /g" | \
-sed "s/charindex(' ',/position(' ' in /g" | \
-psql -h ${PG_DBSERVER} -U ${PG_DBUSER} -d ${PG_DBNAME} ${PSQL_ECHO} >> ${OUTPUTFILE}
+psql -h ${PG_DBSERVER} -U ${PG_DBUSER} -d ${PG_DBNAME} ${PSQL_ECHO} -f${INPUTFILE} >> ${OUTPUTFILE}
