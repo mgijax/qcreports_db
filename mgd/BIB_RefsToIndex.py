@@ -48,7 +48,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -90,7 +91,7 @@ fp.write(CRT)
 #
 db.sql('''
 	select cc.jnumID, cc.pubmedID, cc.isReviewArticle, da._DataSet_key 
-        into #refds 
+        into temporary table refds 
         from BIB_DataSet_Assoc da, BIB_Citation_Cache cc 
         where da._DataSet_key in (%s)
               and da._Refs_key = cc._Refs_key 
@@ -101,7 +102,7 @@ db.sql('''
 #
 # Get each J number/dataset pair needed to build the grid.
 #
-results = db.sql('select jnumID, pubmedID, _DataSet_key from #refds', 'auto')
+results = db.sql('select jnumID, pubmedID, _DataSet_key from refds', 'auto')
 
 #
 # Build a dictionary where the key is the J number and the value is a list
@@ -130,7 +131,7 @@ for r in results:
 #
 results = db.sql('''
 	select distinct jnumID, pubmedID, isReviewArticle 
-        from #refds 
+        from refds 
         order by jnumID
 	''', 'auto')
 

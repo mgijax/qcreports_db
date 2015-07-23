@@ -39,7 +39,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -72,15 +73,15 @@ fp.write(string.ljust('---------------------', 40))
 fp.write(CRT)
 
 db.sql('''select distinct m._Object_key, count(m._Refs_key) as counter
-          into #refA
+          into temporary table refA
           from MGI_Reference_Assoc m, MGI_RefAssocType t
           where m._MGIType_key = 11
           and m._RefAssocType_key = t._RefAssocType_key
           and t.assocType in ('Priority Index', 'Indexed')
 	  group by m._Object_key
 	  ''', None)
-db.sql('create index refA_idx on #refA(_Object_key)', None)
-results = db.sql('select * from #refA', 'auto')
+db.sql('create index refA_idx on refA(_Object_key)', None)
+results = db.sql('select * from refA', 'auto')
 refA = {}
 for r in results:
     refA[r['_Object_key']] = r['counter']
@@ -96,7 +97,7 @@ results = db.sql('''select distinct aa._Allele_key, aa.symbol,
              and a._Term_key in (83412,293594)
              and a._Term_key = t._Term_key
              and aa._Allele_Type_key = tt._Term_key
-             and exists (select 1 from #refA r where aa._Allele_key = r._Object_key)
+             and exists (select 1 from refA r where aa._Allele_key = r._Object_key)
              order by aa.symbol
 	     ''', 'auto')
 

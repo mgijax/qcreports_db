@@ -39,7 +39,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -71,7 +72,7 @@ fp.write('field 6: list of MP J# from column 4\n\n')
 #
 db.sql('''
 	select distinct m._Marker_key, m.symbol
-	into #markers
+	into temporary table markers
         from MRK_Marker m
         where m._Marker_Type_key = 1
 	and exists (select 1 from ALL_Allele aa, GXD_AlleleGenotype p, VOC_Annot v
@@ -81,13 +82,13 @@ db.sql('''
             and p._Genotype_key = v._Object_key
             and v._AnnotType_key = 1002)
        ''', None)
-db.sql('create index markers_idx on #markers(_Marker_key)', None)
+db.sql('create index markers_idx on markers(_Marker_key)', None)
 
 # marker ids
 
 mgiIDs = {}
 results = db.sql('''select m._Marker_key, a.accID
-	    from #markers m, ACC_Accession a 
+	    from markers m, ACC_Accession a 
 	    where m._Marker_key = a._Object_key 
 	    and a._LogicalDB_key = 1 
 	    and a._MGIType_key = 2
@@ -105,7 +106,7 @@ for r in results:
 mgiFeature = {}
 results = db.sql('''
            select m._Marker_key, t.term
-           from #markers m, VOC_Annot a, VOC_Term t
+           from markers m, VOC_Annot a, VOC_Term t
            where m._Marker_key = a._Object_key
            and a._AnnotType_key = 1011
            and a._Term_key = t._Term_key
@@ -127,7 +128,7 @@ results = db.sql('''
 	select m._Marker_key, 
 	       count(distinct aa._Allele_key) as totalAllele,
 	       count(distinct v._Annot_key) as totalAnnot
-        from #markers m, ALL_Allele aa, GXD_AlleleGenotype p, VOC_Annot v
+        from markers m, ALL_Allele aa, GXD_AlleleGenotype p, VOC_Annot v
             where m._Marker_key =  p._Marker_key
 	    and p._Allele_key = aa._Allele_key
 	    and aa._Allele_Status_key = 847114
@@ -144,7 +145,7 @@ for r in results:
 refsID = {}
 results = db.sql('''
         select distinct m._Marker_key, c.accID 
-        from #markers m, ALL_Allele aa, GXD_AlleleGenotype p, 
+        from markers m, ALL_Allele aa, GXD_AlleleGenotype p, 
 	     VOC_Annot v, VOC_Evidence e, ACC_Accession c
 	where m._Marker_key =  p._Marker_key
 	and p._Allele_key = aa._Allele_key
@@ -167,7 +168,7 @@ for r in results:
 
 # final output to print
 results = db.sql('''
-	select distinct m._Marker_key, m.symbol from #markers m order by symbol
+	select distinct m._Marker_key, m.symbol from markers m order by symbol
 	''', 'auto')
 
 fp.write('total # of genes:  ' + str(len(results)) + 2*CRT)
