@@ -24,7 +24,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -64,10 +65,10 @@ def alleleNotes():
 
         sql = '''
 	        select a._Allele_key, a.symbol, aa.accID, t.term, 
-		       convert(char(10), a.creation_date, 101) as cdate,
-		       convert(char(10), a.modification_date, 101) as mdate,
+		       to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
+		       to_char(a.modification_date, 'MM/dd/yyyy') as mdate,
 		       u1.login as clogin, u2.login as mlogin
-	        into #alleles
+	        into temporary table alleles
 	        from ALL_Allele a, ACC_Accession aa, VOC_Term t, MGI_User u1, MGI_User u2
 	        where a._Allele_key = aa._Object_key
 	        and aa._MGIType_key = 11
@@ -83,18 +84,18 @@ def alleleNotes():
 
         db.sql(sql + '''
 	        and n._Note_key = c._Note_key
-	        and (c.note like '%<sup>%' or c.note like '%<sub>%'
+	        and (lower(c.note) like '%<sup>%' or lower(c.note) like '%<sub>%'
 	        ))
 	        ''', None)
 
-        db.sql('create index alleles_idx1 on #alleles(_Allele_key)', None)
+        db.sql('create index alleles_idx1 on alleles(_Allele_key)', None)
 
         #
         # concatenate notes
         #
         results = db.sql('''
 	        select a._Allele_key, c.note
-	        from #alleles a, MGI_Note n, MGI_NoteChunk c
+	        from alleles a, MGI_Note n, MGI_NoteChunk c
 	        where a._Allele_key = n._Object_key
 	        and n._NoteType_key = %s
 	        and n._Note_key = c._Note_key
@@ -117,7 +118,7 @@ def alleleNotes():
         #	   print the allele, note snippet
         #
 
-        results = db.sql('select * from #alleles order by symbol', 'auto')
+        results = db.sql('select * from alleles order by symbol', 'auto')
 
         for r in results:
     
@@ -149,7 +150,7 @@ def alleleNotes():
                 fp.write(r['mlogin'] + TAB)
                 fp.write(r['mdate'] + CRT)
     
-        db.sql('drop table #alleles', None)
+        db.sql('drop table alleles', None)
 
 def mpNotes():
 
@@ -173,10 +174,10 @@ def mpNotes():
 
     db.sql('''
 	   select a._Genotype_key, aa.accID,
-		       convert(char(10), a.creation_date, 101) as cdate,
-		       convert(char(10), a.modification_date, 101) as mdate,
+		       to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
+		       to_char(a.modification_date, 'MM/dd/yyyy') as mdate,
 		       u1.login as clogin, u2.login as mlogin
-	   into #genotypes
+	   into temporary table genotypes
 	   from GXD_Genotype a, ACC_Accession aa, MGI_User u1, MGI_User u2
 	   where a._Genotype_key = aa._Object_key
 	   and aa._MGIType_key = 12
@@ -190,18 +191,18 @@ def mpNotes():
 	   and v._Annot_key = e._Annot_key
 	   and e._AnnotEvidence_key = n._Object_key
 	   and n._NoteType_key = 1008
-	   and (n.note like '%<sup>%' or n.note like '%<sub>%'
+	   and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'
 	   ))
 	   ''', None)
 
-    db.sql('create index genotype_idx1 on #genotypes(_Genotype_key)', None)
+    db.sql('create index genotype_idx1 on genotypes(_Genotype_key)', None)
 
     #
     # concatenate notes
     #
     results = db.sql('''
 	        select a._Genotype_key, n.note
-	        from #genotypes a, VOC_Annot v, VOC_Evidence e, MGI_Note_VocEvidence_View n
+	        from genotypes a, VOC_Annot v, VOC_Evidence e, MGI_Note_VocEvidence_View n
 	        where a._Genotype_key = v._Object_key
 	        and v._AnnotType_key = 1002
 	        and v._Annot_key = e._Annot_key
@@ -226,7 +227,7 @@ def mpNotes():
     #	   print the allele, note snippet
     #
 
-    results = db.sql('select * from #genotypes order by accID', 'auto')
+    results = db.sql('select * from genotypes order by accID', 'auto')
 
     for r in results:
     
@@ -270,9 +271,9 @@ def markerNotes():
 
     db.sql('''
           select a._Marker_key, a.symbol, aa.accID,
-                convert(char(10), a.creation_date, 101) cdate,
-                convert(char(10), a.modification_date, 101) mdate
-          into #markers
+		 to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
+		 to_char(a.modification_date, 'MM/dd/yyyy') as mdate
+          into markers
           from MRK_Marker a, ACC_Accession aa
           where a._Marker_key = aa._Object_key
           and aa._MGIType_key = 2
@@ -280,12 +281,12 @@ def markerNotes():
 	  and aa.preferred = 1
           and exists (select * from MRK_Notes n
           where a._Marker_key = n._Marker_key
-          and (n.note like '%<sup>%' or n.note like '%<sub>%'))
+          and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'))
           ''', None)
 
     results = db.sql('''
 	        select a._Marker_key, n.note
-	        from #markers a, MRK_Notes n
+	        from markers a, MRK_Notes n
 	        where a._Marker_key = n._Marker_key
                 order by a._Marker_key, n.sequenceNum
 	          ''', 'auto')
@@ -306,7 +307,7 @@ def markerNotes():
     #	   print the allele, note snippet
     #
 
-    results = db.sql('select * from #markers order by symbol', 'auto')
+    results = db.sql('select * from markers order by symbol', 'auto')
 
     for r in results:
 

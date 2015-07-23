@@ -25,7 +25,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -44,14 +45,14 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt 
 
 db.sql('''
 	select r._Refs_key 
-	into #triage 
+	into temporary table triage 
 	from BIB_Refs r, BIB_DataSet_Assoc a 
 	where r.modification_date between %s and %s 
 	and r._Refs_key = a._Refs_key 
 	and a._DataSet_key = 1007
 	''' % (fromDate, toDate), None)
 
-db.sql('create index idx1 on #triage(_Refs_key)', None)
+db.sql('create index idx1 on triage(_Refs_key)', None)
 
 results = db.sql('''
 	select b.authors, b.authors2, b.title, b.title2, b._primary, 
@@ -59,7 +60,7 @@ results = db.sql('''
 	       b.vol, b.issue, b.pgs, b.abstract, 
 	       a2.accID as pubmedID,
 	       c.jnumID, c.citation, c.short_citation, c.reviewStatus
-	from #triage t
+	from triage t
 		LEFT OUTER JOIN ACC_Accession a2 on (t._Refs_key = a2._Object_key
 					and a2._LogicalDB_Key = 29),
 	     BIB_Refs b, BIB_Citation_Cache c

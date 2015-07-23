@@ -55,7 +55,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 #
 # Main
@@ -67,10 +68,10 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 
 db.sql('''
 	select m._Marker_key, m.symbol, m.name, m.chromosome, 
-		o.offset, 
+		o.cmoffset, 
 		upper(substring(s.status, 1, 1)) as markerStatus, 
 		t.name as markerType
-	into #markers 
+	into temporary table markers 
 	from MRK_Marker m, MRK_Offset o, MRK_Status s, MRK_Types t 
 	where m._Organism_key = 1 
 	and m._Marker_Status_key in (1,3) 
@@ -83,14 +84,14 @@ db.sql('''
 		and a._LogicalDB_key in (9, 27) 
 		and a.prefixPart not in ('XP_', 'NP_'))
 	''', None)
-db.sql('create index idx1 on #markers(_Marker_key)', None)
-db.sql('create index idx2 on #markers(symbol)', None)
+db.sql('create index idx1 on markers(_Marker_key)', None)
+db.sql('create index idx2 on markers(symbol)', None)
 
 # MGI ids
 
 results = db.sql('''
 	select distinct m._Marker_key, a.accID 
-      	from #markers m, ACC_Accession a 
+      	from markers m, ACC_Accession a 
       	where m._Marker_key = a._Object_key 
       	and a._MGIType_key = 2 
       	and a._LogicalDB_key = 1 
@@ -107,7 +108,7 @@ for r in results:
 
 results = db.sql('''
 	select distinct m._Marker_key, a.accID 
-      	from #markers m, ACC_Accession a 
+      	from markers m, ACC_Accession a 
       	where m._Marker_key = a._Object_key 
       	and a._MGIType_key = 2 
       	and a._LogicalDB_key = 9
@@ -124,7 +125,7 @@ for r in results:
 
 results = db.sql('''
 	select distinct m._Marker_key, a.accID 
-      	from #markers m, ACC_Accession a 
+      	from markers m, ACC_Accession a 
       	where m._Marker_key = a._Object_key 
       	and a._MGIType_key = 2 
       	and a._LogicalDB_key = 23
@@ -141,7 +142,7 @@ for r in results:
 
 results = db.sql('''
 	select distinct m._Marker_key, a.accID 
-      	from #markers m, ACC_Accession a 
+      	from markers m, ACC_Accession a 
       	where m._Marker_key = a._Object_key 
       	and a._MGIType_key = 2 
       	and a._LogicalDB_key = 27 
@@ -157,24 +158,24 @@ for r in results:
 
 # process
 
-results = db.sql('select * from #markers order by symbol', 'auto')
+results = db.sql('select * from markers order by symbol', 'auto')
 
 for r in results:
 	key = r['_Marker_key']
 
-	if r['offset'] == -1.0:
-		offset = 'syntenic'
-	elif r['offset'] == -999.0:
-		offset = 'N/A'
+	if r['cmoffset'] == -1.0:
+		cmoffset = 'syntenic'
+	elif r['cmoffset'] == -999.0:
+		cmoffset = 'N/A'
 	else:
-		offset = str(r['offset'])
+		cmoffset = str(r['cmoffset'])
 
 	fp.write(mgiID[key] + reportlib.TAB + \
 	       	 r['symbol'] + reportlib.TAB + \
 	       	 r['markerStatus'] + reportlib.TAB + \
 	         r['markerType'] + reportlib.TAB + \
 	         r['name'] + reportlib.TAB + \
-	         offset + reportlib.TAB + \
+	         cmoffset + reportlib.TAB + \
 	         r['chromosome'] + reportlib.TAB)
 
 	if gbID.has_key(key):

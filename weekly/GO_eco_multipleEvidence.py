@@ -43,19 +43,14 @@ import sys, os
 import string,re
 import reportlib
 import db
-from datetime import datetime
+import mgi_utils
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
-
-#
-#Set up email contact
-#
-sender = os.environ['GEN_WEBSHARE_EMAIL']
-receiver = "mgi-go@jax.org"
 
 def parseEco(cmd):
     results = db.sql(cmd, 'auto')
@@ -123,8 +118,8 @@ def printResults(eco_main_map):
 
     log.write("-------------------------------------"+CRT)
     log.write("-------------------------------------"+CRT)
-    log.write("Total number of ECO codes:%s\n" %(totalEcoCodes))
-    log.write("Total number of ECO codes with multiple Base Evidence codes:%s\n" %(multEvidenceCount))
+    log.write("Total number of ECO codes: %s\n" %(totalEcoCodes))
+    log.write("Total number of ECO codes with multiple Base Evidence codes: %s\n" %(multEvidenceCount))
     
 #
 # Main
@@ -134,8 +129,7 @@ fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir = os.environ['QCOUT
 log = reportlib.init(sys.argv[0], fileExt = '.log', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 #fp = reportlib.init(sys.argv[0], fileExt = '.rpt', outputdir = '/mgi/all/wts_projects/12000/12045/', printHeading = None)
 
-i = datetime.now()
-log.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
+log.write("Date: %s\n\n" % (mgi_utils.date()))
 
 #
 #
@@ -149,7 +143,7 @@ log.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
 
 db.sql('''select vp.value as ecoCodeNote ,vt2.abbreviation as evCode,
     ve._refs_key,ve._annot_key,ve.inferredfrom,vp.stanza, vp.sequencenum
-    into #goEvProperties
+    into temporary table goEvProperties
     from voc_evidence_property  vp, voc_term vt2, voc_evidence ve,voc_term vt
     where vp._propertyterm_key=6481772
     and vp._propertyterm_key= vt._term_key
@@ -160,7 +154,7 @@ db.sql('''select vp.value as ecoCodeNote ,vt2.abbreviation as evCode,
     and vt2._vocab_key=3
     and vt2.isObsolete=0
     ''', None)
-db.sql('create index annot_idx1 on #goEvProperties(_annot_key)', None)
+db.sql('create index annot_idx1 on goEvProperties(_annot_key)', None)
 
 #
 # Add GO term,GO id, and gaf.qualifier to the list
@@ -171,8 +165,8 @@ db.sql('''
     select va._object_key as _marker_key,vp.ecoCodeNote ,
     vp.evCode,vp._refs_key,vp.inferredfrom, vp.stanza, vp.sequencenum,
     acc.accid as goid,vt2.term as go_term,vt.term as gaf_qualifier
-    into #goEvQualifier
-    from voc_annot va,#goEvProperties vp, voc_term vt2,voc_term vt,acc_accession acc
+    into temporary table goEvQualifier
+    from voc_annot va,goEvProperties vp, voc_term vt2,voc_term vt,acc_accession acc
     where va._annot_key=vp._annot_key
     and va._annottype_key= 1000
     and va._qualifier_key=vt._term_key
@@ -186,8 +180,8 @@ db.sql('''
     and acc._logicaldb_key = 31
     and acc._mgitype_key = 13
     ''', None)
-db.sql('create index marker_key_idx on #goEvQualifier(_marker_key)', None)
-db.sql('create index ref_idx on #goEvQualifier(_refs_key)', None)
+db.sql('create index marker_key_idx on goEvQualifier(_marker_key)', None)
+db.sql('create index ref_idx on goEvQualifier(_refs_key)', None)
 
 #
 # Add GO Ref to the list
@@ -196,8 +190,8 @@ db.sql('''
     select g._marker_key,g.ecoCodeNote ,acc.accid as ref,acc2.accid as mgiref,
     b._primary as author,c.pubmedid,g.evCode,g._refs_key,g.inferredfrom, 
     g.stanza, g.sequencenum,g.goid,g.go_term,g.gaf_qualifier
-    into #goEvRefs
-    from #goEvQualifier g,acc_accession acc,acc_accession acc2,bib_refs b,bib_citation_cache c
+    into temporary table goEvRefs
+    from goEvQualifier g,acc_accession acc,acc_accession acc2,bib_refs b,bib_citation_cache c
     where g._refs_key=acc._object_key
     and acc._logicaldb_key = 1
     and acc._mgitype_key = 1
@@ -209,7 +203,7 @@ db.sql('''
     and  g._refs_key= b._refs_key
     and g._refs_key= c._refs_key
     ''', None)
-db.sql('create index marker_idx1 on #goEvRefs(_marker_key)', None)
+db.sql('create index marker_idx1 on goEvRefs(_marker_key)', None)
 
 #
 # Generate report for annotations with ECO code in the note
@@ -218,19 +212,14 @@ cmd ="""
    select acc.accid as mgiid, m.symbol,g.ecoCodeNote as evidence_note,
    g.ref,g.mgiref,g.author,g.pubmedid,g.evCode,g.inferredfrom,
    g.stanza,g.sequencenum,g.goid,g.go_term,g.gaf_qualifier
-   from #goEvRefs g, acc_accession acc, mrk_marker m 
+   from goEvRefs g, acc_accession acc, mrk_marker m 
    where g.ecoCodeNote like '%ECO:%' and g._marker_key=acc._object_key 
    and acc._logicaldb_key = 1
    and acc._mgitype_key = 2 and acc.prefixpart = 'MGI:' and acc.preferred=1
    and g._marker_key=m._marker_key and m._Marker_Status_key=1
 """
 
-#printResults(cmd)
 parseEco(cmd)
-
-i = datetime.now()
-log.write("Date:"+i.strftime('%Y/%m/%d %I:%M:%S \n\n'))
-print "\nProgram Complete\n"
 
 reportlib.finish_nonps(fp)
 reportlib.finish_nonps(log)

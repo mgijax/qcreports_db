@@ -41,7 +41,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -73,7 +74,7 @@ fp.write(string.ljust('-----------', 30) + \
 #
 db.sql('''
        select m._Marker_key, m.symbol, t.name as markerType
-       into #markers 
+       into temporary table markers 
        from MRK_Marker m, MRK_Types t
        where m._Organism_key = 1 
        and m._Marker_Status_key in (1,3) 
@@ -85,13 +86,13 @@ db.sql('''
        and a._LogicalDB_Key in (9, 13, 27, 41, 59, 60, 85)) 
        and exists (select 1 from GXD_Index i where m._Marker_key = i._Marker_key)
        ''', None)
-db.sql('create index idx1 on #markers(_Marker_key)', None)
+db.sql('create index idx1 on markers(_Marker_key)', None)
 
 #
 # select number of GXD index references for each marker
 #
 results = db.sql('''select m._Marker_key, count(i._Refs_key) as gxd
-        from #markers m, GXD_Index i 
+        from markers m, GXD_Index i 
         where m._Marker_key = i._Marker_key 
         group by m._Marker_key
 	''', 'auto')
@@ -101,7 +102,7 @@ for r in results:
         value = str(r['gxd'])
         gxd[key] = value
 
-results = db.sql('select * from #markers order by markerType, symbol', 'auto')
+results = db.sql('select * from markers order by markerType, symbol', 'auto')
 for r in results:
 	key = r['_Marker_key']
 	fp.write(string.ljust(r['symbol'], 30))

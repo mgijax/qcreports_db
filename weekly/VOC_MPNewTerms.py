@@ -40,7 +40,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -58,7 +59,7 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 
 db.sql('''
 	select a.accid, t.term , t._Term_key, t.creation_date
-	into #triage
+	into temporary table triage
 	from VOC_Term t, ACC_Accession a
 	where t.creation_date between %s and %s
 	and t._Term_key = a._Object_key
@@ -66,17 +67,17 @@ db.sql('''
 	and a._MGIType_key = 13
 	''' % (fromDate, toDate), None)
 
-db.sql('''create index idx1 on #triage(_Term_key)''', None)
+db.sql('''create index idx1 on triage(_Term_key)''', None)
 
 results = db.sql('''
 	(
 	select distinct t.accid, t.term, s.synonym
-    	from #triage t, MGI_Synonym s
+    	from triage t, MGI_Synonym s
     	where t._Term_key = s._Object_key
     	and s._MGIType_key = 13
     	union
     	select distinct t.accid, t.term, null
-    	from #triage t where not exists (select 1 from MGI_Synonym s
+    	from triage t where not exists (select 1 from MGI_Synonym s
 		where t._Term_key = s._Object_key and s._MGIType_key = 13)
 	)
     	order by term

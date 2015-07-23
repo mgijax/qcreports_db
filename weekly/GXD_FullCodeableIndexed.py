@@ -26,7 +26,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -61,11 +62,11 @@ fp.write(CRT)
 #
 db.sql('''
 	select _Marker_key, count(*) as idx_count 
-	into #indexcount
+	into temporary table indexcount
 	from GXD_Index
 	group by _Marker_key
 	''', None)
-db.sql('create index indexed_idx1 on #indexcount(_Marker_key)', None)
+db.sql('create index indexed_idx1 on indexcount(_Marker_key)', None)
 
 #
 # all genes in the GXD index
@@ -73,8 +74,8 @@ db.sql('create index indexed_idx1 on #indexcount(_Marker_key)', None)
 
 db.sql('''
 	select distinct g._Marker_key, m.symbol, a.accID, g.idx_count
-	into #allgenes
-	from #indexcount g, MRK_Marker m, ACC_Accession a
+	into temporary table allgenes
+	from indexcount g, MRK_Marker m, ACC_Accession a
 	where g._Marker_key = m._Marker_key
 	and g._Marker_key = a._Object_key
 	and a._MGIType_key = 2
@@ -82,7 +83,7 @@ db.sql('''
 	and a.preferred = 1
 	''', None)
 
-db.sql('create index allgenes_idx1 on #allgenes(_Marker_key)', None)
+db.sql('create index allgenes_idx1 on allgenes(_Marker_key)', None)
 
 #
 # count of total index records that have been full-coded
@@ -104,7 +105,7 @@ for r in results:
 #
 # to print...
 #
-results = db.sql('select * from #allgenes order by idx_count, symbol', 'auto')
+results = db.sql('select * from allgenes order by idx_count, symbol', 'auto')
 
 for r in results:
 

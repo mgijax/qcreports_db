@@ -41,7 +41,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
@@ -69,7 +70,7 @@ def jrs():
 			substring(s.strain,1,70) as strain, 
 			substring(a.accID,1,6) as accID, 
 			g._Genotype_key 
-	into #strains 
+	into temporary table strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, 
 	     GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
@@ -79,7 +80,7 @@ def jrs():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key 
-	and g.creation_date between %s and getdate()
+	and g.creation_date between %s and current_date
 	''' % (fromDate), None)
 
     printReport(jrsfp)
@@ -100,14 +101,14 @@ def mmrrc():
     
     # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
 
-    db.sql('drop table #strains', None)
+    db.sql('drop table strains', None)
 
     db.sql('''
 	select distinct s._Strain_key, 
 			substring(s.strain,1,70) as strain, 
 			a.accID, 
 			g._Genotype_key 
-	into #strains 
+	into temporary table strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
 	where s.private = 0 
 	and s._Strain_key = a._Object_key 
@@ -116,20 +117,20 @@ def mmrrc():
 	and s._Strain_key = sm._Strain_key 
 	and sm._Allele_key = ag._Allele_key 
 	and ag._Genotype_key = g._Genotype_key
-	and g.creation_date between %s and getdate()
+	and g.creation_date between %s and current_date
 	''' % (fromDate), None)
 
     printReport(mmrrcfp)
 
 def printReport(fp):
 
-    db.sql('create index idx1 on #strains(_Strain_key)', None)
-    db.sql('create index idx2 on #strains(_Genotype_key)', None)
+    db.sql('create index idx1 on strains(_Strain_key)', None)
+    db.sql('create index idx2 on strains(_Genotype_key)', None)
 
     genotypes = {}
     results = db.sql('''
 	    select distinct s._Strain_key, a.accID 
-	    from #strains s, ACC_Accession a 
+	    from strains s, ACC_Accession a 
 	    where s._Genotype_key = a._Object_key 
 	    and a._MGIType_key = 12 
 	    and a._LogicalDB_key = 1 
@@ -144,7 +145,7 @@ def printReport(fp):
 
     results = db.sql('''
 	    select distinct s._Strain_key, s.strain, s.accID
-	    from #strains s
+	    from strains s
 	    where not exists 
 	    (select 1 from PRB_Strain_Genotype g 
 		 where s._Strain_key = g._Strain_key and s._Genotype_key = g._Genotype_key)

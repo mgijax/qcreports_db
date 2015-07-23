@@ -27,7 +27,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
@@ -40,7 +41,6 @@ CATTLE_KEY = 11
 CHIMP_KEY = 10
 DOG_KEY = 13
 
-db.useOneConnection(1)
 fp = reportlib.init(sys.argv[0], 'Homology classes with only mouse genes ', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('HomoloGeneID%sMouse gene count%s' % (TAB, CRT))

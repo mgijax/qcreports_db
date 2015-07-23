@@ -75,7 +75,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -149,7 +150,7 @@ for r in results:
 
 results = db.sql('''
 	select a._Allele_key, 
-	       convert(char(10), a.approval_date, 101) as cDate, 
+	       to_char( a.approval_date, 'MM/dd/yyyy') as cDate,
 	       a1.accID, 
 	       a.alleleType, 
 	       a.symbol 

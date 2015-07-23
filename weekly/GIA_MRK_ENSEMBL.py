@@ -48,7 +48,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -62,7 +63,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 cmd = '''
-	select a1.accID as mgiID, m.symbol, m.name, m.chromosome, o.offset, a2.accID as ensemblID
+	select a1.accID as mgiID, m.symbol, m.name, m.chromosome, o.cmoffset, a2.accID as ensemblID
         from ACC_Accession a1, ACC_Accession a2, MRK_Marker m, MRK_Offset o 
         where a1._Object_key = a2._Object_key 
             and a1._Object_key = m._Marker_key 
@@ -82,7 +83,7 @@ results = db.sql(cmd, 'auto')
 
 for r in results:
     fp.write(r['mgiID'] + TAB + r['symbol'] + TAB + r['name'] + TAB +
-	     str(r['offset']) + TAB +
+	     str(r['cmoffset']) + TAB +
              r['chromosome'] + TAB + 
              r['ensemblID'] + CRT)
 

@@ -34,7 +34,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -111,21 +112,21 @@ fp.write(string.ljust('--------------', 75) + CRT)
 #
 db.sql('''
       select distinct b._Refs_key
-      into #exists
+      into temporary table exists
       from VOC_Annot a, VOC_Evidence e, BIB_Refs b, GXD_AlleleGenotype g
       where a._AnnotType_key = 1002
 	    and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-	    and b.journal in ("%s") 
+	    and b.journal in ('%s') 
 	    and b.year > 2008
 	    and a._Object_key = g._Genotype_key
 	    and exists (select 1 from IMG_ImagePane_Assoc_View v
 	    where v._MGIType_key = 11
 	    and v._ImageClass_key in (6481782)
 	    and g._Allele_key = v._Object_key)
-	''' % (string.join(journals, '","')), None)
+	''' % (string.join(journals, '\',\'')), None)
 
-db.sql('create index exists_idx1 on #exists(_Refs_key)', None)
+db.sql('create index exists_idx1 on exists(_Refs_key)', None)
 
 #
 # all references that contain journals with genotype annotations, etc.
@@ -138,26 +139,26 @@ db.sql('create index exists_idx1 on #exists(_Refs_key)', None)
 #
 db.sql('''
       select distinct b._Refs_key
-      into #refs 
+      into temporary table refs 
       from VOC_Annot a, VOC_Evidence e, BIB_Refs b, GXD_AlleleGenotype g
       where a._AnnotType_key = 1002
 	    and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-	    and b.journal in ("%s") 
+	    and b.journal in ('%s') 
 	    and b.year > 2008
 	    and a._Object_key = g._Genotype_key
-	    and not exists (select 1 from #exists r where b._Refs_key = r._Refs_key)
+	    and not exists (select 1 from exists r where b._Refs_key = r._Refs_key)
 	    and not exists (select 1 from IMG_ImagePane_Assoc_View v
 	    where v._MGIType_key = 11
 	    and v._ImageClass_key in (6481782)
 	    and g._Allele_key = v._Object_key)
-	''' % (string.join(journals, '","')), None)
+	''' % (string.join(journals, '\',\'')), None)
 
-db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
+db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
 results = db.sql('''
 	select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID
-	from #refs r, BIB_Citation_Cache b
+	from refs r, BIB_Citation_Cache b
 	where r._Refs_key = b._Refs_key
               and b.pubmedID is not null
         order by b.jnumID
