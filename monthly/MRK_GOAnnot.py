@@ -48,7 +48,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -82,24 +83,24 @@ fp.write('\n')
 #
 db.sql('''
 	select distinct m._Marker_key, m.symbol
-	into #markers
+	into temporary table markers
         from MRK_Marker m
         where m._Marker_Type_key = 1
 	and exists (select 1 from VOC_Annot a
 	    where m._Marker_key = a._Object_key
 	    and a._AnnotType_key = 1000)
        ''', None)
-db.sql('create index idx1 on #markers(_Marker_key)', None)
+db.sql('create index idx1 on markers(_Marker_key)', None)
 
 # marker ids
 
 mgiIDs = {}
 results = db.sql('''select m._Marker_key, a.accID
-	    from #markers m, ACC_Accession a 
+	    from markers m, ACC_Accession a 
 	    where m._Marker_key = a._Object_key 
 	    and a._LogicalDB_key = 1 
 	    and a._MGIType_key = 2
-	    and a.prefixPart = "MGI:"
+	    and a.prefixPart = 'MGI:'
 	    and a.preferred = 1
 	    ''', 'auto')
 for r in results:
@@ -113,7 +114,7 @@ for r in results:
 mgiFeature = {}
 results = db.sql('''
 	   select m._Marker_key, t.term
-	   from #markers m, VOC_Annot a, VOC_Term t
+	   from markers m, VOC_Annot a, VOC_Term t
 	   where m._Marker_key = a._Object_key
 	   and a._AnnotType_key = 1011
 	   and a._Term_key = t._Term_key
@@ -131,7 +132,7 @@ totalAnnot = {}
 results = db.sql('''
 	select m._Marker_key, 
 	       count(distinct v._Annot_key) as totalAnnot
-        from #markers m, VOC_Annot v
+        from markers m, VOC_Annot v
             where m._Marker_key = v._Object_key
             and v._AnnotType_key = 1000
 	    group by m._Marker_key
@@ -148,7 +149,7 @@ totalEvi = {}
 results = db.sql('''
 	select m._Marker_key, 
 	       count(distinct v._Annot_key) as totalEvi
-        from #markers m, VOC_Annot v, VOC_Evidence e
+        from markers m, VOC_Annot v, VOC_Evidence e
             where m._Marker_key = v._Object_key
             and v._AnnotType_key = 1000
 	    and v._Annot_key = e._Annot_key
@@ -171,7 +172,7 @@ for r in results:
 totalNotUsed = {}
 results = db.sql('''
 	select m._Marker_key, count(distinct r._Refs_key) as totalNotUsed
-	from #markers m, BIB_GOXRef_View r
+	from markers m, BIB_GOXRef_View r
 	where m._Marker_key = r._Marker_key
 	and not exists (select 1 from VOC_Annot a, VOC_Evidence e
 	where a._AnnotType_key = 1000
@@ -192,7 +193,7 @@ for r in results:
 totalUsed = {}
 results = db.sql('''
 	select m._Marker_key, count(distinct e._Refs_key) as totalUsed
-	from #markers m, VOC_Annot a, VOC_Evidence e, MGI_User u
+	from markers m, VOC_Annot a, VOC_Evidence e, MGI_User u
 	where a._AnnotType_key = 1000
 	and m._Marker_key = a._Object_key
 	and a._Annot_key = e._Annot_key
@@ -209,7 +210,7 @@ for r in results:
     totalUsed[key] = value
 
 # final output to print
-results = db.sql('select distinct m._Marker_key, m.symbol from #markers m order by symbol', 'auto')
+results = db.sql('select distinct m._Marker_key, m.symbol from markers m order by symbol', 'auto')
 
 fp.write('total # of genes:  ' + str(len(results)) + 2*CRT)
 

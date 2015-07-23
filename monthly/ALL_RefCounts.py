@@ -98,8 +98,6 @@ def createImsrDict2():
 
 currentDate = mgi_utils.date('%Y')
 
-db.useOneConnection(1)
-
 fp = reportlib.init(sys.argv[0], printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 
 # create the mappings of allele MGI ID to facility abbreviation
@@ -200,5 +198,4 @@ for r in results:
     fp.write('%s%s%s%s%s%s%s%s%s%s%s' % (symbol, TAB, mgiID, TAB, refsCount, TAB, allCt, TAB, f1, f2, CRT) )
 
 reportlib.finish_nonps(fp)	# non-postscript file
-db.useOneConnection(0)
 

@@ -23,14 +23,13 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
-
-db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'Transgenic Genotype Check of the Expression Cache', outputdir = os.environ['QCOUTPUTDIR'])
 
@@ -62,7 +61,7 @@ fp.write(CRT)
 
 db.sql('''
     select a._Refs_key, a._Assay_key, aa.symbol
-    into #final
+    into temporary table final
     from GXD_Assay a, GXD_Expression e, GXD_AlleleGenotype g, ALL_Allele aa
     where a._AssayType_key in (1,2,3,4,5,6,8,9)
     and a._Assay_key = e._Assay_key
@@ -71,12 +70,12 @@ db.sql('''
     and aa._Allele_Type_key in (847126, 2327160)
     ''', None)
 
-db.sql('create index idx1 on #final(_Refs_key)', None)
-db.sql('create index idx2 on #final(_Assay_key)', None)
+db.sql('create index idx1 on final(_Refs_key)', None)
+db.sql('create index idx2 on final(_Assay_key)', None)
 
 results = db.sql('''
-    select f.*, c.jnumID, mgiID = a.accID
-    from #final f, BIB_Citation_Cache c, ACC_Accession a
+    select f.*, c.jnumID, a.accID as mgiID
+    from final f, BIB_Citation_Cache c, ACC_Accession a
     where f._Refs_key = c._Refs_key
     and f._Assay_key = a._Object_key
     and a._LogicalDB_key = 1
@@ -93,5 +92,4 @@ for r in results:
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
-db.useOneConnection(0)
 
