@@ -116,7 +116,7 @@ def runQueries():
 
     db.sql('''
 	   select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart, 'no ' as hasOrthology
-	   into #markers 
+	   into temporary table markers 
 	   from MRK_Marker m, ACC_Accession a 
 	   where m._Marker_Type_key = 1 
 	   and m._Marker_Status_key in (1,3) 
@@ -138,7 +138,7 @@ def runQueries():
 	   and a._AnnotType_key = 1011
 	   and a._Term_key = 6238170)
 	   ''', None)
-    db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
+    db.sql('create index markers_idx1 on markers(_Marker_key)', None)
 
     # orthologies
 
@@ -166,20 +166,20 @@ def runQueries():
 
     db.sql('''select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, 
 	r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal 
-	into #references1 
-	from #markers m , MRK_Reference r, BIB_Refs b 
+	into temporary table references1 
+	from markers m , MRK_Reference r, BIB_Refs b 
 	where m._Marker_key = r._Marker_key 
 	and r._Refs_key = b._Refs_key
 	''', None)
-    db.sql('create index references_idx1 on #references1(_Refs_key)', None)
-    db.sql('create index references_idx2 on #references1(_Marker_key)', None)
-    db.sql('create index references_idx3 on #references1(symbol)', None)
-    db.sql('create index references_idx4 on #references1(numericPart)', None)
+    db.sql('create index references_idx1 on references1(_Refs_key)', None)
+    db.sql('create index references_idx2 on references1(_Marker_key)', None)
+    db.sql('create index references_idx3 on references1(symbol)', None)
+    db.sql('create index references_idx4 on references1(numericPart)', None)
 
     # check if reference is selected for GO
 
 #db.sql('update #references set isGO = 1 ' + \
-#	'from #references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+#	'from references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 #	'where r._Refs_key = ba._Refs_key ' + \
 #	'and ba._DataSet_key = bd._DataSet_key ' + \
 #	'and bd.dataSet = "Gene Ontology" ' + \
@@ -188,7 +188,7 @@ def runQueries():
     # has reference been chosen for GXD
 
     results = db.sql('''select distinct r._Refs_key 
-	from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
 	where r._Refs_key = ba._Refs_key 
 	and ba._DataSet_key = bd._DataSet_key 
 	and bd.dataSet = 'Expression" 
@@ -226,8 +226,8 @@ def reportD():
 
     db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
 	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology ' + \
-	'into #fpD ' + \
-	'from #references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
+	'into temporary table fpD ' + \
+	'from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
 	'where r._Refs_key = ba._Refs_key ' + \
 	'and ba._DataSet_key = bd._DataSet_key ' + \
 	'and bd.dataSet = "Gene Ontology" ' + \
@@ -238,24 +238,24 @@ def reportD():
 	'and a._AnnotType_key = 1000) ', None)
 
     # number of unique MGI gene
-    results = db.sql('select distinct _Marker_key from #fpD', 'auto')
+    results = db.sql('select distinct _Marker_key from fpD', 'auto')
     fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
     # number of unique J:
-    results = db.sql('select distinct _Refs_key from #fpD', 'auto')
+    results = db.sql('select distinct _Refs_key from fpD', 'auto')
     fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
 
     # number of has orthology?
-    results = db.sql('select * from #fpD where hasOrthology = "yes"', 'auto')
+    results = db.sql('select * from fpD where hasOrthology = "yes"', 'auto')
     fpD.write('Number of has orthology? = yes:  %s\n' % (len(results)))
-    results = db.sql('select * from #fpD where hasOrthology = "no "', 'auto')
+    results = db.sql('select * from fpD where hasOrthology = "no "', 'auto')
     fpD.write('Number of has orthology? = no:  %s\n' % (len(results)))
 
     # total number of rows
-    results = db.sql('select * from #fpD', 'auto')
+    results = db.sql('select * from fpD', 'auto')
     fpD.write('Total number of rows:  %s\n\n' % (len(results)))
 
-    results = db.sql('select * from #fpD order by hasOrthology desc, numericPart', 'auto')
+    results = db.sql('select * from fpD order by hasOrthology desc, numericPart', 'auto')
     for r in results:
 	    writeRecordD(fpD, r)
 

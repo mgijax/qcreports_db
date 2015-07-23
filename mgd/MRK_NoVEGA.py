@@ -54,30 +54,30 @@ fp.write('#\n')
 # get the full set of VEGA gene model ids
 # we exclude the obsolete vega ids (only include status = active)
 db.sql('''select accID, s._Sequence_key
-    into #vegaGeneModel
+    into temporary table vegaGeneModel
     from ACC_Accession  a, SEQ_Sequence s
     where a._lOGicalDB_key = 85
     and a._MGIType_key = 19
     and a._Object_key = s._Sequence_key
     and s._SequenceStatus_key = 316342
     ''', None)
-db.sql('create index idxAccid1 on #vegaGeneModel(accID)', None)
-db.sql('create index idxSeqKey1 on #vegaGeneModel(_Sequence_key)', None)
+db.sql('create index idxAccid1 on vegaGeneModel(accID)', None)
+db.sql('create index idxSeqKey1 on vegaGeneModel(_Sequence_key)', None)
 
 # get the set of VEGA ids with marker associations
 db.sql('''select distinct accID 
-    into #vegaGeneAssoc 
+    into temporary table vegaGeneAssoc 
     from ACC_Accession  
     where _LogicalDB_key = 85 
     and _MGIType_key = 2
     and preferred = 1
     ''', None)
-db.sql('create index idxAccid2 on #vegaGeneAssoc(accID)', None)
+db.sql('create index idxAccid2 on vegaGeneAssoc(accID)', None)
 results = db.sql('''select gm.accid as vegaGeneModelNoAssoc, s.rawbiotype 
-    from #vegaGeneModel gm
+    from vegaGeneModel gm
 	 LEFT OUTER JOIN SEQ_GeneModel s on (gm._Sequence_key = s._Sequence_key)
     where not exists (select 1 
-    from #vegaGeneAssoc ga 
+    from vegaGeneAssoc ga 
     where ga.accid = gm.accid) 
     order by gm.accID
     ''', 'auto')

@@ -88,7 +88,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -151,8 +152,8 @@ for r in results:
 
 # select non-ORF genes with GO Associations of evidence IEA only
 
-db.sql('''select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart
-	into #markers
+db.sql('''select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart
+	into temporary table markers
 	from MRK_Marker m, ACC_Accession a
 	where m._Marker_Type_key = 1
 	and m._Marker_Status_key in (1,3)
@@ -176,30 +177,30 @@ db.sql('''select m._Marker_key, m.symbol, m.name, mgiID = a.accID, a.numericPart
 	and a._Annot_key = e._Annot_key
 	and e._EvidenceTerm_key != 115) 
 	''', None)
-db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
+db.sql('create index markers_idx1 on markers(_Marker_key)', None)
 
 ##
 
 db.sql('''select distinct m.*, r._Refs_key, r.pubmedID
-	into #references1
-	from #markers m , MRK_Reference r
+	into temporary table references1
+	from markers m , MRK_Reference r
 	where m._Marker_key = r._Marker_key
 	''', None)
-db.sql('create index index_refs1_key on #references1(_Refs_key)', None)
+db.sql('create index index_refs1_key on references1(_Refs_key)', None)
 
 db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation
-	into #references2
-	from #references1 r, BIB_All_View b
+	into temporary table references2
+	from references1 r, BIB_All_View b
 	where r._Refs_key = b._Refs_key
 	''', None)
-db.sql('create index index_refs_key on #references2(_Refs_key)', None)
+db.sql('create index index_refs_key on references2(_Refs_key)', None)
 
 # has reference been chosen for GXD
 results = db.sql('''select distinct r._Refs_key
-	from #references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
 	where r._Refs_key = ba._Refs_key
 	and ba._DataSet_key = bd._DataSet_key
-	and bd.dataSet = "Expression"
+	and bd.dataSet = 'Expression'
 	and ba.isNeverUsed = 0
 	''', 'auto')
 gxd = []
@@ -208,7 +209,7 @@ for r in results:
 
 # does gene have mouse model annotated to OMIM disease
 results = db.sql('''select distinct m._Marker_key
-	from #markers m, MRK_OMIM_Cache o
+	from markers m, MRK_OMIM_Cache o
 	where m._Marker_key = o._Marker_key
 	''', 'auto')
 omim = []
@@ -221,11 +222,11 @@ for r in results:
 
 db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	r.jnumID, r.jnum, r.numericPart, r.pubmedID
-	into #fpD
-	from #references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+	into temporary table fpD
+	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
 	where r._Refs_key = ba._Refs_key
 	and ba._DataSet_key = bd._DataSet_key
-	and bd.dataSet = "Gene Ontology"
+	and bd.dataSet = 'Gene Ontology'
 	and ba.isNeverUsed = 0
 	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
 	where r._Refs_key = e._Refs_key
@@ -234,18 +235,18 @@ db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	''', None)
 
 # number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #fpD', 'auto')
+results = db.sql('select distinct _Marker_key from fpD', 'auto')
 fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # number of unique J:gene
-results = db.sql('select distinct _Refs_key from #fpD', 'auto')
+results = db.sql('select distinct _Refs_key from fpD', 'auto')
 fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
 
 # total number of rows
-results = db.sql('select * from #fpD', 'auto')
+results = db.sql('select * from fpD', 'auto')
 fpD.write('Total number of rows:  %s\n\n' % (len(results)))
 
-results = db.sql('select * from #fpD order by numericPart', 'auto')
+results = db.sql('select * from fpD order by numericPart', 'auto')
 for r in results:
 	writeRecordD(fpD, r)
 
@@ -256,8 +257,8 @@ for r in results:
 # select genes with OMIM Associations
 # feature type = 'protein coding genes'
 
-db.sql('''select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart 
-	into #omimmarkers
+db.sql('''select m._Marker_key, m.symbol, a.accID as mgiID, a.numericPart 
+	into temporary table omimmarkers
 	from MRK_Marker m, ACC_Accession a, VOC_Annot tdc
 	where m._Organism_key = 1
 	and m._Marker_Type_key = 1
@@ -274,32 +275,32 @@ db.sql('''select m._Marker_key, m.symbol, mgiID = a.accID, a.numericPart
 	where m._Marker_key = g._Marker_key
 	and g._Genotype_key = a._Object_key
 	and a._AnnotType_key = 1005) ''', None)
-db.sql('create index omim_idx1 on #omimmarkers(_Marker_key)', None)
+db.sql('create index omim_idx1 on omimmarkers(_Marker_key)', None)
 
 #
 # select markers with OMIM annotations and either only IEA GO annotations or no GO annotations
 #
 
-db.sql('''select o.*, "yes" as isGO
-	into #fpE
-	from #omimmarkers o, #markers m
+db.sql('''select o.*, 'yes' as isGO
+	into temporary table fpE
+	from omimmarkers o, markers m
 	where o._Marker_key = m._Marker_key
 	union
-	select o.*, "no" as isGO
-	from #omimmarkers o
+	select o.*, 'no' as isGO
+	from omimmarkers o
 	where not exists 
 	  (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000)
 	''', None)
 
 # number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #fpE', 'auto')
+results = db.sql('select distinct _Marker_key from fpE', 'auto')
 fpE.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # total number of rows
-results = db.sql('select * from #fpE', 'auto')
+results = db.sql('select * from fpE', 'auto')
 fpE.write('Total number of rows:  %s\n\n' % (len(results)))
 
-results = db.sql('select * from #fpE order by symbol', 'auto')
+results = db.sql('select * from fpE order by symbol', 'auto')
 for r in results:
     writeRecordF(fpE, r)
 

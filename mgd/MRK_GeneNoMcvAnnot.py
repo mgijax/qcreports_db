@@ -26,7 +26,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -44,7 +45,7 @@ fp.write('-'*80 + CRT)
 # select all official mouse markers of type gene without mcv annotations
 db.sql('''
 	select _Marker_key, _Marker_Type_key, symbol
-	into #noAnnot
+	into temporary table noAnnot
 	from MRK_Marker m
 	where m._Marker_Status_key in (1,3)
 	and _Organism_key = 1
@@ -57,7 +58,7 @@ db.sql('''
 
 results = db.sql('''
 	    select a.accid, n.symbol
-	    from #noAnnot n, ACC_Accession a
+	    from noAnnot n, ACC_Accession a
 	    where n._Marker_key = a._Object_key
 	    and a._MGIType_key = 2
 	    and a.preferred = 1

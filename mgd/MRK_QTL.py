@@ -56,7 +56,7 @@ def getRefs():
 
 	db.sql('''
  	select m._Marker_key, h._Refs_key
-	into #refs
+	into temporary table refs
         from MRK_Marker m, MRK_History h
     	where m._Marker_Type_key = 6
 	  	and m._Marker_Status_key not in (2)
@@ -65,8 +65,8 @@ def getRefs():
 	and h.sequenceNum = 1
 	''', None)
 
-	db.sql('create index refs_idx1 on #refs(_Marker_key)', None)
-	db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
+	db.sql('create index refs_idx1 on refs(_Marker_key)', None)
+	db.sql('create index refs_idx2 on refs(_Refs_key)', None)
 
 def qtl1():
 
@@ -175,7 +175,7 @@ def qtl5():
 		convert(char(10), m.creation_date, 101) as creation_date,
 		substring(t.term,1,10) as term,
 	  	a1.accID as mgiID, r.jnumID as refID, m.symbol, m.name, m.statusNote
-	  into #marker
+	  into temporary table marker
           from ACC_Accession a1, 
 		VOC_Term t,
 		NOM_Marker m left join
@@ -193,7 +193,7 @@ def qtl5():
 	noteLookup = {}
 	results = db.sql('''
 		select distinct m._Nomen_key, nt.noteType
-		from #marker m, MGI_Note n, MGI_NoteType nt
+		from marker m, MGI_Note n, MGI_NoteType nt
           	where m._Nomen_key = n._Object_key
 		and n._MGIType_key = 21
 		and n._NoteType_key = nt._NoteType_key
@@ -205,7 +205,7 @@ def qtl5():
 			noteLookup[key] = []
 		noteLookup[key].append(noteType)
 
-	results = db.sql('select * from #marker order by symbol', 'auto')
+	results = db.sql('select * from marker order by symbol', 'auto')
 
         for r in results:
 		key = r['_Nomen_key']

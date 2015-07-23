@@ -85,7 +85,7 @@ for r in results:
 
 db.sql('''
     select va.*, t1.term as mcvTerm, t2.term as qualifier, a1.accid as mcvID, a2.accid as mgiID
-    into #mcvAnnot
+    into temporary table mcvAnnot
     from VOC_Annot va, VOC_Term t1, VOC_Term t2, ACC_Accession a1, ACC_Accession a2
     where va._AnnotType_key = 1011
     and va._Term_key = t1._Term_key
@@ -100,14 +100,14 @@ db.sql('''
     and a2.preferred = 1
     ''', None)
 
-db.sql('''create index mcvAnnot_idx on #mcvAnnot(_Annot_key)''', None)
+db.sql('''create index mcvAnnot_idx on mcvAnnot(_Annot_key)''', None)
 
 results = db.sql('''
     select  ma.qualifier, convert(char(10), 
 	a.creation_date, 101) as creation_date, e._AnnotEvidence_key as evidKey,
 	ma.mcvTerm, ma.mcvID, ma.mgiID, a.accid as jnum, e.inferredFrom, u.login, 
 	t.term as evidCode
-    from #mcvAnnot ma, VOC_Evidence e, ACC_Accession a, MGI_User u, VOC_Term t
+    from mcvAnnot ma, VOC_Evidence e, ACC_Accession a, MGI_User u, VOC_Term t
     where ma._Annot_key = e._Annot_key
     and e._CreatedBy_key = u._User_key
     and e._Refs_key = a._Object_key

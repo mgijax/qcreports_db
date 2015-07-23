@@ -27,7 +27,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -43,7 +44,7 @@ fp.write('-'*80 + CRT)
 
 db.sql('''
 	select t.term as feature, 0 as featureCount
-	into #notUsed
+	into temporary table notUsed
 	from VOC_Term t
 	where t._Vocab_key = 79
 	and not exists (select 1
@@ -54,7 +55,7 @@ db.sql('''
 
 db.sql('''
 	select va.*, t.term as feature
-        into #mcv
+        into temporary table mcv
         from VOC_Annot va
 	LEFT OUTER JOIN VOC_Term t on (va._Term_key = t._Term_key)
         where va._AnnotType_key = 1011
@@ -62,11 +63,11 @@ db.sql('''
 
 results = db.sql('''
 	select feature, count(feature) as featureCount
-	from #mcv
+	from mcv
 	group by feature
 	union
 	select feature, featureCount
-	from #notUsed
+	from notUsed
 	order by feature
 	''', 'auto')
 

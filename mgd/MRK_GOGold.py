@@ -49,7 +49,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -107,7 +108,7 @@ fpD.write('mgi ID' + TAB + \
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI, TAS
 db.sql('''
 	select m._Marker_key, m.symbol, m.name, a.term, a.accID as goID, e.evidenceCode, d.abbreviation 
-	into #m1 
+	into temporary table m1 
 	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
 	where m._Organism_key = 1 
 	and m._Marker_Type_key = 1 
@@ -122,12 +123,12 @@ db.sql('''
 	and n._DAG_key = d._DAG_key 
 	order by m.symbol
 	''', None)
-db.sql('create index m1_idx1 on #m1(_Marker_key)', None)
+db.sql('create index m1_idx1 on m1(_Marker_key)', None)
 
 # select mouse genes, annotations where evidence code = IDA, IGI, IMP, IPI
 db.sql('''
 	select m._Marker_key, m.symbol, m.name, a.term, a.accID as goID, e.evidenceCode, d.abbreviation, a._annot_key 
-	into #m2 
+	into temporary table m2 
 	from MRK_Marker m, VOC_Annot_View a, VOC_Evidence_View e, VOC_VocabDAG vd, DAG_Node n, DAG_DAG d 
 	where m._Organism_key = 1 
 	and m._Marker_Type_key = 1 
@@ -142,16 +143,16 @@ db.sql('''
 	and n._DAG_key = d._DAG_key 
 	order by m.symbol
 	''', None)
-db.sql('create index m2_idx1 on #m2(_Marker_key)', None)
-db.sql('create index m2_idx_goid on #m2(goID)', None)
-db.sql('create index m2_idx_annot_key on #m2(_annot_key)', None)
+db.sql('create index m2_idx1 on m2(_Marker_key)', None)
+db.sql('create index m2_idx_goid on m2(goID)', None)
+db.sql('create index m2_idx_annot_key on m2(_annot_key)', None)
 
 # select MGI accession ids for mouse genes from set 1
 # this will also suffice for set 2 which is a subset of set 1
 
 results = db.sql('''
 	select distinct m._Marker_key, ma.accID 
-	from #m1 m, ACC_Accession ma 
+	from m1 m, ACC_Accession ma 
 	where m._Marker_key = ma._Object_key 
 	and ma._MGIType_key = 2 
 	and ma.prefixPart = 'MGI:' 
@@ -165,31 +166,31 @@ for r in results:
 ## Report B
 
 # number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #m2', 'auto')
+results = db.sql('select distinct _Marker_key from m2', 'auto')
 fpB.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # total number of rows
-results = db.sql('select * from #m2', 'auto')
+results = db.sql('select * from m2', 'auto')
 fpB.write('Total number of rows:  %s\n\n' % (len(results)))
 
-results = db.sql('select * from #m2', 'auto')
+results = db.sql('select * from m2', 'auto')
 for r in results:
 	writeRecord1(fpB, r)
 
 ## Report D
 
 # select all records from set 2 which have multiple annotations to the same GO term
-db.sql('''select * into #m4 from #m2 m2_1
-	where exists (select 1 from #m2 m2_2 
+db.sql('''select * into temporary table m4 from m2 m2_1
+	where exists (select 1 from m2 m2_2 
 		where m2_1._marker_key = m2_2._marker_key
 			and m2_1.goID = m2_2.goID
 			and m2_1._annot_key != m2_2._annot_key
 	)''', None)
-db.sql('create index m4_idx1 on #m4(_Marker_key)', None)
-db.sql('create index m4_idx2 on #m4(symbol)', None)
+db.sql('create index m4_idx1 on m4(_Marker_key)', None)
+db.sql('create index m4_idx2 on m4(symbol)', None)
 
 # select distinct marker, GO ID, evidence code from set 2 annotations
-results = db.sql('select distinct _Marker_key, goID, evidenceCode from #m4', 'auto')
+results = db.sql('select distinct _Marker_key, goID, evidenceCode from m4', 'auto')
 ecode = {}
 for r in results:
 	key = `r['_Marker_key']` + ':' + r['goID']
@@ -198,14 +199,14 @@ for r in results:
 	ecode[key].append(r['evidenceCode'])
 
 # number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #m4', 'auto')
+results = db.sql('select distinct _Marker_key from m4', 'auto')
 fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # total number of rows
-results = db.sql('select * from #m4', 'auto')
+results = db.sql('select * from m4', 'auto')
 fpD.write('Total number of rows:  %s\n\n' % (len(results)))
 
-results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbreviation from #m4 order by symbol', 'auto')
+results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbreviation from m4 order by symbol', 'auto')
 for r in results:
 	writeRecord2(fpD, r)
 

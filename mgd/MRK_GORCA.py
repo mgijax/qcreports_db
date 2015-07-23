@@ -53,6 +53,7 @@ import reportlib
 import db
 
 db.setTrace()
+db.setAutoTranslate(False)
 db.setAutoTranslateBE()
 
 CRT = reportlib.CRT
@@ -104,7 +105,7 @@ for r in results:
 # select genes with GO Associations of evidence RCA only
 
 db.sql('''select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart 
-	into #markers 
+	into temporary table markers 
 	from MRK_Marker m, ACC_Accession a 
 	where m._Marker_Type_key = 1 
 	and m._Marker_Status_key in (1,3) 
@@ -127,27 +128,27 @@ db.sql('''select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPar
 	and e._EvidenceTerm_key != 514597) 
 	''', None)
 
-db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
+db.sql('create index markers_idx1 on markers(_Marker_key)', None)
 
 db.sql('''select distinct m.*, r._Refs_key, r.pubmedID
-	into #references1 
-	from #markers m , MRK_Reference r 
+	into temporary table references1 
+	from markers m , MRK_Reference r 
 	where m._Marker_key = r._Marker_key 
 	''', None)
 
-db.sql('create index index_refs1_key on #references1(_Refs_key)', None)
+db.sql('create index index_refs1_key on references1(_Refs_key)', None)
 
 db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation 
-	into #references2 
-	from #references1 r, BIB_All_View b 
+	into temporary table references2 
+	from references1 r, BIB_All_View b 
 	where r._Refs_key = b._Refs_key
 	''', None)
 
-db.sql('create index index_refs_key on #references2(_Refs_key)', None)
+db.sql('create index index_refs_key on references2(_Refs_key)', None)
 
 # has reference been chosen for GXD
 results = db.sql('''select distinct r._Refs_key 
-	from #references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
 	where r._Refs_key = ba._Refs_key 
 	and ba._DataSet_key = bd._DataSet_key 
 	and bd.dataSet = 'Expression' 
@@ -159,8 +160,8 @@ for r in results:
 
 db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID, 
 	r.jnumID, r.jnum, r.numericPart, r.pubmedID 
-	into #fpA 
-	from #references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	into temporary table fpA 
+	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
 	where r._Refs_key = ba._Refs_key 
 	and ba._DataSet_key = bd._DataSet_key 
 	and bd.dataSet = 'Gene Ontology' 
@@ -172,18 +173,18 @@ db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	''', None)
 
 # number of unique MGI gene
-results = db.sql('select distinct _Marker_key from #fpA', 'auto')
+results = db.sql('select distinct _Marker_key from fpA', 'auto')
 fpA.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # number of unique J:
-results = db.sql('select distinct _Refs_key from #fpA', 'auto')
+results = db.sql('select distinct _Refs_key from fpA', 'auto')
 fpA.write('Number of unique J: IDs:  %s\n' % (len(results)))
 
 # total number of rows
-results = db.sql('select * from #fpA', 'auto')
+results = db.sql('select * from fpA', 'auto')
 fpA.write('Total number of rows:  %s\n\n' % (len(results)))
 
-results = db.sql('select * from #fpA order by numericPart', 'auto')
+results = db.sql('select * from fpA order by numericPart', 'auto')
 for r in results:
 	writeRecordA(fpA, r)
 

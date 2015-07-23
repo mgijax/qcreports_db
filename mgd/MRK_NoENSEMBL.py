@@ -71,33 +71,33 @@ fp.write('#\n')
 #
 
 db.sql('''select a.accID, s._Sequence_key
-    into #ensemblGeneModel 
+    into temporary table ensemblGeneModel 
     from ACC_Accession  a, SEQ_Sequence s 
     where a._LogicalDB_key = 60 
     and a._MGIType_key = 19 
     and a._Object_key = s._Sequence_key 
     and s._SequenceStatus_key = 316342
     ''', None)
-db.sql('create index ensembl_idxAccid on #ensemblGeneModel(accID)', None)
-db.sql('create index ensembl_idxSeqkey on #ensemblGeneModel(_Sequence_key)', None)
+db.sql('create index ensembl_idxAccid on ensemblGeneModel(accID)', None)
+db.sql('create index ensembl_idxSeqkey on ensemblGeneModel(_Sequence_key)', None)
 print "done first query and index"
 
 # get the set of Ensembl ids with marker associations
 db.sql('''select distinct accID 
-    into #ensemblGeneAssoc 
+    into temporary table ensemblGeneAssoc 
     from ACC_Accession  
     where _LogicalDB_key = 60 
     and _MGIType_key = 2 
     and preferred = 1
     ''', None)
-db.sql('create index idxAccid on #ensemblGeneAssoc(accID)', None)
+db.sql('create index idxAccid on ensemblGeneAssoc(accID)', None)
 print "done second query and index"
 
 results = db.sql('''select gm.accid as ensemblGeneModelNoAssoc, s.rawbiotype
-    from #ensemblGeneModel gm 
+    from ensemblGeneModel gm 
 	 LEFT OUTER JOIN SEQ_GeneModel s on (gm._Sequence_key = s._Sequence_key)
     where not exists (select 1 
-    from #ensemblGeneAssoc ga 
+    from ensemblGeneAssoc ga 
     where ga.accid = gm.accid) 
     order by gm.accID
     ''', 'auto')

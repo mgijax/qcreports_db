@@ -47,28 +47,28 @@ fp.write('#\n')
 # get the full set of NCBI gene model ids
 # only include status = active
 db.sql('select accID ' + \
-    'into #ncbiGeneModel ' + \
+    'into temporary table ncbiGeneModel ' + \
     'from ACC_Accession  a, SEQ_Sequence s ' + \
     'where a._lOGicalDB_key = 59 ' + \
     'and a._MGIType_key = 19 ' + \
     'and a._Object_key = s._Sequence_key ' + \
     'and s._SequenceStatus_key = 316342 ', None)
-db.sql('create index idxAccid1 on #ncbiGeneModel(accID)', None)
+db.sql('create index idxAccid1 on ncbiGeneModel(accID)', None)
 
 # get the set of NCBI ids with marker associations
 db.sql('select distinct accID ' + \
-    'into #ncbiGeneAssoc ' + \
+    'into temporary table ncbiGeneAssoc ' + \
     'from ACC_Accession  ' + \
     'where _LogicalDB_key = 59 ' + \
     'and _MGIType_key = 2 ' + \
     'and preferred = 1', None)
-db.sql('create index idxAccid2 on #ncbiGeneAssoc(accID)', None)
+db.sql('create index idxAccid2 on ncbiGeneAssoc(accID)', None)
 
 # get the set of NCBI ids that do *not* contain markers
 results = db.sql('select gm.accid as ncbiGeneModelNoAssoc ' + \
-    'from #ncbiGeneModel gm ' + \
+    'from ncbiGeneModel gm ' + \
     'where not exists (select 1 ' + \
-    'from #ncbiGeneAssoc ga ' + \
+    'from ncbiGeneAssoc ga ' + \
     'where ga.accid = gm.accid) ' + \
     'order by gm.accID', 'auto')
 
