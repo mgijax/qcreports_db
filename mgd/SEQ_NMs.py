@@ -30,21 +30,10 @@ import os
 import string
 import mgi_utils
 import reportlib
+import db
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-        RADAR = ''
-    else:
-        import db
-        RADAR = os.environ['RADAR_DBNAME'] + '..'
-except:
-    import db
-    RADAR = os.environ['RADAR_DBNAME'] + '..'
-
+db.setTrace()
+db.setAutoTranslateBE()
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
@@ -148,8 +137,8 @@ db.sql('create index acc_idx1 on #acc(accID)', None)
 sql = '''
 	select eg.rna, eg.geneID 
 	into #eg 
-	from %sDP_EntrezGene_Accession eg
-	''' % (RADAR)
+	from radar.DP_EntrezGene_Accession eg
+	'''
 sql = sql + '''
 	where eg.taxID = 10090
 	and eg.rna like 'NM_%' 

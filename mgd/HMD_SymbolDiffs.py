@@ -33,21 +33,10 @@ import os
 import string
 import mgi_utils
 import reportlib
+import db
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-        RADAR = ''
-    else:
-        import db
-        RADAR = os.environ['RADAR_DBNAME'] + '..'
-
-except:
-    import db
-    RADAR = os.environ['RADAR_DBNAME'] + '..'
+db.setTrace()
+db.setAutoTranslateBE()
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -67,8 +56,7 @@ def runQueries(includeRiken):
     #
     # select mouse/humanql('drop table #refs', None)
 
-    if os.environ['DB_TYPE'] == 'postgres':
-    	db.sql('drop table #homology', None)
+    db.sql('drop table #homology', None)
 
     db.sql('''
 	select distinct 
@@ -114,20 +102,19 @@ def runQueries(includeRiken):
     for r in results:
 	mgiID[r['m_Marker_key']] = r['accID']
 
-    if os.environ['DB_TYPE'] == 'postgres':
-    	db.sql('drop table #results', None)
+    db.sql('drop table #results', None)
 
     db.sql('''
 	select h.*, e.status as hstatus
 	into #results 
-        from #homology h, %sDP_EntrezGene_Info e 
+        from #homology h, radar.DP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606 
         union 
         select h.*, '?' as hstatus
         from #homology h 
-        where not exists (select 1 from %sDP_EntrezGene_Info e 
+        where not exists (select 1 from radar.DP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606)
-	''' % (RADAR, RADAR), None)
+	''', None)
 
 def report1(fp, includeRiken = 0):
 

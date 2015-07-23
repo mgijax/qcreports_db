@@ -38,18 +38,10 @@ import os
 import string
 import mgi_utils
 import reportlib
+import db
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
+db.setTrace()
+db.setAutoTranslateBE()
 
 #
 # Main
@@ -167,10 +159,9 @@ def printReport(fp):
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
-    if os.environ['DB_TYPE'] == 'postgres':
-    	db.sql('drop table #strains', None)
-    	db.sql('drop table #strains2', None)
-	db.sql('drop table #strainsToProcess', None)
+    db.sql('drop table #strains', None)
+    db.sql('drop table #strains2', None)
+    db.sql('drop table #strainsToProcess', None)
 
     reportlib.finish_nonps(fp)
 

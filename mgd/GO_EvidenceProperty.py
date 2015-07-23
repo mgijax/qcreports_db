@@ -32,31 +32,18 @@ import sys
 import os
 import string
 import reportlib
+import db
 from datetime import datetime
+
+db.setTrace()
+db.setAutoTranslateBE()
 
 #
 #Set up email contact
 #
 sender = os.environ['GEN_WEBSHARE_EMAIL']
 receiver = "mgi-go@jax.org"
-
-#
-#Set report url
-#
-
-report_url="http://prodwww.informatics.jax.org/data/reports/qcreports_db/output/GO_EvidenceProperty.rpt"
-
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
+report_url= os.environ['QCOUTPUTDIR'] + '/' + sys.argv[0]
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
