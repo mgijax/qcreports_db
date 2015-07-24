@@ -45,8 +45,8 @@ import reportlib
 import db
 
 #db.setTrace()
-db.setAutoTranslate()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -92,7 +92,7 @@ cmd.append('select q._QCRecord_key, ' + \
                   'q.accID as accID, db2.name as logicalDB, ' + \
                   'm2.name as mgiType, ' + \
                   'q.message ' + \
-           'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
+           'from ' + radarDB + '.QC_AssocLoad_Assoc_Discrep q, ' + \
                 'ACC_LogicalDB db1, ' + \
                 'ACC_LogicalDB db2, ' + \
                 'ACC_MGIType m1, ' + \
@@ -105,7 +105,7 @@ cmd.append('select q._QCRecord_key, ' + \
            'order by q.tgtAccID, db1.name')
 
 cmd.append('select q._QCRecord_key, a.accID as mgiID ' + \
-           'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
+           'from ' + radarDB + '.QC_AssocLoad_Assoc_Discrep q, ' + \
                 'ACC_Accession a ' + \
            'where q._TgtMGIType_key = a._MGIType_key and ' + \
                  'q._TgtObject_key = a._Object_key and ' + \
@@ -114,7 +114,7 @@ cmd.append('select q._QCRecord_key, a.accID as mgiID ' + \
                  'q._JobStream_key = ' + jobKey)
 
 cmd.append('select q._QCRecord_key, a.accID as mgiID ' + \
-           'from ' + radarDB + '..QC_AssocLoad_Assoc_Discrep q, ' + \
+           'from ' + radarDB + '.QC_AssocLoad_Assoc_Discrep q, ' + \
                 'ACC_Accession a ' + \
            'where q._MGIType_key = a._MGIType_key and ' + \
                  'q._Object_key = a._Object_key and ' + \

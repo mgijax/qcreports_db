@@ -41,8 +41,8 @@ import reportlib
 import db
 
 #db.setTrace()
-db.setAutoTranslate()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -81,7 +81,7 @@ cmd = []
 cmd.append('select q._QCRecord_key, q.accID, db.name as logicalDB, ' + \
                   'a.accID as mgiID, m.name as mgiType, ' + \
                   'q.expectedType, q.message ' + \
-           'from ' + radarDB + '..QC_AssocLoad_Target_Discrep q, ' + \
+           'from ' + radarDB + '.QC_AssocLoad_Target_Discrep q, ' + \
                 'ACC_Accession a, ' + \
                 'ACC_LogicalDB db, ' + \
                 'ACC_MGIType m ' + \
@@ -96,7 +96,7 @@ cmd.append('select q._QCRecord_key, q.accID, db.name as logicalDB, ' + \
            'select q._QCRecord_key, q.accID, db.name as logicalDB, ' + \
                   'null as mgiID, null as mgiType, ' + \
                   'q.expectedType, q.message ' + \
-           'from ' + radarDB + '..QC_AssocLoad_Target_Discrep q, ' + \
+           'from ' + radarDB + '.QC_AssocLoad_Target_Discrep q, ' + \
                 'ACC_LogicalDB db ' + \
            'where q._LogicalDB_key = db._LogicalDB_key and ' + \
                  'q._MGIType_key is null and ' + \
