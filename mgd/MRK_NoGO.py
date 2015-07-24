@@ -248,9 +248,9 @@ def reportD():
     fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
 
     # number of has orthology?
-    results = db.sql('select * from fpD where hasOrthology = \'yes\'::text', 'auto')
+    results = db.sql('select * from fpD where hasOrthology = \'yes\'', 'auto')
     fpD.write('Number of has orthology? = yes:  %s\n' % (len(results)))
-    results = db.sql('select * from fpD where hasOrthology = \'no \'::text', 'auto')
+    results = db.sql('select * from fpD where hasOrthology = \'no \'', 'auto')
     fpD.write('Number of has orthology? = no:  %s\n' % (len(results)))
 
     # total number of rows

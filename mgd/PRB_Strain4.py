@@ -28,7 +28,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
@@ -43,7 +44,7 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 
 
 db.sql('''
 	select distinct a._Object_key, a.accID, s.strain 
-	into #strains 
+	into temporary table strains 
 	from ACC_Accession a, PRB_Strain s 
 	where a._MGIType_key = 10 
 	and a._LogicalDB_key = 1 
@@ -52,13 +53,13 @@ db.sql('''
 	and a.preferred = 1 
 	and a._Object_key = s._Strain_key
 	''', None)
-db.sql('create index strains_idx on #strains(_Object_key)', None)
+db.sql('create index strains_idx on strains(_Object_key)', None)
 
 # external accession IDs
 
 results = db.sql('''
 	select distinct a._Object_key, a.accID, l.name 
-	from #strains s, ACC_Accession a, ACC_LogicalDB l 
+	from strains s, ACC_Accession a, ACC_LogicalDB l 
 	where s._Object_key = a._Object_key 
 	and a._LogicalDB_key != 1 
 	and a._MGIType_key = 10 
@@ -75,7 +76,7 @@ for r in results:
 # process
 
 rows = 0
-results = db.sql('select * from #strains order by strain', 'auto')
+results = db.sql('select * from strains order by strain', 'auto')
 for r in results:
     key = r['_Object_key']
 

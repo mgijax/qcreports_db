@@ -30,7 +30,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 #
 # Main
@@ -46,7 +47,7 @@ fp.write('--------------------------------------------------' + reportlib.CRT)
 
 db.sql('''
 	select s._Strain_key, substring(s.strain,1,80) as strain, sy.synonym, a.accID 
-	into #strains 
+	into strains 
 	from PRB_Strain s, MGI_Synonym sy, ACC_Accession a 
 	where s._Strain_key = sy._Object_key 
 	and sy._MGIType_key = 10 
@@ -58,7 +59,7 @@ db.sql('''
 	''', None)
 
 syns = {}
-results = db.sql('select _Strain_key, synonym from #strains', 'auto')
+results = db.sql('select _Strain_key, synonym from strains', 'auto')
 for r in results:
     key = r['_Strain_key']
     value = r['synonym']
@@ -66,7 +67,7 @@ for r in results:
         syns[key] = []
     syns[key].append(value)
 
-results = db.sql('select distinct _Strain_key, strain, accID from #strains order by strain', 'auto')
+results = db.sql('select distinct _Strain_key, strain, accID from strains order by strain', 'auto')
 for r in results:
     fp.write(string.ljust(r['accID'], 35))
     fp.write(string.ljust(r['strain'], 85))

@@ -26,13 +26,14 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
 query1 = '''select a1.accID as mgiID, a2.accID as refID, m.symbol, m.name
-    	  from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, #refs r
+    	  from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, refs r
     	  where m._Marker_Type_key = 6
 	  and m._Marker_Status_key not in (2)
     	  and m._Organism_key = 1
@@ -137,7 +138,7 @@ def qtl4():
 
         results = db.sql('''
           select a1.accID as mgiID, a2.accID as refID, m.symbol, m.name
-          from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, #refs r
+          from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, refs r
           where m._Marker_Type_key = 6
 	  and m._Marker_Status_key not in (2)
           and m._Organism_key = 1
@@ -172,7 +173,7 @@ def qtl5():
 
         db.sql('''
           select m._Nomen_key, 
-		convert(char(10), m.creation_date, 101) as creation_date,
+		to_char(m.creation_date, 'MM/dd/yyyy') as creation_date,
 		substring(t.term,1,10) as term,
 	  	a1.accID as mgiID, r.jnumID as refID, m.symbol, m.name, m.statusNote
 	  into temporary table marker

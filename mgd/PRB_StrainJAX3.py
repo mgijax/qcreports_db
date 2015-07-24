@@ -41,7 +41,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 #
 # Main
@@ -63,7 +64,7 @@ def jrs():
     # JR Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
 	    select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key
-	    into #strains
+	    into strains
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
 	    where s._Strain_key = g._Strain_key 
 	    and g._Genotype_key = a._Genotype_key 
@@ -74,7 +75,7 @@ def jrs():
 	    and sa._LogicalDB_key = 22 
 	    and sa.preferred = 1 
 	    ''', None)
-    db.sql('create index strains_idx1 on #strains(_Strain_key)', None)
+    db.sql('create index strains_idx1 on strains(_Strain_key)', None)
 
     printReport(jrsfp)
 
@@ -94,7 +95,7 @@ def mmrrc():
     # MMNC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
 	    select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
-	    into #strains 
+	    into strains 
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
 	    where s.strain like '%/Mmnc'
 	    and s._Strain_key = g._Strain_key 
@@ -106,7 +107,7 @@ def mmrrc():
 	    and sa._LogicalDB_key = 38 
 	    and sa.preferred = 1 
 	    ''', None)
-    db.sql('create index strains_idx2 on #strains(_Strain_key)', None)
+    db.sql('create index strains_idx2 on strains(_Strain_key)', None)
 
     printReport(mmrrcfp)
 
@@ -115,17 +116,17 @@ def printReport(fp):
     # Same Strains and the Marker/Allele associations
     db.sql('''
 	select s._Strain_key, a._Marker_key, a._Allele_key 
-	into #strains2 
-	from #strains s, PRB_Strain_Marker a 
+	into strains2 
+	from strains s, PRB_Strain_Marker a 
 	where s._Strain_key = a._Strain_key
 	''', None)
-    db.sql('create index strains2_idx1 on #strains2(_Strain_key)', None)
+    db.sql('create index strains2_idx1 on strains2(_Strain_key)', None)
 
     # Strains that do not have the same Allele
     
     db.sql('''
-	select s.* into #strainsToProcess from #strains s 
-	where not exists (select 1 from #strains2 ss where s._Strain_key = ss._Strain_key 
+	select s.* into strainsToProcess from strains s 
+	where not exists (select 1 from strains2 ss where s._Strain_key = ss._Strain_key 
 	and s._Allele_key = ss._Allele_key)
 	''', None)
 
@@ -134,7 +135,7 @@ def printReport(fp):
     mgiIDs = {}
     results = db.sql('''
 	select s._Strain_key, a.accID 
-	from #strainsToProcess s, ACC_Accession a 
+	from strainsToProcess s, ACC_Accession a 
 	where s._Genotype_key = a._Object_key 
 	and a._MGIType_key = 12 
 	and a._LogicalDB_key = 1 
@@ -150,7 +151,7 @@ def printReport(fp):
     # Process
 
     rows = 0
-    results = db.sql('select distinct _Strain_key, accID, strain from #strainsToProcess order by strain', 'auto')
+    results = db.sql('select distinct _Strain_key, accID, strain from strainsToProcess order by strain', 'auto')
     for r in results:
         key = r['_Strain_key']
         fp.write(r['accID'] + reportlib.TAB)
@@ -159,9 +160,9 @@ def printReport(fp):
 
     fp.write('\n(%d rows affected)\n' % (len(results)))
 
-    db.sql('drop table #strains', None)
-    db.sql('drop table #strains2', None)
-    db.sql('drop table #strainsToProcess', None)
+    db.sql('drop table strains', None)
+    db.sql('drop table strains2', None)
+    db.sql('drop table strainsToProcess', None)
 
     reportlib.finish_nonps(fp)
 
