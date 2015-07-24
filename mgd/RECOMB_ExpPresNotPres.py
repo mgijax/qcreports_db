@@ -40,7 +40,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -82,36 +83,36 @@ fp.write('----------------------------------------------------------------------
 # TS28;reproductive system [6950]
 
 db.sql('''
-	select _Structure_key = _Descendent_key 
-	into #excludeStructs 
+	select _Descendent_key as _Structure_key
+	into temporary table excludeStructs 
 	from GXD_StructureClosure 
 	where _Structure_key in (1787,2378,3000,3715,4402,5261,6327,7648,7649,7650,7651,6950)
 	''', None)
-db.sql('create index excludeStruct_idx1 on #excludeStructs(_Structure_key)', None)
+db.sql('create index excludeStruct_idx1 on excludeStructs(_Structure_key)', None)
 
 #
 # assays with expression
 #
 db.sql('''
 	select distinct e._Assay_key, e._Refs_key, e._Structure_key, e._Genotype_key, e.age 
-	into #expressed 
+	into temporary table expressed 
 	from GXD_Expression e 
 	where e.isForGXD = 0 
 	and e.expressed = 1 
-	and not exists (select 1 from #excludeStructs r where e._Structure_key = r._Structure_key) 
+	and not exists (select 1 from excludeStructs r where e._Structure_key = r._Structure_key) 
 	''', None)
-db.sql('create index expressd_idx1 on #expressed(_Assay_key)', None)
-db.sql('create index expressd_idx2 on #expressed(_Structure_key)', None)
-db.sql('create index expressd_idx3 on #expressed(_Genotype_key)', None)
-db.sql('create index expressd_idx4 on #expressed(age)', None)
+db.sql('create index expressd_idx1 on expressed(_Assay_key)', None)
+db.sql('create index expressd_idx2 on expressed(_Structure_key)', None)
+db.sql('create index expressd_idx3 on expressed(_Genotype_key)', None)
+db.sql('create index expressd_idx4 on expressed(age)', None)
 
 #
 # compare expressed/not expressed by assay, structure, genotype, age
 #
 db.sql('''
 	select distinct e.* 
-	into #results 
-	from #expressed e, GXD_Expression n 
+	into temporary table results 
+	from expressed e, GXD_Expression n 
 	where e._Assay_key = n._Assay_key 
 	and n.isForGXD = 0 
 	and e._Structure_key = n._Structure_key 
@@ -119,9 +120,9 @@ db.sql('''
 	and e.age = n.age 
 	and n.expressed = 0 
 	''', None)
-db.sql('create index results_idx1 on #results(_Assay_key)', None)
-db.sql('create index results_idx2 on #results(_Structure_key)', None)
-db.sql('create index results_idx3 on #results(_Refs_key)', None)
+db.sql('create index results_idx1 on results(_Assay_key)', None)
+db.sql('create index results_idx2 on results(_Structure_key)', None)
+db.sql('create index results_idx3 on results(_Refs_key)', None)
 
 #
 # final results
@@ -129,8 +130,8 @@ db.sql('create index results_idx3 on #results(_Refs_key)', None)
 results = db.sql('''
 	select ac1.accID as jnumID, 
 	       ac2.accID as mgiID, 
-	       convert(varchar(2), t.stage) || ":" || s.printName as structure
-         from #results r, GXD_Structure s, GXD_TheilerStage t, ACC_Accession ac1, ACC_Accession ac2 
+	       convert(varchar(2), t.stage) || ':' || s.printName as structure
+         from results r, GXD_Structure s, GXD_TheilerStage t, ACC_Accession ac1, ACC_Accession ac2 
          where r._Structure_key = s._Structure_key 
          and s._Stage_key = t._Stage_key 
          and r._Refs_key = ac1._Object_key 

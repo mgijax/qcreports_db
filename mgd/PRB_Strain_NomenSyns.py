@@ -47,7 +47,7 @@ fp.write('--------------------------------------------------' + reportlib.CRT)
 
 db.sql('''
 	select s._Strain_key, substring(s.strain,1,80) as strain, sy.synonym, a.accID 
-	into strains 
+	into temporary table strains 
 	from PRB_Strain s, MGI_Synonym sy, ACC_Accession a 
 	where s._Strain_key = sy._Object_key 
 	and sy._MGIType_key = 10 

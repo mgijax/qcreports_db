@@ -64,7 +64,7 @@ def jrs():
     # JR Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
 	    select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key
-	    into strains
+	    into temporary table strains
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
 	    where s._Strain_key = g._Strain_key 
 	    and g._Genotype_key = a._Genotype_key 
@@ -95,7 +95,7 @@ def mmrrc():
     # MMNC Strains w/ Genotype Associations; exclude wild type alleles
     db.sql('''
 	    select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
-	    into strains 
+	    into temporary table strains 
 	    from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
 	    where s.strain like '%/Mmnc'
 	    and s._Strain_key = g._Strain_key 
@@ -116,7 +116,7 @@ def printReport(fp):
     # Same Strains and the Marker/Allele associations
     db.sql('''
 	select s._Strain_key, a._Marker_key, a._Allele_key 
-	into strains2 
+	into temporary table strains2 
 	from strains s, PRB_Strain_Marker a 
 	where s._Strain_key = a._Strain_key
 	''', None)
@@ -125,7 +125,7 @@ def printReport(fp):
     # Strains that do not have the same Allele
     
     db.sql('''
-	select s.* into strainsToProcess from strains s 
+	select s.* into temporary table strainsToProcess from strains s 
 	where not exists (select 1 from strains2 ss where s._Strain_key = ss._Strain_key 
 	and s._Allele_key = ss._Allele_key)
 	''', None)
