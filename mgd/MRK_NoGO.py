@@ -80,7 +80,7 @@ import db
 
 db.setTrace()
 db.setAutoTranslate(False)
-db.setAutoTranslateBE()
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -116,7 +116,7 @@ def runQueries():
     # exclude markers that contain feature 'heritable phenotypic marker' (6238170)
 
     db.sql('''
-	   select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart, 'no ' as hasOrthology
+	   select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart, 'no '::text as hasOrthology
 	   into temporary table markers 
 	   from MRK_Marker m, ACC_Accession a 
 	   where m._Marker_Type_key = 1 
