@@ -69,7 +69,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 
@@ -118,7 +119,7 @@ def getAssayQuery(table, value, op, year):
         and gis._IndexAssay_key = vt._Term_key 
         and vt._Vocab_key = 12 
         and vt.term %s '%s'
-        and datepart(year, gi.creation_date) <= %d 
+        and date_part('year', gi.creation_date) <= %d 
 	''' % (table, year, op, value, year)
     return cmd
 
@@ -130,16 +131,18 @@ def cdnas():
     # number of mouse cDNAs
     #
 
-    db.sql('select _Source_key into #mussource from PRB_Source where _Organism_key = 1', None)
-    db.sql('create index mussource_idx on #mussource(_Source_key)', None)
+    db.sql('select _Source_key into temporary table mussource from PRB_Source where _Organism_key = 1', None)
+    db.sql('create index mussource_idx on mussource(_Source_key)', None)
 
-    db.sql('select p._Probe_key into #cdnas ' + \
-	'from #mussource s, PRB_Probe p ' + \
-	'where s._Source_key = p._Source_key ' + \
-	'and p._SegmentType_key = 63468 ', None)
-    db.sql('create index cdnas_idx on #cdnas(_Probe_key)', None)
+    db.sql('''select p._Probe_key 
+        into temporary table cdnas
+	from mussource s, PRB_Probe p 
+	where s._Source_key = p._Source_key 
+	and p._SegmentType_key = 63468 
+	''', None)
+    db.sql('create index cdnas_idx on cdnas(_Probe_key)', None)
 
-    results = db.sql('select count(_Probe_key) as ccount from #cdnas', 'auto')
+    results = db.sql('select count(_Probe_key) as ccount from cdnas', 'auto')
     for r in results:
 	fp.write('mouse cDNAs             : ' + str(r['ccount']) + CRT)
 
@@ -149,7 +152,7 @@ def cdnas():
 
     results = db.sql('''
 	select count(distinct(pm._Marker_key)) as mcount 
-	from #cdnas c, PRB_Marker pm 
+	from cdnas c, PRB_Marker pm 
 	where c._Probe_key = pm._Probe_key
 	''', 'auto')
     for r in results:
@@ -164,25 +167,25 @@ def indexOnly():
     #  The first 3 are for Index, Reference and Gene counts
     #
 
-    db.sql('select count(*) as idx_number, count(*) as year into #indexcount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as ref_number, count(*) as year into #referencecount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as gen_number, count(*) as year into #markercount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as idx_number, count(*) as year into temporary table indexcount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as ref_number, count(*) as year into temporary table referencecount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as gen_number, count(*) as year into temporary table markercount from BIB_Refs where 0=1', None)
 
     #
     #  We'll have one temp table for each assay type, with the exception of
     #  Prot-WM, Prot-sxn, RNA-WM and RNA-sxn.  These will be paired together.
     #
 
-    db.sql('select count(*) as cdna_number, count(*) as year into #cdnacount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as knkin_number, count(*) as year into #knkincount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as nor_number, count(*) as year into #norcount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as pri_number, count(*) as year into #pricount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as prot_number, count(*) as year into #protcount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as rna_number, count(*) as year into #rnacount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as rnase_number, count(*) as year into #rnasecount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as rtpcr_number, count(*) as year into #rtpcrcount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as s1nuc_number, count(*) as year into #s1nuccount from BIB_Refs where 0=1', None)
-    db.sql('select count(*) as west_number, count(*) as year into #westcount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as cdna_number, count(*) as year into temporary table cdnacount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as knkin_number, count(*) as year into temporary table knkincount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as nor_number, count(*) as year into temporary table norcount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as pri_number, count(*) as year into temporary table pricount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as prot_number, count(*) as year into temporary table protcount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as rna_number, count(*) as year into temporary table rnacount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as rnase_number, count(*) as year into temporary table rnasecount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as rtpcr_number, count(*) as year into temporary table rtpcrcount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as s1nuc_number, count(*) as year into temporary table s1nuccount from BIB_Refs where 0=1', None)
+    db.sql('select count(*) as west_number, count(*) as year into temporary table westcount from BIB_Refs where 0=1', None)
 
     #
     #  Cycle through the years and fill each temp table with the cumulative
@@ -194,76 +197,76 @@ def indexOnly():
         #
         #  Fill Index temp table
         #
-        db.sql('insert into #indexcount select count(_Index_key), %d ' % (year) + \
-               'from GXD_Index where datepart(year, creation_date) <= %d ' % (year), None)
+        db.sql('insert into indexcount select count(_Index_key), %d ' % (year) + \
+               'from GXD_Index where date_part(\'year\', creation_date) <= %d ' % (year), None)
 
         #
         #  Fill Reference temp table
         #
-        db.sql('insert into #referencecount select count(distinct(_Refs_key)), %d ' % (year) + \
-               'from GXD_Index where datepart(year, creation_date) <= %d ' % (year), None)
+        db.sql('insert into referencecount select count(distinct(_Refs_key)), %d ' % (year) + \
+               'from GXD_Index where date_part(\'year\', creation_date) <= %d ' % (year), None)
 
         #
         #  Fill Gene temp table
         #
-        db.sql('insert into #markercount select count(distinct(_Marker_key)), %d ' % (year) + \
-               'from GXD_Index where datepart(year, creation_date) <= %d ' % (year), None)
+        db.sql('insert into markercount select count(distinct(_Marker_key)), %d ' % (year) + \
+               'from GXD_Index where date_part(\'year\', creation_date) <= %d ' % (year), None)
 
         #
         #  Fill assay temp tables
         #
-        db.sql(getAssayQuery('#cdnacount', 'cDNA', '=', year), None)
-        db.sql(getAssayQuery('#knkincount', 'Knock in', '=', year), None)
-        db.sql(getAssayQuery('#norcount', 'Northern', '=', year), None)
-        db.sql(getAssayQuery('#pricount', 'Primer ex', '=', year), None)
-        db.sql(getAssayQuery('#protcount', 'Prot-%','like',  year), None)
-        db.sql(getAssayQuery('#rnacount', 'RNA-%','like',  year), None)
-        db.sql(getAssayQuery('#rnasecount', 'RNAse prot', '=', year), None)
-        db.sql(getAssayQuery('#rtpcrcount', 'RT-PCR', '=', year), None)
-        db.sql(getAssayQuery('#s1nuccount', 'S1 nuc', '=', year), None)
-        db.sql(getAssayQuery('#westcount', 'Western', '=', year), None)
+        db.sql(getAssayQuery('cdnacount', 'cDNA', '=', year), None)
+        db.sql(getAssayQuery('knkincount', 'Knock in', '=', year), None)
+        db.sql(getAssayQuery('norcount', 'Northern', '=', year), None)
+        db.sql(getAssayQuery('pricount', 'Primer ex', '=', year), None)
+        db.sql(getAssayQuery('protcount', 'Prot-%','like',  year), None)
+        db.sql(getAssayQuery('rnacount', 'RNA-%','like',  year), None)
+        db.sql(getAssayQuery('rnasecount', 'RNAse prot', '=', year), None)
+        db.sql(getAssayQuery('rtpcrcount', 'RT-PCR', '=', year), None)
+        db.sql(getAssayQuery('s1nuccount', 'S1 nuc', '=', year), None)
+        db.sql(getAssayQuery('westcount', 'Western', '=', year), None)
 
     #
     #  Select out all of the rows from each temp table...
     #  ... then add them to a dictionary.
     #
-    results = db.sql('select * from #indexcount', 'auto')
+    results = db.sql('select * from indexcount', 'auto')
     indx  = createDict(results,'year','idx_number')
 
-    results = db.sql('select * from #referencecount', 'auto')
+    results = db.sql('select * from referencecount', 'auto')
     refs  = createDict(results,'year','ref_number')
 
-    results = db.sql('select * from #markercount', 'auto')
+    results = db.sql('select * from markercount', 'auto')
     gens  = createDict(results,'year','gen_number')
 
-    results = db.sql('select * from #cdnacount', 'auto')
+    results = db.sql('select * from cdnacount', 'auto')
     cdna  = createDict(results,'year','cdna_number')
 
-    results = db.sql('select * from #knkincount', 'auto')
+    results = db.sql('select * from knkincount', 'auto')
     knkin = createDict(results,'year','knkin_number')
 
-    results = db.sql('select * from #norcount', 'auto')
+    results = db.sql('select * from norcount', 'auto')
     nor   = createDict(results,'year','nor_number')
 
-    results = db.sql('select * from #pricount', 'auto')
+    results = db.sql('select * from pricount', 'auto')
     pri   = createDict(results,'year','pri_number')
 
-    results = db.sql('select * from #protcount', 'auto')
+    results = db.sql('select * from protcount', 'auto')
     prot  = createDict(results,'year','prot_number')
 
-    results = db.sql('select * from #rnacount', 'auto')
+    results = db.sql('select * from rnacount', 'auto')
     rna   = createDict(results,'year','rna_number')
 
-    results = db.sql('select * from #rnasecount', 'auto')
+    results = db.sql('select * from rnasecount', 'auto')
     rnase = createDict(results,'year','rnase_number')
 
-    results = db.sql('select * from #rtpcrcount', 'auto')
+    results = db.sql('select * from rtpcrcount', 'auto')
     rtpcr = createDict(results,'year','rtpcr_number')
 
-    results = db.sql('select * from #s1nuccount', 'auto')
+    results = db.sql('select * from s1nuccount', 'auto')
     s1nuc = createDict(results,'year','s1nuc_number')
 
-    results = db.sql('select * from #westcount', 'auto')
+    results = db.sql('select * from westcount', 'auto')
     west  = createDict(results,'year','west_number')
 
     # Column headings #
@@ -350,26 +353,26 @@ def fullCoded():
     fp.write(2*CRT + 'GXD Assay and Results:' + 2*CRT)
 
     db.sql('''
-	select _Assay_key, _Refs_key, _Marker_key, 'E' as source
-	into #gxd 
+	select _Assay_key, _Refs_key, _Marker_key, 'E'::text as source
+	into temporary table gxd 
 	from GXD_Expression where _Refs_key in %s
 	and _AssayType_key in (1,2,3,4,5,6,8,9)
 	''' % (electronic), None)
     db.sql('''
-	insert into #gxd select _Assay_key, _Refs_key, _Marker_key, 'L' as source
+	insert into gxd select _Assay_key, _Refs_key, _Marker_key, 'L'::text as source
 	from GXD_Expression where _Refs_key not in %s
 	and _AssayType_key in (1,2,3,4,5,6,8,9)
 	''' % (electronic), None)
-    db.sql('create index gxd_idx1 on #gxd(_Assay_key)', None)
-    db.sql('create index gxd_idx2 on #gxd(_Refs_key)', None)
-    db.sql('create index gxd_idx3 on #gxd(_Marker_key)', None)
-    #db.sql('create index gxd_idx4 on #gxd(source)', None)
+    db.sql('create index gxd_idx1 on gxd(_Assay_key)', None)
+    db.sql('create index gxd_idx2 on gxd(_Refs_key)', None)
+    db.sql('create index gxd_idx3 on gxd(_Marker_key)', None)
+    #db.sql('create index gxd_idx4 on gxd(source)', None)
 
     #
     # total number of references
     #
 
-    results = db.sql('select count(distinct _Refs_key) as acount from #gxd', 'auto')
+    results = db.sql('select count(distinct _Refs_key) as acount from gxd', 'auto')
     for r in results:
         fp.write('Assay References:  ' + str(r['acount']) + 2*CRT)
 
@@ -396,11 +399,11 @@ def fullCoded():
     # Assays 
     #
 
-    results = db.sql("select count(distinct _Assay_key) as acount from #gxd where source = 'E'", 'auto')
+    results = db.sql("select count(distinct _Assay_key) as acount from gxd where source = 'E'", 'auto')
     for r in results:
         ecount = r['acount']
 
-    results = db.sql("select count(distinct _Assay_key) as acount from #gxd where source = 'L'", 'auto')
+    results = db.sql("select count(distinct _Assay_key) as acount from gxd where source = 'L'", 'auto')
     for r in results:
         lcount = r['acount']
 
@@ -413,11 +416,11 @@ def fullCoded():
     # Results
     #
 
-    results = db.sql("select count(_Assay_key) as acount from #gxd where source = 'E'", 'auto')
+    results = db.sql("select count(_Assay_key) as acount from gxd where source = 'E'", 'auto')
     for r in results:
         ecount = r['acount']
 
-    results = db.sql("select count(_Assay_key) as acount from #gxd where source = 'L'", 'auto')
+    results = db.sql("select count(_Assay_key) as acount from gxd where source = 'L'", 'auto')
     for r in results:
         lcount = r['acount']
 
@@ -470,7 +473,8 @@ def imageCounts():
 
     db.sql('''
 	(
-	select distinct a._Refs_key into #images 
+	select distinct a._Refs_key 
+	into temporary table images 
         from GXD_Assay a, IMG_Image i, IMG_ImagePane p 
         where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
 	    a._ImagePane_key = p._ImagePane_key and 
@@ -486,16 +490,16 @@ def imageCounts():
 	)
 	''', None)
 
-    db.sql('create index images_idx1 on #images(_Refs_key)', None)
+    db.sql('create index images_idx1 on images(_Refs_key)', None)
 
-    results = db.sql('select count(_Refs_key) as acount from #images', 'auto')
+    results = db.sql('select count(_Refs_key) as acount from images', 'auto')
     for r in results:
         fp.write('Number of full coded papers with Images:  ' + str(r['acount']) + CRT)
 
     db.sql('''
 	(
 	select distinct ip._ImagePane_key 
-	into #imagepanes1 
+	into temporary table imagepanes1 
 	from IMG_ImagePane ip, IMG_Image i, GXD_Assay a 
 	where ip._Image_key = i._Image_key 
 	and i.xDim is not null 
@@ -515,13 +519,13 @@ def imageCounts():
 	)
 	''', None)
 
-    results = db.sql('select count(distinct _ImagePane_key) as acount from #imagepanes1', 'auto')
+    results = db.sql('select count(distinct _ImagePane_key) as acount from imagepanes1', 'auto')
     for r in results:
         fp.write('Number of Image Panes (jpg attached):  ' + str(r['acount']) + CRT)
 
     db.sql('''
 	select distinct ip._ImagePane_key 
-	into #imagepanes2 
+	into temporary table imagepanes2 
 	from IMG_ImagePane ip, IMG_Image i, GXD_Assay a 
 	where ip._Image_key = i._Image_key 
 	and i.xDim is null 
@@ -540,7 +544,7 @@ def imageCounts():
 	and a._AssayType_key in (1,2,3,4,5,6,8,9) 
 	''', None)
 
-    results = db.sql('select count(distinct _ImagePane_key) as acount from #imagepanes2', 'auto')
+    results = db.sql('select count(distinct _ImagePane_key) as acount from imagepanes2', 'auto')
     for r in results:
         fp.write('Number of Image Panes (no jpg attached):  ' + str(r['acount']) + CRT)
 
@@ -550,44 +554,44 @@ def assayTypeCounts():
     # Build a temp table to get the gene and assay counts.
     #
     db.sql('''
-	select _Assay_key, _AssayType_key, _Marker_key, 'L' as source
-        into #gxdcounts 
+	select _Assay_key, _AssayType_key, _Marker_key, 'L'::text as source
+        into temporary table gxdcounts 
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key not in %s
         and _AssayType_key in (1,2,3,4,5,6,8,9)
 	''' % (electronic), None)
 
     db.sql('''
-	insert into #gxdcounts 
-        select _Assay_key, _AssayType_key, _Marker_key, 'E' as source
+	insert into gxdcounts 
+        select _Assay_key, _AssayType_key, _Marker_key, 'E'::text as source
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key in %s 
         and _AssayType_key in (1,2,3,4,5,6,8,9)
 	''' % (electronic), None)
 
-    db.sql('create index gxdcounts_idx1 on #gxdcounts(_Assay_key)', None)
-    db.sql('create index gxdcounts_idx2 on #gxdcounts(_AssayType_key)', None)
-    db.sql('create index gxdcounts_idx3 on #gxdcounts(_Marker_key)', None)
-    db.sql('create index gxdcounts_idx4 on #gxdcounts(source)', None)
+    db.sql('create index gxdcounts_idx1 on gxdcounts(_Assay_key)', None)
+    db.sql('create index gxdcounts_idx2 on gxdcounts(_AssayType_key)', None)
+    db.sql('create index gxdcounts_idx3 on gxdcounts(_Marker_key)', None)
+    db.sql('create index gxdcounts_idx4 on gxdcounts(source)', None)
 
     #
     # Get the gene and assay counts from the temp table.
     #
     cmd = []
     cmd.append('''
-	select _AssayType_key, count(distinct _Marker_key) "count" 
-        from #gxdcounts 
+	select _AssayType_key, count(distinct _Marker_key) as counter
+        from gxdcounts 
         group by _AssayType_key
 	''')
     cmd.append('''
-	select _AssayType_key, count(distinct _Assay_key) "count" 
-        from #gxdcounts 
+	select _AssayType_key, count(distinct _Assay_key) as counter
+        from gxdcounts 
         where source = 'L' 
         group by _AssayType_key
 	''')
     cmd.append('''
-	select _AssayType_key, count(distinct _Assay_key) "count" 
-        from #gxdcounts 
+	select _AssayType_key, count(distinct _Assay_key) as counter
+        from gxdcounts 
         where source = 'E' 
         group by _AssayType_key
 	''')
@@ -598,7 +602,7 @@ def assayTypeCounts():
     #
     genes = {}
     for r in results[0]:
-        genes[r['_AssayType_key']] = r['count']
+        genes[r['_AssayType_key']] = r['counter']
 
     #
     # Add the assay counts (literature and electronic submissions) for each
@@ -606,25 +610,25 @@ def assayTypeCounts():
     #
     assayLiter = {}
     for r in results[1]:
-        assayLiter[r['_AssayType_key']] = r['count']
+        assayLiter[r['_AssayType_key']] = r['counter']
 
     assayElect = {}
     for r in results[2]:
-        assayElect[r['_AssayType_key']] = r['count']
+        assayElect[r['_AssayType_key']] = r['counter']
 
     #
     # Get the result counts from the GXD_Expression table.
     #
     cmd = []
     cmd.append('''
-	select _AssayType_key, count(_Assay_key) "count" 
+	select _AssayType_key, count(_Assay_key) as counter
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key not in %s 
         and _AssayType_key in (1,2,3,4,5,6,8,9)
         group by _AssayType_key
 	''' % (electronic))
     cmd.append('''
-	select _AssayType_key, count(_Assay_key) "count" 
+	select _AssayType_key, count(_Assay_key) as counter
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key in %s 
         and _AssayType_key in (1,2,3,4,5,6,8,9)
@@ -638,11 +642,11 @@ def assayTypeCounts():
     #
     resLiter = {}
     for r in results[0]:
-        resLiter[r['_AssayType_key']] = r['count']
+        resLiter[r['_AssayType_key']] = r['counter']
 
     resElect = {}
     for r in results[1]:
-        resElect[r['_AssayType_key']] = r['count']
+        resElect[r['_AssayType_key']] = r['counter']
 
     #
     # Get the assay types in the order that they should appear in the
