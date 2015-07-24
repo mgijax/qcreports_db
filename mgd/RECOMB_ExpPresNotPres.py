@@ -130,7 +130,7 @@ db.sql('create index results_idx3 on results(_Refs_key)', None)
 results = db.sql('''
 	select ac1.accID as jnumID, 
 	       ac2.accID as mgiID, 
-	       convert(varchar(2), t.stage) || ':' || s.printName as structure
+	       t.stage::text || ':' || s.printName as structure
          from results r, GXD_Structure s, GXD_TheilerStage t, ACC_Accession ac1, ACC_Accession ac2 
          where r._Structure_key = s._Structure_key 
          and s._Stage_key = t._Stage_key 
