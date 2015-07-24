@@ -31,7 +31,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -51,20 +52,20 @@ fp.write('Full coded assays that were not indexed' + CRT)
 
 db.sql('''
 	select  distinct ga._Assay_key, gis._IndexAssay_key 
-	into #indexAssays
+	into temporary table indexAssays
 	from GXD_Assay ga, GXD_Index gi, GXD_Index_Stages gis
 	where gi._Index_key = gis._Index_key 
 	and gi._Refs_key = ga._Refs_key and gi._Marker_key = ga._Marker_key
 	''', None)
 
-db.sql('create index iaIndex on #indexAssays (_Assay_key, _IndexAssay_key)', None)
+db.sql('create index iaIndex on indexAssays (_Assay_key, _IndexAssay_key)', None)
 
 # Grab the display information for the items in GXD_Expression
 
 db.sql('''
 	select distinct bcc.jnumID as jnum, a.accID as mgiid, 
 	       ge._Assay_key, ge._AssayType_key, gat.assayType
-	into #cacheAssayLookup
+	into temporary table cacheAssayLookup
 	from GXD_Expression ge, ACC_Accession a, BIB_Citation_Cache bcc, GXD_AssayType gat
 	where ge._Assay_key = a._Object_key 
 	and a.prefixPart = 'MGI:'
@@ -74,7 +75,7 @@ db.sql('''
 	and ge._AssayType_key = gat._AssayType_key
 	''', None)
 
-db.sql('create index caLookupindex on #cacheAssayLookup (_Assay_key, _AssayType_key)', None)
+db.sql('create index caLookupindex on cacheAssayLookup (_Assay_key, _AssayType_key)', None)
 
 # Check the various assay type relationships, bringing back those that are missing
 # for each type
@@ -82,58 +83,58 @@ db.sql('create index caLookupindex on #cacheAssayLookup (_Assay_key, _AssayType_
 results = db.sql('''
 	(
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 1 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74718, 74720))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 2 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74722))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 3 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74727))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 4 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74726))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 5 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74724))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 6 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74717, 74719))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 8 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74723))
 	union
 	select distinct cal.jnum, cal.mgiid, cal.assayType
-	from GXD_Expression ge, #cacheAssayLookup cal
+	from GXD_Expression ge, cacheAssayLookup cal
 	where ge._AssayType_key = 9 and ge._Assay_key = cal._Assay_key
-	and not exists (select 1 from #indexAssays iak 
+	and not exists (select 1 from indexAssays iak 
 	where ge._Assay_key = iak._Assay_key 
 	and iak._IndexAssay_key in (74721))
 	)

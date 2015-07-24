@@ -34,7 +34,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -51,7 +52,7 @@ db.sql('''
                     i._Refs_key,
                     i.figureLabel,
                     ip.paneLabel
-    into #assays
+    into temporary table assays
     from GXD_InSituResultImage iri,
          GXD_InSituResult r,
          GXD_Specimen s,
@@ -68,29 +69,29 @@ db.sql('''
           a._Refs_key not in (92242)
 	  ''', None)
 
-db.sql('create index idx1_assay on #assays(_Assay_key)', None)
+db.sql('create index idx1_assay on assays(_Assay_key)', None)
 
 db.sql('''
     select *
-    into #final
-    from #assays a1
-    where exists (select 1 from #assays a2
+    into temporary table final
+    from assays a1
+    where exists (select 1 from assays a2
 	where a2._assay_key = a1._assay_key and a2._imagepane_key = a1._imagepane_key
 		and a2._specimen_key != a1._specimen_key
 	) 
     ''', None)
 
-db.sql('create index idx1_final on #final(_Image_key)', None)
-db.sql('create index idx2_final on #final(_Assay_key)', None)
-db.sql('create index idx3_final on #final(_Refs_key)', None)
+db.sql('create index idx1_final on final(_Image_key)', None)
+db.sql('create index idx2_final on final(_Assay_key)', None)
+db.sql('create index idx3_final on final(_Refs_key)', None)
 
 results = db.sql('''
-    select distinct assayID = a.accID,
-           imageID = i.accID,
-           jNumber = r.accID,
-           figureLabel = f.figureLabel,
-	   paneLabel = f.paneLabel
-    from #final f,
+    select distinct a.accID as assayID,
+           i.accID as imageID,
+           r.accID as jNumber,
+           f.figureLabel,
+	   f.paneLabel
+    from final f,
          ACC_Accession i,
          ACC_Accession a,
          ACC_Accession r

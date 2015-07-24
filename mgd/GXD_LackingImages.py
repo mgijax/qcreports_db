@@ -51,7 +51,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -137,7 +138,7 @@ def printResults(fp):
 
     results = db.sql('''
 	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
-	    from #refs r, IMG_Image i
+	    from refs r, IMG_Image i
 	    where r._Refs_key = i._Refs_key
             order by figureLabel
 	    ''', 'auto')
@@ -151,7 +152,7 @@ def printResults(fp):
 
     results = db.sql('''
 	    select r._Refs_key, b.jnumID, b.short_citation, r.creation_date, r.cdate
-	    from #refs r, BIB_All_View b
+	    from refs r, BIB_All_View b
 	    where r._Refs_key = b._Refs_key 
 	    order by r.creation_date desc, b.jnumID''', 'auto')
 
@@ -168,7 +169,7 @@ def printResults(fp):
 
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
-    db.sql('drop table #refs', None)
+    db.sql('drop table refs', None)
 
 def selectOther():
 
@@ -181,8 +182,8 @@ def selectOther():
 
     db.sql('''
 	    select distinct r._Refs_key, r.journal, i.creation_date, 
-		   convert(char(10), i.creation_date, 101) as cdate
-	    into #refs
+		   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
+	    into temporary table refs
 	    from BIB_Refs r, GXD_Assay a, IMG_Image i
 	    where r.journal in ('%s')
 	    and r._Refs_key = a._Refs_key
@@ -192,7 +193,7 @@ def selectOther():
 	    and i.xDim is null
 	    ''' % (string.join(journalsAll, "','")), None)
 
-    db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
+    db.sql('create index refs_idx2 on refs(_Refs_key)', None)
 
 def selectOther2():
 
@@ -205,8 +206,8 @@ def selectOther2():
 
     db.sql('''
 	    select distinct r._Refs_key, r.journal, i.creation_date, 
-		   convert(char(10), i.creation_date, 101) as cdate
-	    into #refs
+		   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
+	    into temporary table refs
 	    from BIB_Refs r, GXD_Assay a, IMG_Image i
 	    where r.journal in ('%s')
 	    and r._Refs_key = a._Refs_key
@@ -216,7 +217,7 @@ def selectOther2():
 	    and i.xDim is null
 	    ''' % (string.join(journalsAll, "','")), None)
 
-    db.sql('create index refs_idx2 on #refs(_Refs_key)', None)
+    db.sql('create index refs_idx2 on refs(_Refs_key)', None)
 
 #
 # Main

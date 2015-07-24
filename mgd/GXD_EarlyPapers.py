@@ -28,7 +28,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -77,7 +78,7 @@ fp.write(CRT)
 #
 db.sql('''
        select _Marker_key, count(*) as idx_count
-       into #counts 
+       into temporary table counts 
        from GXD_Index 
        group by _Marker_key 
        having count(*) >= 40
@@ -89,14 +90,14 @@ db.sql('''
 #
 db.sql('''
 	select _Marker_key, _Refs_key 
-        into #markerref 
+        into temporary table markerref 
         from GXD_Index gi 
-        where exists (select 1 from #counts c 
+        where exists (select 1 from counts c 
                      where gi._Marker_key = c._Marker_key)
 	''', None)
 
-db.sql('create index markerref_idx1 on #markerref(_Marker_key)', None)
-db.sql('create index markerref_idx2 on #markerref(_Refs_key)', None)
+db.sql('create index markerref_idx1 on markerref(_Marker_key)', None)
+db.sql('create index markerref_idx2 on markerref(_Refs_key)', None)
 
 #
 # Get the additional details for the report for each gene and each paper
@@ -108,9 +109,9 @@ db.sql('create index markerref_idx2 on #markerref(_Refs_key)', None)
 db.sql('''
 	select mr._Marker_key, giv.symbol, giv.jnumID, 
               gi._Priority_key, vt.term, giv.short_citation, 
-              str(br.year) + ' ' + giv.jnumID as sort_field
-       into #details 
-       from #markerref mr, GXD_Index gi, GXD_Index_View giv, VOC_Term vt, 
+              br.year || ' ' || giv.jnumID as sort_field
+       into temporary table details 
+       from markerref mr, GXD_Index gi, GXD_Index_View giv, VOC_Term vt, 
             BIB_Refs br 
        where mr._Marker_key = gi._Marker_key and 
              mr._Refs_key = gi._Refs_key and 
@@ -130,9 +131,9 @@ db.sql('''
 #
 db.sql('''
 	select mr._Marker_key, 
-               min(str(br.year) + ' ' + bcc.jnumID) as sort_field
-        into #firstref 
-        from #markerref mr, BIB_Refs br, BIB_Citation_Cache bcc 
+               min(br.year || ' ' || bcc.jnumID) as sort_field
+        into temporary table firstref 
+        from markerref mr, BIB_Refs br, BIB_Citation_Cache bcc 
         where mr._Refs_key = br._Refs_key and 
               mr._Refs_key = bcc._Refs_key 
         group by mr._Marker_key 
@@ -146,7 +147,7 @@ db.sql('''
 results = db.sql('''
 	select d.symbol, c.idx_count, d.jnumID, d.term, 
                d.short_citation 
-        from #details d, #firstref fr, #counts c 
+        from details d, firstref fr, counts c 
         where d._Marker_key = fr._Marker_key and 
               d.sort_field = fr.sort_field and 
               d._Marker_key = c._Marker_key 

@@ -37,8 +37,9 @@ import string
 import reportlib
 import db
 
-db.setTrace()
-db.setAutoTranslateBE()
+#db.setTrace()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -177,7 +178,7 @@ fp = reportlib.init(sys.argv[0], 'Duplicate Genotypes', os.environ['QCOUTPUTDIR'
 db.sql('''select g1._Genotype_key as geno1, 
                  g2._Genotype_key as geno2, 
                  g1._Strain_key as strain 
-          into #pairs 
+          into temporary table pairs 
           from GXD_Genotype g1, GXD_Genotype g2, GXD_AllelePair a1, GXD_AllelePair a2 
           where g1._Genotype_key = a1._Genotype_key and 
                 a1._Allele_key_1 = a2._Allele_key_1 and 
@@ -200,7 +201,7 @@ db.sql('''select g1._Genotype_key as geno1,
 #
 #  Now add entries that have the allele pairs transposed, but still match.
 #
-db.sql('''insert into #pairs 
+db.sql('''insert into pairs 
           select g1._Genotype_key as geno1, 
                  g2._Genotype_key as geno2, 
                  g1._Strain_key as strain 
@@ -229,7 +230,7 @@ db.sql('''insert into #pairs
 #
 results = db.sql('''select p.geno1, p.geno2, p.strain, 
             count(distinct _AllelePair_key) as numPairs 
-            from #pairs p, GXD_AllelePair gap 
+            from pairs p, GXD_AllelePair gap 
             where p.geno1 = gap._Genotype_key 
             group by p.geno1, p.geno2, p.strain
 	    ''', 'auto')
@@ -321,24 +322,23 @@ fp.write('\n(%d rows affected)\n' % (rows))
 #
 
 db.sql('''select g._Genotype_key, g._Strain_key
-	into #genotype
+	into temporary table genotype
 	from GXD_Genotype g
 	where not exists (select 1 from GXD_AllelePair p
 		where g._Genotype_key = p._Genotype_key)
 	''', None)
 
 db.sql('''select g.*
-        into #duplicate
-        from #genotype g
-	where exists (select g2._strain_key from
-		#genotype g2
+        into temporary table duplicate
+        from genotype g
+	where exists (select g2._strain_key from genotype g2
 		where g._strain_key = g2._strain_key
 		group by g2._Strain_key having count(*) > 1
 		)
 	''', None)
 
 results = db.sql('''select a.accID, s.strain
-	from #duplicate d, PRB_Strain s, ACC_Accession a
+	from duplicate d, PRB_Strain s, ACC_Accession a
 	where d._Strain_key = s._Strain_key
 	and d._Genotype_key = a._Object_key
 	and a._MGIType_key = 12

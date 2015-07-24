@@ -38,10 +38,11 @@ import sys
 import os 
 import string
 import reportlib
-impoort db
+import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -69,7 +70,7 @@ fp.write(CRT)
 
 db.sql('''
 select gi.*, bcc.jnumID, vt.term, gis._IndexAssay_key, gis._StageID_key, m.symbol
-into #validIndexItems
+into temporary table validIndexItems
 from GXD_Index gi, GXD_Index_Stages gis, BIB_Citation_Cache bcc, VOC_Term vt, MRK_Marker m
 where gi._Index_key = gis._Index_key
 and gi._Refs_key = bcc._Refs_key
@@ -92,21 +93,21 @@ and gi._Marker_key = m._Marker_key
 and gi.comments is null
 ''', None)
 
-db.sql('create index idx1 on #validIndexItems(_Index_key)', None)
-db.sql('create index idx2 on #validIndexItems(_IndexAssay_key)', None)
-db.sql('create index idx3 on #validIndexItems(_StageID_key)', None)
-db.sql('create index idx4 on #validIndexItems(_Refs_key)', None)
-db.sql('create index idx5 on #validIndexItems(_Marker_key)', None)
+db.sql('create index idx1 on validIndexItems(_Index_key)', None)
+db.sql('create index idx2 on validIndexItems(_IndexAssay_key)', None)
+db.sql('create index idx3 on validIndexItems(_StageID_key)', None)
+db.sql('create index idx4 on validIndexItems(_Refs_key)', None)
+db.sql('create index idx5 on validIndexItems(_Marker_key)', None)
 
 db.sql('''
 select distinct _Refs_key, _Marker_key, _AssayType_key
-into #tmp_gxd_expression
+into temporary table tmp_gxd_expression
 from GXD_Expression
 ''', None)
 
-db.sql('create index idx6 on #tmp_gxd_expression(_Refs_key)', None)
-db.sql('create index idx7 on #tmp_gxd_expression(_Marker_key)', None)
-db.sql('create index idx8 on #tmp_gxd_expression(_AssayType_key)', None)
+db.sql('create index idx6 on tmp_gxd_expression(_Refs_key)', None)
+db.sql('create index idx7 on tmp_gxd_expression(_Marker_key)', None)
+db.sql('create index idx8 on tmp_gxd_expression(_AssayType_key)', None)
 
 # Match these types against the items in GXD_Expression versus its comparable types.
 # Please note we dont bring back ANY matches to the "E?" stage.
@@ -114,61 +115,61 @@ db.sql('create index idx8 on #tmp_gxd_expression(_AssayType_key)', None)
 results = db.sql('''
 (
 select jnumID, term as AssayType, symbol 
-from #validIndexItems gi
+from validIndexItems gi
 where gi._IndexAssay_key in (74718, 74720) and gi._StageID_key != 74769 
-and exists (select 1 from #tmp_gxd_expression ge 
+and exists (select 1 from tmp_gxd_expression ge 
 	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
-and not exists (select 1 from #tmp_gxd_expression ga 
+and not exists (select 1 from tmp_gxd_expression ga 
 	where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 1)
 
 union
 select distinct jnumID, term as AssayType, symbol 
-from #validIndexItems gi
+from validIndexItems gi
 where gi._IndexAssay_key = 74722 and gi._StageID_key != 74769
-and exists (select 1 from #tmp_gxd_expression ge 
+and exists (select 1 from tmp_gxd_expression ge 
 	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
-and not exists (select 1 from #tmp_gxd_expression ga 
+and not exists (select 1 from tmp_gxd_expression ga 
 	where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 2)
 
 union
 select distinct jnumID, term as AssayType, symbol 
-from #validIndexItems gi
+from validIndexItems gi
 where gi._IndexAssay_key = 74724 and gi._StageID_key != 74769 
-and exists (select 1 from #tmp_gxd_expression ge 
+and exists (select 1 from tmp_gxd_expression ge 
 	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
-and not exists (select 1 from #tmp_gxd_expression ga 
+and not exists (select 1 from tmp_gxd_expression ga 
 	where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 5)
 
 union
 select distinct jnumID, term as AssayType, symbol 
-from #validIndexItems gi
+from validIndexItems gi
 where gi._IndexAssay_key in (74717, 74719) and gi._StageID_key != 74769 
-and exists (select 1 from #tmp_gxd_expression ge 
+and exists (select 1 from tmp_gxd_expression ge 
 	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
-and not exists (select 1 from #tmp_gxd_expression ga 
+and not exists (select 1 from tmp_gxd_expression ga 
 	where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 6)
 
 union
 select distinct jnumID, term as AssayType, symbol 
-from #validIndexItems gi
+from validIndexItems gi
 where gi._IndexAssay_key = 74723 and gi._StageID_key != 74769  
-and exists (select 1 from #tmp_gxd_expression ge 
+and exists (select 1 from tmp_gxd_expression ge 
 	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
-and not exists (select 1 from #tmp_gxd_expression ga 
+and not exists (select 1 from tmp_gxd_expression ga 
 	where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 8)
 
 union
 select distinct jnumID, term as AssayType, symbol 
-from #validIndexItems gi
+from validIndexItems gi
 where gi._IndexAssay_key = 74721 and gi._StageID_key != 74769  
-and exists (select 1 from #tmp_gxd_expression ge 
+and exists (select 1 from tmp_gxd_expression ge 
 	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
-and not exists (select 1 from #tmp_gxd_expression ga 
+and not exists (select 1 from tmp_gxd_expression ga 
 	where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 9)
 )

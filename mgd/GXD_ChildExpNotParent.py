@@ -48,7 +48,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -72,7 +73,7 @@ db.sql('''
 	SELECT r._Specimen_key, 
                s._Structure_key as parentStructureKey, 
                s2._Structure_key as childStructureKey
-        INTO #work 
+        INTO TEMPORARY TABLE work 
         FROM GXD_InSituResult r, GXD_InSituResult r2, 
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
              GXD_StructureClosure c, GXD_Specimen sp, 
@@ -94,13 +95,17 @@ db.sql('''
               and s2._Structure_key = c._Descendent_key
 	''', None)
 
+db.sql('create index idx1 on work(_Specimen_key)', None)
+db.sql('create index idx2 on work(parentStructureKey)', None)
+db.sql('create index idx3 on work(childStructureKey)', None)
+
 #
 # Find distinct combinations of MGI ID, stage and parent structure to
 # determine the number of rows that will be written to the report.
 #
 results = db.sql('''
 	SELECT distinct a.accID, d._Stage_key, d.printName 
-        FROM #work w, GXD_Specimen s, GXD_Expression e, 
+        FROM work w, GXD_Specimen s, GXD_Expression e, 
              ACC_Accession a, ACC_Accession j, 
              GXD_Structure d, GXD_Structure d2 
         WHERE w._Specimen_key = s._Specimen_key 
@@ -169,7 +174,7 @@ results = db.sql('''
                d._Stage_key, 
                d.printName as parentStructure, 
                d2.printName as childStructure 
-        FROM #work w, GXD_Specimen s, GXD_Expression e, 
+        FROM work w, GXD_Specimen s, GXD_Expression e, 
              ACC_Accession a, ACC_Accession j, 
              GXD_Structure d, GXD_Structure d2 
         WHERE w._Specimen_key = s._Specimen_key 

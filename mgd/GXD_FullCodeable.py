@@ -56,7 +56,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -79,7 +80,7 @@ def process():
     db.sql('''
 	select distinct g._Marker_key, g._Refs_key, g._Priority_key, 
           t.term as priority, t2.term as conditional
-	into #refscodeable 
+	into temporary table refscodeable 
 	from GXD_Index g, VOC_Term t, VOC_Term t2
 	where g._Priority_key in (74715, 74714) 
 	and g._Priority_key = t._Term_key 
@@ -87,8 +88,8 @@ def process():
 	and not exists (select 1 from GXD_Assay a where a._Marker_key = g._Marker_key) 
 	''', None)
 
-    db.sql('create index refscodeable_idx1 on #refscodeable(_Marker_key)', None)
-    db.sql('create index refscodeable_idx2 on #refscodeable(_Refs_key)', None)
+    db.sql('create index refscodeable_idx1 on refscodeable(_Marker_key)', None)
+    db.sql('create index refscodeable_idx2 on refscodeable(_Refs_key)', None)
 
     #
     # count of total index records per reference
@@ -96,12 +97,12 @@ def process():
 
     db.sql('''
 	select g._Refs_key, count(*) as idx_count
-	into #indexcount 
+	into temporary table indexcount 
 	from GXD_Index g 
 	group by g._Refs_key
 	''', None)
 
-    db.sql('create index indexcount_idx1 on #indexcount(_Refs_key)', None)
+    db.sql('create index indexcount_idx1 on indexcount(_Refs_key)', None)
 
     #
     # those references that contain at least one E? annotation
@@ -109,7 +110,7 @@ def process():
 
     results = db.sql('''
 	select distinct g._Refs_key
-	from #refscodeable g
+	from refscodeable g
         where exists (select 1 from GXD_Index i, GXD_Index_Stages gis 
             where g._Refs_key = i._Refs_key
 	    and i._Index_key = gis._Index_key 
@@ -145,13 +146,13 @@ def report1(fp):
 
     db.sql('''
 	select distinct gi._Marker_key 
-        into #markers 
+        into temporary table markers 
         from GXD_Index gi 
         where gi._Priority_key in (74714, 74715)
 	and not exists (select 1 from GXD_Assay ga where ga._Marker_key = gi._Marker_key)
         ''', None)
 
-    db.sql('create index markers_idx1 on #markers(_Marker_key)', None)
+    db.sql('create index markers_idx1 on markers(_Marker_key)', None)
 
     #
     # all references for the markers of interest
@@ -161,7 +162,7 @@ def report1(fp):
 
     results = db.sql('''
 	select gi._Marker_key, a.accID 
-        from GXD_Index gi, #markers tm, ACC_Accession a 
+        from GXD_Index gi, markers tm, ACC_Accession a 
         where gi._Priority_key in (74714, 74715) and 
             gi._Marker_key = tm._Marker_key and 
             gi._Refs_key = a._Object_key and 
@@ -182,7 +183,7 @@ def report1(fp):
     #
 
     results = db.sql('select m._Marker_key, m.symbol, count(*) as idx_count ' + \
-                     'from GXD_Index gi, MRK_Marker m, #markers tm ' + \
+                     'from GXD_Index gi, MRK_Marker m, markers tm ' + \
                      'where gi._Marker_key = tm._Marker_key and ' + \
                            'gi._Marker_key = m._Marker_key ' + \
                      'group by m._Marker_key, m.symbol ' + \
@@ -236,11 +237,11 @@ def report2(fp):
 
     db.sql('''
 	select g._Refs_key, count(*) as mrk_count
-	into #markercount 
-	from #refscodeable g 
+	into temporary table markercount 
+	from refscodeable g 
 	group by g._Refs_key
 	''', None)
-    db.sql('create index markercount_idx1 on #markercount(_Refs_key)', None)
+    db.sql('create index markercount_idx1 on markercount(_Refs_key)', None)
 
     #
     # we don't want a reference if it has any assays coded
@@ -248,23 +249,23 @@ def report2(fp):
     #
     db.sql('''
 	select g._Refs_key
-	into #excluded
-	from #refscodeable g, GXD_Assay a
+	into temporary table excluded
+	from refscodeable g, GXD_Assay a
 	where g._Refs_key = a._Refs_key
 	''', None)
-    db.sql('create index excluded_idx1 on #excluded(_Refs_key)', None)
+    db.sql('create index excluded_idx1 on excluded(_Refs_key)', None)
 
     results = db.sql('''
 	select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, r.priority, r.conditional,
 		r._priority_key, a.numericpart
-	from #refscodeable r, #indexcount i, #markercount m, ACC_Accession a 
+	from refscodeable r, indexcount i, markercount m, ACC_Accession a 
 	where r._Refs_key = i._Refs_key 
 	and r._Refs_key = m._Refs_key 
 	and r._Refs_key = a._Object_key 
 	and a._MGIType_key = 1 
 	and a._LogicalDB_key = 1 
 	and a.prefixPart = 'J:' 
-	and not exists (select 1 from #excluded d where r._Refs_key = d._Refs_key)
+	and not exists (select 1 from excluded d where r._Refs_key = d._Refs_key)
 	order by r._Priority_key, m.mrk_count desc, a.numericPart desc
 	''', 'auto')
 
@@ -321,13 +322,13 @@ def report3(fp):
 
     db.sql('''
 	select i._Refs_key, count(*) as mrk_count
-        into #mrk_count 
+        into temporary table mrk_count 
         from GXD_Index i 
         where not exists (select 1 from GXD_Assay a where a._Marker_key = i._Marker_key) 
         group by i._Refs_key
 	''', None)
 
-    db.sql('create index mrk_count_idx1 on #mrk_count(_Refs_key)', None)
+    db.sql('create index mrk_count_idx1 on mrk_count(_Refs_key)', None)
 
     #
     # get the priority
@@ -336,13 +337,13 @@ def report3(fp):
 
     db.sql('''
        select distinct i._Marker_key, i._Refs_key, i._Priority_key, t.term as priority
-           into #priority 
+           into temporary table priority 
            from GXD_Index i, VOC_Term t 
 	   where i._Priority_key in (74715, 74714) 
            and i._Priority_key = t._Term_key
 	   ''', None)
 
-    db.sql('create index priority_idx1 on #priority(_Refs_key)', None)
+    db.sql('create index priority_idx1 on priority(_Refs_key)', None)
 
     #
     # get a list of references with assay type of northern, western, RT-PCR,
@@ -352,7 +353,7 @@ def report3(fp):
 
     db.sql('''
        select distinct b._Refs_key 
-       into #refs 
+       into temporary table refs 
        from BIB_View b 
        where not exists (select 1 from GXD_Index i, GXD_Assay a 
                              where i._Refs_key = b._Refs_key 
@@ -370,9 +371,9 @@ def report3(fp):
 
     results = db.sql('''
 	 select distinct r._Refs_key, a.accID, i.idx_count, m.mrk_count, p.priority 
-	 from #refs r
+	 from refs r
 	      LEFT OUTER JOIN #mrk_count m on (r._Refs_key = m._Refs_key),
-	      #indexcount i, #priority p, ACC_Accession a 
+	      indexcount i, priority p, ACC_Accession a 
 	 where r._Refs_key = i._Refs_key 
 	 and r._Refs_key = p._Refs_key 
          and r._Refs_key = a._Object_key 

@@ -69,7 +69,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -110,7 +111,7 @@ db.sql('''
     select s._Assay_key, s._Specimen_key, s.age, 
 	   s.specimenLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
-    into #temp1 
+    into temporary table temp1 
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
 	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
@@ -128,7 +129,7 @@ db.sql('''
 # insitu specimens with "embryonic" age; include TS 28 for certain structures only
 #
 db.sql('''
-    insert into #temp1 
+    insert into temp1 
     select s._Assay_key, s._Specimen_key, s.age, 
 	   s.specimenLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
@@ -152,7 +153,7 @@ db.sql('''
 # gel lanes with "embryonic day" age; no age ranges; exclude TS 28
 #
 db.sql('''
-    insert into #temp1 
+    insert into temp1 
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
@@ -172,7 +173,7 @@ db.sql('''
 # gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only
 #
 db.sql('''
-    insert into #temp1 
+    insert into temp1 
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, t.stage, t.dpcMin, t.dpcMax 
     from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t 
@@ -203,25 +204,25 @@ db.sql('''
 # so the age values (0.5 and 22) for this specimen must be between 0.0 and 1500.00
 #
 
-db.sql('select distinct * into #temp2 from #temp1', None)
-db.sql('create index temp2_idx1 on #temp2(_Assay_key)', None)
-db.sql('create index temp2_idx2 on #temp2(_Specimen_key)', None)
+db.sql('select distinct * into temporary table temp2 from temp1', None)
+db.sql('create index temp2_idx1 on temp2(_Assay_key)', None)
+db.sql('create index temp2_idx2 on temp2(_Specimen_key)', None)
 db.sql('''
 	select distinct t._Assay_key, t.age, t.label, t.stage, 
 		  min(t.dpcMin) as dpcMin, 
 		  max(t.dpcMax) as dpcMax
-	into #temp3 
-	from #temp2 t 
+	into temporary table temp3 
+	from temp2 t 
 	group by t._Assay_key, t._Specimen_key, t.age, t.label, t.stage
 	''', None)
-db.sql('create index temp3_idx on #temp3(_Assay_key)', None)
+db.sql('create index temp3_idx on temp3(_Assay_key)', None)
 
 ##
 
 results = db.sql('''
 	select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, 
 	                a1.accID as mgi, a2.accID as jnum
-        from #temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 
+        from temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 
         where t._Assay_key = a._Assay_key and 
 	  a._Assay_key = a1._Object_key and 
           a1._MGIType_key = 8 and 

@@ -96,7 +96,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -239,7 +240,7 @@ def runreport(fp, assayType):
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
-          into #refs 
+          into temporary table refs 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p 
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
@@ -255,7 +256,7 @@ def runreport(fp, assayType):
           ''' % (assayType, journals1, journals2, journals3), None)
 
     db.sql('''
-          insert into #refs
+          insert into refs
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r 
@@ -271,11 +272,11 @@ def runreport(fp, assayType):
                 and ac._MGIType_key = 8 
           ''' % (assayType, journals1, journals2, journals3), None)
 
-    db.sql('create index refs_idx1 on #refs(_Refs_key)', None)
+    db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
     results = db.sql('''
 	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
-	    from #refs r, IMG_Image i
+	    from refs r, IMG_Image i
 	    where r._Refs_key = i._Refs_key
 	    order by figureLabel
 	    ''', 'auto')
@@ -289,7 +290,7 @@ def runreport(fp, assayType):
 
     results = db.sql('''
 	    select r._Refs_key, b.jnumID, b.short_citation 
-	    from #refs r, BIB_All_View b
+	    from refs r, BIB_All_View b
 	    where r._Refs_key = b._Refs_key 
             order by r.creation_date, b.jnumID
 	    ''', 'auto')
@@ -329,7 +330,7 @@ def runreport(fp, assayType):
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
-          into #refs3
+          into temporary table refs3
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
@@ -337,8 +338,7 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (b.journal in (%s)
-		or b.journal in (%s))
+	        and (b.journal in (%s) or b.journal in (%s))
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
 	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -349,7 +349,7 @@ def runreport(fp, assayType):
           ''' % (assayType, journals4, journals5), None)
 
     db.sql('''
-          insert into #refs3
+          insert into refs3
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
@@ -358,8 +358,7 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (b.journal in (%s)
-		    or b.journal in (%s))
+	        and (b.journal in (%s) or b.journal in (%s))
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
 	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -369,11 +368,11 @@ def runreport(fp, assayType):
 	        and n._Note_key = c._Note_key)
           ''' % (assayType, journals4, journals5), None)
 
-    db.sql('create index refs3_idx1 on #refs3(_Refs_key)', None)
+    db.sql('create index refs3_idx1 on refs3(_Refs_key)', None)
 
     results = db.sql('''
-	    select distinct r._Refs_key, rtrim(i.figureLabel) figureLabel
-	    from #refs3 r, IMG_Image i
+	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+	    from refs3 r, IMG_Image i
 	    where r._Refs_key = i._Refs_key
 	    ''', 'auto')
     fLabels = {}
@@ -386,7 +385,7 @@ def runreport(fp, assayType):
 
     results = db.sql('''
 	select r._Refs_key, b.jnumID, b.short_citation 
-	from #refs3 r, BIB_All_View b
+	from refs3 r, BIB_All_View b
 	where r._Refs_key = b._Refs_key 
         order by r.creation_date, b.jnumID
 	''', 'auto')
@@ -403,8 +402,8 @@ def runreport(fp, assayType):
     
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
-    db.sql('drop table #refs',None)
-    db.sql('drop table #refs3',None)
+    db.sql('drop table refs',None)
+    db.sql('drop table refs3',None)
 
 #
 # main

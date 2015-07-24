@@ -34,7 +34,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -55,7 +56,7 @@ results = db.sql('''
 	select
 		gs._Structure_key,
 		count(gs._Structure_key) as SCount
-	into #tmp_olin
+	into temporary table tmp_olin
 	from
 		GXD_Structure gs,
 		ACC_Accession acc
@@ -99,7 +100,7 @@ select
 	olin.Scount,
 	gs.printname
 from
-	#tmp_olin olin,
+	tmp_olin olin,
 	GXD_Structure gs,
 	ACC_Accession acc,
 	GXD_TheilerStage gts
@@ -118,6 +119,6 @@ for r in results:
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
-results = db.sql(''' drop table #tmp_olin ''', 'auto')
+results = db.sql(''' drop table tmp_olin ''', 'auto')
 
 reportlib.finish_nonps(fp)	# non-postscript file
