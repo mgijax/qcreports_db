@@ -79,6 +79,7 @@ import reportlib
 import db
 
 db.setTrace()
+db.setAutoTranslate(False)
 db.setAutoTranslateBE()
 
 CRT = reportlib.CRT
@@ -142,21 +143,21 @@ def runQueries():
 
     # orthologies
 
-    db.sql('''update #markers set hasOrthology = 'yes'
+    db.sql('''update markers set hasOrthology = 'yes'
 	where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
 	where mc._ClusterSource_key = 9272151 
         and mc._Cluster_key = hm1._Cluster_key 
-	and hm1._Marker_key = #markers._Marker_key 
+	and hm1._Marker_key = markers._Marker_key 
 	and hm1._Cluster_key = hm2._Cluster_key 
 	and hm2._Marker_key = mh._Marker_key 
 	and mh._Organism_key = 2) 
 	''', None)
 
-    db.sql('''update #markers set hasOrthology = 'yes' 
+    db.sql('''update markers set hasOrthology = 'yes' 
 	where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
 	where mc._ClusterSource_key = 9272151 
         and mc._Cluster_key = hm1._Cluster_key 
-	and hm1._Marker_key = #markers._Marker_key 
+	and hm1._Marker_key = markers._Marker_key 
 	and hm1._Cluster_key = hm2._Cluster_key 
 	and hm2._Marker_key = mh._Marker_key 
 	and mh._Organism_key = 40) 
@@ -191,7 +192,7 @@ def runQueries():
 	from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
 	where r._Refs_key = ba._Refs_key 
 	and ba._DataSet_key = bd._DataSet_key 
-	and bd.dataSet = 'Expression" 
+	and bd.dataSet = 'Expression' 
 	and ba.isNeverUsed = 0
 	''', 'auto')
     for r in results:
@@ -224,18 +225,19 @@ def reportD():
 	     'symbol' + TAB + \
 	     'name' + CRT*2)
 
-    db.sql('select distinct r._Marker_key, r._Refs_key, r.symbol, ' + \
-	'r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology ' + \
-	'into temporary table fpD ' + \
-	'from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-	'where r._Refs_key = ba._Refs_key ' + \
-	'and ba._DataSet_key = bd._DataSet_key ' + \
-	'and bd.dataSet = "Gene Ontology" ' + \
-	'and ba.isNeverUsed = 0 ' + \
-	'and not exists (select 1 from VOC_Evidence e, VOC_Annot a ' + \
-	'where r._Refs_key = e._Refs_key ' + \
-	'and e._Annot_key = a._Annot_key ' + \
-	'and a._AnnotType_key = 1000) ', None)
+    db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol,
+	r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology 
+	into temporary table fpD 
+	from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+	where r._Refs_key = ba._Refs_key 
+	and ba._DataSet_key = bd._DataSet_key 
+	and bd.dataSet = 'Gene Ontology' 
+	and ba.isNeverUsed = 0 
+	and not exists (select 1 from VOC_Evidence e, VOC_Annot a 
+	where r._Refs_key = e._Refs_key 
+	and e._Annot_key = a._Annot_key 
+	and a._AnnotType_key = 1000) 
+	''', None)
 
     # number of unique MGI gene
     results = db.sql('select distinct _Marker_key from fpD', 'auto')
@@ -246,9 +248,9 @@ def reportD():
     fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
 
     # number of has orthology?
-    results = db.sql('select * from fpD where hasOrthology = "yes"', 'auto')
+    results = db.sql('select * from fpD where hasOrthology = \'yes\'::text', 'auto')
     fpD.write('Number of has orthology? = yes:  %s\n' % (len(results)))
-    results = db.sql('select * from fpD where hasOrthology = "no "', 'auto')
+    results = db.sql('select * from fpD where hasOrthology = \'no \'::text', 'auto')
     fpD.write('Number of has orthology? = no:  %s\n' % (len(results)))
 
     # total number of rows
