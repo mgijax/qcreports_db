@@ -31,7 +31,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 
@@ -125,11 +126,11 @@ def monthlyCounts():
 	''', None)
 
     # initialize a table of periodCounts with all assay types for each year/month
-    # and set "assays = 0", "results = 0"
+    # and set "0 as assays", "0 as results"
     # subsequent updates will increment the assays and results counts
 
     db.sql('''select p.year, p.month, t._AssayType_key, substring(t.assayType,1,25) as assayType, 
-	assays = 0, results = 0 
+	0 as assays, 0 as results 
 	into temporary table periodCounts 
 	from periods p, GXD_AssayType t where t._AssayType_key in (1,2,3,4,5,6,8,9)
 	''', None)
