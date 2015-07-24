@@ -32,7 +32,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -49,8 +50,8 @@ fp.write('Gene Symbol' + TAB)
 fp.write('GO ID' + 2*CRT)
 
 db.sql('''
-	select goID = a.accID, ta._Object_key 
-	into #obsolete  
+	select a.accID as goID, ta._Object_key 
+	into temporary table obsolete  
 	from VOC_Term_ACC_View a, VOC_Term t, VOC_Annot ta 
 	where t._Vocab_key = 4  
 	and t.isObsolete = 1  
@@ -61,11 +62,11 @@ db.sql('''
 	and a.preferred = 1
 	''', None)
 
-db.sql('create index obsolete_idx_key on #obsolete(_Object_key)', None)
+db.sql('create index obsolete_idx_key on obsolete(_Object_key)', None)
 
 results = db.sql('''
 	select goID, ma.accID, m.symbol 
-	from #obsolete o, ACC_Accession ma, MRK_Marker m 
+	from obsolete o, ACC_Accession ma, MRK_Marker m 
 	where o._Object_key = ma._Object_key 
 	and ma._MGIType_key = 2 
 	and ma._LogicalDB_key = 1 

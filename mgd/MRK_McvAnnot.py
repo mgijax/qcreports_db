@@ -49,7 +49,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -103,8 +104,9 @@ db.sql('''
 db.sql('''create index mcvAnnot_idx on mcvAnnot(_Annot_key)''', None)
 
 results = db.sql('''
-    select  ma.qualifier, convert(char(10), 
-	a.creation_date, 101) as creation_date, e._AnnotEvidence_key as evidKey,
+    select  ma.qualifier, 
+	to_char(a.creation_date, 'MM/dd/yyyy') as creation_date,
+        e._AnnotEvidence_key as evidKey,
 	ma.mcvTerm, ma.mcvID, ma.mgiID, a.accid as jnum, e.inferredFrom, u.login, 
 	t.term as evidCode
     from mcvAnnot ma, VOC_Evidence e, ACC_Accession a, MGI_User u, VOC_Term t

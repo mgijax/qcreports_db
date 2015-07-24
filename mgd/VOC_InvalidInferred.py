@@ -44,7 +44,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslateBE()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
 
 #
 # Main
@@ -66,7 +67,7 @@ mgiLookup = []
 results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key in (2, 11) and a.prefixPart = \'MGI:\'', 'auto')
 for r in results:
     mgiLookup.append(r['accID'])
-results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart in ("GO:")', 'auto')
+results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart in (\'GO:\')', 'auto')
 for r in results:
     mgiLookup.append(r['accID'])
 bucketMGI = Set(mgiLookup)
@@ -76,7 +77,7 @@ bucketMGI = Set(mgiLookup)
 db.sql('''
 	select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, 
 	       t.abbreviation as evidenceCode
-	into #annotations 
+	into temporary table annotations 
 	from VOC_Annot a, VOC_Evidence e, VOC_Term t 
 	where a._AnnotType_key = 1000 
 	and a._Annot_key = e._Annot_key 
@@ -84,15 +85,15 @@ db.sql('''
 	and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
 	and e._EvidenceTerm_key = t._Term_key
 	''', None)
-db.sql('create index annotations_idx1 on #annotations(_Term_key)', None)
-db.sql('create index annotations_idx2 on #annotations(_Object_key)', None)
-db.sql('create index annotations_idx3 on #annotations(inferredFrom)', None)
+db.sql('create index annotations_idx1 on annotations(_Term_key)', None)
+db.sql('create index annotations_idx2 on annotations(_Object_key)', None)
+db.sql('create index annotations_idx3 on annotations(inferredFrom)', None)
 
 #
 # set of MGI, GO ids in 'inferredFrom'
 #
 
-results = db.sql('select _AnnotEvidence_key, inferredFrom from #annotations', 'auto')
+results = db.sql('select _AnnotEvidence_key, inferredFrom from annotations', 'auto')
 
 inferredLookup = []
 keysLookup = []
@@ -146,7 +147,7 @@ for t in theDiffs:
 
    results = db.sql('''
 	select a.accID, m.symbol, e.evidenceCode, e._AnnotEvidence_key
-	from #annotations e, ACC_Accession a, MRK_Marker m 
+	from annotations e, ACC_Accession a, MRK_Marker m 
 	where e._Term_key = a._Object_key 
 	and a._MGIType_key = 13 
 	and a.preferred = 1 
