@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-0-4
+DATE: 07/27/2015
+STAFF: lnh
+CHANGES:
+1) mgd/GO_EvidenceProperty.py: Added a SERVER_TYPE check - only send email when on prod
+2) Configuration.default: Added new flag SERVER_TYPE=INSTALL_TYPE
+
 TAG: qcreports_db-6-0-0-3
 TAG: qcreports_db-6-0-0-2
 TAG: qcreports_db-6-0-0-1
