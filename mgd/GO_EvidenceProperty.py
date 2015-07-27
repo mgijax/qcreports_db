@@ -23,6 +23,9 @@
 #
 # History:
 #
+# 08/27/2015  lnh
+#       - Added SERVER_TYPE check - only send email notification if SERVER_TYPE=prod
+#
 # 03/10/2014	lnh
 #	- TR 11332
 #
@@ -229,14 +232,15 @@ message+=")\nNote: This report runs daily"
 
 cmd="echo \""+message+"\" | mailx -r \""+sender+"\" -s \"J:73065 GO Annotations Alert - External Ref\" \""+receiver+"\""
 mes="Missing External Ref total: %s  Bad format Total: %s" % (missCount,badCount)
-
 print mes
-if (missCount > 0) or (badCount > 0):
-   try:
-       os.system(cmd)
-       print "Successfully sent email"
-   except  OSError,e:
-       print "Error: unable to send email"
+
+if os.environ['SERVER_TYPE'] == 'prod':
+    if (missCount > 0) or (badCount > 0):
+        try:
+            os.system(cmd)
+            print "Successfully sent email"
+        except  OSError,e:
+            print "Error: unable to send email"
 
 reportlib.finish_nonps(fp)
 
