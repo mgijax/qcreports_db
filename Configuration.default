@@ -19,6 +19,9 @@ umask 002
 # '-e' echo
 setenv PSQL_ECHO "-q"
 
+# Install type (dev, test, prod,...)
+setenv SERVER_TYPE              ${INSTALL_TYPE}
+
 # report output directory
 setenv QCOUTPUTDIR		${QCREPORTDIR}/output
 
