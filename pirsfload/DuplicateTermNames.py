@@ -61,7 +61,7 @@ db.sql('''
     )
 	''', None)
 
-db.sql('create index idx1 on #dupterms(_Term_key)', None)
+db.sql('create index idx1 on dupterms(_Term_key)', None)
 
 results = db.sql('''
 	select d.term, a.accID 
