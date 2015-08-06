@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-0-6
+DATE: 08/06/2015
+STAFF: sc
+CHANGES: TR12082
+1) added weekly/QTL_Triage.py
+2) added above to index page
+
 TAG: qcreports_db-6-0-0-5
 DATE: 07/28/2015
 STAFF: lec
