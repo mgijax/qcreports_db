@@ -20,17 +20,12 @@ import os
 import mgi_utils
 import reportlib
 import Set
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
+import db
 
+db.setTrace()
+db.setAutoTranslate(False)
+db.setAutoTranslateBE(False)
+db.useOneConnection(1)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -75,4 +70,6 @@ fp.write("References selected for QTL and not used%s%s" % (CRT, CRT))
 for j in notUsedSet:
     fp.write('%s%s' % (j, CRT))
 fp.write('Total References selected and not used: %s' % len(notUsedSet))
+
+db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file
