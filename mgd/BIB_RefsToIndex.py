@@ -26,6 +26,9 @@
 #
 # History:
 #
+# lec	08/10/2015
+#	- TR11979/change rules
+#
 # lec	07/29/2010
 #	- TR10281/add pubmedid
 #
@@ -42,8 +45,6 @@
 
 import sys
 import os
-import string
-import mgi_utils
 import reportlib
 import db
 
@@ -56,118 +57,47 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-#
-# Create a list of dataset keys to be included in the report.
-#
-datasetKeys = [ 1005 ]
-inClause = string.join(map(str,datasetKeys),',')
-
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
-#
-# Get the dataset abbreviations to be used for the report heading.
-#
-results = db.sql('''
-	select _DataSet_key, abbreviation 
-        from BIB_DataSet 
-        where _DataSet_key in (%s)
-        order by _DataSet_key
-	''' % (inClause), 'auto')
+fp.write('\nReferences where:\n')
+fp.write('\tselected for GO, not used for GO, not selected for A&P\n')
 
-#
-# Write the report heading.
-#
-fp.write('J Number')
+fp.write('\nJ Number')
 fp.write(TAB + 'PubMed ID')
-for r in results:
-    fp.write(TAB + r['abbreviation'])
 fp.write(TAB + 'Review')
 fp.write(CRT)
 
 #
-# Build a temp table with the review indicator and dataset keys for each
-# reference that has no marker association.  Only select the datasets
-# specified in the list of keys.
-#
-db.sql('''
-	select cc.jnumID, cc.pubmedID, cc.isReviewArticle, da._DataSet_key 
-        into temporary table refds 
-        from BIB_DataSet_Assoc da, BIB_Citation_Cache cc 
-        where da._DataSet_key in (%s)
-              and da._Refs_key = cc._Refs_key 
-              and cc.numericPart >= 121000
-              and not exists (select 1 from MRK_Reference r where da._Refs_key = r._Refs_key) 
-	''' % (inClause), None)
-
-#
-# Get each J number/dataset pair needed to build the grid.
-#
-results = db.sql('select jnumID, pubmedID, _DataSet_key from refds', 'auto')
-
-#
-# Build a dictionary where the key is the J number and the value is a list
-# of datasets selected for that reference.
-#
-dict = {}
-for r in results:
-    jnumID = r['jnumID']
-    dsKey = r['_DataSet_key']
-
-    #
-    # If there is already a dataset for the reference, append another one.
-    #
-    if dict.has_key(jnumID):
-        dict[jnumID].append(dsKey)
-    #
-    # If this is a new reference, start a new dataset list.
-    #
-    else:
-        dsKeyList = [dsKey]
-        dict[jnumID] = dsKeyList
-
-
-#
-# Get the review indicator for each J number.
+# selected for GO (1005) where:
+# not selected for A&P (1002)
+# not used
 #
 results = db.sql('''
-	select distinct jnumID, pubmedID, isReviewArticle 
-        from refds 
-        order by jnumID
+	select s1._Refs_key, cc.jnumID, cc.pubmedID, cc.isReviewArticle
+        from BIB_DataSet_Assoc s1, BIB_Citation_Cache cc
+        where s1._DataSet_key in (1005)
+	and s1._Refs_key = cc._Refs_key
+	and cc.numericPart >= 121000
+	and not exists (select 1 from BIB_DataSet_Assoc s2 
+		where s1._Refs_key = s2._Refs_key and s2._DataSet_key = 1002)
+	and not exists (select 1 from MRK_Reference r where s1._Refs_key = r._Refs_key)
+	order by cc.jnumID
 	''', 'auto')
 
-#
-# For each J number, get its review indicator and list of datasets.
-#
 for r in results:
     jnumID = r['jnumID']
     pubmedID = r['pubmedID']
     review = r['isReviewArticle']
-    dsKeyList = dict[jnumID]
 
-    #
-    # Write the J number in the first column.
-    #
     fp.write(jnumID)
-    fp.write(TAB + mgi_utils.prvalue(pubmedID))
+    fp.write(TAB + str(pubmedID))
 
-    #
-    # Write an "X" under each dataset in the heading if the J number has
-    # been selected for that dataset.
-    #
-    for dsKey in datasetKeys:
-        if dsKey in dsKeyList:
-            fp.write(TAB + 'X')
-        else:
-            fp.write(TAB)
-
-    #
-    # Write "Yes" or "No" under the review column, depending on whether
-    # the J number is a review article.
-    #
     if review:
         fp.write(TAB + 'Yes')
     else:
         fp.write(TAB + 'No')
+
     fp.write(CRT)
 
 reportlib.finish_nonps(fp)
+

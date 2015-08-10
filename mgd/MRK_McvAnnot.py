@@ -74,7 +74,7 @@ results = db.sql('''
         where n._NoteType_key = 1008
         and n._MGIType_key = 25
         and n._Note_key = nc._Note_key
-	order by n._Object_key
+	order by n._Object_key, nc.sequenceNum
 	''', 'auto')
 
 for r in results:

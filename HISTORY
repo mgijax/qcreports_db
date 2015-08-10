@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-0-8
+DATE: 08/10/2015
+STAFF: lec
+CHANGES: TR11979
+1) mgd/BIB_RefsToIndex.py
+
 TAG: qcreports_db-6-0-0-7
 TAG: qcreports_db-6-0-0-6
 DATE: 08/06/2015
