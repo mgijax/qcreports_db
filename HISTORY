@@ -1,3 +1,12 @@
+TAG: qcreports_db-6-0-0-9
+DATE: 08/12/2015
+STAFF: lec
+CHANGES: 
+1) fixed jfilescanner link
+mgd/MRK_GOIEA.py
+mgd/MRK_GORCA.py
+mgd/MRK_NoGO.py
+
 TAG: qcreports_db-6-0-0-8
 DATE: 08/10/2015
 STAFF: lec
