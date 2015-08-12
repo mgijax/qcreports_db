@@ -89,7 +89,7 @@ PAGE = reportlib.PAGE
 
 PUBMED = 29
 url = ''
-jfileurl = 'http://prodwww.informatics.jax.org/jfilescanner/current/get.cgi?jnum='
+jfileurl = 'http://prodwww.informatics.jax.org/jfilescanner/get.cgi?jnum='
 gxd = []
 
 fpD = None
