@@ -64,7 +64,7 @@
 #	- TR 8775; on select GXD assay types
 #
 # lec	03/04/2008
-#	- TR 8826; added PLoS ONE
+#	- TR 8826; added PLoS One
 #
 # lec	02/09/2007
 #	- TR 8147; added Proc Natl Acad Sci U S A
@@ -144,7 +144,7 @@ journals = [
 'PLoS Biol', 
 'PLoS Genet', 
 'PLoS Med', 
-'PLoS ONE' ,
+'PLoS One' ,
 'Proc Natl Acad Sci U S A',
 'Cell Death Dis',
 'Nat Commun',
@@ -248,7 +248,7 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and ((b.journal in (%s)) 
+	        and (((b.journal) in (%s)) 
 		    or (b.journal in (%s) and year >= 2005)
 		    or (b.journal in (%s) and year >= 2006))
                 and a._Assay_key = ac._Object_key 
