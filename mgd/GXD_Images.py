@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	08/19/2015
+#	- TR11963/new journal : Dis Model Mech
+#
 # lec	03/03/2015
 #	- TR11891/new journals
 #
@@ -166,7 +169,8 @@ journals = [
 'BMC Physiol',
 'BMC Struct Biol',
 'BMC Syst Biol',
-'Direct Data Submission from Genetic Resource Science'
+'Direct Data Submission from Genetic Resource Science',
+'Dis Model Mech'
 ]
 
 # journals where year >= 2005
