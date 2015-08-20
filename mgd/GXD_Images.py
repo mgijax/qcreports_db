@@ -129,6 +129,8 @@ journals = [
 'Dev Biol', 
 'Dev Dyn', 
 'Development', 
+'Dis Model Mech',
+'Exp Mol Med',
 'Gene Expr Patterns', 
 'Genesis', 
 'Genome Biol',
@@ -169,7 +171,6 @@ journals = [
 'BMC Physiol',
 'BMC Struct Biol',
 'BMC Syst Biol',
-'Dis Model Mech',
 'Direct Data Submission from Genetic Resource Science'
 ]
 
