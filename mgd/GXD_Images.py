@@ -169,8 +169,8 @@ journals = [
 'BMC Physiol',
 'BMC Struct Biol',
 'BMC Syst Biol',
-'Direct Data Submission from Genetic Resource Science',
-'Dis Model Mech'
+'Dis Model Mech',
+'Direct Data Submission from Genetic Resource Science'
 ]
 
 # journals where year >= 2005
