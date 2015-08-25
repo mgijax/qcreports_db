@@ -54,7 +54,7 @@ db.sql('''
 db.sql('create index idx1 on triage(_Refs_key)', None)
 
 results = db.sql('''
-	select b.authors, b.authors2, b.title, b.title2, b._primary, 
+	select b.authors, b.title, b._primary, 
 	       b.journal, b.year, 
 	       b.vol, b.issue, b.pgs, b.abstract, 
 	       a2.accID as pubmedID,
@@ -82,20 +82,10 @@ for r in results:
 	title = 'Null'
     fp.write(title + TAB)
 
-    title2 = r['title2']
-    if title2 == None:
-	title2 = 'Null'
-    fp.write(title2 + TAB)
-
     authors = r['authors']
     if authors == None:
 	authors = 'Null'
     fp.write(authors + TAB)
-
-    authors2 = r['authors2']
-    if authors2 == None:
-	authors2 = 'Null'
-    fp.write(authors2 + TAB)
 
     _primary = r['_primary']
     if _primary == None:
