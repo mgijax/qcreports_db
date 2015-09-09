@@ -55,10 +55,6 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('Invalid "Inferred From" Values in GO Annotations (MGI, GO, ";")' + 2 * reportlib.CRT)
 rows = 0
 
-# use for Mol Segs...quicker than mgiLookup method due to number of Mol Segs
-
-findID = 'select _Object_key from ACC_Accession where accID = "%s"'
-
 # read in all MGI accession ids for Markers (2), Alleles (11)
 # read in all GO ids (13)
 # this is the list of valid accession ids
@@ -182,7 +178,7 @@ results = db.sql('''
 	''', 'auto')
 
 for r in results:
-    fp.write(r['inferredFrom'] + reportlib.TAB + \
+    fp.write(r['value'] + reportlib.TAB + \
              r['accID'] + reportlib.TAB + \
              r['symbol'] + reportlib.CRT)
 

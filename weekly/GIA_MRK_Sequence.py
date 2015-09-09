@@ -40,11 +40,6 @@
 # lec	01/13/98
 #	- added comments section
 #
-# NOTE: This report is a variation of the daily report with the same name.
-#       It does not get copied to the FTP site and is only used by the
-#       mgddbutilities product to generate input files for the DFCI, DOTS
-#       and NIA association loads.
-#
 '''
  
 import sys
