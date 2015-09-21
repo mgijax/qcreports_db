@@ -61,6 +61,9 @@ setenv EILOGFILES		/userhome
 # EI Log Name
 setenv EILOGNAME		.ei-log
 
+#url to reports
+setenv REPORTS_URL             http://prodwww.informatics.jax.org
+
 # set IMSR csv file
 setenv IMSR_STRAINS_CSV         ${DATADOWNLOADS}/emnet.informatics.jax.org/allStrains.csv
 
