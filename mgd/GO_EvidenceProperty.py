@@ -23,6 +23,9 @@
 #
 # History:
 #
+# 09/21/2015 lnh (TR12143)
+#    -Added REPORTS_URL to provide link to report in the body of the email 
+#
 # 08/27/2015  lnh
 #       - Added SERVER_TYPE check - only send email notification if SERVER_TYPE=prod
 #
@@ -47,7 +50,7 @@ db.setAutoTranslateBE(False)
 #
 sender = os.environ['GEN_WEBSHARE_EMAIL']
 receiver = "mgi-go@jax.org"
-report_url= os.environ['QCOUTPUTDIR'] + '/' + sys.argv[0]
+report_url= os.environ['REPORTS_URL']+os.environ['QCOUTPUTDIR'] + '/GO_EvidenceProperty.rpt'
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
