@@ -83,10 +83,10 @@ db.sql('''
 	and t.term not in ('anatomy', 'cell type', 'dual-taxon ID', 'evidence', 'external ref', 'gene product', 'modification', 'target', 'text')
 	and p.value is not null 
 	and (
-	     p.value like '% CL:%'
-	     or p.value like '% GO:%'
-	     or p.value like '% MA:%'
-	     or p.value like '% PR:%'
+	     p.value like '%CL:%'
+	     or p.value like '%GO:%'
+	     or p.value like '%MA:%'
+	     or p.value like '%PR:%'
 	    )
         and a._Term_key = aa._Object_key 
         and aa._MGIType_key = 13  
