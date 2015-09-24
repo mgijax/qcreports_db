@@ -1,6 +1,7 @@
 
-/* Changes: */
-/* TR11915 - Update to Check 4 - 01/23/2015 - sc */
+-- Changes:
+-- TR12146 - remove check 4 counts - 09/24/2015 - lec
+-- TR11915 - Update to Check 4 - 01/23/2015 - sc
 
 \echo ''
 \echo 'Check 1'
@@ -72,21 +73,11 @@ where acc.accId is NULL
 create index invalidIDs_idx on invalidIDs(adID)
 ;
 
-select _Structure_key, count(_Structure_key) as aCt
-INTO TEMPORARY TABLE annotCt
-from GXD_Expression
-group by _structure_key
-;
-
-create index annotCt_idx on annotCt(_Structure_key)
-;
-
-select i.adID, i.emapsId, ac.aCt
-from invalidIDs i, ACC_Accession a, annotCt ac
+select i.adID, i.emapsId
+from invalidIDs i, ACC_Accession a
 where i.adID = a.accID
 and a._MGIType_key = 38
 and a._LOgicalDB_key = 1
-and a._Object_key = ac._Structure_key
 ;
 
 \echo ''
