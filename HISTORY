@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-0-23
+DATE: 09/24/2015
+STAFF: lec
+CHANGES: TR12146
+1) mgd/GXD_EMAPS_MappingChecks.sql
+
 TAG: qcreports_db-6-0-0-22
 TAG: qcreports_db-6-0-0-21
 DATE: 09/22/2015, 09/23/2015
