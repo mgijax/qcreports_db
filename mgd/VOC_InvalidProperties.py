@@ -46,7 +46,6 @@ rows = 0
 #
 # 4 : GO
 # 6 : Adult Mouse Anatomy
-# 77 : Protein Ontology (PR)
 # 102 : CL
 #
 # and MGI: ids for markers
@@ -80,13 +79,20 @@ db.sql('''
 	and e._AnnotEvidence_key = p._AnnotEvidence_key
 	and p._PropertyTerm_key = t._Term_key
 	and t._Vocab_key = 82
-	and t.term not in ('anatomy', 'cell type', 'dual-taxon ID', 'evidence', 'external ref', 'gene product', 'modification', 'target', 'text')
+	and t.term not in ('anatomy', 
+		'cell type', 
+		'dual-taxon ID', 
+		'evidence', 
+		'external ref', 
+		'gene product', 
+		'modification', 
+		'target', 
+		'text')
 	and p.value is not null 
 	and (
 	     p.value like '%CL:%'
 	     or p.value like '%GO:%'
 	     or p.value like '%MA:%'
-	     or p.value like '%PR:%'
 	    )
         and a._Term_key = aa._Object_key 
         and aa._MGIType_key = 13  
@@ -107,8 +113,7 @@ for r in results:
     for id in idList:
 	if string.find(id, 'CL:') >= 0 \
 	   or string.find(id, 'GO:') >= 0 \
-	   or string.find(id, 'MA:') >= 0 \
-	   or string.find(id, 'PR:') >= 0 :
+	   or string.find(id, 'MA:') >= 0 :
 		if id not in mgiLookup:
         		fp.write(r['accID'] + reportlib.TAB + \
 				r['symbol'] + reportlib.TAB + \
