@@ -113,7 +113,8 @@ for r in results:
     for id in idList:
 	if string.find(id, 'CL:') >= 0 \
 	   or string.find(id, 'GO:') >= 0 \
-	   or string.find(id, 'MA:') >= 0 :
+	   or string.find(id, 'MA:') >= 0 \
+	   or string.find(id, 'MGI:') >= 0 :
 		if id not in mgiLookup:
         		fp.write(r['accID'] + reportlib.TAB + \
 				r['symbol'] + reportlib.TAB + \
