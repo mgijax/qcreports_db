@@ -52,7 +52,7 @@ db.setAutoTranslateBE(False)
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('Invalid "Inferred From" Values in GO Annotations (MGI, GO, ";")' + 2 * reportlib.CRT)
+fp.write('\nInvalid "Inferred From" Values in GO Annotations (MGI, GO, ";")' + 2 * reportlib.CRT)
 rows = 0
 
 # read in all MGI accession ids for Markers (2), Alleles (11)
