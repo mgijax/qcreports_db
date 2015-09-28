@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-0-24
+DATE: 09/28/2015
+STAFF: lec
+CHANGES: TR12070
+1) mgd/VOC_InvalidProperties.py
+
 TAG: qcreports_db-6-0-0-23
 DATE: 09/24/2015
 STAFF: lec

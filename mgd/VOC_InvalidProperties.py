@@ -60,7 +60,7 @@ and a._Object_key = t._Term_key
 and t.isObsolete = 0
 and t._Vocab_key in (4,6,77,102)
 union all
-select a.accID from ACC_Accession a where a._MGIType_key = 2 and a.prefixPart = 'MGI:'
+select a.accID from ACC_Accession a where a._MGIType_key = 2 and a.prefixPart = 'MGI:' and a.preferred = 1
 )
 order by accID
 ''', 'auto')
