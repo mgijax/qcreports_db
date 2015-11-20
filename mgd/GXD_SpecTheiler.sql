@@ -131,6 +131,6 @@ select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel
 from fSpecimens f, mSpecimens m
 where f._Specimen_key = m._Specimen_key
 and f.jnumID != 'J:80502'
-order by mgiID, jnumID
+order by mgiID, jnumID,specimenLabel
 ;
 
