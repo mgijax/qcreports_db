@@ -19,6 +19,9 @@
 #
 # History:
 #
+# lnh 11/20/2015
+#       - TR12134 GXD QC report needs more ordering
+# 
 # sc 01/27/2014
 #	- US175 GXD Anatomy project, include CRE
 #
@@ -111,7 +114,7 @@ where
 	acc._MGIType_key = 38 and
 	acc.prefixPart = 'MGI:'
 order by
-	olin.SCount desc, gs.printname
+	olin.SCount desc, gs.printname,gts.stage 
        ''', 'auto')
 
 for r in results:
