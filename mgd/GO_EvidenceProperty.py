@@ -48,7 +48,7 @@ db.setAutoTranslateBE(False)
 #
 #Set up email contact
 #
-sender = os.environ['GEN_WEBSHARE_EMAIL']
+sender = os.environ['USER']
 receiver = "mgi-go@jax.org"
 report_url= os.environ['REPORTS_URL']+os.environ['QCOUTPUTDIR'] + '/GO_EvidenceProperty.rpt'
 
