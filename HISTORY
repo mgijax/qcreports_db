@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-1-2
+DATE: 11/20/2015
+STAFF: dbm
+CHANGES: 
+1) mgd/GO_EvidenceProperty.py: Replace $GEN_WEBSHARE_EMAIL with $USER for email
+
 TAG: qcreports_db-6-0-1-1
 DATE: 10/13/2015
 STAFF: lec
