@@ -31,6 +31,10 @@
 #
 # History:
 #
+# lnh 11/20/2015
+#       - TR12134 GXD QC report needs more ordering
+#         sort by structure
+#
 # lec	03/11/2014
 #	- TR11597/sort by mgiID desc
 #
@@ -171,7 +175,7 @@ results = db.sql('''
          and ac2._LogicalDB_key = 1 
          and ac2._MGIType_key = 8 
          and ac2.prefixPart = 'MGI:' 
-         order by mgiID desc
+         order by mgiID desc,structure
 	 ''', 'auto')
 
 #
