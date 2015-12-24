@@ -50,7 +50,7 @@ db.setAutoTranslateBE(False)
 #
 sender = os.environ['USER']
 receiver = "mgi-go@jax.org"
-report_url= os.environ['REPORTS_URL']+os.environ['QCOUTPUTDIR'] + '/GO_EvidenceProperty.rpt'
+report_url= os.environ['REPORTS_URL'] + os.environ['QCOUTPUTDIR'] + '/GO_EvidenceProperty.rpt'
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
