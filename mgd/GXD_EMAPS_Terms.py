@@ -58,14 +58,14 @@ for r in results:
     emapsSynDict[termKey].append(synonym)
 
 # get EMAPS ID, TS and term name 
-results = db.sql('''select t._Term_key, t.term, a.accid as emapsID, 
-	emaps.stage
-    from VOC_Term t, ACC_Accession a, VOC_Term_EMAPS emaps
+results = db.sql('''select t._Term_key, t.term, a.accid as emapsID, tt.stage
+    from VOC_Term t, ACC_Accession a, VOC_Term_EMAPS emaps, GXD_TheilerStage tt
     where t._Vocab_key = 91
     and t._Term_key = a._Object_key
     and a._MGIType_key = 13
     and a._LogicalDB_key = 170
     and t._Term_key = emaps._Term_key
+    and emaps._Stage_key = tt._Stage_key
     order by t.term''', 'auto')
 
 numResults = len(results)
