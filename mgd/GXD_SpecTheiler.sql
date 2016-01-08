@@ -2,14 +2,12 @@
 
 select distinct i._Specimen_key, t.stage
 INTO TEMPORARY TABLE temp1
-from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t,
-GXD_StructureName sn
+from GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t
 where i._Result_key = r._Result_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
-and s._StructureName_key = sn._StructureName_key
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
 and not (t.stage = 28 
-and sn.structure in ('placenta','decidua','decidua basalis','decidua capsularis'))
+and s.term in ('placenta','decidua','decidua basalis','decidua capsularis'))
 ;
 
 select distinct _Specimen_key 
@@ -20,15 +18,14 @@ group by _Specimen_key having count(*) > 1
 
 select distinct i._GelLane_key, t.stage
 INTO TEMPORARY TABLE temp3
-from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t,
-GXD_StructureName sn
+from GXD_GelLane i, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t
 where i.age not like '%-%'
 and i.age not like '%,%'
 and i._GelLane_key = r._GelLane_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
-and s._StructureName_key = sn._StructureName_key
-and not (t.stage = 28 and sn.structure in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium'))
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
+and not (t.stage = 28 
+and s.term in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium'))
 ;
 
 select distinct _GelLane_key 

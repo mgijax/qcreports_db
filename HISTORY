@@ -1,3 +1,20 @@
+TAG: qcreports_db-tr12223-?
+DATE: 01/08/2016
+STAFF: lec
+CHANGES:
+1) TR12223/gxd anatomy II
+obsoelte:
+GXD_Transgenic.rpt
+GXD_EMAPS_MappingChecks.sql
+GXD_EMAPS_MappingAdUnmappedChecks.rpt
+GXD_EMAPS_MappingNameChecks.rpt
+GXD_Mouse_Developmental_Anatomy.rpt
+change:
+GXD_EMAPS_Terms.py
+GXD_SpecTheilerAge.py
+GXD_SpecNoAge.sql
+GXD_SpecTheiler.sql
+
 TAG: qcreports_db-tr12223-BP
 DATE: 01/08/2016
 STAFF: lec

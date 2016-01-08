@@ -15,6 +15,9 @@
 #
 # History:
 #
+# 01/08/2016	lec
+#	- TR12223/gxd anatomy II
+#
 # 03/11/2014	lec
 #	- TR11597/remove J:177549/EuReGene
 #

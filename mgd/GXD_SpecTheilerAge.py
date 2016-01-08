@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	01/08/2016
+#	- TR12223/gxd anatomy II
+#
 # lec	10/27/2014
 #	- add 'stage' to output so user can clearly see "duplicate" entries
 #
@@ -113,14 +116,13 @@ db.sql('''
 	   t.stage, t.dpcMin, t.dpcMax 
     into temporary table temp1 
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
-	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
+	 GXD_ISResultStructure i, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
 	  a._Refs_key not in (154591) and 
 	  a._Assay_key = s._Assay_key and 
 	  s._Specimen_key = r._Specimen_key and 
           r._Result_key = i._Result_key and 
-          i._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          i._Stage_key = t._Stage_key and 
           s.age like 'embryonic day%' and 
 	  t.stage != 28 
 	''', None)
@@ -134,19 +136,17 @@ db.sql('''
 	   s.specimenLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
-	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
+	 GXD_ISResultStructure i, VOC_Term c, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
 	  a._Refs_key not in (154591) and 
 	  a._Assay_key = s._Assay_key and 
           s._Specimen_key = r._Specimen_key and 
           r._Result_key = i._Result_key and 
-          i._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          i._EMAPA_Term_key = c._Term_key and 
+          i._Stage_key = t._Stage_key and 
           s.age like 'embryonic%' 
 	  and t.stage = 28 
-	  and not exists (select 1 from GXD_StructureName sn 
-	  where c._Structure_key = sn._Structure_key 
-	  and sn.structure in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus'))
+	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus')
 	''', None)
 
 #
@@ -157,13 +157,11 @@ db.sql('''
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
-    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, 
-	 GXD_Structure c, GXD_TheilerStage t 
+    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_TheilerStage t 
     where a._Refs_key not in (154591) and 
 	  a._Assay_key = g._Assay_key and 
           g._GelLane_key = l._GelLane_key and 
-          l._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          l._Stage_key = t._Stage_key and 
           g.age like 'embryonic day%' and 
 	  g.age not like '%-%' 
 	  and t.stage != 28 
@@ -176,18 +174,16 @@ db.sql('''
     insert into temp1 
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, t.stage, t.dpcMin, t.dpcMax 
-    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t 
+    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, VOC_Term c, GXD_TheilerStage t 
     where a._Refs_key not in (154591) and 
 	  a._Assay_key = g._Assay_key and 
           g._GelLane_key = l._GelLane_key and 
-          l._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          l._EMAPA_Term_key = c._Term_key and 
+          l._Stage_key = t._Stage_key and 
           g.age like 'embryonic%' 
 	  and g.age not like '%-%' 
 	  and t.stage = 28 
-	  and not exists (select 1 from GXD_StructureName sn 
-	  where c._Structure_key = sn._Structure_key 
-	  and sn.structure in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus'))
+	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus')
 	''', None)
 
 #
