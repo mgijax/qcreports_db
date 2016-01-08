@@ -28,6 +28,9 @@
 #
 # History:
 #
+# lec	01/08/2016
+#	- TR12223/gxd anatomy II
+#
 # lec	05/01/2008
 #	- new; TR 8775; copy from GXD
 #
