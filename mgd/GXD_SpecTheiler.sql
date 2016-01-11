@@ -132,14 +132,14 @@ and irs._EMAPA_Term_key = m._Term_key
 
 \echo ''
 \echo 'InSitu Specimens and Gel Lanes with > 1 Sex' 
-\echo '(excludes J:80502, J:171409)'
+\echo '(excludes J:80502)'
 \echo ''
 
 /* report all specimens with annotated to both male and female structures */
 select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel
 from fSpecimens f, mSpecimens m
 where f._Specimen_key = m._Specimen_key
-and f.jnumID not in ('J:80502', 'J:171409')
+and f.jnumID not in ('J:80502')
 order by mgiID, jnumID,specimenLabel
 ;
 
