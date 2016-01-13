@@ -84,7 +84,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'GXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], '\nGXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
 
 fp.write('1. insitu specimens with "embryonic day" age; exclude TS 28\n')
 fp.write('2. insitu specimens with "embryonic" age; include TS 28 for certain structures only\n')
@@ -104,7 +104,7 @@ fp.write('specimen label/gel lane.\n\n')
 fp.write('for example:  if a lane has "embryonic day 0.5,22" and structures from Stage 1 and Stage 28,\n')
 fp.write('then dpcMin = dpcMin from Stage 1\n')
 fp.write('then dpcMax = dpcMax from Stage 28\n')
-fp.write('so the age values (0.5 and 22) for this specimen must be between 0.0 and 1500.00\n')
+fp.write('so the age values (0.5 and 22) for this specimen must be between 0.0 and 1500.00\n\n')
 
 #
 #
@@ -272,7 +272,7 @@ for r in results:
        	s = s + r['mgi'] + TAB + r['jnum'] + TAB + mgi_utils.prvalue(r['label']) + TAB + str(r['stage']) + CRT
        	count = count + 1
 
-fp.write(CRT + 'Number of specimens: ' + str(count) + 2*CRT)
+fp.write('Number of specimens: ' + str(count) + 2*CRT)
 fp.write(s)
 
 reportlib.finish_nonps(fp)
