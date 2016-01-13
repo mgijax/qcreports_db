@@ -1,12 +1,11 @@
 select distinct i._Specimen_key, t.stage
 INTO TEMPORARY TABLE temp1
-from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t,
-GXD_StructureName sn
+from GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t
 where i._Result_key = r._Result_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
-and s._StructureName_key = sn._StructureName_key
-and not (t.stage = 28 and (sn.structure = 'placenta' or sn.structure = 'decidua'))
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
+and not (t.stage = 28 
+and (s.term = 'placenta' or s.term = 'decidua'))
 ;
 
 select distinct _Specimen_key 
@@ -30,39 +29,51 @@ and a._AssayType_key in (10,11)
 /* Added 8/16/2007 TR8389 */
 
 /* get all children of 'reproductive system' */
-select distinct sc._Descendent_key
+SELECT DISTINCT c._DescendentObject_key as _Term_key
 INTO TEMPORARY TABLE repChild
-from GXD_StructureName sn, GXD_StructureClosure sc
-where sn.structure = 'reproductive system'
-and sn._Structure_key = sc._Structure_key
+FROM VOC_Term t, DAG_Closure c, VOC_Term tt
+WHERE t._Vocab_key = 90
+  AND t._Term_key = c._AncestorObject_key
+  AND c._MGIType_key = 13
+  AND c._DescendentObject_key = tt._Term_key
+  AND t.term = 'reproductive system'
+UNION
+SELECT DISTINCT t._Term_key
+FROM VOC_TERM t
+WHERE t._Vocab_key = 90 
+  AND t.term = 'reproductive system'
 ;
 
 /* get all children of 'female' */
-select distinct sn._Structure_key
+SELECT DISTINCT c._DescendentObject_key as _Term_key
 INTO TEMPORARY TABLE femaleChild
-from repChild c, GXD_StructureName sn
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female reproductive system'
-union
-select distinct sc._Descendent_key
-from repChild c, GXD_StructureName sn, GXD_StructureClosure sc
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female reproductive system'
-and sn._Structure_key = sc._Structure_key
+FROM VOC_Term t, DAG_Closure c, VOC_Term tt
+WHERE t._Vocab_key = 90
+  AND t._Term_key = c._AncestorObject_key
+  AND c._MGIType_key = 13
+  AND c._DescendentObject_key = tt._Term_key
+  AND t.term = 'female reproductive system'
+UNION
+SELECT DISTINCT t._Term_key
+FROM VOC_TERM t
+WHERE t._Vocab_key = 90 
+  AND t.term = 'female reproductive system'
 ;
 
 /* get all children of 'male' */
-select distinct sn._Structure_key
+SELECT DISTINCT c._DescendentObject_key as _Term_key
 INTO TEMPORARY TABLE maleChild
-from repChild c, GXD_StructureName sn
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male reproductive system'
-union
-select distinct sc._Descendent_key
-from repChild c, GXD_StructureName sn, GXD_StructureClosure sc
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male reproductive system'
-and sn._Structure_key = sc._Structure_key
+FROM VOC_Term t, DAG_Closure c, VOC_Term tt
+WHERE t._Vocab_key = 90
+  AND t._Term_key = c._AncestorObject_key
+  AND c._MGIType_key = 13
+  AND c._DescendentObject_key = tt._Term_key
+  AND t.term = 'male reproductive system'
+UNION
+SELECT DISTINCT t._Term_key
+FROM VOC_TERM t, VOC_Term_EMAPA emapa
+WHERE t._Vocab_key = 90 
+  AND t.term = 'male reproductive system'
 ;
 
 /* get info about 'reproductive system;female' and children */
@@ -73,7 +84,7 @@ where s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
-and irs._Structure_key = f._Structure_key
+and irs._EMAPA_Term_key = f._Term_key
 ;
 
 /* get info about 'reproductive system;male' and children */
@@ -84,7 +95,7 @@ where s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
-and irs._Structure_key = m._Structure_key
+and irs._EMAPA_Term_key = m._Term_key
 ;
 
 \echo ''
