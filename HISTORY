@@ -9,6 +9,7 @@ GXD_EMAPS_MappingChecks.sql
 GXD_EMAPS_MappingAdUnmappedChecks.rpt
 GXD_EMAPS_MappingNameChecks.rpt
 GXD_Mouse_Developmental_Anatomy.rpt
+
 change:
 GXD_EMAPS_Terms.py
 GXD_SpecNoAge.sql
@@ -16,6 +17,8 @@ GXD_SpecTheiler.sql
 GXD_SpecTheilerAge.py
 GXD_SameStructure.py
 RECOMB_SameStructure.py
+GXD_ExpPresNotPres.py
+RECOMB_ExpPresNotPres.py
 
 TAG: qcreports_db-tr12223-BP
 DATE: 01/08/2016
