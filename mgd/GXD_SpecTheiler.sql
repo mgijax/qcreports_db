@@ -60,51 +60,50 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 
 /* Added 8/16/2007 TR8389 */
 
-/* get all children of 'reproductive system' */
-SELECT DISTINCT c._DescendentObject_key as _Term_key
-INTO TEMPORARY TABLE repChild
-FROM VOC_Term t, DAG_Closure c, VOC_Term tt
-WHERE t._Vocab_key = 90
-  AND t._Term_key = c._AncestorObject_key
+/* EMAPA _term_key & _stage_key as descendent terms */
+-- _AncetorTerm_key, _Term_key, _Stage_key
+-- Descendents
+SELECT emaps._Emapa_Term_key as _AncestorTerm_key, 
+d_emaps._Emapa_Term_key as _Term_key, 
+emaps._Stage_key
+INTO TEMPORARY TABLE emapaChild
+FROM VOC_Term_Emaps emaps, DAG_Closure c, VOC_Term_Emaps d_emaps
+WHERE emaps._Term_key = c._AncestorObject_key
   AND c._MGIType_key = 13
-  AND c._DescendentObject_key = tt._Term_key
-  AND t.term = 'reproductive system'
+  AND c._DescendentObject_key = d_emaps._term_key
 UNION
-SELECT DISTINCT t._Term_key
-FROM VOC_TERM t
-WHERE t._Vocab_key = 90 
+-- Top Ancestors
+SELECT emaps._Emapa_Term_key as _AncestorTerm_key, 
+emaps._Emapa_Term_key as _Term_key, 
+emaps._Stage_key
+FROM VOC_Term_Emaps emaps
+;
+
+create index emapaChild_ancestorterm_key_idx on emapaChild(_AncestorTerm_key);
+create index emapaChild_stage_key_idx on emapaChild(_Stage_key);
+
+
+/* get all children of 'reproductive system' */
+SELECT DISTINCT ec._Term_key, ec._Stage_key
+INTO TEMPORARY TABLE repChild
+FROM VOC_Term t, emapaChild ec
+WHERE t._Term_key = ec._AncestorTerm_key
   AND t.term = 'reproductive system'
 ;
 
 /* get all children of 'female' */
-SELECT DISTINCT c._DescendentObject_key as _Term_key
+SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE femaleChild
-FROM VOC_Term t, DAG_Closure c, VOC_Term tt
-WHERE t._Vocab_key = 90
-  AND t._Term_key = c._AncestorObject_key
-  AND c._MGIType_key = 13
-  AND c._DescendentObject_key = tt._Term_key
-  AND t.term = 'female reproductive system'
-UNION
-SELECT DISTINCT t._Term_key
-FROM VOC_TERM t
-WHERE t._Vocab_key = 90 
+FROM VOC_Term t, emapaChild ec
+WHERE t._Term_key = ec._AncestorTerm_key
   AND t.term = 'female reproductive system'
 ;
 
 /* get all children of 'male' */
-SELECT DISTINCT c._DescendentObject_key as _Term_key
+SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE maleChild
-FROM VOC_Term t, DAG_Closure c, VOC_Term tt
-WHERE t._Vocab_key = 90
-  AND t._Term_key = c._AncestorObject_key
-  AND c._MGIType_key = 13
-  AND c._DescendentObject_key = tt._Term_key
-  AND t.term = 'male reproductive system'
-UNION
-SELECT DISTINCT t._Term_key
-FROM VOC_TERM t, VOC_Term_EMAPA emapa
-WHERE t._Vocab_key = 90 
+FROM VOC_Term t, emapaChild ec
+WHERE t._Term_key = ec._AncestorTerm_key
   AND t.term = 'male reproductive system'
 ;
 
@@ -117,6 +116,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
 and irs._EMAPA_Term_key = f._Term_key
+and irs._Stage_key = f._Stage_key
 ;
 
 /* get info about 'reproductive system;male' and children */
@@ -128,6 +128,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
 and irs._EMAPA_Term_key = m._Term_key
+and irs._Stage_key = m._Stage_key
 ;
 
 \echo ''
