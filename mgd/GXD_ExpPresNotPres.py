@@ -56,7 +56,7 @@ import os
 import reportlib
 import db
 
-db.setTrace()
+#db.setTrace()
 db.setAutoTranslate(False)
 db.setAutoTranslateBE(False)
 
