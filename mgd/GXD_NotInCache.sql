@@ -14,6 +14,7 @@ where a._Assay_key = e._Assay_key)
 select mgiID, jnumID, assayType
 from missing m, GXD_Assay_View v
 where m._Assay_key = v._Assay_key
+order by jnumID, assayType, mgiID
 ;
 
 \echo ''
@@ -27,6 +28,7 @@ where m._Assay_key = a._Assay_key
 and a.isGelAssay = 1
 and not exists (select gl.* from GXD_GelLaneStructure_View gl
 where a._Assay_key = gl._Assay_key)
+order by jnumID, assayType, mgiID
 ;
 
 \echo ''
@@ -41,6 +43,7 @@ and a.isGelAssay = 0
 and not exists (select s.* from GXD_Specimen s, GXD_InSituResult r
 where a._Assay_key = s._Assay_key
 and s._Specimen_key = r._Specimen_key)
+order by jnumID, assayType, mgiID
 ;
 
 \echo ''
@@ -56,6 +59,7 @@ and not exists (select s.* from GXD_Specimen s, GXD_InSituResult r, GXD_ISResult
 where a._Assay_key = s._Assay_key
 and s._Specimen_key = r._Specimen_key
 and r._Result_key = rs._Result_key)
+order by jnumID, assayType, mgiID
 ;
 
 select r._Result_key, r._Specimen_key
@@ -75,6 +79,7 @@ from imissingstructs r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
+order by jnumID, mgiID, specimenLabel
 ;
 
 select r._Specimen_key
@@ -96,6 +101,7 @@ from imissingresults r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
+order by jnumID, mgiID, specimenLabel
 ;
 
 select g._GelLane_key
@@ -116,6 +122,7 @@ from gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
+order by jnumID, mgiID, laneLabel
 ;
 
 select g._GelLane_key
@@ -136,5 +143,6 @@ from gmissingbands r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
+order by jnumID, mgiID, laneLabel
 ;
 

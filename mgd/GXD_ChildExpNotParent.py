@@ -109,7 +109,7 @@ db.sql('''
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
 	     GXD_Specimen sp, GXD_Specimen sp2,
              GXD_Assay a, GXD_Assay a2,
-             VOC_TERM t
+             VOC_Term t
         WHERE r._Strength_key = 1 
               and r._Result_key = s._Result_key 
               and r._Specimen_key = sp._Specimen_key 

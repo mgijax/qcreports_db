@@ -58,24 +58,23 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 ;
 
-/* Added 8/16/2007 TR8389 */
+-- _EMAPA_term_key & _Stage_key as descendent terms
+-- 	_AncetorTerm_key, _Term_key, _Stage_key
+-- 	Descendents
 
-/* EMAPA _term_key & _stage_key as descendent terms */
--- _AncetorTerm_key, _Term_key, _Stage_key
--- Descendents
-SELECT emaps._Emapa_Term_key as _AncestorTerm_key, 
-d_emaps._Emapa_Term_key as _Term_key, 
-emaps._Stage_key
+SELECT emaps._EMAPA_Term_key as _AncestorTerm_key, 
+	d_emaps._EMAPA_Term_key as _Term_key, 
+	emaps._Stage_key
 INTO TEMPORARY TABLE emapaChild
-FROM VOC_Term_Emaps emaps, DAG_Closure c, VOC_Term_Emaps d_emaps
+FROM VOC_Term_EMAPS emaps, DAG_Closure c, VOC_Term_EMAPS d_emaps
 WHERE emaps._Term_key = c._AncestorObject_key
   AND c._MGIType_key = 13
   AND c._DescendentObject_key = d_emaps._term_key
 UNION
 -- Top Ancestors
-SELECT emaps._Emapa_Term_key as _AncestorTerm_key, 
-emaps._Emapa_Term_key as _Term_key, 
-emaps._Stage_key
+SELECT emaps._EMAPA_Term_key as _AncestorTerm_key, 
+	emaps._EMAPA_Term_key as _Term_key, 
+	emaps._Stage_key
 FROM VOC_Term_Emaps emaps
 ;
 
