@@ -97,7 +97,7 @@ db.sql('''
         FROM GXD_InSituResult r, GXD_InSituResult r2, 
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
 	     GXD_Specimen sp, GXD_Specimen sp2,
-             GXD_Assay a, GXD_Assay a2,
+             GXD_Assay a,
              DAG_Closure c, VOC_Term_EMAPS emaps_p, VOC_Term_EMAPS emaps_c
         WHERE r._Strength_key = 1 
               and r._Result_key = s._Result_key 
@@ -108,8 +108,6 @@ db.sql('''
               and r2._Result_key = s2._Result_key 
               and r2._Specimen_key = sp2._Specimen_key 
               and sp._Assay_key = sp2._Assay_key 
-              and sp2._Assay_key = a2._Assay_key 
-	      and a2._AssayType_key in (1,2,3,4,5,6,8,9) 
               and sp._Genotype_key = sp2._Genotype_key 
               and sp.age = sp2.age 
 	      and s._Stage_key = s2._Stage_key
