@@ -10,8 +10,6 @@
 # no expression, but the children used in the same assay have been annotated
 # as having expression.
 #
-# Exclude J:80501, J:80502, J:91257, J:93300, J:101679, J:122989
-#
 # Columns to display:
 #    1) J-Number of the assay
 #    2) MGI ID of the assay
@@ -59,13 +57,9 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-excluded = "'J:80501','J:80502','J:91257','J:93300','J:101679','J:122989','J:153498','J:162220','J:17140'"
-
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('Excluded J-Numbers: J:80501, J:80502, J:91257, J:93300, J:101679, J:122989')
-fp.write('                    J:153498, J:162220, J:171409')
-
+fp.write('Excluded J-Numbers: J:80501,J:80502,J:91257,J:93300,J:101679,J:122989,J:153498,J:162220,J:171409')
 fp.write(2*CRT)
 fp.write(string.ljust('J-Number', 12))
 fp.write(SPACE)
@@ -152,7 +146,7 @@ results = db.sql('''
 	      and e._Stage_key = t._Stage_key
 	      order by mgiID desc, t.stage, pterm
 	''', 'auto')
-fp.write('\n(%d rows affected)\n' % (len(results)))
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 for r in results:
 	fp.write(string.ljust(r['jnumID'], 12))

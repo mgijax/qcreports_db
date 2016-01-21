@@ -59,13 +59,8 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-excluded = "'J:80501','J:80502','J:91257','J:93300','J:101679','J:122989'"
-
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('Excluded J-Numbers: J:80501, J:80502, J:91257, J:93300, J:101679, J:122989')
-
-fp.write(2*CRT)
 fp.write(string.ljust('J-Number', 12))
 fp.write(SPACE)
 fp.write(string.ljust('MGI ID', 12))
@@ -123,7 +118,6 @@ db.sql('''
 	      and c._MGIType_key = 13
 	      and c._DescendentObject_key = emaps_c._Term_key
 	      and emaps_c._EMAPA_Term_key = s2._EMAPA_Term_key
-	      and a._Refs_key not in (81462,81463,92242,94290,102744,124081)
 	''', None)
 
 db.sql('create index idx1 on work(_Specimen_key)', None)
@@ -138,7 +132,7 @@ results = db.sql('''
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
         WHERE e._Assay_key = w._Assay_key
 	      and e._Specimen_key = w._Specimen_key 
-	      and e.isForGXD = 1 
+	      and e.isForGXD = 0 
               and e.expressed = 1 
               and e._Assay_key = a._Object_key 
               and a._MGIType_key = 8 
@@ -151,7 +145,7 @@ results = db.sql('''
 	      and e._Stage_key = t._Stage_key
 	      order by mgiID desc, t.stage, pterm
 	''', 'auto')
-fp.write('Row Count: %s\n\n' % (str(len(results))))
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 for r in results:
 	fp.write(string.ljust(r['jnumID'], 12))
