@@ -24,7 +24,7 @@
 # Originally requested as a custom SQL (TR 8073).
 #
 # Usage:
-#       GXD_ChildExpNotParent.py
+#       RECOMB_ChildExpNotParent.py
 #
 # Notes:
 #
