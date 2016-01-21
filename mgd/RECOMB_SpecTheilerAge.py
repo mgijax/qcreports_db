@@ -47,10 +47,11 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], '\nRecombinant/transgenic specimens with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], '\nRecombinant/transgenic specimens with incompatible Theiler stages and ages', \
+	os.environ['QCOUTPUTDIR'])
 
 #
-# insitu specimens with "embryonic day" age; exclude TS 28
+# insitu specimens with "embryonic day" age; exclude TS 27,28
 #
 db.sql('''
     select s._Assay_key, s._Specimen_key, s.age, s.specimenLabel as label, t.stage, t.dpcMin, t.dpcMax 
@@ -64,7 +65,7 @@ db.sql('''
           i._EMAPA_Term_key = c._Term_key and 
           i._Stage_key = t._Stage_key and 
           s.age like 'embryonic day%' 
-	  and t.stage != 28 
+	  and t.stage not in (27,28)
   ''', None)
 
 #

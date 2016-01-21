@@ -84,12 +84,13 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], '\nGXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], '\nGXD Specimens and Gel Lanes with incompatible Theiler stages and ages', \
+	os.environ['QCOUTPUTDIR'])
 
-fp.write('1. insitu specimens with "embryonic day" age; exclude TS 28\n')
+fp.write('1. insitu specimens with "embryonic day" age; exclude TS 27,28\n')
 fp.write('2. insitu specimens with "embryonic" age; include TS 28 for certain structures only\n')
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
-fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 28\n')
+fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 27,28\n')
 fp.write('4. gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only\n')
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
 fp.write('5. excludes J:153498/Eurexpress\n\n')
@@ -108,7 +109,7 @@ fp.write('so the age values (0.5 and 22) for this specimen must be between 0.0 a
 
 #
 #
-# insitu specimens with "embryonic day" age; exclude TS 28
+# insitu specimens with "embryonic day" age; exclude TS 27,28
 #
 db.sql('''
     select s._Assay_key, s._Specimen_key, s.age, 
@@ -124,7 +125,7 @@ db.sql('''
           r._Result_key = i._Result_key and 
           i._Stage_key = t._Stage_key and 
           s.age like 'embryonic day%' and 
-	  t.stage != 28 
+	  t.stage not in (27, 28)
 	''', None)
 
 #
@@ -150,7 +151,7 @@ db.sql('''
 	''', None)
 
 #
-# gel lanes with "embryonic day" age; no age ranges; exclude TS 28
+# gel lanes with "embryonic day" age; no age ranges; exclude TS 27,28
 #
 db.sql('''
     insert into temp1 
@@ -164,7 +165,7 @@ db.sql('''
           l._Stage_key = t._Stage_key and 
           g.age like 'embryonic day%' and 
 	  g.age not like '%-%' 
-	  and t.stage != 28 
+	  and t.stage not in (27, 28)
 	''', None)
 
 #

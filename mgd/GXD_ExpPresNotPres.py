@@ -18,7 +18,7 @@
 #       .) Absence of staining is when strength is "Absent".  Presence
 #          of staining is anything other than "Absent".
 #       .) Exclude assays with any of these references: J:46439,
-#          J:50869, J:91257, J:93500, J:93300, J:99307.
+#          J:50869, J:91257, J:93500, J:93300, J:99307, J:122989, J:171409
 #
 #       The report should have the following columns:
 #
@@ -77,9 +77,10 @@ reportTitle = 'Assays in which the same anatomical structure is annotated as hav
 fp = reportlib.init(sys.argv[0], title = reportTitle, outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('Excluded:\n')
-fp.write('\tJ:46439, J:50869, J:91257, J:93500, J:93300, J:99307, J:174767\n\n')
+fp.write('\tJ:46439, J:50869, J:91257, J:93500, J:93300, J:99307, J:174767, J:122989, J:171409\n')
+fp.write('\treproductive system, 16-19\n\n')
 
-fp.write('Specimens must have the same genotype and age; reproductive system structures are excluded\n\n')
+fp.write('Specimens must have the same genotype and age\n\n')
 fp.write('J Number   ')
 fp.write('MGI ID        ')
 fp.write('Stage:EMAPA' + CRT)
@@ -94,57 +95,29 @@ db.sql('''
 	from ACC_Accession a 
         where a._MGIType_key = 1 
         and a._LogicalDB_key = 1 
-        and a.accID in ('J:46439','J:50869','J:91257','J:93500','J:93300','J:99307', 'J:174767')
+        and a.accID in 
+		('J:46439','J:50869','J:91257','J:93500','J:93300','J:99307', 'J:174767', 'J:122989', 'J:171409')
 	''', None)
 db.sql('create index excludeRefs_idx1 on excludeRefs(_Refs_key)', None)
 
-#
-# structures of male/female reproductive systems are to be excluded
-# TS16;urogenital system;gonadal component 
-# TS17;urogenital system;gonadal component
-# TS18;gonad primordium
-# TS19;reproductive system
-# TS20;reproductive system
-# TS21;reproductive system
-# TS22;reproductive system
-# TS23;reproductive system
-# TS24;reproductive system
-# TS25;reproductive system
-# TS26;reproductive system
-# TS28;reproductive system
-
 db.sql('''
-    SELECT DISTINCT c._DescendentObject_key as _Term_key, s._Stage_key
+    SELECT DISTINCT s._EMAPA_Term_key, s._Stage_key
     INTO TEMPORARY TABLE excludeStructs
     FROM VOC_Term t, DAG_Closure c, VOC_Term tt, VOC_Term_EMAPS s
-    WHERE t._Vocab_key = 90
+    WHERE t._Vocab_key = 91
       AND t._Term_key = c._AncestorObject_key
       AND c._MGIType_key = 13
       AND c._DescendentObject_key = tt._Term_key
-      AND tt._Term_key = s._EMAPA_Term_key
-      AND
-      (
-      (t.term = 'reproductive system' AND s._Stage_key in (19,20,21,22,23,24,25,26,28))
-      OR
-      (t.term = 'urogenital system' AND s._Stage_key in (16,17))
-      OR
-      (t.term = 'gonad primordium' AND s._Stage_key in (18))
-      )
+      AND tt._Term_key = s._Term_key
+      AND t.term = 'reproductive system' AND s._Stage_key between 16 and 19
     UNION 
-    SELECT DISTINCT t._Term_key, s._Stage_key
-    FROM VOC_TERM t, VOC_Term_EMAPS s
-    WHERE t._Vocab_key = 90
-      AND t._Term_key = s._EMAPA_Term_key
-      AND
-      (
-      (t.term = 'reproductive system' AND s._Stage_key in (19,20,21,22,23,24,25,26,28))
-      OR
-      (t.term = 'urogenital system' AND s._Stage_key in (16,17))
-      OR
-      (t.term = 'gonad primordium' AND s._Stage_key in (18))
-      )
+    SELECT DISTINCT s._EMAPA_Term_key, s._Stage_key
+    FROM VOC_Term t, VOC_Term_EMAPS s
+    WHERE t._Vocab_key = 91
+      AND t._Term_key = s._Term_key
+      AND t.term = 'reproductive system' AND s._Stage_key between 16 and 19
 	''', None)
-db.sql('create index excludeStructs_idx1 on excludeStructs(_Term_key)', None)
+db.sql('create index excludeStructs_idx1 on excludeStructs(_EMAPA_Term_key)', None)
 db.sql('create index excludeStructs_idx2 on excludeStructs(_Stage_key)', None)
 
 #
@@ -157,7 +130,7 @@ db.sql('''
 	where e.isForGXD = 1 
 	and e.expressed = 1 
 	and not exists (select 1 from excludeStructs r 
-		where e._EMAPA_Term_key = r._Term_key and e._Stage_key = r._Stage_key) 
+		where e._EMAPA_Term_key = r._EMAPA_Term_key and e._Stage_key = r._Stage_key) 
 	and not exists (select 1 from excludeRefs r where e._Refs_key = r._Refs_key)
 	''', None)
 db.sql('create index expressed_idx1 on expressed(_Assay_key)', None)

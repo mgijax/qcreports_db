@@ -69,13 +69,13 @@ INTO TEMPORARY TABLE emapaChild
 FROM VOC_Term_EMAPS emaps, DAG_Closure c, VOC_Term_EMAPS d_emaps
 WHERE emaps._Term_key = c._AncestorObject_key
   AND c._MGIType_key = 13
-  AND c._DescendentObject_key = d_emaps._term_key
+  AND c._DescendentObject_key = d_emaps._Term_key
 UNION
 -- Top Ancestors
 SELECT emaps._EMAPA_Term_key as _AncestorTerm_key, 
 	emaps._EMAPA_Term_key as _Term_key, 
 	emaps._Stage_key
-FROM VOC_Term_Emaps emaps
+FROM VOC_Term_EMAPS emaps
 ;
 
 create index emapaChild_ancestorterm_key_idx on emapaChild(_AncestorTerm_key);
