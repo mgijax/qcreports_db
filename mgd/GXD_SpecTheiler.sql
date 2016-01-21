@@ -58,6 +58,7 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 ;
 
+--
 -- _EMAPA_term_key & _Stage_key as descendent terms
 -- 	_AncetorTerm_key, _Term_key, _Stage_key
 -- 	Descendents
@@ -81,13 +82,12 @@ FROM VOC_Term_EMAPS emaps
 create index emapaChild_ancestorterm_key_idx on emapaChild(_AncestorTerm_key);
 create index emapaChild_stage_key_idx on emapaChild(_Stage_key);
 
-
 /* get all children of 'reproductive system' */
 SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE repChild
 FROM VOC_Term t, emapaChild ec
 WHERE t._Term_key = ec._AncestorTerm_key
-  AND t.term = 'reproductive system'
+AND t.term = 'reproductive system'
 ;
 
 /* get all children of 'female' */
@@ -95,7 +95,7 @@ SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE femaleChild
 FROM VOC_Term t, emapaChild ec
 WHERE t._Term_key = ec._AncestorTerm_key
-  AND t.term = 'female reproductive system'
+AND t.term = 'female reproductive system'
 ;
 
 /* get all children of 'male' */
@@ -103,7 +103,7 @@ SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE maleChild
 FROM VOC_Term t, emapaChild ec
 WHERE t._Term_key = ec._AncestorTerm_key
-  AND t.term = 'male reproductive system'
+AND t.term = 'male reproductive system'
 ;
 
 /* get info about 'reproductive system;female' and children */
