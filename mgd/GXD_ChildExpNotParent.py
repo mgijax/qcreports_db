@@ -125,8 +125,12 @@ db.sql('create index idx2 on work(parentKey)', None)
 db.sql('create index idx3 on work(childKey)', None)
 
 results = db.sql('''
-	SELECT DISTINCT a.accID as mgiID, j.accID as jnumID, t.stage, 
-		substring(d.term,1,50) as pterm, substring(d2.term,1,50) as cterm
+	SELECT DISTINCT 
+	       a.accID as mgiID, 
+	       j.accID as jnumID, 
+	       t.stage, 
+	       substring(d.term,1,50) as pterm, 
+	       substring(d2.term,1,50) as cterm
         FROM work w, GXD_Expression e, 
              ACC_Accession a, ACC_Accession j, 
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
