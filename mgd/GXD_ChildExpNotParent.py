@@ -88,7 +88,8 @@ fp.write(CRT)
 #
 
 db.sql('''
-	SELECT a._Assay_key,
+	SELECT DISTINCT
+	       a._Assay_key,
 	       r._Specimen_key, 
                s._EMAPA_Term_key as parentKey, 
 	       s._Stage_key,
@@ -124,7 +125,7 @@ db.sql('create index idx2 on work(parentKey)', None)
 db.sql('create index idx3 on work(childKey)', None)
 
 results = db.sql('''
-	SELECT distinct a.accID as mgiID, j.accID as jnumID, t.stage, 
+	SELECT DISTINCT a.accID as mgiID, j.accID as jnumID, t.stage, 
 		substring(d.term,1,50) as pterm, substring(d2.term,1,50) as cterm
         FROM work w, GXD_Expression e, 
              ACC_Accession a, ACC_Accession j, 
