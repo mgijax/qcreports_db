@@ -178,7 +178,7 @@ results = db.sql('''
 	''', 'auto')
 
 for r in results:
-    fp.write(r['value'] + reportlib.TAB + \
+    fp.write(r['inferredFrom'] + reportlib.TAB + \
              r['accID'] + reportlib.TAB + \
              r['symbol'] + reportlib.CRT)
 
