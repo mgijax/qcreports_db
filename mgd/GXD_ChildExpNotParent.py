@@ -83,14 +83,13 @@ fp.write(50*'-')
 fp.write(CRT)
 
 #
-# Identify all cases where the parent structure has no expression, 
+# Identify all cases where the parent structure has no expression (strength = 1), 
 # but has a child that does have expression (strength > 1).
 #
 
 db.sql('''
 	SELECT DISTINCT
 	       a._Assay_key,
-	       r._Specimen_key, 
                s._EMAPA_Term_key as parentKey, 
 	       s._Stage_key,
                s2._EMAPA_Term_key as childKey
@@ -120,9 +119,10 @@ db.sql('''
 	      and a._Refs_key not in (81462,81463,92242,94290,102744,124081,154591,154591,163316,172505)
 	''', None)
 
-db.sql('create index idx1 on work(_Specimen_key)', None)
+db.sql('create index idx1 on work(_Assay_key)', None)
 db.sql('create index idx2 on work(parentKey)', None)
 db.sql('create index idx3 on work(childKey)', None)
+db.sql('create index idx4 on work(_Stage_key)', None)
 
 results = db.sql('''
 	SELECT DISTINCT 
@@ -131,23 +131,18 @@ results = db.sql('''
 	       t.stage, 
 	       substring(d.term,1,50) as pterm, 
 	       substring(d2.term,1,50) as cterm
-        FROM work w, GXD_Expression e, 
-             ACC_Accession a, ACC_Accession j, 
+        FROM work w, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
-        WHERE e._Assay_key = w._Assay_key
-	      and e._Specimen_key = w._Specimen_key 
-	      and e.isForGXD = 1 
-              and e.expressed = 1 
-              and e._Assay_key = a._Object_key 
+        WHERE w._Assay_key = ga._Assay_key
+              and ga._Assay_key = a._Object_key 
               and a._MGIType_key = 8 
-              and e._Refs_key = j._Object_key 
+              and ga._Refs_key = j._Object_key 
               and j._MGIType_key = 1 
               and j.prefixPart = 'J:' 
               and w.parentKey = d._Term_key 
               and w.childKey = d2._Term_key
-	      and e._Stage_key = w._Stage_key
-	      and e._Stage_key = t._Stage_key
-	      order by mgiID desc, t.stage, pterm
+	      and w._Stage_key = t._Stage_key
+	      order by pterm, cterm, t.stage, pterm
 	''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 

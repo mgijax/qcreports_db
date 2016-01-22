@@ -10,8 +10,6 @@
 # no expression, but the children used in the same assay have been annotated
 # as having expression.
 #
-# Exclude J:80501, J:80502, J:91257, J:93300, J:101679, J:122989
-#
 # Columns to display:
 #    1) J-Number of the assay
 #    2) MGI ID of the assay
@@ -61,6 +59,7 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 
+fp.write(CRT)
 fp.write(string.ljust('J-Number', 12))
 fp.write(SPACE)
 fp.write(string.ljust('MGI ID', 12))
@@ -83,14 +82,13 @@ fp.write(50*'-')
 fp.write(CRT)
 
 #
-# Identify all cases where the parent structure has no expression, 
+# Identify all cases where the parent structure has no expression (strength = 1), 
 # but has a child that does have expression (strength > 1).
 #
 
 db.sql('''
 	SELECT DISTINCT
 	       a._Assay_key,
-	       r._Specimen_key, 
                s._EMAPA_Term_key as parentKey, 
 	       s._Stage_key,
                s2._EMAPA_Term_key as childKey
@@ -119,34 +117,30 @@ db.sql('''
 	      and emaps_c._EMAPA_Term_key = s2._EMAPA_Term_key
 	''', None)
 
-db.sql('create index idx1 on work(_Specimen_key)', None)
+db.sql('create index idx1 on work(_Assay_key)', None)
 db.sql('create index idx2 on work(parentKey)', None)
 db.sql('create index idx3 on work(childKey)', None)
+db.sql('create index idx4 on work(_Stage_key)', None)
 
 results = db.sql('''
 	SELECT DISTINCT 
-	        a.accID as mgiID, 
-		j.accID as jnumID, 
-		t.stage, 
-		substring(d.term,1,50) as pterm, 
-		substring(d2.term,1,50) as cterm
-        FROM work w, GXD_Expression e, 
-             ACC_Accession a, ACC_Accession j, 
+	       a.accID as mgiID, 
+	       j.accID as jnumID, 
+	       t.stage, 
+	       substring(d.term,1,50) as pterm, 
+	       substring(d2.term,1,50) as cterm
+        FROM work w, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
-        WHERE e._Assay_key = w._Assay_key
-	      and e._Specimen_key = w._Specimen_key 
-	      and e.isForGXD = 0 
-              and e.expressed = 1 
-              and e._Assay_key = a._Object_key 
+        WHERE w._Assay_key = ga._Assay_key
+              and ga._Assay_key = a._Object_key 
               and a._MGIType_key = 8 
-              and e._Refs_key = j._Object_key 
+              and ga._Refs_key = j._Object_key 
               and j._MGIType_key = 1 
               and j.prefixPart = 'J:' 
               and w.parentKey = d._Term_key 
               and w.childKey = d2._Term_key
-	      and e._Stage_key = w._Stage_key
-	      and e._Stage_key = t._Stage_key
-	      order by mgiID desc, t.stage, pterm
+	      and w._Stage_key = t._Stage_key
+	      order by pterm, cterm, t.stage, pterm
 	''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
