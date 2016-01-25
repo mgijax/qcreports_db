@@ -15,16 +15,12 @@
 #    2) MGI ID of the assay
 #    3) Stage of the structures in question
 #    4) Parent structure (with absent annotation)
-#    5) Child structure(s) (separated by a '|' if more than one)
-# 
-# Order by MGI ID, stage and parent structure.
+#    5) Child structure
 # 
 # Originally requested as a custom SQL (TR 8073).
 #
 # Usage:
 #       GXD_ChildExpNotParent.py
-#
-# Notes:
 #
 # History:
 #
@@ -142,7 +138,7 @@ results = db.sql('''
               and w.parentKey = d._Term_key 
               and w.childKey = d2._Term_key
 	      and w._Stage_key = t._Stage_key
-	      order by pterm, cterm, t.stage, pterm
+	      order by mgiID desc, t.stage, pterm, cterm
 	''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
