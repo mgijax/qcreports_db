@@ -1,3 +1,5 @@
+/* TR12057 include only MGI IDs */
+
 \echo ''
 \echo 'Orphan Genotypes (can be deleted)'
 \echo ''
@@ -13,5 +15,6 @@ and not exists (select 1 from IMG_ImagePane_Assoc a where g._Genotype_key = a._O
 and g._Strain_key = s._Strain_key
 and g._Genotype_key = a._Object_key
 and a._MGIType_key = 12
+and a._LogicalDB_key = 1
 order by s.strain
 ;
