@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-2-8
+DATE: 02/17/2016
+STAFF: sc
+CHANGES: TR12255 mgd/GXD_DupGenotype.py
+1) needed out join to mcl1
+2) needed chr as part of dup genotype key so transformations aren't included 
+	(different marker, same symbol)
+
 TAG: qcreports_db-6-0-2-7
 DATE: 02/09/2016
 STAFF: sc
