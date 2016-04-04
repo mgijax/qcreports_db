@@ -10,6 +10,7 @@ GXD_EMAPS_MappingAdUnmappedChecks.py
 GXD_EMAPS_MappingNameChecks.py
 GXD_Mouse_Developmental_Anatomy.py
 2) TR12279/added some comments
+3) TR12314/ALL_WithdrawnMarker.sql
 
 change:
 GXD_EMAPS_Terms.py
