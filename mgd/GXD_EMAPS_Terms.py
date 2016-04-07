@@ -76,7 +76,7 @@ results = db.sql('''select t._Term_key, t.term, a.accid as emapsID,
     and a._MGIType_key = 13
     and a._LogicalDB_key = 170
     and t._Term_key = emaps._Term_key
-    order by t.term''', 'auto')
+    order by t.term, emaps.stage''', 'auto')
 
 numResults = len(results)
 # write report
