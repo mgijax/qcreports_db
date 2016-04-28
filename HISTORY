@@ -12,6 +12,7 @@ GXD_Mouse_Developmental_Anatomy.py
 2) TR12279/added some comments
 3) TR12314/ALL_WithdrawnMarker.sql
 4) TR12289/MGI_QTL_ReferenceNotes.sql
+5) TR12026/GXD_Stats.py
 
 change:
 GXD_EMAPS_Terms.py
