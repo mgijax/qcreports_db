@@ -11,7 +11,7 @@ where a._Assay_key = e._Assay_key)
 \echo '(and therefore not visible in Web interface)'
 \echo ''
 
-select mgiID, jnumID, assayType
+select mgiID, jnumID, assayType, modifiedBy
 from missing m, GXD_Assay_View v
 where m._Assay_key = v._Assay_key
 ;
@@ -21,7 +21,7 @@ where m._Assay_key = v._Assay_key
 \echo '(due to missing Specimen Results)'
 \echo ''
 
-select a.mgiID, a.jnumID, a.assayType
+select a.mgiID, a.jnumID, a.assayType, modifiedBy
 from missing m, GXD_Assay_View a
 where m._Assay_key = a._Assay_key
 and a.isGelAssay = 0
@@ -35,7 +35,7 @@ and s._Specimen_key = r._Specimen_key)
 \echo '(due to missing Specimen Results or Results Structures)'
 \echo ''
 
-select a.mgiID, a.jnumID, a.assayType
+select a.mgiID, a.jnumID, a.assayType, modifiedBy
 from missing m, GXD_Assay_View a
 where m._Assay_key = a._Assay_key
 and a.isGelAssay = 0
@@ -60,7 +60,7 @@ where r._Result_key = i._Result_key)
 \echo 'InSitu Results missing Structures'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, modifiedBy
 from imissingstructs r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -82,7 +82,7 @@ and not exists
 \echo 'InSitu Specimens missing Results'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, modifiedBy
 from imissingresults r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key

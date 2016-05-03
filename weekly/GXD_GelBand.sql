@@ -14,7 +14,7 @@ create index idx1 on assay(_Assay_key)
 \echo 'GXD Blot w/ Control = No and Strength = Not Applicable for all bands'
 \echo ''
 
-select distinct a.jnum, a.mgiID
+select distinct a.jnum, a.mgiID, a.modifiedBy
 from assay s, GXD_Assay_View a
 where s._Assay_key = a._Assay_key
 and not exists (select 1 from GXD_GelLane l, GXD_GelBand b

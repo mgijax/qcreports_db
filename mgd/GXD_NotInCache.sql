@@ -11,7 +11,7 @@ where a._Assay_key = e._Assay_key)
 \echo '(and therefore not visible in Web interface)'
 \echo ''
 
-select mgiID, jnumID, assayType
+select mgiID, jnumID, assayType, modifiedBy
 from missing m, GXD_Assay_View v
 where m._Assay_key = v._Assay_key
 order by jnumID, assayType, mgiID
@@ -22,7 +22,7 @@ order by jnumID, assayType, mgiID
 \echo '(due to missing Gel Lane Structures)'
 \echo ''
 
-select a.mgiID, a.jnumID, a.assayType
+select a.mgiID, a.jnumID, a.assayType, modifiedBy
 from missing m, GXD_Assay_View a
 where m._Assay_key = a._Assay_key
 and a.isGelAssay = 1
@@ -36,7 +36,7 @@ order by jnumID, assayType, mgiID
 \echo '(due to missing Specimen Results)'
 \echo ''
 
-select a.mgiID, a.jnumID, a.assayType
+select a.mgiID, a.jnumID, a.assayType, modifiedBy
 from missing m, GXD_Assay_View a
 where m._Assay_key = a._Assay_key
 and a.isGelAssay = 0
@@ -51,7 +51,7 @@ order by jnumID, assayType, mgiID
 \echo '(due to missing Specimen Results or Results Structures)'
 \echo ''
 
-select a.mgiID, a.jnumID, a.assayType
+select a.mgiID, a.jnumID, a.assayType, modifiedBy
 from missing m, GXD_Assay_View a
 where m._Assay_key = a._Assay_key
 and a.isGelAssay = 0
@@ -74,7 +74,7 @@ where r._Result_key = s._Result_key)
 \echo 'InSitu Results missing Structures'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, modifiedBy
 from imissingstructs r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -96,7 +96,7 @@ and not exists
 \echo 'InSitu Specimens missing Results'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, modifiedBy
 from imissingresults r, GXD_Specimen s, GXD_Assay_View a
 where r._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -117,7 +117,7 @@ where g._GelLane_key = s._GelLane_key)
 \echo 'Gel Results missing Structures'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, modifiedBy
 from gmissingstructs r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
@@ -138,7 +138,7 @@ where g._GelLane_key = b._GelLane_key)
 \echo 'Gel Results missing Bands'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, modifiedBy
 from gmissingbands r, GXD_GelLane s, GXD_Assay_View a
 where r._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key

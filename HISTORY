@@ -13,6 +13,7 @@ GXD_Mouse_Developmental_Anatomy.py
 3) TR12314/ALL_WithdrawnMarker.sql
 4) TR12289/MGI_QTL_ReferenceNotes.sql
 5) TR12026/GXD_Stats.py
+6) TR12242/adding assay last modified
 
 change:
 GXD_EMAPS_Terms.py
