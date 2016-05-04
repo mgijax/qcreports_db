@@ -3,7 +3,7 @@
 '''
 #
 # Report:
-#       TR12323 : Double Labeled Specimens w/ Different Hybridization Types
+#       TR12323 : Specimen Type (Hybridization) Conflict
 #
 # History:
 #
@@ -57,23 +57,20 @@ and r._Specimen_key = s._Specimen_key
 and s._Assay_key = ga._Assay_key
 and ga._AssayType_key in (1,6,9)
 and ga._Refs_key = b._Refs_key
-and b.jnumID not in ('J:91257', 'J:93300', 'J:101679', 'J:122989', 'J:153498', 'J:162220', 'J:171409', 'J:228563')
-and b.jnumID in ('J:100241')
-group by ip._ImagePane_key having count(distinct s.specimenLabel) > 1
+group by ip._ImagePane_key having count(distinct s.hybridization) > 1
 '''
 
 db.sql(cmd, None)
 
 cmd = '''
-select distinct aa.accID as jnumID, 
+select distinct aa.accID as jnumID, aa.numericPart as jnum,
         substring(i.figureLabel,1,20) as figureLabel, 
         substring(ip.paneLabel,1,20) as paneLabel, 
         a.accID as imageID, 
 	aaaa.accID as assayID, 
 	m.symbol,
-	s.specimenLabel, s.hybridization,
-	ga._ProbePrep_key, 
-	ga._AntibodyPrep_key
+	s.specimenLabel, 
+	s.hybridization
 into temporary table assays2
 from assays1 x, IMG_ImagePane ip, IMG_Image i, ACC_Accession aa, ACC_Accession a,
 	ACC_Accession aaaa, GXD_InSituResultImage ia, GXD_InSituResult r, GXD_Specimen s, 
@@ -105,7 +102,7 @@ select x.jnumID, x.figureLabel, x.paneLabel, x.imageID, x.assayID, x.symbol,
 	x.specimenLabel, 
 	x.hybridization
 from assays2 x
-order by imageID, figureLabel, paneLabel, symbol
+order by jnum, figureLabel, paneLabel, symbol
 ''', 'auto')
 
 for r in results:

@@ -14,6 +14,7 @@ GXD_Mouse_Developmental_Anatomy.py
 4) TR12289/MGI_QTL_ReferenceNotes.sql
 5) TR12026/GXD_Stats.py
 6) TR12242/adding assay last modified
+7) TR12323/GXD_SpecimenTypeConflict.py
 
 change:
 GXD_EMAPS_Terms.py
