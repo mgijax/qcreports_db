@@ -58,22 +58,22 @@ and a2.preferred = 1
 
 select distinct s._Specimen_key
 INTO TEMPORARY TABLE temp1
-from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure c, GXD_TheilerStage t
+from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term c, GXD_TheilerStage t
 where s.age like 'postnatal%'
 and s._Specimen_key = i._Specimen_key
 and i._Result_key = r._Result_key
-and r._Structure_key = c._Structure_key
-and c._Stage_key = t._Stage_key
+and r._EMAPA_Term_key = c._Term_key
+and r._Stage_key = t._Stage_key
 and t.stage not in (27, 28)
 ;
 
 select distinct i._GelLane_key
 INTO TEMPORARY TABLE temp2
-from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t
+from GXD_GelLane i, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t
 where i.age like 'postnatal%'
 and i._GelLane_key = r._GelLane_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
 and t.stage not in (27, 28)
 ;
 
@@ -141,11 +141,11 @@ and a._AssayType_key in (10,11)
 
 select distinct s._Specimen_key
 INTO TEMPORARY TABLE temp3
-from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure c, GXD_TheilerStage t
+from GXD_Specimen s, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term c, GXD_TheilerStage t
 where s._Specimen_key = i._Specimen_key
 and i._Result_key = r._Result_key
-and r._Structure_key = c._Structure_key
-and c._Stage_key = t._Stage_key
+and r._EMAPA_Term_key = c._Term_key
+and r._Stage_key = t._Stage_key
 and t.stage = 27
 ;
 
@@ -178,11 +178,11 @@ where s._Specimen_key = t._Specimen_key)
 
 select distinct i._GelLane_key
 INTO TEMPORARY TABLE temp4
-from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t
+from GXD_GelLane i, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t
 where i._GelControl_key = 1
 and i._GelLane_key = r._GelLane_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
 and t.stage = 27
 ;
 

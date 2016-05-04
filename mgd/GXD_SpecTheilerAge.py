@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	01/08/2016
+#	- TR12223/gxd anatomy II
+#
 # lec	10/27/2014
 #	- add 'stage' to output so user can clearly see "duplicate" entries
 #
@@ -81,12 +84,13 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'GXD Specimens and Gel Lanes with incompatible Theiler stages and ages', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], '\nGXD Specimens and Gel Lanes with incompatible Theiler stages and ages', \
+	os.environ['QCOUTPUTDIR'])
 
-fp.write('1. insitu specimens with "embryonic day" age; exclude TS 28\n')
+fp.write('1. insitu specimens with "embryonic day" age; exclude TS 27,28\n')
 fp.write('2. insitu specimens with "embryonic" age; include TS 28 for certain structures only\n')
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
-fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 28\n')
+fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 27,28\n')
 fp.write('4. gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only\n')
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
 fp.write('5. excludes J:153498/Eurexpress\n\n')
@@ -101,11 +105,11 @@ fp.write('specimen label/gel lane.\n\n')
 fp.write('for example:  if a lane has "embryonic day 0.5,22" and structures from Stage 1 and Stage 28,\n')
 fp.write('then dpcMin = dpcMin from Stage 1\n')
 fp.write('then dpcMax = dpcMax from Stage 28\n')
-fp.write('so the age values (0.5 and 22) for this specimen must be between 0.0 and 1500.00\n')
+fp.write('so the age values (0.5 and 22) for this specimen must be between 0.0 and 1500.00\n\n')
 
 #
 #
-# insitu specimens with "embryonic day" age; exclude TS 28
+# insitu specimens with "embryonic day" age; exclude TS 27,28
 #
 db.sql('''
     select s._Assay_key, s._Specimen_key, s.age, 
@@ -113,16 +117,15 @@ db.sql('''
 	   t.stage, t.dpcMin, t.dpcMax 
     into temporary table temp1 
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
-	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
+	 GXD_ISResultStructure i, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
 	  a._Refs_key not in (154591) and 
 	  a._Assay_key = s._Assay_key and 
 	  s._Specimen_key = r._Specimen_key and 
           r._Result_key = i._Result_key and 
-          i._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          i._Stage_key = t._Stage_key and 
           s.age like 'embryonic day%' and 
-	  t.stage != 28 
+	  t.stage not in (27, 28)
 	''', None)
 
 #
@@ -134,39 +137,35 @@ db.sql('''
 	   s.specimenLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
-	 GXD_ISResultStructure i, GXD_Structure c, GXD_TheilerStage t 
+	 GXD_ISResultStructure i, VOC_Term c, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
 	  a._Refs_key not in (154591) and 
 	  a._Assay_key = s._Assay_key and 
           s._Specimen_key = r._Specimen_key and 
           r._Result_key = i._Result_key and 
-          i._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          i._EMAPA_Term_key = c._Term_key and 
+          i._Stage_key = t._Stage_key and 
           s.age like 'embryonic%' 
 	  and t.stage = 28 
-	  and not exists (select 1 from GXD_StructureName sn 
-	  where c._Structure_key = sn._Structure_key 
-	  and sn.structure in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus'))
+	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus')
 	''', None)
 
 #
-# gel lanes with "embryonic day" age; no age ranges; exclude TS 28
+# gel lanes with "embryonic day" age; no age ranges; exclude TS 27,28
 #
 db.sql('''
     insert into temp1 
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
-    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, 
-	 GXD_Structure c, GXD_TheilerStage t 
+    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_TheilerStage t 
     where a._Refs_key not in (154591) and 
 	  a._Assay_key = g._Assay_key and 
           g._GelLane_key = l._GelLane_key and 
-          l._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          l._Stage_key = t._Stage_key and 
           g.age like 'embryonic day%' and 
 	  g.age not like '%-%' 
-	  and t.stage != 28 
+	  and t.stage not in (27, 28)
 	''', None)
 
 #
@@ -176,18 +175,16 @@ db.sql('''
     insert into temp1 
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, t.stage, t.dpcMin, t.dpcMax 
-    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_Structure c, GXD_TheilerStage t 
+    from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, VOC_Term c, GXD_TheilerStage t 
     where a._Refs_key not in (154591) and 
 	  a._Assay_key = g._Assay_key and 
           g._GelLane_key = l._GelLane_key and 
-          l._Structure_key = c._Structure_key and 
-          c._Stage_key = t._Stage_key and 
+          l._EMAPA_Term_key = c._Term_key and 
+          l._Stage_key = t._Stage_key and 
           g.age like 'embryonic%' 
 	  and g.age not like '%-%' 
 	  and t.stage = 28 
-	  and not exists (select 1 from GXD_StructureName sn 
-	  where c._Structure_key = sn._Structure_key 
-	  and sn.structure in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus'))
+	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus')
 	''', None)
 
 #
@@ -276,7 +273,7 @@ for r in results:
        	s = s + r['mgi'] + TAB + r['jnum'] + TAB + mgi_utils.prvalue(r['label']) + TAB + str(r['stage']) + CRT
        	count = count + 1
 
-fp.write(CRT + 'Number of specimens: ' + str(count) + 2*CRT)
+fp.write('Number of specimens: ' + str(count) + 2*CRT)
 fp.write(s)
 
 reportlib.finish_nonps(fp)

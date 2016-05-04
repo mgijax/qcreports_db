@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-4-1
+DATE: 05/04/2016
+STAFF: lec
+CHANGES:
+1) TR12223/gxd anatomy II : merge to trunk
+
 TAG: qcreports_db-6-0-3-1
 DATE: 04/07/2016
 STAFF: lec
@@ -40,6 +46,44 @@ STAFF: lec
 CHANGES:
 1) VOC_InvalidInferred.py : bug fix/value
 
+TAG: qcreports_db-tr12223-1
+DATE: 01/08/2016, 05/04/2016
+STAFF: lec
+CHANGES:
+1) TR12223/gxd anatomy II
+obsoelte:
+GXD_Transgenic.rpt
+GXD_EMAPS_MappingChecks.sql
+GXD_EMAPS_MappingAdUnmappedChecks.py
+GXD_EMAPS_MappingNameChecks.py
+GXD_Mouse_Developmental_Anatomy.py
+2) TR12279/added some comments
+3) TR12314/ALL_WithdrawnMarker.sql
+4) TR12289/MGI_QTL_ReferenceNotes.sql
+5) TR12026/GXD_Stats.py
+6) TR12242/adding assay last modified
+7) TR12323/GXD_SpecimenTypeConflict.py
+
+change:
+GXD_EMAPS_Terms.py
+GXD_SpecNoAge.sql
+GXD_SpecTheiler.sql
+GXD_SpecTheilerAge.py
+GXD_SameStructure.py
+RECOMB_SameStructure.py
+GXD_ExpPresNotPres.py
+RECOMB_ExpPresNotPres.py
+
+TAG: qcreports_db-6-0-2-6
+TAG: qcreports_db-6-0-2-5
+DATE: 01/26/2015
+STAFF: sc
+CHANGES: TR12057
+1) GXD_AllelePairCheck.sql.rpt
+2) GXD_OrphanGenotype.sql.rpt
+3) GXD_WildType.sql.rpt
+
+>>>>>>> 1.883.2.15
 TAG: qcreports_db-tr12223-BP
 DATE: 01/08/2016
 STAFF: lec

@@ -2,14 +2,12 @@
 
 select distinct i._Specimen_key, t.stage
 INTO TEMPORARY TABLE temp1
-from GXD_InSituResult i, GXD_ISResultStructure r, GXD_Structure s, GXD_TheilerStage t,
-GXD_StructureName sn
+from GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t
 where i._Result_key = r._Result_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
-and s._StructureName_key = sn._StructureName_key
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
 and not (t.stage = 28 
-and sn.structure in ('placenta','decidua','decidua basalis','decidua capsularis'))
+and s.term in ('placenta','decidua','decidua basalis','decidua capsularis'))
 ;
 
 select distinct _Specimen_key 
@@ -20,15 +18,14 @@ group by _Specimen_key having count(*) > 1
 
 select distinct i._GelLane_key, t.stage
 INTO TEMPORARY TABLE temp3
-from GXD_GelLane i, GXD_GelLaneStructure r, GXD_Structure s, GXD_TheilerStage t,
-GXD_StructureName sn
+from GXD_GelLane i, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t
 where i.age not like '%-%'
 and i.age not like '%,%'
 and i._GelLane_key = r._GelLane_key
-and r._Structure_key = s._Structure_key
-and s._Stage_key = t._Stage_key
-and s._StructureName_key = sn._StructureName_key
-and not (t.stage = 28 and sn.structure in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium'))
+and r._EMAPA_Term_key = s._Term_key
+and r._Stage_key = t._Stage_key
+and not (t.stage = 28 
+and s.term in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium'))
 ;
 
 select distinct _GelLane_key 
@@ -61,42 +58,52 @@ and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 ;
 
-/* Added 8/16/2007 TR8389 */
+--
+-- _EMAPA_term_key & _Stage_key as descendent terms
+-- 	_AncetorTerm_key, _Term_key, _Stage_key
+-- 	Descendents
+
+SELECT emaps._EMAPA_Term_key as _AncestorTerm_key, 
+	d_emaps._EMAPA_Term_key as _Term_key, 
+	emaps._Stage_key
+INTO TEMPORARY TABLE emapaChild
+FROM VOC_Term_EMAPS emaps, DAG_Closure c, VOC_Term_EMAPS d_emaps
+WHERE emaps._Term_key = c._AncestorObject_key
+  AND c._MGIType_key = 13
+  AND c._DescendentObject_key = d_emaps._Term_key
+UNION
+-- Top Ancestors
+SELECT emaps._EMAPA_Term_key as _AncestorTerm_key, 
+	emaps._EMAPA_Term_key as _Term_key, 
+	emaps._Stage_key
+FROM VOC_Term_EMAPS emaps
+;
+
+create index emapaChild_ancestorterm_key_idx on emapaChild(_AncestorTerm_key);
+create index emapaChild_stage_key_idx on emapaChild(_Stage_key);
 
 /* get all children of 'reproductive system' */
-select distinct sc._Descendent_key
+SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE repChild
-from GXD_StructureName sn, GXD_StructureClosure sc
-where sn.structure = 'reproductive system'
-and sn._Structure_key = sc._Structure_key
+FROM VOC_Term t, emapaChild ec
+WHERE t._Term_key = ec._AncestorTerm_key
+AND t.term = 'reproductive system'
 ;
 
 /* get all children of 'female' */
-select distinct sn._Structure_key
+SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE femaleChild
-from repChild c, GXD_StructureName sn
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female reproductive system'
-union
-select distinct sc._Descendent_key
-from repChild c, GXD_StructureName sn, GXD_StructureClosure sc
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'female reproductive system'
-and sn._Structure_key = sc._Structure_key
+FROM VOC_Term t, emapaChild ec
+WHERE t._Term_key = ec._AncestorTerm_key
+AND t.term = 'female reproductive system'
 ;
 
 /* get all children of 'male' */
-select distinct sn._Structure_key
+SELECT DISTINCT ec._Term_key, ec._Stage_key
 INTO TEMPORARY TABLE maleChild
-from repChild c, GXD_StructureName sn
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male reproductive system'
-union
-select distinct sc._Descendent_key
-from repChild c, GXD_StructureName sn, GXD_StructureClosure sc
-where c._Descendent_key = sn._Structure_key
-and sn.structure = 'male reproductive system'
-and sn._Structure_key = sc._Structure_key
+FROM VOC_Term t, emapaChild ec
+WHERE t._Term_key = ec._AncestorTerm_key
+AND t.term = 'male reproductive system'
 ;
 
 /* get info about 'reproductive system;female' and children */
@@ -107,7 +114,8 @@ where s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
-and irs._Structure_key = f._Structure_key
+and irs._EMAPA_Term_key = f._Term_key
+and irs._Stage_key = f._Stage_key
 ;
 
 /* get info about 'reproductive system;male' and children */
@@ -118,7 +126,8 @@ where s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and s._Specimen_key = ir._Specimen_key
 and ir._Result_key = irs._Result_key
-and irs._Structure_key = m._Structure_key
+and irs._EMAPA_Term_key = m._Term_key
+and irs._Stage_key = m._Stage_key
 ;
 
 \echo ''
@@ -130,7 +139,7 @@ and irs._Structure_key = m._Structure_key
 select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel
 from fSpecimens f, mSpecimens m
 where f._Specimen_key = m._Specimen_key
-and f.jnumID != 'J:80502'
+and f.jnumID not in ('J:80502')
 order by mgiID, jnumID,specimenLabel
 ;
 

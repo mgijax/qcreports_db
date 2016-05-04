@@ -15,6 +15,12 @@
 #
 # History:
 #
+# 04/28/2016	lec
+#	- TR12026/added J:228563/lacz
+#
+# 01/08/2016	lec
+#	- TR12223/gxd anatomy II
+#
 # 03/11/2014	lec
 #	- TR11597/remove J:177549/EuReGene
 #
@@ -81,10 +87,10 @@ endYear = string.atoi(mgi_utils.date('%Y'))
 elect_ref1 = 'J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, J:85124 Sousa-Nunes,'
 elect_ref2 = 'J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen, J:122989 Eichele, J:140465 Robson'
 elect_ref3 = 'J:141291 Tamplin1, J:143778 Tamplin2, J:153498 Eurexpress, J:157819 Blackshaw2, J:162220 BGEM'
-elect_ref4 = 'J:171409 GUDMAP'
+elect_ref4 = 'J:171409 GUDMAP, J:228563 IMPC'
 
 # _Refs_key for all electronic references
-electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316,172505)"
+electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316,172505,229658)"
 
 
 '''
@@ -495,6 +501,13 @@ def imageCounts():
     results = db.sql('select count(_Refs_key) as acount from images', 'auto')
     for r in results:
         fp.write('Number of full coded papers with Images:  ' + str(r['acount']) + CRT)
+
+    #
+    # TR12279/sync with mgihome/homepages/stats/all_stats.shtml#allstats_gxd
+    # if this SQL changes, then update the SQL here:
+    #   select * from MGI_StatisticSQL where _Statistic_key = 31;
+    # see script in /mgi/all/wts_projects/12200/12279
+    #
 
     db.sql('''
 	(
