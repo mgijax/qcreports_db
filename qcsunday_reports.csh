@@ -21,14 +21,9 @@ echo `date`: Start Sunday QC reports | tee -a ${LOG}
 
 cd ${QCMGD}
 
-foreach i (GXD_ProbeAntibody.sql GXD_EMAPS_MappingChecks.sql)
+foreach i (GXD_ProbeAntibody.sql)
     echo `date`: $i | tee -a ${LOG}
     ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
-end
-
-foreach i (GXD_EMAPS_MappingAdUnmappedChecks.py)
-    echo `date`: $i | tee -a ${LOG}
-    $i >>& ${LOG}
 end
 
 echo `date`: End Sunday QC reports | tee -a ${LOG}
