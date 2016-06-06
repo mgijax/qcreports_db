@@ -60,15 +60,15 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'GXD Specimens/Lanes that use the same Structure > 1', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write(string.ljust('J:', 35))
-fp.write(string.ljust('Assay ID', 35))
-fp.write(string.ljust('Label', 45))
+fp.write(string.ljust('J:', 15))
+fp.write(string.ljust('Assay ID', 15))
+fp.write(string.ljust('Label', 35))
 fp.write(string.ljust('EMAPA-Term', 50))
 fp.write(string.ljust('Stage', 5))
 fp.write(CRT)
+fp.write(string.ljust('----------', 15))
+fp.write(string.ljust('----------', 15))
 fp.write(string.ljust('----------', 35))
-fp.write(string.ljust('----------', 35))
-fp.write(string.ljust('----------', 45))
 fp.write(string.ljust('----------', 50))
 fp.write(string.ljust('-----', 5))
 fp.write(2*CRT)
@@ -193,11 +193,11 @@ results = db.sql('''
 	''', 'auto')
 
 for r in results:
-    fp.write(string.ljust(r['jnumID'], 35))
-    fp.write(string.ljust(r['mgiID'], 35))
-    fp.write(string.ljust(r['specimenLabel'], 45))
+    fp.write(string.ljust(r['jnumID'], 15))
+    fp.write(string.ljust(r['mgiID'], 15))
+    fp.write(string.ljust(r['specimenLabel'], 35))
     fp.write(string.ljust(r['term'], 50))
-    fp.write(string.ljust(r['stage'], 5))
+    fp.write(string.ljust(str(r['stage']), 5))
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
