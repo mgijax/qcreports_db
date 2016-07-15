@@ -1,9 +1,21 @@
-TAG: qcreports_db-6-0-4-4
+TAG: qcreports_db-6-0-4-6
 DATE: 07/15/2016
 STAFF: sc
 CHANGES: TR11942 new reports:
 1) monthly/ALL_ExpressedSeq.py
 2) weekly/ALL_NoSubType.py
+
+TAG: qcreports_db-6-0-4-5
+DATE: 06/27/2016
+STAFF: lec
+CHANGES:
+1) fix qcr.html/goload links
+
+TAG: qcreports_db-6-0-4-4
+DATE: 06/06/2016
+STAFF: lec
+CHANGES:
+1) fix/stage : GXD_SameStructure.py
 
 TAG: qcreports_db-6-0-4-3
 TAG: qcreports_db-6-0-4-2
