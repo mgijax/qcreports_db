@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	07/25/2016
+#	- TR12222/expects only one delimiter, but *any* delimiter may be used in inferredFrom field
+#
 # lec	11/18/2014
 #	- TR11828/remove "," from report; this is an allowed value
 #
@@ -97,21 +100,11 @@ for r in results:
     ids = r['inferredFrom']
     key = r['_AnnotEvidence_key']
 
-    if string.find(ids, ', ') >= 0:
-	delimiter = ', '
-    elif string.find(ids, ',') >= 0:
-	delimiter = ','
-    elif string.find(ids, '; ') >= 0:
-	delimiter = '; '
-    elif string.find(ids, '|') >= 0:
-	delimiter = '|'
-    else:
-	delimiter = ''
-
-    if len(delimiter) > 0:
-        idList = string.split(ids, delimiter)
-    else:
-	idList = [ids]
+    # any of these delimiters may be used
+    ids = ids.replace(',', '|')
+    ids = ids.replace(', ', '|')
+    ids = ids.replace(';', '|')
+    idList = string.split(ids, '|')
 
     for id in idList:
 	# save id as-is to check for lowercase/uppercase variations
