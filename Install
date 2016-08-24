@@ -6,21 +6,6 @@
 
 cd `dirname $0` && source ./Configuration
 
-#cd ${QCRPTS}
-#sed "s/ftp.informatics.jax.org/${FTPURL}/" qcr.html > qcr.html.new
-#mv -f qcr.html.new qcr.html
-
-#
-# if running against a database other than "radar", 
-# then we need to replace "radar" with the appropriate value
-#
-
-#cd ${QCMGD}
-#set toEdit=`grep -l radar *`
-#foreach i ($toEdit)
-#sed "s/radar/${RADAR_DBNAME}/g" $i > $i.new
-#mv -f $i.new $i
-#end
 
 #
 # permissions
