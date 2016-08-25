@@ -7,6 +7,12 @@
 cd `dirname $0` && source ./Configuration
 
 
+# Create a copy of the default index page that has the proper FTPURL
+# substituted in it 
+#
+rm -f qcr.html
+sed "s/INCLUDE_FTPURL/$FTPURL/" qcr.html.default > qcr.html
+
 #
 # permissions
 #
