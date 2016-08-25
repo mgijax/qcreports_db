@@ -1,8 +1,22 @@
+TAG: qcreports_db-6-0-6-?
+DATE: 08/25/2016
+STAFF: lec
+CHANGES: 
+1) TR12222/expects only one delimiter, but *any* delimiter may be used in inferredFrom field
+2) TR12349/TR12345/gone-to & more/GO_Noctua/GPAD
+obsolete:
+mgd/MRK_InterimByDate.sql
+mgd/MRK_GORCA.py
+weekly/GO_eco_multipleEvidence.py
+new:
+mgd/GO_GPI_verify.py
+modify:
+qcr.html
+
 TAG: qcreports_db-?
 DATE: 08/24/2016
 STAFF: kstone
 CHANGES: changed ftp url
-
 
 TAG: qcreports_db-6-0-5-2
 DATE: 08/22/2016

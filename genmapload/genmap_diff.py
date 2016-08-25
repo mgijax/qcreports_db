@@ -110,7 +110,7 @@ db.sql('''
     where m._Organism_key = 1
     and m._Marker_key = o._Marker_key 
     and o.source = 0
-    and m._Marker_Status_key in (1,3)
+    and m._Marker_Status_key = 1
     and m.chromosome != 'UN'
     and m._Marker_key = a._Object_key
     and a._MGIType_key = 2

@@ -47,7 +47,7 @@ db.sql('''
 	select _Marker_key, _Marker_Type_key, symbol
 	into temporary table noAnnot
 	from MRK_Marker m
-	where m._Marker_Status_key in (1,3)
+	where m._Marker_Status_key = 1
 	and _Organism_key = 1
 	and _Marker_Type_key = 1
 	and not exists(select 1
