@@ -35,7 +35,7 @@ CRT = reportlib.CRT
 query1 = '''select a1.accID as mgiID, a2.accID as refID, m.symbol, m.name
     	  from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, refs r
     	  where m._Marker_Type_key = 6
-	  and m._Marker_Status_key not in (2)
+	  and m._Marker_Status_key = 1
     	  and m._Organism_key = 1
     	  and m._Marker_key = a1._Object_key
     	  and a1._MGIType_key = 2
@@ -60,7 +60,7 @@ def getRefs():
 	into temporary table refs
         from MRK_Marker m, MRK_History h
     	where m._Marker_Type_key = 6
-	  	and m._Marker_Status_key not in (2)
+	  	and m._Marker_Status_key = 1
     	  	and m._Organism_key = 1
 	and m._Marker_key = h._Marker_key
 	and h.sequenceNum = 1
@@ -140,7 +140,7 @@ def qtl4():
           select a1.accID as mgiID, a2.accID as refID, m.symbol, m.name
           from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, refs r
           where m._Marker_Type_key = 6
-	  and m._Marker_Status_key not in (2)
+	  and m._Marker_Status_key = 1
           and m._Organism_key = 1
           and m._Marker_key = a1._Object_key
           and a1._MGIType_key = 2

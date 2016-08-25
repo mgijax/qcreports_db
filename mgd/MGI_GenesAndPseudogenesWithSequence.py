@@ -129,7 +129,7 @@ def process():
             and a._Logicaldb_key = 1    -- Use the MGI Database
             and a.preferred = 1         -- Use the preferred marker ID
             and m._Marker_key = a._Object_key   -- Join on the Marker Primary Key
-            and m._Marker_Status_key in (1,3)   -- Status of official or interim
+            and m._Marker_Status_key = 1
             and m._Marker_Type_key = mt._Marker_Type_key
             and m._Marker_Type_key in (1,7)
             and m._Marker_key = smc._Marker_key

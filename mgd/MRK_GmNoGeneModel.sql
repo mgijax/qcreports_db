@@ -3,7 +3,7 @@ select distinct m._Marker_key, a.accID, m.symbol, m.name
 INTO TEMPORARY TABLE markers
 from MRK_Marker m, ACC_Accession a
 where m._Organism_key = 1
-and m._Marker_Status_key in (1,3)
+and m._Marker_Status_key = 1
 and m.name like 'predicted gene%'
 and not exists (select 1 from SEQ_Marker_Cache c
 where m._Marker_key = c._Marker_key

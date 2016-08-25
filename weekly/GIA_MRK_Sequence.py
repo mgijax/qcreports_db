@@ -68,7 +68,7 @@ db.sql('''
 	into temporary table markers 
 	from MRK_Marker m, MRK_Offset o, MRK_Status s, MRK_Types t 
 	where m._Organism_key = 1 
-	and m._Marker_Status_key in (1,3) 
+	and m._Marker_Status_key = 1
 	and m._Marker_key = o._Marker_key 
 	and o.source = 0 
 	and m._Marker_Status_key = s._Marker_Status_key 

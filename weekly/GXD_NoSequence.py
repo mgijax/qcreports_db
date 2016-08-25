@@ -77,7 +77,7 @@ db.sql('''
        into temporary table markers 
        from MRK_Marker m, MRK_Types t
        where m._Organism_key = 1 
-       and m._Marker_Status_key in (1,3) 
+       and m._Marker_Status_key = 1
        and m._Marker_Type_key not in (2)
        and m._Marker_Type_key = t._Marker_Type_key
        and not exists (select 1 from ACC_Accession a 
