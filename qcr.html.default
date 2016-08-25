@@ -68,7 +68,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_WithdrawnMarker.sql.rpt">Alleles with Withdrawn Markers</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/archive/alleles">New Allele Archive</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoSubType.rpt">Alleles with molecular notes but no attribute</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_ExpressedSeq.rpt">Alleles with molecular notes and expressed sequence attribute</A> <B>(mnk)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/ ALL_ExpressedSeq.rpt">Alleles with molecular notes and expressed sequence attribute</A> <B>(mnk)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
@@ -171,13 +171,11 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Non-Gene Markers with GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_GOObsolete.rpt">Markers with Annotations to Obsolete GO Terms</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GORCA.html">Genes with GO Annotations of evidence RCA only and with references that are selected for GO but have not been used</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceProperty.rpt">J:73065 GO annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_eco_multipleEvidence.rpt">ECO : report</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_eco_multipleEvidence.log">ECO : log</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Combined QC Report</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Total GO Annotations per Gene</A> <B>(jblake)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenotypeDescriptions.rpt">Genotype Descriptions with MGI IDs</A> <B>(mdolan)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Verify GPI file</A> <B>(dph)</B>
 </OL>
 
 <A NAME="mtb"><B>MTB (dab, dmk)</B></A>
@@ -192,7 +190,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_SymbolDiffs1.rpt">MGI Symbols differing from Human Ortholog Symbols, excludes RIKEN (#1)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_SymbolDiffs3.rpt">MGI Symbols differing from Human Ortholog Symbols, RIKEN only (#1)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_InterimByDate.sql.rpt">Interim Markers (sorted by human symbol status/date)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_RefsToIndex.rpt">References to be indexed</A>
 </OL>
 
