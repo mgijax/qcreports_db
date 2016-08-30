@@ -14,9 +14,6 @@
 # 07/23/2015
 #	- TR11750/Postgres only
 #
-# 05/03/2011-05/09/2012	lec
-#	- TR11035/add DB_TYPE/postgres option
-#
 # 10/06/2006	lec
 #	- TR 7943; added HEADERTYPE; removed trailer
 #
