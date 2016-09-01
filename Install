@@ -61,4 +61,5 @@ endif
 # Link the GO stats report into the weekly directory so it runs weekly too.
 #
 cd ${QCRPTS}/weekly
+rm -rf  GO_stats.py
 ln -s ${QCRPTS}/mgd/GO_stats.py .
