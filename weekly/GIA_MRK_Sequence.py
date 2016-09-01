@@ -58,7 +58,7 @@ db.setAutoTranslateBE(False)
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
-# all official/interim mouse markers that have at least one Sequence ID
+# all official mouse markers that have at least one Sequence ID
 
 db.sql('''
 	select m._Marker_key, m.symbol, m.name, m.chromosome, 

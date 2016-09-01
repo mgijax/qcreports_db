@@ -54,7 +54,7 @@ create index final_idx on final(_Object_key)
 \echo ''
 \echo 'Markers Annotated to a Secondary Sequence Accession ID'
 \echo ''
-\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker statuses (official, withdrawn)'
 \echo 'Includes: all marker types (gene, DNA segment, etc.)'
 \echo ''
 

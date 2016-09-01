@@ -28,7 +28,7 @@ and m.symbol != hm.symbol
 \echo 'Gm Markers without Gene Model Associations'
 \echo ''
 \echo '   where name begins ''predicted gene'''
-\echo '   and status = ''official'' or ''interim'''
+\echo '   and status = ''official'' '
 \echo ''
 
 (

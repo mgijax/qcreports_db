@@ -7,7 +7,7 @@
 # Report:
 #	TR10429/marker MCV annotations (curated)
 #
-#    I would like to request a report with all current (official and interim) 
+#    I would like to request a report with all current (official) 
 #    markers and their Feature Types.
 #
 #    It is best to have the following columns that is similar to the load file f

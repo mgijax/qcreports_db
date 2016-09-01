@@ -32,7 +32,7 @@ create index probedummy_idx3 on probedummy(_CreatedBy_key)
 \echo ''
 \echo 'Dummy Sequence Records Annotated to Mouse Markers'
 \echo ''
-\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker statuses (official, withdrawn)'
 \echo 'Includes: all marker types (gene, DNA segment, etc.)'
 \echo ''
 
@@ -53,7 +53,7 @@ order by l.name, d.annotation_date, m.symbol
 \echo ''
 \echo 'Dummy Sequence Records Annotated to Mouse Molecular Segments'
 \echo ''
-\echo 'Includes: all marker statuses (interim, official, withdrawn)'
+\echo 'Includes: all marker statuses (official, withdrawn)'
 \echo 'Includes: all marker types (gene, DNA segment, etc.)'
 \echo ''
 

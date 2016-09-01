@@ -56,7 +56,7 @@ PAGE = reportlib.PAGE
 title = 'Genes without Sequence with GXD Annotations'
 fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('    includes "official", "interim""\n')
+fp.write('    includes "official"\n')
 fp.write('    excludes "DNA Segment"\n\n')
 
 fp.write(string.ljust('Gene Symbol', 30) + \
