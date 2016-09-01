@@ -12,12 +12,6 @@
 #
 # History:
 #
-# lec	09/01/2016
-#	- TR11083/interim is obsolete
-#
-# sc	01/11/2012
-#	- TR10952 added interim as well as official markers
-#
 # sc	06/07/10
 #	- created
 #
