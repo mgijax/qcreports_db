@@ -14,7 +14,7 @@
 #
 # 4: QTL markers that have assigned reference of J:23000 or J:85000
 #
-# 5: QTL markers that are in Nomen and have not been broadcast
+# 5: QTL markers that are in Reserved
 #
 '''
  
@@ -169,60 +169,42 @@ def qtl4():
 
 def qtl5():
 
-	fp5.write('QTL markers that are in Nomen and have not been broadcast\n')
+	fp5.write('QTL markers that are Reserved\n')
 
-        db.sql('''
-          select m._Nomen_key, 
+        results = db.sql('''
+          select m._Marker_key, 
 		to_char(m.creation_date, 'MM/dd/yyyy') as creation_date,
-		substring(t.term,1,10) as term,
-	  	a1.accID as mgiID, r.jnumID as refID, m.symbol, m.name, m.statusNote
-	  into temporary table marker
+		t.status,
+	  	a1.accID as mgiID, 
+		r.jnumID as refID, 
+		m.symbol, 
+		m.name
           from ACC_Accession a1, 
-		VOC_Term t,
-		NOM_Marker m left join
-		MGI_Reference_Nomen_View r on (m._nomen_key = r._object_key and r.assocType = 'Primary')
+		MRK_Status t,
+		MRK_Marker m,
+		MRK_History h,
+		BIB_Citation_Cache r
           where m._Marker_Type_key = 6
-          and m._NomenStatus_key not in (166903, 166904)
-          and m._Nomen_key = a1._Object_key
-          and a1._MGIType_key = 21
+          and m._Marker_Status_key = 3
+          and m._Marker_key = a1._Object_key
+          and a1._MGIType_key = 2
           and a1._Logicaldb_key = 1
           and a1.prefixpart = 'MGI:'
           and a1.preferred = 1
-	  and m._NomenStatus_key = t._Term_key
-        ''', None)
-
-	noteLookup = {}
-	results = db.sql('''
-		select distinct m._Nomen_key, nt.noteType
-		from marker m, MGI_Note n, MGI_NoteType nt
-          	where m._Nomen_key = n._Object_key
-		and n._MGIType_key = 21
-		and n._NoteType_key = nt._NoteType_key
-		''', 'auto')
-	for r in results:
-		key = r['_Nomen_key']
-		noteType = r['noteType']
-		if not noteLookup.has_key(key):
-			noteLookup[key] = []
-		noteLookup[key].append(noteType)
-
-	results = db.sql('select * from marker order by symbol', 'auto')
+	  and m._Marker_Status_key = t._Marker_Status_key
+	  and m._Marker_key = h._Marker_key
+	  and h.sequenceNum = 1
+	  and h._Refs_key = r._Refs_key
+	  order by m.creation_date
+        ''', 'auto')
 
         for r in results:
-		key = r['_Nomen_key']
-
                 fp5.write(r['creation_date'] + TAB)
-                fp5.write(r['term'] + TAB)
+                fp5.write(r['status'] + TAB)
                 fp5.write(r['mgiID'] + TAB)
                 fp5.write(mgi_utils.prvalue(r['refID']) + TAB)
                 fp5.write(r['symbol'] + TAB)
                 fp5.write(r['name'] + TAB)
-                fp5.write(mgi_utils.prvalue(r['statusNote']) + TAB)
-
-		if noteLookup.has_key(key):
-                	fp5.write(string.join(noteLookup[key], ','))
-		fp5.write(TAB)
-
                 fp5.write(CRT)
 
         fp5.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
