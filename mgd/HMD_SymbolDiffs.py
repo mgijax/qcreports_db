@@ -50,9 +50,9 @@ def runQueries(includeRiken):
     global mgID, hstatus
 
     if includeRiken:
-	riken = 'and m1.symbol like \'%Rik\''
+	riken = 'and (m1.symbol like \'%Rik\' or m1.symbol like \'Gm%\')'
     else:
-	riken = 'and m1.symbol not like \'%Rik\''
+	riken = 'and m1.symbol not like \'%Rik\' and m1.symbol not like \'Gm%\''
 
     db.sql('drop table if exists homology', None)
 
@@ -117,9 +117,9 @@ def runQueries(includeRiken):
 def report1(fp, includeRiken = 0):
 
     if includeRiken:
-	riken = 'excludes RIKEN'
+	riken = 'RIKEN and Gene Models only'
     else:
-	riken = 'RIKEN only'
+	riken = 'excludes RIKEN and Gene Models'
 
     fp.write('MGI Symbols differing from Human Ortholog Symbols, ' + riken + ' (#1)' + CRT)
     fp.write('(sorted by modification date of human symbol, symbol status, mouse symbol)' + 2*CRT)
@@ -159,9 +159,9 @@ def report1(fp, includeRiken = 0):
 def report2(fp, includeRiken):
 
     if includeRiken:
-	riken = 'excludes RIKEN'
+	riken = 'RIKEN and Gene Models only'
     else:
-	riken = 'RIKEN only'
+	riken = 'excludes RIKEN and Gene Models'
 
     fp.write('MGI Symbols differing from Human Ortholog Symbols, ' + riken + ' (#2)' + CRT)
     fp.write('(sorted by human status, mouse status, mouse symbol)' + 2*CRT)
