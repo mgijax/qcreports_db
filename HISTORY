@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-6-4
+DATE: 10/26/2016
+STAFF: sc
+CHANGES:
+TR11840 - Added mgd/GO_InvalidInferredFrom.py
+
 TAG: qcreports_db-6-0-6-3
 TAG: qcreports_db-6-0-8-1
 DATE: 10/13/2016
