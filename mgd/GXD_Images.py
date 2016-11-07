@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	11/07/2016
+#	- TR12449/new journal : J Neurosci
+#
 # lec	08/19/2015
 #	- TR11963/new journal : Dis Model Mech
 #
@@ -205,6 +208,10 @@ journalsOther = [
 'EMBO J', 'J Invest Dermatol', 'Mol Psychiatry'
 ]
 
+journalsJNeurosci = [
+'J Neurosci'
+]
+
 def runreport(fp, assayType):
 
     count = 0
@@ -324,6 +331,10 @@ def runreport(fp, assayType):
     fp.write(TAB + 'Other Journals Checked:' + CRT)
     for j in journalsOther:
         fp.write(2*TAB + j + CRT)
+    fp.write(CRT)
+    fp.write(TAB + 'J Neurosci Journals Checked:' + CRT)
+    for j in journalsJNeurosci:
+        fp.write(2*TAB + j + CRT)
     fp.write(2*CRT)
 
     #
@@ -332,6 +343,7 @@ def runreport(fp, assayType):
     #
     journals4 = '\'' + string.join(journalsOxford, '\',\'') + '\''
     journals5 = '\'' + string.join(journalsOther, '\',\'') + '\''
+    journals6 = '\'' + string.join(journalsJNeurosci, '\',\'') + '\''
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -343,7 +355,7 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (b.journal in (%s) or b.journal in (%s))
+	        and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s))
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
 	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -351,7 +363,7 @@ def runreport(fp, assayType):
 	        and n._NoteType_key = 1023
 	        and n._MGIType_key = 9
 	        and n._Note_key = c._Note_key)
-          ''' % (assayType, journals4, journals5), None)
+          ''' % (assayType, journals4, journals5, journals6), None)
 
     db.sql('''
           insert into refs3
@@ -363,7 +375,7 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (b.journal in (%s) or b.journal in (%s))
+	        and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s))
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
 	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -371,7 +383,7 @@ def runreport(fp, assayType):
 	        and n._NoteType_key = 1023
 	        and n._MGIType_key = 9
 	        and n._Note_key = c._Note_key)
-          ''' % (assayType, journals4, journals5), None)
+          ''' % (assayType, journals4, journals5, journals6), None)
 
     db.sql('create index refs3_idx1 on refs3(_Refs_key)', None)
 
