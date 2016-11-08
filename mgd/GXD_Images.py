@@ -386,6 +386,7 @@ def runreport(fp, assayType):
 	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
 	    from refs3 r, IMG_Image i
 	    where r._Refs_key = i._Refs_key
+	    order by figureLabel
 	    ''', 'auto')
     fLabels = {}
     for r in results:
@@ -474,6 +475,7 @@ def runreport(fp, assayType):
 	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
 	    from refs4 r, IMG_Image i
 	    where r._Refs_key = i._Refs_key
+	    order by figureLabel
 	    ''', 'auto')
     fLabels = {}
     for r in results:
