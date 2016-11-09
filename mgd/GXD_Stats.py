@@ -15,6 +15,10 @@
 #
 # History:
 #
+# 11/07/2016	sc
+#	- TR12370 GXD HT Project
+#	add HT experiment stats
+#
 # 04/28/2016	lec
 #	- TR12026/added J:228563/lacz
 #
@@ -81,6 +85,9 @@ db.setAutoTranslateBE(False)
 CRT = reportlib.CRT
 
 startYear = 1998
+
+# For GXD HT Experiments
+gxdHtStartYear = 2016
 endYear = string.atoi(mgi_utils.date('%Y'))
 
 # electronic references
@@ -163,6 +170,25 @@ def cdnas():
 	''', 'auto')
     for r in results:
 	fp.write('Markers curated to cDNAs:  ' + str(r['mcount']) + CRT)
+
+def experiments():
+    # 
+    # Experiments
+    #
+    fp.write('%sHT Experiments:%s%s' % (CRT, CRT, CRT))
+    fp.write(string.ljust('Year', 10))
+    fp.write(string.ljust('Done', 10) + CRT)
+    fp.write(string.ljust('-----', 10))
+    fp.write(string.ljust('-----', 10) + CRT)
+
+    for year in range(gxdHtStartYear, endYear + 1):
+	results = db.sql('''select count(*) as expCt
+	from GXD_HTExperiment
+	where _CurationState_key = 20475421
+	and date_part(\'year\', creation_date) <= %d ''' % (year), 'auto')
+	for r in results:
+	    fp.write(string.ljust(str(year), 10))
+	    fp.write(string.ljust(str(r['expCt']), 10) + CRT)
 
 def indexOnly():
 
@@ -755,6 +781,7 @@ def assayTypeCounts():
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1,
 	fileExt = '.' + os.environ['DATE'] + '.rpt')
 cdnas()
+experiments()
 indexOnly()
 fullCoded()
 mutantAlleles()

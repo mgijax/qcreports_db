@@ -20,6 +20,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#alleles">Alleles</A>
 <LI><A HREF="#phenoannot">Phenotype Vocabulary Annotation</A>
 <LI><A HREF="#gxd">GXD</A>
+<LI><A HREF="#gxdht">GXD HT Experiments</A>
 <LI><A HREF="#recomb">Recombinase and Transgenic Reporter Data</A>
 <LI><A HREF="#go">GO</A>
 <LI><A HREF="#mtb">MTB</A>
@@ -137,7 +138,12 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_CellLine.sql.rpt">Cell Lines</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/gxd">Archived GXD Reports</A>
 </OL>
-
+<A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>
+<OL>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpCuration.rpt">GXD HT Experiments where Curation State set to Done, but other attributes are Not Curated</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTNoMasterBib.rpt">GXD HT Experiment PubMed IDs not in the Master Bib</A>
+</OL>
 <A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (mnk, cms)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NotInCache.sql.rpt">Recombinant/Transgenic Assays missing from Cache Table</A>
