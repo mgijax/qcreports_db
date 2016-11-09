@@ -1,3 +1,12 @@
+TAG: qcreports_db-6-0-6-8
+DATE: 11/09/2016
+STAFF: sc
+CHANGES: GXD HT Project TR12370
+1)added experiments to GXD_Stats.py
+2) new GXD_HTOverview.py
+3) new GXD_HTExpCuration.py
+4) new GXD_HTNoMasterBib.py
+
 TAG: qcreports_db-6-0-6-7
 TAG: qcreports_db-6-0-6-6
 DATE: 11/08/2016
