@@ -83,7 +83,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_MPNewTerms.rpt">MP Ontology terms added in the last week</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenoNoMarker.rpt">Genotype Alleles that Contain No Markers</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_OMIMNoMP.rpt">Alleles with OMIM Annotation, but no MP Annotation</A>
-<LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMExclude.rpt">Obsolete OMIM in DO</A>
 </OL>
 
 <A NAME="gxd"><B>GXD (cms, jfinger, ijm, terryh)</B></A>
