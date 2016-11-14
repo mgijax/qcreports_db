@@ -1,3 +1,14 @@
+TAG: qcreports_db-6-0-6-9
+DATE: 11/14/2016
+STAFF: sc
+CHANGES: GXD HT Project TR12370
+New reports:
+1) mgd/GXD_HTSampleGenotypeNA.py
+2) mgd/GXD_HTSampleIncompAgeAndTS.py
+3) mgd/GXD_HTSampleNoAge.py
+4) mgd/GXD_HTSampleNoStructure.py
+5) mgd/GXD_HTSampleWrongAge.sql
+
 TAG: qcreports_db-6-0-6-8
 DATE: 11/09/2016
 STAFF: sc
