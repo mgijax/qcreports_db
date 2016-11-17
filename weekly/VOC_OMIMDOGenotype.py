@@ -33,7 +33,7 @@ db.setAutoTranslateBE(False)
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init(sys.argv[0], 'omim-to-genotype : do not map to DO ids', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'OMIM-to-Genotype : do not map to DO ids', outputdir = os.environ['QCOUTPUTDIR'])
 
 db.sql('''
 	select distinct a._Object_key, a.accID as omimID, t._Term_key, substring(t.term,1,30) as omimTerm
@@ -131,6 +131,8 @@ for r in results:
 	fp.write(r['omimTerm'] + TAB)
 	fp.write(r['genotypeid'] + TAB)
 	fp.write(r['refID'] + CRT)
+
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 reportlib.finish_nonps(fp)
 
