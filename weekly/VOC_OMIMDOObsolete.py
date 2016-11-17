@@ -33,7 +33,7 @@ db.setAutoTranslateBE(False)
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init(sys.argv[0], 'Obsolete OMIM terms in DO as xrefs', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Obsolete/Missing OMIM terms in DO as xrefs', outputdir = os.environ['QCOUTPUTDIR'])
 
 results = db.sql('''
 	(
