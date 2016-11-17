@@ -33,7 +33,7 @@ db.setAutoTranslateBE(False)
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init(sys.argv[0], 'OMIM-to-Genotype : OMIM term belongs to more than 1 DO term', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'OMIM term belongs to more than 1 DO term', outputdir = os.environ['QCOUTPUTDIR'])
 
 results = db.sql('''
 	select a1.accID
