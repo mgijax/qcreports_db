@@ -8,7 +8,9 @@ mgd/MRK_QTL.py
 mgd/HMD_SymbolDiffs.py
 TR12449/J Neuosci/GXD_Images.py
 add:
-VOC_OMIMDOGenotype.py
+VOC_OMIMGenotypeNoMapDO.py
+VOC_OMIMDOMult.py
+VOC_OMIMDOObsolete.py
 
 TAG: qcreports_db-6-0-6-3
 TAG: qcreports_db-6-0-8-1

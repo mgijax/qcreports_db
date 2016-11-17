@@ -2,14 +2,14 @@
 
 '''
 #
-# VOC_OMIMDOMult.py
+# VOC_OMIMDOObsolete.py
 #
 # Report:
 #
-#       DO terms that have mulitple OMIM xrefs
+#       Obsolete OMIM terms in DO as xrefs
 #
 # Usage:
-# 	VOC_OMIMDOMult.py
+# 	VOC_OMIMDOObsolete.py
 #
 # Notes:
 #
@@ -33,30 +33,18 @@ db.setAutoTranslateBE(False)
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init(sys.argv[0], 'DO terms that have mulitple OMIM xrefs', outputdir = os.environ['QCOUTPUTDIR'])
-
-db.sql('''
-	select a1.accID
-	INTO TEMP TABLE doid
-	from ACC_Accession a1, ACC_Accession a2
-	where a1._MGIType_key = 13
-	and a1._LogicalDB_key = 191 
-	and a1._Object_key = a2._Object_key
-	and a1.preferred = 1 
-	and a2._LogicalDB_key = 15
-	group by a1.accID having count(*) > 1 
-	''', None)
-db.sql('create index doid_idx on doid(accID)', None)
+fp = reportlib.init(sys.argv[0], 'Obsolete OMIM terms in DO as xrefs', outputdir = os.environ['QCOUTPUTDIR'])
 
 results = db.sql('''
 	select a1.accID as doid, a2.accID as omimid
-	from ACC_Accession a1, ACC_Accession a2
+	from ACC_Accession a1, ACC_Accession a2, VOC_Term t
 	where a1._MGIType_key = 13
 	and a1._LogicalDB_key = 191 
 	and a1._Object_key = a2._Object_key
 	and a1.preferred = 1 
 	and a2._LogicalDB_key = 15
-	and exists (select 1 from doid where a1.accID = doid.accID)
+	and a2._Object_key = t._Term_key
+	and t.isObsolete = 1
 	order by a1.accID
 	''', 'auto')
 
