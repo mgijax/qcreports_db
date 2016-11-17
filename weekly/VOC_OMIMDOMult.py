@@ -49,7 +49,7 @@ db.sql('''
 db.sql('create index doid_idx on doid(accID)', None)
 
 results = db.sql('''
-	select a1.accID, a2.accID
+	select a1.accID as doid, a2.accID as omimid
 	from ACC_Accession a1, ACC_Accession a2
 	where a1._MGIType_key = 13
 	and a1._LogicalDB_key = 191 
@@ -61,7 +61,8 @@ results = db.sql('''
 	''', 'auto')
 
 for r in results:
-	fp.write(r['accID'] + CRT)
+	fp.write(r['doID'] + TAB)
+	fp.write(r['omimID'] + CRT)
 
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
