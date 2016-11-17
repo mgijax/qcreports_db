@@ -21,6 +21,9 @@
 #
 # History:
 #
+# sc	11/15/2016
+#	-exclude 'cumulus oophorus'
+#
 # lec	01/08/2016
 #	- TR12223/gxd anatomy II
 #
@@ -89,7 +92,7 @@ fp = reportlib.init(sys.argv[0], '\nGXD Specimens and Gel Lanes with incompatibl
 
 fp.write('1. insitu specimens with "embryonic day" age; exclude TS 27,28\n')
 fp.write('2. insitu specimens with "embryonic" age; include TS 28 for certain structures only\n')
-fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
+fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus, cumulus oophorus)\n')
 fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 27,28\n')
 fp.write('4. gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only\n')
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
@@ -147,7 +150,7 @@ db.sql('''
           i._Stage_key = t._Stage_key and 
           s.age like 'embryonic%' 
 	  and t.stage = 28 
-	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus')
+	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus', 'cumulus oophorus')
 	''', None)
 
 #
@@ -184,7 +187,7 @@ db.sql('''
           g.age like 'embryonic%' 
 	  and g.age not like '%-%' 
 	  and t.stage = 28 
-	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus')
+	  and c.term not in ('placenta', 'decidua', 'decidua basalis', 'decidua capsularis', 'uterus', 'cumulus oophorus')
 	''', None)
 
 #

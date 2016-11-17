@@ -84,7 +84,7 @@ db.sql('''
           i._Stage_key = t._Stage_key and 
           s.age like 'embryonic%' 
 	  and t.stage = 28 
-	  and c.term not in ('placenta', 'decidua', 'uterus')
+	  and c.term not in ('placenta', 'decidua', 'uterus', 'cumulus oophorus' )
     ''', None)
 
 #

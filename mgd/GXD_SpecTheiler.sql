@@ -7,7 +7,7 @@ where i._Result_key = r._Result_key
 and r._EMAPA_Term_key = s._Term_key
 and r._Stage_key = t._Stage_key
 and not (t.stage = 28 
-and s.term in ('placenta','decidua','decidua basalis','decidua capsularis'))
+and s.term in ('placenta','decidua','decidua basalis','decidua capsularis', 'cumulus oophorus'))
 ;
 
 select distinct _Specimen_key 
@@ -25,7 +25,7 @@ and i._GelLane_key = r._GelLane_key
 and r._EMAPA_Term_key = s._Term_key
 and r._Stage_key = t._Stage_key
 and not (t.stage = 28 
-and s.term in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium'))
+and s.term in ('placenta','decidua','decidua basalis','decidua capsularis','uterus', 'mesometrium', 'cumulus oophorus'))
 ;
 
 select distinct _GelLane_key 
@@ -36,7 +36,7 @@ group by _GelLane_key having count(*) > 1
 
 \echo ''
 \echo 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
-\echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis)'
+\echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:cumulus oophorus)'
 \echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
@@ -48,7 +48,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 
 \echo ''
 \echo 'Gel Lane Specimens annotated to structures of > 1 Theiler Stage'
-\echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium)'
+\echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium, TS28:cumulus oophorus)'
 \echo ''
 
 select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel

@@ -143,6 +143,12 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpCuration.rpt">GXD HT Experiments where Curation State set to Done, but other attributes are Not Curated</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTNoMasterBib.rpt">GXD HT Experiment PubMed IDs not in the Master Bib</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleGenotypeNA.rpt">GXD HT Samples whose Relevance = Yes but whose genotype is Not Applicable</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleIncompAgeAndTS.rpt">GXD HT Samples whose Relevance = Yes but whose Theiler stages and age fields are incompatible
+</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoAge.rpt">GXD HT Samples whose Relevance = Yes but the age field is Not Applicable or Not Specified </A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoStructure.rpt">GXD HT Samples whose Relevance = Yes but the structure field is null</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleWrongAge.sql.rpt">GXD HT Samples where relevance = Yes and Age either 'postnatal', 'postnatal adult', 'postnatal newborn' but age range entered</A>
 </OL>
 <A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (mnk, cms)</B></A>
 <OL>
