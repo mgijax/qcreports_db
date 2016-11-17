@@ -83,6 +83,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_MPNewTerms.rpt">MP Ontology terms added in the last week</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenoNoMarker.rpt">Genotype Alleles that Contain No Markers</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_OMIMNoMP.rpt">Alleles with OMIM Annotation, but no MP Annotation</A>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOGenotype.rpt">OMIM-to-Genotype : do not map to DO ids</A>
 </OL>
 
 <A NAME="gxd"><B>GXD (cms, jfinger, ijm, terryh)</B></A>
@@ -296,10 +297,10 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="dataloads"><B>Data Loads</B></A>
 <OL>
 <LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,djr)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,djr)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/unigeneload">UniGene Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/mousecycload/index.html">MouseCyc Load (vocabulary, annotations)</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(jblake)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
@@ -315,16 +316,16 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gorat/index.html">GO/Rat Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gorefgen/index.html">GO/PAINT Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gocfp/index.html">GO/CFP (aka GOC) Load</A> <B>(hjd)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A> <B>(mmh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/OMIMindex.html">OMIM Vocabulary Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/doload/index.html">Disease Ontology (DO) Load</A> <B>(smb)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/vocload/MPindex.html">Mammalian Phenotype Vocabulary/DAG Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(dph)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genmapload/index.html">Genetic Map Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
 <LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/htmpload/impc_index.html">HTMP load: IMPC</A> <B>(csmith, cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/vocload/MPindex.html">Mammalian Phenotype Vocabulary/DAG Load</A> <B>(csmith)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A> <B>(csmith)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/htmpload/impc_index.html">HTMP load: IMPC</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/targetedalleleload/index.html">Targeted Allele Load</A> <B>(csmith)</B>
 </OL>
 
