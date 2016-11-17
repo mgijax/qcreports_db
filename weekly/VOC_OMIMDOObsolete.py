@@ -44,13 +44,13 @@ results = db.sql('''
 	and a1._Object_key = a2._Object_key
 	and a1.preferred = 1 
 	and a2._LogicalDB_key = 15
+	and a2.accID not like 'OMIM:PS%'
 	and not exists (select 1 from ACC_Accession a3, VOC_Term t
 		where a2.accID = a3.accID
 		and a3._MGIType_key = 13
 		and a3._LogicalDB_key = 15
 		and a3._Object_key = t._Term_key
 		and t._Vocab_key = 44
-		and a3.accID not like 'OMIM:PS%'
 		)
 	union
 	select a1.accID as doid, a2.accID as omimid
@@ -60,6 +60,7 @@ results = db.sql('''
 	and a1._Object_key = a2._Object_key
 	and a1.preferred = 1 
 	and a2._LogicalDB_key = 15
+	and a2.accID not like 'OMIM:PS%'
 	and exists (select 1 from ACC_Accession a3, VOC_Term t
 		where a2.accID = a3.accID
 		and a3._MGIType_key = 13
@@ -67,7 +68,6 @@ results = db.sql('''
 		and a3._Object_key = t._Term_key
 		and t._Vocab_key = 44
 		and t.isObsolete = 1
-		and a3.accID not like 'OMIM:PS%'
 		)
 	)
 	order by doid
