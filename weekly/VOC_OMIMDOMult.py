@@ -35,8 +35,9 @@ CRT = reportlib.CRT
 
 fp = reportlib.init(sys.argv[0], 'DO terms that have mulitple OMIM xrefs', outputdir = os.environ['QCOUTPUTDIR'])
 
-results = db.sql('''
+db.sql('''
 	select a1.accID
+	INTO TEMP TABLE doid
 	from ACC_Accession a1, ACC_Accession a2
 	where a1._MGIType_key = 13
 	and a1._LogicalDB_key = 191 
@@ -44,6 +45,18 @@ results = db.sql('''
 	and a1.preferred = 1 
 	and a2._LogicalDB_key = 15
 	group by a1.accID having count(*) > 1 
+	''', None)
+db.sql('create index doid_idx on doid(accID)', None)
+
+results = db.sql('''
+	select a1.accID, a2.accID
+	from ACC_Accession a1, ACC_Accession a2
+	where a1._MGIType_key = 13
+	and a1._LogicalDB_key = 191 
+	and a1._Object_key = a2._Object_key
+	and a1.preferred = 1 
+	and a2._LogicalDB_key = 15
+	and exists (select 1 from doid where a1.accID = doid.accID)
 	order by a1.accID
 	''', 'auto')
 
