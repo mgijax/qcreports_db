@@ -50,6 +50,7 @@ results = db.sql('''
 		and a3._LogicalDB_key = 15
 		and a3._Object_key = t._Term_key
 		and t._Vocab_key = 44
+		and a3.accID not like 'OMIM:PS%'
 		)
 	union
 	select a1.accID as doid, a2.accID as omimid
@@ -66,6 +67,7 @@ results = db.sql('''
 		and a3._Object_key = t._Term_key
 		and t._Vocab_key = 44
 		and t.isObsolete = 1
+		and a3.accID not like 'OMIM:PS%'
 		)
 	)
 	order by doid
