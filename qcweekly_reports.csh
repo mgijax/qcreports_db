@@ -23,20 +23,20 @@ foreach i (*.sql)
     if ( $i == "GXD_Triage.sql" ) then
         mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCGXDARCHIVE}
         rm -rf ${QCOUTPUTDIR}/$i.current.rpt
-        ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+        ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${PG_DBSERVER} ${PG_DBNAME}
         ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
     else if ( $i == "PRB_StrainJAX4.sql" || $i == "PRB_StrainJAX5.sql" ) then
         mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCSTRAINARCHIVE}
         rm -rf ${QCOUTPUTDIR}/$i.current.rpt
-        ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+        ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${PG_DBSERVER} ${PG_DBNAME}
         ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
     else if ( $i == "PRB_StrainJAX7.sql" || $i == "PRB_StrainJAX8.sql" ) then
         mv -f ${QCOUTPUTDIR}/$i.[0-9]*.rpt ${QCSTRAINARCHIVE}
         rm -rf ${QCOUTPUTDIR}/$i.current.rpt
-        ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+        ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.${DATE}.rpt ${PG_DBSERVER} ${PG_DBNAME}
         ln -s ${QCOUTPUTDIR}/$i.${DATE}.rpt ${QCOUTPUTDIR}/$i.current.rpt
     else
-         ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+         ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
     endif
 end
 

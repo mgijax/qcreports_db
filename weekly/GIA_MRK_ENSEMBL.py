@@ -24,7 +24,7 @@
 #
 # lec   02/09/2011
 #	- this is similar to the report on public, but specific for Sophia
-#	  and the ${MGD_DBUTILS}/bin/generateGIAssoc.csh product
+#	  and the ${PG_DBUTILS}/bin/generateGIAssoc.csh product
 #
 # lec	08/26/2003
 #	- added to reports_db product

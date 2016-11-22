@@ -20,7 +20,7 @@ cd ${QCMGD}
 
 foreach i (*.sql)
     echo `date`: $i | tee -a ${LOG}
-    ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+    ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
 end
 
 foreach i (*.py)

@@ -58,7 +58,7 @@ DuplicateTermNames.py ${OUTPUTDIR} ${JOBKEY}
 OtherMarkerTypes.py ${OUTPUTDIR} ${JOBKEY}
 
 foreach RPT (*.sql)
-   ${QCRPTS}/reports.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${MGD_DBSERVER} ${MGD_DBNAME}
+   ${QCRPTS}/reports.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${PG_DBSERVER} ${PG_DBNAME}
 end
 
 # this is klunky...we just want to sort this report
