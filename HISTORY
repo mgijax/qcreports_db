@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-6-11
+DATE: 11/28/2016
+STAFF: sc
+CHANGES: TR12430
+mgd/GO_EvidenceProperty.py - exclude GO_Noctua
+
 TAG: qcreports_db-6-0-6-10
 DATE: 11/17/2016
 STAFF: sc
