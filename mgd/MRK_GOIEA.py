@@ -18,12 +18,12 @@
 #		Y/N (has reference been selected for GXD)
 #		symbol
 #		name
-#		OMIM (print "OMIM" if gene has a mouse model associated with an OMIM disease)
+#		DO (print "DO" if gene has a mouse model associated with an DO disease)
 #
 #	Report 2E (TR 7125)
-#	Title = Genes that have OMIM annotations and either no GO annotations or only IEA GO annotations
+#	Title = Genes that have DO annotations and either no GO annotations or only IEA GO annotations
 #    	Select markers of type 'gene'
-#               where the marker has 'OMIM' associations
+#               where the marker has 'DO' associations
 #               where the marker has 'GO' association w/ IEA only or no GO annotations
 #
 #       Report in a tab delimited file with the following columns:
@@ -118,8 +118,8 @@ def writeRecordD(fp, r):
 	         r['symbol'] + TAB + \
 	         r['name'] + TAB)
 
-	if r['_Marker_key'] in omim:
-		fp.write('OMIM')
+	if r['_Marker_key'] in dolookup:
+		fp.write('DO')
 	fp.write(CRT)
 
 def writeRecordF(fp, r):
@@ -139,7 +139,7 @@ fpD.write('jnum ID' + TAB + \
 	 'mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
-	 'OMIM' + CRT*2)
+	 'DO' + CRT*2)
 
 fpE = reportlib.init("MRK_GOIEA_E", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpE.write('mgi ID' + TAB + \
@@ -207,14 +207,14 @@ gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
 
-# does gene have mouse model annotated to OMIM disease
+# does gene have mouse model annotated to DO disease
 results = db.sql('''select distinct m._Marker_key
-	from markers m, MRK_OMIM_Cache o
+	from markers m, MRK_DO_Cache o
 	where m._Marker_key = o._Marker_key
 	''', 'auto')
-omim = []
+dolookup = []
 for r in results:
-	omim.append(r['_Marker_key'])
+	dolookup.append(r['_Marker_key'])
 
 #
 # fpD
@@ -254,11 +254,11 @@ for r in results:
 # report 2E
 #
 
-# select genes with OMIM Associations
+# select genes with DO Associations
 # feature type = 'protein coding genes'
 
 db.sql('''select m._Marker_key, m.symbol, a.accID as mgiID, a.numericPart 
-	into temporary table omimmarkers
+	into temporary table domarkers
 	from MRK_Marker m, ACC_Accession a, VOC_Annot tdc
 	where m._Organism_key = 1
 	and m._Marker_Type_key = 1
@@ -274,20 +274,20 @@ db.sql('''select m._Marker_key, m.symbol, a.accID as mgiID, a.numericPart
 	and exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a
 	where m._Marker_key = g._Marker_key
 	and g._Genotype_key = a._Object_key
-	and a._AnnotType_key = 1005) ''', None)
-db.sql('create index omim_idx1 on omimmarkers(_Marker_key)', None)
+	and a._AnnotType_key in (1005, 1020)) ''', None)
+db.sql('create index do_idx1 on domarkers(_Marker_key)', None)
 
 #
-# select markers with OMIM annotations and either only IEA GO annotations or no GO annotations
+# select markers with DO annotations and either only IEA GO annotations or no GO annotations
 #
 
 db.sql('''select o.*, 'yes' as isGO
 	into temporary table fpE
-	from omimmarkers o, markers m
+	from domarkers o, markers m
 	where o._Marker_key = m._Marker_key
 	union
 	select o.*, 'no' as isGO
-	from omimmarkers o
+	from domarkers o
 	where not exists 
 	  (select 1 from VOC_Annot a where o._Marker_key = a._Object_key and a._AnnotType_key = 1000)
 	''', None)
