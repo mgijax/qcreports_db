@@ -27,8 +27,6 @@ import db
 import string
 
 db.setTrace()
-db.setAutoTranslate(False)
-db.setAutoTranslateBE(False)
 db.useOneConnection(1)
 
 CRT = reportlib.CRT
