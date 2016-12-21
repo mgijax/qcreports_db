@@ -20,6 +20,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#alleles">Alleles</A>
 <LI><A HREF="#phenoannot">Phenotype Vocabulary Annotation</A>
 <LI><A HREF="#gxd">GXD</A>
+<LI><A HREF="#gxdht">GXD HT Experiments</A>
 <LI><A HREF="#recomb">Recombinase and Transgenic Reporter Data</A>
 <LI><A HREF="#go">GO</A>
 <LI><A HREF="#mtb">MTB</A>
@@ -140,7 +141,18 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_CellLine.sql.rpt">Cell Lines</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/gxd">Archived GXD Reports</A>
 </OL>
-
+<A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>
+<OL>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpCuration.rpt">GXD HT Experiments where Curation State set to Done, but other attributes are Not Curated</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTNoMasterBib.rpt">GXD HT Experiment PubMed IDs not in the Master Bib</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleGenotypeNA.rpt">GXD HT Samples whose Relevance = Yes but whose genotype is Not Applicable</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleIncompAgeAndTS.rpt">GXD HT Samples whose Relevance = Yes but whose Theiler stages and age fields are incompatible
+</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoAge.rpt">GXD HT Samples whose Relevance = Yes but the age field is Not Applicable or Not Specified </A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoStructure.rpt">GXD HT Samples whose Relevance = Yes but the structure field is null</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleWrongAge.sql.rpt">GXD HT Samples where relevance = Yes and Age either 'postnatal', 'postnatal adult', 'postnatal newborn' but age range entered</A>
+</OL>
 <A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (mnk, cms)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NotInCache.sql.rpt">Recombinant/Transgenic Assays missing from Cache Table</A>
@@ -180,6 +192,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Total GO Annotations per Gene</A> <B>(jblake)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenotypeDescriptions.rpt">Genotype Descriptions with MGI IDs</A> <B>(mdolan)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Verify GPI file</A> <B>(dph)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(hjd)</B>
 </OL>
 
 <A NAME="mtb"><B>MTB (dab, dmk)</B></A>
@@ -329,6 +342,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/impc_index.html">HTMP load: IMPC</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/targetedalleleload/index.html">Targeted Allele Load</A> <B>(csmith)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
 </OL>
 
 <HR>

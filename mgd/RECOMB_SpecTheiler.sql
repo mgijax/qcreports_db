@@ -5,7 +5,7 @@ where i._Result_key = r._Result_key
 and r._EMAPA_Term_key = s._Term_key
 and r._Stage_key = t._Stage_key
 and not (t.stage = 28 
-and (s.term = 'placenta' or s.term = 'decidua'))
+and (s.term = 'placenta' or s.term = 'decidua' or s.term = 'cumulus oophorus'))
 ;
 
 select distinct _Specimen_key 
@@ -16,7 +16,7 @@ group by _Specimen_key having count(*) > 1
 
 \echo ''
 \echo 'InSitu Specimens annotated to structures of > 1 Theiler Stage'
-\echo '(excludes TS28:placenta, TS28:decidua)'
+\echo '(excludes TS28:placenta, TS28:decidua, TS28:cumulus oophorus)'
 \echo ''
 
 select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel

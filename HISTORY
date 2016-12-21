@@ -14,6 +14,62 @@ VOC_OMIMDOMult.py
 VOC_OMIMDOObsolete.py
 obsolete: db.setAutoTranslate
 
+TAG: qcreports_db-6-0-6-11
+DATE: 11/28/2016
+STAFF: sc
+CHANGES: TR12430
+mgd/GO_EvidenceProperty.py - exclude GO_Noctua
+
+TAG: qcreports_db-6-0-6-10
+DATE: 11/17/2016
+STAFF: sc
+CHANGES: GXD HT Project TR12370
+modified:   mgd/GXD_SpecTheiler.sql
+modified:   mgd/GXD_SpecTheilerAge.py
+modified:   mgd/RECOMB_SpecTheiler.sql
+modified:   mgd/RECOMB_SpecTheilerAge.py
+modified:   qcr.shtml
+
+TAG: qcreports_db-6-0-6-9
+DATE: 11/14/2016
+STAFF: sc
+CHANGES: GXD HT Project TR12370
+New reports:
+1) mgd/GXD_HTSampleGenotypeNA.py
+2) mgd/GXD_HTSampleIncompAgeAndTS.py
+3) mgd/GXD_HTSampleNoAge.py
+4) mgd/GXD_HTSampleNoStructure.py
+5) mgd/GXD_HTSampleWrongAge.sql
+
+TAG: qcreports_db-6-0-6-8
+DATE: 11/09/2016
+STAFF: sc
+CHANGES: GXD HT Project TR12370
+1)added experiments to GXD_Stats.py
+2) new GXD_HTOverview.py
+3) new GXD_HTExpCuration.py
+4) new GXD_HTNoMasterBib.py
+
+TAG: qcreports_db-6-0-6-7
+TAG: qcreports_db-6-0-6-6
+DATE: 11/08/2016
+STAFF: lec
+CHANGES: 
+TR12449/mgd/GXD_Images.py/J Neurosci
+
+TAG: qcreports_db-6-0-6-5
+DATE: 10/28/2016
+STAFF: sc
+CHANGES: TR12370 GXD HT project
+Added gxdhtload to qcr.shtml
+
+TAG: qcreports_db-6-0-6-4
+DATE: 10/26/2016
+STAFF: sc
+CHANGES:
+TR11840 - Added mgd/GO_InvalidInferredFrom.py
+>>>>>>> master
+
 TAG: qcreports_db-6-0-6-3
 TAG: qcreports_db-6-0-8-1
 DATE: 10/13/2016
