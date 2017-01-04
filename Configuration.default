@@ -65,7 +65,7 @@ setenv EILOGNAME		.ei-log
 setenv REPORTS_URL             http://prodwww.informatics.jax.org
 
 # set IMSR csv file
-setenv IMSR_STRAINS_CSV         ${DATADOWNLOADS}/emnet.informatics.jax.org/allStrains.csv
+setenv IMSR_STRAINS_CSV         ${DATADOWNLOADS}/bhmgiimsr01.jax.org/allStrains.csv
 
 # Date
 setenv DATE `date '+%Y-%m-%d'`
