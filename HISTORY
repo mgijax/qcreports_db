@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-7-1
+DATE: 1/4/2017
+STAFF: dbm
+CHANGES: 
+1) Configuration.default: changed IMSR_STRAINS_CSV to use bhmgiimsr01
+
 TAG: qcreports_db-6-0-6-12
 DATE: 12/27/2016
 STAFF: lec
