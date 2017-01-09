@@ -320,7 +320,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/geoload/index.html">GEO Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gensatload/index.html">GENSAT Load</A> <B>(cms)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/arrayexpload/index.html">ArrayExpress Load</A> <B>(cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/arrayexpload/index.html">Expression Atlas/ArrayExpress Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/GOindex.html">GO Vocabulary/DAG Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/goamouse/index.html">GOA/Mouse Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gomousenoctua/index.html">GO/Mouse/Noctua Load</A> <B>(dph)</B>
