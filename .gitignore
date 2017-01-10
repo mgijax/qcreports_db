@@ -2,3 +2,4 @@ Configuration
 index.html
 includes/*.html
 weekly/GO_stats.py
+*log
