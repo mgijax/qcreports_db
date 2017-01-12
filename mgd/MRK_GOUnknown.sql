@@ -2,6 +2,7 @@
 /* GO Annotations to unknown terms */
 /* only include non-FANTOM references */
 /* and J: creation date >= Annotation creation date */
+/* ('GO:0008150', 'GO:0003674', 'GO:0005575') */
 
 select distinct substring(m.symbol,1,25) as symbol, m._Marker_key, r._Refs_key,
 substring(r.jnumID,1,20) as jnumID,
@@ -9,11 +10,11 @@ substring(r.pubmedID,1,20) as pubmedID,
 to_char(rr.creation_date, 'MM/dd/yyyy') as jnumDate,
 to_char(a.creation_date, 'MM/dd/yyyy') as annotDate
 INTO TEMPORARY TABLE temp1
-from MRK_Marker m, VOC_Annot_View a, MRK_Reference r, BIB_Refs rr
+from MRK_Marker m, VOC_Annot a, MRK_Reference r, BIB_Refs rr
 where m._Organism_key = 1 
 and m._Marker_key = a._Object_key 
 and a._AnnotType_key = 1000 
-and a.accID in ('GO:0008150', 'GO:0003674', 'GO:0005575') 
+and a._Term_key in (1098,120,6113)
 and m._Marker_key = r._Marker_key
 and r.pubmedID not in ('11217851', '12466851', '14621295', '11125038', '12466854', '12466855', '12693553')
 and r._Refs_key = rr._Refs_key
