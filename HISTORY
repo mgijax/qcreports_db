@@ -12,6 +12,7 @@ add:
 VOC_OMIMGenotypeNoMapDO.py
 VOC_OMIMDOMult.py
 VOC_OMIMDOObsolete.py
+VOC_DOAnnotNotInSlim.sql
 obsolete: db.setAutoTranslate
 
 TAG: qcreports_db-6-0-7-2
