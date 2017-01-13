@@ -185,7 +185,7 @@ def experiments():
 	results = db.sql('''select count(*) as expCt
 	from GXD_HTExperiment
 	where _CurationState_key = 20475421
-	and date_part(\'year\', creation_date) <= %d ''' % (year), 'auto')
+	and date_part(\'year\', initial_curated_date) = %d ''' % (year), 'auto')
 	for r in results:
 	    fp.write(string.ljust(str(year), 10))
 	    fp.write(string.ljust(str(r['expCt']), 10) + CRT)
