@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-7-4
+DATE: 1/17/2017
+STAFFsc
+CHANGES: TR12510
+1) weekely/GXD_HTExpCuration.py: Moved to daily
+2) weekely/GXD_HTNoMasterBib.py: Moved to daily
+3) monthly/GXD_HTOverview.py: Moved to daily
+
 TAG: qcreports_db-6-0-7-3
 DATE: 1/13/2017
 STAFF: sc
