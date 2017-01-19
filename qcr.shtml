@@ -285,6 +285,8 @@ be used at times to test reports for <I>future</I> public consumption.)
     <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Master Bib QTL Indexing Report</A> <B>(djr)</B>
     <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A> <B>(djr)</B>
     </OL>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(djr)</B>
+
 </OL>
 
 <A NAME="sequence"><B>Sequences (rmb, cjb, djr, yz)</B></A>
