@@ -83,7 +83,6 @@ for r in results:
 fp.write('Marker ID%sMarker Symbol%sGene Model IDs%s' % (TAB, TAB, CRT))
 for key in reportDict:
     gmIdList = reportDict[key]
-    print gmIdList.sort()
     mgiID, symbol = string.split(key, '|')
     fp.write('%s%s%s%s%s%s' % (mgiID, TAB, symbol, TAB, string.join(gmIdList, ', '), CRT  ))
 
