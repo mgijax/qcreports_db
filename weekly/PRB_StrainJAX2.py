@@ -66,6 +66,7 @@ def jrs():
 	select distinct s._Strain_key, 
 			substring(s.strain,1,70) as strain, 
 			substring(a.accID,1,6) as accID, 
+			a.numericPart,
 			g._Genotype_key 
 	into temporary table strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, 
@@ -104,6 +105,7 @@ def mmrrc():
 	select distinct s._Strain_key, 
 			substring(s.strain,1,70) as strain, 
 			a.accID, 
+			a.numericPart,
 			g._Genotype_key 
 	into temporary table strains 
 	from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
@@ -126,7 +128,7 @@ def printReport(fp):
 
     genotypes = {}
     results = db.sql('''
-	    select distinct s._Strain_key, a.accID 
+	    select distinct s._Strain_key, a.accID, a.numericPart
 	    from strains s, ACC_Accession a 
 	    where s._Genotype_key = a._Object_key 
 	    and a._MGIType_key = 12 
@@ -141,12 +143,12 @@ def printReport(fp):
         genotypes[key].append(value)
 
     results = db.sql('''
-	    select distinct s._Strain_key, s.strain, s.accID
+	    select distinct s._Strain_key, s.strain, s.accID, s.numericPart
 	    from strains s
 	    where not exists 
 	    (select 1 from PRB_Strain_Genotype g 
 		 where s._Strain_key = g._Strain_key and s._Genotype_key = g._Genotype_key)
-	    order by s.accID''', 'auto')
+	    order by s.numericPart''', 'auto')
     for r in results:
         fp.write(r['accID'] + TAB)
         fp.write(r['strain'] + TAB)

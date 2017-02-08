@@ -4,6 +4,7 @@ STAFF: lec
 CHANGES: 
 TR12427/Disease Ontology (DO)
 TR11083/NOM_Marker obsolete/merged with MRK_Marker
+TR12528/PRB_StrainJAX2.py
 mgd/MRK_QTL.py
 mgd/HMD_SymbolDiffs.py
 mgd/MRK_GOIEA.py
