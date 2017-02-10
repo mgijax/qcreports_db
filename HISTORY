@@ -16,6 +16,13 @@ VOC_OMIMDOObsolete.py
 VOC_DOAnnotNotInSlim.sql
 obsolete: db.setAutoTranslate
 
+TAG: qcreports_db-6-0-7-7
+DATE: 02/09/2017
+STAFF sc
+CHANGES:
+TR12505/copyright statements for 2 journals
+mgd/GXD_Images.py
+
 TAG: qcreports_db-6-0-7-6
 TAG: qcreports_db-6-0-7-5
 DATE: 1/19/2017
