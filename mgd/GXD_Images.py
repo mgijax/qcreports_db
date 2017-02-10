@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	02/09/2017
+#	- TR12505/new journal : Biol Open, Cell Cycle
+#
 # lec	11/07/2016
 #	- TR12449/new journal : J Neurosci
 #
@@ -102,8 +105,8 @@ import reportlib
 import db
 
 db.setTrace()
-db.setAutoTranslate(False)
-db.setAutoTranslateBE(False)
+#db.setAutoTranslate(False)
+#db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -111,28 +114,42 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 journals = [
+'Biol Open',
+'BMC Bioinformatics',
 'BMC Biochem', 
 'BMC Biol', 
 'BMC Biotechnol', 
+'BMC Blood Disord',
 'BMC Cancer', 
 'BMC Cell Biol', 
 'BMC Complement Altern Med',
 'BMC Dev Biol', 
 'BMC Evol Biol', 
+'BMC Gastroenterol',
 'BMC Genet', 
 'BMC Genomics', 
+'BMC Immunol',
 'BMC Med', 
+'BMC Med Genet',
 'BMC Mol Biol', 
+'BMC Nephrol',
 'BMC Neurosci',
 'BMC Ophthalmol', 
+'BMC Pharmacol Toxicol',
+'BMC Physiol',
 'BMC Res Notes',
+'BMC Struct Biol',
+'BMC Syst Biol',
 'Brain Res Gene Expr Patterns',
 'Breast Cancer Res',
 'Cell Commun Signal',
+'Cell Death Dis',
 'Dev Biol', 
 'Dev Dyn', 
 'Development', 
+'Direct Data Submission from Genetic Resource Science',
 'Dis Model Mech',
+'Elife',
 'Exp Mol Med',
 'Gene Expr Patterns', 
 'Genesis', 
@@ -148,33 +165,20 @@ journals = [
 'J Lipid Res', 
 'Mech Dev', 
 'Mol Reprod Dev',
-'Neural Dev',
-'PLoS Biol', 
-'PLoS Genet', 
-'PLoS Med', 
-'PLoS One' ,
-'Proc Natl Acad Sci U S A',
-'Cell Death Dis',
 'Nat Commun',
-'Sci Rep',
-'Elife',
-'Vasc Cell',
+'Neural Dev',
+'PeerJ',
+'PLoS Biol', 
 'PLoS Comput Biol',
 'PLoS Curr',
+'PLoS Genet', 
+'PLoS Med', 
 'PLoS Negl Trop Dis',
+'PLoS One' ,
 'PLoS Pathog',
-'PeerJ',
-'BMC Bioinformatics',
-'BMC Blood Disord',
-'BMC Gastroenterol',
-'BMC Immunol',
-'BMC Med Genet',
-'BMC Nephrol',
-'BMC Pharmacol Toxicol',
-'BMC Physiol',
-'BMC Struct Biol',
-'BMC Syst Biol',
-'Direct Data Submission from Genetic Resource Science'
+'Proc Natl Acad Sci U S A',
+'Sci Rep',
+'Vasc Cell'
 ]
 
 # journals where year >= 2005
@@ -205,7 +209,7 @@ journalsOxford = [
 ]
 
 journalsOther = [
-'EMBO J', 'J Invest Dermatol', 'Mol Psychiatry'
+'Cell Cycle', 'EMBO J', 'J Invest Dermatol', 'Mol Psychiatry'
 ]
 
 journalsJNeurosci = [
