@@ -29,8 +29,6 @@ import db
 import re
 
 db.setTrace()
-db.setAutoTranslate(False)
-db.setAutoTranslateBE(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
