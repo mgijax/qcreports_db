@@ -134,7 +134,8 @@ def printReport(fp):
 	    and a._MGIType_key = 12 
 	    and a._LogicalDB_key = 1 
 	    and a.prefixPart = 'MGI:' 
-	    and a.preferred = 1''', 'auto')
+	    and a.preferred = 1
+	    order by a.numericPart''', 'auto')
     for r in results:
         key = r['_Strain_key']
         value = r['accID']
