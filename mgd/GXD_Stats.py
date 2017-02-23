@@ -15,6 +15,9 @@
 #
 # History:
 #
+# 02/23/2017	lec
+#	- TR12491/added J:226028/Lewandowski
+#
 # 11/07/2016	sc
 #	- TR12370 GXD HT Project
 #	add HT experiment stats
@@ -93,9 +96,10 @@ elect_ref1 = 'J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, J:85124 Sousa-Nu
 elect_ref2 = 'J:91257 Gray, J:93300 Blackshaw, J:101679 Deltagen, J:122989 Eichele, J:140465 Robson'
 elect_ref3 = 'J:141291 Tamplin1, J:143778 Tamplin2, J:153498 Eurexpress, J:157819 Blackshaw2, J:162220 BGEM'
 elect_ref4 = 'J:171409 GUDMAP, J:228563 IMPC'
+elect_ref5 = 'J:226028 Lewandowski'
 
 # _Refs_key for all electronic references
-electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316,172505,229658)"
+electronic = "(46734,81462,81463,86101,92242,94290,102744,124081,141558,142384,144871,154591,158912,163316,172505,229658,227123)"
 
 
 '''
@@ -414,7 +418,8 @@ def fullCoded():
     fp.write('(Electronic References are:  ' + elect_ref1 + CRT)
     fp.write('                             ' + elect_ref2 + CRT)
     fp.write('                             ' + elect_ref3 + CRT)
-    fp.write('                             ' + elect_ref4 + 2*CRT)
+    fp.write('                             ' + elect_ref4 + CRT)
+    fp.write('                             ' + elect_ref5 + 2*CRT)
 
     fp.write(string.ljust('             ', 15))
     fp.write(string.ljust('Electronic Submission', 25))
