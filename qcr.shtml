@@ -84,7 +84,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenoNoMarker.rpt">Genotype Alleles that Contain No Markers</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_OMIMNoMP.rpt">Alleles with OMIM Annotation, but no MP Annotation</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMGenotypeNoMapDO.rpt">OMIM-to-Genotype : do not map to DO ids</A>
-<LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOMult.rpt">DO terms that have mulitple OMIM xrefs</A>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOMult.rpt">DO terms that have multiple OMIM xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOObsolete.rpt">Obsolete OMIM terms in DO as xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DOAnnotNotInSlim.sql.rpt">DO terms not in the DO slim</A>
 </OL>

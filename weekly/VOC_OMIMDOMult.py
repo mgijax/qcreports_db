@@ -6,7 +6,7 @@
 #
 # Report:
 #
-#       DO terms that have mulitple OMIM xrefs
+#       DO terms that have multiple OMIM xrefs
 #
 # Usage:
 # 	VOC_OMIMDOMult.py
@@ -31,7 +31,7 @@ db.setTrace()
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init(sys.argv[0], 'DO terms that have mulitple OMIM xrefs', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'DO terms that have multiple OMIM xrefs', outputdir = os.environ['QCOUTPUTDIR'])
 
 db.sql('''
 	select a1.accID
