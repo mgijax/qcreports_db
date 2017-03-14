@@ -2,14 +2,14 @@
 
 '''
 #
-# ALL_OMIMNoMP.py
+# ALL_DONoMP.py
 #
 # Report:
 #
-#       Alleles with OMIM annotations, but no MP annotation
+#       Alleles with DO annotations, but no MP annotation
 #
 # Usage:
-#       ALL_OMIMNoMP.py
+#       ALL_DONoMP.py
 #
 # Notes:
 #
@@ -30,32 +30,30 @@ db.setTrace()
 TAB = reportlib.TAB
 CRT = reportlib.CRT
 
-fp = reportlib.init(sys.argv[0], 'Alleles with OMIM/DO annotations but no MP', outputdir = os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Alleles with DO annotations but no MP', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('Genotype ID%sOMIM/DO ID%sJ:%s%s' % (TAB, TAB, CRT, CRT))
+fp.write('Genotype ID%sDO ID%sJ:%s%s' % (TAB, TAB, CRT, CRT))
 
-# Alleles with OMIM/DO annotations
-db.sql('''select a._Object_key as _Genotype_key, a._Term_key as termKey, 
-	e._Refs_key
-    into temporary table omimdoalleles
+# Alleles with DO annotations
+db.sql('''select a._Object_key as _Genotype_key, a._Term_key as termKey, e._Refs_key
+    into temporary table doalleles
     from VOC_Annot a, VOC_Evidence e, GXD_AllelePair ap
-    where a._AnnotType_key in (1005, 1020)
+    where a._AnnotType_key in (1020)
     and a._Annot_key = e._Annot_key
     and a._Object_key = ap._Genotype_key''', None)
 
 # Alleles with MP Annotations 
-db.sql('''select a._Object_key as _Genotype_key, a._Term_key as termKey, 
-	e._Refs_key
+db.sql('''select a._Object_key as _Genotype_key, a._Term_key as termKey, e._Refs_key
     into temporary table mpalleles
     from VOC_Annot a, VOC_Evidence e, GXD_AllelePair ap
     where a._AnnotType_key = 1002
     and a._Annot_key = e._Annot_key
     and a._Object_key = ap._Genotype_key''', None)
 
-# Alleles with OMIM/DO, no MP annotations
+# Alleles with DO, no MP annotations
 db.sql('''select *
     into temporary table nomp
-    from omimdoalleles o
+    from doalleles o
     where not exists(select 1
     from mpalleles m
     where o._Genotype_key = m._Genotype_key)''', None)
@@ -76,7 +74,7 @@ results = db.sql('''select a1.accid as mgiID, a2.accid as jNum,
     and a2.prefixPart = 'J:'
     and n.termKey = a3._Object_key
     and a3._MGIType_key = 13 /* VOC_Term */
-    and a3._LogicalDB_key in (15, 191) /* OMIM, DO */
+    and a3._LogicalDB_key in (191) /* DO */
     and a3.preferred = 1''', 'auto')
 
 for r in results:
