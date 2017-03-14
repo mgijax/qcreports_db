@@ -45,31 +45,85 @@ db.setTrace()
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+# get refs used for GO
 db.sql('''select distinct e._Refs_key
-    into temporary table gorefs
+    into temporary table goUsed
     from VOC_Annot a, VOC_Evidence e
-    where a._AnnotType_key = 1000 /* GO */
+    where a._AnnotType_key = 1000 
     and a._Annot_key = e._Annot_key''', None)
-db.sql('create index idx1 on gorefs(_Refs_key)', None)
 
-results = db.sql('''select v.jnumID, a.accid as markerID
-    from BIB_DataSet_Assoc bda, MGI_Reference_Marker_view v, ACC_Accession a
-    where bda._DataSet_key = 1012 /* PRO */
-    and bda._Refs_key = v._Refs_key
-    and v._MGIType_key = 2 /* Marker */
+db.sql('''create index idx1 on goUsed(_Refs_key)''', None)
+
+# get marker references 
+db.sql('''select v.jnumID, v._Refs_Key, a.accid as markerID
+into temporary table markers
+    from MGI_Reference_Marker_view v, ACC_Accession a
+    where v._Refs_key in (236447, 238453, 238765, 239391,239667, 239714, 239754, 239758)
+    and v._MGIType_key = 2 
     and v._Object_key = a._Object_key
     and a._MGIType_key = 2
     and a._LogicalDB_key = 1
     and a.preferred = 1
-    and a.prefixPart = 'MGI:'
-    and not exists (select 1 /* not used in GO annotation */
-    from gorefs g
-    where bda._Refs_key = g._Refs_key)''', 'auto')
+    and a.prefixPart = 'MGI:' ''', None)
+
+db.sql('''create index idx2 on markers(_Refs_key)''', None)
+
+# get the refs selected for PRO
+db.sql('''select a.accid as jnumID, bda._Refs_key
+into temporary table proRefs
+    from BIB_DataSet_Assoc bda, ACC_Accession a
+    where bda._DataSet_key = 1012 
+    and bda._Refs_key = a._Object_key
+    and a._MGIType_key = 1 
+    and a._LogicalDB_key = 1
+    and a.prefixPart = 'J:'
+    and a.preferred = 1''', None)
+
+db.sql('''create index idx3 on proRefs(_Refs_key)''', None)
+
+# get the refs selected for GO 
+db.sql('''select a.accid as jnumID, bda._Refs_key
+    into temporary table goRefs
+    from BIB_DataSet_Assoc bda, ACC_Accession a
+    where bda._DataSet_key = 1005 
+    and bda._Refs_key = a._Object_key
+    and a._MGIType_key = 1 
+    and a._LogicalDB_key = 1
+    and a.prefixPart = 'J:'
+    and a.preferred = 1''', None)
+
+db.sql('''create index idx4 on goRefs(_Refs_key)''', None)
+
+# get refs selected for PRO and GO
+db.sql('''select p.* 
+    into temporary table goProRefs
+    from goRefs g, proRefs p
+    where g._Refs_key = p._Refs_key''', None)
+
+db.sql('''create index idx5 on goProRefs(_Refs_key)''', None)
+
+# select refs selected for PRO and GO, but not used by GO 
+db.sql('''select p.*
+    into temporary table notUsed
+    from goProRefs p
+    where not exists (select 1
+    from goUsed u
+    where  p._Refs_key = u._Refs_key)''', None)
+
+db.sql('''create index idx6 on notUsed(_Refs_key)''', None)
+
+# final query, get markers if there are any
+results = db.sql('''select distinct nu.jnumID, m.markerID
+    from notUsed nu
+    left outer join markers m on (nu._Refs_key = m._Refs_key)''', 'auto')
 
 jNumDict = {}
+print results
 for r in results:
     jNumID = r['jnumID']
     markerID = r['markerID']
+    if markerID == None:
+	markerID = ''
     if jNumID not in jNumDict:
 	jNumDict[jNumID] = []
     jNumDict[jNumID].append(markerID)
