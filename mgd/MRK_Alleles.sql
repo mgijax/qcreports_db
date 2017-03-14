@@ -9,6 +9,7 @@ and m._Organism_key = 1
 and a.symbol != '+'
 and m.symbol not in ('a', 'A')
 and a.symbol not like '%' || m.symbol || '%'
+and m._Marker_Status_key in (1,2)
 ;
 
 /* duplicate alleles by symbol */
