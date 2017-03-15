@@ -3,6 +3,8 @@ DATE: 03/07/2017
 STAFF: lec 
 TR12540/DO (Disease Ontology)
 ALL_OMIMNoMP.py renamed ALL_DONoMP.py
+VOC_OMIMDOMult.py ; add genotypes
+VOC_OMIMObsolete.sql renamed VOC_DOObsolete.sql
 
 TAG: qcreports_db-6-0-8-11
 DATE: 03/14/2017
