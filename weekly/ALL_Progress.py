@@ -440,21 +440,24 @@ def vocab():
     fp.write('Vocab count' + 2*CRT)
 
     mp = db.sql('select count(_Term_key) as c from VOC_Term where _Vocab_key = 5 and isObsolete = 0', 'auto')[0]['c']
+    omim = db.sql('select count(_Term_key) as c from VOC_Term where _Vocab_key = 44 and isObsolete = 0', 'auto')[0]['c']
     diseaseont = db.sql('select count(_Term_key) as c from VOC_Term where _Vocab_key = 125 and isObsolete = 0', 'auto')[0]['c']
 
     fp.write(string.ljust('MP terms (exclude obsolete):', 60))
     fp.write(string.rjust(str(mp), 10) + CRT)
+    fp.write(string.rjust(str(omim), 10) + CRT)
     fp.write(string.ljust('Disease Ontology (DO) terms (exclude obsolete):', 60))
     fp.write(string.rjust(str(diseaseont), 10) + CRT)
 
 def diseaseontology():
 
     fp.write(2*CRT + '#########################' + 2*CRT)
-    fp.write('Disease Ontology (DO) annotations' + 2*CRT)
+    fp.write('DO annotations' + 2*CRT)
 
     genotypes = db.sql('select count(distinct _Object_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
     diseaseont = db.sql('select count(distinct _Term_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
 
+    fp.write(string.ljust('Genotypes associated with at least one DO term:', 60))
     fp.write(string.rjust(str(genotypes), 10) + CRT)
     fp.write(string.ljust('DO terms that have one or more genotypes associated:', 60))
     fp.write(string.rjust(str(diseaseont), 10) + CRT)
