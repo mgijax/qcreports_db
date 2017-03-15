@@ -43,14 +43,14 @@ create index temp2_idx1 on temp2(_Marker_key)
 create index temp2_idx2 on temp2(_Refs_key)
 ;
 
-/* set OMIM yes/no flag */
+/* set DO yes/no flag */
 
 select distinct t._Marker_key, t.symbol
-INTO TEMPORARY TABLE omim
+INTO TEMPORARY TABLE diseaseontology
 from temp2 t, VOC_Annot va,
 GXD_AlleleGenotype agt, VOC_Term vt, ALL_Allele a
 where t._Marker_key = agt._Marker_key
-and va._AnnotType_key = 1005
+and va._AnnotType_key = 1020
 and va._Term_key = vt._Term_key
 and vt.isObsolete = 0
 and va._Qualifier_key in (1614158)
@@ -60,7 +60,7 @@ and a._Allele_Status_key != 847112
 and a.isWildType != 1
 ;
 
-create index omim_idx1 on omim(_Marker_key)
+create index diseaseontology_idx1 on diseaseontology(_Marker_key)
 ;
 
 /* grab the pubmed ids */
@@ -140,18 +140,18 @@ and e._Refs_key = t._Refs_key)
 create index temp3_idx1 on temp3(_Marker_key)
 ;
 
-/* set hasOMIM */
+/* set hasDO */
 
-select t.*, 'Y'::text as hasOMIM
+select t.*, 'Y'::text as hasDO
 INTO TEMPORARY TABLE temp4
 from temp3 t
-where exists (select 1 from omim o where t._Marker_key = o._Marker_key)
+where exists (select 1 from diseaseontology o where t._Marker_key = o._Marker_key)
 ;
 
 INSERT INTO temp4
-select t.*, 'N'::text as hasOMIM
+select t.*, 'N'::text as hasDO
 from temp3 t
-where not exists (select 1 from omim o where t._Marker_key = o._Marker_key)
+where not exists (select 1 from diseaseontology o where t._Marker_key = o._Marker_key)
 ;
 
 create index temp4_idx1 on temp4(symbol)
@@ -167,7 +167,7 @@ create index temp4_idx2 on temp4(tag)
 
 select 'Number of unique MGI Gene IDs:  ', count(distinct mgiID) from temp4
 union
-select 'Number of unique MGI Gene IDs associated with OMIM:', count(distinct mgiID) from temp4 where hasOMIM = 'Y'
+select 'Number of unique MGI Gene IDs associated with OMIM:', count(distinct mgiID) from temp4 where hasDO = 'Y'
 union
 select 'Number of total rows:  ', count(*) from temp4
 ;
@@ -178,7 +178,7 @@ select 'Number of total rows:  ', count(*) from temp4
 \echo ' tag 3 = any GO'
 \echo ''
 
-select distinct symbol, mgiID, jnumID, pubmedID, tag, hasOMIM, jnumDate, annotDate
+select distinct symbol, mgiID, jnumID, pubmedID, tag, hasDO, jnumDate, annotDate
 from temp4 
 order by symbol, tag
 ;

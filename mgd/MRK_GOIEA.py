@@ -272,7 +272,7 @@ db.sql('''select m._Marker_key, m.symbol, a.accID as mgiID, a.numericPart
 	and exists (select 1 from GXD_AlleleGenotype g, VOC_Annot a
 	where m._Marker_key = g._Marker_key
 	and g._Genotype_key = a._Object_key
-	and a._AnnotType_key in (1020)) ''', None)
+	and a._AnnotType_key in (1020))''', None)
 db.sql('create index do_idx1 on domarkers(_Marker_key)', None)
 
 #
