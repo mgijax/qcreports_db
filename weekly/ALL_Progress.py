@@ -445,6 +445,7 @@ def vocab():
 
     fp.write(string.ljust('MP terms (exclude obsolete):', 60))
     fp.write(string.rjust(str(mp), 10) + CRT)
+    fp.write(string.ljust('OMIM terms (exclude obsolete):', 60))
     fp.write(string.rjust(str(omim), 10) + CRT)
     fp.write(string.ljust('Disease Ontology (DO) terms (exclude obsolete):', 60))
     fp.write(string.rjust(str(diseaseont), 10) + CRT)
