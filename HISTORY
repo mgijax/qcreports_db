@@ -5,6 +5,12 @@ TR12540/DO (Disease Ontology)
 ALL_OMIMNoMP.py renamed ALL_DONoMP.py
 VOC_OMIMDOMult.py ; add genotypes
 VOC_OMIMObsolete.sql renamed VOC_DOObsolete.sql
+ALL_Progress.py : remove OMIM
+change OMIM annotations to DO annotations:
+GO_Combined_Report.py
+MRK_GOUnknown.sql
+MRK_GOIEA.py
+GXD_OrphanGenotype.sql
 
 TAG: qcreports_db-6-0-8-11
 DATE: 03/14/2017

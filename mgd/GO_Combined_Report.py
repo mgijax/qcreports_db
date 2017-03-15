@@ -116,7 +116,7 @@ db.sql('''
 	into temporary table mrkOmimAnnot
 	from validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
-	         and annotType = 'OMIM/Genotype')
+	         and annotType = 'DO/Genotype')
 	group by m._Marker_key
 	''', None)
 db.sql('create index mrkOmimIndex on mrkOmimAnnot (_Marker_key)', None)
@@ -128,7 +128,7 @@ db.sql('''
 	into temporary table mrkOmimHumanAnnot
 	from validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
-	         and annotType = 'OMIM/Human Marker')
+	         and annotType = 'DO/Human Marker')
 	group by m._Marker_key
 	''', None)
 db.sql('create index mrkOmimHumanIndex on mrkOmimHumanAnnot (_Marker_key)', None)
@@ -469,8 +469,8 @@ fp.write(CRT + CRT + CRT + 'No GO' + TAB + \
 	'MGI ID' + TAB + \
 	'Gene Name' + TAB + \
 	'Rat/Human Orthologs?' + TAB + \
-	'OMIM Genotype Annotations?' + TAB + \
-	'OMIM Human Annotations?' + TAB + \
+	'DO Genotype Annotations?' + TAB + \
+	'DO Human Annotations?' + TAB + \
 	'Alleles?' + TAB + \
 	'Annotation Complete?' + TAB + \
 	'Number of GO References' + CRT)
@@ -482,8 +482,8 @@ fp2.write(CRT + CRT + CRT +
 	'MGI ID' + TAB + \
 	'Gene Name' + TAB + \
 	'Rat/Human Orthologs?' + TAB + \
-	'OMIM Genotype Annotations?' + TAB + \
-	'OMIM Human Annotations?' + TAB + \
+	'DO Genotype Annotations?' + TAB + \
+	'DO Human Annotations?' + TAB + \
 	'Alleles?' + TAB + \
 	'Annotation Complete?' + TAB + \
 	'Number of GO References' + CRT)
@@ -498,8 +498,8 @@ fp3.write(CRT + CRT + CRT +
 	'MGI ID' + TAB + \
 	'Gene Name' + TAB + \
 	'Rat/Human Orthologs?' + TAB + \
-	'OMIM Genotype Annotations?' + TAB + \
-	'OMIM Human Annotations?' + TAB + \
+	'DO Genotype Annotations?' + TAB + \
+	'DO Human Annotations?' + TAB + \
 	'Alleles?' + TAB + \
 	'Annotation Complete?' + TAB + \
 	'Number of GO References' + CRT)
