@@ -337,7 +337,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A> <B>(mmh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/OMIMindex.html">OMIM Vocabulary Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/DOindex.html">Disease Ontology (DO) Vocabulary Load</A> <B>(smb)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/doload/index.html">Disease Ontology (DO) Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(dph)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genmapload/index.html">Genetic Map Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
