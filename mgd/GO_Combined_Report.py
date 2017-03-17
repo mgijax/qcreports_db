@@ -112,7 +112,7 @@ db.sql('create index mrkAlleleIndex on mrkAlleles (_Marker_key)', None)
 # setup the mrk Omim annotations table
 
 db.sql('''
-	select m._Marker_key, count(vmc._Term_key) as hasOmim
+	select m._Marker_key, count(vmc._Term_key) as hasDO
 	into temporary table mrkOmimAnnot
 	from validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
@@ -124,7 +124,7 @@ db.sql('create index mrkOmimIndex on mrkOmimAnnot (_Marker_key)', None)
 # Setup the mrk human -> mouse orthologs relationship
 
 db.sql('''
-	select m._Marker_key, count(vmc._Term_key) as hasOmimHuman
+	select m._Marker_key, count(vmc._Term_key) as hasDOHuman
 	into temporary table mrkOmimHumanAnnot
 	from validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
@@ -189,8 +189,8 @@ db.sql('''
 	select m._Marker_key,
 	case when gt.completion_date is not null then 'Yes' else 'No' end as isComplete,
 	case when ma.hasAlleles > 0 then 'Yes' else 'No' end as hasAlleles,
-	case when moa.hasOmim > 0 then 'Yes' else 'No' end as hasOmim,
-	case when moha.hasOmimHuman > 0 then 'Yes' else 'No' end as hasHumanOmim,
+	case when moa.hasDO > 0 then 'Yes' else 'No' end as hasDO,
+	case when moha.hasDOHuman > 0 then 'Yes' else 'No' end as hasHumanDO,
 	case when mho.hasOrtholog > 0 then 'Yes' else 'No' end as hasOrtholog,
 	rgs.goRefcount 
 	into temporary table goOverall
@@ -210,7 +210,7 @@ db.sql('create index goOverall_idx on goOverall (_Marker_key)', None)
 
 resultsNoGO = db.sql('''
 	select distinct '1' as type, m.symbol, a.accID as mgiID, m.name,
-		g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, 
+		g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, 
 		g.goRefcount
 	from validMarkers m, ACC_Accession a, goOverall g
 	where m._Marker_key = a._Object_key
@@ -228,7 +228,7 @@ noGOCount = len(resultsNoGO)
 	
 db.sql('''
 	select distinct '1' as type, m.symbol, a.accID as mgiID, m.name,
-		g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, 
+		g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, 
 		g.goRefcount, m._Marker_key
 	into temporary table hasNoGO
 	from validMarkers m, ACC_Accession a, goOverall g
@@ -248,7 +248,7 @@ db.sql('''
 
 resultsNDOnly = db.sql('''
 	select distinct '2' as type, m.symbol, a.accID as mgiID, m.name,
-		g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, 
+		g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, 
 		g.goRefcount
 	from validMarkers m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, goOverall g
@@ -277,7 +277,7 @@ NDOnlyCount = len(resultsNDOnly[0])
 
 resultsIEAOnly = db.sql('''
 	select distinct '3' as type, m.symbol, a.accID as mgiID, m.name,
-	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
 	from validMarkers m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, goOverall g
 	where m._Marker_key = a._Object_key
@@ -306,7 +306,7 @@ IEAOnlyCount = len(resultsIEAOnly[0])
 
 resultsIEAAndNDOnly = db.sql('''
 	select distinct '4' as type, m.symbol, a.accID as mgiID, m.name,
-	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
 	from MRK_Marker m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, goOverall g
 	where m._Marker_key = a._Object_key
@@ -340,7 +340,7 @@ IEAAndNDOnlyCount = len(resultsIEAAndNDOnly[0])
 
 resultsAllOther = db.sql('''
 	select distinct '5' as type, m.symbol, a.accID as mgiID, m.name,
-	g.isComplete, g.hasAlleles, g.hasOmim, g.hasHumanOmim, g.hasOrtholog, g.goRefcount
+	g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
 	from MRK_Marker m, ACC_Accession a, VOC_Annot a2,
 	voc_evidence e2, voc_term vt, goOverall g
 	where m._Marker_key = a._Object_key
@@ -400,14 +400,14 @@ for r in results:
     rhHomologsYes = r['cnt']
 fp.write(CRT + "7. Mouse Genes that have Rat/Human Homologs and NO GO annotations: %d" % rhHomologsYes)
 
-# Count of markers with omim geno annotations
+# Count of markers with do/geno annotations
 results = db.sql('''
 	select count(go._Marker_key) as cnt from goOverall go, hasNoGO hng
-	where go.hasOmim = 'Yes' and go._Marker_key = hng._Marker_key 
+	where go.hasDO = 'Yes' and go._Marker_key = hng._Marker_key 
 	''', 'auto')
 for r in results:
-    omimGenoYes = r['cnt']
-fp.write(CRT + "8. Mouse Genes with Human Disease Annotations and NO GO annotations: %d" % omimGenoYes)
+    doGenoYes = r['cnt']
+fp.write(CRT + "8. Mouse Genes with Human Disease Annotations and NO GO annotations: %d" % doGenoYes)
 
 # Count of markers that have alleles	
 results = db.sql('''
@@ -505,26 +505,26 @@ fp3.write(CRT + CRT + CRT +
 	'Number of GO References' + CRT)
 	
 for r in resultsNoGO:
-    fp.write(templateRow % (type1, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
+    fp.write(templateRow % (type1, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
     
     # Report #2 needs a copy of this
-    fp2.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
+    fp2.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
     
     # Report #3 needs a copy of this, if they have alleles.
     if r['hasAlleles'] == 'Yes':
-        fp3.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
+        fp3.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
         
 for r in resultsNDOnly:
-    fp.write(templateRow % (type2, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
+    fp.write(templateRow % (type2, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
 
 for r in resultsIEAOnly:
-    fp.write(templateRow % (type3, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
+    fp.write(templateRow % (type3, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
     
 for r in resultsIEAAndNDOnly:
-    fp.write(templateRow % (type4, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
+    fp.write(templateRow % (type4, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))	
     
 for r in resultsAllOther:
-    fp.write(templateRow % (type5, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasOmim'], r['hasHumanOmim'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))    
+    fp.write(templateRow % (type5, r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))    
 
 
 reportlib.finish_nonps(fp)
