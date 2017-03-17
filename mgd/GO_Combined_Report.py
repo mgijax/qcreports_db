@@ -109,29 +109,29 @@ db.sql('''
 	''', None)
 db.sql('create index mrkAlleleIndex on mrkAlleles (_Marker_key)', None)
 
-# setup the mrk Omim annotations table
+# setup the mrk/DO annotations table
 
 db.sql('''
 	select m._Marker_key, count(vmc._Term_key) as hasDO
-	into temporary table mrkOmimAnnot
+	into temporary table mrkDOAnnot
 	from validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
 	         and annotType = 'DO/Genotype')
 	group by m._Marker_key
 	''', None)
-db.sql('create index mrkOmimIndex on mrkOmimAnnot (_Marker_key)', None)
+db.sql('create index mrkDOIndex on mrkDOAnnot (_Marker_key)', None)
 
 # Setup the mrk human -> mouse orthologs relationship
 
 db.sql('''
 	select m._Marker_key, count(vmc._Term_key) as hasDOHuman
-	into temporary table mrkOmimHumanAnnot
+	into temporary table mrkDOHumanAnnot
 	from validMarkers m
 	     LEFT OUTER JOIN VOC_Marker_Cache vmc on (m._Marker_key = vmc._Marker_key
 	         and annotType = 'DO/Human Marker')
 	group by m._Marker_key
 	''', None)
-db.sql('create index mrkOmimHumanIndex on mrkOmimHumanAnnot (_Marker_key)', None)
+db.sql('create index mrkDOHumanIndex on mrkDOHumanAnnot (_Marker_key)', None)
 
 # Set up the marker has orthologs table
 
@@ -196,8 +196,8 @@ db.sql('''
 	into temporary table goOverall
 	from validMarkers m
 	     LEFT OUTER JOIN GO_Tracking gt on (m._Marker_key = gt._Marker_key),
-	     mrkAlleles ma, mrkOmimAnnot moa, 
-	     refGOUnused rgs, mrkOmimHumanAnnot moha, mrkHomology mho
+	     mrkAlleles ma, mrkDOAnnot moa, 
+	     refGOUnused rgs, mrkDOHumanAnnot moha, mrkHomology mho
 	where m._Marker_key = ma._Marker_key
 	and m._Marker_key = moa._Marker_key
 	and m._Marker_key = mho._Marker_key
