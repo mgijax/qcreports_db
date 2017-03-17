@@ -12,7 +12,7 @@
 # History:
 #
 # sc 01/28/2014
-#	- TR11347 remove OMIM column
+#	- TR11347 remove DO column
 #
 # lec	08/06/2012
 #	- copied from GXD_FullCodeable.py

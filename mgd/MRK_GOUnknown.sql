@@ -167,7 +167,7 @@ create index temp4_idx2 on temp4(tag)
 
 select 'Number of unique MGI Gene IDs:  ', count(distinct mgiID) from temp4
 union
-select 'Number of unique MGI Gene IDs associated with OMIM:', count(distinct mgiID) from temp4 where hasDO = 'Y'
+select 'Number of unique MGI Gene IDs associated with DO:', count(distinct mgiID) from temp4 where hasDO = 'Y'
 union
 select 'Number of total rows:  ', count(*) from temp4
 ;
