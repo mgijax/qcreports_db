@@ -39,8 +39,8 @@ db.sql('''
 	from ACC_Accession a1, ACC_Accession a2
 	where a1._MGIType_key = 13
 	and a1._LogicalDB_key = 191 
-	and a1._Object_key = a2._Object_key
 	and a1.preferred = 1 
+	and a1._Object_key = a2._Object_key
 	and a2._LogicalDB_key = 15
 	group by a1.accID having count(*) > 1 
 	''', None)
@@ -51,8 +51,8 @@ results = db.sql('''
 	from ACC_Accession a1, ACC_Accession a2, VOC_Annot va, ACC_Accession a3
 	where a1._MGIType_key = 13
 	and a1._LogicalDB_key = 191 
-	and a1._Object_key = a2._Object_key
 	and a1.preferred = 1 
+	and a1._Object_key = a2._Object_key
 	and a2._LogicalDB_key = 15
 	and a1._Object_key = va._Term_key
 	and va._AnnotType_key = 1020
