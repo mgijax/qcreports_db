@@ -20,7 +20,12 @@ cd ${QCMGD}
 
 foreach i (*.sql)
     echo `date`: $i | tee -a ${LOG}
-    ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
+    if ( $i == "GO_NotGene.sql" ) then
+	${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
+	cp -p ${QCOUTPUTDIR}/GO_NotGene.sql.rpt ${QCGOARCHIVE}/GO_NotGene.sql.rpt.`date +%Y%m%d`
+    else
+	${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
+    endif
 end
 
 foreach i (*.py)
