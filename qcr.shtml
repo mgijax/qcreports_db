@@ -71,6 +71,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoSubType.rpt">Alleles with molecular notes but no attribute</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ExpressedSeq.rpt">Alleles with molecular notes and expressed sequence attribute</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoOrigRef.sql.rpt">Alleles with status approved or autoload that have no original reference</A> <B> (sbello)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-ExpComp.rpt">All expresses component relationship report </A> <B> (mnk)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-MutInv.rpt">All mutation involves relationship report </A> <B> (mnk)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
@@ -144,8 +146,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpCuration.rpt">GXD HT Experiments where Curation State set to Done, but other attributes are Not Curated</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTNoMasterBib.rpt">GXD HT Experiment PubMed IDs not in the Master Bib</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpCuration.rpt">GXD HT Experiments where Curation State set to Done, but other attributes are Not Curated</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleGenotypeNA.rpt">GXD HT Samples whose Relevance = Yes but whose genotype is Not Applicable</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleIncompAgeAndTS.rpt">GXD HT Samples whose Relevance = Yes but whose Theiler stages and age fields are incompatible
 </A>
@@ -182,7 +184,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidInferred.rpt">Invalid "Inferred From" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Invalid "Properties" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">GO Statistics</A>
-<LI><A HREF="/data/reports/qcreports_db/archive/go">Archive of GO Statistics</A>
+<LI><A HREF="/data/reports/qcreports_db/archive/go">Archive of GO Statistics and Reports</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.sql.rpt">All genes with 'unknown' annotations with new indexed literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Non-Gene Markers with GO Annotations</A>

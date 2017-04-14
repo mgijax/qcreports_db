@@ -23,6 +23,9 @@
 #
 # History:
 #
+# sc	04/06/2017
+#	- TR12523 add curation state as field 5
+#
 # sc   11/04/2061
 #       - TR12370 created
 #
@@ -45,9 +48,10 @@ fp = reportlib.init(sys.argv[0], 'GXD Overview QC', os.environ['QCOUTPUTDIR'])
 
 results = db.sql('''select a1.accid as aeId, a2.accid as geoId, e._Experiment_key, 
 	    t1.term as exptType, t2.term as evalState, t3.term as studyType, 
-	    v._Term_key as varTermKey, vt.Term as varTerm
+	    t4.term as curationState, v._Term_key as varTermKey, 
+	    vt.Term as varTerm
 	from ACC_Accession a1, VOC_Term t1, VOC_Term t2, VOC_Term t3, 
-	    GXD_HTExperiment e
+	    VOC_Term t4, GXD_HTExperiment e
 	left outer join ACC_Accession a2 on (e._Experiment_key = a2._Object_key
 	    and a2._MGIType_key = 42
 	    and a2._LogicalDB_key = 190
@@ -61,15 +65,17 @@ results = db.sql('''select a1.accid as aeId, a2.accid as geoId, e._Experiment_ke
 	    and a1.preferred = 1
 	    and e._ExperimentType_key = t1._Term_key
 	    and e._EvaluationState_key = t2._Term_key
-	    and e._StudyType_key = t3._Term_key''', 'auto')
+	    and e._StudyType_key = t3._Term_key
+	    and e._CurationState_key = t4._Term_key''', 'auto')
 exptDict = {}
 for r in results:
     #    Col 1: List of AE ids loaded in to MGI typeKey=42, ldbKey=189
     #    Col 2: GEO id, if applicable ldbKey=190
     #    Col 3: experiment type vocabKey=121
-    #    Col 4: evaluation state  vocabKey=116
+    #    Col 4: evaluation state  vocabKey=11
     #    Col 5: study type vocabKey=124
-    #    Col 6: experimental variables, multiples separated by '|' vocabKey=122
+    #    Col 6: curationState vocabKey=117
+    #    Col 7: experimental variables, multiples separated by '|' vocabKey=122
     exptKey = r['_Experiment_key']
     
     if not exptKey in exptDict:
@@ -77,7 +83,7 @@ for r in results:
     exptDict[exptKey].append(r)
 
 ct = 0
-fp.write('ArrayExpress ID%sGEO ID%sExperiment Type%sEvaluation State%sStudy Type%sVariables%s' % (TAB, TAB, TAB, TAB, TAB, CRT))
+fp.write('ArrayExpress ID%sGEO ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%s' % (TAB, TAB, TAB, TAB, TAB, TAB, CRT))
 for key in exptDict:
     # if there are > 1 row then there are > 1 variable, all other info repeated
     r = exptDict[key][0]
@@ -86,6 +92,7 @@ for key in exptDict:
     exptType = r['exptType']
     evalState = r['evalState']
     studyType = r['studyType']
+    curationState = r['curationState']
     varList = []
     for r in exptDict[key]:
 	varTerm = r['varTerm']
@@ -93,7 +100,7 @@ for key in exptDict:
 	if varTerm != None:
 	    varList.append(varTerm)
     varTerms = string.join(varList, '|')
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (aeId, TAB, geoId, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, varTerms, CRT ))
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (aeId, TAB, geoId, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, CRT ))
     ct += 1
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))
