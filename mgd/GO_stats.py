@@ -6,6 +6,9 @@
 #
 # Report:
 #
+# sc	04/24/2017
+#	TR12466 add Noctua section
+#
 # kstone 04/15/2015
 #	- TR11932 GO Central -> GO_Central
 #
@@ -55,7 +58,7 @@ import string
 import reportlib
 import db
 
-db.setTrace()
+db.setTrace(True)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -97,6 +100,7 @@ GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
 REFGENOME_CLAUSE="('GO_Central')"
 GO_CLAUSE="('GOC', 'UniProtKB', 'GO_Central') "
+NOCTUA_CLAUSE="('GO_Noctua')"
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
@@ -410,6 +414,25 @@ def writeCount(name):
        results3 = db.sql(byAnnot1 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
 
+   elif name == "NOCTUA":
+        # not in IEA references
+        # loaded by GO_Noctua load
+        # not in evidence codes (see above)
+
+       results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+       results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+
+
    # total by gene
    fp.write('Total Number of Genes Annotated to:' + TAB + str(results1[0]['cnt']) + '\n')
 
@@ -446,6 +469,7 @@ writeCount('ALL')
 writeCount('Total Non-IEA')
 writeCount('GOC')
 writeCount('Curator')
+writeCount('NOCTUA')
 writeCount('GOA')
 writeCount('GO/Rat')
 writeCount('GOA/Human')
