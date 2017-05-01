@@ -6,11 +6,11 @@ and s.strain not like '%)F1%'
 and s.strain not like '%)F2%'
 ;
 
-create unique index index_strain_key on strains(_Strain_key)
+create unique index index_strain_key1 on strains(_Strain_key)
 ;
 
-update strains 
-set dataExists = 'n'
+select s._Strain_key
+INTO TEMPORARY TABLE toUpdate
 from strains s
 where
 not exists (select 1 from ALL_Allele a where s._Strain_key = a._Strain_key)
@@ -22,6 +22,15 @@ and not exists (select 1 from CRS_Cross a where s._Strain_key = a._femaleStrain_
 and not exists (select 1 from CRS_Cross a where s._Strain_key = a._maleStrain_key)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_1)
 and not exists (select 1 from RI_RISet a where s._Strain_key = a._Strain_key_2)
+;
+
+create unique index index_strain_key2 on toUpdate(_Strain_key)
+;
+
+update strains 
+set dataExists = 'n'
+from toUpdate u, strains s
+where u._Strain_key = s._Strain_key
 ;
 
 \echo ''
