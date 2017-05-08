@@ -37,7 +37,7 @@ db.sql('''
 	select distinct a._Object_key, a.accID as omimID, t._Term_key, substring(t.term,1,30) as omimTerm
 	INTO TEMP TABLE omimlookup
 	from VOC_Annot v, ACC_Accession a, VOC_Term t
-	where v._AnnotType_key = 1005
+	where v._AnnotType_key = 1020
 	and v._Term_key = a._Object_key
 	and a._MGIType_key = 13
 	and a.preferred = 1
@@ -88,7 +88,7 @@ db.sql('''
 	select distinct a._Object_key, a.accID as genotypeid
 	INTO TEMP TABLE genotype
 	from VOC_Annot v, ACC_Accession a
-	where v._AnnotType_key = 1005
+	where v._AnnotType_key = 1020
 	and v._Object_key = a._Object_key
 	and a._MGIType_key = 12
 	and a._LogicalDB_key = 1
@@ -100,7 +100,7 @@ db.sql('''
 	select distinct a._Object_key, a.accID as refID
 	INTO TEMP TABLE reference 
 	from VOC_Annot v, VOC_Evidence e, ACC_Accession a
-	where v._AnnotType_key = 1005
+	where v._AnnotType_key = 1020
 	and v._Annot_key = e._Annot_key
 	and e._Refs_key = a._Object_key
 	and a._MGIType_key = 1
@@ -116,7 +116,7 @@ results = db.sql('''
        		a5.refID
 	from VOC_Annot v, VOC_Evidence e,
 		exclude_omimdolookup a2, genotype a4, reference a5
-	where v._AnnotType_key = 1005
+	where v._AnnotType_key = 1020
 	and v._Term_key = a2._Term_key
 	and v._Object_key = a4._Object_key
 	and v._Annot_key = e._Annot_key
