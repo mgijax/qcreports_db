@@ -5,23 +5,23 @@
 \echo '(See the EI Mutant Cell Line Module)'
 \echo ''
 
-select substring(ac.creator,1,25) as creator, acc.accID, 
-substring(a.symbol,1,35) as symbol, 
-substring(ac.cellLine,1,25) as "mutant cell line ID"
-from ALL_Allele a, ALL_Allele_CellLine c, ALL_CellLine_View ac, ACC_Accession acc
-where a._Allele_key = c._Allele_key
-and c._MutantCellLine_key = ac._CellLine_key
-and ac.creator is not null
-and ac.creator != 'Not Specified'
-and a._Allele_key = acc._Object_key
-and acc._MGIType_key = 11
-and acc._LogicalDB_key = 1
-and acc.preferred = 1
-and not exists (select 1 from ACC_Accession aa
-where aa._MGIType_key = 28
-and c._MutantCellLine_key = aa._Object_key)
-order by ac.creator
-;
+--select substring(ac.creator,1,25) as creator, acc.accID, 
+--substring(a.symbol,1,35) as symbol, 
+--substring(ac.cellLine,1,25) as "mutant cell line ID"
+--from ALL_Allele a, ALL_Allele_CellLine c, ALL_CellLine_View ac, ACC_Accession acc
+--where a._Allele_key = c._Allele_key
+--and c._MutantCellLine_key = ac._CellLine_key
+--and ac.creator is not null
+--and ac.creator != 'Not Specified'
+--and a._Allele_key = acc._Object_key
+--and acc._MGIType_key = 11
+--and acc._LogicalDB_key = 1
+--and acc.preferred = 1
+--and not exists (select 1 from ACC_Accession aa
+--where aa._MGIType_key = 28
+--and c._MutantCellLine_key = aa._Object_key)
+--order by ac.creator
+--;
 
 /*
  * since some celllines have > 1 accession id and one of them may be correct...
@@ -36,12 +36,12 @@ where c._MutantCellLine_key = ac._CellLine_key
 and aa._MGIType_key = 28
 and ac._CellLine_key = aa._Object_key
 and ac.cellLine != aa.accID
-and not exists (select 1 from ALL_Allele_CellLine c2, ALL_CellLine ac2, ACC_Accession aa2
-	where c2._allele_key = c._allele_key
-		and c2._mutantcellline_key = ac2._cellline_key
-		and aa2._object_key = ac2._cellline_key
-		and aa2._mgitype_key = 28
-		and aa2.accID = ac2.cellline)
+--and not exists (select 1 from ALL_Allele_CellLine c2, ALL_CellLine ac2, ACC_Accession aa2
+--	where c2._allele_key = c._allele_key
+--		and c2._mutantcellline_key = ac2._cellline_key
+--		and aa2._object_key = ac2._cellline_key
+--		and aa2._mgitype_key = 28
+--		and aa2.accID = ac2.cellline)
 ;
 
 create index idx_allele on notexists(_Allele_key)
