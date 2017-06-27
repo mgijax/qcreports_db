@@ -39,7 +39,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_NoAbstract.sql.rpt">References w/ PubMed ID and No Abstract</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_DupPM_DOI.sql.rpt">References w/ Duplicated PubMed and DO IDs</A> <B>(jeo)</B>
-<LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.log">Lit Triage Errors</A> <B>(neb)</B>
+<LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(neb)</B>
 </OL>
 
 <A NAME="alleles"><B>Alleles (csmith, smb, dlb, honda, mnk)</B> </A>
