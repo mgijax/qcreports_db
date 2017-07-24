@@ -16,7 +16,6 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
@@ -75,6 +74,10 @@ ojournals = '\'' + '\',\''.join(goJournals) + '\''
 gjournals = '\'' + '\',\''.join(gxdJournals) + '\''
 tjournals = '\'' + '\',\''.join(tumorJournals) + '\''
 
+curatorExclude = 'MGI:curator_%'
+discardExclude = 'MGI:Discard'
+notSelectedExclude = 'Tumor:NotSelected'
+
 countQuery = '''
 	select count(r.*) as rCount
 	from BIB_Citation_Cache r, BIB_Workflow_Status ws, MGI_User u, VOC_Term wst, VOC_Term gt
@@ -85,6 +88,11 @@ countQuery = '''
 	and wst.term in ('Not Routed')
 	and u._Group_key = gt._Term_key
 	and gt.abbreviation = '%s'
+	and not exists (select 1 from BIB_Workflow_Tag wt, VOC_Term wtt
+		where r._Refs_key = wt._Refs_key
+		and wt._Tag_key = wtt._Term_key
+		and wtt.term like '%s'
+		)
 	'''
 
 results = db.sql(countQuery % (ajournals, 'AP'), 'auto')
@@ -100,21 +108,51 @@ results = db.sql(countQuery % (tjournals, 'Tumor'), 'auto')
 for r in results:
 	fp.write('Tumor journals:  ' + str(r['rCount']) + '\n')
 fp.write('\n\n')
+sys.exit(0)
+
+login = 'jfinger'
+#login = 'csmith'
+#login = 'dph'
+#login = 'dmk'
+results = db.sql('''
+	select t._Term_key, t.abbreviation 
+	from MGI_User u, VOC_Term t
+	where u.login = '%s'
+	and u._Group_key = t._Term_key
+	''' % (login), 'auto')
+for r in results:
+    groupKey = r['_Term_key']
+    group = r['abbreviation']
+
+if group == 'AP':
+    masterjournals = ajournals
+elif group == 'GXD':
+    masterjournals = gjournals
+elif group == 'GO':
+    masterjournals = ojournals
+elif group == 'Tumor':
+    masterjournals = tjournals
+elif group == 'QTL':
+    masterjournals = 'None'
 
 results = db.sql('''
 	(
-	select r.mgiID, r.journal, r._Refs_key, 1 as relevance
+	select r.mgiID
 	from BIB_Citation_Cache r
 	where r.journal in (%s)
-	and exists (select 1 from BIB_Workflow_Status ws, VOC_Term wst, MGI_User u
+	and exists (select 1 from BIB_Workflow_Status ws, VOC_Term wst
 		where r._Refs_key = ws._Refs_Key
 		and ws._Status_key = wst._Term_key
 		and wst.term in ('Not Routed')
-		and u.login = 'jfinger'
-		and u._Group_key = ws._Group_key
+		and ws._Group_key = %s
+		)
+	and not exists (select 1 from BIB_Workflow_Tag wt, VOC_Term wtt
+		where r._Refs_key = wt._Refs_key
+		and wt._Tag_key = wtt._Term_key
+		and wtt.term like '%s'
 		)
 	union
-	select r.mgiID, r.journal, r._Refs_key, 2
+	select r.mgiID
 	from BIB_Citation_Cache r
 	where r.journal not in (%s)
 	and r.journal not in (%s)
@@ -150,10 +188,15 @@ results = db.sql('''
 		and wst.term in ('Not Routed')
 		and ws._Group_key = 31576668
 		)
+	and not exists (select 1 from BIB_Workflow_Tag wt, VOC_Term wtt
+		where r._Refs_key = wt._Refs_key
+		and wt._Tag_key = wtt._Term_key
+		and wtt.term like '%s'
+		)
 	)
-	order by relevance, mgiID
+	order by mgiID
 	limit 200
-	'''  % (gjournals, ajournals, ojournals, gjournals, tjournals), 'auto')
+	'''  % (masterjournals, groupKey, curatorExclude, ajournals, ojournals, gjournals, tjournals, curatorExclude), 'auto')
 
 for r in results:
 	fp.write(str(r) + '\n')
