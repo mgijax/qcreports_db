@@ -158,7 +158,7 @@ results = db.sql('''
 for r in results:
 	fp.write(str(r) + '\n')
 
-print fp.write('\n%s rows()' % (len(results)))
+fp.write('\n%s rows()' % (len(results)))
 
 reportlib.finish_nonps(fp)
 
