@@ -103,7 +103,7 @@ fp.write('\n\n')
 
 results = db.sql('''
 	(
-	select r.mgiID, r.journal, r._Refs_key, 1 as orderby
+	select r.mgiID, r.journal, r._Refs_key, 1 as relevance
 	from BIB_Citation_Cache r
 	where r.journal in (%s)
 	and exists (select 1 from BIB_Workflow_Status ws, VOC_Term wst, MGI_User u
@@ -151,7 +151,7 @@ results = db.sql('''
 		and ws._Group_key = 31576668
 		)
 	)
-	order by orderby, mgiID
+	order by relevance, mgiID
 	limit 200
 	'''  % (gjournals, ajournals, ojournals, gjournals, tjournals), 'auto')
 
