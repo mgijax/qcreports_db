@@ -75,6 +75,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoOrigRef.sql.rpt">Alleles with status approved or autoload that have no original reference</A> <B> (sbello)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-ExpComp.rpt">All expresses component relationship report </A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-MutInv.rpt">All mutation involves relationship report </A> <B> (mnk)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/AP_WF_Routed.rpt">Review for AP routed workflow status</A> <B> (mnk)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
