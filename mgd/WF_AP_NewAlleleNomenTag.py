@@ -141,7 +141,9 @@ for r in results:
 		subText = extractedText[match.start()-40:match.end()+40]
                 byJText[jnumID].append(subText)
 
-for r in byJStatus:
+keys = byJStatus.keys()
+keys.sort()
+for r in keys:
 	fp.write(r + TAB)
 	fp.write('\t'.join(byJStatus[r]) + TAB)
 	fp.write('|'.join(byJText[r]) + CRT)
