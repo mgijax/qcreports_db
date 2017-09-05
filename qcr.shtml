@@ -76,6 +76,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-ExpComp.rpt">All expresses component relationship report </A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-MutInv.rpt">All mutation involves relationship report </A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Routed.rpt">Review for AP routed workflow status</A> <B> (mnk)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewAlleleNomenTag.rpt">Review for AP:NewAlleleNomenclature tag</A> <B> (mnk)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>

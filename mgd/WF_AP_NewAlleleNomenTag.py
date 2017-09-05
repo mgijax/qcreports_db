@@ -6,10 +6,11 @@
 #
 # Report:
 #
+#	Review for AP:NewAlleleNomenclature tag
+#
 #	The reference must be:
-#	group = AP, status = 'Not Routed'
-#	for other groups, there must be at least one status in:
-#		'Routed', 'Chosen', 'Indexed', 'Full-coded'
+#	group = AP, status = 'Routed', 'Chosen'
+#	group = AP, tag != 'AP:NewAlleleNomenclature'
 #	not discarded
 #
 #	output:
@@ -18,7 +19,7 @@
 #	3. extracted text (80 characters/around highlighted text)
 #
 # Usage:
-#       WF_AP_Routed.py
+#       WF_AP_NewAlleleNomenTag
 #
 # Notes:
 #
@@ -46,36 +47,35 @@ PAGE = reportlib.PAGE
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], 'Review for AP routed workflow status', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Review for AP:NewAlleleNomenclature tag', os.environ['QCOUTPUTDIR'])
 
 searchTerms = [
-'targeted mutation',
-'knockout mouse',
-'knockout mice',
-'knock-out mouse',
-'knock-out mice',
-'knockin mouse',
-'knockin mice',
-'knock-in mouse',
-'knock-in mice',
-'transgene',
-'transgenic mouse',
-'transgenic mice',
-'induced mutation',
+'we generated',
+'we have generated',
+'we created',
+'we have created',
+'mice were generated',
+'mice were created',
+'targeting vector',
+'ES cell',
+'targeting construct',
+'generation of mice',
+'novel mutation',
+'novel mutant',
+'spontaneous mutation',
 'spontaneous mutant',
-'mutant mouse',
-'mutant mice',
-'heterozygote',
-'homozygote',
-'CRISPR',
-'-/-'
+'generation of mutant mice',
+'generation of transgenic mice',
+'gene trapped',
+'gene-trapped',
+'gene trap',
+'gene-trap'
 ]
 
 fp.write('''
  	The reference must be:
- 	     group = AP, status = 'Not Routed'
- 	     for other groups, there must be at least one status in:
- 		     'Routed', 'Chosen', 'Indexed', 'Full-coded'
+ 	     group = AP, status = 'Routed', 'Chosen'
+ 	     group = AP, tag != 'AP:NewAlleleNomenclature'
  	     not discarded
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
@@ -103,15 +103,13 @@ and wfs.isCurrent = 1
 and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
 	where r._Refs_key = wfso._Refs_key
 	and wfso._Group_key in (31576664)
-	and wfso._Status_key in (31576669)
+	and wfso._Status_key in (31576670, 31576671)
 	and wfso.isCurrent = 1
 	)
 
-and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
-	where r._Refs_key = wfso._Refs_key
-	and wfso._Group_key not in (31576664)
-	and wfso._Status_key not in (31576669, 31576672)
-	and wfso.isCurrent = 1
+and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
+	where r._Refs_key = wftag._Refs_key
+	and wftag._Tag_key in (31576700)
 	)
 
 and (%s)
