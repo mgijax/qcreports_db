@@ -155,6 +155,6 @@ for r in byJStatus:
 	fp.write('\t'.join(byJStatus[r]) + TAB)
 	fp.write('|'.join(byJText[r]) + CRT)
 
-#fp.write('\n(%d rows affected)\n' % ())
+fp.write('\n(%d rows affected)\n' % (len(byJStatus)))
 reportlib.finish_nonps(fp)
 
