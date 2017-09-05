@@ -15,11 +15,12 @@
 #
 #	output:
 #	1. J#
-#	2. status/group : 1 row per group
-#	3. extracted text (80 characters/around highlighted text)
+#	2. Creation Date
+#	3. status/group : 1 row per group
+#	4. extracted text (80 characters/around text)
 #
 # Usage:
-#       WF_AP_NewAlleleNomenTag
+#       WF_AP_NewAlleleNomenTag.py
 #
 # Notes:
 #
