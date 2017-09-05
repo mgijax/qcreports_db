@@ -80,6 +80,7 @@ fp.write('''
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
+byJData = {}
 byJStatus = {}
 byJText = {}
 
@@ -89,7 +90,8 @@ for s in searchTerms:
 searchSQL = searchSQL[:-2]
 
 results = db.sql('''
-select r._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, d.extractedText
+select r._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, d.extractedText,
+	to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Data d, 
 	VOC_Term g, VOC_Term s
 where r.isDiscard = 0
@@ -122,6 +124,10 @@ for r in results:
 	jnumID = r['jnumID']
 	groupstatus = r['groupTerm'] + '|' + r['statusTerm'] + TAB
 
+	if jnumID not in byJData:
+	    byJData[jnumID] = []
+        byJData[jnumID].append(r['cdate'])
+
 	if jnumID not in byJStatus:
 	    byJStatus[jnumID] = []
         byJStatus[jnumID].append(groupstatus)
@@ -147,6 +153,7 @@ keys = byJStatus.keys()
 keys.sort()
 for r in keys:
 	fp.write(r + TAB)
+	fp.write(byJData[r][0] + TAB)
 	fp.write('\t'.join(byJStatus[r]) + TAB)
 	fp.write('|'.join(byJText[r]) + CRT)
 
