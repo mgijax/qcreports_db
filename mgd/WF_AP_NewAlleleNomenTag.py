@@ -74,7 +74,7 @@ searchTerms = [
 
 fp.write('''
  	The reference must be:
- 	     group = AP, status = 'Routed', 'Chosen'
+ 	     group = AP, status = 'Routed' or 'Chosen'
  	     group = AP, tag != 'AP:NewAlleleNomenclature'
  	     not discarded
 ''')
