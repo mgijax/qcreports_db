@@ -1,6 +1,6 @@
 
 \echo ''
-\echo 'Papers ''Routed'' or ''Chosen'' For Expression in past week by creation date'
+\echo 'Papers ''Routed'' or ''Chosen'' For Expression in past week by Status creation date'
 \echo ''
 
  
