@@ -5,7 +5,7 @@
 \echo ''
 
 (
-select 'J:' || r.numericPart as jnum, wft.term as wfterm
+select r.jnumID, wft.term as wfterm
 from BIB_Citation_Cache r, BIB_Workflow_Status s, BIB_Workflow_Tag t, VOC_Term wft
 where r._Refs_key = s._Refs_key
 and s.isCurrent = 1
@@ -15,7 +15,7 @@ and r._Refs_key = t._Refs_key
 and t._Tag_key = wft._Term_key
 and wft.term like 'GXD:%'
 union
-select 'J:' || r.numericPart as jnum, null as wfterm
+select r.jnumID, null as wfterm
 from BIB_Citation_Cache r, BIB_Workflow_Status s
 where r._Refs_key = s._Refs_key
 and s.isCurrent = 1
@@ -27,5 +27,5 @@ and not exists (select 1 from BIB_Workflow_Tag t, VOC_Term wft
 	and wft.term like 'GXD:%'
 	)
 )
-order by wfterm, numericPart
+order by wfterm, jnumID
 ;
