@@ -1,27 +1,18 @@
 
-/* papers selected for Expression in the past week */
-
-select r._Refs_key, r.creation_date
-INTO TEMPORARY TABLE triageA
-from BIB_Refs r, BIB_DataSet_Assoc a
-where a.creation_date between (now() + interval '-7 day') and now()
-and r._Refs_key = a._Refs_key
-and a._DataSet_key = 1004
-
-;
-
-create index idx1 on triageA(_Refs_key)
-
-;
-
 \echo ''
-\echo 'Papers Selected For Expression in past week '
+\echo 'Papers ''Routed'' or ''Chosen'' For Expression in past week '
 \echo 'by Data Set creation date'
 \echo ''
 
-select v.jnumID, substring(v.short_citation, 1, 50) as short_citation
-from triageA t, BIB_All_View v
-where t._Refs_key = v._Refs_key
-order by v.jnum
+ 
+select 'J:' || c.numericPart, c.short_citation
+from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status s
+where r.creation_date between (now() + interval '-7 day') and now()
+and r._Refs_key = s._Refs_key
+and s.isCurrent = 1 
+and s._Group_key = 31576665
+and s._Status_key in (31576670, 31576671)
+and r._Refs_key = c._Refs_key
+order by c.numericPart
 ;
 
