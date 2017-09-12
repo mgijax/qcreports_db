@@ -1,7 +1,7 @@
 \echo ''
 \echo 'Reference where '
-\echo 'group = GXD, status in ''Routed'' or ''Chosen'' '
-\echo 'if tag, then tag like ''GXD:'' '
+\echo '   group = GXD, status in ''Routed'' or ''Chosen'' '
+\echo '   if tag, then tag like ''GXD:'' '
 \echo ''
 
 (
