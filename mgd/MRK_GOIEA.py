@@ -47,6 +47,9 @@
 #
 # History:
 #
+# lec   09/13/2017
+#       - TR12250/Lit Triage/replace Data Sets with Workflow Status
+#
 # lec	08/22/2011
 #	- TR10813; 2E; include feature type = 'protein coding genes' only
 #
@@ -193,14 +196,22 @@ db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation
 	''', None)
 db.sql('create index index_refs_key on references2(_Refs_key)', None)
 
-# has reference been chosen for GXD
-results = db.sql('''select distinct r._Refs_key
-	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
-	where r._Refs_key = ba._Refs_key
-	and ba._DataSet_key = bd._DataSet_key
-	and bd.dataSet = 'Expression'
-	and ba.isNeverUsed = 0
-	''', 'auto')
+# has reference been routed/chosen for GXD
+#results = db.sql('''select distinct r._Refs_key
+#	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+#	where r._Refs_key = ba._Refs_key
+#	and ba._DataSet_key = bd._DataSet_key
+#	and bd.dataSet = 'Expression'
+#	and ba.isNeverUsed = 0
+#	''', 'auto')
+results = db.sql('''
+        select distinct r._Refs_key 
+        from references1 r, BIB_Workflow_Status s
+        where r._Refs_key = s._Refs_key 
+        and s._Group_key = 31576665
+        and s._Status_key in (31576670,31576671)
+        and s.isCurrent = 1 
+        ''', 'auto')
 gxd = []
 for r in results:
 	gxd.append(r['_Refs_key'])
@@ -218,20 +229,33 @@ for r in results:
 # fpD
 #
 
+#db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
+#	r.jnumID, r.jnum, r.numericPart, r.pubmedID
+#	into temporary table fpD
+#	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+#	where r._Refs_key = ba._Refs_key
+#	and ba._DataSet_key = bd._DataSet_key
+#	and bd.dataSet = 'Gene Ontology'
+#	and ba.isNeverUsed = 0
+#	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
+#	where r._Refs_key = e._Refs_key
+#	and e._Annot_key = a._Annot_key
+#	and a._AnnotType_key = 1000)
+#	''', None)
+
 db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	r.jnumID, r.jnum, r.numericPart, r.pubmedID
 	into temporary table fpD
-	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
-	where r._Refs_key = ba._Refs_key
-	and ba._DataSet_key = bd._DataSet_key
-	and bd.dataSet = 'Gene Ontology'
-	and ba.isNeverUsed = 0
+	from references2 r, BIB_Workflow_Status s
+	where r._Refs_key = s._Refs_key
+        and s._Group_key = 31576666
+        and s._Status_key in (31576670,31576671)
+        and s.isCurrent = 1
 	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
 	where r._Refs_key = e._Refs_key
 	and e._Annot_key = a._Annot_key
 	and a._AnnotType_key = 1000)
 	''', None)
-
 # number of unique MGI gene
 results = db.sql('select distinct _Marker_key from fpD', 'auto')
 fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
