@@ -32,6 +32,9 @@
 #
 # History:
 #
+# lec	09/13/2017
+#	- TR12250/Lit Triage/replace Data Sets with Workflow Status
+#
 # lec   10/23/2014
 #       - TR11750/postres complient
 #
@@ -119,31 +122,33 @@ db.sql('create index idx1_marker_key on markers(_Marker_key)', None)
 
 ##
 
-# select all genes with references selected for GO
+# select all genes with references 
+# group = GO, status in 'Routed', 'Chosen', has J#
 
 db.sql('''
 	select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, 'N' as hasAnnotations
 	into temporary table references1 
-	from markers m , MRK_Reference r, BIB_Refs b, BIB_DataSet_Assoc ba, BIB_DataSet bd 
+	from markers m , MRK_Reference r, BIB_Workflow_Status s 
 	where m._Marker_key = r._Marker_key 
-	and r._Refs_key = b._Refs_key 
-	and b._Refs_key = ba._Refs_key 
-	and ba._DataSet_key = bd._DataSet_key 
-	and bd.dataSet = 'Gene Ontology' 
-	and ba.isNeverUsed = 0
+	and r.jnumID is not null
+	and r._Refs_key = s._Refs_key 
+	and s._Group_key = 31576666
+	and s._Status_key in (31576670,31576671)
+	and s.isCurrent = 1
 	''', None)
 db.sql('create index idx2_refs_key on references1(_Refs_key)', None)
 db.sql('create index idx2_marker_key on references1(_Marker_key)', None)
 
-# has reference been selected for GXD
+# select all genes with references 
+# group = GXD, status in 'Routed', 'Chosen', has J#
 
 results = db.sql('''
 	select distinct r._Refs_key 
-	from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
-	where r._Refs_key = ba._Refs_key 
-	and ba._DataSet_key = bd._DataSet_key 
-	and bd.dataSet = 'Expression' 
-	and ba.isNeverUsed = 0
+	from references1 r, BIB_Workflow_Status s
+	where r._Refs_key = s._Refs_key 
+	and s._Group_key = 31576665
+	and s._Status_key in (31576670,31576671)
+	and s.isCurrent = 1
 	''', 'auto')
 gxd = []
 for r in results:
