@@ -6,14 +6,13 @@
 #
 # Report:
 #	TR 4698
-#	Title = Genes with References chosen for GO but not used for GO
+#	Title = Genes with References that are GO/Indexed
 #    	Select markers of type 'gene'
 #
 #	Report in a tab delimited/html file with the following columns:
 #
 #	J: of reference associated with the Marker, selected for GO but has not been used in annotation
 #	PubMed ID of reference (with HTML link to PubMed)	(TR 4698)
-#	Y/N (has reference been selected for GXD)
 #	MGI:ID
 #	Y/N (does gene have GO annotations)
 #	symbol
@@ -74,11 +73,6 @@ def writeRecord(fp, r):
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
-	if r['_Refs_key'] in gxd:
-		fp.write('Y' + TAB)
-	else:
-		fp.write('N' + TAB)
-
 	fp.write(r['mgiID'] + TAB + \
 	         r['hasAnnotations'] + TAB + \
 	         r['symbol'] + TAB + \
@@ -92,7 +86,6 @@ fp = reportlib.init("MRK_AllNoGO", printHeading = None, outputdir = os.environ['
 
 fp.write(CRT + 'jnumID' + TAB + \
 	 'pubMedID' + TAB + \
-	 'ref in GXD?' + TAB + \
 	 'mgi ID' + TAB + \
 	 'GO annotation?' + TAB + \
 	 'symbol' + TAB + \
@@ -123,7 +116,7 @@ db.sql('create index idx1_marker_key on markers(_Marker_key)', None)
 ##
 
 # select all genes with references 
-# group = GO, status in 'Routed', 'Chosen', has J#
+# group = GO, status in 'Indexed'
 
 db.sql('''
 	select distinct m.*, r._Refs_key, r.jnumID, r.pubmedID, 'N' as hasAnnotations
@@ -133,26 +126,11 @@ db.sql('''
 	and r.jnumID is not null
 	and r._Refs_key = s._Refs_key 
 	and s._Group_key = 31576666
-	and s._Status_key in (31576670,31576671)
+	and s._Status_key in (31576673)
 	and s.isCurrent = 1
 	''', None)
 db.sql('create index idx2_refs_key on references1(_Refs_key)', None)
 db.sql('create index idx2_marker_key on references1(_Marker_key)', None)
-
-# select all genes with references 
-# group = GXD, status in 'Routed', 'Chosen', has J#
-
-results = db.sql('''
-	select distinct r._Refs_key 
-	from references1 r, BIB_Workflow_Status s
-	where r._Refs_key = s._Refs_key 
-	and s._Group_key = 31576665
-	and s._Status_key in (31576670,31576671)
-	and s.isCurrent = 1
-	''', 'auto')
-gxd = []
-for r in results:
-	gxd.append(r['_Refs_key'])
 
 # does marker have GO annotations
 

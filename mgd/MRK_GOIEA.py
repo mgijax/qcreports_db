@@ -9,13 +9,12 @@
 #
 #	Report 2D
 #	Title = Gene with only GO Assocations w/ IEA evidence
-#               with references that are selected for GO but have not been used
+#               with references that are GO/Indexed
 #
 #    	Report in a tab delimited/html file:
 #		J:
 #		PubMed ID (with HTML link)
 #		MGI:ID
-#		Y/N (has reference been selected for GXD)
 #		symbol
 #		name
 #		DO (print "DO" if gene has a mouse model associated with an DO disease)
@@ -110,11 +109,6 @@ def writeRecordD(fp, r):
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
-	if r['_Refs_key'] in gxd:
-		fp.write('Y' + TAB)
-	else:
-		fp.write('N' + TAB)
-
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + TAB)
@@ -136,7 +130,6 @@ def writeRecordF(fp, r):
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 fpD.write('jnum ID' + TAB + \
 	 'pubMed ID' + TAB + \
-	 'ref in GXD?' + TAB + \
 	 'mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
@@ -196,26 +189,6 @@ db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation
 	''', None)
 db.sql('create index index_refs_key on references2(_Refs_key)', None)
 
-# has reference been routed/chosen for GXD
-#results = db.sql('''select distinct r._Refs_key
-#	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
-#	where r._Refs_key = ba._Refs_key
-#	and ba._DataSet_key = bd._DataSet_key
-#	and bd.dataSet = 'Expression'
-#	and ba.isNeverUsed = 0
-#	''', 'auto')
-results = db.sql('''
-        select distinct r._Refs_key 
-        from references1 r, BIB_Workflow_Status s
-        where r._Refs_key = s._Refs_key 
-        and s._Group_key = 31576665
-        and s._Status_key in (31576670,31576671)
-        and s.isCurrent = 1 
-        ''', 'auto')
-gxd = []
-for r in results:
-	gxd.append(r['_Refs_key'])
-
 # does gene have mouse model annotated to DO disease
 results = db.sql('''select distinct m._Marker_key
 	from markers m, MRK_DO_Cache o
@@ -229,27 +202,13 @@ for r in results:
 # fpD
 #
 
-#db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
-#	r.jnumID, r.jnum, r.numericPart, r.pubmedID
-#	into temporary table fpD
-#	from references2 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
-#	where r._Refs_key = ba._Refs_key
-#	and ba._DataSet_key = bd._DataSet_key
-#	and bd.dataSet = 'Gene Ontology'
-#	and ba.isNeverUsed = 0
-#	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
-#	where r._Refs_key = e._Refs_key
-#	and e._Annot_key = a._Annot_key
-#	and a._AnnotType_key = 1000)
-#	''', None)
-
 db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	r.jnumID, r.jnum, r.numericPart, r.pubmedID
 	into temporary table fpD
 	from references2 r, BIB_Workflow_Status s
 	where r._Refs_key = s._Refs_key
         and s._Group_key = 31576666
-        and s._Status_key in (31576670,31576671)
+        and s._Status_key in (31576673)
         and s.isCurrent = 1
 	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
 	where r._Refs_key = e._Refs_key

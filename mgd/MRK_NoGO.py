@@ -19,7 +19,6 @@
 #
 #	J: of reference associated with the Marker, selected for GO but has not been used in annotation
 #	PubMed ID of reference (with HTML link to PubMed)	(TR 4698)
-#	Y/N (has the reference been selected for GXD)
 #	MGI:ID
 #	symbol
 #	name
@@ -88,7 +87,6 @@ PAGE = reportlib.PAGE
 PUBMED = 29
 url = ''
 jfileurl = 'http://prodwww.informatics.jax.org/jfilescanner/get.cgi?jnum='
-gxd = []
 
 fpD = None
 
@@ -104,7 +102,7 @@ def reportClose():
 
 def runQueries():
 
-    global gxd, url
+    global url
 
     results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
     for r in results:
@@ -175,27 +173,6 @@ def runQueries():
     db.sql('create index references_idx3 on references1(symbol)', None)
     db.sql('create index references_idx4 on references1(numericPart)', None)
 
-    # check if reference is selected for GO
-
-#db.sql('update #references set isGO = 1 ' + \
-#	'from references r, BIB_DataSet_Assoc ba, BIB_DataSet bd ' + \
-#	'where r._Refs_key = ba._Refs_key ' + \
-#	'and ba._DataSet_key = bd._DataSet_key ' + \
-#	'and bd.dataSet = "Gene Ontology" ' + \
-#	'and ba.isNeverUsed = 0', None)
-
-    # has reference been chosen for GXD
-
-    results = db.sql('''select distinct r._Refs_key 
-	from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd 
-	where r._Refs_key = ba._Refs_key 
-	and ba._DataSet_key = bd._DataSet_key 
-	and bd.dataSet = 'Expression' 
-	and ba.isNeverUsed = 0
-	''', 'auto')
-    for r in results:
-	gxd.append(r['_Refs_key'])
-
 def writeRecordD(fp, r):
 
 	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
@@ -205,11 +182,6 @@ def writeRecordD(fp, r):
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
-	if r['_Refs_key'] in gxd:
-		fp.write('Y' + TAB)
-	else:
-		fp.write('N' + TAB)
-
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
@@ -218,7 +190,6 @@ def reportD():
 
     fpD.write('jnum ID' + TAB + \
 	     'pubMed ID' + TAB + \
-	     'ref in GXD?' + TAB + \
 	     'mgi ID' + TAB + \
 	     'symbol' + TAB + \
 	     'name' + CRT*2)
@@ -226,11 +197,13 @@ def reportD():
     db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol,
 	r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology 
 	into temporary table fpD 
-	from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+	from references1 r, BIB_Workflow_Status s
 	where r._Refs_key = ba._Refs_key 
-	and ba._DataSet_key = bd._DataSet_key 
-	and bd.dataSet = 'Gene Ontology' 
-	and ba.isNeverUsed = 0 
+        and r.jnumID is not null
+        and r._Refs_key = s._Refs_key 
+        and s._Group_key = 31576666
+        and s._Status_key in (31576673)
+        and s.isCurrent = 1 
 	and not exists (select 1 from VOC_Evidence e, VOC_Annot a 
 	where r._Refs_key = e._Refs_key 
 	and e._Annot_key = a._Annot_key 
