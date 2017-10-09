@@ -63,9 +63,10 @@ for r in results:
 db.sql('''
 	select distinct r._Refs_key
 	into temporary table selNotUsed
-	from BIB_Refs r, BIB_DataSet_Assoc a
-	where r._Refs_key = a._Refs_key
-	and a._DataSet_key = 1011
+	from BIB_Refs r, BIB_WorkFlow_Status s
+	where r._Refs_key = s._Refs_key
+	and s._Group_key = 31576668 -- QTL
+	and s._Status_key = 31576670 -- routed
 	and not exists (
 	select 1 from MLD_Expts m
 	where m.exptType in ('TEXT', 'TEXT-QTL', 'TEXT-QTL-Candidate Genes', 'TEXT-Congenic', 'TEXT-Meta Analysis')
