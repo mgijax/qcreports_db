@@ -187,7 +187,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Invalid "Properties" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">GO Statistics</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Archive of GO Statistics and Reports</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.sql.rpt">All genes with 'unknown' annotations with new indexed literature</A><B>(dph, krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">All genes with 'unknown' annotations with new indexed literature</A><B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Non-Gene Markers with GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_GOObsolete.rpt">Markers with Annotations to Obsolete GO Terms</A>
