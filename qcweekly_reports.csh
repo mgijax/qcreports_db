@@ -55,11 +55,6 @@ foreach i (*.py)
         $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`jrs.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
         ln -s $QCOUTPUTDIR/`basename $i py`mmrrc.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
-    else if ( $i == "MTB_Triage.py" ) then
-        mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.txt $QCMTBARCHIVE
-        rm -rf $QCOUTPUTDIR/`basename $i py`current.txt
-        $i >>& ${LOG}
-        ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.txt $QCOUTPUTDIR/`basename $i py`current.txt
     else if ( $i == "GO_stats.py" ) then
         $i >>& ${LOG}
         cp -p ${QCOUTPUTDIR}/GO_stats.rpt ${QCGOARCHIVE}/GO_stats.`date +%Y%m%d`

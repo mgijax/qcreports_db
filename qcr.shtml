@@ -23,7 +23,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#gxdht">GXD HT Experiments</A>
 <LI><A HREF="#recomb">Recombinase and Transgenic Reporter Data</A>
 <LI><A HREF="#go">GO</A>
-<LI><A HREF="#mtb">MTB</A>
 <LI><A HREF="#nomenclature">Nomenclature</A>
 <LI><A HREF="#strains">Strains</A>
 <LI><A HREF="#strainsjax">Strains - JAX</A>
@@ -178,10 +177,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Mouse Genes with no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">Mouse Genes that have Alleles but no GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">Genes with no GO Annotations with references that are selected for GO but have not been used</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_AllNoGO.html">Genes with references that are GO/Routed/Chosen but have not been used</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">Genes with GO Annotations of evidence IEA only and with references that are selected for GO but have not been used</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_E.rpt">Genes with DO Annotations and either GO Annotations of evidence IEA only or no GO Annotations</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">Genes with no GO Annotations with references that are selected for GO but have not been used</A><B>(dmitrys)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">Genes with GO Annotations of evidence IEA only and with references that are selected for GO but have not been used</A><B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_E.rpt">Genes with DO Annotations and either GO Annotations of evidence IEA only or no GO Annotations</A><B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">All Genes with Annotations to IDA, IGI, IMP, IPI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Total # of Annotations by GO Evidence Code</A>
@@ -189,7 +187,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Invalid "Properties" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">GO Statistics</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Archive of GO Statistics and Reports</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.sql.rpt">All genes with 'unknown' annotations with new indexed literature</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.sql.rpt">All genes with 'unknown' annotations with new indexed literature</A><B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Non-Gene Markers with GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_GOObsolete.rpt">Markers with Annotations to Obsolete GO Terms</A>
@@ -199,13 +197,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenotypeDescriptions.rpt">Genotype Descriptions with MGI IDs</A> <B>(mdolan)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Verify GPI file</A> <B>(dph)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(hjd)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_PRO_NoGO.rpt">Papers Selected for PRO, but Not Used</A> <B>(hjd)</B>
-</OL>
-
-<A NAME="mtb"><B>MTB (dab, dmk)</B></A>
-<OL>
-<LI><A HREF="/data/reports/qcreports_db/output/MTB_Triage.current.txt">MTB Triage (weekly)</A>
-<LI><A HREF="/data/reports/qcreports_db/archive/mtb">Archived MTB Reports</A>
 </OL>
 
 <A NAME="nomenclature"><B>Nomenclature (mmh)</B></A>
