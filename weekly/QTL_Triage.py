@@ -10,6 +10,8 @@
 # Usage:
 #       QTL_Triage.py
 #
+# sc	10/06/2017
+#	- Littriage project, update to use BIB_Workflow Status of 'routed'
 # sc	08/31/2015
 #	- TR12082 add markers
 #
@@ -109,12 +111,12 @@ for r in results:
     if markers != '':
 	distinctDict[jNum].append(markers)
 
-fp.write("References selected for QTL and not used%s%s" % (CRT, CRT)) 
+fp.write("References with status 'routed' for group QTL%s%s" % (CRT, CRT)) 
 jNums = distinctDict.keys()
 jNums.sort()
 for jNum in jNums:
     fp.write('%s%s%s%s' % (jNum, TAB, string.join(distinctDict[jNum], ' | '), CRT))
-fp.write('Total References selected and not used: %s' % len(jNums))
+fp.write("Total References with status 'routed' for group QTL: %s" % len(jNums))
 
 db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file
