@@ -38,6 +38,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_NoAbstract.sql.rpt">References w/ PubMed ID and No Abstract</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_DupPM_DOI.sql.rpt">References w/ Duplicated PubMed and DOI IDs</A> <B>(jeo)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_BIB_Discard.py">MGI Discard References with associated data</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(jeo, neb)</B>
 </OL>
 
