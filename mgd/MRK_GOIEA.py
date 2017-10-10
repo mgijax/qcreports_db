@@ -46,6 +46,10 @@
 #
 # History:
 #
+# sc    10/05/2017
+#	- TR12250/Lit Triage/update WF Status logic
+#	  Add column for curator tag
+#
 # lec   09/13/2017
 #       - TR12250/Lit Triage/replace Data Sets with Workflow Status
 #
@@ -115,6 +119,11 @@ def writeRecordD(fp, r):
 
 	if r['_Marker_key'] in dolookup:
 		fp.write('DO')
+	fp.write(TAB)
+	refsKey = r['_Refs_key']
+	if refsKey in curTagDict:
+	    curList = curTagDict[refsKey]
+	    fp.write(string.join(curList, ', '))
 	fp.write(CRT)
 
 def writeRecordF(fp, r):
@@ -133,7 +142,8 @@ fpD.write('jnum ID' + TAB + \
 	 'mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
-	 'DO' + CRT*2)
+	 'DO' + TAB + \
+	 'Curator Tag' + CRT*2)
 
 fpE = reportlib.init("MRK_GOIEA_E", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
 fpE.write('mgi ID' + TAB + \
@@ -144,6 +154,18 @@ results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PU
 for r in results:
 	url = r['url']
 
+# lookup for curator tag
+curTagDict = {}
+results = db.sql('''select t._Refs_key, vt.term
+	from BIB_Workflow_Tag t, VOC_Term vt
+	where t._Tag_key = vt._Term_key
+	and vt.term like 'MGI:curator_%' ''', 'auto')
+for r in results:
+  	refsKey = r['_Refs_key']
+	tag = r['term']
+	if refsKey not in curTagDict:
+	    curTagDict[refsKey] = []
+	curTagDict[refsKey].append(tag)
 # select non-ORF genes with GO Associations of evidence IEA only
 
 db.sql('''select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart
@@ -207,8 +229,8 @@ db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	into temporary table fpD
 	from references2 r, BIB_Workflow_Status s
 	where r._Refs_key = s._Refs_key
-        and s._Group_key = 31576666
-        and s._Status_key in (31576673)
+        and s._Group_key = 31576666 -- GO
+        and s._Status_key in (31576673, 31576671) -- indexed, chosen
         and s.isCurrent = 1
 	and not exists (select 1 from VOC_Evidence e, VOC_Annot a
 	where r._Refs_key = e._Refs_key

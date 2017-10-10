@@ -36,6 +36,9 @@
 #
 # History:
 #
+# sc	10/05/2017
+#	- TR 12250 Littriage project, exclude Gt(ROSA)26Sor and Gcna
+#
 #	04/07/2011
 #	- TR 10668; exclude feature type ''heritable phenotypic marker' (6238170)
 #
@@ -87,6 +90,7 @@ PAGE = reportlib.PAGE
 PUBMED = 29
 url = ''
 jfileurl = 'http://prodwww.informatics.jax.org/jfilescanner/get.cgi?jnum='
+gxd = []
 
 fpD = None
 
@@ -102,7 +106,7 @@ def reportClose():
 
 def runQueries():
 
-    global url
+    global gxd, url
 
     results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
     for r in results:
@@ -165,13 +169,26 @@ def runQueries():
 	r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal 
 	into temporary table references1 
 	from markers m , MRK_Reference r, BIB_Refs b 
-	where m._Marker_key = r._Marker_key 
+	where m._Marker_key = r._Marker_key
+	and m._Marker_key not in ( 25559, 37270 ) -- Gcna, Gt(ROSA)26Sor
 	and r._Refs_key = b._Refs_key
 	''', None)
     db.sql('create index references_idx1 on references1(_Refs_key)', None)
     db.sql('create index references_idx2 on references1(_Marker_key)', None)
     db.sql('create index references_idx3 on references1(symbol)', None)
     db.sql('create index references_idx4 on references1(numericPart)', None)
+
+    # has reference been chosen for GXD
+
+    results = db.sql('''select distinct r._Refs_key
+        from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
+        where r._Refs_key = ba._Refs_key
+        and ba._DataSet_key = bd._DataSet_key
+        and bd.dataSet = 'Expression'
+        and ba.isNeverUsed = 0
+        ''', 'auto')
+    for r in results:
+        gxd.append(r['_Refs_key'])
 
 def writeRecordD(fp, r):
 
@@ -181,6 +198,11 @@ def writeRecordD(fp, r):
 		purl = string.replace(url, '@@@@', r['pubmedID'])
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
+
+        if r['_Refs_key'] in gxd:
+                fp.write('Y' + TAB)
+        else:
+                fp.write('N' + TAB)
 
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
@@ -198,7 +220,7 @@ def reportD():
 	r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology 
 	into temporary table fpD 
 	from references1 r, BIB_Workflow_Status s
-	where r._Refs_key = ba._Refs_key 
+	where r._Refs_key = s._Refs_key 
         and r.jnumID is not null
         and r._Refs_key = s._Refs_key 
         and s._Group_key = 31576666

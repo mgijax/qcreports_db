@@ -56,6 +56,14 @@ for r in results:
             curTagDict[refsKey] = []
         curTagDict[refsKey].append(tag)
 
+# refs keys with the GO:NotforGOUnknown tag
+db.sql('''select s._Refs_key
+        into temporary table exclude
+	from BIB_Workflow_Status s, BIB_Workflow_Tag t
+	where s._Group_key =  31576666
+	and s._Refs_key = t._Refs_key
+	and t._Tag_key = 35429720''', None)
+
 # GO Annotations to unknown terms 
 # only include non-FANTOM references 
 # and J: creation date >= Annotation creation date 
@@ -139,6 +147,8 @@ db.sql('''select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID,
 	    and s._Group_key = 31576666
 	    and s._Status_key in (31576673, 31576671) 
 	    and s.isCurrent = 1)
+    and not exists (select 1 from exclude e
+	    where e._Refs_key = t._Refs_key) 
     and not exists (select 1 from BIB_Workflow_Status s
 	    where t._Refs_key = s._Refs_key
 	    and s._Group_key in (31576664, 31576668, 31576665) 
@@ -158,6 +168,8 @@ select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jn
     where not exists (select 1 from temp3 t3 
 	    where t.symbol = t3.symbol
 	    and t.pubmedID = t3.pubmedID)
+    and not exists (select 1 from exclude e
+            where e._Refs_key = t._Refs_key)
     and exists (select 1 from BIB_Workflow_Status s
 	    where t._Refs_key = s._Refs_key
 	    and s._Group_key = 31576666
@@ -182,6 +194,8 @@ select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jn
     where not exists (select 1 from temp3 t3 
 	    where t.symbol = t3.symbol
 	    and t.pubmedID = t3.pubmedID)
+    and not exists (select 1 from exclude e
+            where e._Refs_key = t._Refs_key)
     and exists (select 1 from BIB_Workflow_Status s
 	    where t._Refs_key = s._Refs_key
 	    and s._Group_key = 31576666
@@ -240,6 +254,7 @@ results = db.sql('''select distinct _Refs_key, symbol, mgiID, jnumID, pubmedID,
     order by symbol, category''', 'auto')
 for r in results:
     refsKey = r['_Refs_key']
+
     # curator tags in MGI
     cur = ''
     if refsKey in curTagDict:
