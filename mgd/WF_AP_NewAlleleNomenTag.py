@@ -11,6 +11,7 @@
 #	The reference must be:
 #	group = AP, status = 'Routed', 'Chosen'
 #	group = AP, tag != 'AP:NewAlleleNomenclature'
+#		    and tag != 'AP:NewTransgene'
 #	not discarded
 #
 #	output:
@@ -77,6 +78,7 @@ fp.write('''
  	The reference must be:
  	     group = AP, status = 'Routed' or 'Chosen'
  	     group = AP, tag != 'AP:NewAlleleNomenclature'
+                     and tag != 'AP:NewTransgene'
  	     not discarded
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
@@ -112,7 +114,7 @@ and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
 
 and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
 	where r._Refs_key = wftag._Refs_key
-	and wftag._Tag_key in (31576700)
+	and wftag._Tag_key in (31576700, 31576702)
 	)
 
 and (%s)
