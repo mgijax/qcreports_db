@@ -177,14 +177,14 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_LackingImages.rpt">Recombinase Papers Requiring Permissions</A>
 </OL>
 
-<A NAME="go"><B>GO (hjd, dph, jblake, dsitnikov, ln, mdolan)</B></A>
+<A NAME="go"> <B>GO (hjd, dph, jblake, dsitnikov, ln, mdolan)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Mouse Genes with no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">Mouse Genes that have Alleles but no GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">Genes with no GO Annotations with references that are selected for GO but have not been used</A><B>(dmitrys)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">Genes with GO Annotations of evidence IEA only and with references that are selected for GO but have not been used</A><B>(ln)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_E.rpt">Genes with DO Annotations and either GO Annotations of evidence IEA only or no GO Annotations</A><B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">Genes with no GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(dmitrys)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_E.rpt">Genes with DO Annotations and either GO Annotations of evidence IEA only or no GO Annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">All Genes with Annotations to IDA, IGI, IMP, IPI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Total # of Annotations by GO Evidence Code</A>
@@ -192,7 +192,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Invalid "Properties" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">GO Statistics</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Archive of GO Statistics and Reports</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">All genes with 'unknown' annotations with new indexed literature</A><B>(dph, krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">All genes with 'unknown' annotations with new indexed literature</A> <B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Non-Gene Markers with GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_GOObsolete.rpt">Markers with Annotations to Obsolete GO Terms</A>
