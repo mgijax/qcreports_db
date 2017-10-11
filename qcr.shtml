@@ -39,6 +39,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_NoAbstract.sql.rpt">References w/ PubMed ID and No Abstract</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_DupPM_DOI.sql.rpt">References w/ Duplicated PubMed and DOI IDs</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_Duplicates.sql.rpt">References with Duplicate Titles</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_BIB_Discard.rpt">MGI Discard References with associated data</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingPDFs.sql.rpt">J#'s missing PDF's</A>
 </OL>
@@ -191,7 +192,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Invalid "Properties" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">GO Statistics</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Archive of GO Statistics and Reports</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.sql.rpt">All genes with 'unknown' annotations with new indexed literature</A><B>(dph, krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">All genes with 'unknown' annotations with new indexed literature</A><B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">"Done" Genes with Literature</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Non-Gene Markers with GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_GOObsolete.rpt">Markers with Annotations to Obsolete GO Terms</A>
@@ -209,7 +210,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_SymbolDiffs1.rpt">MGI Symbols differing from Human Ortholog Symbols, excludes RIKEN (#1)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/HMD_SymbolDiffs3.rpt">MGI Symbols differing from Human Ortholog Symbols, RIKEN only (#1)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_RefsToIndex.rpt">References to be indexed</A>
 </OL>
 
 <A NAME="strains"><B>Strains (brs)</B></A>
@@ -316,7 +316,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="dataloads"><B>Data Loads</B></A>
 <OL>
 <LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/pdfdownload/index.html">PDF Download (PLOS, etc.)</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/pubmed2geneload/index.html">PubMed to Gene Load</A>
+<LI><A HREF="/usrlocalmgi/live/pdfdownload/index.html">PDF Download (PLOS, etc.)</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,djr)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,djr)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
