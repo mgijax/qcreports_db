@@ -357,7 +357,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationMetrics.sql.rpt">J: Numbers Assigned</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_CurationMetrics.sql.rpt">GO Curation</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics.sql.rpt">GXD Curation</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FulCoded.sql.rpt">GXD Curation - Full-coded</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A>
 </OL>
 <HR>
