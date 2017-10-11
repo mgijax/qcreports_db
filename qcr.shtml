@@ -30,6 +30,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#sequence">Sequence</A>
 <LI><A HREF="#homology">Homology</A>
 <LI><A HREF="#dataloads">Data Loads</A>
+<LI><A HREF="#metrics">Curation Metrics</A>
 <LI><A HREF="<!--#include file="includes/ftp_url.html" -->/reports/index.html">Public Reports</A>
 </UL>
 <HR>
@@ -352,6 +353,13 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
 </OL>
 
+<A NAME="metrics"><B>Curation Metrics</B></A>
+<OL>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationMetrics.sql.rpt">J: Numbers Assigned</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_CurationMetrics.sql.rpt">GO Curation</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics.sql.rpt">GXD Curation</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A>
+</OL>
 <HR>
 
 </BODY>
