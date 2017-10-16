@@ -16,6 +16,9 @@
 #
 # History:
 #
+# sc	10/12/2017 
+#	- TR12250 Littriage Project
+#	exclude AP:NoImages tag (33436864)
 # lec   10/22/2014
 #       - TR11750/postres complient
 #
@@ -88,7 +91,7 @@ for j in journals:
       fp.write(CRT + 2*TAB)
       count = 0
 fp.write(2*CRT)
-
+fp.write('Excludes References with AP:NoImages Tag\n\n')
 fp.write(TAB + string.ljust('J#', 12))
 fp.write(string.ljust('PubMed', 12))
 fp.write(string.ljust('short_citation', 75) + CRT)
@@ -159,6 +162,10 @@ results = db.sql('''
 	from refs r, BIB_Citation_Cache b
 	where r._Refs_key = b._Refs_key
               and b.pubmedID is not null
+	and not exists (select 1
+	from BIB_Workflow_Tag t
+	where r._Refs_key = t._Refs_key
+	and t._Tag_key = 33436864)
         order by b.jnumID
 	''', 'auto')
 
