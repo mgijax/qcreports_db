@@ -1,5 +1,12 @@
 \echo ''
 \echo 'References with A&P Status not matching curation data'
+\echo 'Includes references which:'
+\echo '  1. have a current AP status other than Indexed or Full-coded'
+\echo '  2. have a J: number'
+\echo '  3. meet at least one of these three criteria:'
+\echo '     a. indexed to an allele'
+\echo '     b. flagged as transmission, original, or molecular ref for an allele'
+\echo '     c. used as evidence for an MP annotation'
 \echo ''
 
 with ap_unused as (

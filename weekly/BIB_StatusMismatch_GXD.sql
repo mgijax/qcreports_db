@@ -1,5 +1,11 @@
 \echo ''
 \echo 'References with GXD Status not matching curation data'
+\echo 'Includes references which:'
+\echo '  1. have a current GXD status other than Indexed or Full-coded'
+\echo '  2. have a J: number'
+\echo '  3. meet at least one of these two criteria:'
+\echo '     a. is in GXD Lit Index'
+\echo '     b. is associated with an expression assay'
 \echo ''
 
 with gxd_unused as (
