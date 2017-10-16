@@ -2,6 +2,7 @@
 \echo ''
 \echo 'Indexing metrics for GXD, monthly for current year (so far) and in the previous five years'
 \echo '- user count is defined as curators who created an index record in the month'
+\echo '- references counted for a month are those with their first lit index record in that month'
 \echo ''
 
 select extract(year from gi.creation_date)::integer AS year,

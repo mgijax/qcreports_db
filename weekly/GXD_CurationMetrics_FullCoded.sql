@@ -2,6 +2,7 @@
 \echo ''
 \echo 'Curation metrics for GXD, monthly for current year (so far) and in the previous five years'
 \echo '- user count is defined as curators who created an assay during the month'
+\echo '- references counted for a month are those with their first assay record in that month'
 \echo ''
 
 select extract(year from ga.creation_date)::integer AS year,

@@ -1,5 +1,9 @@
 \echo ''
 \echo 'J#''s missing PDF''s'
+\echo 'Includes references which:'
+\echo '  1. have a type of Peer Reviewed Article'
+\echo '  2. have no PDF file'
+\echo '  3. have a J: number'
 \echo ''
 
 with refs_without_pdfs as (
