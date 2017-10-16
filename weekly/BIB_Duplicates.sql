@@ -1,6 +1,10 @@
 \echo ''
 \echo 'References with Duplicate Titles'
-\echo ''
+\echo 'Includes references which meet all of the following criteria:'
+\echo '  1. match title (case insensitive) with another reference'
+\echo '  2. match journal (case insensitive) with the same reference as #1'
+\echo '  3. has type other than MGI Direct Data Submission, Newsletter, Personal Communication, External Resource, or MGI Curation Record'
+\echo '  4. either have a null DOI ID or a DOI ID that does not match a reference that satisfies the above three criteria'
 
 select _Refs_key, lower(btrim(title)) as title, lower(btrim(journal)) as journal
 into temp table lower_refs
