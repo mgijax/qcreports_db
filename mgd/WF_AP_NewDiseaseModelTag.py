@@ -62,6 +62,8 @@ searchTerms = [
 'disease condition'
 ]
 
+searchTerms = map(lambda x : x.lower(), searchTerms)
+
 fp.write('''
  	The reference must be:
  	     group = AP, status = 'Routed' or 'Chosen'
@@ -78,33 +80,42 @@ byJText = {}
 
 searchSQL = ''
 for s in searchTerms:
-	searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
+	searchSQL += ' d.extractedText like \'%' + s + '%\' or'
+#	searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
 searchSQL = searchSQL[:-2]
 
 results = db.sql('''
-select r._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, d.extractedText,
+-- working with references with AP status of Chosen or Routed, which do NOT have one of three special tags,
+-- and which are NOT discarded
+with refSet1 as (select wfso._Refs_key, r.creation_date
+    from BIB_Workflow_Status wfso, BIB_Refs r
+	where wfso._Group_key in (31576664)
+    	and wfso._Status_key in (31576670, 31576671)
+    	and wfso._Refs_key = r._Refs_key
+    	and r.isDiscard = 0
+	    and wfso.isCurrent = 1
+        and not exists (select wftag._Refs_key
+            from BIB_Workflow_Tag wftag
+            where wfso._Refs_key = wftag._Refs_key
+            and wftag._Tag_key in (31576701, 31576702, 31576704)
+        )
+),
+-- lowercase needed text fields (only once) into a temp table
+lowerText as (select d._Refs_key, lower(d.extractedText) as extractedText, r.creation_date
+    from BIB_Workflow_Data d, refSet1 as r
+    where d._Refs_key = r._Refs_key
+)
+select r._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, bwd.extractedText,
 	to_char(r.creation_date, 'MM/dd/yyyy') as cdate
-from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Data d, 
-	VOC_Term g, VOC_Term s
-where r.isDiscard = 0
-and r._Refs_key = c._Refs_key
+from refSet1 r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Data bwd, 
+	VOC_Term g, VOC_Term s, lowerText d
+where r._Refs_key = c._Refs_key
+and r._Refs_key = bwd._Refs_key
 and r._Refs_key = d._Refs_key
 and r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
 and wfs._Status_key = s._Term_key
 and wfs.isCurrent = 1
-
-and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
-	where r._Refs_key = wfso._Refs_key
-	and wfso._Group_key in (31576664)
-	and wfso._Status_key in (31576670, 31576671)
-	and wfso.isCurrent = 1
-	)
-
-and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
-	where r._Refs_key = wftag._Refs_key
-	and wftag._Tag_key in (31576701, 31576702, 31576704)
-	)
 
 and (%s)
 order by jnumID, groupTerm
