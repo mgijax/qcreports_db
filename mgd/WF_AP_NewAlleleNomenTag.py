@@ -59,7 +59,7 @@ searchTerms = [
 'mice were generated',
 'mice were created',
 'targeting vector',
-'ES cell',
+' ES cell',             # note the space is important (avoids matches like "increases cell")
 'targeting construct',
 'novel mutation',
 'novel mutant',
