@@ -234,19 +234,30 @@ fp.write('(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038,
 
 results = db.sql('''select count(distinct mgiID) as ct from temp4''', 'auto')
 for r in results:
-    fp.write('Number of unique MGI Gene IDs: %s\n' % r['ct'])
+    fp.write('Number of unique MGI Gene IDs: \t\t\t\t%s\n' % r['ct'])
 
 results = db.sql('''select  count(distinct mgiID)  as ct from temp4 where hasDO = 'Y' ''', 'auto')
 for r in results:
-    fp.write('Number of unique MGI Gene IDs associated with DO: %s\n' % r['ct'])
+    fp.write('Number of unique MGI Gene IDs associated with DO:\t%s\n' % r['ct'])
 
 results = db.sql('''select count(*) as ct from temp4''', 'auto')
 for r in results:
-    fp.write('Number of total rows: %s\n' %  r['ct'])
+    fp.write('Number of total rows: \t\t\t\t\t%s\n' %  r['ct'])
 fp.write('\n\n')
 fp.write(' Category 1 = chosen or indexed only for GO\n')
 fp.write(' Category 2 = chosen or indexed only for GO & A&P\n')
 fp.write(' Category 3 = chosen or indexed for GO and any other group\n\n')
+
+fp.write(string.ljust('symbol', 25))
+fp.write(string.ljust('mgiID', 15))
+fp.write(string.ljust('jnumID', 15))
+fp.write(string.ljust('pubmedID', 15))
+fp.write(string.center('category', 10))
+fp.write(string.center('hasDO', 10))
+fp.write(string.ljust('jnumDate', 14))
+fp.write(string.ljust('annotDate', 14))
+fp.write(string.ljust('MGI Curator Tag', 50) + CRT)
+#fp.write(80*'-' + CRT)
 
 results = db.sql('''select distinct _Refs_key, symbol, mgiID, jnumID, pubmedID, 
     category, hasDO, jnumDate, annotDate
@@ -261,4 +272,4 @@ for r in results:
             curList = curTagDict[refsKey]
             cur = string.join(curList, ', ')
 
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (r['symbol'], TAB, r['mgiID'], TAB, r['jnumID'], TAB, r['pubmedID'], TAB, r['category'], TAB, r['hasDO'], TAB, r['jnumDate'], TAB, r['annotDate'], TAB, cur, CRT))
+    fp.write('%s%s%s%s%s%s%s%s%s%s' % (string.ljust(r['symbol'], 25), string.ljust(r['mgiID'], 15), string.ljust(r['jnumID'], 15), string.ljust(r['pubmedID'], 15), string.center(r['category'], 10), string.center(r['hasDO'], 10), string.ljust(r['jnumDate'], 14), string.ljust(r['annotDate'], 14), string.ljust(cur, 50), CRT))
