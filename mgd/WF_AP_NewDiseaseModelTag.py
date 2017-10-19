@@ -146,7 +146,7 @@ for r in results:
 	extractedText = extractedText.replace('\n', ' ')
 	extractedText = extractedText.replace('\r', ' ')
 	for s in searchTerms:
-	    for match in re.finditer(s, extractedText):
+	    for match in re.finditer(s, extractedText, flags=re.IGNORECASE):
 		subText = extractedText[match.start()-40:match.end()+40]
                 byJText[jnumID].append(subText)
 
