@@ -12,6 +12,7 @@
 #	group = AP, status = 'Routed', 'Chosen'
 #	group = AP, tag != 'AP:NewDiseaseModel'
 #			and tag != 'AP:NewTransgene'
+#			and tag != 'AP:MiscellaneousDisease'
 #	not discarded
 #
 #	output:
@@ -66,6 +67,7 @@ fp.write('''
  	     group = AP, status = 'Routed' or 'Chosen'
  	     group = AP, tag != 'AP:NewDiseaseModel'
                      and tag != 'AP:NewTransgene'
+                     and tag != 'AP:MiscellaneousDisease'
  	     not discarded
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
@@ -101,7 +103,7 @@ and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
 
 and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
 	where r._Refs_key = wftag._Refs_key
-	and wftag._Tag_key in (31576701, 31576702)
+	and wftag._Tag_key in (31576701, 31576702, 31576704)
 	)
 
 and (%s)
