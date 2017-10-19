@@ -113,6 +113,11 @@ def writeRecordD(fp, r):
 		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
 	fp.write(TAB)
 
+	if r['_Refs_key'] in gxd:
+                fp.write('Y' + TAB)
+        else:
+                fp.write('N' + TAB)
+
 	fp.write(r['mgiID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + TAB)
@@ -139,6 +144,7 @@ def writeRecordF(fp, r):
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 fpD.write('jnum ID' + TAB + \
 	 'pubMed ID' + TAB + \
+         'ref in GXD?' + TAB + \
 	 'mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
@@ -210,6 +216,19 @@ db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation
 	where r._Refs_key = b._Refs_key
 	''', None)
 db.sql('create index index_refs_key on references2(_Refs_key)', None)
+
+# has reference been routed/chosen for GXD
+results = db.sql('''
+        select distinct r._Refs_key
+        from references1 r, BIB_Workflow_Status s
+        where r._Refs_key = s._Refs_key
+        and s._Group_key = 31576665
+        and s._Status_key in (31576670,31576671)
+        and s.isCurrent = 1
+        ''', 'auto')
+gxd = []
+for r in results:
+        gxd.append(r['_Refs_key'])
 
 # does gene have mouse model annotated to DO disease
 results = db.sql('''select distinct m._Marker_key
