@@ -105,14 +105,14 @@ lowerText as (select d._Refs_key, lower(d.extractedText) as extractedText, r.cre
     from BIB_Workflow_Data d, refSet1 as r
     where d._Refs_key = r._Refs_key
 )
-select r._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, bwd.extractedText,
-	to_char(r.creation_date, 'MM/dd/yyyy') as cdate
-from refSet1 r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Data bwd, 
-	VOC_Term g, VOC_Term s, lowerText d
-where r._Refs_key = c._Refs_key
-and r._Refs_key = bwd._Refs_key
-and r._Refs_key = d._Refs_key
-and r._Refs_key = wfs._Refs_key
+select d._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, bwd.extractedText,
+	to_char(d.creation_date, 'MM/dd/yyyy') as cdate
+from lowertext d, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Data bwd, 
+	VOC_Term g, VOC_Term s
+where d._Refs_key = c._Refs_key
+and d._Refs_key = bwd._Refs_key
+and d._Refs_key = d._Refs_key
+and d._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
 and wfs._Status_key = s._Term_key
 and wfs.isCurrent = 1
