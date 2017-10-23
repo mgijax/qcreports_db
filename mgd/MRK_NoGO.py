@@ -178,14 +178,13 @@ def runQueries():
     db.sql('create index references_idx3 on references1(symbol)', None)
     db.sql('create index references_idx4 on references1(numericPart)', None)
 
-    # has reference been chosen for GXD
+    # yes if reference has be chosen, indexed or full-coded for GXD
 
     results = db.sql('''select distinct r._Refs_key
-        from references1 r, BIB_DataSet_Assoc ba, BIB_DataSet bd
-        where r._Refs_key = ba._Refs_key
-        and ba._DataSet_key = bd._DataSet_key
-        and bd.dataSet = 'Expression'
-        and ba.isNeverUsed = 0
+        from references1 r, BIB_Workflow_Status w
+        where r._Refs_key = w._Refs_key
+        and w._Group_key = 31576665
+        and w._Status_key in (31576671, 31576673, 31576674) 
         ''', 'auto')
     for r in results:
         gxd.append(r['_Refs_key'])
