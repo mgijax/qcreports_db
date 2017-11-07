@@ -18,6 +18,9 @@
 #
 # History:
 #
+# sc	11/03/17
+#	TR12607 exclude cre transgene refs from GO QC 15 (14 after littriage release)
+#
 # sc    10/09/2017
 #	converted from MRK_GOUnknown.sql
 #	Add new column for curator tag
@@ -64,6 +67,16 @@ db.sql('''select s._Refs_key
 	and s._Refs_key = t._Refs_key
 	and t._Tag_key = 35429720''', None)
 
+# markers with allele subtype 'recombinase' to exclude
+db.sql('''select a._Marker_key
+    into temporary table recomb
+    from ALL_Allele a, VOC_Annot va
+    where a._Allele_key = va._Object_key
+    and va._AnnotType_key = 1014 
+    and va._Term_key = 11025588''', None)
+
+db.sql('create index recomb_idx1 on recomb(_Marker_key)', None)
+
 # GO Annotations to unknown terms 
 # only include non-FANTOM references 
 # and J: creation date >= Annotation creation date 
@@ -83,7 +96,10 @@ db.sql('''select distinct substring(m.symbol,1,25) as symbol, m._Marker_key, r._
     and m._Marker_key = r._Marker_key
     and r.pubmedID not in ('11217851', '12466851', '14621295', '11125038', '12466854', '12466855', '12693553')
     and r._Refs_key = rr._Refs_key
-    and rr.creation_date >= a.creation_date''', None)
+    and rr.creation_date >= a.creation_date
+    and not exists(select 1
+	from recomb r
+	where m._Marker_key = r._Marker_key)''', None)
 
 db.sql('create index temp1_idx1 on temp1(_Marker_key)', None)
 
@@ -229,8 +245,9 @@ db.sql('create index temp4_idx2 on temp4(category)', None)
 fp.write( 'All genes with ''unknown'' annotations with new indexed literature\n')
 fp.write('J: creation date >= Annotation creation date)\n')
 fp.write("and if reference is 'chosen' or 'indexed' for GO and ''not used''\n")
-fp.write('for any GO annotation')
-fp.write('(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)\n\n')
+fp.write('for any GO annotation\n')
+fp.write('(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)\n')
+fp.write('(excludes markers with alleles of subtype "Recombinase")\n\n')
 
 results = db.sql('''select count(distinct mgiID) as ct from temp4''', 'auto')
 for r in results:
