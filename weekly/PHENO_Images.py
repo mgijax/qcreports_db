@@ -92,11 +92,13 @@ for j in journals:
       count = 0
 fp.write(2*CRT)
 fp.write('Excludes References with AP:NoImages Tag\n\n')
-fp.write(TAB + string.ljust('J#', 12))
+fp.write(string.ljust('J#', 12))
 fp.write(string.ljust('PubMed', 12))
+fp.write(string.ljust('MGI ID', 20))
 fp.write(string.ljust('short_citation', 75) + CRT)
-fp.write(TAB + string.ljust('--', 12))
+fp.write(string.ljust('--', 12))
 fp.write(string.ljust('------', 12))
+fp.write(string.ljust('------', 20))
 fp.write(string.ljust('--------------', 75) + CRT)
 
 #
@@ -158,7 +160,7 @@ db.sql('''
 db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
 results = db.sql('''
-	select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID
+	select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID, b.mgiID
 	from refs r, BIB_Citation_Cache b
 	where r._Refs_key = b._Refs_key
               and b.pubmedID is not null
@@ -170,8 +172,9 @@ results = db.sql('''
 	''', 'auto')
 
 for r in results:
-    fp.write(TAB + string.ljust(r['jnumID'], 12))
+    fp.write(string.ljust(r['jnumID'], 12))
     fp.write(string.ljust(r['pubmedID'], 12))
+    fp.write(string.ljust(r['mgiID'], 20))
     fp.write(string.ljust(r['short_citation'], 75))
     fp.write(CRT)
 
