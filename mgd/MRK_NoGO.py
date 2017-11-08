@@ -89,7 +89,7 @@ PAGE = reportlib.PAGE
 
 PUBMED = 29
 url = ''
-jfileurl = 'http://prodwww.informatics.jax.org/jfilescanner/get.cgi?jnum='
+pdfurl = os.environ['PDFVIEWER_URL']
 gxd = []
 
 fpD = None
@@ -191,7 +191,7 @@ def runQueries():
 
 def writeRecordD(fp, r):
 
-	fp.write('<A HREF="%s%s">%s</A>' %(jfileurl, r['jnum'], r['jnumID']) + TAB)
+	fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['mgiID'], r['mgiID']) + TAB)
 
 	if r['pubmedID'] != None:
 		purl = string.replace(url, '@@@@', r['pubmedID'])
@@ -203,15 +203,15 @@ def writeRecordD(fp, r):
         else:
                 fp.write('N' + TAB)
 
-	fp.write(r['mgiID'] + TAB + \
+	fp.write(r['jnumID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
 
 def reportD():
 
-    fpD.write('jnum ID' + TAB + \
+    fpD.write('mgi ID' + TAB + \
 	     'pubMed ID' + TAB + \
-	     'mgi ID' + TAB + \
+	     'jnum ID' + TAB + \
 	     'symbol' + TAB + \
 	     'name' + CRT*2)
 

@@ -1,3 +1,8 @@
+TAG: qcreports_db-6-0-11-15
+DATE: 11/08/2017
+STAFF: lec
+TR12693/mgd/MRK_GOIEA.py, MRK_NoGO.py: link jfileurl -> pdfurl
+
 TAG: qcreports_db-6-0-11-14
 DATE: 11/07/2017
 STAFF: sc
