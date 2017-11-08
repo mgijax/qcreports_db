@@ -166,12 +166,13 @@ def runQueries():
     # references
 
     db.sql('''select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, 
-	r._Refs_key, r.jnumID, r.jnum, r.pubmedID, b.journal 
+	r._Refs_key, r.pubmedID, b.journal, b.mgiID as refID
 	into temporary table references1 
-	from markers m , MRK_Reference r, BIB_Refs b 
+	from markers m , MRK_Reference r, BIB_Citation_Cache b 
 	where m._Marker_key = r._Marker_key
 	and m._Marker_key not in ( 25559, 37270 ) -- Gcna, Gt(ROSA)26Sor
 	and r._Refs_key = b._Refs_key
+	and r.jnum is not null
 	''', None)
     db.sql('create index references_idx1 on references1(_Refs_key)', None)
     db.sql('create index references_idx2 on references1(_Marker_key)', None)
@@ -191,7 +192,7 @@ def runQueries():
 
 def writeRecordD(fp, r):
 
-	fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['mgiID'], r['mgiID']) + TAB)
+	fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['refID'], r['refID']) + TAB)
 
 	if r['pubmedID'] != None:
 		purl = string.replace(url, '@@@@', r['pubmedID'])
@@ -203,24 +204,23 @@ def writeRecordD(fp, r):
         else:
                 fp.write('N' + TAB)
 
-	fp.write(r['jnumID'] + TAB + \
+	fp.write(r['refID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + CRT)
 
 def reportD():
 
-    fpD.write('mgi ID' + TAB + \
+    fpD.write('ref ID' + TAB + \
 	     'pubMed ID' + TAB + \
-	     'jnum ID' + TAB + \
+	     'mgi ID' + TAB + \
 	     'symbol' + TAB + \
 	     'name' + CRT*2)
 
     db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol,
-	r.name, r.mgiID, r.jnumID, r.jnum, r.numericPart, r.pubmedID, r.hasOrthology 
+	r.name, r.mgiID, r.refID, r.numericPart, r.pubmedID, r.hasOrthology 
 	into temporary table fpD 
 	from references1 r, BIB_Workflow_Status s
 	where r._Refs_key = s._Refs_key 
-        and r.jnumID is not null
         and r._Refs_key = s._Refs_key 
         and s._Group_key = 31576666
         and s._Status_key in (31576673)

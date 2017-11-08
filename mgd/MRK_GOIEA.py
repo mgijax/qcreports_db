@@ -106,7 +106,7 @@ pdfurl = os.environ['PDFVIEWER_URL']
 
 def writeRecordD(fp, r):
 
-	fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['mgiID'], r['mgiID']) + TAB)
+	fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['refID'], r['refID']) + TAB)
 
 	if r['pubmedID'] != None:
 		purl = string.replace(url, '@@@@', r['pubmedID'])
@@ -118,7 +118,7 @@ def writeRecordD(fp, r):
         else:
                 fp.write('N' + TAB)
 
-	fp.write(r['jnumID'] + TAB + \
+	fp.write(r['refID'] + TAB + \
 	         r['symbol'] + TAB + \
 	         r['name'] + TAB)
 
@@ -142,10 +142,10 @@ def writeRecordF(fp, r):
 #
 
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
-fpD.write('mgi ID' + TAB + \
+fpD.write('ref ID' + TAB + \
 	 'pubMed ID' + TAB + \
          'ref in GXD?' + TAB + \
-	 'jnum ID' + TAB + \
+	 'mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
 	 'DO' + TAB + \
@@ -210,9 +210,9 @@ db.sql('''select distinct m.*, r._Refs_key, r.pubmedID
 	''', None)
 db.sql('create index index_refs1_key on references1(_Refs_key)', None)
 
-db.sql('''select r.*, b.jnum, b.jnumID, b.short_citation
+db.sql('''select r.*, b.mgiID as refID, b.short_citation
 	into temporary table references2
-	from references1 r, BIB_All_View b
+	from references1 r, BIB_Citation_Cache b
 	where r._Refs_key = b._Refs_key
 	''', None)
 db.sql('create index index_refs_key on references2(_Refs_key)', None)
@@ -244,7 +244,7 @@ for r in results:
 #
 
 db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
-	r.jnumID, r.jnum, r.numericPart, r.pubmedID
+	r.refID, r.numericPart, r.pubmedID
 	into temporary table fpD
 	from references2 r, BIB_Workflow_Status s
 	where r._Refs_key = s._Refs_key
