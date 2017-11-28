@@ -14,6 +14,7 @@
 #    	Report in a tab delimited/html file:
 #		J:
 #		PubMed ID (with HTML link)
+#		Ref in GXD?
 #		MGI:ID
 #		symbol
 #		name
@@ -45,6 +46,12 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec   11/27/2017
+#       - TR12678
+#       - column GXD? = set to Y if GXD workflow status = Indexed or Full-coded
+#       - add column heading for GXD column = "Ref in GXD?"
+#       - filter out Gt(ROSA)26Sor
 #
 # sc    10/05/2017
 #	- TR12250/Lit Triage/update WF Status logic
@@ -142,19 +149,8 @@ def writeRecordF(fp, r):
 #
 
 fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
-fpD.write('ref ID' + TAB + \
-	 'pubMed ID' + TAB + \
-         'ref in GXD?' + TAB + \
-	 'mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'name' + TAB + \
-	 'DO' + TAB + \
-	 'Curator Tag' + CRT*2)
 
 fpE = reportlib.init("MRK_GOIEA_E", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
-fpE.write('mgi ID' + TAB + \
-	 'symbol' + TAB + \
-	 'GO?' + CRT*2)
 
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:
@@ -182,6 +178,7 @@ db.sql('''select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPar
 	and m.name !~ 'gene model %'
 	and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]'
 	and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]'
+	and m.symbol !~ 'Gt(ROSA)26Sor'
 	and m.symbol not like 'ORF%'
 	and m._Marker_key = a._Object_key
 	and a._MGIType_key = 2
@@ -217,13 +214,13 @@ db.sql('''select r.*, b.mgiID as refID, b.short_citation
 	''', None)
 db.sql('create index index_refs_key on references2(_Refs_key)', None)
 
-# has reference been routed/chosen for GXD
+# has reference been routed for GXD
 results = db.sql('''
         select distinct r._Refs_key
         from references1 r, BIB_Workflow_Status s
         where r._Refs_key = s._Refs_key
         and s._Group_key = 31576665
-        and s._Status_key in (31576670,31576671)
+        and s._Status_key in (31576670)
         and s.isCurrent = 1
         ''', 'auto')
 gxd = []
@@ -267,6 +264,15 @@ fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
 # total number of rows
 results = db.sql('select * from fpD', 'auto')
 fpD.write('Total number of rows:  %s\n\n' % (len(results)))
+
+fpD.write('ref ID' + TAB + \
+	 'pubMed ID' + TAB + \
+         'ref in GXD?' + TAB + \
+	 'mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'name' + TAB + \
+	 'DO' + TAB + \
+	 'Curator Tag' + CRT*2)
 
 results = db.sql('select * from fpD order by numericPart', 'auto')
 for r in results:
@@ -321,6 +327,10 @@ fpE.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 # total number of rows
 results = db.sql('select * from fpE', 'auto')
 fpE.write('Total number of rows:  %s\n\n' % (len(results)))
+
+fpE.write('mgi ID' + TAB + \
+	 'symbol' + TAB + \
+	 'GO?' + CRT*2)
 
 results = db.sql('select * from fpE order by symbol', 'auto')
 for r in results:

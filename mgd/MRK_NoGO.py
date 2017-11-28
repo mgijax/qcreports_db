@@ -19,6 +19,7 @@
 #
 #	J: of reference associated with the Marker, selected for GO but has not been used in annotation
 #	PubMed ID of reference (with HTML link to PubMed)	(TR 4698)
+#	Ref in GXD?
 #	MGI:ID
 #	symbol
 #	name
@@ -35,6 +36,12 @@
 #	- all private SQL reports require the header
 #
 # History:
+#
+# lec	11/27/2017
+#	- TR12678
+#	- column GXD? = set to Y if GXD workflow status = Indexed or Full-coded
+#	- add column heading for GXD column = "Ref in GXD?"
+#	- filter out Gt(ROSA)26Sor
 #
 # sc	10/05/2017
 #	- TR 12250 Littriage project, exclude Gt(ROSA)26Sor and Gcna
@@ -126,6 +133,7 @@ def runQueries():
 	   and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
 	   and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
 	   and m.symbol !~ 'ORF%' 
+	   and m.symbol !~ 'Gt(ROSA)26Sor' 
 	   and m._Marker_key = a._Object_key 
 	   and a._MGIType_key = 2 
 	   and a._LogicalDB_key = 1 
@@ -179,13 +187,13 @@ def runQueries():
     db.sql('create index references_idx3 on references1(symbol)', None)
     db.sql('create index references_idx4 on references1(numericPart)', None)
 
-    # yes if reference has be chosen, indexed or full-coded for GXD
+    # yes if reference has be indexed or full-coded for GXD
 
     results = db.sql('''select distinct r._Refs_key
         from references1 r, BIB_Workflow_Status w
         where r._Refs_key = w._Refs_key
         and w._Group_key = 31576665
-        and w._Status_key in (31576671, 31576673, 31576674) 
+        and w._Status_key in (31576673, 31576674) 
         ''', 'auto')
     for r in results:
         gxd.append(r['_Refs_key'])
@@ -209,12 +217,6 @@ def writeRecordD(fp, r):
 	         r['name'] + CRT)
 
 def reportD():
-
-    fpD.write('ref ID' + TAB + \
-	     'pubMed ID' + TAB + \
-	     'mgi ID' + TAB + \
-	     'symbol' + TAB + \
-	     'name' + CRT*2)
 
     db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol,
 	r.name, r.mgiID, r.refID, r.numericPart, r.pubmedID, r.hasOrthology 
@@ -248,6 +250,13 @@ def reportD():
     # total number of rows
     results = db.sql('select * from fpD', 'auto')
     fpD.write('Total number of rows:  %s\n\n' % (len(results)))
+
+    fpD.write('ref ID' + TAB + \
+	     'pubMed ID' + TAB + \
+	     'ref in GXD?' + TAB + \
+	     'mgi ID' + TAB + \
+	     'symbol' + TAB + \
+	     'name' + CRT*2)
 
     results = db.sql('select * from fpD order by hasOrthology desc, numericPart', 'auto')
     for r in results:

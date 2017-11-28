@@ -261,9 +261,10 @@ results = db.sql('''select count(*) as ct from temp4''', 'auto')
 for r in results:
     fp.write('Number of total rows: \t\t\t\t\t%s\n' %  r['ct'])
 fp.write('\n\n')
-fp.write(' Category 1 = chosen or indexed only for GO\n')
-fp.write(' Category 2 = chosen or indexed only for GO & A&P\n')
-fp.write(' Category 3 = chosen or indexed for GO and any other group\n\n')
+
+fp.write('Category 1 = chosen or indexed only for GO\n')
+fp.write('Category 2 = chosen or indexed only for GO & A&P\n')
+fp.write('Category 3 = chosen or indexed for GO and any other group\n\n')
 
 fp.write(string.ljust('symbol', 25))
 fp.write(string.ljust('mgiID', 15))
@@ -273,8 +274,7 @@ fp.write(string.center('category', 10))
 fp.write(string.center('hasDO', 10))
 fp.write(string.ljust('jnumDate', 14))
 fp.write(string.ljust('annotDate', 14))
-fp.write(string.ljust('MGI Curator Tag', 50) + CRT)
-#fp.write(80*'-' + CRT)
+fp.write(string.ljust('MGI Curator Tag', 50) + CRT*2)
 
 results = db.sql('''select distinct _Refs_key, symbol, mgiID, jnumID, pubmedID, 
     category, hasDO, jnumDate, annotDate
