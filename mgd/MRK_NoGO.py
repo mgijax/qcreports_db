@@ -39,7 +39,7 @@
 #
 # lec	11/27/2017
 #	- TR12678
-#	- column GXD? = set to Y if GXD workflow status = Indexed or Full-coded
+#	- column GXD? = set to Y if GXD workflow status = Indexed or Chosen
 #	- add column heading for GXD column = "Ref in GXD?"
 #	- filter out Gt(ROSA)26Sor
 #
@@ -187,13 +187,13 @@ def runQueries():
     db.sql('create index references_idx3 on references1(symbol)', None)
     db.sql('create index references_idx4 on references1(numericPart)', None)
 
-    # yes if reference has be indexed or full-coded for GXD
+    # yes if reference has be indexed/chosen for gxd
 
     results = db.sql('''select distinct r._Refs_key
         from references1 r, BIB_Workflow_Status w
         where r._Refs_key = w._Refs_key
         and w._Group_key = 31576665
-        and w._Status_key in (31576673, 31576674) 
+        and w._Status_key in (31576673, 31576671)  -- indexed or chosen
         ''', 'auto')
     for r in results:
         gxd.append(r['_Refs_key'])
@@ -225,7 +225,7 @@ def reportD():
 	where r._Refs_key = s._Refs_key 
         and r._Refs_key = s._Refs_key 
         and s._Group_key = 31576666
-        and s._Status_key in (31576673)
+        and s._Status_key in (31576673, 31576671)
         and s.isCurrent = 1 
 	and not exists (select 1 from VOC_Evidence e, VOC_Annot a 
 	where r._Refs_key = e._Refs_key 

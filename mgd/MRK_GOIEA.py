@@ -9,7 +9,7 @@
 #
 #	Report 2D
 #	Title = Gene with only GO Assocations w/ IEA evidence
-#               with references that are GO/Indexed
+#               with references that are GO/Indexed or Chosen
 #
 #    	Report in a tab delimited/html file:
 #		J:
@@ -49,7 +49,7 @@
 #
 # lec   11/27/2017
 #       - TR12678
-#       - column GXD? = set to Y if GXD workflow status = Indexed or Full-coded
+#       - column GXD? = set to Y if GXD workflow status = Indexed or Chosen
 #       - add column heading for GXD column = "Ref in GXD?"
 #       - filter out Gt(ROSA)26Sor
 #
@@ -214,13 +214,13 @@ db.sql('''select r.*, b.mgiID as refID, b.short_citation
 	''', None)
 db.sql('create index index_refs_key on references2(_Refs_key)', None)
 
-# has reference been routed for GXD
+# yes if reference has be indexed/chosen for gxd
 results = db.sql('''
         select distinct r._Refs_key
         from references1 r, BIB_Workflow_Status s
         where r._Refs_key = s._Refs_key
         and s._Group_key = 31576665
-        and s._Status_key in (31576670)
+        and s._Status_key in (31576673, 31576671)
         and s.isCurrent = 1
         ''', 'auto')
 gxd = []
