@@ -1,7 +1,9 @@
 TAG: qcreports_db-6-0-11-?
 DATE: 11/29/2017
 STAFF: lec
-TR12678/MRK_GOIEA.py ; MRK_NoGO.py
+1) TR12678/MRK_GOIEA.py ; MRK_NoGO.py
+2) TR12681 qcr.shtml - add link in references section to pdfdownload missed 
+    papers log
 
 TAG: qcreports_db-6-0-11-16
 TAG: qcreports_db-6-0-11-15

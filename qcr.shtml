@@ -43,6 +43,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_BIB_Discard.rpt">MGI Discard References with associated data</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingPDFs.sql.rpt">J#'s missing PDF's</A> <B>(jeo)</B>
+<LI><A HREF="/data/loads/mgi/pdfdownload/logs/identify_missed_papers_plos.sh.log">Overdue PLOS DOI IDs - not in PubMed Central, no longer within timeframe of PLOS downloader</A> <B>(jeo, neb)</B>
 </OL>
 
 <A NAME="alleles"><B>Alleles (csmith, smb, dlb, honda, mnk)</B> </A>
@@ -184,7 +185,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Mouse Genes with no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">Mouse Genes that have Alleles but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">Genes with no GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(dmitrys)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">Genes with only IEA GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_E.rpt">Genes with DO Annotations and either GO Annotations of evidence IEA only or no GO Annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">All Genes with Annotations to IDA, IGI, IMP, IPI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A>
