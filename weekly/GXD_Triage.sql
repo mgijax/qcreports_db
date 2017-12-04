@@ -4,7 +4,7 @@
 \echo ''
 
  
-select c.jnumID, c.short_citation, s.creation_date, t.term
+select c.jnumID, c.short_citation, t.term
 from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status s, BIB_Workflow_Data d, VOC_Term t
 where s.creation_date between (now() + interval '-7 day') and now()
 and r._Refs_key = s._Refs_key
