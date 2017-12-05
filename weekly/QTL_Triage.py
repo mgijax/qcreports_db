@@ -7,11 +7,22 @@
 # Report:
 #       Weekly QTL Triage Report
 #
+#	Routed (R) or Chosen (C)
+#	J:
+#	Year
+#	QTL symbol (if there is one)
+#	Curator that Routed/Chose reference
+#	QTL tags
+#	
 # Usage:
 #       QTL_Triage.py
 #
+# lec	12/04/2017
+#	- TR12730/changes per Deb Reed (djr)
+#
 # sc	10/06/2017
 #	- Littriage project, update to use BIB_Workflow Status of 'routed'
+#
 # sc	08/31/2015
 #	- TR12082 add markers
 #
@@ -37,86 +48,111 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 reportlib.column_width = 150
 
-# QTL marker keys mapped to their symbol and MGI ID
-qtlDict = {}
-
 #
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.rpt', printHeading = None)
+fp = reportlib.init(sys.argv[0], 'References with status "Routed or Chosen"', outputdir = os.environ['QCOUTPUTDIR'])
+fp.write('Status,J:,Year,QTL symbol,Curator,QTL tags' + 2*CRT)
 
-results = db.sql('''select m._Marker_key, m.symbol, a.accID
-	from MRK_Marker m, ACC_Accession a
-	where m._Marker_Type_key = 6
-	and m._Marker_Status_key = 1
-	and m._Marker_key = a._Object_key
-	and a._MGIType_key = 2
-	and a._LogicalDB_key = 1
-	and a.preferred = 1
-	and a.prefixPart = 'MGI:' ''', 'auto')
-for r in results:
-    mrkKey = r['_Marker_key']
-    symbol = r['symbol']
-    mgiID = r['accID']
-    if not qtlDict.has_key(mrkKey):
-	qtlDict[mrkKey] = []
-    qtlDict[mrkKey].append('%s, %s' % (symbol, mgiID))
+#
+# reference in group QTL
+# current status in ('Routed', 'Chosen')
+# no Mapping records
+#
 db.sql('''
-	select distinct r._Refs_key
-	into temporary table selNotUsed
-	from BIB_Refs r, BIB_WorkFlow_Status s
-	where r._Refs_key = s._Refs_key
-	and s._Group_key = 31576668 -- QTL
-	and s._Status_key = 31576670 -- routed
-	and not exists (
-	select 1 from MLD_Expts m
-	where m.exptType in ('TEXT', 'TEXT-QTL', 'TEXT-QTL-Candidate Genes', 'TEXT-Congenic', 'TEXT-Meta Analysis')
-	and m._Refs_key = r._Refs_key)
+	select distinct r._Refs_key, t.term as status, c.jnumID, r.year, u.login
+	into temporary table qtl_refs
+	from BIB_Refs r, BIB_Citation_Cache c, BIB_WorkFlow_Status wfs, VOC_Term t, MGI_User u
+	where r._Refs_key = c._Refs_key
+	and r._Refs_key = wfs._Refs_key
+	and wfs._Group_key = 31576668
+	and wfs._Status_key in (31576670,31576671)
+	and wfs.isCurrent = 1
+	and wfs._Status_key = t._Term_key
+	and wfs._CreatedBy_key = u._User_key
+	and not exists (select 1 from MLD_Expts e
+		where r._Refs_key = e._Refs_key
+		and e.exptType in ('TEXT', 'TEXT-QTL', 'TEXT-QTL-Candidate Genes', 'TEXT-Congenic', 'TEXT-Meta Analysis')
+		)
+	order by r.year desc, status, c.jnumID
 	''', None)
 
-db.sql('create index idx1 on selNotUsed(_Refs_key)', None)
+db.sql('create index idx1 on qtl_refs(_Refs_key)', None)
 
-db.sql('''
-        select distinct s._Refs_key, aRef.accID as jNum
-	into temporary table withJnum
-        from selNotUsed s, ACC_Accession aRef
-        where s._Refs_key = aRef._Object_key
-        and aRef._MGIType_key = 1
-        and aRef._LogicalDB_key = 1
-        and aRef.prefixPart = 'J:'
-        and aRef.preferred = 1''', None)
-
-db.sql('create index idx2 on withJnum(_Refs_key)', None)
-
+#
+# has QTL: tags
+#
+tagLookup = {}
 results = db.sql('''
-	select distinct mr._Marker_key, j.*
-	from withJnum j
-	LEFT OUTER JOIN MRK_Reference mr on (j._Refs_key = mr._Refs_key)
-	order by j.jNum
-	''', 'auto')
+		select r._Refs_key, t.term
+		from qtl_refs r, BIB_Workflow_Tag wft, VOC_Term t
+		where r._Refs_key = wft._Refs_key
+		and wft._Tag_key = t._Term_key
+		and t.term like 'QTL:%'
+		order by r._Refs_key, t.term
+		''', 'auto')
+for r in results:	
+    key = r['_Refs_key']
+    value = r['term']
+    if key not in tagLookup:
+        tagLookup[key] = []
+    tagLookup[key].append(value)
 
-distinctDict = {}
+#
+# has QTL markers
+#
+markerLookup = {}
+results = db.sql('''
+		select r._Refs_key, m.symbol
+		from qtl_refs r, MRK_Reference rm, MRK_Marker m
+		where r._Refs_key = rm._Refs_key
+		and rm._Marker_key = m._Marker_key
+		and m._Marker_Type_key = 6
+		''', 'auto')
+for r in results:	
+    key = r['_Refs_key']
+    value = r['symbol']
+    if key not in markerLookup:
+        markerLookup[key] = []
+    markerLookup[key].append(value)
+
+#
+# Routed
+#
+results = db.sql('''select * from qtl_refs where status = 'Routed' ''', 'auto')
 for r in results:
-    mrkKey = r['_Marker_key']
-    jNum = r['jNum']
-    mrkList = []
-    if mrkKey != None  and qtlDict.has_key(mrkKey):
-	mrkList = qtlDict[mrkKey]
-    if not distinctDict.has_key(jNum):
-	distinctDict[jNum] = []
-    markers = ''
-    if mrkList != []:
-	markers = string.join(mrkList, ' | ')
-    if markers != '':
-	distinctDict[jNum].append(markers)
+    key = r['_Refs_key']
+    fp.write('R' + TAB)
+    fp.write(r['jnumID'] + TAB)
+    fp.write(str(r['year']) + TAB)
+    if key in markerLookup:
+    	fp.write(';'.join(markerLookup[key]))
+    fp.write(TAB)
+    fp.write(r['login'] + TAB)
+    if key in tagLookup:
+    	fp.write(';'.join(tagLookup[key]))
+    fp.write(CRT)
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
-fp.write("References with status 'routed' for group QTL%s%s" % (CRT, CRT)) 
-jNums = distinctDict.keys()
-jNums.sort()
-for jNum in jNums:
-    fp.write('%s%s%s%s' % (jNum, TAB, string.join(distinctDict[jNum], ' | '), CRT))
-fp.write("Total References with status 'routed' for group QTL: %s" % len(jNums))
+#
+# Chosen
+#
+results = db.sql('''select * from qtl_refs where status = 'Chosen' ''', 'auto')
+for r in results:
+    key = r['_Refs_key']
+    fp.write('C' + TAB)
+    fp.write(r['jnumID'] + TAB)
+    fp.write(str(r['year']) + TAB)
+    if key in markerLookup:
+    	fp.write(';'.join(markerLookup[key]))
+    fp.write(TAB)
+    fp.write(r['login'] + TAB)
+    if key in tagLookup:
+    	fp.write(';'.join(tagLookup[key]))
+    fp.write(CRT)
+fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file
+
