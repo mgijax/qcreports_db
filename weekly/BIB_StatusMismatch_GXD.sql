@@ -39,3 +39,32 @@ where (a._Assay_key is not null
 	or i._Index_key is not null
 order by u.accid
 ;
+
+\echo ''
+\echo 'References where group = Expression, status = Indexed and reference is not in GXD Lit Index'
+\echo ''
+select distinct c.mgiID, c.jnumID
+from BIB_Citation_Cache c, BIB_Workflow_Status s
+where c._Refs_key = s._Refs_key
+and s.isCurrent = 1
+and s._Group_key = 31576665
+and s._Status_key = 31576673
+and not exists (select 1 from GXD_Index g where c._Refs_key = g._Refs_key)
+order by c.mgiID
+;
+
+\echo ''
+\echo 'References where group = Expression, status = Full-coded and reference is associated with Assay'
+\echo 'excluding recombinase assays'
+\echo ''
+select distinct c.mgiID, c.jnumID
+from BIB_Citation_Cache c, BIB_Workflow_Status s
+where c._Refs_key = s._Refs_key
+and s.isCurrent = 1
+and s._Group_key = 31576665
+and s._Status_key = 31576674
+and not exists (select 1 from GXD_Assay a where c._Refs_key = a._Refs_key 
+	and a._AssayType_key not in (10,11))
+order by c.mgiID
+;
+

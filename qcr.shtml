@@ -29,8 +29,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#sequencegroup">Sequence Group</A>
 <LI><A HREF="#sequence">Sequence</A>
 <LI><A HREF="#homology">Homology</A>
-<LI><A HREF="#dataloads">Data Loads</A>
 <LI><A HREF="#metrics">Curation Metrics</A>
+<LI><A HREF="#dataloads">Data Loads</A>
 <LI><A HREF="<!--#include file="includes/ftp_url.html" -->/reports/index.html">Public Reports</A>
 </UL>
 <HR>
@@ -315,6 +315,16 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class2.rpt">Classes with no Mouse Genes</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class3.rpt">Classes with only Mouse Genes</A>
 </OL>
+
+<A NAME="metrics"><B>Curation Metrics</B></A>
+<OL>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationMetrics.sql.rpt">J: Numbers Assigned</A> <B>(jfinger)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_CurationMetrics.sql.rpt">GO Curation</A> <B>(mmh)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A> <B>(jfinger)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FullCoded.sql.rpt">GXD Curation - Full-coded</A> <B>(jfinger)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A> <B>(mnk)</B>
+</OL>
+
 <A NAME="dataloads"><B>Data Loads</B></A>
 <OL>
 <LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A>
@@ -354,14 +364,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
 </OL>
 
-<A NAME="metrics"><B>Curation Metrics</B></A>
-<OL>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationMetrics.sql.rpt">J: Numbers Assigned</A> <B>(jfinger)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_CurationMetrics.sql.rpt">GO Curation</A> <B>(mmh)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A> <B>(jfinger)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FullCoded.sql.rpt">GXD Curation - Full-coded</A> <B>(jfinger)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A> <B>(mnk)</B>
-</OL>
 <HR>
 
 </BODY>
