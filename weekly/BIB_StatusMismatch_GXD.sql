@@ -40,7 +40,7 @@ order by u.accid
 ;
 
 \echo ''
-\echo 'References where group = Expression, status = Indexed and reference is not in GXD Lit Index'
+\echo 'References where group = Expression, status = Indexed and is in GXD Lit Index'
 \echo ''
 select distinct c.mgiID, c.jnumID
 from BIB_Citation_Cache c, BIB_Workflow_Status s
@@ -53,8 +53,7 @@ order by c.mgiID
 ;
 
 \echo ''
-\echo 'References where group = Expression, status = Full-coded and reference is associated with Assay'
-\echo 'excluding CRE'
+\echo 'References where group = Expression, status = Full-coded and is associated with an expression assay, excluding CRE'
 \echo ''
 select distinct c.mgiID, c.jnumID
 from BIB_Citation_Cache c, BIB_Workflow_Status s
