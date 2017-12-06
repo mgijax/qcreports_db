@@ -32,11 +32,10 @@ select distinct u.accid, u.group, u.status,
 		else ''
 	end in_gxd_index
 from gxd_unused u
-left outer join gxd_assay a on (u._Refs_key = a._Refs_key)
-left outer join gxd_index i on (u._Refs_key = i._Refs_key)
-where (a._Assay_key is not null
+left outer join gxd_assay a on (u._Refs_key = a._Refs_key
 	and a._AssayType_key not in (10,11))
-	or i._Index_key is not null
+left outer join gxd_index i on (u._Refs_key = i._Refs_key)
+where a._Assay_key is not null or i._Index_key is not null
 order by u.accid
 ;
 
