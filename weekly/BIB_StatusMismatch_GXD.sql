@@ -55,7 +55,7 @@ order by c.mgiID
 
 \echo ''
 \echo 'References where group = Expression, status = Full-coded and reference is associated with Assay'
-\echo 'excluding recombinase assays'
+\echo 'excluding CRE'
 \echo ''
 select distinct c.mgiID, c.jnumID
 from BIB_Citation_Cache c, BIB_Workflow_Status s
