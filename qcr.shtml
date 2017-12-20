@@ -147,6 +147,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_DevDyn.rpt">Dev Dyn papers to full code</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_Development.rpt">Development papers to full code</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_References.sql.rpt">Reference where group = GXD, status = 'Routed' or 'Chosen'</A>
+<LI><A HREF="/data/reports/qcreports_db/output/WF_GXD_secondary.rpt">Lit Triage secondary-triage : GXD</A>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_StatusMismatch_GXD.sql.rpt">References with GXD status not matching curated data</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_EMAPA_Terms.rpt">EMAPA Terms</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_EMAPS_Terms.rpt">EMAPS Terms</A>
