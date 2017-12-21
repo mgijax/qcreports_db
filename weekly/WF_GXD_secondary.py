@@ -141,7 +141,7 @@ db.sql('create index idx_embryo on embryo_set(_Refs_key)', None)
 
 fp1 = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
-fp1.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):')
+fp1.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):\n')
 fp1.write('\n'.join(ignoreSearchTerms) + '\n\n')
 
 fp1.write('ignore_set = references where ignore set exists in extracted text\n')
