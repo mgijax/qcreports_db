@@ -205,6 +205,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenotypeDescriptions.rpt">Genotype Descriptions with MGI IDs</A> <B>(mdolan)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Verify GPI file</A> <B>(dph)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(hjd)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/WF_GO_FullCodeNoAnnot.rpt">Papers marked as Full-coded with no GO annotations</A> <B>(hjd)</B>
 </OL>
 
 <A NAME="nomenclature"><B>Nomenclature (mmh)</B></A>

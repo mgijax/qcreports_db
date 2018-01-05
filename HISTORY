@@ -1,7 +1,9 @@
+TAG: qcreports_db-6-0-11-25
 TAG: qcreports_db-6-0-11-24
 DATE: 01/03/2018
 STAFF: sc
 CHANGES: TR12672 - new QC report mgd/WF_GO_FullCodeNoAnnot.py
+Added to qcr.shtml
 
 TAG: qcreports_db-6-0-11-23
 DATE: 12/20/2017
