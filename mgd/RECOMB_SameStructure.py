@@ -189,7 +189,7 @@ for r in results:
     fp.write(string.ljust(r['mgiID'], 35))
     fp.write(string.ljust(r['specimenLabel'], 45))
     fp.write(string.ljust(r['term'], 50))
-    fp.write(string.ljust(r['stage'], 5))
+    fp.write(string.ljust(str(r['stage']), 5))
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
