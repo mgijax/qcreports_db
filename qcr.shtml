@@ -44,6 +44,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingPDFs.sql.rpt">J#'s missing PDF's</A> <B>(jeo)</B>
 <LI><A HREF="/data/loads/mgi/pdfdownload/logs/identify_missed_papers_plos.sh.log">Overdue PLOS DOI IDs - not in PubMed Central, no longer within timeframe of PLOS downloader</A> <B>(jeo, neb)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/WF_SupplementalData.rpt">Supplemental Data Needed</A> <B>(jeo, neb)</B>
 </OL>
 
 <A NAME="alleles"><B>Alleles (csmith, smb, dlb, honda, mnk)</B> </A>
