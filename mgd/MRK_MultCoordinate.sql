@@ -25,9 +25,10 @@ create index dups_idx1 on dups(_Marker_key)
 \echo 'Symbols w/ > 1 Ensembl, NCBI Gene Model Association'
 \echo ''
 
-select distinct a.accID, m.symbol, c.accID, c.provider
+select distinct a.accID, m.symbol, c.accID, s.provider
 from dups s, coord c, MRK_Marker m, ACC_Accession a
 where s._Marker_key = c._Marker_key
+and s.provider = c.provider
 and s._Marker_key = m._Marker_key
 and m._Marker_key = a._Object_key
 and a._MGIType_key = 2
