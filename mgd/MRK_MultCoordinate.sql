@@ -25,7 +25,7 @@ create index dups_idx1 on dups(_Marker_key)
 \echo 'Symbols w/ > 1 Ensembl, VEGA or NCBI Gene Model Association'
 \echo ''
 
-select m.symbol, c.accID, c.provider
+select distinct m.symbol, c.accID, c.provider
 from dups s, coord c, MRK_Marker m
 where s._Marker_key = c._Marker_key
 and s._Marker_key = m._Marker_key
