@@ -34,6 +34,6 @@ and m._Marker_key = a._Object_key
 and a._MGIType_key = 2
 and a._LogicalDB_key = 1
 and a.preferred = 1
-order by c.provider, m.symbol
+order by s.provider, m.symbol
 ;
 
