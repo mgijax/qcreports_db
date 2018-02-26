@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-11-31
+DATE: 02/26/2018
+STAFF: sc
+CHANGES:
+1) TR12778 - ensuring correct gene for Cre portal assays
+New RECOMB_Reporter.sql monthly report, qcr.shtml updated
+
 TAG: qcreports_db-6-0-11-30
 DATE: 02/26/2018
 STAFF: lec
