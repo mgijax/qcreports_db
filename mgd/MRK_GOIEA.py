@@ -47,6 +47,10 @@
 #
 # History:
 #
+# sc	03/07/2018
+#	- If Indexed or Chosen or Full-coded 'ref in GXD' = 'Y'
+#	- add explanation of 'ref in GXD' column to report header
+#
 # lec   11/27/2017
 #       - TR12678
 #       - column GXD? = set to Y if GXD workflow status = Indexed or Chosen
@@ -220,7 +224,7 @@ results = db.sql('''
         from references1 r, BIB_Workflow_Status s
         where r._Refs_key = s._Refs_key
         and s._Group_key = 31576665
-        and s._Status_key in (31576673, 31576671)
+        and s._Status_key in (31576673, 31576671, 31576674)
         and s.isCurrent = 1
         ''', 'auto')
 gxd = []
@@ -255,6 +259,7 @@ db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
 	''', None)
 # number of unique MGI gene
 results = db.sql('select distinct _Marker_key from fpD', 'auto')
+
 fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # number of unique J:gene
@@ -264,6 +269,7 @@ fpD.write('Number of unique J: IDs:  %s\n' % (len(results)))
 # total number of rows
 results = db.sql('select * from fpD', 'auto')
 fpD.write('Total number of rows:  %s\n\n' % (len(results)))
+fpD.write('"Ref in GXD" column = "Y" if GXD current status is "chosen", "indexed" or "full-coded"\n\n')
 
 fpD.write('ref ID' + TAB + \
 	 'pubMed ID' + TAB + \

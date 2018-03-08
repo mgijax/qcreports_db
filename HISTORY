@@ -1,4 +1,10 @@
 TAG: qcreports_db-6-0-11-32
+DATE: 03/08/2018
+STAFF: sc
+CHANGES: TR12807
+Update MRK_GOIEA D report ref in gxd logic to include Full-coded status.
+
+TAG: qcreports_db-6-0-11-32
 DATE: 02/26/2018
 STAFF: sc
 CHANGES: TR12779 - Recombinase reporter check
