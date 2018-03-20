@@ -97,7 +97,7 @@ def alleleNotes():
 	        where a._Allele_key = n._Object_key
 	        and n._NoteType_key = %s
 	        and n._Note_key = c._Note_key
-                order by n._Note_key, c.sequenceNum
+                order by n._Note_key
 	          ''' % (n), 'auto')
 
         notes = {}
@@ -206,7 +206,7 @@ def mpNotes():
 	        and v._Annot_key = e._Annot_key
 	        and e._AnnotEvidence_key = n._Object_key
 	        and n._NoteType_key = 1008
-                order by n._Note_key, n.sequenceNum
+                order by n._Note_key
 	          ''', 'auto')
 
     notes = {}
@@ -286,7 +286,7 @@ def markerNotes():
 	        select a._Marker_key, n.note
 	        from markers a, MRK_Notes n
 	        where a._Marker_key = n._Marker_key
-                order by a._Marker_key, n.sequenceNum
+                order by a._Marker_key
 	          ''', 'auto')
 
     notes = {}
