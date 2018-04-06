@@ -22,6 +22,9 @@
 #
 # History:
 #
+# lec   04/06/2018
+#	- TR12808/add count
+#
 # lec   10/22/2014
 #       - TR11750/postres complient
 #
@@ -69,7 +72,8 @@ trappedKeys = '847121'
 qtlKeys = '847130'
 spontKeys = '847115'
 chemicalKeys = '847122'
-otherKeys = '847124,847123,847131,847132,847125'
+endonucleaseKeys = '11927650'
+otherKeys = '847124,847123,847131,847132,847125,11927652,2327161'
 #Including to the counts only alleles that have a "autoload" or "approved" status
 statusKeys='847114,3983021'
 
@@ -142,6 +146,9 @@ def alleleCounts():
     chemical = db.sql('select count(*) as c from alleles where _Allele_Type_key in (%s)' % (chemicalKeys), 'auto')[0]['c']
     chemicalM = db.sql('select count(*) as c from amonthly where _Allele_Type_key in (%s)' % (chemicalKeys), 'auto')[0]['c']
 
+    endonuclease = db.sql('select count(*) as c from alleles where _Allele_Type_key in (%s)' % (endonucleaseKeys), 'auto')[0]['c']
+    endonucleaseM = db.sql('select count(*) as c from amonthly where _Allele_Type_key in (%s)' % (endonucleaseKeys), 'auto')[0]['c']
+
     other = db.sql('select count(*) as c from alleles where _Allele_Type_key in (%s)' % (otherKeys), 'auto')[0]['c']
     otherM = db.sql('select count(*) as c from amonthly where _Allele_Type_key in (%s)' % (otherKeys), 'auto')[0]['c']
 
@@ -186,9 +193,14 @@ def alleleCounts():
     fp.write(string.rjust(str(spontM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Chemical (ENU)', 35))
+    fp.write(string.ljust('Chemically induced (ENU)', 35))
     fp.write(string.rjust(str(chemical), 15))
     fp.write(string.rjust(str(chemicalM), 25))
+    fp.write(CRT)
+
+    fp.write(string.ljust('Endonuclease-mediated', 35))
+    fp.write(string.rjust(str(endonuclease), 15))
+    fp.write(string.rjust(str(endonucleaseM), 25))
     fp.write(CRT)
 
     fp.write(string.ljust('All Other', 35))

@@ -1,9 +1,13 @@
+TAG: qcreports_db-6-0-12-2
+DATE: 04/06/2018
+STAFF: lec
+CHANGES: TR12808/ALL_Progress.py
+
 TAG: qcreports_db-6-0-12-1
 DATE: 03/20/2018
 STAFF: lec
 CHANGES: TR12662/GMC
 ALL_Notes.py/sequenceNum removed
-
 
 TAG: qcreports_db-6-0-11-34
 TAG: qcreports_db-6-0-11-33
