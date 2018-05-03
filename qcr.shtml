@@ -261,7 +261,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz, djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(?)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_VEGA_Associations.rpt">VEGA Associations</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz, djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz, djr)</B>
@@ -281,7 +280,6 @@ be used at times to test reports for <I>future</I> public consumption.)
     <BR> * Gene Model biotypes not loaded because unable to translate biotype. 
     <OL>
     <LI><A HREF="/data/loads/mgi/genemodelload/logs/ensembl_seqgenemodelload.log"> Ensembl Sequence Gene Model Information Load</A>
-    <LI><A HREF="/data/loads/mgi/genemodelload/logs/vega_seqgenemodelload.log"> VEGA Sequence Gene Model Information Load</A>
     <LI><A HREF="/data/loads/mgi/genemodelload/logs/ncbi_seqgenemodelload.log"> NCBI Sequence Gene Model Information Load</A>
     </OL>
 <LI><A HREF="/data/reports/qcreports_db/output/GIA_MRK_ENSEMBL.rpt">Ensembl Associations for Gene Index</A> <B>(yz)</B>
@@ -307,10 +305,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Split.sql.rpt">Split Sequences</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_MarkerAnnotation.sql.rpt">Markers Annotated to a Secondary Sequence Accession ID</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Dummy.sql.rpt">Dummy Sequences Annotated to Mouse Marker (report a) & Molecular Segments (report b) </A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultCoordinate.sql.rpt">Symbols w/ > 1 Ensembl, VEGA or NCBI Gene Model Association</A> <B>(yz,djr)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, VEGA or NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,djr)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz,djr)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoVEGA.rpt">VEGA Gene Models with no Marker Association</A> <B>(yz,djr)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,djr)</B>
 </OL>
 

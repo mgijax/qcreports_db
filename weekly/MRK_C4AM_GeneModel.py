@@ -63,12 +63,12 @@ db.sql('''select mcf._Object_key as markerKey, a.accid as mgiID, m.symbol
 
 db.sql('create index idx1 on curated(markerKey)', None)
 
-# get curated markers with gene models, NCBI, VEGA, Ensembl
+# get curated markers with gene models, NCBI, Ensembl
 results = db.sql('''select a.accid as genemodelID, c.* 
 from ACC_Accession a, curated c
 where a._Object_key = c.markerKey
 and a._MGIType_key = 2
-and a._LogicalDB_key in (59, 60, 85)
+and a._LogicalDB_key in (59, 60)
 order by symbol''', 'auto') 
 
 for r in results:

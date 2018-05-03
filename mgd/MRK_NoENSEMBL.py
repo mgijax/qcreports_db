@@ -64,9 +64,6 @@ fp.write('#\n')
 
 #
 # get the full set of Ensembl gene model ids
-# we exclude the obsolete vega ids (only include status = active)
-# TR10541: remove
-# 'and (s.description like "%protein_coding%" or s.description like "%pseudogene%")', None)
 #
 
 db.sql('''select a.accID, s._Sequence_key

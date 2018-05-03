@@ -4,7 +4,7 @@ INTO TEMPORARY TABLE coord
 from SEQ_Marker_Cache s, SEQ_Coord_Cache c
 where s._Organism_key = 1
 and s._Sequence_key = c._Sequence_key
-and c.provider in ('Ensembl Gene Model', 'VEGA Gene Model', 'NCBI Gene Model')
+and c.provider in ('Ensembl Gene Model', 'NCBI Gene Model')
 ;
 
 create index coord_idx1 on coord(_Sequence_key)
@@ -22,7 +22,7 @@ create index dups_idx1 on dups(_Sequence_key)
 ;
 
 \echo ''
-\echo 'Ensembl, VEGA Gene Models, or NCBI Gene Model w/ > 1 Marker Association'
+\echo 'Ensembl, NCBI Gene Model w/ > 1 Marker Association'
 \echo ''
 
 select c.accID, m.symbol, c.provider
