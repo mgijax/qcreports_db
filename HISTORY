@@ -2,7 +2,9 @@ TAG: qcreports_db-6-0-13-?
 DATE:
 STAFF: lec  
 CHANGES: TR12734/GenFevah/Mouse Genome Project
-remove biotype_vega.config
+remove VEGA reports
+mgd/GXD_HTNoMasterBib.py : retire per Connie
+
 
 TAG: qcreports_db-6-0-12-2
 DATE: 04/06/2018
