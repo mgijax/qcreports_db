@@ -80,10 +80,12 @@ fp.write('\n')
 #   contain GO annotations
 #
 db.sql('''
-	select distinct m._Marker_key, m.symbol
+	select m._Marker_key, m.symbol
 	into temporary table markers
         from MRK_Marker m
         where m._Marker_Type_key = 1
+	and m._Marker_Status_key = 1
+	and m._Organism_key = 1
 	and exists (select 1 from VOC_Annot a
 	    where m._Marker_key = a._Object_key
 	    and a._AnnotType_key = 1000)
@@ -96,8 +98,8 @@ mgiIDs = {}
 results = db.sql('''select m._Marker_key, a.accID
 	    from markers m, ACC_Accession a 
 	    where m._Marker_key = a._Object_key 
-	    and a._LogicalDB_key = 1 
 	    and a._MGIType_key = 2
+	    and a._LogicalDB_key = 1 
 	    and a.prefixPart = 'MGI:'
 	    and a.preferred = 1
 	    ''', 'auto')
@@ -170,13 +172,21 @@ for r in results:
 totalNotUsed = {}
 results = db.sql('''
 	select m._Marker_key, count(distinct r._Refs_key) as totalNotUsed
-	from markers m, BIB_GOXRef_View r
+	from markers m, MRK_Reference r
 	where m._Marker_key = r._Marker_key
+	and exists (select 1 from BIB_Workflow_Status ws, VOC_Term wst1, VOC_Term wst2
+        	where r._Refs_key = ws._Refs_Key
+        	and ws._Group_key = wst1._Term_key
+        	and wst1.abbreviation in ('GO')
+        	and ws._Status_key = wst2._Term_key
+        	and wst2.term in ('Chosen', 'Routed', 'Indexed')
+        	and ws.isCurrent = 1
+        	)
 	and not exists (select 1 from VOC_Annot a, VOC_Evidence e
-	where a._AnnotType_key = 1000
-	and m._Marker_key = a._Object_key
-	and a._Annot_key = e._Annot_key
-	and e._Refs_key = r._Refs_key)
+		where a._AnnotType_key = 1000
+		and m._Marker_key = a._Object_key
+		and a._Annot_key = e._Annot_key
+		and e._Refs_key = r._Refs_key)
 	group by m._Marker_key
      ''', 'auto')
 for r in results:
