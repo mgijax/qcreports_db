@@ -6,33 +6,33 @@ where
 or
 (s.strain like '%/Mmucd%' and s.creation_date = '09/24/2012')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '01/04/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '01/04/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '01/09/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '01/09/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '01/15/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '01/15/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '02/20/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '02/20/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '03/22/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '03/22/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '06/10/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '06/10/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '07/16/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '07/16/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '08/08/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '08/08/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '09/17/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '09/17/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '10/08/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '10/08/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '11/19/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '11/19/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '12/09/2013')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '12/09/2013')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '01/21/2014')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '01/21/2014')
 or
-(s._CreatedBy_key = 1421 and s.creation_date = '04/09/2014')
+(s._CreatedBy_key in (1421,1065) and s.creation_date = '04/09/2014')
 ;
 
 create index exclude_idx on exclude(_Strain_key)
@@ -46,7 +46,7 @@ create index exclude_idx on exclude(_Strain_key)
 \echo 'excludes /Mmucd from 09/24/2012'
 \echo 'excludes "mberry" from 01/04/2013, 01/09/2013, 01/15/2013, 02/20/2013, 03/22/2013, 06/10/2013, 07/16/2013, 08/08/2013'
 \echo 'excludes "mberry" from 09/17/2013, 10/08/2013, 11/19/2013, 12/09/2013, 01/21/2014, 04/09/2014'
-\echo 'excludes created-by = "strainautoload"'
+\echo 'excludes created-by = "strainautoload" or "csmith"'
 \echo ''
 
 (
