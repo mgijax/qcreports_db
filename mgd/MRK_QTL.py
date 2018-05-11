@@ -16,6 +16,11 @@
 #
 # 5: QTL markers that are in Reserved
 #
+# History
+#
+# lec	05/11/2018
+#	TR12858/MRK_QTL.py/add J: and counts to MRK_QTL_2.rpt (query2)
+#
 '''
  
 import sys 
@@ -40,6 +45,19 @@ query1 = '''select a1.accID as mgiID, a2.accID as refID, m.symbol, m.name
     	  and a1._Logicaldb_key = 1
     	  and a1.prefixpart = 'MGI:'
     	  and a1.preferred = 1
+	  and m._Marker_key = r._Marker_key
+    	  and r._refs_key = a2._Object_key
+    	  and a2._MGIType_key = 1
+    	  and a2._Logicaldb_key = 1
+    	  and a2.prefixpart = 'J:'
+    	  and a2.preferred = 1
+	  '''
+
+query2 = '''select distinct a2.accID as refID, a2.numericPart
+    	  from MRK_Marker m, ACC_Accession a2, refs r
+    	  where m._Marker_Type_key = 6
+	  and m._Marker_Status_key = 1
+    	  and m._Organism_key = 1
 	  and m._Marker_key = r._Marker_key
     	  and r._refs_key = a2._Object_key
     	  and a2._MGIType_key = 1
@@ -107,6 +125,19 @@ def qtl2():
     		fp2.write(r['name'] + TAB)
     		fp2.write(CRT)
 
+	fp2.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
+
+	fp2.write('\n\nQTL References with map records that have QTL associated w/o Alleles:\n\n')
+
+	results = db.sql('''%s
+	  and not exists (select 1 from MRK_Notes n where m._Marker_key = n._Marker_key)
+    	  and exists (select 1 from MLD_Expt_Marker mld where m._Marker_key = mld._Marker_key)
+    	  and not exists (select 1 from ALL_Allele al where m._Marker_key = al._Marker_key and al.isWildType = 0)
+	  order by numericPart
+    	''' % (query2), 'auto')
+
+	for r in results:
+    		fp2.write(mgi_utils.prvalue(r['refID']) + CRT)
 	fp2.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
 
 def qtl3():
