@@ -100,7 +100,7 @@ GOA_HUMAN_CLAUSE="'UniProtKB'"
 GORAT_CLAUSE="'RGD'"
 REFGENOME_CLAUSE="('GO_Central')"
 GO_CLAUSE="('GOC', 'UniProtKB', 'GO_Central') "
-NOCTUA_CLAUSE="('GO_Noctua')"
+NOCTUA_CLAUSE="'NOCTUA_%'"
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
@@ -416,20 +416,20 @@ def writeCount(name):
 
    elif name == "NOCTUA":
         # not in IEA references
-        # loaded by GO_Noctua load
+        # loaded by gomousenoctua load
         # not in evidence codes (see above)
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('in ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
 
 

@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-12-5
+DATE: 05/16/2018
+STAFF: lec 
+CHANGES: TR12868/noctua cleanup
+#	modified:   mgd/GO_EvidenceProperty.py
+#	modified:   mgd/GO_stats.py
+
 TAG: qcreports_db-6-0-12-4
 DATE: 05/11/2018
 STAFF: lec 
