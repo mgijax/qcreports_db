@@ -305,6 +305,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Split.sql.rpt">Split Sequences</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_MarkerAnnotation.sql.rpt">Markers Annotated to a Secondary Sequence Accession ID</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Dummy.sql.rpt">Dummy Sequences Annotated to Mouse Marker (report a) & Molecular Segments (report b) </A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultCoordinate.sql.rpt">Symbols w/ > 1 Ensembl, NCBI Gene Model Association</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>

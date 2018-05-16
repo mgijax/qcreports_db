@@ -131,16 +131,18 @@ fp.write("Date: %s\n\n" % (mgi_utils.date()))
 #
 # Get all GO/Marker evidence annotations records for J:73065 -> _refs_key=74017
 # _annottyp_key=1000 (GO/Marker); exclude annotations where _user_key=1503 (login=GOC)
-# or _User_key = 1559 (login = 'GO_Noctua')
+# or user login like 'NOCTUA%'
 db.sql('''
         select ve._annotevidence_key,va._term_key,va._object_key,m.login
         into temporary table goevidence
         from  voc_evidence ve,voc_annot va, mgi_user m
         where ve._refs_key=74017
         and   ve._createdby_key= m._user_key
-        and   m._user_key not in (1503, 1559)
+        and   m._user_key not in (1503)
         and   ve._annot_key=va._annot_key
         and   va._annottype_key=1000
+	and not exists (select 1 from mgi_user m where ve._createdby_key = m._user_key and m._user_key in (1503))
+	and not exists (select 1 from mgi_user m where ve._createdby_key = m._user_key and m.login like 'NOCTUA%')
         ''', None)
 db.sql('create index goevidence_idx1 on goevidence(_object_key)', None)
 
