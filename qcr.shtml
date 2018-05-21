@@ -181,6 +181,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_LackingImages.rpt">Recombinase Papers Requiring Permissions</A>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_Reporter.sql.rpt">Tg reporter and RR assays where the assayed Gene is not the Gene which is mutated in the Genotype</A>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_ReporterCheck.rpt">Recombinase reporter specimen genotype check</A>
+<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase allele without driver gene check</A>
 </OL>
 
 <A NAME="go"> <B>GO (hjd, dph, jblake, dsitnikov, ln, mdolan)</B></A>
