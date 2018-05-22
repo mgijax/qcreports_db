@@ -365,6 +365,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz/DMDD</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/targetedalleleload/index.html">Targeted Allele Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A>
 </OL>
 
 <HR>
