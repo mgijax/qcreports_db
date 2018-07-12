@@ -467,13 +467,48 @@ def diseaseontology():
     fp.write(2*CRT + '#########################' + 2*CRT)
     fp.write('DO annotations' + 2*CRT)
 
-    genotypes = db.sql('select count(distinct _Object_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
-    diseaseont = db.sql('select count(distinct _Term_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
+    #genotypes = db.sql('select count(distinct _Object_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
+    #diseaseont = db.sql('select count(distinct _Term_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
 
-    fp.write(string.ljust('Genotypes associated with at least one DO term:', 60))
-    fp.write(string.rjust(str(genotypes), 10) + CRT)
-    fp.write(string.ljust('DO terms that have one or more genotypes associated:', 60))
-    fp.write(string.rjust(str(diseaseont), 10) + CRT)
+    #fp.write(string.ljust('Genotypes associated with at least one DO term:', 60))
+    #fp.write(string.rjust(str(genotypes), 10) + CRT)
+    #fp.write(string.ljust('DO terms that have one or more genotypes associated:', 60))
+    #fp.write(string.rjust(str(diseaseont), 10) + CRT)
+
+    fp.write('Number of unique genotype to disease annotations.\n')
+    fp.write('count of unique combinations of genotype and disease,\n')
+    fp.write('the same genotype could be counted more than once if it is attached to different diseases\n')
+    fp.write('includes NOT annotations:   ')
+    results = db.sql('select count(foo.*) as c from (select distinct _Object_key, _Term_key from VOC_Annot where _AnnotType_key = 1020) as foo', 'auto')
+    fp.write(str(results[0]['c']) + 2*CRT)
+
+    fp.write('Total number of genotype to disease annotations.\n')
+    fp.write('the same genotype plus disease combination could be counted more than once if there is a new reference\n')
+    fp.write('associated, includes NOT annotations:   ')
+    results = db.sql('select count(foo.*) as c from (select distinct a._Object_key, a._Term_key, e._Refs_key from VOC_Annot a, VOC_Evidence e where a._AnnotType_key = 1020 and a._Annot_key = e._Annot_Key) as foo', 'auto')
+    fp.write(str(results[0]['c']) + 2*CRT)
+
+    fp.write('Number of unique genotype to disease NOT annotations.\n')
+    fp.write('only count the annotations that have the NOT qualifier:    ')
+    results = db.sql('select count(distinct _Object_key) as c from VOC_Annot where _AnnotType_key = 1020 and _Qualifier_key = 1614157', 'auto')
+    fp.write(str(results[0]['c']) + 2*CRT)
+
+    fp.write('Total number of genotype to disease NOT annotations.\n')
+    fp.write('only count the annotations that have the NOT qualifier:    ')
+    results = db.sql('select count(_Object_key) as c from VOC_Annot where _AnnotType_key = 1020 and _Qualifier_key = 1614157', 'auto')
+    fp.write(str(results[0]['c']) + 2*CRT)
+
+    fp.write('Number of unique allele to disease annotations.\n')
+    fp.write('count of unique combinations of allele and disease,\n')
+    fp.write('the same allele could be counted more than once if it is attached to different diseases:    ')
+    results = db.sql('select count(foo.*) as c from (select distinct _Object_key, _Term_key from VOC_Annot where _AnnotType_key = 1021) as foo', 'auto')
+    fp.write(str(results[0]['c']) + 2*CRT)
+
+    fp.write('Total number of allele to disease annotations.\n')
+    fp.write('count of all annotations of allele to disease\n')
+    fp.write('the same allele could be counted multiple times if there are multiple references:    ')
+    results = db.sql('select count(_Object_key) as c from VOC_Annot where _AnnotType_key = 1021', 'auto')
+    fp.write(str(results[0]['c']) + 2*CRT)
 
 #
 # Main

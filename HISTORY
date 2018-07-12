@@ -5,6 +5,12 @@ CHANGES: TR12734/GenFevah/Mouse Genome Project
 remove VEGA reports
 mgd/GXD_HTNoMasterBib.py : retire per Connie
 
+TAG: qcreports_db-6-0-12-7
+DATE: 07/12/2018
+STAFF: lec
+CHANGES: TR12894/DO annotation counts
+weekly/ALL_Progress.py
+
 TAG: qcreports_db-6-0-12-6
 DATE: 05/17/2018
 STAFF: sc
