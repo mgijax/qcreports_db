@@ -21,6 +21,9 @@
 #
 # History:
 #
+# lec	06/24/2018
+#	- TR12900/exclude J:171409/GUDMAP, J:257654/Memic, J:215487/Thompson
+#
 # sc	11/15/2016
 #	-exclude 'cumulus oophorus'
 #
@@ -94,7 +97,7 @@ fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus, cu
 fp.write('3. gel lanes with "embryonic day" age; no age ranges; exclude TS 27,28\n')
 fp.write('4. gel lanes with "embryonic day" age; no age ranges; include TS 28 for certain structures only\n')
 fp.write('   (placenta, decidua, decidua basalis, decidua capsularis, uterus)\n')
-fp.write('5. excludes J:153498/Eurexpress\n\n')
+fp.write('5. excludes J:153498/Eurexpress, J:171409/GUDMAP, J:215487/Thompson, J:257654/Memic\n\n')
 
 fp.write('select specimens/gel lanes and group by assay & specimen\n')
 fp.write('take the mininum stage dpc value and maximum stage dpc value from all structures annotated to \n')
@@ -120,7 +123,7 @@ db.sql('''
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
 	 GXD_ISResultStructure i, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
-	  a._Refs_key not in (154591) and 
+	  a._Refs_key not in (154591,172505,216584,276690) and 
 	  a._Assay_key = s._Assay_key and 
 	  s._Specimen_key = r._Specimen_key and 
           r._Result_key = i._Result_key and 
@@ -140,7 +143,7 @@ db.sql('''
     from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, 
 	 GXD_ISResultStructure i, VOC_Term c, GXD_TheilerStage t 
     where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
-	  a._Refs_key not in (154591) and 
+	  a._Refs_key not in (154591,172505,216584,276690) and 
 	  a._Assay_key = s._Assay_key and 
           s._Specimen_key = r._Specimen_key and 
           r._Result_key = i._Result_key and 
@@ -160,7 +163,7 @@ db.sql('''
 	   g.laneLabel as label, 
 	   t.stage, t.dpcMin, t.dpcMax 
     from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, GXD_TheilerStage t 
-    where a._Refs_key not in (154591) and 
+    where a._Refs_key not in (154591,172505,216584,276690) and 
 	  a._Assay_key = g._Assay_key and 
           g._GelLane_key = l._GelLane_key and 
           l._Stage_key = t._Stage_key and 
@@ -177,7 +180,7 @@ db.sql('''
     select g._Assay_key, g._GelLane_key, g.age, 
 	   g.laneLabel as label, t.stage, t.dpcMin, t.dpcMax 
     from GXD_Assay a, GXD_GelLane g, GXD_GelLaneStructure l, VOC_Term c, GXD_TheilerStage t 
-    where a._Refs_key not in (154591) and 
+    where a._Refs_key not in (154591,172505,216584,276690) and 
 	  a._Assay_key = g._Assay_key and 
           g._GelLane_key = l._GelLane_key and 
           l._EMAPA_Term_key = c._Term_key and 
