@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-12-8
+DATE: 07/24/2018
+STAFF: lec
+CHANGES: TR12900
+mgd/GXD_Stats.py
+mgd/GXD_SpecTheilerAge.py
+
 TAG: qcreports_db-6-0-12-7
 DATE: 07/12/2018
 STAFF: lec
