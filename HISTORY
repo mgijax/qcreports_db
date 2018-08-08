@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-12-9
+DATE: 08/08/2018
+STAFF: sc
+CHANGES: TR12901
+New: mgd/ALL_ConditionalNeedsReview.py
+
 TAG: qcreports_db-6-0-12-8
 DATE: 07/24/2018
 STAFF: lec
