@@ -84,6 +84,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewAlleleNomenTag.rpt">Review for AP:NewAlleleNomenclature tag</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewDiseaseModelTag.rpt">Review for AP:NewDiseaseModel tag</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_StatusMismatch_AP.sql.rpt">References with AP status not matching curated data</A> <B>(mnk)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
@@ -226,7 +227,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainNonStd.sql.rpt">Strains (Non Standard excluding F1 and F2)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainF1F2.sql.rpt">Strains Containing F1 or F2</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainDup.sql.rpt">Duplicate Strains</A> <B>(dlb)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainByDate.sql.rpt">Strains (Non Standard - Sorted by Creation Date)</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_NonStdNoAttributes.rpt">Strains (Non Standard - Sorted by Creation Date)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain.rpt">Tab-delimited File of All Strains (MGI Acc ID, Strain, Markers, Synonyms, External Acc IDs)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain2.rpt">Tab-delimited File of All Strains (Strain/Standard)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainTrans.sql.rpt">Strains - Transgenic or Targeted Mutation</A>

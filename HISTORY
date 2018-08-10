@@ -5,6 +5,19 @@ CHANGES: TR12734/GenFevah/Mouse Genome Project
 remove VEGA reports
 mgd/GXD_HTNoMasterBib.py : retire per Connie
 
+TAG: qcreports_db-6-0-12-10
+DATE: 08/09/2018
+STAFF: sc
+CHANGES: TR12850 replace mgd/PRB_StrainByDate.sql
+    with mgd/PRB_Strain_NonStdNoAttributes.py
+    keep as Strains report #5 same text, different report
+
+TAG: qcreports_db-6-0-12-9
+DATE: 08/08/2018
+STAFF: sc
+CHANGES: TR12901
+New: mgd/ALL_ConditionalNeedsReview.py
+
 TAG: qcreports_db-6-0-12-8
 DATE: 07/24/2018
 STAFF: lec
