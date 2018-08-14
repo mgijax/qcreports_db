@@ -209,3 +209,48 @@ and a._AssayType_key in (10,11)
 and not exists (select 1 from temp4 t
 where s._GelLane_key = t._GelLane_key)
 ;
+
+\echo ''
+\echo 'InSitu Specimens where Theiler = 28 and ageMin < 21.01'
+\echo 'excludes placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus, uterus'
+\echo ''
+
+select gs.age, gs.ageMin, a1.accID as mgiid, gs.specimenLabel
+from GXD_Assay ga, GXD_Specimen gs, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1
+where ga._AssayType_key in (10,11)
+and ga._Assay_key = gs._Assay_key
+and gs.ageMin < 21.01
+and gs._Specimen_key = i._Specimen_key
+and i._Result_key = r._Result_key
+and r._Stage_key = t._Stage_key
+and r._EMAPA_Term_key = s._Term_key
+and s.term not in ('placenta','decidua','decidua basalis','decidua capsularis', 'cumulus oophorus', 'uterus')
+and t.stage = 28  
+and gs._Assay_key = a1._Object_key
+and a1._MGIType_key = 8 
+and a1._LogicalDB_key = 1 
+and a1.prefixPart = 'MGI:'
+;
+
+\echo ''
+\echo 'InSitu Specimens where Theiler = 27 and ageMin < 21.01' or ageMin not > 28.01
+\echo 'excludes (placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus'
+\echo ''
+
+select gs.age, gs.ageMin, gs.ageMax, a1.accID as mgiid, gs.specimenLabel
+from GXD_Assay ga, GXD_Specimen gs, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1
+where ga._AssayType_key in (10,11)
+and ga._Assay_key = gs._Assay_key
+and (gs.ageMin < 21.01 or gs.ageMax > 28.01)
+and gs._Specimen_key = i._Specimen_key
+and i._Result_key = r._Result_key
+and r._Stage_key = t._Stage_key
+and r._EMAPA_Term_key = s._Term_key
+and s.term not in ('placenta','decidua','decidua basalis','decidua capsularis', 'cumulus oophorus')
+and t.stage = 27
+and gs._Assay_key = a1._Object_key
+and a1._MGIType_key = 8 
+and a1._LogicalDB_key = 1 
+and a1.prefixPart = 'MGI:'
+;
+
