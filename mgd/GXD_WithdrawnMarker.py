@@ -16,6 +16,9 @@
 #
 # History:
 #
+# sc	08/24/2018
+#	- TR12940; remove Alan Brain Atlas
+#
 # lec	09/23/2009
 #	- TR 9846; add Allen Brain Atles (ldb = 107)
 #
@@ -76,50 +79,3 @@ for r in results:
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
-
-#
-# Allen Brain Atlas check
-#
-
-fp.write('\n\nWithdrawn Markers (name = withdrawn) that contain an Allen Brain Atlas ID\n')
-
-fp.write(2*CRT)
-fp.write(string.ljust('Symbol', 50))
-fp.write(SPACE)
-fp.write(string.ljust('Acc ID', 30))
-fp.write(SPACE)
-fp.write(string.ljust('ABA Acc ID', 30))
-fp.write(CRT)
-fp.write(50*'-')
-fp.write(SPACE)
-fp.write(30*'-')
-fp.write(SPACE)
-fp.write(30*'-')
-fp.write(CRT)
-
-results = db.sql('''
-    select distinct m.symbol, a.accID, aa.accID as abaID
-    from MRK_Marker_View m, ACC_Accession a , ACC_Accession aa
-    where m._Marker_Status_key = 2 
-    and m._Marker_key = a._Object_key 
-    and a._MGIType_key = 2 
-    and a._LogicalDB_key = 1 
-    and a.preferred = 1 
-    and a.prefixPart = 'MGI:' 
-    and m._Marker_key = aa._Object_key 
-    and aa._MGIType_key = 2 
-    and aa._LogicalDB_key = 107
-    ''', 'auto')
-
-for r in results:
-    fp.write(string.ljust(r['symbol'], 50))
-    fp.write(SPACE)
-    fp.write(string.ljust(r['accID'], 30))
-    fp.write(SPACE)
-    fp.write(string.ljust(r['abaID'], 30))
-    fp.write(SPACE)
-    fp.write(CRT)
-
-fp.write('\n(%d rows affected)\n' % (len(results)))
-
-reportlib.finish_nonps(fp)
