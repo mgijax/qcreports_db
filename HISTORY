@@ -3,7 +3,13 @@ DATE:
 STAFF: lec  
 CHANGES: TR12734/GenFevah/Mouse Genome Project
 remove VEGA reports
-mgd/GXD_HTNoMasterBib.py : retire per Connie
+
+TAG: qcreports_db-6-0-12-12
+DATE: 08/23/2018
+STAFF: sc
+CHANGES: TR12940 
+1) retire GXD_HTNoMasterBib report
+2) modify GXD_WithdrawnMarker report
 
 TAG: qcreports_db-6-0-12-11
 DATE: 08/14/2018

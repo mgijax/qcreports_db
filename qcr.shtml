@@ -159,7 +159,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTNoMasterBib.rpt">GXD HT Experiment PubMed IDs not in the Master Bib</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpCuration.rpt">GXD HT Experiments where Curation State set to Done, but other attributes are Not Curated</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleGenotypeNA.rpt">GXD HT Samples whose Relevance = Yes but whose genotype is Not Applicable</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleIncompAgeAndTS.rpt">GXD HT Samples whose Relevance = Yes but whose Theiler stages and age fields are incompatible
