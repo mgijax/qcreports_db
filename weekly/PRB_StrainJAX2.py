@@ -144,12 +144,18 @@ def printReport(fp):
         genotypes[key].append(value)
 
     results = db.sql('''
+	    (
 	    select distinct s._Strain_key, s.strain, s.accID, s.numericPart
 	    from strains s
-	    where not exists 
-	    (select 1 from PRB_Strain_Genotype g 
-		 where s._Strain_key = g._Strain_key and s._Genotype_key = g._Genotype_key)
-	    order by s.numericPart''', 'auto')
+	    where not exists (select 1 from PRB_Strain_Genotype g where s._Strain_key = g._Strain_key and s._Genotype_key = g._Genotype_key)
+	    and exists (select 1 from VOC_Annot va where va._AnnotType_key = 1002 and s._Genotype_key = va._Object_key)
+	    union
+	    select distinct s._Strain_key, s.strain, s.accID, s.numericPart
+	    from strains s
+	    where not exists (select 1 from PRB_Strain_Genotype g where s._Strain_key = g._Strain_key and s._Genotype_key = g._Genotype_key)
+	    and exists (select 1 from VOC_Annot va where va._AnnotType_key = 1020 and s._Genotype_key = va._Object_key)
+	    )
+	    order by numericPart''', 'auto')
     for r in results:
         fp.write(r['accID'] + TAB)
         fp.write(r['strain'] + TAB)

@@ -12,6 +12,9 @@
 #
 # History:
 #
+# 08/29/2018	lec
+#	- TR12946/add marker names
+#
 # 10/4/2011	sc
 # Alicia has asked for some modifications:
 # 1. Add columns for Allele Type and Synonyms.
@@ -28,6 +31,7 @@ import sys
 import os
 import string
 import reportlib
+import mgi_utils
 import db
 
 db.setTrace()
@@ -58,15 +62,18 @@ for r in results:
     synonymDict[key].append(r['synonym'])
 
 results = db.sql('''
+	(
 	select a._Allele_key, a.symbol, 
 	substring(a.name,1,60) as name, 
+	substring(m.name,1,60) as markerName,
 	substring(t1.term,1,15) as status, 
 	substring(t2.term, 1, 60) as type,
 	ac.accID
-	from ALL_Allele a, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
+	from ALL_Allele a, MRK_Marker m, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
 	where a._Allele_Status_key = t1._Term_key
 	and a._Allele_Type_key = t2._Term_key
 	and a.creation_date between %s and %s
+	and a._Marker_key = m._Marker_key
 	and a._Allele_key = r._Object_key
 	and r._MGIType_key = 11
 	and r._RefAssocType_key = 1011
@@ -75,20 +82,45 @@ results = db.sql('''
 	and ac._LogicalDB_key = 1
 	and ac.prefixPart = 'J:'
 	and ac.preferred = 1
-	order by a.symbol
-	''' % (fromDate, toDate), 'auto')
+	union
+	select a._Allele_key, a.symbol, 
+	substring(a.name,1,60) as name, 
+	null,
+	substring(t1.term,1,15) as status, 
+	substring(t2.term, 1, 60) as type,
+	ac.accID
+	from ALL_Allele a, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
+	where a._Allele_Status_key = t1._Term_key
+	and a._Allele_Type_key = t2._Term_key
+	and a.creation_date between %s and %s
+	and a._Marker_key is null
+	and a._Allele_key = r._Object_key
+	and r._MGIType_key = 11
+	and r._RefAssocType_key = 1011
+	and r._Refs_key = ac._Object_key 
+	and ac._MGIType_key = 1
+	and ac._LogicalDB_key = 1
+	and ac.prefixPart = 'J:'
+	and ac.preferred = 1
+	)
+	order by symbol
+	''' % (fromDate, toDate, fromDate, toDate), 'auto')
 
 for r in results:
 	alleleKey = r['_Allele_key']
+
+	fp.write(mgi_utils.prvalue(r['symbol']) + TAB)
+	fp.write(mgi_utils.prvalue(r['name']) + TAB)
+	fp.write(mgi_utils.prvalue(r['markerName']) + TAB)
+
 	synonyms = ''
         if synonymDict.has_key(alleleKey):
 	    synonyms = string.join(synonymDict[alleleKey])
-	fp.write(r['symbol'] + TAB)
-	fp.write(r['name'] + TAB)
 	fp.write(synonyms + TAB)
-	fp.write(r['type'] + TAB)
-	fp.write(r['status'] + TAB)
-	fp.write(r['accID'] + CRT)
+
+	fp.write(mgi_utils.prvalue(r['type']) + TAB)
+	fp.write(mgi_utils.prvalue(r['status']) + TAB)
+	fp.write(mgi_utils.prvalue(r['accID']) + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
 

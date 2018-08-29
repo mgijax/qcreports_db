@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-12-13
+DATE: 08/29/2018
+STAFF: lec
+CHANGES: 
+1) TR12946 : weekly/ALL_NewAllele.py
+2) TR12930 : weekly/PRB_StrainJAX2.py
+
 TAG: qcreports_db-6-0-12-12
 DATE: 08/23/2018
 STAFF: sc
