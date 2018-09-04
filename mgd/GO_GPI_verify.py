@@ -17,7 +17,7 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-gpiSet = ['PR', 'EMBL', 'ENSEMBL', 'RefSeq', 'VEGA']
+gpiSet = ['PR', 'EMBL', 'ENSEMBL', 'RefSeq']
 gpiFileName = os.environ['PUBREPORTDIR'] + '/output/mgi.gpi'
 gpiFile = open(gpiFileName, 'r')
 gpiLookup = []

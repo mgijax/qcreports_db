@@ -262,7 +262,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz, jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(?)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_VEGA_Associations.rpt">VEGA Associations</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz, jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz, jrecla)</B>
@@ -282,7 +281,6 @@ be used at times to test reports for <I>future</I> public consumption.)
     <BR> * Gene Model biotypes not loaded because unable to translate biotype. 
     <OL>
     <LI><A HREF="/data/loads/mgi/genemodelload/logs/ensembl_seqgenemodelload.log"> Ensembl Sequence Gene Model Information Load</A>
-    <LI><A HREF="/data/loads/mgi/genemodelload/logs/vega_seqgenemodelload.log"> VEGA Sequence Gene Model Information Load</A>
     <LI><A HREF="/data/loads/mgi/genemodelload/logs/ncbi_seqgenemodelload.log"> NCBI Sequence Gene Model Information Load</A>
     </OL>
 <LI><A HREF="/data/reports/qcreports_db/output/GIA_MRK_ENSEMBL.rpt">Ensembl Associations for Gene Index</A> <B>(yz)</B>
@@ -308,10 +306,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Split.sql.rpt">Split Sequences</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_MarkerAnnotation.sql.rpt">Markers Annotated to a Secondary Sequence Accession ID</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Dummy.sql.rpt">Dummy Sequences Annotated to Mouse Marker (report a) & Molecular Segments (report b) </A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultCoordinate.sql.rpt">Symbols w/ > 1 Ensembl, VEGA or NCBI Gene Model Association</A> <B>(yz,jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, VEGA or NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultCoordinate.sql.rpt">Symbols w/ > 1 Ensembl, NCBI Gene Model Association</A> <B>(yz,jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoVEGA.rpt">VEGA Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
 </OL>
 
@@ -333,17 +330,15 @@ be used at times to test reports for <I>future</I> public consumption.)
 
 <A NAME="dataloads"><B>Data Loads</B></A>
 <OL>
-<LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/pubmed2geneload/index.html">PubMed to Gene Load</A>
-<LI><A HREF="/usrlocalmgi/live/pdfdownload/index.html">PDF Download (PLOS, etc.)</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A> <B>(jfiner)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/pubmed2geneload/index.html">PubMed to Gene Load</A> <B>(jfiner)</B>
+<LI><A HREF="/usrlocalmgi/live/pdfdownload/index.html">PDF Download (PLOS, etc.)</A> <B>(jfiner)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/unigeneload">UniGene Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/mousecycload/index.html">MouseCyc Load (vocabulary, annotations)</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(jblake)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MAindex.html">Adult Mouse Anatomy Vocabulary/DAG Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/geoload/index.html">GEO Load</A> <B>(cms)</B>
@@ -368,6 +363,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz/DMDD</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/targetedalleleload/index.html">Targeted Allele Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A> <B>(paul hale)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/mousecycload/index.html">MouseCyc Load (vocabulary, annotations)</A>
 </OL>
 
 <HR>

@@ -13,7 +13,6 @@
 #       . associated with at least one:  
 #         NCBI Gene Model
 #         Ensembl Gene Model
-#         VEGA Gene Model
 #         Any sequence
 #
 # History:

@@ -534,13 +534,6 @@ def imageCounts():
     for r in results:
         fp.write('Number of full coded papers with Images:  ' + str(r['acount']) + CRT)
 
-    #
-    # TR12279/sync with mgihome/homepages/stats/all_stats.shtml#allstats_gxd
-    # if this SQL changes, then update the SQL here:
-    #   select * from MGI_StatisticSQL where _Statistic_key = 31;
-    # see script in /mgi/all/wts_projects/12200/12279
-    #
-
     db.sql('''
 	(
 	select distinct ip._ImagePane_key 
