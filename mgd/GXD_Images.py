@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	09/10/2018
+#	- TR12954/new journal : eNeuro
+#
 # lec	02/09/2017
 #	- TR12505/new journal : Biol Open, Cell Cycle
 #
@@ -147,6 +150,7 @@ journals = [
 'Development', 
 'Direct Data Submission from Genetic Resource Science',
 'Dis Model Mech',
+'eNeuro',
 'Elife',
 'Exp Mol Med',
 'Gene Expr Patterns', 
