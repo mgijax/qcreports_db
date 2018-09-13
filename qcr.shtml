@@ -340,6 +340,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/unigeneload">UniGene Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(jblake)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MAindex.html">Adult Mouse Anatomy Vocabulary/DAG Load</A> <B>(terryh)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mp_emapaload/index.html">MP/EMAPA Relationships Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/geoload/index.html">GEO Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gensatload/index.html">GENSAT Load</A> <B>(cms)</B>
