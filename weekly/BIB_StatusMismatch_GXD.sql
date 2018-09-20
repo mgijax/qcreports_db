@@ -8,8 +8,8 @@
 \echo '     b. is associated with an expression assay, excluding CRE'
 \echo ''
 
-with gxd_unused as (
-	select r._Refs_key, j.numericPart, j.accid, g.abbreviation as group, t.term as status
+select r._Refs_key, j.numericPart, j.accid, g.abbreviation as group, t.term as status
+into temporary table gxd_unused
 	from bib_refs r, acc_accession j, bib_workflow_status s, voc_term g, voc_term t
 	where r._Refs_key = j._Object_key
 		and j._MGIType_key = 1
@@ -21,7 +21,11 @@ with gxd_unused as (
 		and g.abbreviation = 'GXD'
 		and s._Status_key = t._Term_key
 		and t.term not in ('Indexed', 'Full-coded')
-)
+;
+
+create index idx1 on gxd_unused(_Refs_key)
+;
+
 select distinct u.accid, u.group, u.status,
 	case
 		when (a._Assay_key is not null) then 'yes'

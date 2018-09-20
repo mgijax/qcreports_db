@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-13-4
+DATE: 09/20/2018
+STAFF: sc
+CHANGES: restructured and index added, AP version hangs
+    on the test server:
+1) BIB_StatusMismatch_GXD.sql
+2) BIB_StatusMismatch_AP.sql
+
 TAG: qcreports_db-6-0-13-3
 DATE: 09/13/2018
 STAFF: lec  

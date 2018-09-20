@@ -9,20 +9,24 @@
 \echo '     c. used as evidence for an MP annotation'
 \echo ''
 
-with ap_unused as (
-	select r._Refs_key, j.numericPart, j.accid, g.abbreviation as group, t.term as status
-	from bib_refs r, acc_accession j, bib_workflow_status s, voc_term g, voc_term t
-	where r._Refs_key = j._Object_key
-		and j._MGIType_key = 1
-		and j.prefixPart = 'J:'
-		and j._LogicalDB_key = 1
-		and r._Refs_key = s._Refs_key
-		and s.isCurrent = 1
-		and s._Group_key = g._Term_key
-		and g.abbreviation = 'AP'
-		and s._Status_key = t._Term_key
-		and t.term not in ('Indexed', 'Full-coded')
-)
+select r._Refs_key, j.numericPart, j.accid, g.abbreviation as group, t.term as status
+into temporary table ap_unused
+from bib_refs r, acc_accession j, bib_workflow_status s, voc_term g, voc_term t
+where r._Refs_key = j._Object_key
+	and j._MGIType_key = 1
+	and j.prefixPart = 'J:'
+	and j._LogicalDB_key = 1
+	and r._Refs_key = s._Refs_key
+	and s.isCurrent = 1
+	and s._Group_key = g._Term_key
+	and g.abbreviation = 'AP'
+	and s._Status_key = t._Term_key
+	and t.term not in ('Indexed', 'Full-coded')
+;
+
+create index idx1 on ap_unused(_Refs_key)
+;
+
 select distinct u.accid, u.group, u.status,
 	case 
 		when (a._Annot_key is not null) then 'yes'
