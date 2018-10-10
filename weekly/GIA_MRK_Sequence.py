@@ -59,16 +59,13 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 # all official mouse markers that have at least one Sequence ID
 
 db.sql('''
-	select m._Marker_key, m.symbol, m.name, m.chromosome, 
-		o.cmoffset, 
+	select m._Marker_key, m.symbol, m.name, m.chromosome, m.cmOffset, 
 		upper(substring(s.status, 1, 1)) as markerStatus, 
 		t.name as markerType
 	into temporary table markers 
-	from MRK_Marker m, MRK_Offset o, MRK_Status s, MRK_Types t 
+	from MRK_Marker m, MRK_Status s, MRK_Types t 
 	where m._Organism_key = 1 
 	and m._Marker_Status_key = 1
-	and m._Marker_key = o._Marker_key 
-	and o.source = 0 
 	and m._Marker_Status_key = s._Marker_Status_key 
 	and m._Marker_Type_key = t._Marker_Type_key 
 	and exists (select 1 from ACC_Accession a where m._Marker_key = a._Object_key 
@@ -155,19 +152,19 @@ results = db.sql('select * from markers order by symbol', 'auto')
 for r in results:
 	key = r['_Marker_key']
 
-	if r['cmoffset'] == -1.0:
-		cmoffset = 'syntenic'
-	elif r['cmoffset'] == -999.0:
-		cmoffset = 'N/A'
+	if r['cmOffset'] == -1.0:
+		cmOffset = 'syntenic'
+	elif r['cmOffset'] == -999.0:
+		cmOffset = 'N/A'
 	else:
-		cmoffset = str(r['cmoffset'])
+		cmOffset = str(r['cmOffset'])
 
 	fp.write(mgiID[key] + reportlib.TAB + \
 	       	 r['symbol'] + reportlib.TAB + \
 	       	 r['markerStatus'] + reportlib.TAB + \
 	         r['markerType'] + reportlib.TAB + \
 	         r['name'] + reportlib.TAB + \
-	         cmoffset + reportlib.TAB + \
+	         cmOffset + reportlib.TAB + \
 	         r['chromosome'] + reportlib.TAB)
 
 	if gbID.has_key(key):
