@@ -45,6 +45,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingPDFs.sql.rpt">J#'s missing PDF's</A> <B>(jeo)</B>
 <LI><A HREF="/data/loads/mgi/pdfdownload/logs/identify_missed_papers_plos.sh.log">Overdue PLOS DOI IDs - not in PubMed Central, no longer within timeframe of PLOS downloader</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_SupplementalData.rpt">Supplemental Data Needed</A> <B>(jeo, neb)</B>
+<LI><A HREF="/data/loads/mgi/pdfdownload/logs/noPdfs.log">Missing PDFs from PMC - automated downloads attempted, but could not find a PDF file</A> <B>(jeo, neb)</B>
 </OL>
 
 <A NAME="alleles"><B>Alleles (csmith, smb, dlb, honda, mnk)</B> </A>
@@ -330,9 +331,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 
 <A NAME="dataloads"><B>Data Loads</B></A>
 <OL>
-<LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A> <B>(jfiner)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/pubmed2geneload/index.html">PubMed to Gene Load</A> <B>(jfiner)</B>
-<LI><A HREF="/usrlocalmgi/live/pdfdownload/index.html">PDF Download (PLOS, etc.)</A> <B>(jfiner)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A> <B>(jfinger)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/pubmed2geneload/index.html">PubMed to Gene Load</A> <B>(jfinger)</B>
+<LI><A HREF="/usrlocalmgi/live/pdfdownload/index.html">PDF Download (PLOS, etc.)</A> <B>(jfinger)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
