@@ -2,5 +2,6 @@ Configuration
 index.html
 includes/*.html
 weekly/GO_stats.py
+qcr.html
 *log
 *~
