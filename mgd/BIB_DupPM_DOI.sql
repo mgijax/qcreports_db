@@ -1,4 +1,4 @@
-select _logicaldb_key, accid, count(distinct _object_key) as dupCount
+select _logicaldb_key, accid, count(_object_key) as dupCount
    into temporary table dups
    from acc_accession
    where _logicaldb_key in (29,65)
