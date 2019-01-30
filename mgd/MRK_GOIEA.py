@@ -152,7 +152,7 @@ def writeRecordF(fp, r):
 # Main
 #
 
-fpD = reportlib.init("MRK_GOIEA_D", outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1, printHeading = None)
+fpD = reportlib.init("MRK_GOIEA_D", outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
 fpE = reportlib.init("MRK_GOIEA_E", outputdir = os.environ['QCOUTPUTDIR'])
 
