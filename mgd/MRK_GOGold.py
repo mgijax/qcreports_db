@@ -85,7 +85,7 @@ def writeRecord2(fp, r):
 # Main
 #
 
-fpB = reportlib.init("MRK_GOGold_B", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+fpB = reportlib.init("MRK_GOGold_B", outputdir = os.environ['QCOUTPUTDIR'])
 fpB.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \
@@ -94,7 +94,7 @@ fpB.write('mgi ID' + TAB + \
 	 'GO Term' + TAB + \
 	 'evidence codes' + CRT*2)
 
-fpD = reportlib.init("MRK_GOGold_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+fpD = reportlib.init("MRK_GOGold_D", outputdir = os.environ['QCOUTPUTDIR'])
 fpD.write('mgi ID' + TAB + \
 	 'symbol' + TAB + \
 	 'name' + TAB + \

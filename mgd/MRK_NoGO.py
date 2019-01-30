@@ -104,7 +104,7 @@ fpD = None
 def reportOpen():
     global fpD
 
-    fpD = reportlib.init("MRK_NoGO_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+    fpD = reportlib.init("MRK_NoGO_D", outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1, printHeading = None)
 
 def reportClose():
     global fpD
