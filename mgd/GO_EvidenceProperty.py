@@ -125,7 +125,7 @@ def printMissEvCodeResults(cmd,evidenceMap):
 #     When he changes his mind, we will set outputdir=os.environ['QCOUTPUTDIR']
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write("Date: %s\n\n" % (mgi_utils.date()))
 
 #

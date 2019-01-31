@@ -152,9 +152,9 @@ def writeRecordF(fp, r):
 # Main
 #
 
-fpD = reportlib.init("MRK_GOIEA_D", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
+fpD = reportlib.init("MRK_GOIEA_D", outputdir = os.environ['QCOUTPUTDIR'], isHTML = 1)
 
-fpE = reportlib.init("MRK_GOIEA_E", printHeading = None, outputdir = os.environ['QCOUTPUTDIR'])
+fpE = reportlib.init("MRK_GOIEA_E", outputdir = os.environ['QCOUTPUTDIR'])
 
 results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
 for r in results:

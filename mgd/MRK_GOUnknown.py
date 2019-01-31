@@ -44,7 +44,7 @@ PAGE = reportlib.PAGE
 # Main
 #
 print "initializing"
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 # lookup for curator tag
 curTagDict = {}

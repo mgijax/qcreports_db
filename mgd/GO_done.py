@@ -98,7 +98,7 @@ def printResults(cmd, isReferenceGene):
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], fileExt = '.mgi', outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('Gene Symbol' + TAB)
 fp.write('MGI-ID' + TAB)
 fp.write('reference gene status' + TAB)

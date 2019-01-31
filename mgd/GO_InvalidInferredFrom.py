@@ -63,7 +63,7 @@ for r in results:
 	goDict[goId] = []
     goDict[goId].append(preferred)
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('MGI-ID' + TAB)
 fp.write('MGI symbol' + TAB)
 fp.write('Annotation that has the IC' + TAB)
