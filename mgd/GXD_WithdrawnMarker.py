@@ -16,6 +16,9 @@
 #
 # History:
 #
+# lec	01/31/2019
+#	- removed accession id piece/withdrawn markers don't have accession ids
+#
 # sc	08/24/2018
 #	- TR12940; remove Alan Brain Atlas
 #
@@ -47,23 +50,16 @@ fp = reportlib.init(sys.argv[0], 'Withdrawn Markers (name = withdrawn) annotated
 
 fp.write(2*CRT)
 fp.write(string.ljust('Symbol', 50))
-fp.write(SPACE)
-fp.write(string.ljust('Acc ID', 30))
 fp.write(CRT)
 fp.write(50*'-')
-fp.write(SPACE)
-fp.write(30*'-')
 fp.write(CRT)
 
+# NOTE:  withdrawn markers do not have marker accession ids
+
 results = db.sql('''
-    select distinct m.symbol, a.accID 
-    from MRK_Marker_View m, ACC_Accession a 
+    select distinct m.symbol
+    from MRK_Marker m
     where m._Marker_Status_key = 2 
-    and m._Marker_key = a._Object_key 
-    and a._MGIType_key = 2 
-    and a._LogicalDB_key = 1 
-    and a.preferred = 1 
-    and a.prefixPart = 'MGI:' 
     and (exists (select 1 from GXD_Index gi where m._Marker_key = gi._Marker_key)
          or 
          exists (select 1 from GXD_Assay ga 
@@ -73,9 +69,6 @@ results = db.sql('''
 
 for r in results:
     fp.write(string.ljust(r['symbol'], 50))
-    fp.write(SPACE)
-    fp.write(string.ljust(r['accID'], 30))
-    fp.write(SPACE)
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))

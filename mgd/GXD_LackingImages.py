@@ -96,7 +96,6 @@ journalsAll = [
 'Int J Oral Sci',
 'J Cereb Blood Flow Metab',
 'J Hum Genet',
-'Kidney Int',
 'Lab Invest',
 'Leukemia',
 'Mucosal Immunol',

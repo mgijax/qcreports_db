@@ -86,6 +86,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewDiseaseModelTag.rpt">Review for AP:NewDiseaseModel tag</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_StatusMismatch_AP.sql.rpt">References with AP status not matching curated data</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Discard.rpt">Discarded AP relevant references</A> <B> (mnk)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>

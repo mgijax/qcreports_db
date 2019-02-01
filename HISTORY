@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-13-11
+DATE: 01/31/2019
+STAFF: lec
+CHANGES: 
+TR13031/WF_AP_Discard.py
+TR12968/GXD_LackingImages.py
+no TR/GXD_WithdrawnMarker.py
+
 TAG: qcreports_db-6-0-13-10
 TAG: qcreports_db-6-0-13-9
 DATE: 01/30/2019
