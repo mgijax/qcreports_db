@@ -78,8 +78,8 @@ fp.write('''
 	1. MGI
 	2. 'mice' count
 	3. count of matching terms
-	4. Creation Date
-	5. Last user
+	4. last user
+	5. creation date
 	6. extracted text (80 characters/around text)
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
