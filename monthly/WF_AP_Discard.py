@@ -10,11 +10,12 @@
 #	group = AP, isDiscard = 1
 #
 #	output:
-#	1. MGI
+#	1. MGI ID
 #	2. 'mice' count
 #	3. count of matching terms
-#	4. Creation Date
-#	5. extracted text (80 characters/around text)
+#	4. last user to modify reference
+#	5. creation date of reference
+#	6. extracted text (80 characters/around text)
 #
 # Usage:
 #       WF_AP_Disarc.py
@@ -75,11 +76,11 @@ fp.write('''
  	     group = AP, isDiscard = yes
 	     exclude : AP:DiscardReviewed
 
-	1. MGI
+	1. MGI ID
 	2. 'mice' count
 	3. count of matching terms
-	4. last user
-	5. creation date
+	4. last user to modify reference
+	5. creation date of reference
 	6. extracted text (80 characters/around text)
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
@@ -106,10 +107,10 @@ for s in searchTerms:
 	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Status wfs, MGI_User u
 	where r.isDiscard = 1
 	and r._Refs_key = c._Refs_key
+	and r._ModifiedBy_key = u._User_key
 	and r._Refs_key = wfs._Refs_key 
 	and wfs._Group_key = 31576664
 	and wfs.isCurrent = 1
-	and wfs._ModifiedBy_key = u._User_key
 	and not exists (select 1 from BIB_Workflow_Tag wft 
 		where r._Refs_key = wft._Refs_key 
 		and wft._Tag_key = 31576712
