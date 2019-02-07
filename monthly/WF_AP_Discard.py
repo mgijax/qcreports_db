@@ -113,9 +113,10 @@ for s in searchTerms:
 	and wfs.isCurrent = 1
 	and not exists (select 1 from BIB_Workflow_Tag wft 
 		where r._Refs_key = wft._Refs_key 
-		and wft._Tag_key = 31576712
+		and wft._Tag_key = 48188429
 		)
 	and r._Refs_key = d._Refs_key
+	and c.mgiid in ('MGI:5916925')
 	and %s
 	''' % (searchSQL), 'auto')
 
