@@ -95,16 +95,13 @@ byMiceCount = {}
 # but this was taking forever, so switched to this method
 
 searchSQL = ''
-for s in searchTerms:
 
-    # search for term in extractedText
-
-    searchSQL = ' lower(d.extractedText) like lower(\'%' + s + '%\')'
-    results = db.sql('''
-	select r._Refs_key, c.mgiID, d.extractedText,
+db.sql('''
+	select r._Refs_key, c.mgiID, 
 		to_char(r.creation_date, 'MM/dd/yyyy') as cdate,
 		u.login
-	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Status wfs, MGI_User u
+	into temp table refs
+	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, MGI_User u
 	where r.isDiscard = 1
 	and r._Refs_key = c._Refs_key
 	and r._ModifiedBy_key = u._User_key
@@ -115,8 +112,19 @@ for s in searchTerms:
 		where r._Refs_key = wft._Refs_key 
 		and wft._Tag_key = 48188429
 		)
-	and r._Refs_key = d._Refs_key
-	and c.mgiid in ('MGI:5916925')
+	''', None)
+
+db.sql('create index idx_refs on refs(_Refs_key)', None)
+
+for s in searchTerms:
+
+    # search for term in extractedText
+
+    searchSQL = ' lower(d.extractedText) like lower(\'%' + s + '%\')'
+    results = db.sql('''
+	select r.*, d.extractedText
+	from refs r, BIB_Workflow_Data d
+	where r._Refs_key = d._refs_key
 	and %s
 	''' % (searchSQL), 'auto')
 
