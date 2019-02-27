@@ -10,10 +10,12 @@
 #	group = AP, isDiscard = 1
 #
 #	output:
-#	1. MGI
+#	1. MGI ID
 #	2. 'mice' count
-#	3. Creation Date
-#	4. extracted text (80 characters/around text)
+#	3. count of matching terms
+#	4. last user to modify reference
+#	5. creation date of reference
+#	6. extracted text (80 characters/around text)
 #
 # Usage:
 #       WF_AP_Disarc.py
@@ -72,10 +74,18 @@ searchTerms = [
 fp.write('''
  	The reference must be:
  	     group = AP, isDiscard = yes
+	     exclude : AP:DiscardReviewed
+
+	1. MGI ID
+	2. 'mice' count
+	3. count of matching terms
+	4. last user to modify reference
+	5. creation date of reference
+	6. extracted text (80 characters/around text)
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
-byDate = {}
+byUser = {}
 byMGI = {}
 byText = {}
 byMiceCount = {}
@@ -85,23 +95,36 @@ byMiceCount = {}
 # but this was taking forever, so switched to this method
 
 searchSQL = ''
+
+db.sql('''
+	select r._Refs_key, c.mgiID, 
+		to_char(r.creation_date, 'MM/dd/yyyy') as cdate,
+		u.login
+	into temp table refs
+	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, MGI_User u
+	where r.isDiscard = 1
+	and r._Refs_key = c._Refs_key
+	and r._ModifiedBy_key = u._User_key
+	and r._Refs_key = wfs._Refs_key 
+	and wfs._Group_key = 31576664
+	and wfs.isCurrent = 1
+	and not exists (select 1 from BIB_Workflow_Tag wft 
+		where r._Refs_key = wft._Refs_key 
+		and wft._Tag_key = 48188429
+		)
+	''', None)
+
+db.sql('create index idx_refs on refs(_Refs_key)', None)
+
 for s in searchTerms:
 
     # search for term in extractedText
 
     searchSQL = ' lower(d.extractedText) like lower(\'%' + s + '%\')'
     results = db.sql('''
-	select r._Refs_key, c.mgiID, d.extractedText,
-		to_char(r.creation_date, 'MM/dd/yyyy') as cdate
-	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d
-	where r.isDiscard = 1
-	and r._Refs_key = c._Refs_key
-	and exists (select 1 from BIB_Workflow_Status wfs 
-		where r._Refs_key = wfs._Refs_key 
-		and wfs._Group_key = 31576664
-		and wfs.isCurrent = 1
-		)
-	and r._Refs_key = d._Refs_key
+	select r.*, d.extractedText
+	from refs r, BIB_Workflow_Data d
+	where r._Refs_key = d._refs_key
 	and %s
 	''' % (searchSQL), 'auto')
 
@@ -109,9 +132,9 @@ for s in searchTerms:
     for r in results:
 	mgiID = r['mgiID']
 
-	if mgiID not in byDate:
-	    byDate[mgiID] = []
-        byDate[mgiID].append(r['cdate'])
+	if mgiID not in byUser:
+	    byUser[mgiID] = []
+        byUser[mgiID].append((r['login'], r['cdate']))
 
 	if mgiID not in byMGI:
 	    byMGI[mgiID] = []
@@ -143,10 +166,14 @@ for s in searchTerms:
 keys = byMGI.keys()
 keys.sort()
 for r in keys:
-    fp.write(r + TAB)
-    fp.write(str(byMiceCount[r][0]) + TAB)
-    fp.write(byDate[r][0] + TAB)
-    fp.write('|'.join(byText[r]) + CRT)
+
+    if len(byText[r]) > 0:
+        fp.write(r + TAB)
+        fp.write(str(byMiceCount[r][0]) + TAB)
+        fp.write(str(len(byText[r])) + TAB)
+        fp.write(byUser[r][0][0] + TAB)
+        fp.write(byUser[r][0][1] + TAB)
+        fp.write('|'.join(byText[r]) + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(byMGI)))
 reportlib.finish_nonps(fp)
