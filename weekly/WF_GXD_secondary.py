@@ -89,6 +89,7 @@ for r in results:
 
 #
 # references : see rules at top
+# only interested in 'body' section of extracted text
 #
 db.sql('''
 select r._Refs_key, r.jnumID, 
@@ -102,6 +103,7 @@ and s.isCurrent = 1
 and s._Group_key = 31576665
 and s._Status_key = 31576669
 and r._Refs_key = d._Refs_key
+and d._ExtractedText_key = 48804490
 and not exists (select 1 from BIB_Workflow_Tag t, VOC_Term v 
          where r._Refs_key = t._Refs_key
          and t._Tag_key = v._Term_key
