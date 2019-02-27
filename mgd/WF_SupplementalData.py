@@ -79,10 +79,6 @@ fp.write('\t- additional file\n')
 fp.write('\t- Supplement_\n')
 fp.write('\t- Appendix\n\n')
 
-#
-# only interested in extracted text 'body' section
-#
-
 curatorList = []
 results = db.sql('''
 select distinct r.jnumID, t.term
@@ -92,7 +88,6 @@ and r.isReviewArticle = 0
 and r.jnumID is not null
 and r.journal not in ('Elife')
 and r._Refs_key = d._Refs_key
-and d._ExtractedText_key = 48804490
 and d._Supplemental_key in (31576675, 34027000)
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1
@@ -116,7 +111,6 @@ and r.isReviewArticle = 0
 and r.jnumID is not null
 and r.journal not in ('Elife')
 and r._Refs_key = d._Refs_key
-and d._ExtractedText_key = 48804490
 and d._Supplemental_key in (31576675, 34027000)
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1

@@ -90,7 +90,7 @@ for s in searchTerms:
 	searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
 searchSQL = searchSQL[:-2]
 
-# only interested in extracted text 'body' section
+# exclude extractedText not in 'reference' section
 results = db.sql('''
 select r._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, d.extractedText,
 	to_char(r.creation_date, 'MM/dd/yyyy') as cdate
@@ -99,7 +99,7 @@ from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Dat
 where r.isDiscard = 0
 and r._Refs_key = c._Refs_key
 and r._Refs_key = d._Refs_key
-and d._ExtractedText_key = 48804490
+and d._ExtractedText_key not in (48734896)
 and r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
 and wfs._Status_key = s._Term_key

@@ -118,14 +118,14 @@ db.sql('create index idx_refs on refs(_Refs_key)', None)
 
 for s in searchTerms:
 
-    # search for term in extractedText/'body' section only
+    # search for term in extractedText/not in 'reference' section
 
     searchSQL = ' lower(d.extractedText) like lower(\'%' + s + '%\')'
     results = db.sql('''
 	select r.*, d.extractedText
 	from refs r, BIB_Workflow_Data d
 	where r._Refs_key = d._refs_key
-	and d._ExtractedText_key = 48804490
+	and d._ExtractedText_key not in (48734896)
 	and %s
 	''' % (searchSQL), 'auto')
 
