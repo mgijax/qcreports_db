@@ -14,6 +14,7 @@ where r._ReferenceType_key = t._Term_key
 	and r._Refs_key = d._Refs_key
 	and r._Refs_key = c._Refs_key
 	and d.hasPDF = 0
+	and d._ExtractedText_key = 48804490
 order by 1 desc
 )
 select jnumid, short_citation

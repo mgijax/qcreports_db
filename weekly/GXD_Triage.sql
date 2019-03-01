@@ -14,6 +14,7 @@ and s._Status_key in (31576670, 31576671)
 and r._Refs_key = c._Refs_key
 and r._Refs_key = d._Refs_key
 and d._Supplemental_key = t._Term_key
+and d._ExtractedText_key = 48804490
 order by c.jnumID
 ;
 
