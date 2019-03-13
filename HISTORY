@@ -1,3 +1,8 @@
+TAG: qcreports_db-6-0-13-16
+DATE: 03/13/2019
+STAFF: sc
+CHANGES: TR13050 - qcr.shtml - added link in dataloads to omim_hpload index file
+
 TAG: qcreports_db-6-0-13-15
 TAG: qcreports_db-6-0-13-14
 TAG: qcreports_db-6-0-13-13
