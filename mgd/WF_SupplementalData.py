@@ -22,6 +22,7 @@
 #	- additional file
 #	- Supplement_
 #	- Appendix
+#	- supporting information
 #
 #	output:
 #	1. J#
@@ -77,7 +78,8 @@ fp.write('\t- supplemental\n')
 fp.write('\t- supplementary\n')
 fp.write('\t- additional file\n')
 fp.write('\t- Supplement_\n')
-fp.write('\t- Appendix\n\n')
+fp.write('\t- Appendix\n')
+fp.write('\t- supporting information\n\n')
 
 curatorList = []
 results = db.sql('''
