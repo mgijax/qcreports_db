@@ -99,7 +99,7 @@ from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, BIB_Workflow_Dat
 where r.isDiscard = 0
 and r._Refs_key = c._Refs_key
 and r._Refs_key = d._Refs_key
-and d._ExtractedText_key not in (48734896)
+and d._ExtractedText_key not in (48804491)
 and r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
 and wfs._Status_key = s._Term_key

@@ -125,7 +125,7 @@ for s in searchTerms:
 	select r.*, d.extractedText
 	from refs r, BIB_Workflow_Data d
 	where r._Refs_key = d._refs_key
-	and d._ExtractedText_key not in (48734896)
+	and d._ExtractedText_key not in (48804491)
 	and %s
 	''' % (searchSQL), 'auto')
 

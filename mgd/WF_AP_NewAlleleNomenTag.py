@@ -115,7 +115,7 @@ with refSet1 as (select wfso._Refs_key, r.creation_date
 lowerText as (select d._Refs_key, lower(d.extractedText) as extractedText, r.creation_date
     from BIB_Workflow_Data d, refSet1 as r
     where d._Refs_key = r._Refs_key
-    and d._ExtractedText_key not in (48734896)
+    and d._ExtractedText_key not in (48804491)
 )
 select d._Refs_key, c.jnumID, g.abbreviation as groupTerm, s.term as statusTerm, bwd.extractedText,
 	to_char(d.creation_date, 'MM/dd/yyyy') as cdate

@@ -103,7 +103,7 @@ and s.isCurrent = 1
 and s._Group_key = 31576665
 and s._Status_key = 31576669
 and r._Refs_key = d._Refs_key
-and d._ExtractedText_key not in (48734896)
+and d._ExtractedText_key not in (48804491)
 and not exists (select 1 from BIB_Workflow_Tag t, VOC_Term v 
          where r._Refs_key = t._Refs_key
          and t._Tag_key = v._Term_key
