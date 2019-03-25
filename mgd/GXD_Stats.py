@@ -182,18 +182,22 @@ def experiments():
     #
     fp.write('%sHT Experiments:%s%s' % (CRT, CRT, CRT))
     fp.write(string.ljust('Year', 10))
-    fp.write(string.ljust('Done', 10) + CRT)
+    fp.write(string.ljust('Cumulative Count', 10) + CRT)
     fp.write(string.ljust('-----', 10))
-    fp.write(string.ljust('-----', 10) + CRT)
+    fp.write(string.ljust('----------------', 10) + CRT)
 
+    totalCount = 0
     for year in range(gxdHtStartYear, endYear + 1):
-	results = db.sql('''select count(*) as expCt
-	from GXD_HTExperiment
-	where _CurationState_key = 20475421
-	and date_part(\'year\', initial_curated_date) = %d ''' % (year), 'auto')
+	results = db.sql('''
+		select count(*) as expCt
+		from GXD_HTExperiment
+		where _CurationState_key = 20475421
+		and date_part('year', initial_curated_date) = %d
+		''' % (year), 'auto')
 	for r in results:
+	    totalCount += r['expCt']
 	    fp.write(string.ljust(str(year), 10))
-	    fp.write(string.ljust(str(r['expCt']), 10) + CRT)
+	    fp.write(string.ljust(str(totalCount), 10) + CRT)
 
 def indexOnly():
 
