@@ -94,6 +94,7 @@ for s in searchTerms:
 	searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
 searchSQL = searchSQL[:-2]
 
+# read non-null extracted text
 # exclude extractedText not in 'reference' section
 sql = '''
 select r._Refs_key, c.jnumID, lower(d.extractedText) as extractedText,
