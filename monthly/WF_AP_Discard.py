@@ -67,7 +67,7 @@ searchTerms = [
 'mutant mice',
 'heterozygote',
 'homozygote',
-'CRISPR',
+'crispr',
 '-/-'
 ]
 
@@ -96,12 +96,12 @@ byMiceCount = {}
 
 searchSQL = ''
 
-db.sql('''
+results = db.sql('''
 	select r._Refs_key, c.mgiID, 
 		to_char(r.creation_date, 'MM/dd/yyyy') as cdate,
-		u.login
-	into temp table refs
-	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, MGI_User u
+		u.login,
+		lower(d.extractedText) as extractedText
+	from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, MGI_User u, BIB_Workflow_Data d
 	where r.isDiscard = 1
 	and r._Refs_key = c._Refs_key
 	and r._ModifiedBy_key = u._User_key
@@ -112,25 +112,14 @@ db.sql('''
 		where r._Refs_key = wft._Refs_key 
 		and wft._Tag_key = 48188429
 		)
-	''', None)
 
-db.sql('create index idx_refs on refs(_Refs_key)', None)
-
-for s in searchTerms:
-
-    # search for term in extractedText/not in 'reference' section
-
-    searchSQL = ' lower(d.extractedText) like lower(\'%' + s + '%\')'
-    results = db.sql('''
-	select r.*, d.extractedText
-	from refs r, BIB_Workflow_Data d
-	where r._Refs_key = d._refs_key
+	and r._Refs_key = d._Refs_key
 	and d._ExtractedText_key not in (48804491)
-	and %s
-	''' % (searchSQL), 'auto')
+	and d.extractedText is not null
+	''', 'auto')
 
-    # for each referernce
-    for r in results:
+for r in results:
+
 	mgiID = r['mgiID']
 
 	if mgiID not in byUser:
@@ -150,9 +139,12 @@ for s in searchTerms:
 	extractedText = extractedText.replace('\n', ' ')
 	extractedText = extractedText.replace('\r', ' ')
 
-	for match in re.finditer(s, extractedText):
-	    subText = extractedText[match.start()-40:match.end()+40]
-            byText[mgiID].append(subText)
+        for s in searchTerms:
+	    for match in re.finditer(s, extractedText):
+	        subText = extractedText[match.start()-40:match.end()+40]
+		if len(subText) == 0:
+	            subText = extractedText[match.start()-10:match.end()+40]
+                byText[mgiID].append(subText)
 
 	# count number of times the term 'mice" appears in the extractedText
 	# only have to do this once per mgiID/reference
