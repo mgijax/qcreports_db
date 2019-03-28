@@ -168,6 +168,11 @@ for r in results:
 #print embryoLookup
 
 #
+# embryo_set; store output in a list so it can be sorted
+#
+embryoList = {}
+
+#
 # references in embryo_set and not in ignore_set
 #
 fp1.write('\nreferences in embryo_set and not in ignore_set : good')
@@ -180,11 +185,11 @@ where not exists (select 1 from ignore_set s1 where s2._Refs_key = s1._Refs_key)
 order by s2.jnumID
 ''', 'auto')
 for r in results:
-    fp1.write(r['jnumID'] + TAB)
     ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
-    fp1.write('|'.join(ignoreLookup) + CRT)
     count +=1
-
+    if r['jnumID'] not in embryoList:
+    	embryoList[r['jnumID']] = []
+    embryoList[r['jnumID']].append('|'.join(ignoreLookup))
 #
 # references in embryo_set and in ignore_set 
 # where embryo_set count > ignoreCount
@@ -198,9 +203,19 @@ order by s2.jnumID
 for r in results:
     ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
     if embryoLookup[r['_Refs_key']] > ignoreCount:
-        fp1.write(r['jnumID'] + TAB)
-        fp1.write('|'.join(ignoreLookup) + CRT)
 	count += 1
+        if r['jnumID'] not in embryoList:
+    	    embryoList[r['jnumID']] = []
+        embryoList[r['jnumID']].append('|'.join(ignoreLookup))
+
+#
+# sort by jnum & write to report
+#
+keys = embryoList.keys()
+keys.sort()
+for r in keys:
+    fp1.write(r + TAB)
+    fp1.write(str(embryoList[r][0]) + CRT)
 fp1.write('\n(%d rows affected)\n' % (count))
 
 #
