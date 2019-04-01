@@ -1,3 +1,19 @@
+TAG: qcreports_db-6-0-14-?
+DATE: 04/01/2019
+STAFF: lec
+CHANGES: T12963/TR12763/Lit Triage
+WF_GXD_secondary.py
+WF_AP_Routed.py
+WF_AP_NewAlleleNomenTag.py
+WF_AP_Discard.py
+GXD_Stats.py
+GXD_Triage.sql
+GXD_References.sql
+BIB_MissingPDFs.sql
+WF_SupplementalData.py
+WF_AP_NewAlleleNomenTag.py : obsolete
+GXD_EarlyPapers : obsolete
+
 TAG: qcreports_db-6-0-13-17
 DATE: 03/25/2019
 STAFF: lec
