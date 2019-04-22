@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-14-3
+DATE: 04/22/2019
+STAFF: sc
+CHANGES: TR13075
+New report - weekly/VOC_DOOMIMMult.py
+qcr.shtml - added OMIM terms that have multiple DO xrefs
+
 TAG: qcreports_db-6-0-14-2
 DATE: 04/11/2019
 STAFF: lec

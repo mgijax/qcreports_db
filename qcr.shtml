@@ -101,6 +101,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOMult.rpt">DO terms that have multiple OMIM xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOObsolete.rpt">Obsolete OMIM terms in DO as xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DOAnnotNotInSlim.sql.rpt">DO terms not in the DO slim</A>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_DOOMIMMult.rpt">OMIM terms that have multiple DO xrefs</A>
 </OL>
 
 <A NAME="gxd"><B>GXD (cms, jfinger, ijm, terryh)</B></A>
