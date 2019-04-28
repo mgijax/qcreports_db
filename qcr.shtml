@@ -101,7 +101,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOMult.rpt">DO terms that have multiple OMIM xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOObsolete.rpt">Obsolete OMIM terms in DO as xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DOAnnotNotInSlim.sql.rpt">DO terms not in the DO slim</A>
-<LI><A HREF="/data/reports/qcreports_db/output/VOC_DOOMIMMult.rpt">OMIM terms that have multiple DO xrefs</A>
 </OL>
 
 <A NAME="gxd"><B>GXD (cms, jfinger, ijm, terryh)</B></A>
@@ -221,7 +220,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A>
 </OL>
 
-<A NAME="strains"><B>Strains (brs)</B></A>
+<A NAME="strains"><B>Strains (mnk)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainStd.sql.rpt">Strains (Standard only)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainNonStd.sql.rpt">Strains (Non Standard excluding F1 and F2)</A>
