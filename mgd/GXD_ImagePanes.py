@@ -63,7 +63,7 @@ cmd = '''
 	from IMG_Image i, IMG_ImagePane p,
 	     GXD_InSituResultImage r, GXD_InSituResult rr, GXD_Specimen s, 
 	     GXD_Assay aa, GXD_AssayType t
-	where i._MGIType_key = 8
+	where i._ImageClass_key = 6481781
 	and i._ImageType_key = 1072158
 	and i._Image_key = p._Image_key
 	and p._ImagePane_key = r._ImagePane_key
@@ -87,7 +87,7 @@ for r in results:
 cmd = '''
 	select distinct i._Image_key, t.assayType
 	from IMG_Image i, IMG_ImagePane p, GXD_Assay aa, GXD_AssayType t
-	where i._MGIType_key = 8
+	where i._ImageClass_key = 6481781
 	and i._ImageType_key = 1072158
 	and i._Image_key = p._Image_key
 	and p._ImagePane_key = aa._ImagePane_key
@@ -111,7 +111,7 @@ for r in results:
 
 cmd = ''' select i._Image_key, a.accID as pixID
 	from IMG_Image i, ACC_Accession a
-	where i._MGIType_key = 8
+	where i._ImageClass_key = 6481781
 	and i._ImageType_key = 1072158
 	and i._Image_key = a._Object_key
 	and a._MGIType_key = 9
@@ -142,7 +142,7 @@ cmd = ''' select i._Image_key, i.xDim, i.yDim, i.figureLabel,
                 a1.accID, 
 		a2.accID as refID
 	from IMG_Image i, IMG_ImagePane p, ACC_Accession a1, ACC_Accession a2
-	where i._MGIType_key = 8
+	where i._ImageClass_key = 6481781
 	and i._ImageType_key = 1072158
 	and i._Image_key = p._Image_key
 	and i._Image_key = a1._Object_key

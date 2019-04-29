@@ -43,7 +43,7 @@ order by i.jnumID
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
-where i._MGIType_key = 8
+where i._ImageClass_key = 6481781
 and i._Image_key = n._Object_key
 and n._MGIType_key = 9
 and n._NoteType_key = 1023
@@ -68,7 +68,7 @@ order by i.jnumID
 
 select distinct i.jnumID, i.mgiID
 from IMG_Image_View i, MGI_Note_Image_View n
-where i._MGIType_key = 8
+where i._ImageClass_key = 6481781
 and n._NoteType_key = 1023
 and lower(n.note) like 'reprinted with permission from elsevier%'
 and n.note not like '%' || i.jnumID || '%'
@@ -84,7 +84,7 @@ select distinct i.jnumID, i.mgiID, r._primary,
        n.note, substring(r._primary, 1, position(' ' in r._primary) - 1) as p
 INTO TEMPORARY TABLE a
 from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
-where i._MGIType_key = 8
+where i._ImageClass_key = 6481781
 and n._NoteType_key = 1023
 and lower(n.note) like 'this image is from%'
 and i._Refs_key = r._Refs_key
@@ -103,7 +103,7 @@ order by jnumID
 
 select i.mgiID, i.jnumID
 from IMG_Image_View i 
-where i._MGIType_key = 8
+where i._ImageClass_key = 6481781
 and i._ImageType_key = 1072158
 and i.xDim is not null
 and not exists
