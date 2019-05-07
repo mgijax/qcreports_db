@@ -89,7 +89,7 @@ and s._Stage_key = t._Stage_key
 and t.stage = 28
 and s.ageMin < 21.01
 and s._emapa_key = vt._Term_key
-and vt.term not in ('placenta','decidua','decidua basalis','decidua capsularis', 'cumulus oophorus', 'uterus')
+and vt.term not in ('placenta','decidua','decidua basalis','decidua capsularis','cumulus oophorus','uterus')
 and s._Sample_key = a1._Object_key
 and a1._MGIType_key = 42
 and a1._LogicalDB_key = 189
@@ -108,7 +108,7 @@ and s._Stage_key = t._Stage_key
 and t.stage = 27
 and (s.ageMin < 21.01 or s.ageMax > 28.01)
 and s._emapa_key = vt._Term_key
-and vt.term not in ('placenta','decidua','decidua basalis','decidua capsularis', 'cumulus oophorus')
+and vt.term not in ('placenta','decidua','decidua basalis','decidua capsularis','cumulus oophorus')
 and s._Sample_key = a1._Object_key
 and a1._MGIType_key = 42
 and a1._LogicalDB_key = 189
