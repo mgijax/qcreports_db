@@ -79,7 +79,7 @@ and a1._LogicalDB_key = 189
 \echo ''
 \echo 'Theiler = 28 and ageMin < 21.01'
 \echo 'Relevance = Yes'
-\echo 'excludes placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus, uterus'
+\echo 'excludes placenta,decidua,decidua basalis,decidua capsularis,cumulus oophorus,uterus'
 \echo ''
 
 select s.age, s.ageMin, a1.accID as exptID, s.name
@@ -98,7 +98,7 @@ and a1._LogicalDB_key = 189
 \echo ''
 \echo 'Theiler = 27 and ageMin < 21.01' or ageMin not > 28.01
 \echo 'Relevance = Yes'
-\echo 'excludes (placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus'
+\echo 'excludes (placenta,decidua,decidua basalis,decidua capsularis,cumulus oophorus'
 \echo ''
 
 select s.age, s.ageMin, a1.accID as exptID, s.name
