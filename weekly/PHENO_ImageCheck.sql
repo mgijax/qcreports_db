@@ -38,12 +38,14 @@ order by i.jnumID
 \echo ''
 
 select distinct i.jnumID, i.mgiID
-from IMG_Image_View i,MGI_Note_Image_View n
-where i._MGIType_key = 11
+from IMG_Image_View i,MGI_Note_Image_View n, IMG_ImagePane_Assoc p
+where i._ImageClass_key = 6481782
 and n._NoteType_key = 1023
 and lower(n.note) like 'reprinted with permission from elsevier%'
 and n.note not like '%' || i.jnumID || '%'
 and n._Object_key = i._Image_key
+and i._Image_key = p._Image_key
+and p._MGIType_key = 11
 order by i.jnumID
 ;
 
@@ -53,8 +55,8 @@ order by i.jnumID
 \echo ''
 
 select distinct i.jnumID, i.mgiID, r._primary
-from IMG_Image_View i,MGI_Note_Image_View n, BIB_Refs r
-where i._MGIType_key = 11
+from IMG_Image_View i,MGI_Note_Image_View n, BIB_Refs r, IMG_ImagePane_Assoc p
+where i._ImageClass_key = 6481782
 and n._NoteType_key = 1023
 and lower(n.note) like 'this image is from%'
 and i._Refs_key = r._Refs_key
@@ -63,6 +65,8 @@ and n._Object_key = i._Image_key
 and exists (select 1 from ACC_Accession a where r._Refs_key = a._Object_key
 and a._MGIType_key = 1
 and a._LogicalDB_key = 29)
+and i._Image_key = p._Image_key
+and p._MGIType_key = 11
 order by i.jnumID
 ;
 
@@ -71,8 +75,8 @@ order by i.jnumID
 \echo ''
 
 select distinct c.accID as "MGI ID"
-from IMG_Image a, IMG_Image b, ACC_Accession c
-where a._MGIType_key = 11
+from IMG_Image a, IMG_Image b, ACC_Accession c, IMG_ImagePane_Assoc p
+where i._ImageClass_key = 6481782
 and a._ImageType_key = 1072158
 and a.xDim is not null
 and a._ThumbnailImage_key = b._Image_key
@@ -81,6 +85,8 @@ and a._Image_key = c._Object_key
 and c._MGIType_key = 9
 and c._LogicalDB_key = 1
 and c.prefixPart = 'MGI:'
+and i._Image_key = p._Image_key
+and p._MGIType_key = 11
 order by accID
 ;
 
@@ -89,10 +95,12 @@ order by accID
 \echo ''
 
 select i.mgiID, i.jnumID
-from IMG_Image_View i 
-where i._MGIType_key = 11
+from IMG_Image_View i, IMG_ImagePane_Assoc p
+where i._ImageClass_key = 6481782
 and i._ImageType_key = 1072158
 and i.xDim is not null
+and i._Image_key = p._Image_key
+and p._MGIType_key = 11
 and not exists
 (select 1 from MGI_Note mn
 where i._Image_key = mn._Object_key
@@ -105,12 +113,14 @@ and mn._NoteType_key = 1023)
 \echo ''
 
 select distinct c.accID as "MGI ID"
-from IMG_Image a, ACC_Accession c
-where a._MGIType_key = 11
+from IMG_Image a, ACC_Accession c, IMG_ImagePane_Assoc p
+where i._ImageClass_key = 6481782
 and a._Image_key = c._Object_key
 and c._MGIType_key = 9
 and c._LogicalDB_key = 1
 and c.prefixPart = 'MGI:'
+and i._Image_key = p._Image_key
+and p._MGIType_key = 11
 and not exists (select 1 from MGI_Note n
 where a._Image_key = n._Object_key
 and n._NoteType_key = 1024)
