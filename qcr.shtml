@@ -111,6 +111,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_NotInCache.sql.rpt">GXD Assays missing from GXD Expression Cache Table</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SpecTheilerAge.rpt">GXD Specimens with incompatible Theiler stages and ages</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SpecNoAge.sql.rpt">Specimens with incorrect age/age range values</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_DistinctAge.sql.rpt">Distinct Age, AgeMin, AgeMax</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SameStructure.rpt">GXD Specimens/Lanes that use the same Structure > 1</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SpecTheiler.sql.rpt">Specimens annotated to structures of > 1 Theiler Stage or Sex</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_ExpPresNotPres.rpt">Assays in which the same anatomical structure is annotated as having expression both present and absent</A>
@@ -163,6 +164,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleGenotypeNA.rpt">GXD HT Samples whose Relevance = Yes but whose genotype is Not Applicable</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleTheilerAge.rpt">GXD HT Samples with incompatible Theiler stages and ages</A>
 </A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTDistinctAge.sql.rpt">Distinct Age, AgeMin, AgeMax</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoAge.sql.rpt">GXD HT Samples with incorrect age/age range values</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoStructure.rpt">GXD HT Samples whose Relevance = Yes but the structure field is null</A>
 </OL>
