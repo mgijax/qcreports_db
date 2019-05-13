@@ -13,5 +13,6 @@ order by age;
 
 select distinct age, agemin, agemax 
 from gxd_gellane
+where _gelcontrol_key = 1
 order by age;
 
