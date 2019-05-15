@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-14-4
+DATE: 05/15/2019
+STAFF: lec
+CHANGES:
+TR13113/WF_GXD_secondary.py/fix count
+
 TAG: qcreports_db-6-0-14-3
 DATE: 04/22/2019
 STAFF: sc

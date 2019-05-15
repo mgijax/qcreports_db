@@ -213,9 +213,11 @@ for r in results:
 #
 keys = embryoList.keys()
 keys.sort()
+count = 0
 for r in keys:
     fp1.write(r + TAB)
     fp1.write(str(embryoList[r][0]) + CRT)
+    count += 1
 fp1.write('\n(%d rows affected)\n' % (count))
 
 #
