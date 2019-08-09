@@ -37,7 +37,7 @@ or lower(comments) like '%reverse%'
 or lower(comments) like '%immunoprecip%'
 or lower(comments) like '%binding%'
 or lower(comments) like '%rocket%'
-or lower(comments) like '%quantitative RT%'
+or lower(comments) like '%quantitative rt%'
 ;
 
 create index excluded_idx on excluded(_Index_key)
