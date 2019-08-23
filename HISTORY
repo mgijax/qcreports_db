@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-14-8
+DATE: 08/23/2019
+STAFF: sc
+CHANGES: TR13115 Variant Reports
+ weekly/ALL_VariantCheckComplement.py
+ weekly/ALL_VariantSeqAssoc.py
+ weekly/ALL_VariantSeqCoords.py
+
 TAG: qcreports_db-6-0-14-7
 DATE: 08/20/2019
 STAFF: lec
