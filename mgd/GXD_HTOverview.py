@@ -12,7 +12,11 @@
 #    Col 3: experiment type vocabKey=121
 #    Col 4: evaluation state  vocabKey=116
 #    Col 5: study type vocabKey=124
-#    Col 6: experimental variables, multiples separated by pipes vocabKey=122
+#    Col 6: curation state vocabKey=117
+#    Col 7: experimental variables, multiples separated by pipes vocabKey=122
+#    Col 8: In Expression Atlas Set Y/N
+#    Col 9: In RNA-Seq Load Set Y/N
+#
 #    monthly run sufficient for this one
 #    make in a format that will load into excel easily (such as tab delimited)
 #
@@ -22,6 +26,10 @@
 # Notes:
 #
 # History:
+#
+# sc	08/23/2019
+#	- GRSD project story 290, add columns for in RNA-Seq Load and 
+#	    Expression Atlas sets
 #
 # sc	04/06/2017
 #	- TR12523 add curation state as field 5
@@ -43,6 +51,26 @@ CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
+
+# experments in this list are in the Expression Atlas set
+eaList = []
+
+# experiments in this list are in the RNA-Seq Load set
+rnaSeqList = []
+
+results = db.sql('''select sm._object_key 
+	from MGI_SetMember sm, MGI_Set s
+	where s.name = 'Expression Atlas Experiments'
+	and s._Set_key = sm._Set_key''', 'auto')
+for r in results:
+    eaList.append(r['_object_key'])
+
+results = db.sql('''select sm._object_key
+        from MGI_SetMember sm, MGI_Set s
+        where s.name = 'RNASeq Load Experiments'
+        and s._Set_key = sm._Set_key''', 'auto')
+for r in results:
+    rnaSeqList.append(r['_object_key'])
 
 fp = reportlib.init(sys.argv[0], 'GXD Overview QC', os.environ['QCOUTPUTDIR'])
 
@@ -76,6 +104,9 @@ for r in results:
     #    Col 5: study type vocabKey=124
     #    Col 6: curationState vocabKey=117
     #    Col 7: experimental variables, multiples separated by '|' vocabKey=122
+    #    Col 8: In Expression Atlas Set Y/N
+    #    Col 9: In RNA-Seq Load Set Y/N
+
     exptKey = r['_Experiment_key']
     
     if not exptKey in exptDict:
@@ -83,7 +114,7 @@ for r in results:
     exptDict[exptKey].append(r)
 
 ct = 0
-fp.write('ArrayExpress ID%sGEO ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%s' % (TAB, TAB, TAB, TAB, TAB, TAB, CRT))
+fp.write('ArrayExpress ID%sGEO ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%sExpression Atlas?%sRNA-Seq Load?%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT))
 for key in exptDict:
     # if there are > 1 row then there are > 1 variable, all other info repeated
     r = exptDict[key][0]
@@ -100,7 +131,13 @@ for key in exptDict:
 	if varTerm != None:
 	    varList.append(varTerm)
     varTerms = string.join(varList, '|')
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (aeId, TAB, geoId, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, CRT ))
+    eaSet = 'No'
+    if key in eaList:
+	eaSet = 'Yes'
+    rnaSeqSet = 'No'
+    if key in rnaSeqList:
+	rnaSeqSet = 'Yes'
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (aeId, TAB, geoId, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, TAB, eaSet, TAB, rnaSeqSet, CRT ))
     ct += 1
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))
