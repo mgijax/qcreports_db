@@ -162,7 +162,7 @@ for r in results:
 	if writeError:
 	    alleleInfo = alleleInfoDict[alleleKey]
 	    id, symbol = string.split(alleleInfo, '|')
-	    errorList.append('%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transRef, TAB, genRef, TAB, transVar, TAB, genVar))    
+	    errorList.append('%s%s%s%s%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transRef, TAB, genRef, TAB, transVar, TAB, genVar))    
 
 
 # write to the reports
