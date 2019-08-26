@@ -70,12 +70,17 @@ results = db.sql('''select  lc.startCoordinate as markerStart,
 # Are the 'as-curated' genomic coordinates outside the range of the variant's genomic coordinates?
 genomicRpt = []
 for r in results:
-    varStart = int(r['startCoordinate'])
-    varEnd = int(r['endCoordinate'])
+    varStart = r['startCoordinate']
+    varEnd = r['endCoordinate']
     mrkStart = r['markerStart']
     mrkEnd = r['markerEnd']
     if mrkStart == None or mrkEnd == None:
 	continue
+    else:
+	varStart = int(varStart)
+	varEnd = int(varEnd)
+	mrkStart = int(mrkStart)
+	mrkEnd = int(mrkEnd)
     if varStart < mrkStart or varStart > mrkEnd or varEnd < varStart or varEnd > mrkEnd:
 	genomicRpt.append('%s%s%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, mrkStart, TAB, mrkEnd))
 
