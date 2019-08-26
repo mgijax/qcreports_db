@@ -66,11 +66,9 @@ results = db.sql('''select distinct v.transcriptID, m.symbol
     and a._object_key = smc._sequence_key
     and smc._organism_key = 1
     and smc._marker_key = m._marker_key''', 'auto')
-print 'loading mrkTranscriptDict'
 for r in results:
     t = string.strip(r['transcriptID'])
     s = string.strip(r['symbol'])
-    print '"%s":"%s"' % (t, s)
     if t not in mrkTranscriptDict:
 	mrkTranscriptDict[t] = []
     mrkTranscriptDict[t].append(s)
@@ -100,11 +98,9 @@ results = db.sql('''select distinct v.proteinID, m.symbol
     and a._object_key = smc._sequence_key
     and smc._organism_key = 1
     and smc._marker_key = m._marker_key''', 'auto')
-print 'loading mrkProteinDict'
 for r in results:
     t = string.strip(r['proteinID'])
     s = string.strip(r['symbol'])
-    print '"%s":"%s"' % (t, s)
     if t not in mrkProteinDict:
         mrkProteinDict[t] = []
     mrkProteinDict[t].append(s)
@@ -147,16 +143,12 @@ for r in results:
     alleleID = r['alleleID']
     alleleSymbol = r['asymbol']
     markerSymbol = r['msymbol']
-    print '"%s", "%s", "%s", "%s"' % (transcriptID, alleleID, alleleSymbol, markerSymbol)
     if transcriptID in mrkTranscriptDict:
-	print '%s in mrkTranscriptDict %s' % (transcriptID, mrkTranscriptDict[transcriptID])
 	# transcript assoc with different marker
 	if markerSymbol not in mrkTranscriptDict[transcriptID]:
-	    print '%s not same as %s' % (markerSymbol, mrkTranscriptDict[transcriptID])
 	    transDiffMrkRpt.append('%s%s%s%s%s%s%s%s%s' % (transcriptID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, string.join(mrkTranscriptDict[transcriptID], ', ')))
 	    
     else: # transcript no assoc w/any marker
-	print '%s Not in mrkTranscriptDict' % transcriptID
 	transNotAssocRpt.append('%s%s%s%s%s%s%s%s%s' % (transcriptID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ''))
 
 #######
@@ -182,16 +174,12 @@ for r in results:
     alleleID = r['alleleID']
     alleleSymbol = r['asymbol']
     markerSymbol = r['msymbol']
-    print '"%s", "%s", "%s", "%s"' % (proteinID, alleleID, alleleSymbol, markerSymbol)
     if proteinID in mrkProteinDict:
-        print '%s in mrkProteinDict %s' % (proteinID, mrkProteinDict[proteinID])
         # protein assoc with different marker
         if markerSymbol not in mrkProteinDict[proteinID]:
-            print '%s not same as %s' % (markerSymbol, mrkProteinDict[proteinID])
             protDiffMrkRpt.append('%s%s%s%s%s%s%s%s%s' % (proteinID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, string.join(mrkProteinDict[proteinID], ', ')))
 
     else: # protein no assoc w/any marker
-        print '%s Not in mrkProteinDict' % proteinID
         protNotAssocRpt.append('%s%s%s%s%s%s%s%s%s' % (proteinID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ''))
 
 # write report

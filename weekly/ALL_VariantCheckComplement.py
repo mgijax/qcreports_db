@@ -48,6 +48,7 @@ resultsDict = {}
 # {alleleKey:alleleID|alleleSymbol, ...}
 alleleInfoDict = {}
 
+errorList = []
 variantSeqErrorList = []
 referenceSeqErrorList = []
 
@@ -107,7 +108,6 @@ for r in resultsD:
     genRef =  r['referenceSequence']
     genVar = r['variantSequence']
     if genRef == None and genVar == None:
-	#print 'allele|variant: %s has no genomic ref or var sequence' % dictKey
  	continue
     if dictKey not in resultsDict:
 	resultsDict[dictKey] = {}
@@ -125,7 +125,6 @@ for r in resultsR:
     transVar = r['variantSequence']
 
     if transRef == None and transVar == None:
-        #print 'allele|variant: %s has no transcript ref or var sequence' % dictKey
         continue
     if dictKey not in resultsDict:
         continue # this means we don't have any genomic ref or var sequences
@@ -141,44 +140,37 @@ for r in results:
     key = '%s|%s' % (alleleKey, r['_Variant_key'])
     if key in resultsDict:
 	seqDict = resultsDict[key]
-	#print '%s seqDict: %s' % (key, seqDict)
 	# check that transRef is reverse complement genRef
+	transRef = ''
+	genRef = ''
+	transVar = ''
+	genVar = ''
+	writeError = 0
 	if 'transRef' in seqDict and 'genRef' in seqDict:
 	    transRef = seqDict['transRef']
 	    genRef = seqDict['genRef']
 	    genRefCompl = str(Seq(genRef).reverse_complement())
 	    if transRef != genRefCompl:
-		alleleInfo = alleleInfoDict[alleleKey]
-                id, symbol = string.split(alleleInfo, '|')
-		referenceSeqErrorList.append('%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transRef, TAB, genRef))
-		#print '%s transRef: %s genRefCompl: %s' % (key, transRef, genRefCompl)
+		writeError = 1
 	# check that transVar is reverse complement genVar
 	if 'transVar' in seqDict and 'genVar' in seqDict:
 	    transVar = seqDict['transVar']
 	    genVar = seqDict['genVar']
 	    genVarCompl = str(Seq(genVar).reverse_complement())
 	    if transVar != genVarCompl:
-		alleleInfo = alleleInfoDict[alleleKey]
-	 	id, symbol = string.split(alleleInfo, '|')
-		variantSeqErrorList.append('%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transVar, TAB, genVar))
-		#print '%s transVar: %s genVarCompl: %s' % (key, transVar, genVarCompl)
+		writeError = 1
+	if writeError:
+	    alleleInfo = alleleInfoDict[alleleKey]
+	    id, symbol = string.split(alleleInfo, '|')
+	    errorList.append('%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transRef, TAB, genRef, TAB, transVar, TAB, genVar))    
+
 
 # write to the reports
-fp1 = reportlib.init(sys.argv[0], fileExt = '.referenceSeq', outputdir = os.environ['QCOUTPUTDIR'])
-fp1.write('The reference transcript sequence is NOT the reverse complement of the reference genomic sequence%s' % CRT)
-fp1.write('Allele ID%s Symbol%sTranscript%sGenomic%s' % (TAB, TAB, TAB, CRT))
-# join the list referenceSeqErrorList
-fp1.write(string.join(referenceSeqErrorList, CRT))
-length = len(referenceSeqErrorList)
-fp1.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
+fp  = reportlib.init(sys.argv[0],  outputdir = os.environ['QCOUTPUTDIR'])
+fp.write('The reference or variant transcript sequence is NOT the reverse complement of the reference or variant genomic sequence%s' % CRT)
+fp.write('Allele ID%s Symbol%sReference Transcript%sReference Genomic%sVariant Transcript%sVariant Genomic%s' % (TAB, TAB, TAB, TAB, TAB, CRT))
+fp.write(string.join(errorList, CRT))
+length = len(errorList)
+fp.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
-fp2 = reportlib.init(sys.argv[0], fileExt = '.variantSeq', outputdir = os.environ['QCOUTPUTDIR'])
-fp2.write('The variant transcript sequence is NOT the reverse complement of the variant genomic sequence%s' % CRT)
-fp2.write('Allele ID%s Symbol%sTranscript%sGenomic%s' % (TAB, TAB, TAB, CRT))
-# join the variantSeqErrorList
-fp2.write(string.join(variantSeqErrorList, CRT))
-length = len(variantSeqErrorList)
-fp2.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
-
-reportlib.finish_nonps(fp1)	# non-postscript file
-reportlib.finish_nonps(fp2)
+reportlib.finish_nonps(fp)    # non-postscript file

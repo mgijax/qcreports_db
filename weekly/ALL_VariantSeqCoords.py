@@ -75,7 +75,6 @@ for r in results:
     mrkStart = r['markerStart']
     mrkEnd = r['markerEnd']
     if mrkStart == None or mrkEnd == None:
-        print '%s%s%s%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB,  varEnd, TAB, mrkStart, TAB, mrkEnd, CRT)
 	continue
     if varStart < mrkStart or varStart > mrkEnd or varEnd < varStart or varEnd > mrkEnd:
 	genomicRpt.append('%s%s%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, mrkStart, TAB, mrkEnd))
@@ -109,13 +108,10 @@ results = db.sql('''select distinct v.transcriptID, v.startCoordinate,
 # Are the as-curated transcript coordinated outside the length of the transcript
 # sequence?
 transcriptRpt = []
-print 'TRANSCRIPTS:'
-print 'length results: %s' % len(results)
 for r in results:
     varStart = int(r['startCoordinate'])
     varEnd = int(r['endCoordinate'])
     seqLength = int(r['length'])
-    print '%s %s %s: varEnd -  varStart + 1: %s seqLength: %s' % (r['alleleID'], r['symbol'], r['transcriptID'], varEnd - varStart + 1, seqLength)
     if (varEnd - varStart + 1) > seqLength:
 	transcriptRpt.append('%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, seqLength))
 
@@ -144,12 +140,10 @@ results = db.sql('''select distinct v.proteinID, v.startCoordinate, v.alleleID
     and smc._sequence_key = s._sequence_key''', 'auto')
 
 proteinRpt = []
-print 'PROTEINS:'
 for r in results:
     varStart = int(r['startCoordinate'])
     varEnd = int(r['endCoordinate'])
     seqLength = int(r['length'])
-    print '%s %s %s: varEnd -  varStart + 1: %s seqLength: %s' % (r['alleleID'], r['symbol'], r['proteinID'], varEnd - varStart + 1, seqLength)
     if (varEnd - varStart + 1) > seqLength:
         proteinRpt.append('%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, seqLength))
 
