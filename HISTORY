@@ -1,3 +1,13 @@
+TAG: qcreports_db-6-0-14-13
+TAG: qcreports_db-6-0-14-12
+DATE: 09/19/2019
+STAFF: sc
+CHANGES:TR13173 - new variant report for Carol
+1) weekly/ALL_Variant.py 
+    produces a tab-delim report and a json report
+    each with slightly different info
+    ALL_Variant.rpt and ALL_Variant.json.rpt
+
 TAG: qcreports_db-6-0-14-11
 TAG: qcreports_db-6-0-14-10
 TAG: qcreports_db-6-0-14-9

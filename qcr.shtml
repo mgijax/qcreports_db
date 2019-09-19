@@ -97,6 +97,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqAssoc.transcript">Variants where transcript ID not associated with the variants marker or associated with a different marker</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqAssoc.protein">Variants where protein ID not associated with the variants marker or associated with a different marker</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantCheckComplement.rpt">Variants where the reference or variant transcript sequence is NOT the reverse complement of the reference or variant genomic sequence</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_Variant.rpt">Sequence variants associated with phenotypic alleles. Tab-delimited</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_Variant.json.rpt">Sequence variants associated with phenotypic alleles. JSON</A>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
