@@ -18,6 +18,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <UL>
 <LI><A HREF="#references">References</A>
 <LI><A HREF="#alleles">Alleles</A>
+<LI><A HREF="#variants">Allele Variants</A>
 <LI><A HREF="#phenoannot">Phenotype Vocabulary Annotation</A>
 <LI><A HREF="#gxd">GXD</A>
 <LI><A HREF="#gxdht">GXD HT Experiments</A>
@@ -86,6 +87,18 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_StatusMismatch_AP.sql.rpt">References with AP status not matching curated data</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Discard.rpt">Discarded AP relevant references</A> <B> (mnk)</B>
+</OL>
+
+<A NAME="variants"><B>Allele Variants (laurens)</B> </A>
+<OL>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqCoords.genomic">Variants with curated coordinates outside the variants gene</A> 
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqCoords.transcript">Variants with curated coordinates inconsistent with the length of the transcript sequence</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqCoords.protein">Variants with curated coordinates inconsistent with the length of the protein sequence</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqAssoc.transcript">Variants where transcript ID not associated with the variants marker or associated with a different marker</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantSeqAssoc.protein">Variants where protein ID not associated with the variants marker or associated with a different marker</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantCheckComplement.rpt">Variants where the reference or variant transcript sequence is NOT the reverse complement of the reference or variant genomic sequence</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_Variant.rpt">Sequence variants associated with phenotypic alleles. Tab-delimited</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_Variant.json.rpt">Sequence variants associated with phenotypic alleles. JSON</A>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>

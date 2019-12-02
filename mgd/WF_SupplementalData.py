@@ -91,6 +91,7 @@ and r.jnumID is not null
 and r.journal not in ('Elife')
 and r._Refs_key = d._Refs_key
 and d._Supplemental_key in (31576675, 34027000)
+and d._ExtractedText_key = 48804490
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1
 and s._Status_key in (31576671, 31576673)
@@ -114,6 +115,7 @@ and r.jnumID is not null
 and r.journal not in ('Elife')
 and r._Refs_key = d._Refs_key
 and d._Supplemental_key in (31576675, 34027000)
+and d._ExtractedText_key = 48804490
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1
 and s._Status_key in (31576671, 31576673)
