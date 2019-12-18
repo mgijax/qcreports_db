@@ -124,7 +124,6 @@ db.sql('''
      and a._Refs_key = r._Refs_key 
      and a._ImageType_key = 1072158 
      and a._Image_key = aa._Image_key 
-     and aa.paneLabel is not null
      ''', None)
 
 db.sql('create index images_idx1 on images(jnumID)', None)
