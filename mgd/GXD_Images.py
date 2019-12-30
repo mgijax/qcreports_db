@@ -16,6 +16,13 @@
 #
 # History:
 #
+# sc	12/30/2019
+#	- TR13205/move  to J Neurosci section and rename to
+#    'Check copyright & 6 month delay'
+#	    J Cell Biol
+#	    J Exp Med
+#	    J Gen Phsyiol
+#
 # lec	09/10/2018
 #	- TR12954/new journal : eNeuro
 #
@@ -159,11 +166,8 @@ journals = [
 'J Biol', 
 'J Biol Chem', 
 'J Biomed Sci',
-'J Cell Biol', 
 'J Clin Invest',
 'J Comp Neurol', 
-'J Exp Med', 
-'J Gen Physiol',
 'J Lipid Res', 
 'Mech Dev', 
 'Mol Reprod Dev',
@@ -214,9 +218,11 @@ journalsOther = [
 'Cell Cycle', 'EMBO J', 'J Invest Dermatol', 'Mol Psychiatry'
 ]
 
-journalsJNeurosci = [
-'J Neurosci'
-]
+checkCpyrtAndDelay = [
+'J Neurosci', 
+'J Cell Biol',
+'J Exp Med',
+'J Gen Phsyiol']
 
 def runreport(fp, assayType):
 
@@ -425,15 +431,15 @@ def runreport(fp, assayType):
     # J Neurosci
     #
 
-    fp.write(TAB + 'J Neurosci 6 month delay:' + CRT)
-    for j in journalsJNeurosci:
+    fp.write(TAB + 'Check copyright & 6 month delay:' + CRT)
+    for j in checkCpyrtAndDelay:
         fp.write(2*TAB + j + CRT)
     fp.write(2*CRT)
 
     #
-    # journal6 = J Neurosci
+    # journals6 = Check copyright & 6 month delay
     #
-    journals6 = '\'' + string.join(journalsJNeurosci, '\',\'') + '\''
+    journals6 = '\'' + string.join(checkCpyrtAndDelay, '\',\'') + '\''
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
