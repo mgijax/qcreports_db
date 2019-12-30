@@ -21,7 +21,7 @@
 #    'Check copyright & 6 month delay'
 #	    J Cell Biol
 #	    J Exp Med
-#	    J Gen Phsyiol
+#	    J Gen Physiol
 #
 # lec	09/10/2018
 #	- TR12954/new journal : eNeuro
@@ -222,7 +222,7 @@ checkCpyrtAndDelay = [
 'J Neurosci', 
 'J Cell Biol',
 'J Exp Med',
-'J Gen Phsyiol']
+'J Gen Physiol']
 
 def runreport(fp, assayType):
 
