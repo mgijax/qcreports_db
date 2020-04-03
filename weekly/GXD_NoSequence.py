@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -57,15 +56,15 @@ fp = reportlib.init(sys.argv[0], title = title, outputdir = os.environ['QCOUTPUT
 fp.write('    includes "official"\n')
 fp.write('    excludes "DNA Segment"\n\n')
 
-fp.write(string.ljust('Gene Symbol', 30) + \
- 	 string.ljust('Marekr Type', 30) + \
-	 string.ljust('GXD Refs', 30) + \
- 	 CRT)
+fp.write(str.ljust('Gene Symbol', 30) + \
+         str.ljust('Marekr Type', 30) + \
+         str.ljust('GXD Refs', 30) + \
+         CRT)
 
-fp.write(string.ljust('-----------', 30) + \
- 	 string.ljust('-----------', 30) + \
-	 string.ljust('--------', 30) + \
- 	 CRT)
+fp.write(str.ljust('-----------', 30) + \
+         str.ljust('-----------', 30) + \
+         str.ljust('--------', 30) + \
+         CRT)
 
 #
 # select genes with no sequences that exist in GXD index
@@ -93,7 +92,7 @@ results = db.sql('''select m._Marker_key, count(i._Refs_key) as gxd
         from markers m, GXD_Index i 
         where m._Marker_key = i._Marker_key 
         group by m._Marker_key
-	''', 'auto')
+        ''', 'auto')
 gxd = {}
 for r in results:
         key = r['_Marker_key']
@@ -102,10 +101,10 @@ for r in results:
 
 results = db.sql('select * from markers order by markerType, symbol', 'auto')
 for r in results:
-	key = r['_Marker_key']
-	fp.write(string.ljust(r['symbol'], 30))
-	fp.write(string.ljust(r['markerType'], 30))
-	fp.write(string.ljust(gxd[key], 30) + CRT)
+        key = r['_Marker_key']
+        fp.write(str.ljust(r['symbol'], 30))
+        fp.write(str.ljust(r['markerType'], 30))
+        fp.write(str.ljust(gxd[key], 30) + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)	# non-postscript file

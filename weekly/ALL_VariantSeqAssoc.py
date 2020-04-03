@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -67,10 +66,10 @@ results = db.sql('''select distinct v.transcriptID, m.symbol
     and smc._organism_key = 1
     and smc._marker_key = m._marker_key''', 'auto')
 for r in results:
-    t = string.strip(r['transcriptID'])
-    s = string.strip(r['symbol'])
+    t = str.strip(r['transcriptID'])
+    s = str.strip(r['symbol'])
     if t not in mrkTranscriptDict:
-	mrkTranscriptDict[t] = []
+        mrkTranscriptDict[t] = []
     mrkTranscriptDict[t].append(s)
 
 ###
@@ -99,8 +98,8 @@ results = db.sql('''select distinct v.proteinID, m.symbol
     and smc._organism_key = 1
     and smc._marker_key = m._marker_key''', 'auto')
 for r in results:
-    t = string.strip(r['proteinID'])
-    s = string.strip(r['symbol'])
+    t = str.strip(r['proteinID'])
+    s = str.strip(r['symbol'])
     if t not in mrkProteinDict:
         mrkProteinDict[t] = []
     mrkProteinDict[t].append(s)
@@ -144,12 +143,12 @@ for r in results:
     alleleSymbol = r['asymbol']
     markerSymbol = r['msymbol']
     if transcriptID in mrkTranscriptDict:
-	# transcript assoc with different marker
-	if markerSymbol not in mrkTranscriptDict[transcriptID]:
-	    transDiffMrkRpt.append('%s%s%s%s%s%s%s%s%s' % (transcriptID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, string.join(mrkTranscriptDict[transcriptID], ', ')))
-	    
+        # transcript assoc with different marker
+        if markerSymbol not in mrkTranscriptDict[transcriptID]:
+            transDiffMrkRpt.append('%s%s%s%s%s%s%s%s%s' % (transcriptID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ', '.join(mrkTranscriptDict[transcriptID])))
+            
     else: # transcript no assoc w/any marker
-	transNotAssocRpt.append('%s%s%s%s%s%s%s%s%s' % (transcriptID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ''))
+        transNotAssocRpt.append('%s%s%s%s%s%s%s%s%s' % (transcriptID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ''))
 
 #######
 #  PROTEIN
@@ -177,7 +176,7 @@ for r in results:
     if proteinID in mrkProteinDict:
         # protein assoc with different marker
         if markerSymbol not in mrkProteinDict[proteinID]:
-            protDiffMrkRpt.append('%s%s%s%s%s%s%s%s%s' % (proteinID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, string.join(mrkProteinDict[proteinID], ', ')))
+            protDiffMrkRpt.append('%s%s%s%s%s%s%s%s%s' % (proteinID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ', '.join(mrkProteinDict[proteinID])))
 
     else: # protein no assoc w/any marker
         protNotAssocRpt.append('%s%s%s%s%s%s%s%s%s' % (proteinID, TAB, alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, ''))
@@ -187,28 +186,27 @@ fp1 = reportlib.init(sys.argv[0], fileExt = '.transcript', outputdir = os.enviro
 fp1.write('Variants where transcript ID not associated with the variants marker%s%s' %  (CRT, CRT))
 fp1.write('Transcript ID%sAllele ID%sSymbol%sVariant Marker%s%s' % (TAB, TAB, TAB, TAB, CRT))
 length = len(transNotAssocRpt)
-fp1.write(string.join(transNotAssocRpt, CRT))
+fp1.write(CRT.join(transNotAssocRpt))
 fp1.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 fp1.write('Variants where transcript ID associated with a different marker%s%s' % (CRT, CRT))
 fp1.write('Transcript ID%sAllele ID%sSymbol%sVariant Marker%sTranscript Marker%s' % (TAB, TAB, TAB, TAB, CRT))
 length = len(transDiffMrkRpt)
-fp1.write(string.join(transDiffMrkRpt, CRT))
+fp1.write(CRT.join(transDiffMrkRpt))
 fp1.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 fp2 = reportlib.init(sys.argv[0], fileExt = '.protein', outputdir = os.environ['QCOUTPUTDIR'])
 fp2.write('Variants where protein ID not associated with the variants marker%s%s'% (CRT, CRT))
 fp2.write('Protein ID%sAllele ID%sSymbol%sVariant Marker%s%s' % (TAB, TAB, TAB, TAB, CRT))
 length = len(protNotAssocRpt)
-fp2.write(string.join(protNotAssocRpt, CRT))
+fp2.write(CRT.join(protNotAssocRpt))
 fp2.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 fp2.write('Variants where protein ID associated with a different marker%s%s' % (CRT, CRT))
 fp2.write('Protein ID%sAllele ID%sSymbol%sVariant Marker%sProtein Marker%s' % (TAB, TAB, TAB, TAB, CRT))
 length = len(protDiffMrkRpt)
-fp2.write(string.join(protDiffMrkRpt, CRT))
+fp2.write(CRT.join(protDiffMrkRpt))
 fp2.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 reportlib.finish_nonps(fp1)	# non-postscript file
 reportlib.finish_nonps(fp2)
-

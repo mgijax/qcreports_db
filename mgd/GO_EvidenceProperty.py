@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -141,8 +140,8 @@ db.sql('''
         and   m._user_key not in (1503)
         and   ve._annot_key=va._annot_key
         and   va._annottype_key=1000
-	and not exists (select 1 from mgi_user m where ve._createdby_key = m._user_key and m._user_key in (1503))
-	and not exists (select 1 from mgi_user m where ve._createdby_key = m._user_key and m.login like 'NOCTUA%')
+        and not exists (select 1 from mgi_user m where ve._createdby_key = m._user_key and m._user_key in (1503))
+        and not exists (select 1 from mgi_user m where ve._createdby_key = m._user_key and m.login like 'NOCTUA%')
         ''', None)
 db.sql('create index goevidence_idx1 on goevidence(_object_key)', None)
 
@@ -158,7 +157,7 @@ db.sql('''
         and ac._mgitype_key=2  
         and ac._logicaldb_key=1
         and ac.preferred=1 
-	''', None)
+        ''', None)
 db.sql('create index gormarkers_idx1 on gomarkers(_term_key)', None)
 
 #
@@ -238,15 +237,14 @@ message+=")\nNote: This report runs daily"
 
 cmd="echo \""+message+"\" | mailx -r \""+sender+"\" -s \"J:73065 GO Annotations Alert - External Ref\" \""+receiver+"\""
 mes="Missing External Ref total: %s  Bad format Total: %s" % (missCount,badCount)
-print mes
+print(mes)
 
 if os.environ['SERVER_TYPE'] == 'prod':
     if (missCount > 0) or (badCount > 0):
         try:
             os.system(cmd)
-            print "Successfully sent email"
-        except  OSError,e:
-            print "Error: unable to send email"
+            print("Successfully sent email")
+        except  OSError as e:
+            print("Error: unable to send email")
 
 reportlib.finish_nonps(fp)
-

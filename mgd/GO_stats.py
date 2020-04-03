@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -184,10 +183,10 @@ def goSummary1():
 
     fp.write('*********************************************************************\n')
     fp.write('GO Ontology Summary - Number of GO Terms per Ontology\n\n')
-    fp.write(string.ljust('ontology', 25) + TAB)
-    fp.write(string.ljust('number of terms', 25) + CRT)
-    fp.write(string.ljust('--------', 25) + TAB)
-    fp.write(string.ljust('---------------', 25) + CRT)
+    fp.write(str.ljust('ontology', 25) + TAB)
+    fp.write(str.ljust('number of terms', 25) + CRT)
+    fp.write(str.ljust('--------', 25) + TAB)
+    fp.write(str.ljust('---------------', 25) + CRT)
 
     results = db.sql('''
            select substring(d.name,1,30) as name, count(n._Object_key) as terms
@@ -195,12 +194,12 @@ def goSummary1():
            where d._DAG_key in (1,2,3)
            and d._DAG_key = n._DAG_key
            group by d.name
-	   order by d.name
-	   ''', 'auto')
+           order by d.name
+           ''', 'auto')
 
     for r in results:
-	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(str(r['terms']), 25) + CRT)
+        fp.write(str.ljust(r['name'], 25) + TAB)
+        fp.write(str.ljust(str(r['terms']), 25) + CRT)
 
     fp.write('\n*********************************************************************\n')
 
@@ -212,24 +211,24 @@ def goSummary2():
 
     fp.write('*********************************************************************\n')
     fp.write('GO Ontology Summary - Number of GO Terms per Ontology Used in MGI\n\n')
-    fp.write(string.ljust('ontology', 25) + TAB)
-    fp.write(string.ljust('number of terms', 25) + CRT)
-    fp.write(string.ljust('--------', 25) + TAB)
-    fp.write(string.ljust('---------------', 25) + CRT)
+    fp.write(str.ljust('ontology', 25) + TAB)
+    fp.write(str.ljust('number of terms', 25) + CRT)
+    fp.write(str.ljust('--------', 25) + TAB)
+    fp.write(str.ljust('---------------', 25) + CRT)
 
     results = db.sql('''
-	   select substring(d.name,1,30) as name, count(n._Object_key) as terms
-	   from DAG_DAG d, DAG_Node n
-	   where d._DAG_key in (1,2,3)
-	   and d._DAG_key = n._DAG_key
-	   and exists (select 1 from VOC_Annot a where n._Object_key = a._Term_key)
-	   group by d.name
-	   order by d.name
-	   ''', 'auto')
+           select substring(d.name,1,30) as name, count(n._Object_key) as terms
+           from DAG_DAG d, DAG_Node n
+           where d._DAG_key in (1,2,3)
+           and d._DAG_key = n._DAG_key
+           and exists (select 1 from VOC_Annot a where n._Object_key = a._Term_key)
+           group by d.name
+           order by d.name
+           ''', 'auto')
 
     for r in results:
-	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(str(r['terms']), 35) + CRT)
+        fp.write(str.ljust(r['name'], 25) + TAB)
+        fp.write(str.ljust(str(r['terms']), 35) + CRT)
 
     fp.write('\n*********************************************************************\n')
 
@@ -243,7 +242,7 @@ def writeCount(name):
    fp.write('======================\n')
 
    if name == "ALL":
-	# all annotations
+        # all annotations
 
        results1 = db.sql(byGene1 % ('', '', ''), 'auto')
        results2 = db.sql(byGene2 % ('', '', ''), 'auto')
@@ -251,7 +250,7 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % ('', '', ''), 'auto')
 
    elif name == "Total Non-IEA":
-	# not in IEA references
+        # not in IEA references
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
@@ -259,7 +258,7 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
 
    elif name == "Total IEA":
-	# in IEA references
+        # in IEA references
 
        results1 = db.sql(byGene1 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
@@ -267,115 +266,115 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
 
    elif name == "Curator":
-	# not in IEA references
-	# not like "GOA"
-	# not in rest of GO GAFs
-	# not in evidence codes (see above)
+        # not in IEA references
+        # not like "GOA"
+        # not in rest of GO GAFs
+        # not in evidence codes (see above)
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-			byCreatedBy % ('not in ' + GO_CLAUSE) + \
-			byCreatedBy % ('not like ' + GOA_CLAUSE), \
-			byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
+                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-			byCreatedBy % ('not in ' + GO_CLAUSE) + \
-			byCreatedBy % ('not like ' + GOA_CLAUSE), \
-			byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
+                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-			byCreatedBy % ('not in ' + GO_CLAUSE) + \
-			byCreatedBy % ('not like ' + GOA_CLAUSE), \
-			byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
+                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-			byCreatedBy % ('not in ' + GO_CLAUSE) + \
-			byCreatedBy % ('not like ' + GOA_CLAUSE), \
-			byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
+                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
 
    elif name == "GOA":
-	# not in IEA references
-	# in "GOA_%" user
+        # not in IEA references
+        # in "GOA_%" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + GOA_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('like ' + GOA_CLAUSE), \
+                        ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + GOA_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('like ' + GOA_CLAUSE), \
+                        ''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + GOA_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('like ' + GOA_CLAUSE), \
+                        ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('like ' + GOA_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('like ' + GOA_CLAUSE), \
+                        ''), 'auto')
 
    elif name == "GOC":
-	# not in IEA references
-	# in "GOC" user
+        # not in IEA references
+        # in "GOC" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOC_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOC_CLAUSE), \
+                        ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOC_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOC_CLAUSE), \
+                        ''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOC_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOC_CLAUSE), \
+                        ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOC_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOC_CLAUSE), \
+                        ''), 'auto')
 
    elif name == "GO/PAINT":
-	# not in IEA references
-	# in "GO_Central" user
+        # not in IEA references
+        # in "GO_Central" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
+                        ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
+                        ''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
+                        ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
+                        ''), 'auto')
 
    elif name == "GO/Rat":
-	# not in IEA references
-	# in "RGD" user
+        # not in IEA references
+        # in "RGD" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GORAT_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
+                        ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GORAT_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
+                        ''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GORAT_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
+                        ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GORAT_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
+                        ''), 'auto')
 
    elif name == "GOA/Human":
-	# not in IEA references
-	# in "UniProtKB" user
+        # not in IEA references
+        # in "UniProtKB" user
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+                        ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+                        ''), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+                        ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-			byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-			''), 'auto')
+                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
+                        ''), 'auto')
 
    elif name == "ORTHOLOGY":
-	# in orthology reference
+        # in orthology reference
 
        results1 = db.sql(byGene1 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
@@ -383,7 +382,7 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
 
    elif name == "SWISS_PROT":
-	# in SWISS_PROT reference
+        # in SWISS_PROT reference
 
        results1 = db.sql(byGene1 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
@@ -391,7 +390,7 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
 
    elif name == "INTERPRO":
-	# in INTERPRO reference
+        # in INTERPRO reference
 
        results1 = db.sql(byGene1 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
@@ -399,7 +398,7 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
 
    elif name == "EC":
-	# in EC reference
+        # in EC reference
 
        results1 = db.sql(byGene1 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
@@ -407,7 +406,7 @@ def writeCount(name):
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
 
    elif name == "ROOT":
-	# in ROOT reference
+        # in ROOT reference
 
        results1 = db.sql(byGene1 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
@@ -440,8 +439,8 @@ def writeCount(name):
    fp.write('Breakdown by OntologyName:\n')
 
    for r in results2:
-	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(str(r['terms']), 45) + CRT)
+        fp.write(str.ljust(r['name'], 25) + TAB)
+        fp.write(str.ljust(str(r['terms']), 45) + CRT)
 
    fp.write('---------------------------------------------------------------------\n')
 
@@ -452,8 +451,8 @@ def writeCount(name):
    fp.write('Breakdown by OntologyName:\n')
 
    for r in results4:
-	fp.write(string.ljust(r['name'], 25) + TAB)
-	fp.write(string.ljust(str(r['terms']), 45) + CRT)
+        fp.write(str.ljust(r['name'], 25) + TAB)
+        fp.write(str.ljust(str(r['terms']), 45) + CRT)
 
    fp.write('*********************************************************************\n')
 
@@ -482,4 +481,3 @@ writeCount('EC')
 writeCount('ROOT')
 
 reportlib.finish_nonps(fp)
-

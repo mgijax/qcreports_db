@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -78,7 +77,7 @@ db.sql('''select a.accID as mgiID, p._Probe_key, p.name as probeName, pm._Marker
           a._LogicalDB_key = 1 and 
           a.prefixPart = 'MGI:' and 
           a.preferred = 1
-	  ''', None)
+          ''', None)
 
 #
 # From the previous list of probes/markers, find the ones that have a
@@ -94,7 +93,7 @@ db.sql('''select pm.*, a1.accID as seqID, a2._Object_key as _Sequence_key
           a2._MGIType_key = 19 and 
           a2._LogicalDB_key = 9 and 
           a2.preferred = 1
-	  ''', None)
+          ''', None)
 
 #
 # From the previous list of probes/marker/sequences, find the ones where
@@ -104,7 +103,7 @@ results = db.sql('''select distinct ps.mgiID, ps.probeName, ps.seqID
     from prbseq ps, SEQ_Marker_Cache sm 
     where ps._Sequence_key = sm._Sequence_key and 
           ps._Marker_key != sm._Marker_key
-	  ''', 'auto')
+          ''', 'auto')
 
 #
 # Process each row of the results set.

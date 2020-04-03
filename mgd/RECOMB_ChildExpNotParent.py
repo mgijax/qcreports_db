@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -56,15 +55,15 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(CRT)
-fp.write(string.ljust('J-Number', 12))
+fp.write(str.ljust('J-Number', 12))
 fp.write(SPACE)
-fp.write(string.ljust('MGI ID', 12))
+fp.write(str.ljust('MGI ID', 12))
 fp.write(SPACE)
-fp.write(string.ljust('Stage', 5))
+fp.write(str.ljust('Stage', 5))
 fp.write(SPACE)
-fp.write(string.ljust('Parent Structure', 50))
+fp.write(str.ljust('Parent Structure', 50))
 fp.write(SPACE)
-fp.write(string.ljust('Child Structure', 50))
+fp.write(str.ljust('Child Structure', 50))
 fp.write(CRT)
 fp.write(12*'-')
 fp.write(SPACE)
@@ -83,35 +82,35 @@ fp.write(CRT)
 #
 
 db.sql('''
-	SELECT DISTINCT
-	       a._Assay_key,
+        SELECT DISTINCT
+               a._Assay_key,
                s._EMAPA_Term_key as parentKey, 
-	       s._Stage_key,
+               s._Stage_key,
                s2._EMAPA_Term_key as childKey
         INTO TEMPORARY TABLE work 
         FROM GXD_InSituResult r, GXD_InSituResult r2, 
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
-	     GXD_Specimen sp, GXD_Specimen sp2,
+             GXD_Specimen sp, GXD_Specimen sp2,
              GXD_Assay a,
              DAG_Closure c, VOC_Term_EMAPS emaps_p, VOC_Term_EMAPS emaps_c
         WHERE r._Strength_key = 1 
               and r._Result_key = s._Result_key 
               and r._Specimen_key = sp._Specimen_key 
-	      and sp._Assay_key = a._Assay_key 
-	      and a._AssayType_key in (10,11) 
+              and sp._Assay_key = a._Assay_key 
+              and a._AssayType_key in (10,11) 
               and r2._Strength_key > 1 
               and r2._Result_key = s2._Result_key 
               and r2._Specimen_key = sp2._Specimen_key 
               and sp._Assay_key = sp2._Assay_key 
               and sp._Genotype_key = sp2._Genotype_key 
               and sp.age = sp2.age 
-	      and s._Stage_key = s2._Stage_key
+              and s._Stage_key = s2._Stage_key
               and s._EMAPA_Term_key = emaps_p._EMAPA_Term_key
-	      and emaps_p._Term_key = c._AncestorObject_key
-	      and c._MGIType_key = 13
-	      and c._DescendentObject_key = emaps_c._Term_key
-	      and emaps_c._EMAPA_Term_key = s2._EMAPA_Term_key
-	''', None)
+              and emaps_p._Term_key = c._AncestorObject_key
+              and c._MGIType_key = 13
+              and c._DescendentObject_key = emaps_c._Term_key
+              and emaps_c._EMAPA_Term_key = s2._EMAPA_Term_key
+        ''', None)
 
 db.sql('create index idx1 on work(_Assay_key)', None)
 db.sql('create index idx2 on work(parentKey)', None)
@@ -119,12 +118,12 @@ db.sql('create index idx3 on work(childKey)', None)
 db.sql('create index idx4 on work(_Stage_key)', None)
 
 results = db.sql('''
-	SELECT DISTINCT 
-	       a.accID as mgiID, 
-	       j.accID as jnumID, 
-	       t.stage, 
-	       substring(d.term,1,50) as pterm, 
-	       substring(d2.term,1,50) as cterm
+        SELECT DISTINCT 
+               a.accID as mgiID, 
+               j.accID as jnumID, 
+               t.stage, 
+               substring(d.term,1,50) as pterm, 
+               substring(d2.term,1,50) as cterm
         FROM work w, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
         WHERE w._Assay_key = ga._Assay_key
@@ -135,22 +134,21 @@ results = db.sql('''
               and j.prefixPart = 'J:' 
               and w.parentKey = d._Term_key 
               and w.childKey = d2._Term_key
-	      and w._Stage_key = t._Stage_key
-	      order by mgiID desc, t.stage, pterm, cterm
-	''', 'auto')
+              and w._Stage_key = t._Stage_key
+              order by mgiID desc, t.stage, pterm, cterm
+        ''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 for r in results:
-	fp.write(string.ljust(r['jnumID'], 12))
-	fp.write(SPACE)
-	fp.write(string.ljust(r['mgiID'], 12))
-	fp.write(SPACE)
-	fp.write(string.ljust(str(r['stage']), 5))
-	fp.write(SPACE)
-	fp.write(string.ljust(r['pterm'], 50))
-	fp.write(SPACE)
-	fp.write(string.ljust(r['cterm'], 50))
-	fp.write(CRT)
+        fp.write(str.ljust(r['jnumID'], 12))
+        fp.write(SPACE)
+        fp.write(str.ljust(r['mgiID'], 12))
+        fp.write(SPACE)
+        fp.write(str.ljust(str(r['stage']), 5))
+        fp.write(SPACE)
+        fp.write(str.ljust(r['pterm'], 50))
+        fp.write(SPACE)
+        fp.write(str.ljust(r['cterm'], 50))
+        fp.write(CRT)
 
 reportlib.finish_nonps(fp)
-

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -68,37 +67,37 @@ for r in results:
 # read in all annotations that contains terms of interest
 
 db.sql('''
-	select distinct p.value, aa.accID, m.symbol
-	into temporary table annotations 
-	from VOC_Annot a, VOC_Evidence e, VOC_Evidence_Property p, VOC_Term t,
-		ACC_Accession aa, MRK_Marker m
-	where a._AnnotType_key = 1000 
-	and a._Annot_key = e._Annot_key 
-	and e._AnnotEvidence_key = p._AnnotEvidence_key
-	and p._PropertyTerm_key = t._Term_key
-	and t._Vocab_key = 82
-	and t.term not in ('anatomy', 
-		'cell type', 
-		'dual-taxon ID', 
-		'evidence', 
-		'external ref', 
-		'gene product', 
-		'modification', 
-		'target', 
-		'text')
-	and p.value is not null 
-	and (
-	     p.value like '%CL:%'
-	     or p.value like '%GO:%'
-	     or p.value like '%MA:%'
-	     or p.value like '%MGI:%'
-	    )
+        select distinct p.value, aa.accID, m.symbol
+        into temporary table annotations 
+        from VOC_Annot a, VOC_Evidence e, VOC_Evidence_Property p, VOC_Term t,
+                ACC_Accession aa, MRK_Marker m
+        where a._AnnotType_key = 1000 
+        and a._Annot_key = e._Annot_key 
+        and e._AnnotEvidence_key = p._AnnotEvidence_key
+        and p._PropertyTerm_key = t._Term_key
+        and t._Vocab_key = 82
+        and t.term not in ('anatomy', 
+                'cell type', 
+                'dual-taxon ID', 
+                'evidence', 
+                'external ref', 
+                'gene product', 
+                'modification', 
+                'target', 
+                'text')
+        and p.value is not null 
+        and (
+             p.value like '%CL:%'
+             or p.value like '%GO:%'
+             or p.value like '%MA:%'
+             or p.value like '%MGI:%'
+            )
         and a._Term_key = aa._Object_key 
         and aa._MGIType_key = 13  
         and aa.preferred = 1 
         and a._Object_key = m._Marker_key 
-	order by p.value
-	''', None)
+        order by p.value
+        ''', None)
 
 results = db.sql('select * from annotations', 'auto')
 
@@ -107,19 +106,18 @@ for r in results:
     ids = ids.replace(' ', ';')
     ids = ids.upper()
     delimiter = ';'
-    idList = string.split(ids, delimiter)
+    idList = str.split(ids, delimiter)
 
     for id in idList:
-	if string.find(id, 'CL:') >= 0 \
-	   or string.find(id, 'GO:') >= 0 \
-	   or string.find(id, 'MA:') >= 0 \
-	   or string.find(id, 'MGI:') >= 0 :
-		if id not in mgiLookup:
-        		fp.write(r['accID'] + reportlib.TAB + \
-				r['symbol'] + reportlib.TAB + \
-        			r['value'] + reportlib.CRT)
-			rows = rows + 1 
+        if str.find(id, 'CL:') >= 0 \
+           or str.find(id, 'GO:') >= 0 \
+           or str.find(id, 'MA:') >= 0 \
+           or str.find(id, 'MGI:') >= 0 :
+                if id not in mgiLookup:
+                        fp.write(r['accID'] + reportlib.TAB + \
+                                r['symbol'] + reportlib.TAB + \
+                                r['value'] + reportlib.CRT)
+                        rows = rows + 1 
 
 fp.write('\n(%d rows affected)\n' % (rows))
 reportlib.finish_nonps(fp)
-

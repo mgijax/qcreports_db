@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -45,12 +44,11 @@ results = db.sql(cmd, 'auto')
 
 for r in results:
 
-	fp.write(r['strain'] + reportlib.TAB)
+        fp.write(r['strain'] + reportlib.TAB)
 
-	if r['standard'] == 1:
-		fp.write('Y' + reportlib.CRT)
-	else:
-		fp.write('N' + reportlib.CRT)
+        if r['standard'] == 1:
+                fp.write('Y' + reportlib.CRT)
+        else:
+                fp.write('N' + reportlib.CRT)
 
 reportlib.finish_nonps(fp)
-

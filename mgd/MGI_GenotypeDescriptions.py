@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -53,12 +52,12 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 #
 
 db.sql('''
-	select distinct a._Genotype_key, a._Marker_key, a.symbol, 
+        select distinct a._Genotype_key, a._Marker_key, a.symbol, 
         a._Allele_key_1, a.allele1, g._Strain_key 
         into temporary table genotypes 
         from GXD_AllelePair_View a, GXD_Genotype g 
         where a._Genotype_key = g._Genotype_key
-	''', None)
+        ''', None)
 
 db.sql('create index genotypes_idx1 on genotypes(_Genotype_key)', None)
 db.sql('create index genotypes_idx2 on genotypes(_Marker_key)', None)
@@ -69,10 +68,10 @@ db.sql('create index genotypes_idx3 on genotypes(_Allele_key_1)', None)
 #
 
 results = db.sql('''
-	select distinct g._Marker_key, m.mgiID 
+        select distinct g._Marker_key, m.mgiID 
         from genotypes g, MRK_Mouse_View m 
         where g._Marker_key = m._Marker_key
-	''', 'auto')
+        ''', 'auto')
 geneID = {}
 
 for r in results:
@@ -85,10 +84,10 @@ for r in results:
 #
 
 results = db.sql('''
-	select distinct g._Allele_key_1, a.mgiID 
+        select distinct g._Allele_key_1, a.mgiID 
         from genotypes g, ALL_Summary_View a 
         where g._Allele_key_1 = a._Object_key
-	''', 'auto')
+        ''', 'auto')
 alleleID = {}
 
 for r in results:
@@ -101,10 +100,10 @@ for r in results:
 #
 
 results = db.sql('''
-	select distinct g._Genotype_key, v.mgiID 
+        select distinct g._Genotype_key, v.mgiID 
         from genotypes g, GXD_Genotype_View v 
         where g._Genotype_key = v._Genotype_key
-	''', 'auto')
+        ''', 'auto')
 genotypeID = {}
 
 for r in results:
@@ -117,11 +116,11 @@ for r in results:
 #
 
 results = db.sql('''
-	select distinct g._Genotype_key, s.strain 
+        select distinct g._Genotype_key, s.strain 
         from genotypes g, PRB_Strain s 
         where g._Genotype_key = g._Genotype_key 
         and g._Strain_key = s._Strain_key
-	''', 'auto')
+        ''', 'auto')
 strain = {}
 
 for r in results:
@@ -134,18 +133,18 @@ for r in results:
 #
 
 results = db.sql('''
-	select distinct a._Genotype_key, nc.note 
+        select distinct a._Genotype_key, nc.note 
         from genotypes a, MGI_Note n, MGI_NoteChunk nc 
         where a._Genotype_key = n._Object_key 
         and n._NoteType_key = 1016 
         and n._Note_key = nc._Note_key
-	''', 'auto')
+        ''', 'auto')
 
 alleles = {}
 for r in results:
         key = r['_Genotype_key']
-        value = re.sub('\n', ',', string.strip(r['note']))
-        if not alleles.has_key(key):
+        value = re.sub('\n', ',', str.strip(r['note']))
+        if key not in alleles:
                 alleles[key] = []
         alleles[key].append(value)
 
@@ -154,25 +153,25 @@ results = db.sql('select * from genotypes order by _Marker_key, _Allele_key_1', 
 fp.write(TAB.join(['Gene ID', 'Gene Symbol', 'Allele ID', 'Allele Symbol', 'Genotype ID', 'Alleles', 'Genetic Background']) + CRT)
 
 for r in results:
-        if geneID.has_key(r['_Marker_key']):
+        if r['_Marker_key'] in geneID:
                 fp.write(geneID[r['_Marker_key']])
-	fp.write(TAB)
+        fp.write(TAB)
         if r['symbol'] != None:
-	    fp.write(r['symbol'])
-	fp.write(TAB)
+            fp.write(r['symbol'])
+        fp.write(TAB)
 
-        if alleleID.has_key(r['_Allele_key_1']):
+        if r['_Allele_key_1'] in alleleID:
                 fp.write(alleleID[r['_Allele_key_1']] + TAB)
 
         fp.write(r['allele1'] + TAB)
 
-        if genotypeID.has_key(r['_Genotype_key']):
+        if r['_Genotype_key'] in genotypeID:
                 fp.write(genotypeID[r['_Genotype_key']] + TAB)
 
-        if alleles.has_key(r['_Genotype_key']):
-                fp.write(string.join(alleles[r['_Genotype_key']], ',') + TAB)
+        if r['_Genotype_key'] in alleles:
+                fp.write(','.join(alleles[r['_Genotype_key']]) + TAB)
 
-        if strain.has_key(r['_Genotype_key']):
+        if r['_Genotype_key'] in strain:
                 fp.write(strain[r['_Genotype_key']] + CRT)
 
 

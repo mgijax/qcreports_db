@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -61,38 +60,38 @@ IMSR_CSV = os.environ['IMSR_STRAINS_CSV']
 # functions
 
 def createImsrDict1():
-	"""
-	Returns dictionary of allele IDs to facility abbreviation
-	for JAX only
-	"""
-	facilityMap = {}
-	csvfile = open(IMSR_CSV, 'r')
-	reader = csv.reader(csvfile)
-	for row in reader:
-		allele_ids = row[0]
-		provider = row[3]
-		if allele_ids and provider == 'JAX':
-			for id in  allele_ids.split(','):
-				facilityMap[id] = ['JAX']
-	
-	return facilityMap
+        """
+        Returns dictionary of allele IDs to facility abbreviation
+        for JAX only
+        """
+        facilityMap = {}
+        csvfile = open(IMSR_CSV, 'r')
+        reader = csv.reader(csvfile)
+        for row in reader:
+                allele_ids = row[0]
+                provider = row[3]
+                if allele_ids and provider == 'JAX':
+                        for id in  allele_ids.split(','):
+                                facilityMap[id] = ['JAX']
+        
+        return facilityMap
 
 def createImsrDict2():
-	"""
-	Returns dictionary of allele IDs to facility abbreviation
-	for non-JAX 
-	"""
-	facilityMap = {}
-	csvfile = open(IMSR_CSV, 'r')
-	reader = csv.reader(csvfile)
-	for row in reader:
-		allele_ids = row[0]
-		provider = row[3]
-		if allele_ids and provider != 'JAX':
-			for id in  allele_ids.split(','):
-				facilityMap.setdefault(id, []).append(provider)
-	
-	return facilityMap
+        """
+        Returns dictionary of allele IDs to facility abbreviation
+        for non-JAX 
+        """
+        facilityMap = {}
+        csvfile = open(IMSR_CSV, 'r')
+        reader = csv.reader(csvfile)
+        for row in reader:
+                allele_ids = row[0]
+                provider = row[3]
+                if allele_ids and provider != 'JAX':
+                        for id in  allele_ids.split(','):
+                                facilityMap.setdefault(id, []).append(provider)
+        
+        return facilityMap
 
 currentDate = mgi_utils.date('%Y')
 
@@ -173,27 +172,26 @@ for r in results:
     aKey = r['_Allele_key']
 
     allCt = 0
-    if allRefsDict.has_key(aKey):
-	allCt = allRefsDict[aKey]
+    if aKey in allRefsDict:
+        allCt = allRefsDict[aKey]
 
     refsCount = r['refsCount']
 
     facilities = []
-    if imsrDict1.has_key(mgiID):
-	facilities = imsrDict1[mgiID]
-    f1 = string.join(facilities, ', ')
+    if mgiID in imsrDict1:
+        facilities = imsrDict1[mgiID]
+    f1 =  ', '.join(facilities)
 
     facilities = []
-    if imsrDict2.has_key(mgiID):
-	# need to unique and sort the list of providers
-	facilities = list(set(imsrDict2[mgiID]))
-	facilities.sort()
-    f2 = string.join(facilities, ', ')
+    if mgiID in imsrDict2:
+        # need to unique and sort the list of providers
+        facilities = list(set(imsrDict2[mgiID]))
+        facilities.sort()
+    f2 =  ', '.join(facilities)
 
     if len(f1) > 0 and len(f2) > 0:
-	f1 = f1 + ', '
+        f1 = f1 + ', '
 
     fp.write('%s%s%s%s%s%s%s%s%s%s%s' % (symbol, TAB, mgiID, TAB, refsCount, TAB, allCt, TAB, f1, f2, CRT) )
 
 reportlib.finish_nonps(fp)	# non-postscript file
-

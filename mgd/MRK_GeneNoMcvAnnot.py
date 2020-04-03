@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -39,28 +38,28 @@ fp.write('-'*80 + CRT)
 
 # select all official mouse markers of type gene without mcv annotations
 db.sql('''
-	select _Marker_key, _Marker_Type_key, symbol
-	into temporary table noAnnot
-	from MRK_Marker m
-	where m._Marker_Status_key = 1
-	and _Organism_key = 1
-	and _Marker_Type_key = 1
-	and not exists(select 1
-	from  VOC_Annot v
-	where m._Marker_key = v._Object_key
-	and v._AnnotType_key = 1011)
-	''', None)
+        select _Marker_key, _Marker_Type_key, symbol
+        into temporary table noAnnot
+        from MRK_Marker m
+        where m._Marker_Status_key = 1
+        and _Organism_key = 1
+        and _Marker_Type_key = 1
+        and not exists(select 1
+        from  VOC_Annot v
+        where m._Marker_key = v._Object_key
+        and v._AnnotType_key = 1011)
+        ''', None)
 
 results = db.sql('''
-	    select a.accid, n.symbol
-	    from noAnnot n, ACC_Accession a
-	    where n._Marker_key = a._Object_key
-	    and a._MGIType_key = 2
-	    and a.preferred = 1
-	    and a._LogicalDB_key = 1
-	    and a.prefixPart = 'MGI:'
-	    order by n.symbol
-	    ''', 'auto')
+            select a.accid, n.symbol
+            from noAnnot n, ACC_Accession a
+            where n._Marker_key = a._Object_key
+            and a._MGIType_key = 2
+            and a.preferred = 1
+            and a._LogicalDB_key = 1
+            and a.prefixPart = 'MGI:'
+            order by n.symbol
+            ''', 'auto')
 
 for r in results:
     fp.write('%s%s%s%s' % (r['accid'], TAB, r['symbol'], CRT))

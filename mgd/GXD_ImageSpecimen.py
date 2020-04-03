@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -65,7 +64,7 @@ db.sql('''
           s._Assay_key = a._Assay_key and
           a._AssayType_key in (1,2,3,4,5,6,8,9) and
           a._Refs_key not in (92242)
-	  ''', None)
+          ''', None)
 
 db.sql('create index idx1_assay on assays(_Assay_key)', None)
 
@@ -74,9 +73,9 @@ db.sql('''
     into temporary table final
     from assays a1
     where exists (select 1 from assays a2
-	where a2._assay_key = a1._assay_key and a2._imagepane_key = a1._imagepane_key
-		and a2._specimen_key != a1._specimen_key
-	) 
+        where a2._assay_key = a1._assay_key and a2._imagepane_key = a1._imagepane_key
+                and a2._specimen_key != a1._specimen_key
+        ) 
     ''', None)
 
 db.sql('create index idx1_final on final(_Image_key)', None)
@@ -88,7 +87,7 @@ results = db.sql('''
            i.accID as imageID,
            r.accID as jNumber,
            f.figureLabel,
-	   f.paneLabel
+           f.paneLabel
     from final f,
          ACC_Accession i,
          ACC_Accession a,
@@ -119,13 +118,13 @@ fp.write(CRT)
 fp.write('Excludes J:91257 (Gray)')
 fp.write(2*CRT)
 
-fp.write(string.ljust('Assay ID',30))
+fp.write(str.ljust('Assay ID',30))
 fp.write(SPACE)
-fp.write(string.ljust('Image ID',30))
+fp.write(str.ljust('Image ID',30))
 fp.write(SPACE)
-fp.write(string.ljust('J-Number',30))
+fp.write(str.ljust('J-Number',30))
 fp.write(SPACE)
-fp.write(string.ljust('Label',50))
+fp.write(str.ljust('Label',50))
 fp.write(CRT)
 fp.write(30*'-')
 fp.write(SPACE)
@@ -146,15 +145,15 @@ def xstr(s):
         return str(s)
 
 for r in results:
-    fp.write(string.ljust(r['assayID'],30))
+    fp.write(str.ljust(r['assayID'],30))
     fp.write(SPACE)
-    fp.write(string.ljust(r['imageID'],30))
+    fp.write(str.ljust(r['imageID'],30))
     fp.write(SPACE)
-    fp.write(string.ljust(r['jNumber'],30))
+    fp.write(str.ljust(r['jNumber'],30))
     fp.write(SPACE)
     figureLabel = xstr(r['figureLabel'])
     paneLabel = xstr(r['paneLabel'])
-    fp.write(string.ljust((figureLabel + paneLabel)[:50],50))
+    fp.write(str.ljust((figureLabel + paneLabel)[:50],50))
     fp.write(CRT)
 
 reportlib.finish_nonps(fp)

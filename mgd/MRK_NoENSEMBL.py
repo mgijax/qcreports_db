@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -52,7 +51,7 @@ PAGE = reportlib.PAGE
 #
 # Main
 #
-print "initializing"
+print("initializing")
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 fp.write('#\n')
@@ -76,7 +75,7 @@ db.sql('''select a.accID, s._Sequence_key
     ''', None)
 db.sql('create index ensembl_idxAccid on ensemblGeneModel(accID)', None)
 db.sql('create index ensembl_idxSeqkey on ensemblGeneModel(_Sequence_key)', None)
-print "done first query and index"
+print("done first query and index")
 
 # get the set of Ensembl ids with marker associations
 db.sql('''select distinct accID 
@@ -87,23 +86,23 @@ db.sql('''select distinct accID
     and preferred = 1
     ''', None)
 db.sql('create index idxAccid on ensemblGeneAssoc(accID)', None)
-print "done second query and index"
+print("done second query and index")
 
 results = db.sql('''select gm.accid as ensemblGeneModelNoAssoc, s.rawbiotype
     from ensemblGeneModel gm 
-	 LEFT OUTER JOIN SEQ_GeneModel s on (gm._Sequence_key = s._Sequence_key)
+         LEFT OUTER JOIN SEQ_GeneModel s on (gm._Sequence_key = s._Sequence_key)
     where not exists (select 1 
     from ensemblGeneAssoc ga 
     where ga.accid = gm.accid) 
     order by gm.accID
     ''', 'auto')
-print "done third query and writing out results"
+print("done third query and writing out results")
 
 for r in results:
     fp.write(r['ensemblGeneModelNoAssoc'] + TAB)
     raw = r['rawbiotype']
     if raw == None:
-	raw = ''
+        raw = ''
     fp.write(raw + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -47,12 +46,12 @@ results = db.sql('''select t._Term_key, s.synonym
     where t._Vocab_key = 91
     and t._Term_key = s._Object_key
     and s._MGIType_key = 13''', 'auto')
-print 'len synonyms %s' % len(results)
+print('len synonyms %s' % len(results))
 for r in results:
     termKey = r['_Term_key']
     synonym = r['synonym']
-    if not emapsSynDict.has_key(termKey):
-	emapsSynDict[termKey] = []
+    if termKey not in emapsSynDict:
+        emapsSynDict[termKey] = []
     emapsSynDict[termKey].append(synonym)
 
 # get EMAPS ID, TS and term name 
@@ -75,8 +74,8 @@ for r in results:
     emapsId = r['emapsID']
     stage = r['stage']
     synList = []
-    if emapsSynDict.has_key(termKey):
-	synList =  emapsSynDict[termKey]
+    if termKey in emapsSynDict:
+        synList =  emapsSynDict[termKey]
     synString = '|'.join(synList)
     fp.write('%s%s%s%s%s%s%s%s' % (emapsId, TAB, term, TAB, stage, TAB, synString, CRT))
 fp.write('%sTotal results: %s' % (CRT, numResults))

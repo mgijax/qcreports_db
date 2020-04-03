@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -59,34 +58,34 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHea
 # all official mouse markers that have at least one Sequence ID
 
 db.sql('''
-	select m._Marker_key, m.symbol, m.name, m.chromosome, m.cmOffset, 
-		upper(substring(s.status, 1, 1)) as markerStatus, 
-		t.name as markerType
-	into temporary table markers 
-	from MRK_Marker m, MRK_Status s, MRK_Types t 
-	where m._Organism_key = 1 
-	and m._Marker_Status_key = 1
-	and m._Marker_Status_key = s._Marker_Status_key 
-	and m._Marker_Type_key = t._Marker_Type_key 
-	and exists (select 1 from ACC_Accession a where m._Marker_key = a._Object_key 
-		and a._MGIType_key = 2 
-		and a._LogicalDB_key in (9, 27) 
-		and a.prefixPart not in ('XP_', 'NP_'))
-	''', None)
+        select m._Marker_key, m.symbol, m.name, m.chromosome, m.cmOffset, 
+                upper(substring(s.status, 1, 1)) as markerStatus, 
+                t.name as markerType
+        into temporary table markers 
+        from MRK_Marker m, MRK_Status s, MRK_Types t 
+        where m._Organism_key = 1 
+        and m._Marker_Status_key = 1
+        and m._Marker_Status_key = s._Marker_Status_key 
+        and m._Marker_Type_key = t._Marker_Type_key 
+        and exists (select 1 from ACC_Accession a where m._Marker_key = a._Object_key 
+                and a._MGIType_key = 2 
+                and a._LogicalDB_key in (9, 27) 
+                and a.prefixPart not in ('XP_', 'NP_'))
+        ''', None)
 db.sql('create index idx1 on markers(_Marker_key)', None)
 db.sql('create index idx2 on markers(symbol)', None)
 
 # MGI ids
 
 results = db.sql('''
-	select distinct m._Marker_key, a.accID 
-      	from markers m, ACC_Accession a 
-      	where m._Marker_key = a._Object_key 
-      	and a._MGIType_key = 2 
-      	and a._LogicalDB_key = 1 
-      	and a.prefixPart = 'MGI:' 
-      	and a.preferred = 1
-	''', 'auto')
+        select distinct m._Marker_key, a.accID 
+        from markers m, ACC_Accession a 
+        where m._Marker_key = a._Object_key 
+        and a._MGIType_key = 2 
+        and a._LogicalDB_key = 1 
+        and a.prefixPart = 'MGI:' 
+        and a.preferred = 1
+        ''', 'auto')
 mgiID = {}
 for r in results:
     key = r['_Marker_key']
@@ -96,53 +95,53 @@ for r in results:
 # GenBank ids
 
 results = db.sql('''
-	select distinct m._Marker_key, a.accID 
-      	from markers m, ACC_Accession a 
-      	where m._Marker_key = a._Object_key 
-      	and a._MGIType_key = 2 
-      	and a._LogicalDB_key = 9
-	''', 'auto')
+        select distinct m._Marker_key, a.accID 
+        from markers m, ACC_Accession a 
+        where m._Marker_key = a._Object_key 
+        and a._MGIType_key = 2 
+        and a._LogicalDB_key = 9
+        ''', 'auto')
 gbID = {}
 for r in results:
     key = r['_Marker_key']
     value = r['accID']
-    if not gbID.has_key(key):
-	gbID[key] = []
+    if key not in gbID:
+        gbID[key] = []
     gbID[key].append(value)
 
 # UniGene ids
 
 results = db.sql('''
-	select distinct m._Marker_key, a.accID 
-      	from markers m, ACC_Accession a 
-      	where m._Marker_key = a._Object_key 
-      	and a._MGIType_key = 2 
-      	and a._LogicalDB_key = 23
-	''', 'auto')
+        select distinct m._Marker_key, a.accID 
+        from markers m, ACC_Accession a 
+        where m._Marker_key = a._Object_key 
+        and a._MGIType_key = 2 
+        and a._LogicalDB_key = 23
+        ''', 'auto')
 ugID = {}
 for r in results:
     key = r['_Marker_key']
     value = r['accID']
-    if not ugID.has_key(key):
-	ugID[key] = []
+    if key not in ugID:
+        ugID[key] = []
     ugID[key].append(value)
 
 # RefSeq ids
 
 results = db.sql('''
-	select distinct m._Marker_key, a.accID 
-      	from markers m, ACC_Accession a 
-      	where m._Marker_key = a._Object_key 
-      	and a._MGIType_key = 2 
-      	and a._LogicalDB_key = 27 
-      	and a.prefixPart not in ('XP_', 'NP_')
-	''', 'auto')
+        select distinct m._Marker_key, a.accID 
+        from markers m, ACC_Accession a 
+        where m._Marker_key = a._Object_key 
+        and a._MGIType_key = 2 
+        and a._LogicalDB_key = 27 
+        and a.prefixPart not in ('XP_', 'NP_')
+        ''', 'auto')
 rsID = {}
 for r in results:
     key = r['_Marker_key']
     value = r['accID']
-    if not rsID.has_key(key):
-	rsID[key] = []
+    if key not in rsID:
+        rsID[key] = []
     rsID[key].append(value)
 
 # process
@@ -150,33 +149,33 @@ for r in results:
 results = db.sql('select * from markers order by symbol', 'auto')
 
 for r in results:
-	key = r['_Marker_key']
+        key = r['_Marker_key']
 
-	if r['cmOffset'] == -1.0:
-		cmOffset = 'syntenic'
-	elif r['cmOffset'] == -999.0:
-		cmOffset = 'N/A'
-	else:
-		cmOffset = str(r['cmOffset'])
+        if r['cmOffset'] == -1.0:
+                cmOffset = 'syntenic'
+        elif r['cmOffset'] == -999.0:
+                cmOffset = 'N/A'
+        else:
+                cmOffset = str(r['cmOffset'])
 
-	fp.write(mgiID[key] + reportlib.TAB + \
-	       	 r['symbol'] + reportlib.TAB + \
-	       	 r['markerStatus'] + reportlib.TAB + \
-	         r['markerType'] + reportlib.TAB + \
-	         r['name'] + reportlib.TAB + \
-	         cmOffset + reportlib.TAB + \
-	         r['chromosome'] + reportlib.TAB)
+        fp.write(mgiID[key] + reportlib.TAB + \
+                 r['symbol'] + reportlib.TAB + \
+                 r['markerStatus'] + reportlib.TAB + \
+                 r['markerType'] + reportlib.TAB + \
+                 r['name'] + reportlib.TAB + \
+                 cmOffset + reportlib.TAB + \
+                 r['chromosome'] + reportlib.TAB)
 
-	if gbID.has_key(key):
-		fp.write(string.join(gbID[key], ' '))
-	fp.write(reportlib.TAB)
+        if key in gbID:
+                fp.write(' '.join(gbID[key]))
+        fp.write(reportlib.TAB)
 
-	if ugID.has_key(key):
-		fp.write(string.join(ugID[key], ' '))
-	fp.write(reportlib.TAB)
+        if key in ugID:
+                fp.write(' '.join(ugID[key]))
+        fp.write(reportlib.TAB)
 
-	if rsID.has_key(key):
-		fp.write(string.join(rsID[key], ' '))
-	fp.write(reportlib.CRT)
+        if key in rsID:
+                fp.write(' '.join(rsID[key]))
+        fp.write(reportlib.CRT)
 
 reportlib.finish_nonps(fp)

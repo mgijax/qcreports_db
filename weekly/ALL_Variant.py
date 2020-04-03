@@ -1,4 +1,3 @@
-#!/opt/python/bin/python
 
 '''
 #
@@ -120,9 +119,9 @@ for r in results:
     pubmedID = r['pubmedID']
 
     if variantKey not in variantPubMedDict:
-	variantPubMedDict[variantKey] = []
+        variantPubMedDict[variantKey] = []
     if pubmedID != None:
-	variantPubMedDict[variantKey].append(pubmedID)
+        variantPubMedDict[variantKey].append(pubmedID)
 
 # get the jnumbers for the curated variant references
 results = db.sql('''select a.accid as jnumID, r.*
@@ -148,10 +147,10 @@ results = db.sql('''select n._Object_key as _Variant_key, nc.note
     and v._SourceVariant_key is not null''', 'auto')
 for r in results:
     variantKey = r['_Variant_key']
-    note = string.strip(r['note'])
-    note = string.replace(note, '\n', ' ')
+    note = str.strip(r['note'])
+    note = str.replace(note, '\n', ' ')
     if variantKey not in variantNoteDict:
-	variantNoteDict[variantKey] = []
+        variantNoteDict[variantKey] = []
     variantNoteDict[variantKey].append(note)
 
 # variant type annotations (SO IDs)
@@ -170,7 +169,7 @@ for r in results:
     variantKey = r['_variant_key']
     soID = r['accid']
     if variantKey not in variantTypeDict:
-	variantTypeDict[variantKey] = []
+        variantTypeDict[variantKey] = []
     variantTypeDict[variantKey].append(soID)
 
 # variant effect annotations (SO IDs)
@@ -219,11 +218,11 @@ db.sql('''select distinct av._Variant_key, av.description, av._Allele_key
 db.sql('''create index idx3 on variants(_Variant_key)''', None)
 
 results = db.sql('''select distinct vs._variantsequence_key, a.accid as alleleID, 
-	aa.symbol as alleleSymbol, m.symbol as markerSymbol, m.chromosome, 
-	vs.startCoordinate, vs.endCoordinate, vs.referenceSequence, 
-	vs.variantSequence , vs.version, v.description as hgvs, v._Variant_key
+        aa.symbol as alleleSymbol, m.symbol as markerSymbol, m.chromosome, 
+        vs.startCoordinate, vs.endCoordinate, vs.referenceSequence, 
+        vs.variantSequence , vs.version, v.description as hgvs, v._Variant_key
     from variants v, ACC_Accession a, ALL_Allele aa, MRK_Marker m, 
-	ALL_Variant_Sequence vs
+        ALL_Variant_Sequence vs
     where v._Allele_key = a._Object_key
     and a._MGIType_key = 11
     and a.preferred = 1
@@ -250,70 +249,70 @@ for r in results:
     markerSymbol = r['markerSymbol']
     start =  r['startCoordinate']
     if start == None:
-	start = ''
+        start = ''
     else:
-	start = int(start)
+        start = int(start)
 
     end = r['endCoordinate']
     if end == None:
-	end = ''
+        end = ''
     else:
-	end = int(end)
+        end = int(end)
 
     refSeq = r['referenceSequence']
     if refSeq == None:
-	refSeq = ''
+        refSeq = ''
     else:
-	refSeq = string.strip(refSeq)
+        refSeq = str.strip(refSeq)
 
     varSeq =  r['variantSequence']
     if varSeq == None:
-	varSeq = ''
+        varSeq = ''
     else:
-	varSeq = string.strip(varSeq)
+        varSeq = str.strip(varSeq)
 
     hgvs = r['hgvs']
     if hgvs == None:
-	hgvs = ''
+        hgvs = ''
     else:
-	hgvs = string.strip(hgvs)
+        hgvs = str.strip(hgvs)
     version = r['version']
     if version == None:
-	version = ''
+        version = ''
     else:
-	version = string.strip(version)
+        version = str.strip(version)
 
     variantKey = r['_Variant_key']
 
     pubMedIDList = []
     if variantKey in variantPubMedDict:
-	pubMedIDList = variantPubMedDict[variantKey]
-    pubMedString = string.join(pubMedIDList, ', ')
+        pubMedIDList = variantPubMedDict[variantKey]
+    pubMedString = ', '.join(pubMedIDList)
 
     jnumIDList = []
     if variantKey in variantJNumDict:
         jnumIDList = variantJNumDict[variantKey]
-    jnumString = string.join(jnumIDList, ', ')
+    jnumString = ', '.join(jnumIDList)
 
     noteList = []
     if variantKey in variantNoteDict:
-	 noteList = variantNoteDict[variantKey]
-    noteString = string.join(noteList, '|||')
+         noteList = variantNoteDict[variantKey]
+    noteString = '|||'.join(noteList)
 
     typeList = []
     if variantKey in variantTypeDict:
-	typeList =  variantTypeDict[variantKey]
-    typeString = string.join(typeList, ', ')
+        typeList =  variantTypeDict[variantKey]
+    typeString = ', '.join(typeList)
 
     effectList = []
     if variantKey in variantEffectDict:
-	effectList = variantEffectDict[variantKey]
-    effectString = string.join(effectList, ', ')
+        effectList = variantEffectDict[variantKey]
+    effectString = ', '.join(effectList)
 
     chromosome = r['chromosome']
     contig = ''
     if chromosome in  contigByChrDict:
-	contig = contigByChrDict[chromosome]
+        contig = contigByChrDict[chromosome]
 
     fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (alleleID, TAB, alleleSymbol, TAB, markerSymbol, TAB, chromosome, TAB, start, TAB, end, TAB, refSeq, TAB, varSeq, TAB, hgvs, TAB, version, TAB, pubMedString, TAB, jnumString, TAB, noteString, CRT))
     currentDict = {}
@@ -321,9 +320,9 @@ for r in results:
     contigACC = "RefSeq:%s" % contig
     refList = []
     for id in pubMedIDList:
-    	currentRefDict = {}
-   	currentRefDict["publicationId"] = "PMID:%s" % id
-	refList.append(currentRefDict)
+        currentRefDict = {}
+        currentRefDict["publicationId"] = "PMID:%s" % id
+        refList.append(currentRefDict)
 
     currentDict["alleleId"] = "%s" % alleleID
     currentDict["assembly"] = "%s" % version
@@ -337,13 +336,13 @@ for r in results:
     currentDict["type"] = "%s" % typeString
     currentDict["references"] = refList
     try:
-	jsonString = json.dumps(currentDict)
-	jsonList.append(jsonString)
+        jsonString = json.dumps(currentDict)
+        jsonList.append(jsonString)
     except:
-	print 'not able to serialize currentDict'
+        print('not able to serialize currentDict')
 
 fp.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
-fpJson.write('[%s]' % string.join(jsonList, ', '))
+fpJson.write('[%s]' % ', '.join(jsonList))
 
 reportlib.finish_nonps(fp)    # non-postscript file
 reportlib.finish_nonps(fpJson)    # non-postscript file

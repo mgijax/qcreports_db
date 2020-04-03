@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -41,7 +40,7 @@
 import sys
 import os
 import string
-from sets import Set
+import Set
 import mgi_utils
 import reportlib
 import db
@@ -67,21 +66,21 @@ for r in results:
 results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart in (\'GO:\')', 'auto')
 for r in results:
     mgiLookup.append(r['accID'])
-bucketMGI = Set(mgiLookup)
+bucketMGI = set(mgiLookup)
 
 # read in all annotations that contains MGD or GO
 
 db.sql('''
-	select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, 
-	       t.abbreviation as evidenceCode
-	into temporary table annotations 
-	from VOC_Annot a, VOC_Evidence e, VOC_Term t 
-	where a._AnnotType_key = 1000 
-	and a._Annot_key = e._Annot_key 
-	and e.inferredFrom is not null 
-	and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
-	and e._EvidenceTerm_key = t._Term_key
-	''', None)
+        select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, 
+               t.abbreviation as evidenceCode
+        into temporary table annotations 
+        from VOC_Annot a, VOC_Evidence e, VOC_Term t 
+        where a._AnnotType_key = 1000 
+        and a._Annot_key = e._Annot_key 
+        and e.inferredFrom is not null 
+        and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
+        and e._EvidenceTerm_key = t._Term_key
+        ''', None)
 db.sql('create index annotations_idx1 on annotations(_Term_key)', None)
 db.sql('create index annotations_idx2 on annotations(_Object_key)', None)
 db.sql('create index annotations_idx3 on annotations(inferredFrom)', None)
@@ -102,24 +101,24 @@ for r in results:
     ids = ids.replace(',', '|')
     ids = ids.replace(', ', '|')
     ids = ids.replace(';', '|')
-    idList = string.split(ids, '|')
+    idList = str.split(ids, '|')
 
     for id in idList:
-	# save id as-is to check for lowercase/uppercase variations
-	realid = id
-	id.replace('"', '')
-	id = id.upper()
+        # save id as-is to check for lowercase/uppercase variations
+        realid = id
+        id.replace('"', '')
+        id = id.upper()
 
-	if string.find(id, 'MGI:') >= 0 or string.find(id, 'GO:') >= 0:
-	   if realid not in inferredLookup:
-	      inferredLookup.append(realid)
-	      keysLookup.append(key)
+        if str.find(id, 'MGI:') >= 0 or str.find(id, 'GO:') >= 0:
+           if realid not in inferredLookup:
+              inferredLookup.append(realid)
+              keysLookup.append(key)
 
 #
 # bucket of all inferred-from ids
 #
 
-bucketInferred = Set(inferredLookup)
+bucketInferred = set(inferredLookup)
 
 #
 # compare inferred-from ids to MGI ids
@@ -133,14 +132,14 @@ for t in theDiffs:
    toSelect = '%' + t + '%'
 
    results = db.sql('''
-	select a.accID, m.symbol, e.evidenceCode, e._AnnotEvidence_key
-	from annotations e, ACC_Accession a, MRK_Marker m 
-	where e._Term_key = a._Object_key 
-	and a._MGIType_key = 13 
-	and a.preferred = 1 
-	and e._Object_key = m._Marker_key 
-	and e.inferredFrom like '%s'
-	''' % (toSelect), 'auto')
+        select a.accID, m.symbol, e.evidenceCode, e._AnnotEvidence_key
+        from annotations e, ACC_Accession a, MRK_Marker m 
+        where e._Term_key = a._Object_key 
+        and a._MGIType_key = 13 
+        and a.preferred = 1 
+        and e._Object_key = m._Marker_key 
+        and e.inferredFrom like '%s'
+        ''' % (toSelect), 'auto')
 
    for r in results:
       key = r['_AnnotEvidence_key']
@@ -156,17 +155,17 @@ for t in theDiffs:
 #
 
 results = db.sql('''
-	select distinct aa.accID, m.symbol, t.term, e.inferredFrom
-	from VOC_Annot a, VOC_Evidence e, VOC_Term t, ACC_Accession aa, MRK_Marker m
-	where a._AnnotType_key = 1000 
-	and a._Annot_key = e._Annot_key 
-	and e.inferredFrom like '%;%'
-	and e._EvidenceTerm_key = t._Term_key
-	and t._Term_key = aa._Object_key 
-	and aa._MGIType_key = 13 
-	and aa.preferred = 1 
-	and a._Object_key = m._Marker_key 
-	''', 'auto')
+        select distinct aa.accID, m.symbol, t.term, e.inferredFrom
+        from VOC_Annot a, VOC_Evidence e, VOC_Term t, ACC_Accession aa, MRK_Marker m
+        where a._AnnotType_key = 1000 
+        and a._Annot_key = e._Annot_key 
+        and e.inferredFrom like '%;%'
+        and e._EvidenceTerm_key = t._Term_key
+        and t._Term_key = aa._Object_key 
+        and aa._MGIType_key = 13 
+        and aa.preferred = 1 
+        and a._Object_key = m._Marker_key 
+        ''', 'auto')
 
 for r in results:
     fp.write(r['inferredFrom'] + reportlib.TAB + \
@@ -175,4 +174,3 @@ for r in results:
 
 fp.write('\n(%d rows affected)\n' % (rows + len(results)))
 reportlib.finish_nonps(fp)
-

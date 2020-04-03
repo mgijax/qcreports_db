@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -60,7 +59,7 @@ db.sql('''select *
 
 # resolve keys to IDs
 results = db.sql('''select a1.accid as mgiID, a2.accid as jNum, 
-	a3.accid as termID
+        a3.accid as termID
     from nomp n, ACC_Accession a1, ACC_Accession a2, ACC_Accession a3
     where n._Genotype_key = a1._Object_key
     and a1._MGIType_key = 12 /* GXD_Genotype */

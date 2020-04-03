@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -85,21 +84,21 @@ fp = reportlib.init(sys.argv[0], 'Phenotype Annotations Requiring Images', outpu
 count = 0
 fp.write(TAB + 'Journals Checked:' + CRT + 2*TAB)
 for j in journals:
-    fp.write(string.ljust(j, 25) + TAB)
+    fp.write(str.ljust(j, 25) + TAB)
     count = count + 1
     if count > 2:
       fp.write(CRT + 2*TAB)
       count = 0
 fp.write(2*CRT)
 fp.write('Excludes References with AP:NoImages Tag\n\n')
-fp.write(string.ljust('J#', 12))
-fp.write(string.ljust('PubMed', 12))
-fp.write(string.ljust('MGI ID', 20))
-fp.write(string.ljust('short_citation', 75) + CRT)
-fp.write(string.ljust('--', 12))
-fp.write(string.ljust('------', 12))
-fp.write(string.ljust('------', 20))
-fp.write(string.ljust('--------------', 75) + CRT)
+fp.write(str.ljust('J#', 12))
+fp.write(str.ljust('PubMed', 12))
+fp.write(str.ljust('MGI ID', 20))
+fp.write(str.ljust('short_citation', 75) + CRT)
+fp.write(str.ljust('--', 12))
+fp.write(str.ljust('------', 12))
+fp.write(str.ljust('------', 20))
+fp.write(str.ljust('--------------', 75) + CRT)
 
 #
 # select references that:
@@ -118,16 +117,16 @@ db.sql('''
       into temporary table exists
       from VOC_Annot a, VOC_Evidence e, BIB_Refs b, GXD_AlleleGenotype g
       where a._AnnotType_key = 1002
-	    and a._Annot_key = e._Annot_key
+            and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-	    and b.journal in ('%s') 
-	    and b.year > 2008
-	    and a._Object_key = g._Genotype_key
-	    and exists (select 1 from IMG_ImagePane_Assoc_View v
-	    where v._MGIType_key = 11
-	    and v._ImageClass_key in (6481782)
-	    and g._Allele_key = v._Object_key)
-	''' % (string.join(journals, '\',\'')), None)
+            and b.journal in ('%s') 
+            and b.year > 2008
+            and a._Object_key = g._Genotype_key
+            and exists (select 1 from IMG_ImagePane_Assoc_View v
+            where v._MGIType_key = 11
+            and v._ImageClass_key in (6481782)
+            and g._Allele_key = v._Object_key)
+        ''' % (','.join(journals)), None)
 
 db.sql('create index exists_idx1 on exists(_Refs_key)', None)
 
@@ -145,37 +144,37 @@ db.sql('''
       into temporary table refs 
       from VOC_Annot a, VOC_Evidence e, BIB_Refs b, GXD_AlleleGenotype g
       where a._AnnotType_key = 1002
-	    and a._Annot_key = e._Annot_key
+            and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-	    and b.journal in ('%s') 
-	    and b.year > 2008
-	    and a._Object_key = g._Genotype_key
-	    and not exists (select 1 from exists r where b._Refs_key = r._Refs_key)
-	    and not exists (select 1 from IMG_ImagePane_Assoc_View v
-	    where v._MGIType_key = 11
-	    and v._ImageClass_key in (6481782)
-	    and g._Allele_key = v._Object_key)
-	''' % (string.join(journals, '\',\'')), None)
+            and b.journal in ('%s') 
+            and b.year > 2008
+            and a._Object_key = g._Genotype_key
+            and not exists (select 1 from exists r where b._Refs_key = r._Refs_key)
+            and not exists (select 1 from IMG_ImagePane_Assoc_View v
+            where v._MGIType_key = 11
+            and v._ImageClass_key in (6481782)
+            and g._Allele_key = v._Object_key)
+        ''' % (','.join(journals)), None)
 
 db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
 results = db.sql('''
-	select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID, b.mgiID
-	from refs r, BIB_Citation_Cache b
-	where r._Refs_key = b._Refs_key
+        select r._Refs_key, b.jnumID, b.short_citation, b.pubmedID, b.mgiID
+        from refs r, BIB_Citation_Cache b
+        where r._Refs_key = b._Refs_key
               and b.pubmedID is not null
-	and not exists (select 1
-	from BIB_Workflow_Tag t
-	where r._Refs_key = t._Refs_key
-	and t._Tag_key = 33436864)
+        and not exists (select 1
+        from BIB_Workflow_Tag t
+        where r._Refs_key = t._Refs_key
+        and t._Tag_key = 33436864)
         order by b.jnumID
-	''', 'auto')
+        ''', 'auto')
 
 for r in results:
-    fp.write(string.ljust(r['jnumID'], 12))
-    fp.write(string.ljust(r['pubmedID'], 12))
-    fp.write(string.ljust(r['mgiID'], 20))
-    fp.write(string.ljust(r['short_citation'], 75))
+    fp.write(str.ljust(r['jnumID'], 12))
+    fp.write(str.ljust(r['pubmedID'], 12))
+    fp.write(str.ljust(r['mgiID'], 20))
+    fp.write(str.ljust(r['short_citation'], 75))
     fp.write(CRT)
 
 fp.write(CRT + 'Total J numbers: ' + str(len(results)) + CRT)

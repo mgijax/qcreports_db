@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -61,7 +60,7 @@ db.sql('''create index idx1 on variantSeq(_variantSequence_key)''', None)
 #######
 # get marker coordinates for the alleles' marker
 results = db.sql('''select  lc.startCoordinate as markerStart, 
-	lc.endCoordinate as markerEnd, t.*
+        lc.endCoordinate as markerEnd, t.*
     from variantSeq t, MRK_Location_Cache lc
     where t._Marker_key = lc._Marker_key
     and t._sequence_type_key = 316347 --dna
@@ -75,14 +74,14 @@ for r in results:
     mrkStart = r['markerStart']
     mrkEnd = r['markerEnd']
     if mrkStart == None or mrkEnd == None:
-	continue
+        continue
     else:
-	varStart = int(varStart)
-	varEnd = int(varEnd)
-	mrkStart = int(mrkStart)
-	mrkEnd = int(mrkEnd)
+        varStart = int(varStart)
+        varEnd = int(varEnd)
+        mrkStart = int(mrkStart)
+        mrkEnd = int(mrkEnd)
     if varStart < mrkStart or varStart > mrkEnd or varEnd < varStart or varEnd > mrkEnd:
-	genomicRpt.append('%s%s%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, mrkStart, TAB, mrkEnd))
+        genomicRpt.append('%s%s%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, mrkStart, TAB, mrkEnd))
 
 
 #######
@@ -100,7 +99,7 @@ db.sql('''select a.accid as transcriptID, t.*
 db.sql('''create index  idx2 on vTranscripts(transcriptID)''', None)
 
 results = db.sql('''select distinct v.transcriptID, v.startCoordinate, 
- 	v.alleleID, v.symbol, v.endCoordinate, s.length
+        v.alleleID, v.symbol, v.endCoordinate, s.length
     from vTranscripts v, acc_accession a, seq_marker_cache smc, seq_sequence s
     where v.transcriptID = a.accid
     and a._MGItype_key = 19
@@ -118,7 +117,7 @@ for r in results:
     varEnd = int(r['endCoordinate'])
     seqLength = int(r['length'])
     if (varEnd - varStart + 1) > seqLength:
-	transcriptRpt.append('%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, seqLength))
+        transcriptRpt.append('%s%s%s%s%s%s%s%s%s' % (r['alleleID'], TAB, r['symbol'], TAB, varStart, TAB, varEnd, TAB, seqLength))
 
 #######
 #  PROTEIN
@@ -158,21 +157,21 @@ fp1 = reportlib.init(sys.argv[0], fileExt = '.genomic', outputdir = os.environ['
 fp1.write('Variants with curated coordinates outside the variants gene%s%s' %  (CRT, CRT))
 fp1.write('Allele ID%s Symbol%sVariant Start%s Variant End%sMarker Start%sMarker End%s' % (TAB, TAB, TAB, TAB, TAB, CRT))
 length = len(genomicRpt)
-fp1.write(string.join(genomicRpt, CRT))
+fp1.write(CRT.join(genomicRpt))
 fp1.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 fp2 =  reportlib.init(sys.argv[0], fileExt = '.transcript', outputdir = os.environ['QCOUTPUTDIR'])
 fp2.write('Variants with curated coordinates inconsistent with the length of the transcript sequence%s%s' % (CRT, CRT))
 fp2.write('Allele ID%s Symbol%sVariant Start%s Variant End%sSequence Length%s' % (TAB, TAB, TAB, TAB, CRT))
 length = len(transcriptRpt)
-fp2.write(string.join(transcriptRpt, CRT))
+fp2.write(CRT.join(transcriptRpt))
 fp2.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 fp3 = reportlib.init(sys.argv[0], fileExt = '.protein', outputdir = os.environ['QCOUTPUTDIR'])
 fp3.write('Variants with curated coordinates inconsistent with the length of the protein sequence%s%s'% (CRT, CRT))
 fp3.write('Allele ID%s Symbol%sVariant Start%s Variant End%sSequence Length%s' % (TAB, TAB, TAB, TAB, CRT))
 length = len(proteinRpt)
-fp3.write(string.join(proteinRpt, CRT))
+fp3.write(CRT.join(proteinRpt))
 fp3.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 
 reportlib.finish_nonps(fp1)	# non-postscript file

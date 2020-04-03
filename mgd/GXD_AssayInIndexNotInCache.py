@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -116,9 +115,9 @@ select jnumID, term as AssayType, symbol
 from validIndexItems gi
 where gi._IndexAssay_key in (74718, 74720) and gi._StageID_key != 74769 
 and exists (select 1 from tmp_gxd_expression ge 
-	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
+        where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
 and not exists (select 1 from tmp_gxd_expression ga 
-	where gi._Refs_key = ga._Refs_key 
+        where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 1)
 
 union
@@ -126,9 +125,9 @@ select distinct jnumID, term as AssayType, symbol
 from validIndexItems gi
 where gi._IndexAssay_key = 74722 and gi._StageID_key != 74769
 and exists (select 1 from tmp_gxd_expression ge 
-	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
+        where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
 and not exists (select 1 from tmp_gxd_expression ga 
-	where gi._Refs_key = ga._Refs_key 
+        where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 2)
 
 union
@@ -136,9 +135,9 @@ select distinct jnumID, term as AssayType, symbol
 from validIndexItems gi
 where gi._IndexAssay_key = 74724 and gi._StageID_key != 74769 
 and exists (select 1 from tmp_gxd_expression ge 
-	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
+        where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
 and not exists (select 1 from tmp_gxd_expression ga 
-	where gi._Refs_key = ga._Refs_key 
+        where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 5)
 
 union
@@ -146,9 +145,9 @@ select distinct jnumID, term as AssayType, symbol
 from validIndexItems gi
 where gi._IndexAssay_key in (74717, 74719) and gi._StageID_key != 74769 
 and exists (select 1 from tmp_gxd_expression ge 
-	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
+        where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
 and not exists (select 1 from tmp_gxd_expression ga 
-	where gi._Refs_key = ga._Refs_key 
+        where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 6)
 
 union
@@ -156,9 +155,9 @@ select distinct jnumID, term as AssayType, symbol
 from validIndexItems gi
 where gi._IndexAssay_key = 74723 and gi._StageID_key != 74769  
 and exists (select 1 from tmp_gxd_expression ge 
-	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
+        where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
 and not exists (select 1 from tmp_gxd_expression ga 
-	where gi._Refs_key = ga._Refs_key 
+        where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 8)
 
 union
@@ -166,19 +165,18 @@ select distinct jnumID, term as AssayType, symbol
 from validIndexItems gi
 where gi._IndexAssay_key = 74721 and gi._StageID_key != 74769  
 and exists (select 1 from tmp_gxd_expression ge 
-	where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
+        where gi._Refs_key = ge._Refs_key and gi._Marker_key = ge._Marker_key)
 and not exists (select 1 from tmp_gxd_expression ga 
-	where gi._Refs_key = ga._Refs_key 
+        where gi._Refs_key = ga._Refs_key 
 and gi._Marker_key = ga._Marker_key and ga._AssayType_key = 9)
 )
 
 order by jnumID''', 'auto')
 
 for item in results:
-	fp.write(string.ljust(item['jnumID'], 30) + TAB)
-	fp.write(string.ljust(item['AssayType'], 30) + TAB)
-	fp.write(string.ljust(item['symbol'], 30) + CRT)
+        fp.write(str.ljust(item['jnumID'], 30) + TAB)
+        fp.write(str.ljust(item['AssayType'], 30) + TAB)
+        fp.write(str.ljust(item['symbol'], 30) + CRT)
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fp)
-

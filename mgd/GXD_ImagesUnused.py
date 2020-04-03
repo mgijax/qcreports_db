@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -165,12 +164,11 @@ for r in results:
     fp.write(r['jnumID'] + TAB)
     fp.write(r['figureLabel'] + TAB)
     if (r['paneLabel'] == None):
-    	fp.write('None' + TAB)
+        fp.write('None' + TAB)
     else:
-    	fp.write(r['paneLabel'] + TAB)
+        fp.write(r['paneLabel'] + TAB)
     fp.write(r['cdate'] + CRT)
 
 fp.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
-

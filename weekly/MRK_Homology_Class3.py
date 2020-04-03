@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -48,23 +47,23 @@ fp.write('HomoloGeneID%sMouse gene count%s' % (TAB, CRT))
 # cluster type 'homology'
 #
 results = db.sql('''select mc.clusterID, mcm._Marker_key, m._Organism_key
-	    from MRK_Cluster mc, MRK_ClusterMember mcm, MRK_Marker m
-	    where mc._ClusterType_key = 9272150
-	    and mc._ClusterSource_key = 9272151
-	    and mc._Cluster_key = mcm._Cluster_key
-	    and mcm._Marker_key = m._Marker_key
-	    order by mc._Cluster_key''', 'auto')
+            from MRK_Cluster mc, MRK_ClusterMember mcm, MRK_Marker m
+            where mc._ClusterType_key = 9272150
+            and mc._ClusterSource_key = 9272151
+            and mc._Cluster_key = mcm._Cluster_key
+            and mcm._Marker_key = m._Marker_key
+            order by mc._Cluster_key''', 'auto')
 
 clusterDict = {}
 for r in results:
     homologeneID = int(r['clusterID'])
     orgKey = r['_Organism_key']
-    if not clusterDict.has_key(homologeneID):
-	clusterDict[homologeneID] = {'mouse':0, 'human':0, 'rat':0, 'cattle':0, 'chimp':0, 'dog':0}
+    if homologeneID not in clusterDict:
+        clusterDict[homologeneID] = {'mouse':0, 'human':0, 'rat':0, 'cattle':0, 'chimp':0, 'dog':0}
     if orgKey == MOUSE_KEY:
-	clusterDict[homologeneID]['mouse'] += 1
+        clusterDict[homologeneID]['mouse'] += 1
     elif orgKey == HUMAN_KEY:
-	clusterDict[homologeneID]['human'] += 1
+        clusterDict[homologeneID]['human'] += 1
     elif orgKey == RAT_KEY:
         clusterDict[homologeneID]['rat'] += 1
     elif orgKey == CATTLE_KEY:
@@ -77,8 +76,7 @@ for r in results:
 idList = sorted(clusterDict.keys() )
 for id in idList:
     if clusterDict[id]['mouse'] > 0:
-	if clusterDict[id]['human'] == 0 and clusterDict[id]['rat'] == 0 and clusterDict[id]['cattle'] == 0 and clusterDict[id]['chimp'] == 0 and clusterDict[id]['dog'] == 0:
-	    fp.write('%s%s%s%s' % (id, TAB, clusterDict[id]['mouse'], CRT) )  
+        if clusterDict[id]['human'] == 0 and clusterDict[id]['rat'] == 0 and clusterDict[id]['cattle'] == 0 and clusterDict[id]['chimp'] == 0 and clusterDict[id]['dog'] == 0:
+            fp.write('%s%s%s%s' % (id, TAB, clusterDict[id]['mouse'], CRT) )  
 
 reportlib.finish_nonps(fp)
-

@@ -1,4 +1,3 @@
-#!/opt/python/bin/python
 # requires Python 2.7 for BioPython
 
 '''
@@ -108,9 +107,9 @@ for r in resultsD:
     genRef =  r['referenceSequence']
     genVar = r['variantSequence']
     if genRef == None and genVar == None:
- 	continue
+        continue
     if dictKey not in resultsDict:
-	resultsDict[dictKey] = {}
+        resultsDict[dictKey] = {}
     resultsDict[dictKey]['genRef'] = genRef
     resultsDict[dictKey]['genVar'] = genVar
 
@@ -133,43 +132,43 @@ for r in resultsR:
 
 # now get all the alleles on '-' strand and process
 results = db.sql('''select _Allele_key, _Variant_key
-	from onMinus''', 'auto')
+        from onMinus''', 'auto')
 
 for r in results:
     alleleKey = r['_Allele_key']
     key = '%s|%s' % (alleleKey, r['_Variant_key'])
     if key in resultsDict:
-	seqDict = resultsDict[key]
-	# check that transRef is reverse complement genRef
-	transRef = ''
-	genRef = ''
-	transVar = ''
-	genVar = ''
-	writeError = 0
-	if 'transRef' in seqDict and 'genRef' in seqDict:
-	    transRef = seqDict['transRef']
-	    genRef = seqDict['genRef']
-	    genRefCompl = str(Seq(genRef).reverse_complement())
-	    if transRef != genRefCompl:
-		writeError = 1
-	# check that transVar is reverse complement genVar
-	if 'transVar' in seqDict and 'genVar' in seqDict:
-	    transVar = seqDict['transVar']
-	    genVar = seqDict['genVar']
-	    genVarCompl = str(Seq(genVar).reverse_complement())
-	    if transVar != genVarCompl:
-		writeError = 1
-	if writeError:
-	    alleleInfo = alleleInfoDict[alleleKey]
-	    id, symbol = string.split(alleleInfo, '|')
-	    errorList.append('%s%s%s%s%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transRef, TAB, genRef, TAB, transVar, TAB, genVar))    
+        seqDict = resultsDict[key]
+        # check that transRef is reverse complement genRef
+        transRef = ''
+        genRef = ''
+        transVar = ''
+        genVar = ''
+        writeError = 0
+        if 'transRef' in seqDict and 'genRef' in seqDict:
+            transRef = seqDict['transRef']
+            genRef = seqDict['genRef']
+            genRefCompl = str(Seq(genRef).reverse_complement())
+            if transRef != genRefCompl:
+                writeError = 1
+        # check that transVar is reverse complement genVar
+        if 'transVar' in seqDict and 'genVar' in seqDict:
+            transVar = seqDict['transVar']
+            genVar = seqDict['genVar']
+            genVarCompl = str(Seq(genVar).reverse_complement())
+            if transVar != genVarCompl:
+                writeError = 1
+        if writeError:
+            alleleInfo = alleleInfoDict[alleleKey]
+            id, symbol = str.split(alleleInfo, '|')
+            errorList.append('%s%s%s%s%s%s%s%s%s%s%s' % (id, TAB, symbol, TAB, transRef, TAB, genRef, TAB, transVar, TAB, genVar))    
 
 
 # write to the reports
 fp  = reportlib.init(sys.argv[0],  outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('The reference or variant transcript sequence is NOT the reverse complement of the reference or variant genomic sequence%s' % CRT)
 fp.write('Allele ID%s Symbol%sReference Transcript%sReference Genomic%sVariant Transcript%sVariant Genomic%s' % (TAB, TAB, TAB, TAB, TAB, CRT))
-fp.write(string.join(errorList, CRT))
+fp.write(CRT.join(errorList))
 length = len(errorList)
 fp.write('%sTotal: %s%s%s' % (CRT, length, CRT, CRT))
 

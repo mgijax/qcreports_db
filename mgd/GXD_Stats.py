@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -92,7 +91,7 @@ startYear = 1998
 
 # For GXD HT Experiments
 gxdHtStartYear = 2016
-endYear = string.atoi(mgi_utils.date('%Y'))
+endYear = int(mgi_utils.date('%Y'))
 
 # electronic references
 elect_ref1 = 'J:46439 Freeman, J:80502 Reymond, J:80501 Gitton, J:85124 Sousa-Nunes,'
@@ -124,13 +123,13 @@ def createDict(results, keyField, valueField):
     for r in results:
         key = r[keyField]
         value = r[valueField]
-        if not d.has_key(key):
+        if key not in d:
             d[key] = value
     return d
 
 def getAssayQuery(table, value, op, year):
     cmd = '''
-	insert into %s 
+        insert into %s 
         select count(distinct(gi._Index_key)), %d 
         from GXD_Index gi, GXD_Index_Stages gis, VOC_Term vt 
         where gi._Index_key = gis._Index_key 
@@ -138,7 +137,7 @@ def getAssayQuery(table, value, op, year):
         and vt._Vocab_key = 12 
         and vt.term %s '%s'
         and date_part('year', gi.creation_date) <= %d 
-	''' % (table, year, op, value, year)
+        ''' % (table, year, op, value, year)
     return cmd
 
 def cdnas():
@@ -154,50 +153,50 @@ def cdnas():
 
     db.sql('''select p._Probe_key 
         into temporary table cdnas
-	from mussource s, PRB_Probe p 
-	where s._Source_key = p._Source_key 
-	and p._SegmentType_key = 63468 
-	''', None)
+        from mussource s, PRB_Probe p 
+        where s._Source_key = p._Source_key 
+        and p._SegmentType_key = 63468 
+        ''', None)
     db.sql('create index cdnas_idx on cdnas(_Probe_key)', None)
 
     results = db.sql('select count(_Probe_key) as ccount from cdnas', 'auto')
     for r in results:
-	fp.write('mouse cDNAs             : ' + str(r['ccount']) + CRT)
+        fp.write('mouse cDNAs             : ' + str(r['ccount']) + CRT)
 
     #
     # number of markers curated to mouse cDNAs
     #
 
     results = db.sql('''
-	select count(distinct(pm._Marker_key)) as mcount 
-	from cdnas c, PRB_Marker pm 
-	where c._Probe_key = pm._Probe_key
-	''', 'auto')
+        select count(distinct(pm._Marker_key)) as mcount 
+        from cdnas c, PRB_Marker pm 
+        where c._Probe_key = pm._Probe_key
+        ''', 'auto')
     for r in results:
-	fp.write('Markers curated to cDNAs:  ' + str(r['mcount']) + CRT)
+        fp.write('Markers curated to cDNAs:  ' + str(r['mcount']) + CRT)
 
 def experiments():
     # 
     # Experiments
     #
     fp.write('%sHT Experiments:%s%s' % (CRT, CRT, CRT))
-    fp.write(string.ljust('Year', 10))
-    fp.write(string.ljust('Cumulative Count', 10) + CRT)
-    fp.write(string.ljust('-----', 10))
-    fp.write(string.ljust('----------------', 10) + CRT)
+    fp.write(str.ljust('Year', 10))
+    fp.write(str.ljust('Cumulative Count', 10) + CRT)
+    fp.write(str.ljust('-----', 10))
+    fp.write(str.ljust('----------------', 10) + CRT)
 
     totalCount = 0
     for year in range(gxdHtStartYear, endYear + 1):
-	results = db.sql('''
-		select count(*) as expCt
-		from GXD_HTExperiment
-		where _CurationState_key = 20475421
-		and date_part('year', initial_curated_date) = %d
-		''' % (year), 'auto')
-	for r in results:
-	    totalCount += r['expCt']
-	    fp.write(string.ljust(str(year), 10))
-	    fp.write(string.ljust(str(totalCount), 10) + CRT)
+        results = db.sql('''
+                select count(*) as expCt
+                from GXD_HTExperiment
+                where _CurationState_key = 20475421
+                and date_part('year', initial_curated_date) = %d
+                ''' % (year), 'auto')
+        for r in results:
+            totalCount += r['expCt']
+            fp.write(str.ljust(str(year), 10))
+            fp.write(str.ljust(str(totalCount), 10) + CRT)
 
 def indexOnly():
 
@@ -317,23 +316,23 @@ def indexOnly():
     #
 
     fp.write(2*CRT + 'GXD Index Stats:' + 2*CRT)
-    fp.write(string.ljust('Year', 10))
-    fp.write(string.ljust('Index', 10))
-    fp.write(string.ljust('Refs', 10))
-    fp.write(string.ljust('Genes', 10) + CRT)
-    fp.write(string.ljust('-----', 10))
-    fp.write(string.ljust('-----', 10))
-    fp.write(string.ljust('-----', 10))
-    fp.write(string.ljust('-----', 10) + CRT)
+    fp.write(str.ljust('Year', 10))
+    fp.write(str.ljust('Index', 10))
+    fp.write(str.ljust('Refs', 10))
+    fp.write(str.ljust('Genes', 10) + CRT)
+    fp.write(str.ljust('-----', 10))
+    fp.write(str.ljust('-----', 10))
+    fp.write(str.ljust('-----', 10))
+    fp.write(str.ljust('-----', 10) + CRT)
 
-    keys = indx.keys()
+    keys = list(indx.keys())
     keys.sort()
     for key in keys:
         if key > 0:
-            fp.write(string.ljust(str(key), 10))
-            fp.write(string.ljust(str(indx[key]), 10))
-            fp.write(string.ljust(str(refs[key]), 10))
-            fp.write(string.ljust(str(gens[key]), 10) + CRT)
+            fp.write(str.ljust(str(key), 10))
+            fp.write(str.ljust(str(indx[key]), 10))
+            fp.write(str.ljust(str(refs[key]), 10))
+            fp.write(str.ljust(str(gens[key]), 10) + CRT)
     fp.write(CRT)
 
     #
@@ -342,28 +341,28 @@ def indexOnly():
     #  First the header...
     #
     fp.write('Number of Assays in GXD Index by Assay Type' + 2*CRT)
-    fp.write(string.ljust('As of 12/31', 15))
-    fp.write(string.ljust('cDNA', 10))
-    fp.write(string.ljust('Knock', 10))
-    fp.write(string.ljust('North', 10))
-    fp.write(string.ljust('Prime', 10))
-    fp.write(string.ljust('Immuno', 10))
-    fp.write(string.ljust('RNA', 10))
-    fp.write(string.ljust('RNAse', 10))
-    fp.write(string.ljust('RTPCR', 10))
-    fp.write(string.ljust('S1nuc', 10))
-    fp.write(string.ljust('West', 10) + CRT)
-    fp.write(string.ljust('-----------', 15))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10))
-    fp.write(string.ljust('------', 10) + CRT)
+    fp.write(str.ljust('As of 12/31', 15))
+    fp.write(str.ljust('cDNA', 10))
+    fp.write(str.ljust('Knock', 10))
+    fp.write(str.ljust('North', 10))
+    fp.write(str.ljust('Prime', 10))
+    fp.write(str.ljust('Immuno', 10))
+    fp.write(str.ljust('RNA', 10))
+    fp.write(str.ljust('RNAse', 10))
+    fp.write(str.ljust('RTPCR', 10))
+    fp.write(str.ljust('S1nuc', 10))
+    fp.write(str.ljust('West', 10) + CRT)
+    fp.write(str.ljust('-----------', 15))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10))
+    fp.write(str.ljust('------', 10) + CRT)
 
     #
     #  Cycle through the years in each of the assay dictionaries.
@@ -373,17 +372,17 @@ def indexOnly():
             #
             #  Add the year value column to the output.
             #
-	    fp.write(string.ljust(str(key), 15))
-            fp.write(string.ljust(str(cdna[key]), 10))
-            fp.write(string.ljust(str(knkin[key]), 10))
-            fp.write(string.ljust(str(nor[key]), 10))
-            fp.write(string.ljust(str(pri[key]), 10))
-            fp.write(string.ljust(str(prot[key]), 10))
-            fp.write(string.ljust(str(rna[key]), 10))
-            fp.write(string.ljust(str(rnase[key]), 10))
-            fp.write(string.ljust(str(rtpcr[key]), 10))
-            fp.write(string.ljust(str(s1nuc[key]), 10))
-            fp.write(string.ljust(str(west[key]), 10) + CRT)
+            fp.write(str.ljust(str(key), 15))
+            fp.write(str.ljust(str(cdna[key]), 10))
+            fp.write(str.ljust(str(knkin[key]), 10))
+            fp.write(str.ljust(str(nor[key]), 10))
+            fp.write(str.ljust(str(pri[key]), 10))
+            fp.write(str.ljust(str(prot[key]), 10))
+            fp.write(str.ljust(str(rna[key]), 10))
+            fp.write(str.ljust(str(rnase[key]), 10))
+            fp.write(str.ljust(str(rtpcr[key]), 10))
+            fp.write(str.ljust(str(s1nuc[key]), 10))
+            fp.write(str.ljust(str(west[key]), 10) + CRT)
 
 def fullCoded():
 
@@ -394,16 +393,16 @@ def fullCoded():
     fp.write(2*CRT + 'GXD Assay and Results:' + 2*CRT)
 
     db.sql('''
-	select _Assay_key, _Refs_key, _Marker_key, 'E'::text as source
-	into temporary table gxd 
-	from GXD_Expression where _Refs_key in %s
-	and _AssayType_key in (1,2,3,4,5,6,8,9)
-	''' % (electronic), None)
+        select _Assay_key, _Refs_key, _Marker_key, 'E'::text as source
+        into temporary table gxd 
+        from GXD_Expression where _Refs_key in %s
+        and _AssayType_key in (1,2,3,4,5,6,8,9)
+        ''' % (electronic), None)
     db.sql('''
-	insert into gxd select _Assay_key, _Refs_key, _Marker_key, 'L'::text as source
-	from GXD_Expression where _Refs_key not in %s
-	and _AssayType_key in (1,2,3,4,5,6,8,9)
-	''' % (electronic), None)
+        insert into gxd select _Assay_key, _Refs_key, _Marker_key, 'L'::text as source
+        from GXD_Expression where _Refs_key not in %s
+        and _AssayType_key in (1,2,3,4,5,6,8,9)
+        ''' % (electronic), None)
     db.sql('create index gxd_idx1 on gxd(_Assay_key)', None)
     db.sql('create index gxd_idx2 on gxd(_Refs_key)', None)
     db.sql('create index gxd_idx3 on gxd(_Marker_key)', None)
@@ -428,14 +427,14 @@ def fullCoded():
     fp.write('                             ' + elect_ref4 + CRT)
     fp.write('                             ' + elect_ref5 + 2*CRT)
 
-    fp.write(string.ljust('             ', 15))
-    fp.write(string.ljust('Electronic Submission', 25))
-    fp.write(string.ljust('Literature Submission', 25))
-    fp.write(string.ljust('Total', 10) + CRT)
-    fp.write(string.ljust('-------------', 15))
-    fp.write(string.ljust('---------------------', 25))
-    fp.write(string.ljust('---------------------', 25))
-    fp.write(string.ljust('-----', 10) + CRT)
+    fp.write(str.ljust('             ', 15))
+    fp.write(str.ljust('Electronic Submission', 25))
+    fp.write(str.ljust('Literature Submission', 25))
+    fp.write(str.ljust('Total', 10) + CRT)
+    fp.write(str.ljust('-------------', 15))
+    fp.write(str.ljust('---------------------', 25))
+    fp.write(str.ljust('---------------------', 25))
+    fp.write(str.ljust('-----', 10) + CRT)
 
     #
     # Assays 
@@ -449,10 +448,10 @@ def fullCoded():
     for r in results:
         lcount = r['acount']
 
-    fp.write(string.ljust('Assays', 15))
-    fp.write(string.ljust(str(ecount), 25))
-    fp.write(string.ljust(str(lcount), 25))
-    fp.write(string.ljust(str(ecount + lcount), 10) + CRT)
+    fp.write(str.ljust('Assays', 15))
+    fp.write(str.ljust(str(ecount), 25))
+    fp.write(str.ljust(str(lcount), 25))
+    fp.write(str.ljust(str(ecount + lcount), 10) + CRT)
 
     #
     # Results
@@ -466,19 +465,19 @@ def fullCoded():
     for r in results:
         lcount = r['acount']
 
-    fp.write(string.ljust('Assay Results', 15))
-    fp.write(string.ljust(str(ecount), 25))
-    fp.write(string.ljust(str(lcount), 25))
-    fp.write(string.ljust(str(ecount + lcount), 10) + CRT)
+    fp.write(str.ljust('Assay Results', 15))
+    fp.write(str.ljust(str(ecount), 25))
+    fp.write(str.ljust(str(lcount), 25))
+    fp.write(str.ljust(str(ecount + lcount), 10) + CRT)
 
     #
     # Genes
     #
 
     results = db.sql('''
-	select count(distinct _Marker_key) as genes
-    	from GXD_Expression where _AssayType_key in (1,2,3,4,5,6,8,9)
-	''', 'auto')
+        select count(distinct _Marker_key) as genes
+        from GXD_Expression where _AssayType_key in (1,2,3,4,5,6,8,9)
+        ''', 'auto')
     fp.write(2*CRT + 'Number of genes with GXD data:  ' + str(results[0]['genes']) + CRT)
 
 def mutantAlleles():
@@ -488,14 +487,14 @@ def mutantAlleles():
     #
 
     results = db.sql('''
-	select count(distinct a._Allele_key) as acount
-	from GXD_AlleleGenotype g, ALL_Allele a 
-	where g._Allele_key = a._Allele_key 
-	and a.isWildType != 1 
-	and exists (select 1 from GXD_Expression e 
-	where g._Genotype_key = e._Genotype_key and _AssayType_key in (1,2,3,4,5,6,8,9)) 
-	and a.symbol not like '%<+>%'
-	''', 'auto')
+        select count(distinct a._Allele_key) as acount
+        from GXD_AlleleGenotype g, ALL_Allele a 
+        where g._Allele_key = a._Allele_key 
+        and a.isWildType != 1 
+        and exists (select 1 from GXD_Expression e 
+        where g._Genotype_key = e._Genotype_key and _AssayType_key in (1,2,3,4,5,6,8,9)) 
+        and a.symbol not like '%<+>%'
+        ''', 'auto')
 
     for r in results:
         fp.write('Number of mutant alleles that have GXD data:  ' + str(r['acount']) + CRT)
@@ -514,12 +513,12 @@ def imageCounts():
     # 
 
     db.sql('''
-	(
-	select distinct a._Refs_key 
-	into temporary table images 
+        (
+        select distinct a._Refs_key 
+        into temporary table images 
         from GXD_Assay a, IMG_Image i, IMG_ImagePane p 
         where a._AssayType_key in (1,2,3,4,5,6,8,9) and 
-	    a._ImagePane_key = p._ImagePane_key and 
+            a._ImagePane_key = p._ImagePane_key and 
             p._Image_key = i._Image_key and 
             i.xDim is not NULL 
         union 
@@ -529,8 +528,8 @@ def imageCounts():
             a._Assay_key = g._Assay_key and 
             g._Specimen_key = r._Specimen_key and 
             r.xDim is not NULL
-	)
-	''', None)
+        )
+        ''', None)
 
     db.sql('create index images_idx1 on images(_Refs_key)', None)
 
@@ -539,52 +538,52 @@ def imageCounts():
         fp.write('Number of full coded papers with Images:  ' + str(r['acount']) + CRT)
 
     db.sql('''
-	(
-	select distinct ip._ImagePane_key 
-	into temporary table imagepanes1 
-	from IMG_ImagePane ip, IMG_Image i, GXD_Assay a 
-	where ip._Image_key = i._Image_key 
-	and i.xDim is not null 
-	and ip._ImagePane_key = a._ImagePane_key 
-	and a._AssayType_key in (1,2,3,4,5,6,8,9) 
-	union  
-	select distinct ip._ImagePane_key 
-	from IMG_ImagePane ip, IMG_Image i, GXD_InSituResultImage isri, GXD_InSituResult isr,  
-	     GXD_Specimen s, GXD_Assay a 
-	where ip._Image_key = i._Image_key 
-	and i.xDim is not null 
-	and ip._ImagePane_key = isri._ImagePane_key 
-	and isri._Result_key = isr._Result_key 
-	and isr._Specimen_key = s._Specimen_key 
-	and s._Assay_key = a._Assay_key 
-	and a._AssayType_key in (1,2,3,4,5,6,8,9) 
-	)
-	''', None)
+        (
+        select distinct ip._ImagePane_key 
+        into temporary table imagepanes1 
+        from IMG_ImagePane ip, IMG_Image i, GXD_Assay a 
+        where ip._Image_key = i._Image_key 
+        and i.xDim is not null 
+        and ip._ImagePane_key = a._ImagePane_key 
+        and a._AssayType_key in (1,2,3,4,5,6,8,9) 
+        union  
+        select distinct ip._ImagePane_key 
+        from IMG_ImagePane ip, IMG_Image i, GXD_InSituResultImage isri, GXD_InSituResult isr,  
+             GXD_Specimen s, GXD_Assay a 
+        where ip._Image_key = i._Image_key 
+        and i.xDim is not null 
+        and ip._ImagePane_key = isri._ImagePane_key 
+        and isri._Result_key = isr._Result_key 
+        and isr._Specimen_key = s._Specimen_key 
+        and s._Assay_key = a._Assay_key 
+        and a._AssayType_key in (1,2,3,4,5,6,8,9) 
+        )
+        ''', None)
 
     results = db.sql('select count(distinct _ImagePane_key) as acount from imagepanes1', 'auto')
     for r in results:
         fp.write('Number of Image Panes (jpg attached):  ' + str(r['acount']) + CRT)
 
     db.sql('''
-	select distinct ip._ImagePane_key 
-	into temporary table imagepanes2 
-	from IMG_ImagePane ip, IMG_Image i, GXD_Assay a 
-	where ip._Image_key = i._Image_key 
-	and i.xDim is null 
-	and ip._ImagePane_key = a._ImagePane_key 
-	and a._AssayType_key in (1,2,3,4,5,6,8,9) 
-	union  
-	select distinct ip._ImagePane_key 
-	from IMG_ImagePane ip, IMG_Image i, GXD_InSituResultImage isri, GXD_InSituResult isr,  
-	     GXD_Specimen s, GXD_Assay a 
-	where ip._Image_key = i._Image_key 
-	and i.xDim is null 
-	and ip._ImagePane_key = isri._ImagePane_key 
-	and isri._Result_key = isr._Result_key 
-	and isr._Specimen_key = s._Specimen_key 
-	and s._Assay_key = a._Assay_key 
-	and a._AssayType_key in (1,2,3,4,5,6,8,9) 
-	''', None)
+        select distinct ip._ImagePane_key 
+        into temporary table imagepanes2 
+        from IMG_ImagePane ip, IMG_Image i, GXD_Assay a 
+        where ip._Image_key = i._Image_key 
+        and i.xDim is null 
+        and ip._ImagePane_key = a._ImagePane_key 
+        and a._AssayType_key in (1,2,3,4,5,6,8,9) 
+        union  
+        select distinct ip._ImagePane_key 
+        from IMG_ImagePane ip, IMG_Image i, GXD_InSituResultImage isri, GXD_InSituResult isr,  
+             GXD_Specimen s, GXD_Assay a 
+        where ip._Image_key = i._Image_key 
+        and i.xDim is null 
+        and ip._ImagePane_key = isri._ImagePane_key 
+        and isri._Result_key = isr._Result_key 
+        and isr._Specimen_key = s._Specimen_key 
+        and s._Assay_key = a._Assay_key 
+        and a._AssayType_key in (1,2,3,4,5,6,8,9) 
+        ''', None)
 
     results = db.sql('select count(distinct _ImagePane_key) as acount from imagepanes2', 'auto')
     for r in results:
@@ -596,20 +595,20 @@ def assayTypeCounts():
     # Build a temp table to get the gene and assay counts.
     #
     db.sql('''
-	select _Assay_key, _AssayType_key, _Marker_key, 'L'::text as source
+        select _Assay_key, _AssayType_key, _Marker_key, 'L'::text as source
         into temporary table gxdcounts 
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key not in %s
         and _AssayType_key in (1,2,3,4,5,6,8,9)
-	''' % (electronic), None)
+        ''' % (electronic), None)
 
     db.sql('''
-	insert into gxdcounts 
+        insert into gxdcounts 
         select _Assay_key, _AssayType_key, _Marker_key, 'E'::text as source
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key in %s 
         and _AssayType_key in (1,2,3,4,5,6,8,9)
-	''' % (electronic), None)
+        ''' % (electronic), None)
 
     db.sql('create index gxdcounts_idx1 on gxdcounts(_Assay_key)', None)
     db.sql('create index gxdcounts_idx2 on gxdcounts(_AssayType_key)', None)
@@ -621,22 +620,22 @@ def assayTypeCounts():
     #
     cmd = []
     cmd.append('''
-	select _AssayType_key, count(distinct _Marker_key) as counter
+        select _AssayType_key, count(distinct _Marker_key) as counter
         from gxdcounts 
         group by _AssayType_key
-	''')
+        ''')
     cmd.append('''
-	select _AssayType_key, count(distinct _Assay_key) as counter
+        select _AssayType_key, count(distinct _Assay_key) as counter
         from gxdcounts 
         where source = 'L' 
         group by _AssayType_key
-	''')
+        ''')
     cmd.append('''
-	select _AssayType_key, count(distinct _Assay_key) as counter
+        select _AssayType_key, count(distinct _Assay_key) as counter
         from gxdcounts 
         where source = 'E' 
         group by _AssayType_key
-	''')
+        ''')
     results = db.sql(cmd,'auto')
 
     #
@@ -663,19 +662,19 @@ def assayTypeCounts():
     #
     cmd = []
     cmd.append('''
-	select _AssayType_key, count(_Assay_key) as counter
+        select _AssayType_key, count(_Assay_key) as counter
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key not in %s 
         and _AssayType_key in (1,2,3,4,5,6,8,9)
         group by _AssayType_key
-	''' % (electronic))
+        ''' % (electronic))
     cmd.append('''
-	select _AssayType_key, count(_Assay_key) as counter
+        select _AssayType_key, count(_Assay_key) as counter
         from GXD_Expression 
         where isForGXD = 1 and _Refs_key in %s 
         and _AssayType_key in (1,2,3,4,5,6,8,9)
         group by _AssayType_key
-	''' % (electronic))
+        ''' % (electronic))
     results = db.sql(cmd,'auto')
 
     #
@@ -696,43 +695,43 @@ def assayTypeCounts():
     # the counts for each assay.
     #
     results = db.sql('''
-	select _AssayType_key, assayType 
+        select _AssayType_key, assayType 
         from GXD_AssayType 
         where _AssayType_key > 0 
-	and _AssayType_key in (1,2,3,4,5,6,8,9) 
+        and _AssayType_key in (1,2,3,4,5,6,8,9) 
         order by assayType
-	''','auto')
+        ''','auto')
     
     #
     # Print a heading for this section of the report.
     #
     fp.write(2*CRT + 'Number of Genes, Assays and Results by Assay Type:' + 2*CRT)
 
-    fp.write(string.ljust(' ', 40))
-    fp.write(string.ljust('Assay', 10))
-    fp.write(string.ljust('Assay', 12))
-    fp.write(string.ljust('Assay', 12))
-    fp.write(string.ljust('Results', 10))
-    fp.write(string.ljust('Results', 12))
-    fp.write(string.ljust('Results', 12) + CRT)
+    fp.write(str.ljust(' ', 40))
+    fp.write(str.ljust('Assay', 10))
+    fp.write(str.ljust('Assay', 12))
+    fp.write(str.ljust('Assay', 12))
+    fp.write(str.ljust('Results', 10))
+    fp.write(str.ljust('Results', 12))
+    fp.write(str.ljust('Results', 12) + CRT)
 
-    fp.write(string.ljust('Assay Type', 30))
-    fp.write(string.ljust('Genes', 10))
-    fp.write(string.ljust('Total', 10))
-    fp.write(string.ljust('Literature', 12))
-    fp.write(string.ljust('Submitted', 12))
-    fp.write(string.ljust('Total', 10))
-    fp.write(string.ljust('Literature', 12))
-    fp.write(string.ljust('Submitted', 12) + CRT)
+    fp.write(str.ljust('Assay Type', 30))
+    fp.write(str.ljust('Genes', 10))
+    fp.write(str.ljust('Total', 10))
+    fp.write(str.ljust('Literature', 12))
+    fp.write(str.ljust('Submitted', 12))
+    fp.write(str.ljust('Total', 10))
+    fp.write(str.ljust('Literature', 12))
+    fp.write(str.ljust('Submitted', 12) + CRT)
 
-    fp.write(string.ljust('----------------------------', 30))
-    fp.write(string.ljust('--------', 10))
-    fp.write(string.ljust('--------', 10))
-    fp.write(string.ljust('----------', 12))
-    fp.write(string.ljust('----------', 12))
-    fp.write(string.ljust('--------', 10))
-    fp.write(string.ljust('----------', 12))
-    fp.write(string.ljust('----------', 12) + CRT)
+    fp.write(str.ljust('----------------------------', 30))
+    fp.write(str.ljust('--------', 10))
+    fp.write(str.ljust('--------', 10))
+    fp.write(str.ljust('----------', 12))
+    fp.write(str.ljust('----------', 12))
+    fp.write(str.ljust('--------', 10))
+    fp.write(str.ljust('----------', 12))
+    fp.write(str.ljust('----------', 12) + CRT)
 
     #
     # Loop through each assay type and print the counts for the report.
@@ -741,39 +740,39 @@ def assayTypeCounts():
         assayType = r['assayType']
         assayTypeKey = r['_AssayType_key']
 
-        if genes.has_key(assayTypeKey):
+        if assayTypeKey in genes:
             geneCount = genes[assayTypeKey]
         else:
             geneCount = 0
 
-        if assayLiter.has_key(assayTypeKey):
+        if assayTypeKey in assayLiter:
             assayLiterCount = assayLiter[assayTypeKey]
         else:
             assayLiterCount = 0
 
-        if assayElect.has_key(assayTypeKey):
+        if assayTypeKey in assayElect:
             assayElectCount = assayElect[assayTypeKey]
         else:
             assayElectCount = 0
 
-        if resLiter.has_key(assayTypeKey):
+        if assayTypeKey in resLiter:
             resLiterCount = resLiter[assayTypeKey]
         else:
             resLiterCount = 0
 
-        if resElect.has_key(assayTypeKey):
+        if assayTypeKey in resElect:
             resElectCount = resElect[assayTypeKey]
         else:
             resElectCount = 0
 
-        fp.write(string.ljust(assayType, 30))
-        fp.write(string.ljust(str(geneCount), 10))
-        fp.write(string.ljust(str(assayLiterCount+assayElectCount), 10))
-        fp.write(string.ljust(str(assayLiterCount), 12))
-        fp.write(string.ljust(str(assayElectCount), 12))
-        fp.write(string.ljust(str(resLiterCount+resElectCount), 10))
-        fp.write(string.ljust(str(resLiterCount), 12))
-        fp.write(string.ljust(str(resElectCount), 12) + CRT)
+        fp.write(str.ljust(assayType, 30))
+        fp.write(str.ljust(str(geneCount), 10))
+        fp.write(str.ljust(str(assayLiterCount+assayElectCount), 10))
+        fp.write(str.ljust(str(assayLiterCount), 12))
+        fp.write(str.ljust(str(assayElectCount), 12))
+        fp.write(str.ljust(str(resLiterCount+resElectCount), 10))
+        fp.write(str.ljust(str(resLiterCount), 12))
+        fp.write(str.ljust(str(resElectCount), 12) + CRT)
 
 ########
 #      #
@@ -782,7 +781,7 @@ def assayTypeCounts():
 ########
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1,
-	fileExt = '.' + os.environ['DATE'] + '.rpt')
+        fileExt = '.' + os.environ['DATE'] + '.rpt')
 cdnas()
 experiments()
 indexOnly()
@@ -791,4 +790,3 @@ mutantAlleles()
 imageCounts()
 assayTypeCounts()
 reportlib.finish_nonps(fp)
-
