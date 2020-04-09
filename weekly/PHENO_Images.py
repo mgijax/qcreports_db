@@ -42,6 +42,10 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+# py3 convert to tuple mapping each member of list to a string, then repr as
+# string e.g. "('BMC Biochem', 'BMC Biol', and so on )"
+# this can be plugged into the query which uses 'in'
+
 journals = [
 'BMC Biochem',
 'BMC Biol',
@@ -75,6 +79,9 @@ journals = [
 'Proc Natl Acad Sci U S A'
 ]
 
+print('journals: %s' % journals)
+journalsSQL = repr(tuple(map(str, journals)))
+print('journalsSQL: %s' % journalsSQL)
 #
 # Main
 #
@@ -119,14 +126,14 @@ db.sql('''
       where a._AnnotType_key = 1002
             and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-            and b.journal in ('%s') 
+            and b.journal in %s 
             and b.year > 2008
             and a._Object_key = g._Genotype_key
             and exists (select 1 from IMG_ImagePane_Assoc_View v
             where v._MGIType_key = 11
             and v._ImageClass_key in (6481782)
             and g._Allele_key = v._Object_key)
-        ''' % (','.join(journals)), None)
+        ''' % (journalsSQL), None)
 
 db.sql('create index exists_idx1 on exists(_Refs_key)', None)
 
@@ -146,7 +153,7 @@ db.sql('''
       where a._AnnotType_key = 1002
             and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-            and b.journal in ('%s') 
+            and b.journal in %s 
             and b.year > 2008
             and a._Object_key = g._Genotype_key
             and not exists (select 1 from exists r where b._Refs_key = r._Refs_key)
@@ -154,7 +161,7 @@ db.sql('''
             where v._MGIType_key = 11
             and v._ImageClass_key in (6481782)
             and g._Allele_key = v._Object_key)
-        ''' % (','.join(journals)), None)
+        ''' % (journalsSQL), None)
 
 db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
