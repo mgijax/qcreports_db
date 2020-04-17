@@ -1,6 +1,3 @@
-#!/usr/local/bin/python
-
-'''
 #
 # Report:
 #       This script produces a report of discrepancies where a target
@@ -32,11 +29,9 @@
 # dbm   01/24/2005
 #       - created
 #
-'''
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
@@ -63,7 +58,7 @@ fp = reportlib.init(outputfile='TargetDiscrepancy.rpt', outputdir=outputDir,
 
 fp.write('SERVER=' + server + '  DATABASE=' + radarDB + ',' + mgdDB + 2*CRT)
 
-fp.write(string.center('Target Discrepancy Report',reportWidth) + 2*CRT)
+fp.write(str.center('Target Discrepancy Report',reportWidth) + 2*CRT)
 
 fp.write('Acc ID               Logical DB           ' + \
          'MGI Object           MGI Type             Expected Type        ' + \

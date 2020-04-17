@@ -67,7 +67,7 @@ endif
 cd `dirname $0`
 
 foreach RPT (*.py)
-    ${RPT} ${OUTPUTDIR} ${SERVER} ${RADAR} ${MGD} ${JOBKEY}
+    ${PYTHON} ${RPT} ${OUTPUTDIR} ${SERVER} ${RADAR} ${MGD} ${JOBKEY}
 end
 
 exit 0

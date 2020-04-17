@@ -1,5 +1,3 @@
-
-'''
 #
 # Report:
 #       This script produces a report of discrepancies where an
@@ -35,11 +33,9 @@
 # dbm   01/24/2005
 #       - created
 #
-'''
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
@@ -66,7 +62,7 @@ fp = reportlib.init(outputfile='AssocDiscrepancy.rpt', outputdir=outputDir,
 
 fp.write('SERVER=' + server + '  DATABASE=' + radarDB + ',' + mgdDB + 2*CRT)
 
-fp.write(string.center('Associate Discrepancy Report',reportWidth) + 2*CRT)
+fp.write(str.center('Associate Discrepancy Report',reportWidth) + 2*CRT)
 
 fp.write('Target Acc ID        Target Logical DB    ' + \
          'Target MGI Object    Target MGI Type      ' + \
@@ -142,11 +138,11 @@ for r in results[0]:
 #    tgtMGIID = tgtObjs.get(key,' ')
 #    mgiID = assocObjs.get(key,' ')
 
-    if tgtObjs.has_key(key):
+    if key in tgtObjs:
         tgtMGIID = tgtObjs[key]
     else:
         tgtMGIID = ' '
-    if assocObjs.has_key(key):
+    if key in assocObjs:
         mgiID = assocObjs[key]
     else:
         mgiID = ' '
