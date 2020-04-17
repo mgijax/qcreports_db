@@ -1,4 +1,5 @@
 
+
 '''
 #
 # GXD_Images.py
@@ -257,9 +258,24 @@ def runreport(fp, assayType):
     # journals2 = journals2005
     # journals3 = journals2006
     #
-    journals1 = '\'' + ','.join(journals) + '\''
-    journals2 = '\'' + ','.join(journals2005) + '\''
-    journals3 = '\'' + ','.join(journals2006) + '\''
+    #journals1 = '\'' + ','.join(journals) + '\''
+    journals1 =  repr(tuple(map(str, journals)))
+    # check if list is single, if so tuple will have trailing ','
+    if len(journals) == 1:
+        journals1 = journals1.replace(',','')
+    print('journals1: %s' % journals1)
+
+    #journals2 = '\'' + ','.join(journals2005) + '\''
+    journals2 = repr(tuple(map(str, journals2005)))
+    if len(journals2005) == 1:
+        journals2 = journals2.replace(',','')
+    print('journals2: %s' % journals2)
+
+    #journals3 = '\'' + ','.join(journals2006) + '\''
+    journals3 = repr(tuple(map(str, journals2006)))
+    if len(journals2006) == 1:
+        journals3 = journals3.replace(',','')
+    print('journals3: %s' % journals3)
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -271,9 +287,9 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (((b.journal) in (%s)) 
-                    or (b.journal in (%s) and year >= 2005)
-                    or (b.journal in (%s) and year >= 2006))
+                and ((b.journal in %s) 
+                    or (b.journal in %s and year >= 2005)
+                    or (b.journal in %s and year >= 2006))
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
           ''' % (assayType, journals1, journals2, journals3), None)
@@ -288,9 +304,9 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and ((b.journal in (%s)) 
-                    or (b.journal in (%s) and year >= 2005) 
-                    or (b.journal in (%s) and year >= 2006)) 
+                and ((b.journal in %s) 
+                    or (b.journal in %s and year >= 2005) 
+                    or (b.journal in %s and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
           ''' % (assayType, journals1, journals2, journals3), None)
@@ -348,8 +364,17 @@ def runreport(fp, assayType):
     # journal4 = Oxford Journals
     # journal5 = Others
     #
-    journals4 = '\'' + ','.join(journalsOxford) + '\''
-    journals5 = '\'' + ','.join(journalsOther) + '\''
+    #journals4 = '\'' + ','.join(journalsOxford) + '\''
+    journals4 = repr(tuple(map(str, journalsOxford)))
+    if len(journalsOxford) == 1:
+        journals4 = journals4.replace(',','')
+    print('journals4: %s' % journals4)
+
+    #journals5 = '\'' + ','.join(journalsOther) + '\''
+    journals5 = repr(tuple(map(str, journalsOther)))
+    if len(journalsOther) == 1:
+        journals5 = journals5.replace(',','')
+    print('journals5: %s' % journals5)
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -361,7 +386,7 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s))
+                and (b.journal in %s or b.journal in %s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
                 and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -381,7 +406,7 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s))
+                and (b.journal in %s or b.journal in %s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
                 and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -438,7 +463,11 @@ def runreport(fp, assayType):
     #
     # journals6 = Check copyright & 6 month delay
     #
-    journals6 = '\'' + ','.join(checkCpyrtAndDelay) + '\''
+    #journals6 = '\'' + ','.join(checkCpyrtAndDelay) + '\''
+    journals6 = repr(tuple(map(str, checkCpyrtAndDelay)))
+    if len(checkCpyrtAndDelay) == 1:
+        journals6 = journals6.replace(',','')
+    print('journals6: %s' % journals6)
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -450,7 +479,7 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and b.journal in (%s)
+                and b.journal in %s
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
                 and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -470,7 +499,7 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and b.journal in (%s)
+                and b.journal in %s
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
                 and exists (select 1 from MGI_Note n, MGI_NoteChunk c
