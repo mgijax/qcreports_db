@@ -106,7 +106,7 @@ for id in mpIds:
         s = r['synonym']
         if s != None:
             synonymList.append(r['synonym'])
-    synonyms = str.join(synonymList, ', ')
+    synonyms =  ', '.join(synonymList)
     fp.write(str.ljust(id, 15) )
     fp.write(SPACE)
     fp.write(str.ljust(term, 75) )
