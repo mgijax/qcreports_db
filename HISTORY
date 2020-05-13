@@ -1,3 +1,8 @@
+TAG: qcreports_db-6-0-15-5
+DATE: 05/13/2020
+STAFF: sc
+CHANGES:TR13265 - Variants QC reports: add checking for ref = var
+
 TAG: qcreports_db-6-0-15-4
 TAG: qcreports_db-6-0-15-3
 DATE: 12/30/2019
