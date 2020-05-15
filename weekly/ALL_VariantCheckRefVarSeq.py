@@ -41,7 +41,7 @@ TAB = reportlib.TAB
 #
 
 fp  = reportlib.init(sys.argv[0], title = 'Variants where reference and variant sequence are the same', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
-fp.write('AlleleID%sAlleleSymbol%sCuratedGenomicReferenceAllele%sCuratedGenomicVariantAllele%sCuratorNotes%s' % (TAB, TAB, TAB, TAB, CRT))
+fp.write('AlleleID%sAlleleSymbol%sRef%sVar%sCuratorNotes%s' % (TAB, TAB, TAB, TAB, CRT))
 db.sql('''select aa.accid, a.symbol, vs.referencesequence, 
         vs.variantsequence, vs._variant_key
     into temporary table variants
