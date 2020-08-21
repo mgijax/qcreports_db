@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -67,19 +66,19 @@ fp.write('MCV ID%sMarker MGI ID%sJ:%sEvidence Code Abbreviation%sInferred From%s
 # _MGIType_key = 25 # - annotation evidence
 noteLookup = {}
 results = db.sql('''
-	select n._Object_key as annotKey, nc.note as chunk
+        select n._Object_key as annotKey, nc.note as chunk
         from MGI_Note n, MGI_NoteChunk nc
         where n._NoteType_key = 1008
         and n._MGIType_key = 25
         and n._Note_key = nc._Note_key
-	order by n._Object_key, nc.sequenceNum
-	''', 'auto')
+        order by n._Object_key, nc.sequenceNum
+        ''', 'auto')
 
 for r in results:
     annotKey = r['annotKey']
     chunk = r['chunk']
-    if not noteLookup.has_key(annotKey):
-	noteLookup[annotKey] = []
+    if annotKey not in noteLookup:
+        noteLookup[annotKey] = []
     noteLookup[annotKey].append(chunk)
 
 db.sql('''
@@ -103,10 +102,10 @@ db.sql('''create index mcvAnnot_idx on mcvAnnot(_Annot_key)''', None)
 
 results = db.sql('''
     select  ma.qualifier, 
-	to_char(a.creation_date, 'MM/dd/yyyy') as creation_date,
+        to_char(a.creation_date, 'MM/dd/yyyy') as creation_date,
         e._AnnotEvidence_key as evidKey,
-	ma.mcvTerm, ma.mcvID, ma.mgiID, a.accid as jnum, e.inferredFrom, u.login, 
-	t.term as evidCode
+        ma.mcvTerm, ma.mcvID, ma.mgiID, a.accid as jnum, e.inferredFrom, u.login, 
+        t.term as evidCode
     from mcvAnnot ma, VOC_Evidence e, ACC_Accession a, MGI_User u, VOC_Term t
     where ma._Annot_key = e._Annot_key
     and e._CreatedBy_key = u._User_key
@@ -126,20 +125,19 @@ for r in results:
     evidCode =  r['evidCode']
     inferredFrom =  r['inferredFrom']
     if inferredFrom == None:
-	inferredFrom = ''
+        inferredFrom = ''
     qualifier = r['qualifier']
     if qualifier == None:
-	qualifier = ''
+        qualifier = ''
     login = r['login']
     date = r['creation_date']
     mcvTerm = r['mcvTerm']
     note = ''
     col10 = '' # always empty as supposed to follow mcvload format
-    if noteLookup.has_key(evidKey):
-	chunkList = noteLookup[evidKey]
-	note = ''.join(chunkList).strip()
-	note = string.replace(note, '\n', ' ')
+    if evidKey in noteLookup:
+        chunkList = noteLookup[evidKey]
+        note = ''.join(chunkList).strip()
+        note = str.replace(note, '\n', ' ')
     fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (mcvID, TAB, mgiID, TAB, jnum, TAB, evidCode, TAB, inferredFrom, TAB, qualifier, TAB, login, TAB, date, TAB, note, TAB, col10, TAB, mcvTerm, CRT))
 
 reportlib.finish_nonps(fp)
-

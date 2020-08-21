@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -39,15 +38,14 @@ CRT = reportlib.CRT
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], title = 'Strains containing "either" or "involves" and marked STANDARD')
 
 results = db.sql('''
-	select s.strain 
-	from PRB_Strain s 
-	where s.standard = 1 
-	and (s.strain like '%either%' or s.strain like '%involves%')
-	''', 'auto')
+        select s.strain 
+        from PRB_Strain s 
+        where s.standard = 1 
+        and (s.strain like '%either%' or s.strain like '%involves%')
+        ''', 'auto')
 
 for r in results:
     fp.write(r['strain'] + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
-

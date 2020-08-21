@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -58,17 +57,17 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'GXD Specimens/Lanes that use the same Structure > 1', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write(string.ljust('J:', 15))
-fp.write(string.ljust('Assay ID', 15))
-fp.write(string.ljust('Label', 35))
-fp.write(string.ljust('EMAPA-Term', 50))
-fp.write(string.ljust('Stage', 5))
+fp.write(str.ljust('J:', 15))
+fp.write(str.ljust('Assay ID', 15))
+fp.write(str.ljust('Label', 35))
+fp.write(str.ljust('EMAPA-Term', 50))
+fp.write(str.ljust('Stage', 5))
 fp.write(CRT)
-fp.write(string.ljust('----------', 15))
-fp.write(string.ljust('----------', 15))
-fp.write(string.ljust('----------', 35))
-fp.write(string.ljust('----------', 50))
-fp.write(string.ljust('-----', 5))
+fp.write(str.ljust('----------', 15))
+fp.write(str.ljust('----------', 15))
+fp.write(str.ljust('----------', 35))
+fp.write(str.ljust('----------', 50))
+fp.write(str.ljust('-----', 5))
 fp.write(2*CRT)
 
 # get the all specimen/structure pairs
@@ -150,7 +149,7 @@ db.sql('''
 
 db.sql('''
     select distinct ss.specimenLabel, ss.term, ss.stage,
-	   a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
+           a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
     into temporary table finalSpecimen 
     from specimens ss, ACC_Accession a1, ACC_Accession a2 
     where ss._Assay_key = a1._Object_key 
@@ -166,7 +165,7 @@ db.sql('''
 
 db.sql('''
     select distinct ss.laneLabel, ss.term, ss.stage,
-	   a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
+           a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
     into temporary table finalGel 
     from gels ss, ACC_Accession a1, ACC_Accession a2 
     where ss._Assay_key = a1._Object_key 
@@ -181,24 +180,23 @@ db.sql('''
     ''', None)
 
 results = db.sql('''
-	(
-	select specimenLabel, term, stage, mgiID, jnumID, numericPart 
-	from finalSpecimen 
-	union 
-	select laneLabel, term, stage, mgiID, jnumID, numericPart from finalGel 
-	)
-	order by numericPart
-	''', 'auto')
+        (
+        select specimenLabel, term, stage, mgiID, jnumID, numericPart 
+        from finalSpecimen 
+        union 
+        select laneLabel, term, stage, mgiID, jnumID, numericPart from finalGel 
+        )
+        order by numericPart
+        ''', 'auto')
 
 for r in results:
-    fp.write(string.ljust(r['jnumID'], 15))
-    fp.write(string.ljust(r['mgiID'], 15))
-    fp.write(string.ljust(r['specimenLabel'], 35))
-    fp.write(string.ljust(r['term'], 50))
-    fp.write(string.ljust(str(r['stage']), 5))
+    fp.write(str.ljust(r['jnumID'], 15))
+    fp.write(str.ljust(r['mgiID'], 15))
+    fp.write(str.ljust(r['specimenLabel'], 35))
+    fp.write(str.ljust(r['term'], 50))
+    fp.write(str.ljust(str(r['stage']), 5))
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fp)	# non-postscript file
-

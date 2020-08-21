@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -42,18 +41,18 @@ CRT = reportlib.CRT
 egbucketsdir = os.environ['DATALOADSOUTPUT'] + '/entrezgene/egload/reports/'
 
 egbuckets = {'1:N' : 'bucket_one_to_many.txt',
-	     '0:1' : 'bucket_zero_to_one.txt',
-	     'N:1' : 'bucket_many_to_one.txt',
-	     'N:M' : 'bucket_many_to_many.txt'
-	     }
+             '0:1' : 'bucket_zero_to_one.txt',
+             'N:1' : 'bucket_many_to_one.txt',
+             'N:M' : 'bucket_many_to_many.txt'
+             }
 
 # define what field contains the EG ID in each bucket, and subtract 1
 
 egfield = {'1:N' : 3,
-	   '0:1' : 0,
-	   'N:1' : 3,
-	   'N:M' : 3
-	   }
+           '0:1' : 0,
+           'N:1' : 3,
+           'N:M' : 3
+           }
 
 def searchBuckets(id):
 
@@ -66,32 +65,32 @@ def searchBuckets(id):
 
     whichBucket = 'not found'
 
-    for b in egbuckets.keys():
+    for b in list(egbuckets.keys()):
 
-	i = egfield[b]
+        i = egfield[b]
         found = 0
 
-	bfile = egbucketsdir + egbuckets[b]
+        bfile = egbucketsdir + egbuckets[b]
         bfp = open(bfile, 'r')
 
-	for line in bfp.readlines():
-	    tokens = string.split(line[:-1], TAB)
+        for line in bfp.readlines():
+            tokens = str.split(line[:-1], TAB)
 
-	    # lines without ids
+            # lines without ids
 
-	    if len(tokens) < i:
-		continue
+            if len(tokens) < i:
+                continue
 
-	    # if id is found, we're done
+            # if id is found, we're done
 
-	    if id == tokens[i]:
-		found = 1
-		break
+            if id == tokens[i]:
+                found = 1
+                break
 
-	bfp.close()
+        bfp.close()
 
-	if found:
-	    whichBucket = b
+        if found:
+            whichBucket = b
 
     return whichBucket
 
@@ -106,13 +105,13 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 #
 
 db.sql('''
-	select s._Sequence_key 
-	into temporary table sequence 
-	from SEQ_Sequence s 
-	where s._SequenceProvider_key = 316372 
-	and s._SequenceStatus_key = 316342 
-	and not exists (select 1 from SEQ_Marker_Cache m where s._Sequence_key = m._Sequence_key)
-	''', None)
+        select s._Sequence_key 
+        into temporary table sequence 
+        from SEQ_Sequence s 
+        where s._SequenceProvider_key = 316372 
+        and s._SequenceStatus_key = 316342 
+        and not exists (select 1 from SEQ_Marker_Cache m where s._Sequence_key = m._Sequence_key)
+        ''', None)
 db.sql('create index sequences_idx1 on sequence(_Sequence_key)', None)
 
 #
@@ -120,13 +119,13 @@ db.sql('create index sequences_idx1 on sequence(_Sequence_key)', None)
 #
 
 db.sql('''
-	select s._Sequence_key, a.accID 
-	into temporary table acc 
-	from sequence s, ACC_Accession a 
-	where s._Sequence_key = a._Object_key 
-	and a._MGIType_key = 19 
-	and a.prefixPart = 'NM_'
-	''', None)
+        select s._Sequence_key, a.accID 
+        into temporary table acc 
+        from sequence s, ACC_Accession a 
+        where s._Sequence_key = a._Object_key 
+        and a._MGIType_key = 19 
+        and a.prefixPart = 'NM_'
+        ''', None)
 db.sql('create index acc_idx1 on acc(accID)', None)
 
 #
@@ -134,24 +133,24 @@ db.sql('create index acc_idx1 on acc(accID)', None)
 #
 
 sql = '''
-	select eg.rna, eg.geneID 
-	into temporary table eg 
-	from radar.DP_EntrezGene_Accession eg
-	'''
+        select eg.rna, eg.geneID 
+        into temporary table eg 
+        from radar.DP_EntrezGene_Accession eg
+        '''
 sql = sql + '''
-	where eg.taxID = 10090
-	and eg.rna like 'NM_%' 
-	'''
+        where eg.taxID = 10090
+        and eg.rna like 'NM_%' 
+        '''
 db.sql(sql, 'auto')
 db.sql('create index eg_idx1 on eg(rna)', None)
 
 fp.write(CRT + "NM's falling into EG Buckets" + 2*CRT)
-fp.write(string.ljust('NM Acc ID', 35))
-fp.write(string.ljust('EG ID of NM', 35))
-fp.write(string.ljust('MGI/EG Bucket', 35) + CRT)
-fp.write(string.ljust('---------', 35))
-fp.write(string.ljust('-----------', 35))
-fp.write(string.ljust('-------------', 35) + CRT)
+fp.write(str.ljust('NM Acc ID', 35))
+fp.write(str.ljust('EG ID of NM', 35))
+fp.write(str.ljust('MGI/EG Bucket', 35) + CRT)
+fp.write(str.ljust('---------', 35))
+fp.write(str.ljust('-----------', 35))
+fp.write(str.ljust('-------------', 35) + CRT)
 
 #
 # retrieve results and sort them into their appropriate buckets
@@ -159,15 +158,15 @@ fp.write(string.ljust('-------------', 35) + CRT)
 
 bresults = {}
 results = db.sql('''
-	select distinct a.accID, eg.geneID 
-	from acc a, eg eg 
-	where a.accID = eg.rna 
-	order by a.accID 
-	''', 'auto')
+        select distinct a.accID, eg.geneID 
+        from acc a, eg eg 
+        where a.accID = eg.rna 
+        order by a.accID 
+        ''', 'auto')
 for r in results:
     bucket = searchBuckets(r['geneID'])
-    if not bresults.has_key(bucket):
-	bresults[bucket] = []
+    if bucket not in bresults:
+        bresults[bucket] = []
     bresults[bucket].append(r)
 
 #
@@ -175,14 +174,14 @@ for r in results:
 #
 
 c = 0
-bkeys = bresults.keys()
+bkeys = list(bresults.keys())
 bkeys.sort()
 for b in bkeys:
     for r in bresults[b]:
-        fp.write(string.ljust(r['accID'], 35))
-        fp.write(string.ljust(r['geneID'], 35))
-        fp.write(string.ljust(b, 35) + CRT)
-	c = c + 1
+        fp.write(str.ljust(r['accID'], 35))
+        fp.write(str.ljust(r['geneID'], 35))
+        fp.write(str.ljust(b, 35) + CRT)
+        c = c + 1
 fp.write('\n(%d rows affected)\n' % (c))
 
 #
@@ -190,17 +189,16 @@ fp.write('\n(%d rows affected)\n' % (c))
 #
 
 fp.write(CRT + "NM's not in EG File" + 2*CRT)
-fp.write(string.ljust('NM Acc ID', 35) + CRT)
-fp.write(string.ljust('---------', 35) + CRT)
+fp.write(str.ljust('NM Acc ID', 35) + CRT)
+fp.write(str.ljust('---------', 35) + CRT)
 
 results = db.sql('''
-	select a.accID from acc a 
-	where not exists (select 1 from eg eg where a.accID = eg.rna) 
-	order by a.accID
-	''', 'auto')
+        select a.accID from acc a 
+        where not exists (select 1 from eg eg where a.accID = eg.rna) 
+        order by a.accID
+        ''', 'auto')
 for r in results:
-    fp.write(string.ljust(r['accID'], 35) + CRT)
+    fp.write(str.ljust(r['accID'], 35) + CRT)
 fp.write('\n(%d rows affected)\n' % (len(results)))
 
 reportlib.finish_nonps(fp)
-

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -55,22 +54,22 @@ def findExtractedText(extractedText):
 
     for s in ignoreSearchTerms:
 
-	# count each instance of search term
+        # count each instance of search term
         counter = extractedText.count(s)
 
-	if counter > 0:
+        if counter > 0:
 
-	    #
-	    # this will be counted 3 times, but only count 1
-	    # human embryonic stem, human embryonic, embryonic stem
-	    #
-	    if s == 'human embryonic stem':
-	        counter = counter - 2
+            #
+            # this will be counted 3 times, but only count 1
+            # human embryonic stem, human embryonic, embryonic stem
+            #
+            if s == 'human embryonic stem':
+                counter = counter - 2
 
-	    ignoreCount += counter
+            ignoreCount += counter
 
-	    if s not in ignoreLookup:
-	        ignoreLookup.append(s)
+            if s not in ignoreLookup:
+                ignoreLookup.append(s)
 
     #print ignoreLookup, ignoreCount
     return ignoreLookup, ignoreCount
@@ -93,7 +92,7 @@ for r in results:
 #
 db.sql('''
 select r._Refs_key, r.jnumID, 
-	lower(regexp_replace(d.extractedtext, E'\n', ' ', 'g')) as extractedText
+        lower(regexp_replace(d.extractedtext, E'\n', ' ', 'g')) as extractedText
 into temp table refs
 from BIB_Citation_Cache r, BIB_Workflow_Status s, BIB_Workflow_Data d
 where r.isDiscard = 0
@@ -188,7 +187,7 @@ for r in results:
     ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
     count +=1
     if r['jnumID'] not in embryoList:
-    	embryoList[r['jnumID']] = []
+        embryoList[r['jnumID']] = []
     embryoList[r['jnumID']].append('|'.join(ignoreLookup))
 #
 # references in embryo_set and in ignore_set 
@@ -203,15 +202,15 @@ order by s2.jnumID
 for r in results:
     ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
     if embryoLookup[r['_Refs_key']] > ignoreCount:
-	count += 1
+        count += 1
         if r['jnumID'] not in embryoList:
-    	    embryoList[r['jnumID']] = []
+            embryoList[r['jnumID']] = []
         embryoList[r['jnumID']].append('|'.join(ignoreLookup))
 
 #
 # sort by jnum & write to report
 #
-keys = embryoList.keys()
+keys = list(embryoList.keys())
 keys.sort()
 count = 0
 for r in keys:
@@ -238,8 +237,7 @@ for r in results:
     if embryoLookup[r['_Refs_key']] == ignoreCount:
         fp1.write(r['jnumID'] + TAB)
         fp1.write('|'.join(ignoreLookup) + CRT)
-	count += 1
+        count += 1
 fp1.write('\n(%d rows affected)\n' % (count))
 
 reportlib.finish_nonps(fp1)
-

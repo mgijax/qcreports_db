@@ -25,7 +25,7 @@ end
 
 foreach i (*.py)
     echo `date`: $i | tee -a ${LOG}
-    $i >>& ${LOG}
+    ${PYTHON} $i >>& ${LOG}
 end
 
 echo `date`: End monthly QC reports | tee -a ${LOG}

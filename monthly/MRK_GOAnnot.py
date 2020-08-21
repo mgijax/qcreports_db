@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -80,15 +79,15 @@ fp.write('\n')
 #   contain GO annotations
 #
 db.sql('''
-	select m._Marker_key, m.symbol
-	into temporary table markers
+        select m._Marker_key, m.symbol
+        into temporary table markers
         from MRK_Marker m
         where m._Marker_Type_key = 1
-	and m._Marker_Status_key = 1
-	and m._Organism_key = 1
-	and exists (select 1 from VOC_Annot a
-	    where m._Marker_key = a._Object_key
-	    and a._AnnotType_key = 1000)
+        and m._Marker_Status_key = 1
+        and m._Organism_key = 1
+        and exists (select 1 from VOC_Annot a
+            where m._Marker_key = a._Object_key
+            and a._AnnotType_key = 1000)
        ''', None)
 db.sql('create index idx1 on markers(_Marker_key)', None)
 
@@ -96,13 +95,13 @@ db.sql('create index idx1 on markers(_Marker_key)', None)
 
 mgiIDs = {}
 results = db.sql('''select m._Marker_key, a.accID
-	    from markers m, ACC_Accession a 
-	    where m._Marker_key = a._Object_key 
-	    and a._MGIType_key = 2
-	    and a._LogicalDB_key = 1 
-	    and a.prefixPart = 'MGI:'
-	    and a.preferred = 1
-	    ''', 'auto')
+            from markers m, ACC_Accession a 
+            where m._Marker_key = a._Object_key 
+            and a._MGIType_key = 2
+            and a._LogicalDB_key = 1 
+            and a.prefixPart = 'MGI:'
+            and a.preferred = 1
+            ''', 'auto')
 for r in results:
     key = r['_Marker_key']
     value = r['accID']
@@ -113,12 +112,12 @@ for r in results:
 #
 mgiFeature = {}
 results = db.sql('''
-	   select m._Marker_key, t.term
-	   from markers m, VOC_Annot a, VOC_Term t
-	   where m._Marker_key = a._Object_key
-	   and a._AnnotType_key = 1011
-	   and a._Term_key = t._Term_key
-	''', 'auto')
+           select m._Marker_key, t.term
+           from markers m, VOC_Annot a, VOC_Term t
+           where m._Marker_key = a._Object_key
+           and a._AnnotType_key = 1011
+           and a._Term_key = t._Term_key
+        ''', 'auto')
 for r in results:
     key = r['_Marker_key']
     value = r['term']
@@ -130,12 +129,12 @@ for r in results:
 #
 totalAnnot = {}
 results = db.sql('''
-	select m._Marker_key, 
-	       count(distinct v._Annot_key) as totalAnnot
+        select m._Marker_key, 
+               count(distinct v._Annot_key) as totalAnnot
         from markers m, VOC_Annot v
             where m._Marker_key = v._Object_key
             and v._AnnotType_key = 1000
-	    group by m._Marker_key
+            group by m._Marker_key
        ''', 'auto')
 for r in results:
     key = r['_Marker_key']
@@ -147,14 +146,14 @@ for r in results:
 #
 totalEvi = {}
 results = db.sql('''
-	select m._Marker_key, 
-	       count(distinct v._Annot_key) as totalEvi
+        select m._Marker_key, 
+               count(distinct v._Annot_key) as totalEvi
         from markers m, VOC_Annot v, VOC_Evidence e
             where m._Marker_key = v._Object_key
             and v._AnnotType_key = 1000
-	    and v._Annot_key = e._Annot_key
-	    and e._EvidenceTerm_key in (109,110,111,112,114,3251466,3251496)
-	    group by m._Marker_key
+            and v._Annot_key = e._Annot_key
+            and e._EvidenceTerm_key in (109,110,111,112,114,3251466,3251496)
+            group by m._Marker_key
        ''', 'auto')
 for r in results:
     key = r['_Marker_key']
@@ -171,23 +170,23 @@ for r in results:
 #
 totalNotUsed = {}
 results = db.sql('''
-	select m._Marker_key, count(distinct r._Refs_key) as totalNotUsed
-	from markers m, MRK_Reference r
-	where m._Marker_key = r._Marker_key
-	and exists (select 1 from BIB_Workflow_Status ws, VOC_Term wst1, VOC_Term wst2
-        	where r._Refs_key = ws._Refs_Key
-        	and ws._Group_key = wst1._Term_key
-        	and wst1.abbreviation in ('GO')
-        	and ws._Status_key = wst2._Term_key
-        	and wst2.term in ('Chosen', 'Routed', 'Indexed')
-        	and ws.isCurrent = 1
-        	)
-	and not exists (select 1 from VOC_Annot a, VOC_Evidence e
-		where a._AnnotType_key = 1000
-		and m._Marker_key = a._Object_key
-		and a._Annot_key = e._Annot_key
-		and e._Refs_key = r._Refs_key)
-	group by m._Marker_key
+        select m._Marker_key, count(distinct r._Refs_key) as totalNotUsed
+        from markers m, MRK_Reference r
+        where m._Marker_key = r._Marker_key
+        and exists (select 1 from BIB_Workflow_Status ws, VOC_Term wst1, VOC_Term wst2
+                where r._Refs_key = ws._Refs_Key
+                and ws._Group_key = wst1._Term_key
+                and wst1.abbreviation in ('GO')
+                and ws._Status_key = wst2._Term_key
+                and wst2.term in ('Chosen', 'Routed', 'Indexed')
+                and ws.isCurrent = 1
+                )
+        and not exists (select 1 from VOC_Annot a, VOC_Evidence e
+                where a._AnnotType_key = 1000
+                and m._Marker_key = a._Object_key
+                and a._Annot_key = e._Annot_key
+                and e._Refs_key = r._Refs_key)
+        group by m._Marker_key
      ''', 'auto')
 for r in results:
     key = r['_Marker_key']
@@ -200,17 +199,17 @@ for r in results:
 #   exclude evidence codes (IEA, ND)
 totalUsed = {}
 results = db.sql('''
-	select m._Marker_key, count(distinct e._Refs_key) as totalUsed
-	from markers m, VOC_Annot a, VOC_Evidence e, MGI_User u
-	where a._AnnotType_key = 1000
-	and m._Marker_key = a._Object_key
-	and a._Annot_key = e._Annot_key
-	and e._Refs_key not in (74750, 61933,73199,73197)
-	and e._EvidenceTerm_key not in (115,118)
-	and e._CreatedBy_key = u._User_key
-	and u.login not like ('GOA_%')
-	and u.login not in ('GOC', 'GO_Central', 'UniProtKB')
-	group by m._Marker_key
+        select m._Marker_key, count(distinct e._Refs_key) as totalUsed
+        from markers m, VOC_Annot a, VOC_Evidence e, MGI_User u
+        where a._AnnotType_key = 1000
+        and m._Marker_key = a._Object_key
+        and a._Annot_key = e._Annot_key
+        and e._Refs_key not in (74750, 61933,73199,73197)
+        and e._EvidenceTerm_key not in (115,118)
+        and e._CreatedBy_key = u._User_key
+        and u.login not like ('GOA_%')
+        and u.login not in ('GOC', 'GO_Central', 'UniProtKB')
+        group by m._Marker_key
      ''', 'auto')
 for r in results:
     key = r['_Marker_key']
@@ -228,30 +227,29 @@ for r in results:
 
     fp.write(mgiIDs[key] + TAB)
 
-    if mgiFeature.has_key(key):
+    if key in mgiFeature:
       fp.write(mgiFeature[key])
     fp.write(TAB)
 
     fp.write(r['symbol'] + TAB)
     fp.write(str(totalAnnot[key]) + TAB)
 
-    if totalEvi.has_key(key):
+    if key in totalEvi:
       fp.write(str(totalEvi[key]))
     else:
       fp.write('0')
     fp.write(TAB)
 
-    if totalNotUsed.has_key(key):
+    if key in totalNotUsed:
       fp.write(str(totalNotUsed[key]))
     else:
       fp.write('0')
     fp.write(TAB)
 
-    if totalUsed.has_key(key):
+    if key in totalUsed:
       fp.write(str(totalUsed[key]))
     else:
       fp.write('0')
     fp.write(CRT)
 
 reportlib.finish_nonps(fp)
-

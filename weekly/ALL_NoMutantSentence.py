@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -55,7 +54,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Genes w/Phenotypic Alleles and No Mutant Sentence', os.environ['QCOUTPUTDIR'])
 
 cmd = '''
-	select ac.accID, m.symbol 
+        select ac.accID, m.symbol 
         from ACC_Accession ac, MRK_Marker m 
         where ac._Object_key = m._Marker_key 
               and ac.prefixPart = 'MGI:' 
@@ -70,11 +69,11 @@ cmd = '''
               and exists (select 1 
                       from GXD_AlleleGenotype a, VOC_Annot va 
                       where m._Marker_key = a._Marker_key 
-		      and a._Genotype_key = va._Object_key 
-		      and va._AnnotType_key = 1002)
+                      and a._Genotype_key = va._Object_key 
+                      and va._AnnotType_key = 1002)
               and not exists (select 1 from MRK_Notes n where m._Marker_key = n._Marker_key) 
         order by ac.accID, m.symbol
-	'''
+        '''
 
 results = db.sql(cmd, 'auto')
 

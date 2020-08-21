@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -116,7 +115,7 @@ def process():
             from
                 ACC_Accession a,
                 MRK_Marker m
-		LEFT OUTER JOIN MRK_Location_Cache mlc on (m._Marker_key = mlc._Marker_key),
+                LEFT OUTER JOIN MRK_Location_Cache mlc on (m._Marker_key = mlc._Marker_key),
                 MRK_Types mt,
                 SEQ_Marker_Cache smc,
                 VOC_Term vt,

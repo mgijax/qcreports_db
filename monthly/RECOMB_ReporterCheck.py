@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -54,12 +53,12 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], '\nRecombinase reporter specimen genotype check', \
-	os.environ['QCOUTPUTDIR'])
+        os.environ['QCOUTPUTDIR'])
 
 # get all recombinase reporter speciments
 db.sql('''
     select distinct a._Assay_key, a1.accid as jNum, substring(specimenLabel, 
-	1, 50) as specimenLabel, e._Genotype_key
+        1, 50) as specimenLabel, e._Genotype_key
     INTO TEMPORARY TABLE reporter
     from GXD_Assay a, GXD_Specimen s, GXD_Expression e, ACC_Accession a1
     where a._AssayType_key  = 11
@@ -111,7 +110,7 @@ db.sql('''
 # get allele2
 results = db.sql('''
     select s.jNum, s.assayID, s.specimenLabel, s.genotypeID, 
-	s._Genotype_key, s.allele1, al2.symbol as allele2
+        s._Genotype_key, s.allele1, al2.symbol as allele2
     from specSglAllelePair s
     left outer join ALL_Allele al2 on (s._Allele_key_2 = al2._Allele_key)
     order by s._Assay_key DESC, s.specimenLabel''', 'auto')
@@ -127,7 +126,7 @@ for r in results:
     allele1 = r['allele1']
     allele2 = r['allele2']
     if allele2 == None:
-	allele2 = ''
+        allele2 = ''
     fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (jNum, TAB, assayID, TAB, specLabel, TAB, genoID, TAB, allele1, TAB, allele2, CRT))
 
 fp.write('Number of specimens: ' + str(count) + 2*CRT)

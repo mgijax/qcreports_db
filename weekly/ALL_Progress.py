@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -80,41 +79,41 @@ statusKeys='847114,3983021'
 def alleleCounts():
 
     fp.write('Allele Counts (excluding wild types and private data)' + 2*CRT)
-    fp.write(string.ljust('Allele category',  35))
-    fp.write(string.rjust('Total',  15))
-    fp.write(string.rjust('Previous Month Total',  25) + CRT)
-    fp.write(string.ljust('---------------',  35))
-    fp.write(string.rjust('-----',  15))
-    fp.write(string.rjust('--------------------',  25) + CRT)
+    fp.write(str.ljust('Allele category',  35))
+    fp.write(str.rjust('Total',  15))
+    fp.write(str.rjust('Previous Month Total',  25) + CRT)
+    fp.write(str.ljust('---------------',  35))
+    fp.write(str.rjust('-----',  15))
+    fp.write(str.rjust('--------------------',  25) + CRT)
 
     db.sql('''
-	select _Allele_key, _Allele_Type_key, _Marker_key 
-	into temporary table alleles from ALL_Allele where isWildType = 0 
+        select _Allele_key, _Allele_Type_key, _Marker_key 
+        into temporary table alleles from ALL_Allele where isWildType = 0 
         and _Allele_Status_key in (%s)
-	''' % (statusKeys), None)
+        ''' % (statusKeys), None)
 
     db.sql('''
-	select _Allele_key, _Allele_Type_key, _Marker_key 
-	into temporary table allelesmice from ALL_Allele where isWildType = 0 and _Transmission_key != 3982953
+        select _Allele_key, _Allele_Type_key, _Marker_key 
+        into temporary table allelesmice from ALL_Allele where isWildType = 0 and _Transmission_key != 3982953
         and _Allele_Status_key in (%s)
-	''' % (statusKeys), None)
+        ''' % (statusKeys), None)
 
     db.sql('''
-	select _Allele_key, _Allele_Type_key into temporary table amonthly from ALL_Allele 
-	where isWildType = 0 
+        select _Allele_key, _Allele_Type_key into temporary table amonthly from ALL_Allele 
+        where isWildType = 0 
         and _Allele_Status_key in (%s)
-	and date_part('year', creation_date) = %d 
-	and date_part('month', creation_date) = %d 
-	''' % (""+statusKeys+"",year, month), None)
+        and date_part('year', creation_date) = %d 
+        and date_part('month', creation_date) = %d 
+        ''' % (""+statusKeys+"",year, month), None)
 
     db.sql('''
-	select _Allele_key, _Allele_Type_key into temporary table amonthlymice from ALL_Allele 
-	where isWildType = 0 
+        select _Allele_key, _Allele_Type_key into temporary table amonthlymice from ALL_Allele 
+        where isWildType = 0 
         and _Allele_Status_key in (%s)
-	and _Transmission_key != 3982953 
-	and date_part('year', creation_date) = %d 
-	and date_part('month', creation_date) = %d 
-	''' % (""+statusKeys+"",year, month), None)
+        and _Transmission_key != 3982953 
+        and date_part('year', creation_date) = %d 
+        and date_part('month', creation_date) = %d 
+        ''' % (""+statusKeys+"",year, month), None)
 
     total = db.sql('select count(*) as c from alleles', 'auto')[0]['c']
     totalM = db.sql('select count(*) as c from amonthly', 'auto')[0]['c']
@@ -158,111 +157,111 @@ def alleleCounts():
     nonqtlMice = db.sql('select count(*) as c from allelesmice where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['c']
     nonqtlMiceM = db.sql('select count(*) as c from amonthlymice where _Allele_Type_key not in (%s)' % (qtlKeys), 'auto')[0]['c']
 
-    fp.write(string.ljust('Transgeneic (all types)', 35))
-    fp.write(string.rjust(str(transgenic), 15))
-    fp.write(string.rjust(str(transgenicM), 25))
+    fp.write(str.ljust('Transgeneic (all types)', 35))
+    fp.write(str.rjust(str(transgenic), 15))
+    fp.write(str.rjust(str(transgenicM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Targeted (all types)', 35))
-    fp.write(string.rjust(str(targeted), 15))
-    fp.write(string.rjust(str(targetedM), 25))
+    fp.write(str.ljust('Targeted (all types)', 35))
+    fp.write(str.rjust(str(targeted), 15))
+    fp.write(str.rjust(str(targetedM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Targeted (all types - in mice)', 35))
-    fp.write(string.rjust(str(targetedMice), 15))
-    fp.write(string.rjust(str(targetedMiceM), 25))
+    fp.write(str.ljust('Targeted (all types - in mice)', 35))
+    fp.write(str.rjust(str(targetedMice), 15))
+    fp.write(str.rjust(str(targetedMiceM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Gene Trapped', 35))
-    fp.write(string.rjust(str(trapped), 15))
-    fp.write(string.rjust(str(trappedM), 25))
+    fp.write(str.ljust('Gene Trapped', 35))
+    fp.write(str.rjust(str(trapped), 15))
+    fp.write(str.rjust(str(trappedM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Gene Trapped (in mice)', 35))
-    fp.write(string.rjust(str(trappedMice), 15))
-    fp.write(string.rjust(str(trappedMiceM), 25))
+    fp.write(str.ljust('Gene Trapped (in mice)', 35))
+    fp.write(str.rjust(str(trappedMice), 15))
+    fp.write(str.rjust(str(trappedMiceM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('QTL', 35))
-    fp.write(string.rjust(str(qtl), 15))
-    fp.write(string.rjust(str(qtlM), 25))
+    fp.write(str.ljust('QTL', 35))
+    fp.write(str.rjust(str(qtl), 15))
+    fp.write(str.rjust(str(qtlM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Spontaneous', 35))
-    fp.write(string.rjust(str(spont), 15))
-    fp.write(string.rjust(str(spontM), 25))
+    fp.write(str.ljust('Spontaneous', 35))
+    fp.write(str.rjust(str(spont), 15))
+    fp.write(str.rjust(str(spontM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Chemically induced (ENU)', 35))
-    fp.write(string.rjust(str(chemical), 15))
-    fp.write(string.rjust(str(chemicalM), 25))
+    fp.write(str.ljust('Chemically induced (ENU)', 35))
+    fp.write(str.rjust(str(chemical), 15))
+    fp.write(str.rjust(str(chemicalM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Endonuclease-mediated', 35))
-    fp.write(string.rjust(str(endonuclease), 15))
-    fp.write(string.rjust(str(endonucleaseM), 25))
+    fp.write(str.ljust('Endonuclease-mediated', 35))
+    fp.write(str.rjust(str(endonuclease), 15))
+    fp.write(str.rjust(str(endonucleaseM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('All Other', 35))
-    fp.write(string.rjust(str(other), 15))
-    fp.write(string.rjust(str(otherM), 25))
+    fp.write(str.ljust('All Other', 35))
+    fp.write(str.rjust(str(other), 15))
+    fp.write(str.rjust(str(otherM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Total', 35))
-    fp.write(string.rjust(str(total), 15))
-    fp.write(string.rjust(str(totalM), 25))
+    fp.write(str.ljust('Total', 35))
+    fp.write(str.rjust(str(total), 15))
+    fp.write(str.rjust(str(totalM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Total (in mice)', 35))
-    fp.write(string.rjust(str(totalMice), 15))
-    fp.write(string.rjust(str(totalMiceM), 25))
+    fp.write(str.ljust('Total (in mice)', 35))
+    fp.write(str.rjust(str(totalMice), 15))
+    fp.write(str.rjust(str(totalMiceM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Total minus QTL', 35))
-    fp.write(string.rjust(str(nonqtl), 15))
-    fp.write(string.rjust(str(nonqtlM), 25))
+    fp.write(str.ljust('Total minus QTL', 35))
+    fp.write(str.rjust(str(nonqtl), 15))
+    fp.write(str.rjust(str(nonqtlM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Total minus QTL (in mice)', 35))
-    fp.write(string.rjust(str(nonqtlMice), 15))
-    fp.write(string.rjust(str(nonqtlMiceM), 25))
+    fp.write(str.ljust('Total minus QTL (in mice)', 35))
+    fp.write(str.rjust(str(nonqtlMice), 15))
+    fp.write(str.rjust(str(nonqtlMiceM), 25))
     fp.write(CRT)
 
 def genotypeCounts():
 
     fp.write(2*CRT + '#########################' + 2*CRT)
     fp.write('Genotypes Associated with at least one MP Term' + 2*CRT)
-    fp.write(string.ljust('Category',  35))
-    fp.write(string.rjust('Total',  15))
-    fp.write(string.rjust('Previous Month Total',  25) + CRT)
-    fp.write(string.ljust('---------------',  35))
-    fp.write(string.rjust('-----',  15))
-    fp.write(string.rjust('--------------------',  25) + CRT)
+    fp.write(str.ljust('Category',  35))
+    fp.write(str.rjust('Total',  15))
+    fp.write(str.rjust('Previous Month Total',  25) + CRT)
+    fp.write(str.ljust('---------------',  35))
+    fp.write(str.rjust('-----',  15))
+    fp.write(str.rjust('--------------------',  25) + CRT)
 
     db.sql('''
-	select g._Genotype_key, a._Annot_key, a.creation_date into temporary table genotypes 
-	from GXD_Genotype g, VOC_Annot a 
-	where a._AnnotType_key = 1002 
-	and g._Genotype_key = a._Object_key 
-	''', None)
+        select g._Genotype_key, a._Annot_key, a.creation_date into temporary table genotypes 
+        from GXD_Genotype g, VOC_Annot a 
+        where a._AnnotType_key = 1002 
+        and g._Genotype_key = a._Object_key 
+        ''', None)
     db.sql('create index geneoytpes_idx1 on genotypes(_Genotype_key)', None)
 
     db.sql('''
-	select _Genotype_key, _Annot_key into temporary table gmonthly 
-	from genotypes 
-	where date_part('year', creation_date) = %d 
-	and date_part('month', creation_date) = %d 
-	''' % (year, month), None)
+        select _Genotype_key, _Annot_key into temporary table gmonthly 
+        from genotypes 
+        where date_part('year', creation_date) = %d 
+        and date_part('month', creation_date) = %d 
+        ''' % (year, month), None)
     db.sql('create index gmonthly_idx1 on gmonthly(_Genotype_key)', None)
 
     db.sql('''
-	select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key 
-	into temporary table noqtl 
-	from genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
-	where g._Genotype_key = a._Genotype_key 
-	and a._Marker_key = m._Marker_key 
-	and m._Marker_Type_key != 6
-	''', None)
+        select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key 
+        into temporary table noqtl 
+        from genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
+        where g._Genotype_key = a._Genotype_key 
+        and a._Marker_key = m._Marker_key 
+        and m._Marker_Type_key != 6
+        ''', None)
     
     db.sql('''
         select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key 
@@ -274,12 +273,12 @@ def genotypeCounts():
         ''', None)
 
     db.sql('''
-	select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
-	into temporary table noqtlmonthly 
-	from noqtl 
-	where date_part('year', creation_date) = %d 
-	and date_part('month', creation_date) = %d 
-	''' % (year, month), None)
+        select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
+        into temporary table noqtlmonthly 
+        from noqtl 
+        where date_part('year', creation_date) = %d 
+        and date_part('month', creation_date) = %d 
+        ''' % (year, month), None)
     
     db.sql('''
         select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
@@ -290,21 +289,21 @@ def genotypeCounts():
         ''' % (year, month), None)
 
     db.sql('''
-	select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key
-	into temporary table qtl 
-	from genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
-	where g._Genotype_key = a._Genotype_key 
-	and a._Marker_key = m._Marker_key 
-	and m._Marker_Type_key = 6
-	''', None)
+        select g._Genotype_key, g._Annot_key, g.creation_date, a._Allele_key, a._Marker_key
+        into temporary table qtl 
+        from genotypes g, GXD_AlleleGenotype a, MRK_Marker m 
+        where g._Genotype_key = a._Genotype_key 
+        and a._Marker_key = m._Marker_key 
+        and m._Marker_Type_key = 6
+        ''', None)
 
     db.sql('''
-	select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
-	into temporary table qtlmonthly 
-	from qtl 
-	where date_part('year', creation_date) = %d 
-	and date_part('month', creation_date) = %d 
-	''' % (year, month), None)
+        select _Genotype_key, _Annot_key, _Allele_key, _Marker_key 
+        into temporary table qtlmonthly 
+        from qtl 
+        where date_part('year', creation_date) = %d 
+        and date_part('month', creation_date) = %d 
+        ''' % (year, month), None)
 
     allGenotypes = db.sql('select count(distinct _Genotype_key) as c from genotypes', 'auto')[0]['c']
     allGenotypesM = db.sql('select count(distinct _Genotype_key) as c from gmonthly', 'auto')[0]['c']
@@ -330,44 +329,44 @@ def genotypeCounts():
     qtl = db.sql('select count(distinct _Marker_key) as c from qtl', 'auto')[0]['c']
     qtlM = db.sql('select count(distinct _Marker_key) as c from qtlmonthly', 'auto')[0]['c']
 
-    fp.write(string.ljust('All Genotypes', 35))
-    fp.write(string.rjust(str(allGenotypes), 15))
-    fp.write(string.rjust(str(allGenotypesM), 25))
+    fp.write(str.ljust('All Genotypes', 35))
+    fp.write(str.rjust(str(allGenotypes), 15))
+    fp.write(str.rjust(str(allGenotypesM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Genotypes, excluding QTL', 35))
-    fp.write(string.rjust(str(noQTL), 15))
-    fp.write(string.rjust(str(noQTLM), 25))
+    fp.write(str.ljust('Genotypes, excluding QTL', 35))
+    fp.write(str.rjust(str(noQTL), 15))
+    fp.write(str.rjust(str(noQTLM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Annotations', 35))
-    fp.write(string.rjust(str(annotations), 15))
-    fp.write(string.rjust(str(annotationsM), 25))
+    fp.write(str.ljust('Annotations', 35))
+    fp.write(str.rjust(str(annotations), 15))
+    fp.write(str.rjust(str(annotationsM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Annotations, excluding QTL', 35))
-    fp.write(string.rjust(str(annotnoQTL), 15))
-    fp.write(string.rjust(str(annotnoQTLM), 25))
+    fp.write(str.ljust('Annotations, excluding QTL', 35))
+    fp.write(str.rjust(str(annotnoQTL), 15))
+    fp.write(str.rjust(str(annotnoQTLM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Alleles Annotated, excluding QTL', 35))
-    fp.write(string.rjust(str(allelenoQTL), 15))
-    fp.write(string.rjust(str(allelenoQTLM), 25))
+    fp.write(str.ljust('Alleles Annotated, excluding QTL', 35))
+    fp.write(str.rjust(str(allelenoQTL), 15))
+    fp.write(str.rjust(str(allelenoQTLM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('Markers Annotated, excluding QTL', 35))
-    fp.write(string.rjust(str(markernoQTL), 15))
-    fp.write(string.rjust(str(markernoQTLM), 25))
+    fp.write(str.ljust('Markers Annotated, excluding QTL', 35))
+    fp.write(str.rjust(str(markernoQTL), 15))
+    fp.write(str.rjust(str(markernoQTLM), 25))
     fp.write(CRT)
     
-    fp.write(string.ljust('Genes Annotated, including HMP', 35))
-    fp.write(string.rjust(str(genenoQTL), 15))
-    fp.write(string.rjust(str(genenoQTLM), 25))
+    fp.write(str.ljust('Genes Annotated, including HMP', 35))
+    fp.write(str.rjust(str(genenoQTL), 15))
+    fp.write(str.rjust(str(genenoQTLM), 25))
     fp.write(CRT)
 
-    fp.write(string.ljust('QTL Annotated', 35))
-    fp.write(string.rjust(str(qtl), 15))
-    fp.write(string.rjust(str(qtlM), 25))
+    fp.write(str.ljust('QTL Annotated', 35))
+    fp.write(str.rjust(str(qtl), 15))
+    fp.write(str.rjust(str(qtlM), 25))
     fp.write(CRT)
 
 def genesalleles():
@@ -378,73 +377,73 @@ def genesalleles():
     # markers of type gene only
 
     db.sql('''
-	select distinct a._Marker_key, a._Allele_Type_key into temporary table genes 
-	from alleles a, MRK_Marker m 
-	where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1
-	''', None)
+        select distinct a._Marker_key, a._Allele_Type_key into temporary table genes 
+        from alleles a, MRK_Marker m 
+        where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1
+        ''', None)
 
     db.sql('''
-	select distinct a._Marker_key, a._Allele_Type_key into temporary table genesMice 
-	from allelesmice a, MRK_Marker m 
-	where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1
-	''', None)
+        select distinct a._Marker_key, a._Allele_Type_key into temporary table genesMice 
+        from allelesmice a, MRK_Marker m 
+        where a._Marker_key = m._Marker_key and m._Marker_Type_key = 1
+        ''', None)
 
     genes = db.sql('select count(distinct _Marker_key) as c from genes', 'auto')[0]['c'] 
     genesMice = db.sql('select count(distinct _Marker_key) as c from genesMice', 'auto')[0]['c']
 
     targeted = db.sql('''
-	select count(distinct _Marker_key) as c from genes 
-	where _Allele_Type_key in (%s)
-	''' % (targetedKeys), 'auto')[0]['c']
+        select count(distinct _Marker_key) as c from genes 
+        where _Allele_Type_key in (%s)
+        ''' % (targetedKeys), 'auto')[0]['c']
     targetedMice = db.sql('''
-	select count(distinct _Marker_key) as c from genesMice 
-	where _Allele_Type_key in (%s)
-	''' % (targetedKeys), 'auto')[0]['c']
+        select count(distinct _Marker_key) as c from genesMice 
+        where _Allele_Type_key in (%s)
+        ''' % (targetedKeys), 'auto')[0]['c']
 
     trapped = db.sql('''
-	select count(distinct _Marker_key) as c from genes 
-	where _Allele_Type_key in (%s)
-	''' % (trappedKeys), 'auto')[0]['c']
+        select count(distinct _Marker_key) as c from genes 
+        where _Allele_Type_key in (%s)
+        ''' % (trappedKeys), 'auto')[0]['c']
     trappedMice = db.sql('''
-	select count(distinct _Marker_key) as c from genesMice 
-	where _Allele_Type_key in (%s)
-	''' % (trappedKeys), 'auto')[0]['c']
+        select count(distinct _Marker_key) as c from genesMice 
+        where _Allele_Type_key in (%s)
+        ''' % (trappedKeys), 'auto')[0]['c']
 
     # markers that have both targeted and trapped alleles
 
     bothTargTrapped = db.sql('''
-	select count(distinct g1._Marker_key) as c from genes g1, genes g2 
-	where g1._Allele_Type_key in (%s) 
-	and g1._Marker_key = g2._Marker_key 
-	and g2._Allele_Type_key in (%s)
-	''' % (targetedKeys, trappedKeys), 'auto')[0]['c']
+        select count(distinct g1._Marker_key) as c from genes g1, genes g2 
+        where g1._Allele_Type_key in (%s) 
+        and g1._Marker_key = g2._Marker_key 
+        and g2._Allele_Type_key in (%s)
+        ''' % (targetedKeys, trappedKeys), 'auto')[0]['c']
 
     bothTargTrappedMice = db.sql('''
-	select count(distinct g1._Marker_key) as c from genesMice g1, genesMice g2 
-	where g1._Allele_Type_key in (%s) 
-	and g1._Marker_key = g2._Marker_key 
-	and g2._Allele_Type_key in (%s)
-	''' % (targetedKeys, trappedKeys), 'auto')[0]['c']
+        select count(distinct g1._Marker_key) as c from genesMice g1, genesMice g2 
+        where g1._Allele_Type_key in (%s) 
+        and g1._Marker_key = g2._Marker_key 
+        and g2._Allele_Type_key in (%s)
+        ''' % (targetedKeys, trappedKeys), 'auto')[0]['c']
 
-    fp.write(string.ljust('Total Genes with Alleles:', 60))
-    fp.write(string.rjust(str(genes), 10) + CRT)
-    fp.write(string.ljust('Total Genes with Alleles in mice:', 60))
-    fp.write(string.rjust(str(genesMice), 10) + CRT)
+    fp.write(str.ljust('Total Genes with Alleles:', 60))
+    fp.write(str.rjust(str(genes), 10) + CRT)
+    fp.write(str.ljust('Total Genes with Alleles in mice:', 60))
+    fp.write(str.rjust(str(genesMice), 10) + CRT)
 
-    fp.write(string.ljust('Genes with targeted alleles (all types):', 60))
-    fp.write(string.rjust(str(targeted), 10) + CRT)
-    fp.write(string.ljust('Genes with targeted alleles (all types - in mice):', 60))
-    fp.write(string.rjust(str(targetedMice), 10) + CRT)
+    fp.write(str.ljust('Genes with targeted alleles (all types):', 60))
+    fp.write(str.rjust(str(targeted), 10) + CRT)
+    fp.write(str.ljust('Genes with targeted alleles (all types - in mice):', 60))
+    fp.write(str.rjust(str(targetedMice), 10) + CRT)
 
-    fp.write(string.ljust('Genes with gene trapped alleles:', 60))
-    fp.write(string.rjust(str(trapped), 10) + CRT)
-    fp.write(string.ljust('Genes with gene trapped alleles in mice:', 60))
-    fp.write(string.rjust(str(trappedMice), 10) + CRT)
+    fp.write(str.ljust('Genes with gene trapped alleles:', 60))
+    fp.write(str.rjust(str(trapped), 10) + CRT)
+    fp.write(str.ljust('Genes with gene trapped alleles in mice:', 60))
+    fp.write(str.rjust(str(trappedMice), 10) + CRT)
 
-    fp.write(string.ljust('Genes with both targeted and gene trapped alleles:', 60))
-    fp.write(string.rjust(str(bothTargTrapped), 10) + CRT)
-    fp.write(string.ljust('Genes with both targeted and gene trapped alleles in mice:', 60))
-    fp.write(string.rjust(str(bothTargTrappedMice), 10) + CRT)
+    fp.write(str.ljust('Genes with both targeted and gene trapped alleles:', 60))
+    fp.write(str.rjust(str(bothTargTrapped), 10) + CRT)
+    fp.write(str.ljust('Genes with both targeted and gene trapped alleles in mice:', 60))
+    fp.write(str.rjust(str(bothTargTrappedMice), 10) + CRT)
 
 def vocab():
 
@@ -455,12 +454,12 @@ def vocab():
     omim = db.sql('select count(_Term_key) as c from VOC_Term where _Vocab_key = 44 and isObsolete = 0', 'auto')[0]['c']
     diseaseont = db.sql('select count(_Term_key) as c from VOC_Term where _Vocab_key = 125 and isObsolete = 0', 'auto')[0]['c']
 
-    fp.write(string.ljust('MP terms (exclude obsolete):', 60))
-    fp.write(string.rjust(str(mp), 10) + CRT)
-    fp.write(string.ljust('OMIM terms (exclude obsolete):', 60))
-    fp.write(string.rjust(str(omim), 10) + CRT)
-    fp.write(string.ljust('Disease Ontology (DO) terms (exclude obsolete):', 60))
-    fp.write(string.rjust(str(diseaseont), 10) + CRT)
+    fp.write(str.ljust('MP terms (exclude obsolete):', 60))
+    fp.write(str.rjust(str(mp), 10) + CRT)
+    fp.write(str.ljust('OMIM terms (exclude obsolete):', 60))
+    fp.write(str.rjust(str(omim), 10) + CRT)
+    fp.write(str.ljust('Disease Ontology (DO) terms (exclude obsolete):', 60))
+    fp.write(str.rjust(str(diseaseont), 10) + CRT)
 
 def diseaseontology():
 
@@ -470,10 +469,10 @@ def diseaseontology():
     #genotypes = db.sql('select count(distinct _Object_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
     #diseaseont = db.sql('select count(distinct _Term_key) as c from VOC_Annot where _AnnotType_key = 1020', 'auto')[0]['c']
 
-    #fp.write(string.ljust('Genotypes associated with at least one DO term:', 60))
-    #fp.write(string.rjust(str(genotypes), 10) + CRT)
-    #fp.write(string.ljust('DO terms that have one or more genotypes associated:', 60))
-    #fp.write(string.rjust(str(diseaseont), 10) + CRT)
+    #fp.write(str.ljust('Genotypes associated with at least one DO term:', 60))
+    #fp.write(str.rjust(str(genotypes), 10) + CRT)
+    #fp.write(str.ljust('DO terms that have one or more genotypes associated:', 60))
+    #fp.write(str.rjust(str(diseaseont), 10) + CRT)
 
     fp.write('Number of unique genotype to disease annotations.\n')
     fp.write('count of unique combinations of genotype and disease,\n')
@@ -533,4 +532,3 @@ vocab()
 diseaseontology()
 
 reportlib.finish_nonps(fp)	# non-postscript file
-

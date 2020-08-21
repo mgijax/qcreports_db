@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -46,7 +45,7 @@ cmd = '''
 select distinct ip._ImagePane_key
 into temporary table assays1
 from IMG_Image i, IMG_ImagePane ip, GXD_InSituResultImage ia, 
-	GXD_InSituResult r, GXD_Specimen s, GXD_Assay ga, BIB_Citation_Cache b
+        GXD_InSituResult r, GXD_Specimen s, GXD_Assay ga, BIB_Citation_Cache b
 where i._ImageType_key = 1072158
 and i._Image_key = ip._Image_key
 and ip._ImagePane_key = ia._ImagePane_key
@@ -65,15 +64,15 @@ select distinct aa.accID as jnumID, aa.numericPart as jnum,
         substring(i.figureLabel,1,20) as figureLabel, 
         substring(ip.paneLabel,1,20) as paneLabel, 
         a.accID as imageID, 
-	aaaa.accID as assayID, 
-	m.symbol,
-	s.specimenLabel, 
-	s.hybridization
+        aaaa.accID as assayID, 
+        m.symbol,
+        s.specimenLabel, 
+        s.hybridization
 into temporary table assays2
 from assays1 x, IMG_ImagePane ip, IMG_Image i, ACC_Accession aa, ACC_Accession a,
-	ACC_Accession aaaa, GXD_InSituResultImage ia, GXD_InSituResult r, GXD_Specimen s, 
-	GXD_Assay ga,
-	MRK_Marker m
+        ACC_Accession aaaa, GXD_InSituResultImage ia, GXD_InSituResult r, GXD_Specimen s, 
+        GXD_Assay ga,
+        MRK_Marker m
 where x._ImagePane_key = ip._ImagePane_key
 and ip._Image_key = i._Image_key
 and i._Refs_key = aa._Object_key
@@ -97,8 +96,8 @@ db.sql(cmd, None)
 
 results = db.sql('''
 select x.jnumID, x.figureLabel, x.paneLabel, x.imageID, x.assayID, x.symbol,
-	x.specimenLabel, 
-	x.hybridization
+        x.specimenLabel, 
+        x.hybridization
 from assays2 x
 order by jnum, figureLabel, paneLabel, symbol
 ''', 'auto')
@@ -115,4 +114,3 @@ for r in results:
 
 reportlib.finish_nonps(fp)	# non-postscript file
 db.useOneConnection(0)
-

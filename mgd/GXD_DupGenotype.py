@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #	TR12255 - this is a rewrite of TR5488 to
@@ -66,8 +65,8 @@ fp.write('genotypeIds%ssymbol%schr%sallele1%sallele2%salleleState%smcl1%smcl2%ss
 # map each genotype ID to its set of allele pairs
 for r in results:
     genoAccid = r['genoAccid']
-    if not genoDict.has_key(genoAccid):
-	genoDict[genoAccid]= []
+    if genoAccid not in genoDict:
+        genoDict[genoAccid]= []
     genoDict[genoAccid].append(r)
 
 #{key:[genoAccid1, ...], ...}
@@ -79,33 +78,33 @@ for gId in genoDict:
     keyList = []
     resultsList = genoDict[gId]
     for r in resultsList:
-	symbol = r['symbol']
-	chr = r['chromosome']
-	allele1 = r['allele1']
-	allele2 = r['allele2']
-	alleleState = r['alleleState']
-	mcl1 = r['mcl1']
-	mcl2 = r['mcl2']
-	if mcl2 == None:
-	    mcl2 = 'None'	
-	strain = r['strain']
-	isConditional = r['isConditional']
+        symbol = r['symbol']
+        chr = r['chromosome']
+        allele1 = r['allele1']
+        allele2 = r['allele2']
+        alleleState = r['alleleState']
+        mcl1 = r['mcl1']
+        mcl2 = r['mcl2']
+        if mcl2 == None:
+            mcl2 = 'None'	
+        strain = r['strain']
+        isConditional = r['isConditional']
 
-	# delimit the attributes of each allele pair with '|'
-	k = '%s|%s|%s|%s|%s|%s|%s|%s|%s' %(symbol, chr, allele1, allele2, alleleState, mcl1, mcl2, strain, isConditional)
-	keyList.append(k)
+        # delimit the attributes of each allele pair with '|'
+        k = '%s|%s|%s|%s|%s|%s|%s|%s|%s' %(symbol, chr, allele1, allele2, alleleState, mcl1, mcl2, strain, isConditional)
+        keyList.append(k)
     # Delimit the allele pairs in the key with 'comma'
-    key = string.join(keyList, ',')
-    if not allelePairDict.has_key(key):
-	allelePairDict[key] = []
+    key = ','.join(keyList)
+    if key not in allelePairDict:
+        allelePairDict[key] = []
     allelePairDict[key].append(gId)
 
 # now look for dups and report them
 for key in allelePairDict:
     # if there are multiple records for this key
     if len(allelePairDict[key]) > 1:
-	# genotype MGI IDs for this key and write to report
-	dupGenoList = allelePairDict[key]
-	fp.write('%s%s%s%s' % (string.join(dupGenoList, ', '), TAB, key, CRT))
-	
+        # genotype MGI IDs for this key and write to report
+        dupGenoList = allelePairDict[key]
+        fp.write('%s%s%s%s' % (', '.join(dupGenoList), TAB, key, CRT))
+        
 reportlib.finish_nonps(fp) 

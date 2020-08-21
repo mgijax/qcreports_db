@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -49,7 +48,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Withdrawn Markers (name = withdrawn) annotated to index records and/or assays', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write(2*CRT)
-fp.write(string.ljust('Symbol', 50))
+fp.write(str.ljust('Symbol', 50))
 fp.write(CRT)
 fp.write(50*'-')
 fp.write(CRT)
@@ -68,7 +67,7 @@ results = db.sql('''
     ''', 'auto')
 
 for r in results:
-    fp.write(string.ljust(r['symbol'], 50))
+    fp.write(str.ljust(r['symbol'], 50))
     fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))

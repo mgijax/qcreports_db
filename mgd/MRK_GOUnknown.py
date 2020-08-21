@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -43,7 +42,7 @@ PAGE = reportlib.PAGE
 #
 # Main
 #
-print "initializing"
+print("initializing")
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 # lookup for curator tag
@@ -62,10 +61,10 @@ for r in results:
 # refs keys with the GO:NotforGOUnknown tag
 db.sql('''select s._Refs_key
         into temporary table exclude
-	from BIB_Workflow_Status s, BIB_Workflow_Tag t
-	where s._Group_key =  31576666
-	and s._Refs_key = t._Refs_key
-	and t._Tag_key = 35429720''', None)
+        from BIB_Workflow_Status s, BIB_Workflow_Tag t
+        where s._Group_key =  31576666
+        and s._Refs_key = t._Refs_key
+        and t._Tag_key = 35429720''', None)
 
 # markers with allele subtype 'recombinase' to exclude
 db.sql('''select a._Marker_key
@@ -98,8 +97,8 @@ db.sql('''select distinct substring(m.symbol,1,25) as symbol, m._Marker_key, r._
     and r._Refs_key = rr._Refs_key
     and rr.creation_date >= a.creation_date
     and not exists(select 1
-	from recomb r
-	where m._Marker_key = r._Marker_key)''', None)
+        from recomb r
+        where m._Marker_key = r._Marker_key)''', None)
 
 db.sql('create index temp1_idx1 on temp1(_Marker_key)', None)
 
@@ -155,72 +154,72 @@ db.sql('create index diseaseontology_idx1 on diseaseontology(_Marker_key)', None
 # category 1: 
 
 db.sql('''select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, 
-	t.pubmedID, t.jnumDate, t.annotDate, '1'::text as category
+        t.pubmedID, t.jnumDate, t.annotDate, '1'::text as category
     INTO TEMPORARY TABLE temp3
     from temp2 t
     where exists (select 1 from BIB_Workflow_Status s
-	    where t._Refs_key = s._Refs_key
-	    and s._Group_key = 31576666
-	    and s._Status_key in (31576673, 31576671) 
-	    and s.isCurrent = 1)
+            where t._Refs_key = s._Refs_key
+            and s._Group_key = 31576666
+            and s._Status_key in (31576673, 31576671) 
+            and s.isCurrent = 1)
     and not exists (select 1 from exclude e
-	    where e._Refs_key = t._Refs_key) 
+            where e._Refs_key = t._Refs_key) 
     and not exists (select 1 from BIB_Workflow_Status s
-	    where t._Refs_key = s._Refs_key
-	    and s._Group_key in (31576664, 31576668, 31576665) 
-	    and s._Status_key in (31576670, 31576671, 31576673, 31576674)
-	    and s.isCurrent = 1)
+            where t._Refs_key = s._Refs_key
+            and s._Group_key in (31576664, 31576668, 31576665) 
+            and s._Status_key in (31576670, 31576671, 31576673, 31576674)
+            and s.isCurrent = 1)
     and not exists (select 1 from VOC_Annot va, VOC_Evidence e
-	    where va._AnnotType_key = 1000
-	    and va._Annot_key = e._Annot_key
-	    and e._Refs_key = t._Refs_key)''', None)
+            where va._AnnotType_key = 1000
+            and va._Annot_key = e._Annot_key
+            and e._Refs_key = t._Refs_key)''', None)
 
 # category 2: 
 
 db.sql('''INSERT INTO temp3
 select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, 
-	t.annotDate, '2'::text as category
+        t.annotDate, '2'::text as category
     from temp2 t
     where not exists (select 1 from temp3 t3 
-	    where t.symbol = t3.symbol
-	    and t.pubmedID = t3.pubmedID)
+            where t.symbol = t3.symbol
+            and t.pubmedID = t3.pubmedID)
     and not exists (select 1 from exclude e
             where e._Refs_key = t._Refs_key)
     and exists (select 1 from BIB_Workflow_Status s
-	    where t._Refs_key = s._Refs_key
-	    and s._Group_key = 31576666
-	    and s._Status_key in (31576673,31576671) 
-	    and s.isCurrent = 1)
+            where t._Refs_key = s._Refs_key
+            and s._Group_key = 31576666
+            and s._Status_key in (31576673,31576671) 
+            and s.isCurrent = 1)
     and exists (select 1 from BIB_Workflow_Status s
-	    where t._Refs_key = s._Refs_key
-	    and s._Group_key in (31576664, 31576668)
-	    and s._Status_key in (31576670,31576671, 31576673, 31576674)
-	    and s.isCurrent = 1)
+            where t._Refs_key = s._Refs_key
+            and s._Group_key in (31576664, 31576668)
+            and s._Status_key in (31576670,31576671, 31576673, 31576674)
+            and s.isCurrent = 1)
     and not exists (select 1 from VOC_Annot va, VOC_Evidence e
-	    where va._AnnotType_key = 1000
-	    and va._Annot_key = e._Annot_key
-	    and e._Refs_key = t._Refs_key)''', None)
+            where va._AnnotType_key = 1000
+            and va._Annot_key = e._Annot_key
+            and e._Refs_key = t._Refs_key)''', None)
 
 # category 3: any GO annotations 
 
 db.sql('''INSERT INTO temp3
 select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jnumDate, 
-	t.annotDate, '3'::text as category
+        t.annotDate, '3'::text as category
     from temp2 t
     where not exists (select 1 from temp3 t3 
-	    where t.symbol = t3.symbol
-	    and t.pubmedID = t3.pubmedID)
+            where t.symbol = t3.symbol
+            and t.pubmedID = t3.pubmedID)
     and not exists (select 1 from exclude e
             where e._Refs_key = t._Refs_key)
     and exists (select 1 from BIB_Workflow_Status s
-	    where t._Refs_key = s._Refs_key
-	    and s._Group_key = 31576666
-	    and s._Status_key in (31576673,31576671) 
-	    and s.isCurrent = 1)
+            where t._Refs_key = s._Refs_key
+            and s._Group_key = 31576666
+            and s._Status_key in (31576673,31576671) 
+            and s.isCurrent = 1)
     and not exists (select 1 from VOC_Annot va, VOC_Evidence e
-	    where va._AnnotType_key = 1000
-	    and va._Annot_key = e._Annot_key
-	    and e._Refs_key = t._Refs_key)''', None)
+            where va._AnnotType_key = 1000
+            and va._Annot_key = e._Annot_key
+            and e._Refs_key = t._Refs_key)''', None)
 
 db.sql('create index temp3_idx1 on temp3(_Marker_key)', None)
 
@@ -231,7 +230,7 @@ db.sql('''select t.*, 'Y'::text as hasDO
     INTO TEMPORARY TABLE temp4
     from temp3 t
     where exists (select 1 from diseaseontology o
-	where t._Marker_key = o._Marker_key)''', None)
+        where t._Marker_key = o._Marker_key)''', None)
 
 db.sql('''INSERT INTO temp4
     select t.*, 'N'::text as hasDO
@@ -266,15 +265,15 @@ fp.write('Category 1 = chosen or indexed only for GO\n')
 fp.write('Category 2 = chosen or indexed only for GO & A&P\n')
 fp.write('Category 3 = chosen or indexed for GO and any other group\n\n')
 
-fp.write(string.ljust('symbol', 25))
-fp.write(string.ljust('mgiID', 15))
-fp.write(string.ljust('jnumID', 15))
-fp.write(string.ljust('pubmedID', 15))
-fp.write(string.center('category', 10))
-fp.write(string.center('hasDO', 10))
-fp.write(string.ljust('jnumDate', 14))
-fp.write(string.ljust('annotDate', 14))
-fp.write(string.ljust('MGI Curator Tag', 50) + CRT*2)
+fp.write(str.ljust('symbol', 25))
+fp.write(str.ljust('mgiID', 15))
+fp.write(str.ljust('jnumID', 15))
+fp.write(str.ljust('pubmedID', 15))
+fp.write(str.center('category', 10))
+fp.write(str.center('hasDO', 10))
+fp.write(str.ljust('jnumDate', 14))
+fp.write(str.ljust('annotDate', 14))
+fp.write(str.ljust('MGI Curator Tag', 50) + CRT*2)
 
 results = db.sql('''select distinct _Refs_key, symbol, mgiID, jnumID, pubmedID, 
     category, hasDO, jnumDate, annotDate
@@ -287,6 +286,6 @@ for r in results:
     cur = ''
     if refsKey in curTagDict:
             curList = curTagDict[refsKey]
-            cur = string.join(curList, ', ')
+            cur = ', '.join(curList)
 
-    fp.write('%s%s%s%s%s%s%s%s%s%s' % (string.ljust(r['symbol'], 25), string.ljust(r['mgiID'], 15), string.ljust(r['jnumID'], 15), string.ljust(r['pubmedID'], 15), string.center(r['category'], 10), string.center(r['hasDO'], 10), string.ljust(r['jnumDate'], 14), string.ljust(r['annotDate'], 14), string.ljust(cur, 50), CRT))
+    fp.write('%s%s%s%s%s%s%s%s%s%s' % (str.ljust(r['symbol'], 25), str.ljust(r['mgiID'], 15), str.ljust(r['jnumID'], 15), str.ljust(r['pubmedID'], 15), str.center(r['category'], 10), str.center(r['hasDO'], 10), str.ljust(r['jnumDate'], 14), str.ljust(r['annotDate'], 14), str.ljust(cur, 50), CRT))

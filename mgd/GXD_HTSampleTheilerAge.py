@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -73,12 +72,12 @@ for r in results:
     m = re.search('[-,]', range)
 
     if m == None:
-        minAge = string.atof(range)
+        minAge = float(range)
         maxAge = minAge
     else:
         delim = m.start()
-        minAge = string.atof(range[0:delim])
-        maxAge = string.atof(range[delim+1:])
+        minAge = float(range[0:delim])
+        maxAge = float(range[delim+1:])
 
     dpcMin = r['dpcMin']
     dpcMax = r['dpcMax']

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -117,71 +116,71 @@ def runQueries():
 
     results = db.sql('select url from ACC_ActualDB where _LogicalDB_key = %d ' % (PUBMED), 'auto')
     for r in results:
-	    url = r['url']
+            url = r['url']
 
     # exclude markers that have GO annotations
     # exclude markers that contain feature 'heritable phenotypic marker' (6238170)
 
     db.sql('''
-	   select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart, 'no '::text as hasOrthology
-	   into temporary table markers 
-	   from MRK_Marker m, ACC_Accession a 
-	   where m._Marker_Type_key = 1 
-	   and m._Marker_Status_key = 1
-	   and m.name !~ 'gene model %' 
-	   and m.name !~ 'gene trap %' 
-	   and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
-	   and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
-	   and m.symbol !~ 'ORF%' 
-	   and m.symbol !~ 'Gt(ROSA)26Sor' 
-	   and m._Marker_key = a._Object_key 
-	   and a._MGIType_key = 2 
-	   and a._LogicalDB_key = 1 
-	   and a.prefixPart = 'MGI:' 
-	   and a.preferred = 1 
-	   and not exists (select 1 from  VOC_Annot a 
-	   where m._Marker_key = a._Object_key 
-	   and a._AnnotType_key = 1000) 
-	   and not exists (select 1 from  VOC_Annot a 
-	   where m._Marker_key = a._Object_key 
-	   and a._AnnotType_key = 1011
-	   and a._Term_key = 6238170)
-	   ''', None)
+           select m._Marker_key, m.symbol, m.name, a.accID as mgiID, a.numericPart, 'no '::text as hasOrthology
+           into temporary table markers 
+           from MRK_Marker m, ACC_Accession a 
+           where m._Marker_Type_key = 1 
+           and m._Marker_Status_key = 1
+           and m.name !~ 'gene model %' 
+           and m.name !~ 'gene trap %' 
+           and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
+           and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
+           and m.symbol !~ 'ORF%' 
+           and m.symbol !~ 'Gt(ROSA)26Sor' 
+           and m._Marker_key = a._Object_key 
+           and a._MGIType_key = 2 
+           and a._LogicalDB_key = 1 
+           and a.prefixPart = 'MGI:' 
+           and a.preferred = 1 
+           and not exists (select 1 from  VOC_Annot a 
+           where m._Marker_key = a._Object_key 
+           and a._AnnotType_key = 1000) 
+           and not exists (select 1 from  VOC_Annot a 
+           where m._Marker_key = a._Object_key 
+           and a._AnnotType_key = 1011
+           and a._Term_key = 6238170)
+           ''', None)
     db.sql('create index markers_idx1 on markers(_Marker_key)', None)
 
     # orthologies
 
     db.sql('''update markers set hasOrthology = 'yes'
-	where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
-	where mc._ClusterSource_key = 9272151 
+        where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
+        where mc._ClusterSource_key = 9272151 
         and mc._Cluster_key = hm1._Cluster_key 
-	and hm1._Marker_key = markers._Marker_key 
-	and hm1._Cluster_key = hm2._Cluster_key 
-	and hm2._Marker_key = mh._Marker_key 
-	and mh._Organism_key = 2) 
-	''', None)
+        and hm1._Marker_key = markers._Marker_key 
+        and hm1._Cluster_key = hm2._Cluster_key 
+        and hm2._Marker_key = mh._Marker_key 
+        and mh._Organism_key = 2) 
+        ''', None)
 
     db.sql('''update markers set hasOrthology = 'yes' 
-	where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
-	where mc._ClusterSource_key = 9272151 
+        where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
+        where mc._ClusterSource_key = 9272151 
         and mc._Cluster_key = hm1._Cluster_key 
-	and hm1._Marker_key = markers._Marker_key 
-	and hm1._Cluster_key = hm2._Cluster_key 
-	and hm2._Marker_key = mh._Marker_key 
-	and mh._Organism_key = 40) 
-	''', None)
+        and hm1._Marker_key = markers._Marker_key 
+        and hm1._Cluster_key = hm2._Cluster_key 
+        and hm2._Marker_key = mh._Marker_key 
+        and mh._Organism_key = 40) 
+        ''', None)
 
     # references
 
     db.sql('''select m._Marker_key, m.symbol, m.name, m.mgiID, m.numericPart, m.hasOrthology, 
-	r._Refs_key, r.pubmedID, b.journal, b.mgiID as refID
-	into temporary table references1 
-	from markers m , MRK_Reference r, BIB_Citation_Cache b 
-	where m._Marker_key = r._Marker_key
-	and m._Marker_key not in ( 25559, 37270 ) -- Gcna, Gt(ROSA)26Sor
-	and r._Refs_key = b._Refs_key
-	and r.jnum is not null
-	''', None)
+        r._Refs_key, r.pubmedID, b.journal, b.mgiID as refID
+        into temporary table references1 
+        from markers m , MRK_Reference r, BIB_Citation_Cache b 
+        where m._Marker_key = r._Marker_key
+        and m._Marker_key not in ( 25559, 37270 ) -- Gcna, Gt(ROSA)26Sor
+        and r._Refs_key = b._Refs_key
+        and r.jnum is not null
+        ''', None)
     db.sql('create index references_idx1 on references1(_Refs_key)', None)
     db.sql('create index references_idx2 on references1(_Marker_key)', None)
     db.sql('create index references_idx3 on references1(symbol)', None)
@@ -200,38 +199,38 @@ def runQueries():
 
 def writeRecordD(fp, r):
 
-	fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['refID'], r['refID']) + TAB)
+        fp.write('<A HREF="%s%s">%s</A>' %(pdfurl, r['refID'], r['refID']) + TAB)
 
-	if r['pubmedID'] != None:
-		purl = string.replace(url, '@@@@', r['pubmedID'])
-		fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
-	fp.write(TAB)
+        if r['pubmedID'] != None:
+                purl = str.replace(url, '@@@@', r['pubmedID'])
+                fp.write('<A HREF="%s">%s</A>' % (purl, r['pubmedID']))
+        fp.write(TAB)
 
         if r['_Refs_key'] in gxd:
                 fp.write('Y' + TAB)
         else:
                 fp.write('N' + TAB)
 
-	fp.write(r['refID'] + TAB + \
-	         r['symbol'] + TAB + \
-	         r['name'] + CRT)
+        fp.write(r['refID'] + TAB + \
+                 r['symbol'] + TAB + \
+                 r['name'] + CRT)
 
 def reportD():
 
     db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol,
-	r.name, r.mgiID, r.refID, r.numericPart, r.pubmedID, r.hasOrthology 
-	into temporary table fpD 
-	from references1 r, BIB_Workflow_Status s
-	where r._Refs_key = s._Refs_key 
+        r.name, r.mgiID, r.refID, r.numericPart, r.pubmedID, r.hasOrthology 
+        into temporary table fpD 
+        from references1 r, BIB_Workflow_Status s
+        where r._Refs_key = s._Refs_key 
         and r._Refs_key = s._Refs_key 
         and s._Group_key = 31576666
         and s._Status_key in (31576673, 31576671)
         and s.isCurrent = 1 
-	and not exists (select 1 from VOC_Evidence e, VOC_Annot a 
-	where r._Refs_key = e._Refs_key 
-	and e._Annot_key = a._Annot_key 
-	and a._AnnotType_key = 1000) 
-	''', None)
+        and not exists (select 1 from VOC_Evidence e, VOC_Annot a 
+        where r._Refs_key = e._Refs_key 
+        and e._Annot_key = a._Annot_key 
+        and a._AnnotType_key = 1000) 
+        ''', None)
 
     # number of unique MGI gene
     results = db.sql('select distinct _Marker_key from fpD', 'auto')
@@ -252,15 +251,15 @@ def reportD():
     fpD.write('Total number of rows:  %s\n\n' % (len(results)))
 
     fpD.write('ref ID' + TAB + \
-	     'pubMed ID' + TAB + \
-	     'ref in GXD?' + TAB + \
-	     'mgi ID' + TAB + \
-	     'symbol' + TAB + \
-	     'name' + CRT*2)
+             'pubMed ID' + TAB + \
+             'ref in GXD?' + TAB + \
+             'mgi ID' + TAB + \
+             'symbol' + TAB + \
+             'name' + CRT*2)
 
     results = db.sql('select * from fpD order by hasOrthology desc, numericPart', 'auto')
     for r in results:
-	    writeRecordD(fpD, r)
+            writeRecordD(fpD, r)
 
 #
 # Main
@@ -270,4 +269,3 @@ reportOpen()
 runQueries()
 reportD()
 reportClose()
-

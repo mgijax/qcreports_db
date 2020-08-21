@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -49,7 +48,7 @@ fp = reportlib.init(sys.argv[0], 'Markers with C4AM Coordinates and Gene Models'
 db.sql('''select mcf._Object_key as markerKey, a.accid as mgiID, m.symbol
     into temporary table curated
     from  MAP_Coord_Feature mcf, MAP_Coordinate mc, MAP_Coord_Collection mcc, 
-	ACC_Accession a, MRK_Marker m
+        ACC_Accession a, MRK_Marker m
     where mcf._CreatedBy_key = 1523 /*mrk_coordload*/
     and mcf._Map_key = mc._Map_key
     and mc._Collection_key = mcc._Collection_key
@@ -77,17 +76,16 @@ for r in results:
     gmID = r['genemodelID']
     key = '%s|%s' % (mgiID, symbol)
     if key not in reportDict:
-	reportDict[key] = []
+        reportDict[key] = []
     reportDict[key].append(gmID)
 
 fp.write('Marker ID%sMarker Symbol%sGene Model IDs%s' % (TAB, TAB, CRT))
 for key in reportDict:
     gmIdList = reportDict[key]
-    mgiID, symbol = string.split(key, '|')
-    fp.write('%s%s%s%s%s%s' % (mgiID, TAB, symbol, TAB, string.join(gmIdList, ', '), CRT  ))
+    mgiID, symbol = str.split(key, '|')
+    fp.write('%s%s%s%s%s%s' % (mgiID, TAB, symbol, TAB, ', '.join(gmIdList), CRT  ))
 
 fp.write(CRT)
 fp.write('Total: %s' % len(results))
 
 reportlib.finish_nonps(fp)	# non-postscript file
-

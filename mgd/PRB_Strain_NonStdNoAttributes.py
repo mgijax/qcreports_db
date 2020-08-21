@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -83,25 +82,25 @@ results = db.sql('''select a._Object_key as _Strain_key, a.accid, ldb.name
 for r in results:
     strainKey = r['_Strain_key']
     if strainKey not in accidDict1:
-	accidDict1[strainKey] = []
+        accidDict1[strainKey] = []
     accidDict1[strainKey].append(r)
 
 results = db.sql('''select * from strains1
-	order by rawDate desc''', 'auto')
+        order by rawDate desc''', 'auto')
 for r in results:
     strainKey = r['_Strain_key']
     private = 'N' # default
     if r['private'] == 1:
-	private = 'Y'
+        private = 'Y'
     creation_date = r['creation_date']
     strain = r['strain']
     created_by = r['name']
     strainID = r['strainID']
     otherIDs = []
     if strainKey in accidDict1:
-	for res in accidDict1[strainKey]:
-	    otherIDs.append(res['accid'])
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (creation_date, TAB, strainID, TAB, string.join(otherIDs, ', '), TAB, strain, TAB, private, TAB, created_by, CRT)) 
+        for res in accidDict1[strainKey]:
+            otherIDs.append(res['accid'])
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (creation_date, TAB, strainID, TAB, ', '.join(otherIDs), TAB, strain, TAB, private, TAB, created_by, CRT)) 
 
 fp.write('%sTotal: %s' % (CRT, len(results)))
 
@@ -152,7 +151,7 @@ for r in results:
     if strainKey in accidDict1:
         for res in accidDict1[strainKey]:
             otherIDs.append(res['accid'])
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (creation_date, TAB, strainID, TAB, string.join(otherIDs, ', '), TAB, strain, TAB, private, TAB, created_by, CRT))
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (creation_date, TAB, strainID, TAB, ', '.join(otherIDs), TAB, strain, TAB, private, TAB, created_by, CRT))
 
 fp.write('%sTotal: %s' % (CRT, len(results)))
 

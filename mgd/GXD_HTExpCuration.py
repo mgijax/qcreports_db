@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -48,32 +47,32 @@ for r in results:
     notCuratedStudyTypeList.append(r['_Experiment_key'])
 
 results = db.sql('''select _Experiment_key from GXD_HTExperimentVariable
-	where _Term_key = 20475439''', 'auto') # Not Curated
+        where _Term_key = 20475439''', 'auto') # Not Curated
 for r in results:
-	notCuratedVarList.append(r['_Experiment_key'])
+        notCuratedVarList.append(r['_Experiment_key'])
 
 
 results = db.sql('''select _Experiment_key 
-	from GXD_HTExperiment
-	where _ExperimentType_key = 20475438''', 'auto') # Not Resolved
+        from GXD_HTExperiment
+        where _ExperimentType_key = 20475438''', 'auto') # Not Resolved
 for r in results:
     expTypeNRList.append(r['_Experiment_key'])
 
 
 results = db.sql('''select a.accid, hte._Experiment_key
-	from ACC_Accession a, GXD_HTExperiment hte
-	where hte._CurationState_key = 20475421
-	and hte._Experiment_key = a._Object_key
-	and a._MGIType_key = 42
-	and a._LogicalDB_key = 189
-	and a.preferred = 1''', 'auto') # Done
+        from ACC_Accession a, GXD_HTExperiment hte
+        where hte._CurationState_key = 20475421
+        and hte._Experiment_key = a._Object_key
+        and a._MGIType_key = 42
+        and a._LogicalDB_key = 189
+        and a.preferred = 1''', 'auto') # Done
 
 ct = 0
 for r in results:
     exptKey = r['_Experiment_key']
     accid = r['accid']
     if exptKey in notCuratedStudyTypeList or exptKey in notCuratedVarList or exptKey in expTypeNRList:
-	ct += 1
-	fp.write('%s%s' % (accid, CRT))
+        ct += 1
+        fp.write('%s%s' % (accid, CRT))
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -88,14 +87,14 @@ fp.write('----------------------------------------------------------------------
 
 # excluded references
 db.sql('''
-	select a._Object_key as _Refs_key
-	into temporary table excludeRefs 
-	from ACC_Accession a 
+        select a._Object_key as _Refs_key
+        into temporary table excludeRefs 
+        from ACC_Accession a 
         where a._MGIType_key = 1 
         and a._LogicalDB_key = 1 
         and a.accID in 
-		('J:46439','J:50869','J:91257','J:93500','J:93300','J:99307', 'J:174767', 'J:122989', 'J:171409')
-	''', None)
+                ('J:46439','J:50869','J:91257','J:93500','J:93300','J:99307', 'J:174767', 'J:122989', 'J:171409')
+        ''', None)
 db.sql('create index excludeRefs_idx1 on excludeRefs(_Refs_key)', None)
 
 db.sql('''
@@ -114,7 +113,7 @@ db.sql('''
     WHERE t._Vocab_key = 91
       AND t._Term_key = s._Term_key
       AND t.term = 'reproductive system' AND s._Stage_key between 16 and 19
-	''', None)
+        ''', None)
 db.sql('create index excludeStructs_idx1 on excludeStructs(_EMAPA_Term_key)', None)
 db.sql('create index excludeStructs_idx2 on excludeStructs(_Stage_key)', None)
 
@@ -122,15 +121,15 @@ db.sql('create index excludeStructs_idx2 on excludeStructs(_Stage_key)', None)
 # assays with expression
 #
 db.sql('''
-	select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age 
-	into temporary table expressed 
-	from GXD_Expression e 
-	where e.isForGXD = 1 
-	and e.expressed = 1 
-	and not exists (select 1 from excludeStructs r 
-		where e._EMAPA_Term_key = r._EMAPA_Term_key and e._Stage_key = r._Stage_key) 
-	and not exists (select 1 from excludeRefs r where e._Refs_key = r._Refs_key)
-	''', None)
+        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age 
+        into temporary table expressed 
+        from GXD_Expression e 
+        where e.isForGXD = 1 
+        and e.expressed = 1 
+        and not exists (select 1 from excludeStructs r 
+                where e._EMAPA_Term_key = r._EMAPA_Term_key and e._Stage_key = r._Stage_key) 
+        and not exists (select 1 from excludeRefs r where e._Refs_key = r._Refs_key)
+        ''', None)
 db.sql('create index expressed_idx1 on expressed(_Assay_key)', None)
 db.sql('create index expressed_idx2 on expressed(_EMAPA_Term_key)', None)
 db.sql('create index expressed_idx3 on expressed(_Stage_key)', None)
@@ -141,17 +140,17 @@ db.sql('create index expressed_idx5 on expressed(age)', None)
 # compare expressed/not expressed by assay, structure, stage, genotype, age
 #
 db.sql('''
-	select distinct e.* 
-	into temporary table results 
-	from expressed e, GXD_Expression n 
-	where e._Assay_key = n._Assay_key 
-	and n.isForGXD = 1 
-	and e._EMAPA_Term_key = n._EMAPA_Term_key 
-	and e._Stage_key = n._Stage_key 
-	and e._Genotype_key = n._Genotype_key 
-	and e.age = n.age 
-	and n.expressed = 0 
-	''', None)
+        select distinct e.* 
+        into temporary table results 
+        from expressed e, GXD_Expression n 
+        where e._Assay_key = n._Assay_key 
+        and n.isForGXD = 1 
+        and e._EMAPA_Term_key = n._EMAPA_Term_key 
+        and e._Stage_key = n._Stage_key 
+        and e._Genotype_key = n._Genotype_key 
+        and e.age = n.age 
+        and n.expressed = 0 
+        ''', None)
 db.sql('create index results_idx1 on results(_Assay_key)', None)
 db.sql('create index results_idx2 on results(_EMAPA_Term_key)', None)
 db.sql('create index results_idx3 on results(_Stage_key)', None)
@@ -161,11 +160,11 @@ db.sql('create index results_idx4 on results(_Refs_key)', None)
 # final results
 #
 results = db.sql('''
-	select ac1.accID as jnumID, 
-	       ac2.accID as mgiID, 
-	       t.stage::text || ':' || s.term as term
+        select ac1.accID as jnumID, 
+               ac2.accID as mgiID, 
+               t.stage::text || ':' || s.term as term
          from results r, VOC_Term s, GXD_TheilerStage t, 
-	      ACC_Accession ac1, ACC_Accession ac2 
+              ACC_Accession ac1, ACC_Accession ac2 
          where r._EMAPA_Term_key = s._Term_key 
          and r._Stage_key = t._Stage_key 
          and r._Refs_key = ac1._Object_key 
@@ -177,7 +176,7 @@ results = db.sql('''
          and ac2._MGIType_key = 8 
          and ac2.prefixPart = 'MGI:' 
          order by mgiID desc, term
-	 ''', 'auto')
+         ''', 'auto')
 
 #
 # Process each row of the results set.
@@ -187,4 +186,3 @@ fp.write('\n(%d rows affected)\n\n' % (len(results)))
 for r in results:
     fp.write("%-9s  %-12s  %-100s\n" % (r['jnumID'],r['mgiID'],r['term']))
 fp.write('\n(%d rows affected)\n' % (len(results)))
-

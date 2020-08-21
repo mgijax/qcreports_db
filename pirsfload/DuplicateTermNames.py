@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -40,11 +39,11 @@ jobKey=sys.argv[2]
 fp = reportlib.init(sys.argv[0],  'PIRSFLoad - Duplicate terms loaded into MGD (Job Stream %s)' % (jobKey), outputdir = outputDir, sqlLogging = 0)
 
 fp.write('\tA row in this report represents a superfamily term that is used in more than one superfamily.\n\n')
-fp.write(string.ljust('Term name', 100))
-fp.write(string.ljust('Superfamily ID', 15))
+fp.write(str.ljust('Term name', 100))
+fp.write(str.ljust('Superfamily ID', 15))
 fp.write(CRT)
-fp.write(string.ljust('------------------------------------------------------------------------------------------', 100))
-fp.write(string.ljust('---------------', 15))
+fp.write(str.ljust('------------------------------------------------------------------------------------------', 100))
+fp.write(str.ljust('---------------', 15))
 fp.write(CRT)
 
 db.sql('''
@@ -57,22 +56,22 @@ db.sql('''
       where vt2._Vocab_key = 46 
       group by vt2.term having count(*) > 1
     )
-	''', None)
+        ''', None)
 
 db.sql('create index idx1 on dupterms(_Term_key)', None)
 
 results = db.sql('''
-	select d.term, a.accID 
-   	from dupterms d, ACC_Accession a 
-   	where d._Term_key = a ._Object_key 
-   	and a._LogicalDB_key = 78 
-   	order by d.term
-	''', 'auto')
+        select d.term, a.accID 
+        from dupterms d, ACC_Accession a 
+        where d._Term_key = a ._Object_key 
+        and a._LogicalDB_key = 78 
+        order by d.term
+        ''', 'auto')
 
 for r in results:
-    fp.write(string.ljust(r['term'], 100) + \
-             string.ljust(r['accID'], 15) + \
-	     CRT)
+    fp.write(str.ljust(r['term'], 100) + \
+             str.ljust(r['accID'], 15) + \
+             CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)

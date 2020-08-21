@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -137,4 +136,3 @@ for r in dataloadList:
 totalCount = len(curatorList) + len(dataloadList)
 fp.write('\n(%d rows affected)\n' % (totalCount))
 reportlib.finish_nonps(fp)
-

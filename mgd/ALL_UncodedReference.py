@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -52,14 +51,14 @@ fp.write('     B = # of "used-fc"' + CRT)
 fp.write('     ration of A/B' + 2*CRT)
 
 db.sql('''
-	select distinct m._Object_key, count(m._Refs_key) as counter
+        select distinct m._Object_key, count(m._Refs_key) as counter
         into temporary table refA
         from MGI_Reference_Assoc m, MGI_RefAssocType t
         where m._MGIType_key = 11
         and m._RefAssocType_key = t._RefAssocType_key
         and t.assocType in ('Priority Index', 'Indexed')
-	group by m._Object_key
-	''', None)
+        group by m._Object_key
+        ''', None)
 db.sql('create index refA_idx1 on refA(_Object_key)', None)
 results = db.sql('select * from refA', 'auto')
 refA = {}
@@ -67,14 +66,14 @@ for r in results:
     refA[r['_Object_key']] = r['counter']
 
 db.sql('''
-	select distinct m._Object_key, count(m._Refs_key) as counter
+        select distinct m._Object_key, count(m._Refs_key) as counter
         into temporary table refB
         from MGI_Reference_Assoc m, MGI_RefAssocType t
         where m._MGIType_key = 11
         and m._RefAssocType_key = t._RefAssocType_key
         and t.assocType in ('Used-FC')
-	group by m._Object_key
-	''', None)
+        group by m._Object_key
+        ''', None)
 db.sql('create index refB_idx1 on refB(_Object_key)', None)
 results = db.sql('select * from refB', 'auto')
 refB = {}
@@ -83,28 +82,28 @@ for r in results:
 
 # only interested in the A group
 results = db.sql('''
-	select distinct a._Allele_key, a.symbol 
-	from ALL_Allele a
-	where exists (select 1 from refA r where a._Allele_key = r._Object_key)
-	order by a.symbol
+        select distinct a._Allele_key, a.symbol 
+        from ALL_Allele a
+        where exists (select 1 from refA r where a._Allele_key = r._Object_key)
+        order by a.symbol
         ''', 'auto')
 
 for r in results:
 
      alleleKey = r['_Allele_key']
-     fp.write(string.ljust(r['symbol'], 50) + TAB)
+     fp.write(str.ljust(r['symbol'], 50) + TAB)
 
      a = 0
      b = 0
 
-     if refA.has_key(alleleKey):
-	 a = int(refA[alleleKey])
+     if alleleKey in refA:
+         a = int(refA[alleleKey])
          fp.write(str(a) + TAB)
      else:
          fp.write('0' + TAB)
 
-     if refB.has_key(alleleKey):
-	 b = int(refB[alleleKey])
+     if alleleKey in refB:
+         b = int(refB[alleleKey])
          fp.write(str(b) + TAB)
      else:
          fp.write('0' + TAB)
@@ -115,4 +114,3 @@ for r in results:
          fp.write(CRT)
 
 reportlib.finish_nonps(fp)
-

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -113,7 +112,7 @@ def printAll(fp):
     count = 0
     fp.write(TAB + 'Journals for all years:' + CRT + 2*TAB)
     for j in journalsAll:
-        fp.write(string.ljust(j, 25) + TAB)
+        fp.write(str.ljust(j, 25) + TAB)
         count = count + 1
         if count > 2:
           fp.write(CRT + 2*TAB)
@@ -122,47 +121,47 @@ def printAll(fp):
 
 def printFields(fp):
 
-    fp.write(TAB + string.ljust('J#', 12))
-    fp.write(string.ljust('short_citation', 60))
-    fp.write(string.ljust('stub created', 15))
-    fp.write(string.ljust('figure labels', 50) + CRT)
-    fp.write(TAB + string.ljust('--', 12))
-    fp.write(string.ljust('--------------', 60))
-    fp.write(string.ljust('------------', 15))
-    fp.write(string.ljust('-------------', 50) + CRT)
+    fp.write(TAB + str.ljust('J#', 12))
+    fp.write(str.ljust('short_citation', 60))
+    fp.write(str.ljust('stub created', 15))
+    fp.write(str.ljust('figure labels', 50) + CRT)
+    fp.write(TAB + str.ljust('--', 12))
+    fp.write(str.ljust('--------------', 60))
+    fp.write(str.ljust('------------', 15))
+    fp.write(str.ljust('-------------', 50) + CRT)
 
 def printResults(fp):
 
     results = db.sql('''
-	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
-	    from refs r, IMG_Image i
-	    where r._Refs_key = i._Refs_key
+            select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+            from refs r, IMG_Image i
+            where r._Refs_key = i._Refs_key
             order by figureLabel
-	    ''', 'auto')
+            ''', 'auto')
     fLabels = {}
     for r in results:
         key = r['_Refs_key']
         value = r['figureLabel']
-        if not fLabels.has_key(key):
-	    fLabels[key] = []
+        if key not in fLabels:
+            fLabels[key] = []
         fLabels[key].append(value)
 
     results = db.sql('''
-	    select r._Refs_key, b.jnumID, b.short_citation, r.creation_date, r.cdate
-	    from refs r, BIB_All_View b
-	    where r._Refs_key = b._Refs_key 
-	    order by r.creation_date desc, b.jnumID''', 'auto')
+            select r._Refs_key, b.jnumID, b.short_citation, r.creation_date, r.cdate
+            from refs r, BIB_All_View b
+            where r._Refs_key = b._Refs_key 
+            order by r.creation_date desc, b.jnumID''', 'auto')
 
     count = 0
     refprinted = []
     for r in results:
         if r['_Refs_key'] not in refprinted:
-            fp.write(TAB + string.ljust(r['jnumID'], 12))
-            fp.write(string.ljust(r['short_citation'], 60))
-	    fp.write(string.ljust(str(r['cdate']), 15))
-            fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
-	    refprinted.append(r['_Refs_key'])
-	    count = count + 1
+            fp.write(TAB + str.ljust(r['jnumID'], 12))
+            fp.write(str.ljust(r['short_citation'], 60))
+            fp.write(str.ljust(str(r['cdate']), 15))
+            fp.write(str.ljust(','.join(fLabels[r['_Refs_key']]), 50) + CRT)
+            refprinted.append(r['_Refs_key'])
+            count = count + 1
 
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
@@ -178,17 +177,17 @@ def selectOther():
     #
 
     db.sql('''
-	    select distinct r._Refs_key, r.journal, i.creation_date, 
-		   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
-	    into temporary table refs
-	    from BIB_Refs r, GXD_Assay a, IMG_Image i
-	    where r.journal in ('%s')
-	    and r._Refs_key = a._Refs_key
-	    and a._AssayType_key in (1,2,3,4,5,6,8,9)
-	    and r._Refs_key = i._Refs_key 
-	    and i._ImageType_key = 1072158
-	    and i.xDim is null
-	    ''' % (string.join(journalsAll, "','")), None)
+            select distinct r._Refs_key, r.journal, i.creation_date, 
+                   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
+            into temporary table refs
+            from BIB_Refs r, GXD_Assay a, IMG_Image i
+            where r.journal in ('%s')
+            and r._Refs_key = a._Refs_key
+            and a._AssayType_key in (1,2,3,4,5,6,8,9)
+            and r._Refs_key = i._Refs_key 
+            and i._ImageType_key = 1072158
+            and i.xDim is null
+            ''' % ("','".join(journalsAll)), None)
 
     db.sql('create index refs_idx2 on refs(_Refs_key)', None)
 
@@ -202,17 +201,17 @@ def selectOther2():
     #
 
     db.sql('''
-	    select distinct r._Refs_key, r.journal, i.creation_date, 
-		   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
-	    into temporary table refs
-	    from BIB_Refs r, GXD_Assay a, IMG_Image i
-	    where r.journal in ('%s')
-	    and r._Refs_key = a._Refs_key
-	    and a._AssayType_key not in (1,2,3,4,5,6,8,9)
-	    and r._Refs_key = i._Refs_key 
-	    and i._ImageType_key = 1072158
-	    and i.xDim is null
-	    ''' % (string.join(journalsAll, "','")), None)
+            select distinct r._Refs_key, r.journal, i.creation_date, 
+                   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
+            into temporary table refs
+            from BIB_Refs r, GXD_Assay a, IMG_Image i
+            where r.journal in ('%s')
+            and r._Refs_key = a._Refs_key
+            and a._AssayType_key not in (1,2,3,4,5,6,8,9)
+            and r._Refs_key = i._Refs_key 
+            and i._ImageType_key = 1072158
+            and i.xDim is null
+            ''' % ("','".join(journalsAll)), None)
 
     db.sql('create index refs_idx2 on refs(_Refs_key)', None)
 
@@ -233,4 +232,3 @@ printFields(fp2)
 selectOther2()
 printResults(fp2)
 reportlib.finish_nonps(fp2)
-

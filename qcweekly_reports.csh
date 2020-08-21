@@ -45,21 +45,21 @@ foreach i (*.py)
     if ( $i == "ALL_Progress.py" || $i == "ALL_NewAllele.py" ) then
         mv -f $QCOUTPUTDIR/`basename $i py`[0-9]*.rpt $QCALLELEARCHIVE
         rm -rf $QCOUTPUTDIR/`basename $i py`current.rpt
-        $i >>& ${LOG}
+        ${PYTHON} $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
     else if ( $i == "PRB_StrainJAX2.py" ) then
         mv -f $QCOUTPUTDIR/`basename $i py`jrs.[0-9]*.rpt $QCSTRAINARCHIVE
         mv -f $QCOUTPUTDIR/`basename $i py`mmrrc.[0-9]*.rpt $QCSTRAINARCHIVE
         rm -rf $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
         rm -rf $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
-        $i >>& ${LOG}
+        ${PYTHON}  $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`jrs.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
         ln -s $QCOUTPUTDIR/`basename $i py`mmrrc.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
     else if ( $i == "GO_stats.py" ) then
-        $i >>& ${LOG}
+        ${PYTHON} $i >>& ${LOG}
         cp -p ${QCOUTPUTDIR}/GO_stats.rpt ${QCGOARCHIVE}/GO_stats.`date +%Y%m%d`
     else
-        $i >>& ${LOG}
+        ${PYTHON} $i >>& ${LOG}
     endif
 end
 

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -31,9 +30,9 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 noteType = {1020: 'General',
-	    1021: 'Molecular Notes'
-	   }
-	  
+            1021: 'Molecular Notes'
+           }
+          
 def alleleNotes():
 
     #
@@ -62,29 +61,29 @@ def alleleNotes():
         #
 
         sql = '''
-	        select a._Allele_key, a.symbol, aa.accID, t.term, 
-		       to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
-		       to_char(a.modification_date, 'MM/dd/yyyy') as mdate,
-		       u1.login as clogin, u2.login as mlogin
-	        into temporary table alleles
-	        from ALL_Allele a, ACC_Accession aa, VOC_Term t, MGI_User u1, MGI_User u2
-	        where a._Allele_key = aa._Object_key
-	        and aa._MGIType_key = 11
-	        and aa._LogicalDB_key = 1
-	        and aa.preferred = 1
-	        and a._Allele_Status_key = t._Term_key
-	        and a._CreatedBy_key = u1._User_key
-	        and a._ModifiedBy_key = u2._User_key
-	        and exists (select * from MGI_Note n, MGI_NoteChunk c
-	        where a._Allele_key = n._Object_key
-	        and n._NoteType_key = %s
-	        ''' % (n)
+                select a._Allele_key, a.symbol, aa.accID, t.term, 
+                       to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
+                       to_char(a.modification_date, 'MM/dd/yyyy') as mdate,
+                       u1.login as clogin, u2.login as mlogin
+                into temporary table alleles
+                from ALL_Allele a, ACC_Accession aa, VOC_Term t, MGI_User u1, MGI_User u2
+                where a._Allele_key = aa._Object_key
+                and aa._MGIType_key = 11
+                and aa._LogicalDB_key = 1
+                and aa.preferred = 1
+                and a._Allele_Status_key = t._Term_key
+                and a._CreatedBy_key = u1._User_key
+                and a._ModifiedBy_key = u2._User_key
+                and exists (select * from MGI_Note n, MGI_NoteChunk c
+                where a._Allele_key = n._Object_key
+                and n._NoteType_key = %s
+                ''' % (n)
 
         db.sql(sql + '''
-	        and n._Note_key = c._Note_key
-	        and (lower(c.note) like '%<sup>%' or lower(c.note) like '%<sub>%'
-	        ))
-	        ''', None)
+                and n._Note_key = c._Note_key
+                and (lower(c.note) like '%<sup>%' or lower(c.note) like '%<sub>%'
+                ))
+                ''', None)
 
         db.sql('create index alleles_idx1 on alleles(_Allele_key)', None)
 
@@ -92,23 +91,23 @@ def alleleNotes():
         # concatenate notes
         #
         results = db.sql('''
-	        select a._Allele_key, c.note
-	        from alleles a, MGI_Note n, MGI_NoteChunk c
-	        where a._Allele_key = n._Object_key
-	        and n._NoteType_key = %s
-	        and n._Note_key = c._Note_key
+                select a._Allele_key, c.note
+                from alleles a, MGI_Note n, MGI_NoteChunk c
+                where a._Allele_key = n._Object_key
+                and n._NoteType_key = %s
+                and n._Note_key = c._Note_key
                 order by n._Note_key
-	          ''' % (n), 'auto')
+                  ''' % (n), 'auto')
 
         notes = {}
         for r in results:
             key = r['_Allele_key']
-            value = string.lower(r['note'])
+            value = str.lower(r['note'])
     
-            if notes.has_key(key):
-	        notes[key] = notes[key] + value
+            if key in notes:
+                notes[key] = notes[key] + value
             else:
-	        notes[key] = value
+                notes[key] = value
 
         #
         # for each allele w/ notes:
@@ -123,21 +122,21 @@ def alleleNotes():
             snippets = []
             note = notes[r['_Allele_key']]
 
-	    # if number of <sup> != number of </sup>, then add to snippet
-            findA = string.count(note, '<sup>')
-            findB = string.count(note, '</sup>')
+            # if number of <sup> != number of </sup>, then add to snippet
+            findA = str.count(note, '<sup>')
+            findB = str.count(note, '</sup>')
             if findA != findB:
-                findA = string.find(note, '<sup>')
-                findB = string.find(note, '</sup>')
+                findA = str.find(note, '<sup>')
+                findB = str.find(note, '</sup>')
                 snippets.append(note)
 
-	    # if number of <sub> != number of </sub>, then add to snippet
-            findA = string.count(note, '<sub>')
-            findB = string.count(note, '</sub>')
+            # if number of <sub> != number of </sub>, then add to snippet
+            findA = str.count(note, '<sub>')
+            findB = str.count(note, '</sub>')
             if findA != findB:
                 snippets.append(note)
 
-	    # if any snippets exist, then print
+            # if any snippets exist, then print
             if len(snippets) > 0:
                 fp.write(noteType[n] + TAB)
                 fp.write(r['symbol'] + TAB)
@@ -171,27 +170,27 @@ def mpNotes():
     #
 
     db.sql('''
-	   select a._Genotype_key, aa.accID,
-		       to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
-		       to_char(a.modification_date, 'MM/dd/yyyy') as mdate,
-		       u1.login as clogin, u2.login as mlogin
-	   into temporary table genotypes
-	   from GXD_Genotype a, ACC_Accession aa, MGI_User u1, MGI_User u2
-	   where a._Genotype_key = aa._Object_key
-	   and aa._MGIType_key = 12
-	   and aa._LogicalDB_key = 1
-	   and aa.preferred = 1
-	   and a._CreatedBy_key = u1._User_key
-	   and a._ModifiedBy_key = u2._User_key
-	   and exists (select * from VOC_Annot v, VOC_Evidence e, MGI_Note_VocEvidence_View n
-	   where a._Genotype_key = v._Object_key
-	   and v._AnnotType_key = 1002
-	   and v._Annot_key = e._Annot_key
-	   and e._AnnotEvidence_key = n._Object_key
-	   and n._NoteType_key = 1008
-	   and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'
-	   ))
-	   ''', None)
+           select a._Genotype_key, aa.accID,
+                       to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
+                       to_char(a.modification_date, 'MM/dd/yyyy') as mdate,
+                       u1.login as clogin, u2.login as mlogin
+           into temporary table genotypes
+           from GXD_Genotype a, ACC_Accession aa, MGI_User u1, MGI_User u2
+           where a._Genotype_key = aa._Object_key
+           and aa._MGIType_key = 12
+           and aa._LogicalDB_key = 1
+           and aa.preferred = 1
+           and a._CreatedBy_key = u1._User_key
+           and a._ModifiedBy_key = u2._User_key
+           and exists (select * from VOC_Annot v, VOC_Evidence e, MGI_Note_VocEvidence_View n
+           where a._Genotype_key = v._Object_key
+           and v._AnnotType_key = 1002
+           and v._Annot_key = e._Annot_key
+           and e._AnnotEvidence_key = n._Object_key
+           and n._NoteType_key = 1008
+           and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'
+           ))
+           ''', None)
 
     db.sql('create index genotype_idx1 on genotypes(_Genotype_key)', None)
 
@@ -199,25 +198,25 @@ def mpNotes():
     # concatenate notes
     #
     results = db.sql('''
-	        select a._Genotype_key, n.note
-	        from genotypes a, VOC_Annot v, VOC_Evidence e, MGI_Note_VocEvidence_View n
-	        where a._Genotype_key = v._Object_key
-	        and v._AnnotType_key = 1002
-	        and v._Annot_key = e._Annot_key
-	        and e._AnnotEvidence_key = n._Object_key
-	        and n._NoteType_key = 1008
+                select a._Genotype_key, n.note
+                from genotypes a, VOC_Annot v, VOC_Evidence e, MGI_Note_VocEvidence_View n
+                where a._Genotype_key = v._Object_key
+                and v._AnnotType_key = 1002
+                and v._Annot_key = e._Annot_key
+                and e._AnnotEvidence_key = n._Object_key
+                and n._NoteType_key = 1008
                 order by n._Note_key
-	          ''', 'auto')
+                  ''', 'auto')
 
     notes = {}
     for r in results:
         key = r['_Genotype_key']
-        value = string.lower(r['note'])
+        value = str.lower(r['note'])
     
-        if notes.has_key(key):
-	    notes[key] = notes[key] + value
+        if key in notes:
+            notes[key] = notes[key] + value
         else:
-	    notes[key] = value
+            notes[key] = value
 
     #
     # for each allele w/ notes:
@@ -232,21 +231,21 @@ def mpNotes():
         snippets = []
         note = notes[r['_Genotype_key']]
 
-	# if number of <sup> != number of </sup>, then add to snippet
-        findA = string.count(note, '<sup>')
-        findB = string.count(note, '</sup>')
+        # if number of <sup> != number of </sup>, then add to snippet
+        findA = str.count(note, '<sup>')
+        findB = str.count(note, '</sup>')
         if findA != findB:
-            findA = string.find(note, '<sup>')
-            findB = string.find(note, '</sup>')
+            findA = str.find(note, '<sup>')
+            findB = str.find(note, '</sup>')
             snippets.append(note)
 
-	# if number of <sub> != number of </sub>, then add to snippet
-        findA = string.count(note, '<sub>')
-        findB = string.count(note, '</sub>')
+        # if number of <sub> != number of </sub>, then add to snippet
+        findA = str.count(note, '<sub>')
+        findB = str.count(note, '</sub>')
         if findA != findB:
             snippets.append(note)
 
-	# if any snippets exist, then print
+        # if any snippets exist, then print
         if len(snippets) > 0:
             fp.write('MP notes' + TAB)
             fp.write(r['accID'] + TAB)
@@ -269,32 +268,32 @@ def markerNotes():
 
     db.sql('''
           select a._Marker_key, a.symbol, aa.accID,
-		 to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
-		 to_char(a.modification_date, 'MM/dd/yyyy') as mdate
+                 to_char(a.creation_date, 'MM/dd/yyyy') as cdate,
+                 to_char(a.modification_date, 'MM/dd/yyyy') as mdate
           into markers
           from MRK_Marker a, ACC_Accession aa
           where a._Marker_key = aa._Object_key
           and aa._MGIType_key = 2
-	  and aa._LogicalDB_key = 1
-	  and aa.preferred = 1
+          and aa._LogicalDB_key = 1
+          and aa.preferred = 1
           and exists (select * from MRK_Notes n
           where a._Marker_key = n._Marker_key
           and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'))
           ''', None)
 
     results = db.sql('''
-	        select a._Marker_key, n.note
-	        from markers a, MRK_Notes n
-	        where a._Marker_key = n._Marker_key
+                select a._Marker_key, n.note
+                from markers a, MRK_Notes n
+                where a._Marker_key = n._Marker_key
                 order by a._Marker_key
-	          ''', 'auto')
+                  ''', 'auto')
 
     notes = {}
     for r in results:
         key = r['_Marker_key']
-        value = string.lower(r['note'])
+        value = str.lower(r['note'])
     
-        if notes.has_key(key):
+        if key in notes:
             notes[key] = notes[key] + value
         else:
             notes[key] = value
@@ -313,16 +312,16 @@ def markerNotes():
         note = notes[r['_Marker_key']]
 
         # if number of <sup> != number of </sup>, then add to snippet
-        findA = string.count(note, '<sup>')
-        findB = string.count(note, '</sup>')
+        findA = str.count(note, '<sup>')
+        findB = str.count(note, '</sup>')
         if findA != findB:
-            findA = string.find(note, '<sup>')
-            findB = string.find(note, '</sup>')
+            findA = str.find(note, '<sup>')
+            findB = str.find(note, '</sup>')
             snippets.append(note)
 
         # if number of <sub> != number of </sub>, then add to snippet
-        findA = string.count(note, '<sub>')
-        findB = string.count(note, '</sub>')
+        findA = str.count(note, '<sub>')
+        findB = str.count(note, '</sub>')
         if findA != findB:
             snippets.append(note)
 
@@ -343,4 +342,3 @@ markerNotes()
 mpNotes()
 alleleNotes()
 reportlib.finish_nonps(fp)	# non-postscript file
-

@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -61,7 +60,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
 cmd = '''
-	select a1.accID as mgiID, m.symbol, m.name, m.chromosome, m.cmOffset, a2.accID as ensemblID
+        select a1.accID as mgiID, m.symbol, m.name, m.chromosome, m.cmOffset, a2.accID as ensemblID
         from ACC_Accession a1, ACC_Accession a2, MRK_Marker m
         where a1._Object_key = a2._Object_key 
             and a1._Object_key = m._Marker_key 
@@ -73,13 +72,13 @@ cmd = '''
             and a2._MGIType_key = 2 
             and m._Marker_Type_key = 1 
         order by m.chromosome, m.symbol
-	'''
+        '''
 
 results = db.sql(cmd, 'auto')
 
 for r in results:
     fp.write(r['mgiID'] + TAB + r['symbol'] + TAB + r['name'] + TAB +
-	     str(r['cmOffset']) + TAB +
+             str(r['cmOffset']) + TAB +
              r['chromosome'] + TAB + 
              r['ensemblID'] + CRT)
 

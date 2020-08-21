@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -73,11 +72,11 @@ searchTerms = [
 ]
 
 fp.write('''
- 	The reference must be:
- 	     group = AP, status = 'Not Routed'
- 	     for other groups, there must be at least one status in:
- 		     'Routed', 'Chosen', 'Indexed', 'Full-coded'
- 	     not discarded
+        The reference must be:
+             group = AP, status = 'Not Routed'
+             for other groups, there must be at least one status in:
+                     'Routed', 'Chosen', 'Indexed', 'Full-coded'
+             not discarded
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
@@ -87,14 +86,14 @@ byText = {}
 
 searchSQL = ''
 for s in searchTerms:
-	searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
+        searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
 searchSQL = searchSQL[:-2]
 
 # read non-null extracted text
 # exclude extractedText not in 'reference' section
 sql = '''
 select r._Refs_key, c.jnumID, lower(d.extractedText) as extractedText,
-	to_char(r.creation_date, 'MM/dd/yyyy') as cdate
+        to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
 from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d
 where r.isDiscard = 0
@@ -128,23 +127,23 @@ db.sql('create index ref_idx on extractedText(_Refs_key)', None)
 results = db.sql('select * from extractedText', 'auto')
 for r in results:
 
-	jnumID = r['jnumID']
+        jnumID = r['jnumID']
 
-	if jnumID not in byDate:
-	    byDate[jnumID] = []
+        if jnumID not in byDate:
+            byDate[jnumID] = []
             byDate[jnumID].append(r['cdate'])
 
-	if jnumID not in byText:
-	    byText[jnumID] = []
+        if jnumID not in byText:
+            byText[jnumID] = []
 
-	extractedText = r['extractedText']
-	extractedText = extractedText.replace('\n', ' ')
-	extractedText = extractedText.replace('\r', ' ')
-	for s in searchTerms:
-	    for match in re.finditer(s, extractedText):
-		subText = extractedText[match.start()-40:match.end()+40]
+        extractedText = r['extractedText']
+        extractedText = extractedText.replace('\n', ' ')
+        extractedText = extractedText.replace('\r', ' ')
+        for s in searchTerms:
+            for match in re.finditer(s, extractedText):
+                subText = extractedText[match.start()-40:match.end()+40]
                 if len(subText) == 0:
-		    subText = extractedText[match.start()-10:match.end()+40]
+                    subText = extractedText[match.start()-10:match.end()+40]
                 byText[jnumID].append(subText)
 
 #
@@ -163,28 +162,27 @@ results = db.sql(sql, 'auto')
 
 for r in results:
 
-	jnumID = r['jnumID']
-	groupstatus = r['groupstatus']
+        jnumID = r['jnumID']
+        groupstatus = r['groupstatus']
 
-	if jnumID not in byStatus:
-	    byStatus[jnumID] = []
-	if groupstatus not in byStatus[jnumID]:
+        if jnumID not in byStatus:
+            byStatus[jnumID] = []
+        if groupstatus not in byStatus[jnumID]:
             byStatus[jnumID].append(groupstatus)
 
 #
 # print report
 #
 counter = 0
-keys = byStatus.keys()
+keys = list(byStatus.keys())
 keys.sort()
 for r in keys:
-	if len(byText[r]) > 0:
-	    fp.write(r + TAB)
-	    fp.write(byDate[r][0] + TAB)
-	    fp.write('\t'.join(byStatus[r]) + TAB)
-	    fp.write('|'.join(byText[r]) + CRT)
-	    counter += 1
+        if len(byText[r]) > 0:
+            fp.write(r + TAB)
+            fp.write(byDate[r][0] + TAB)
+            fp.write('\t'.join(byStatus[r]) + TAB)
+            fp.write('|'.join(byText[r]) + CRT)
+            counter += 1
 
 fp.write('\n(%d rows affected)\n' % counter)
 reportlib.finish_nonps(fp)
-

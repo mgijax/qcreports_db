@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+
 
 '''
 #
@@ -229,7 +229,7 @@ def runreport(fp, assayType):
     count = 0
     fp.write(TAB + 'Journals Checked:' + CRT + 2*TAB)
     for j in journals:
-        fp.write(string.ljust(j, 25) + TAB)
+        fp.write(str.ljust(j, 25) + TAB)
         count = count + 1
         if count > 2:
           fp.write(CRT + 2*TAB)
@@ -246,21 +246,36 @@ def runreport(fp, assayType):
         fp.write(2*TAB + j + CRT)
     fp.write(2*CRT)
 
-    fp.write(TAB + string.ljust('J#', 12))
-    fp.write(string.ljust('short_citation', 75))
-    fp.write(string.ljust('figure labels', 50) + CRT)
-    fp.write(TAB + string.ljust('--', 12))
-    fp.write(string.ljust('--------------', 75))
-    fp.write(string.ljust('-------------', 50) + CRT)
+    fp.write(TAB + str.ljust('J#', 12))
+    fp.write(str.ljust('short_citation', 75))
+    fp.write(str.ljust('figure labels', 50) + CRT)
+    fp.write(TAB + str.ljust('--', 12))
+    fp.write(str.ljust('--------------', 75))
+    fp.write(str.ljust('-------------', 50) + CRT)
 
     #
     # journals1 = journals
     # journals2 = journals2005
     # journals3 = journals2006
     #
-    journals1 = '\'' + string.join(journals, '\',\'') + '\''
-    journals2 = '\'' + string.join(journals2005, '\',\'') + '\''
-    journals3 = '\'' + string.join(journals2006, '\',\'') + '\''
+    #journals1 = '\'' + ','.join(journals) + '\''
+    journals1 =  repr(tuple(map(str, journals)))
+    # check if list is single, if so tuple will have trailing ','
+    if len(journals) == 1:
+        journals1 = journals1.replace(',','')
+    print('journals1: %s' % journals1)
+
+    #journals2 = '\'' + ','.join(journals2005) + '\''
+    journals2 = repr(tuple(map(str, journals2005)))
+    if len(journals2005) == 1:
+        journals2 = journals2.replace(',','')
+    print('journals2: %s' % journals2)
+
+    #journals3 = '\'' + ','.join(journals2006) + '\''
+    journals3 = repr(tuple(map(str, journals2006)))
+    if len(journals2006) == 1:
+        journals3 = journals3.replace(',','')
+    print('journals3: %s' % journals3)
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -268,13 +283,13 @@ def runreport(fp, assayType):
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p 
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
-	        and a._ImagePane_key = p._ImagePane_key 
+                and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (((b.journal) in (%s)) 
-		    or (b.journal in (%s) and year >= 2005)
-		    or (b.journal in (%s) and year >= 2006))
+                and ((b.journal in %s) 
+                    or (b.journal in %s and year >= 2005)
+                    or (b.journal in %s and year >= 2006))
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
           ''' % (assayType, journals1, journals2, journals3), None)
@@ -285,13 +300,13 @@ def runreport(fp, assayType):
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r 
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
-	        and a._Assay_key = g._Assay_key 
+                and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and ((b.journal in (%s)) 
-		    or (b.journal in (%s) and year >= 2005) 
-		    or (b.journal in (%s) and year >= 2006)) 
+                and ((b.journal in %s) 
+                    or (b.journal in %s and year >= 2005) 
+                    or (b.journal in %s and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
           ''' % (assayType, journals1, journals2, journals3), None)
@@ -299,35 +314,35 @@ def runreport(fp, assayType):
     db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
     results = db.sql('''
-	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
-	    from refs r, IMG_Image i
-	    where r._Refs_key = i._Refs_key
-	    order by figureLabel
-	    ''', 'auto')
+            select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+            from refs r, IMG_Image i
+            where r._Refs_key = i._Refs_key
+            order by figureLabel
+            ''', 'auto')
     fLabels = {}
     for r in results:
         key = r['_Refs_key']
         value = r['figureLabel']
-        if not fLabels.has_key(key):
-	    fLabels[key] = []
+        if key not in fLabels:
+            fLabels[key] = []
         fLabels[key].append(value)
 
     results = db.sql('''
-	    select r._Refs_key, b.jnumID, b.short_citation 
-	    from refs r, BIB_All_View b
-	    where r._Refs_key = b._Refs_key 
+            select r._Refs_key, b.jnumID, b.short_citation 
+            from refs r, BIB_All_View b
+            where r._Refs_key = b._Refs_key 
             order by r.creation_date, b.jnumID
-	    ''', 'auto')
+            ''', 'auto')
 
     count = 0
     refprinted = []
     for r in results:
         if r['_Refs_key'] not in refprinted:
-            fp.write(TAB + string.ljust(r['jnumID'], 12))
-            fp.write(string.ljust(r['short_citation'], 75))
-            fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
-	    refprinted.append(r['_Refs_key'])
-	    count = count + 1
+            fp.write(TAB + str.ljust(r['jnumID'], 12))
+            fp.write(str.ljust(r['short_citation'], 75))
+            fp.write(str.ljust(','.join(fLabels[r['_Refs_key']]), 50) + CRT)
+            refprinted.append(r['_Refs_key'])
+            count = count + 1
 
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
@@ -349,8 +364,17 @@ def runreport(fp, assayType):
     # journal4 = Oxford Journals
     # journal5 = Others
     #
-    journals4 = '\'' + string.join(journalsOxford, '\',\'') + '\''
-    journals5 = '\'' + string.join(journalsOther, '\',\'') + '\''
+    #journals4 = '\'' + ','.join(journalsOxford) + '\''
+    journals4 = repr(tuple(map(str, journalsOxford)))
+    if len(journalsOxford) == 1:
+        journals4 = journals4.replace(',','')
+    print('journals4: %s' % journals4)
+
+    #journals5 = '\'' + ','.join(journalsOther) + '\''
+    journals5 = repr(tuple(map(str, journalsOther)))
+    if len(journalsOther) == 1:
+        journals5 = journals5.replace(',','')
+    print('journals5: %s' % journals5)
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -358,18 +382,18 @@ def runreport(fp, assayType):
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
-	        and a._ImagePane_key = p._ImagePane_key 
+                and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (b.journal in (%s) or b.journal in (%s))
+                and (b.journal in %s or b.journal in %s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
-	        where i._Image_key = n._Object_key 
-	        and n._NoteType_key = 1023
-	        and n._MGIType_key = 9
-	        and n._Note_key = c._Note_key)
+                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                where i._Image_key = n._Object_key 
+                and n._NoteType_key = 1023
+                and n._MGIType_key = 9
+                and n._Note_key = c._Note_key)
           ''' % (assayType, journals4, journals5), None)
 
     db.sql('''
@@ -378,52 +402,52 @@ def runreport(fp, assayType):
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
-	        and a._Assay_key = g._Assay_key 
+                and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and (b.journal in (%s) or b.journal in (%s))
+                and (b.journal in %s or b.journal in %s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
-	        where r._Image_key = n._Object_key 
-	        and n._NoteType_key = 1023
-	        and n._MGIType_key = 9
-	        and n._Note_key = c._Note_key)
+                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                where r._Image_key = n._Object_key 
+                and n._NoteType_key = 1023
+                and n._MGIType_key = 9
+                and n._Note_key = c._Note_key)
           ''' % (assayType, journals4, journals5), None)
 
     db.sql('create index refs3_idx1 on refs3(_Refs_key)', None)
 
     results = db.sql('''
-	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
-	    from refs3 r, IMG_Image i
-	    where r._Refs_key = i._Refs_key
-	    order by figureLabel
-	    ''', 'auto')
+            select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+            from refs3 r, IMG_Image i
+            where r._Refs_key = i._Refs_key
+            order by figureLabel
+            ''', 'auto')
     fLabels = {}
     for r in results:
         key = r['_Refs_key']
         value = r['figureLabel']
-        if not fLabels.has_key(key):
-	    fLabels[key] = []
+        if key not in fLabels:
+            fLabels[key] = []
         fLabels[key].append(value)
 
     results = db.sql('''
-	select r._Refs_key, b.jnumID, b.short_citation 
-	from refs3 r, BIB_All_View b
-	where r._Refs_key = b._Refs_key 
+        select r._Refs_key, b.jnumID, b.short_citation 
+        from refs3 r, BIB_All_View b
+        where r._Refs_key = b._Refs_key 
         order by r.creation_date, b.jnumID
-	''', 'auto')
+        ''', 'auto')
 
     count = 0
     refprinted = []
     for r in results:
         if r['_Refs_key'] not in refprinted:
-            fp.write(TAB + string.ljust(r['jnumID'], 12))
-            fp.write(string.ljust(r['short_citation'], 75))
-            fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
-	    refprinted.append(r['_Refs_key'])
-	    count = count + 1
+            fp.write(TAB + str.ljust(r['jnumID'], 12))
+            fp.write(str.ljust(r['short_citation'], 75))
+            fp.write(str.ljust(','.join(fLabels[r['_Refs_key']]), 50) + CRT)
+            refprinted.append(r['_Refs_key'])
+            count = count + 1
     
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
@@ -439,7 +463,11 @@ def runreport(fp, assayType):
     #
     # journals6 = Check copyright & 6 month delay
     #
-    journals6 = '\'' + string.join(checkCpyrtAndDelay, '\',\'') + '\''
+    #journals6 = '\'' + ','.join(checkCpyrtAndDelay) + '\''
+    journals6 = repr(tuple(map(str, checkCpyrtAndDelay)))
+    if len(checkCpyrtAndDelay) == 1:
+        journals6 = journals6.replace(',','')
+    print('journals6: %s' % journals6)
 
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
@@ -447,18 +475,18 @@ def runreport(fp, assayType):
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
-	        and a._ImagePane_key = p._ImagePane_key 
+                and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and b.journal in (%s)
+                and b.journal in %s
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
-	        where i._Image_key = n._Object_key 
-	        and n._NoteType_key = 1023
-	        and n._MGIType_key = 9
-	        and n._Note_key = c._Note_key)
+                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                where i._Image_key = n._Object_key 
+                and n._NoteType_key = 1023
+                and n._MGIType_key = 9
+                and n._Note_key = c._Note_key)
           ''' % (assayType, journals6), None)
 
     db.sql('''
@@ -467,52 +495,52 @@ def runreport(fp, assayType):
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
           where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
-	        and a._Assay_key = g._Assay_key 
+                and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-	        and b.journal in (%s)
+                and b.journal in %s
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-	        and exists (select 1 from MGI_Note n, MGI_NoteChunk c
-	        where r._Image_key = n._Object_key 
-	        and n._NoteType_key = 1023
-	        and n._MGIType_key = 9
-	        and n._Note_key = c._Note_key)
+                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                where r._Image_key = n._Object_key 
+                and n._NoteType_key = 1023
+                and n._MGIType_key = 9
+                and n._Note_key = c._Note_key)
           ''' % (assayType, journals6), None)
 
     db.sql('create index refs4_idx1 on refs4(_Refs_key)', None)
 
     results = db.sql('''
-	    select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
-	    from refs4 r, IMG_Image i
-	    where r._Refs_key = i._Refs_key
-	    order by figureLabel
-	    ''', 'auto')
+            select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+            from refs4 r, IMG_Image i
+            where r._Refs_key = i._Refs_key
+            order by figureLabel
+            ''', 'auto')
     fLabels = {}
     for r in results:
         key = r['_Refs_key']
         value = r['figureLabel']
-        if not fLabels.has_key(key):
-	    fLabels[key] = []
+        if key not in fLabels:
+            fLabels[key] = []
         fLabels[key].append(value)
 
     results = db.sql('''
-	select r._Refs_key, b.jnumID, b.short_citation 
-	from refs4 r, BIB_All_View b
-	where r._Refs_key = b._Refs_key 
+        select r._Refs_key, b.jnumID, b.short_citation 
+        from refs4 r, BIB_All_View b
+        where r._Refs_key = b._Refs_key 
         order by r.creation_date, b.jnumID
-	''', 'auto')
+        ''', 'auto')
 
     count = 0
     refprinted = []
     for r in results:
         if r['_Refs_key'] not in refprinted:
-            fp.write(TAB + string.ljust(r['jnumID'], 12))
-            fp.write(string.ljust(r['short_citation'], 75))
-            fp.write(string.ljust(string.join(fLabels[r['_Refs_key']], ','), 50) + CRT)
-	    refprinted.append(r['_Refs_key'])
-	    count = count + 1
+            fp.write(TAB + str.ljust(r['jnumID'], 12))
+            fp.write(str.ljust(r['short_citation'], 75))
+            fp.write(str.ljust(','.join(fLabels[r['_Refs_key']]), 50) + CRT)
+            refprinted.append(r['_Refs_key'])
+            count = count + 1
     
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*3)
 
@@ -531,4 +559,3 @@ reportlib.finish_nonps(fp1)
 fp2 = reportlib.init('RECOMB_Images', 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
 runreport(fp2, 'not ')
 reportlib.finish_nonps(fp2)
-

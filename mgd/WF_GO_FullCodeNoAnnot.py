@@ -1,4 +1,3 @@
-#!/usr/local/bin/python
 
 '''
 #
@@ -46,13 +45,13 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'References with GO status "Full-coded" where there is no GO annotation', os.environ['QCOUTPUTDIR'])
 
 fp.write('''
- 	The reference must be:
- 	     group = GO, status = 'Full-coded'
-	     No GO annotation
+        The reference must be:
+             group = GO, status = 'Full-coded'
+             No GO annotation
 ''')
 
 results = db.sql('''select distinct a.accid as jnumID, b.isDiscard, 
-	to_char(b.creation_date, 'MM/dd/yyyy') as cdate
+        to_char(b.creation_date, 'MM/dd/yyyy') as cdate
     from BIB_Workflow_status wf, ACC_Accession a, BIB_Refs b
     where wf._Group_key = 31576666
     and wf.isCurrent = 1
@@ -72,10 +71,10 @@ results = db.sql('''select distinct a.accid as jnumID, b.isDiscard,
 fp.write('JNumber%sisDiscard%sCreation Date%s' % (TAB, TAB, CRT))
 fp.write('-' * 40 + CRT)
 for r in results:
-	jnumID = r['jnumID']
-	isDiscard = r['isDiscard']
-	cdate = r['cdate']
-	fp.write('%s%s%d%s%s%s' % (jnumID, TAB, isDiscard, TAB, cdate, CRT))
+        jnumID = r['jnumID']
+        isDiscard = r['isDiscard']
+        cdate = r['cdate']
+        fp.write('%s%s%d%s%s%s' % (jnumID, TAB, isDiscard, TAB, cdate, CRT))
 fp.write('\nTotal: %d\n' % len(results))
 
 reportlib.finish_nonps(fp)
