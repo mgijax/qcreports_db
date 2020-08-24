@@ -1,4 +1,13 @@
-<<<<<<< HEAD
+TAG: qcreports_db-6-0-16-2
+DATE: 08/24/2020
+STAFF: lec
+TR13369/QC report of COV: tagged papers/weekly/BIB_Covid.py
+
+TAG: qcreports_db-6-0-16-1
+DATE: 08/21/2020
+STAFF: lec
+TR13204/Infrastructure Release
+
 TAG: qcreports_db-6-0-15-9
 DATE: 07/10/2020
 STAFF: dbm
@@ -11,11 +20,6 @@ TAG: qcreports_db-6-0-15-5
 DATE: 05/13/2020
 STAFF: sc
 CHANGES:TR13265 - Variants QC reports: add checking for ref = var
-=======
-TAG: qcreports_db-6-0-16-1
-DATE: 08/21/2020
-STAFF: lec
-TR13204/Infrastructure Release
 
 TAG: qcreports_db-6-0-?
 DATE: 
@@ -23,7 +27,6 @@ STAFF:
 CHANGES:
 TR13204/Infrastructure/python 3
 re-add http://wts.informatics.jax.org/wts_projects/11100/11105/GXD_EarlyEmbPapers.py
->>>>>>> tr13204
 
 TAG: qcreports_db-6-0-15-4
 TAG: qcreports_db-6-0-15-3
