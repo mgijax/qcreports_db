@@ -20,17 +20,18 @@ db.setTrace()
 fp = reportlib.init(sys.argv[0], 'Coronaviruas related references', outputdir = os.environ['QCOUTPUTDIR'],  printHeading = None)
 
 fp.write('*1.  workflow tags\n')
-fp.write('*2.  title\n')
-fp.write('*3.  abstract\n')
-fp.write('*4.  year\n')
-fp.write('*5.  journal\n')
-fp.write('*6.  PMID\n')
-fp.write('*7.  J#\n')
-fp.write('*8.  markers\n')
-fp.write('*9.  alleles\n')
-fp.write('*10. strains\n')
-fp.write('*11. DOID-allele\n')
-fp.write('*12. DOID-genotype\n')
+fp.write('*2.  authors\n')
+fp.write('*3.  title\n')
+fp.write('*4.  abstract\n')
+fp.write('*5.  year\n')
+fp.write('*6.  journal\n')
+fp.write('*7.  PMID\n')
+fp.write('*8.  J#\n')
+fp.write('*9.  markers\n')
+fp.write('*10. alleles\n')
+fp.write('*11. strains\n')
+fp.write('*12. DOID-allele\n')
+fp.write('*13. DOID-genotype\n')
 fp.write('\n')
 
 #
@@ -173,7 +174,7 @@ for r in results:
 #
 # reference info
 #
-cmd = '''select distinct covid._refs_key, b.jnumid, b.pubmedid, r.title, r.year, r.journal, r.abstract
+cmd = '''select distinct covid._refs_key, b.jnumid, b.pubmedid, r.authors, r.title, r.year, r.journal, r.abstract
 from bib_workflow_tag covid, voc_term t, bib_citation_cache b, bib_refs r
 where covid._tag_key = t._term_key
 and t._vocab_key = 129
@@ -192,6 +193,7 @@ for r in results:
         fp.write('|'.join(tags[key]))
     fp.write('\t')
 
+    fp.write(r['authors'] + '\t')
     fp.write(r['title'] + '\t')
 
     if r['abstract'] != None:
