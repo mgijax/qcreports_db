@@ -19,18 +19,18 @@ db.setTrace()
 
 fp = reportlib.init(sys.argv[0], 'Coronaviruas related references', outputdir = os.environ['QCOUTPUTDIR'],  printHeading = None)
 
-fp.write('*workflow tags\n')
-fp.write('*title\n')
-fp.write('*abstract\n')
-fp.write('*year\n')
-fp.write('*journal\n')
-fp.write('*PMID\n')
-fp.write('*J#\n')
-fp.write('*markers\n')
-fp.write('*alleles\n')
-fp.write('*strains\n')
-fp.write('*DOID-allele\n')
-fp.write('*DOID-genotype\n')
+fp.write('*1.  workflow tags\n')
+fp.write('*2.  title\n')
+fp.write('*3.  abstract\n')
+fp.write('*4.  year\n')
+fp.write('*5.  journal\n')
+fp.write('*6.  PMID\n')
+fp.write('*7.  J#\n')
+fp.write('*8.  markers\n')
+fp.write('*9.  alleles\n')
+fp.write('*10. strains\n')
+fp.write('*11. DOID-allele\n')
+fp.write('*12. DOID-genotype\n')
 fp.write('\n')
 
 #
@@ -150,7 +150,7 @@ for r in results:
 #print(doigenotype)
 
 #
-# reference info
+# workflow tags
 #
 cmd = '''
 select covid._refs_key, t.term
@@ -160,9 +160,6 @@ and tg._tag_key = t._term_key
 order by covid._refs_key
 '''
 
-#
-# workflow tags
-#
 results = db.sql(cmd, 'auto')
 tags = {}
 for r in results:
@@ -173,7 +170,10 @@ for r in results:
     tags[key].append(value)
 #print(tags)
 
-cmd = '''select distinct covid._refs_key, b.jnumid, b.pubmedid, r.title, r.year, r.journal
+#
+# reference info
+#
+cmd = '''select distinct covid._refs_key, b.jnumid, b.pubmedid, r.title, r.year, r.journal, r.abstract
 from bib_workflow_tag covid, voc_term t, bib_citation_cache b, bib_refs r
 where covid._tag_key = t._term_key
 and t._vocab_key = 129
@@ -193,6 +193,11 @@ for r in results:
     fp.write('\t')
 
     fp.write(r['title'] + '\t')
+
+    if r['abstract'] != None:
+        fp.write(r['abstract'])
+    fp.write('\t')
+
     fp.write(str(r['year']) + '\t')
     fp.write(r['journal'] + '\t')
 
