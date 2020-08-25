@@ -81,7 +81,7 @@ results = db.sql('''
         and va._Object_key = m._Marker_key
         and va._Object_key = a._Object_key
         and a._MGIType_key = 2
-        and a._LOgicalDB_key = 1
+        and a._LogicalDB_key = 1
         and a.preferred = 1
         and a.prefixPart = 'MGI:'
         ''', 'auto')
@@ -92,6 +92,11 @@ for r in results:
     mgiId = r['mgiId']
     symbol = r['symbol']
     inferredFrom = r['inferredFrom']
+
+    if inferredFrom == None:
+        invalidList.append('%s%s%s%s%s%sNone%sNot in database%s' % (mgiId, TAB, symbol, TAB, goId, TAB, TAB, CRT))
+        continue
+
     for id in re.split(r'[;,\|]\s*', inferredFrom):
         if id not in goDict:
             invalidList.append('%s%s%s%s%s%s%s%sNot in database%s' % (mgiId, TAB, symbol, TAB, goId, TAB, inferredFrom, TAB, CRT))
