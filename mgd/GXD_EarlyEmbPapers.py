@@ -22,26 +22,15 @@
 
 import sys
 import os
+import db
 import reportlib
 
-try:
-    if os.environ['DB_TYPE'] == 'postgres':
-        import pg_db
-        db = pg_db
-        db.setTrace()
-        db.setAutoTranslateBE()
-    else:
-        import db
-except:
-    import db
-
+db.setTrace()
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
-
-db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'Early Embryonic Expression Papers', outputdir = os.environ['QCOUTPUTDIR'])
 
@@ -77,7 +66,7 @@ fp.write(CRT)
 db.sql('''
     select distinct _Refs_key, _Priority_key, 
            p.term as priority, c.term as conditional
-    into #refs1
+    into temp table refs1
     from GXD_Index gi, 
          GXD_Index_Stages gis, 
          VOC_Term vts,
@@ -93,7 +82,7 @@ db.sql('''
     and gi._ConditionalMutants_key = c._Term_key
     ''', None)
 
-db.sql('create index refs1_idx1 on #refs1(_Refs_key)', None)
+db.sql('create index refs1_idx1 on refs1(_Refs_key)', None)
 
 #
 # delete records that have index data that is other than E0.5-7.5, A
@@ -102,12 +91,12 @@ db.sql('create index refs1_idx1 on #refs1(_Refs_key)', None)
 
 db.sql('''
     delete
-    from #refs1
+    from refs1
     where exists (select 1
      from GXD_Index gi, 
           GXD_Index_Stages gis, 
           VOC_Term vts
-     where #refs1._Refs_key = gi._Refs_key
+     where refs1._Refs_key = gi._Refs_key
      and gi._Index_key = gis._Index_key
      and gis._StageID_key = vts._Term_key
      and vts._Vocab_key = 13
@@ -119,15 +108,14 @@ db.sql('''
 #
 
 db.sql('''
-    select r._Refs_key, r._Priority_key, 
-           r.priority, r.conditional, count(_Index_key) as numIndexes
-    into #refs2
-    from #refs1 r, GXD_Index gi 
+    select r._Refs_key, count(_Index_key) as numindexes
+    into refs2
+    from refs1 r, GXD_Index gi 
     where r._Refs_key = gi._Refs_key
     group by r._Refs_key
     ''', None)
 
-db.sql('create index refs2_idx1 on #refs2(_Refs_key)', None)
+db.sql('create index refs2_idx1 on refs2(_Refs_key)', None)
 
 #
 # select number of new genes (genes in index but not in expression cache)
@@ -135,10 +123,9 @@ db.sql('create index refs2_idx1 on #refs2(_Refs_key)', None)
 
 # those genes that are not in the cache
 db.sql('''
-    select r._Refs_key, r._Priority_key, 
-           r.priority, r.conditional, r.numIndexes, count(_Index_key) as numGenes
-    into #final
-    from #refs2 r, GXD_Index gi 
+    select r._Refs_key, count(_Index_key) as numgenes
+    into temp table final
+    from refs2 r, GXD_Index gi 
     where r._Refs_key = gi._Refs_key
     and not exists (select 1 from GXD_Expression e where gi._Marker_key = e._Marker_key)
     group by r._Refs_key
@@ -146,35 +133,36 @@ db.sql('''
 
 # those genes that are in the cache
 db.sql('''
-    insert into #final
-    select r._Refs_key, r._Priority_key, 
-           r.priority, r.conditional, r.numIndexes, numGenes = 0
-    from #refs2 r, GXD_Index gi 
+    insert into final
+    select r._Refs_key, 0
+    from refs2 r, GXD_Index gi 
     where r._Refs_key = gi._Refs_key
-    and not exists (select 1 from #final f where r._Refs_key = f._Refs_key)
+    and not exists (select 1 from final f where r._Refs_key = f._Refs_key)
     and exists (select 1 from GXD_Expression e where gi._Marker_key = e._Marker_key)
     group by r._Refs_key
     ''', None)
 
-db.sql('create index final_idx1 on #final(_Refs_key)', None)
+db.sql('create index final_idx1 on final(_Refs_key)', None)
 
 #
 # final report
 #
 
 results = db.sql('''
-   select b.jnumID, f.*
-   from #final f, BIB_Citation_Cache b
+   select b.jnumID, f.*, r1._Priority_key, r1.priority, r1.conditional, r2.numindexes
+   from final f, BIB_Citation_Cache b, refs1 r1, refs2 r2
    where f._Refs_key = b._Refs_key
-   order by  f._Priority_key, f.numGenes desc, f.numIndexes desc
+   and f._Refs_key = r1._Refs_key
+   and f._Refs_key = r2._Refs_key
+   order by  r1._Priority_key, f.numgenes desc, r2.numindexes desc
    ''', 'auto')
 
 for r in results:
         fp.write(str.ljust(r['jnumID'], 10))
         fp.write(SPACE)
-        fp.write(str.ljust(str(r['numIndexes']), 15))
+        fp.write(str.ljust(str(r['numindexes']), 15))
         fp.write(SPACE)
-        fp.write(str.ljust(str(r['numGenes']), 15))
+        fp.write(str.ljust(str(r['numgenes']), 15))
         fp.write(SPACE)
         fp.write(str.ljust(r['priority'], 15))
         fp.write(SPACE)
@@ -182,4 +170,3 @@ for r in results:
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
-db.useOneConnection(0)
