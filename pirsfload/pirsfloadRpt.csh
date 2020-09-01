@@ -54,8 +54,8 @@ else
     setenv JOBKEY $2
 endif
 
-DuplicateTermNames.py ${OUTPUTDIR} ${JOBKEY}
-OtherMarkerTypes.py ${OUTPUTDIR} ${JOBKEY}
+${PYTHON} DuplicateTermNames.py ${OUTPUTDIR} ${JOBKEY}
+${PYTHON} OtherMarkerTypes.py ${OUTPUTDIR} ${JOBKEY}
 
 foreach RPT (*.sql)
    ${QCRPTS}/reports.csh $RPT ${OUTPUTDIR}/`basename $RPT`.rpt ${PG_DBSERVER} ${PG_DBNAME}

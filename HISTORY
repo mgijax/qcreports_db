@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-16-5
+DATE: 08/27/2020
+STAFF: sc
+TR13204/Infrastructure Release
+pirsfloadRpt.csh calls python report scripts, but was not updated to use ${PYTHON}
+
 TAG: qcreports_db-6-0-16-4
 DATE: 08/26/2020
 STAFF: lec
