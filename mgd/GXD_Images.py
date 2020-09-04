@@ -152,6 +152,7 @@ journals = [
 'Breast Cancer Res',
 'Cell Commun Signal',
 'Cell Death Dis',
+'Cell Rep',
 'Dev Biol', 
 'Dev Dyn', 
 'Development', 
