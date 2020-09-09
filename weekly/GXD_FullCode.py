@@ -14,6 +14,9 @@
 #
 # History:
 #
+# lec   09/04/2020
+#       - TR13277/change short citation to longer citation on journal QC reports
+#
 # lec   10/24/2014
 #       - TR11750/postres complient
 #
@@ -76,7 +79,9 @@ def processJournal(jList, fileName):
         fp.write(SPACE)
         fp.write(str.ljust('Priorty', 10))
         fp.write(SPACE)
-        fp.write(str.ljust('Short Citation', 20))
+        fp.write(str.ljust('Short Citation', 50))
+        fp.write(SPACE)
+        fp.write(str.ljust('Title', 50))
         fp.write(CRT)
         fp.write(str.ljust('-----', 30))
         fp.write(SPACE)
@@ -88,7 +93,9 @@ def processJournal(jList, fileName):
         fp.write(SPACE)
         fp.write(str.ljust('---------', 10))
         fp.write(SPACE)
-        fp.write(str.ljust('---------', 20))
+        fp.write(str.ljust('---------', 50))
+        fp.write(SPACE)
+        fp.write(str.ljust('---------', 50))
         fp.write(CRT)
 
         # get set of references not coded with high/medium priority
@@ -130,10 +137,12 @@ def processJournal(jList, fileName):
                 select distinct a.jnumID, i._Refs_key, i.markerCount, 
                                 i.conditional, i.priority, 
                                 a.short_citation,
+                                r.title,
                                 0 as newGeneCount
                 into temporary table final 
-                from mcount1 i, BIB_Citation_Cache a 
+                from mcount1 i, BIB_Citation_Cache a, BIB_Refs r
                 where i._Refs_key = a._Refs_key 
+                and a._Refs_key = r._Refs_key
                 ''', None)
 
         #
@@ -196,6 +205,8 @@ def processJournal(jList, fileName):
             fp.write(str.ljust(str(r['priority']), 10))
             fp.write(SPACE)
             fp.write(str.ljust(str(r['short_citation']), 50))
+            fp.write(SPACE)
+            fp.write(str.ljust(str(r['title']), 50))
             fp.write(CRT)
 
         fp.write('%s(%d rows affected)%s%s' % (CRT, len(results), CRT, CRT))

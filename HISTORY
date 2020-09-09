@@ -1,7 +1,25 @@
-TAG: qcreports_db-6-0-16-6
+TAG: qcreports_db-6-0-16-9
 DATE: 09/09/2020
 STAFF: sc
 TR13374 - New MRK_C4AM.rpt
+
+TAG: qcreports_db-6-0-16-8
+DATE: 09/04/2020
+STAFF: lec
+TR13327/AP group weekly reference QC reports
+
+TAG: qcreports_db-6-0-16-7
+DATE: 09/04/2020
+STAFF: lec
+TR13277/change short citation to longer citation on journal QC reports
+TR13356/re-label and re-sort GO QC reports
+TR13357/removal of GO QC report  (mgd/MGI_GenotypeDescriptions.py)
+
+TAG: qcreports_db-6-0-16-6
+DATE: 09/04/2020
+STAFF: lec
+TR13186/add auto copyright for Cell Rep
+TR13363/add J# to list of GXD electronic references
 
 TAG: qcreports_db-6-0-16-5
 DATE: 08/27/2020
