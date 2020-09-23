@@ -31,6 +31,7 @@ import sys
 import os 
 import reportlib
 import db
+import mgi_utils
 
 db.setTrace()
 
@@ -95,7 +96,7 @@ results = db.sql('select * from refs', 'auto')
 for r in results:
         key = r['_Refs_key']
         fp.write(r['tagTerm'] + TAB)
-        fp.write(r['jnumid'] + TAB)
+        fp.write(mgi_utils.prvalue(r['jnumid']) + TAB)
         fp.write(str(r['pubmedid']) + TAB)
         fp.write(str(r['year']) + TAB)
         fp.write(r['statusterm'] + TAB)
