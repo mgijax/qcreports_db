@@ -180,10 +180,10 @@ for r in results:
     fp.write(r['figureLabel'] + TAB)
     fp.write(mgi_utils.prvalue(r['paneLabel']) + TAB)
     fp.write(r['accID'] + TAB)
-    fp.write(str.join(pixID[key], '|') + TAB)
+    fp.write('|'.join(pixID[key]) + TAB)
     fp.write(str(r['xDim']) + TAB)
     fp.write(str(r['yDim']) + TAB)
-    fp.write(str.join(assayType[key], '|') + CRT)
+    fp.write('|'.join(assayType[key]) + CRT)
 
     counter = counter + 1
 
