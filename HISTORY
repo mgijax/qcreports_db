@@ -1,3 +1,8 @@
+TAG: qcreports_db-6-0-16-12
+DATE: 10/23/2020
+STAFF: dbm
+python3 fix: mgd/GO_InvalidInferredFrom.py, mgd/MRK_GOIEA.py
+
 TAG: qcreports_db-6-0-16-11
 DATE: 10/14/2020
 STAFF: sc
