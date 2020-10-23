@@ -116,7 +116,7 @@ for r in results:
                 primaryIdList = []
                 for r in results:
                     primaryIdList.append(r['accid'])
-                invalidList.append('%s%s%s%s%s%s%s%s%s%s' % (mgiId, TAB, symbol, TAB, goId, TAB, inferredFrom, TAB, str.join(primaryIdList, ', '), CRT))
+                invalidList.append('%s%s%s%s%s%s%s%s%s%s' % (mgiId, TAB, symbol, TAB, goId, TAB, inferredFrom, TAB, ', '.join(primaryIdList), CRT))
 
 for i in invalidList:
     fp.write(i)

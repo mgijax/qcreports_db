@@ -138,7 +138,7 @@ def writeRecordD(fp, r):
         refsKey = r['_Refs_key']
         if refsKey in curTagDict:
             curList = curTagDict[refsKey]
-            fp.write(str.join(curList, ', '))
+            fp.write(', '.join(curList))
         fp.write(CRT)
 
 def writeRecordF(fp, r):
