@@ -99,8 +99,11 @@ sql = '''
 select r._Refs_key, c.jnumID, lower(d.extractedText) as extractedText,
         to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
-from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d
-where r.isDiscard = 0
+from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v
+where c.jnumID is not null
+and r._Refs_key = v._Refs_key
+and v._Relevance_key != 70594666
+and v.isCurrent = 1
 and r._Refs_key = c._Refs_key
 and r._Refs_key = d._Refs_key
 and d._ExtractedText_key not in (48804491)

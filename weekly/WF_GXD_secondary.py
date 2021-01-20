@@ -94,9 +94,11 @@ db.sql('''
 select r._Refs_key, r.jnumID, 
         lower(regexp_replace(d.extractedtext, E'\n', ' ', 'g')) as extractedText
 into temp table refs
-from BIB_Citation_Cache r, BIB_Workflow_Status s, BIB_Workflow_Data d
-where r.isDiscard = 0
-and r.jnumID is not null
+from BIB_Citation_Cache r, BIB_Workflow_Status s, BIB_Workflow_Data d, BIB_Workflow_Relevance v
+where r.jnumID is not null
+and r._Refs_key = v._Refs_key
+and v._Relevance_key != 70594666
+and v.isCurrent = 1
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1
 and s._Group_key = 31576665

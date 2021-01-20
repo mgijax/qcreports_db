@@ -50,9 +50,10 @@ fp.write('''
              No GO annotation
 ''')
 
-results = db.sql('''select distinct a.accid as jnumID, b.isDiscard, 
+results = db.sql('''
+    select distinct a.accid as jnumID, v._Relevance_key,
         to_char(b.creation_date, 'MM/dd/yyyy') as cdate
-    from BIB_Workflow_status wf, ACC_Accession a, BIB_Refs b
+    from BIB_Workflow_Status wf, ACC_Accession a, BIB_Refs b, BIB_Workflow_Relevance v
     where wf._Group_key = 31576666
     and wf.isCurrent = 1
     and wf._Status_key = 31576674
@@ -62,17 +63,25 @@ results = db.sql('''select distinct a.accid as jnumID, b.isDiscard,
     and a.prefixPart = 'J:'
     and a.preferred = 1
     and wf._Refs_key = b._Refs_key
+    and wf._Refs_key = v._Refs_key
+    and v.isCurrent = 1
     and not exists (select 1
-    from VOC_Annot a, VOC_Evidence e
-    where a._AnnotType_key = 1000
-    and a._Annot_key = e._Annot_key
-    and e._Refs_key = wf._Refs_key)
-    order by a.accid''', 'auto')
+        from VOC_Annot a, VOC_Evidence e
+        where a._AnnotType_key = 1000
+        and a._Annot_key = e._Annot_key
+        and e._Refs_key = wf._Refs_key)
+    order by a.accid
+    ''', 'auto')
 fp.write('JNumber%sisDiscard%sCreation Date%s' % (TAB, TAB, CRT))
 fp.write('-' * 40 + CRT)
 for r in results:
         jnumID = r['jnumID']
-        isDiscard = r['isDiscard']
+
+        if r['_Relevance_key'] == '70594666':
+                isDiscard = 1
+        else:
+                isDiscard = 0
+
         cdate = r['cdate']
         fp.write('%s%s%d%s%s%s' % (jnumID, TAB, isDiscard, TAB, cdate, CRT))
 fp.write('\nTotal: %d\n' % len(results))

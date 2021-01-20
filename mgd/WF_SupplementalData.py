@@ -83,8 +83,10 @@ fp.write('\t- supporting information\n\n')
 curatorList = []
 results = db.sql('''
 select distinct r.jnumID, t.term
-from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Workflow_Status s, VOC_Term t, MGI_User u
-where r.isDiscard = 0
+from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Workflow_Status s, BIB_Workflow_Relevance v, VOC_Term t, MGI_User u
+where r._Refs_key = v._Refs_key
+and v._Relevance_key != 70594666
+and v.isCurrent = 1
 and r.isReviewArticle = 0
 and r.jnumID is not null
 and r.journal not in ('Elife')
@@ -107,8 +109,10 @@ for r in results:
 dataloadList = []
 results = db.sql('''
 select distinct r.jnumID, t.term
-from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Workflow_Status s, VOC_Term t, MGI_User u
-where r.isDiscard = 0
+from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Workflow_Status s, BIB_Workflow_Relevance v, VOC_Term t, MGI_User u
+where r._Refs_key = v._Refs_key
+and v._Relevance_key != 70594666
+and v.isCurrent = 1
 and r.isReviewArticle = 0
 and r.jnumID is not null
 and r.journal not in ('Elife')

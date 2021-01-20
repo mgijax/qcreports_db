@@ -45,10 +45,12 @@ fp = reportlib.init(sys.argv[0], 'AP tagged references for curation', os.environ
 results = db.sql('''
 select r._Refs_key, c.numericpart, c.jnumid, c.pubmedid, r.year, wftag._tag_key, tt.term as tagterm, st.term as statusterm
 into temp table refs
-from BIB_Refs r, BIB_Citation_Cache c, 
+from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Relevance v,
 BIB_Workflow_Tag wftag, VOC_Term tt,
 BIB_Workflow_Status wfstatus, VOC_Term st
-where r.isDiscard = 0
+where r._Refs_key = v._Refs_key
+and v._Relevance_key != 70594666
+and v.isCurrent = 1
 and r._Refs_key = c._Refs_key
 and r._Refs_key = wftag._Refs_key
 and wftag._Tag_key in (35710200, 31576700, 31576701, 31576709)
