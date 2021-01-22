@@ -5,7 +5,7 @@
 \echo ''
 
 (
-select distinct r.jnumID, wft.term as wfterm, wfs.term as supplemental
+select distinct r.mgiID, r.jnumID, wft.term as wfterm, wfs.term as supplemental
 from BIB_Citation_Cache r, BIB_Workflow_Status s, BIB_Workflow_Tag t, VOC_Term wft,
 	BIB_Workflow_Data d, VOC_Term wfs
 where r._Refs_key = s._Refs_key
@@ -19,7 +19,7 @@ and r._Refs_key = d._Refs_key
 and d._Supplemental_key = wfs._Term_key
 and d._ExtractedText_key = 48804490
 union
-select distinct r.jnumID, null as wfterm, wfs.term as supplemental
+select distinct r.mgiID, r.jnumID, null as wfterm, wfs.term as supplemental
 from BIB_Citation_Cache r, BIB_Workflow_Status s,
 	BIB_Workflow_Data d, VOC_Term wfs
 where r._Refs_key = s._Refs_key

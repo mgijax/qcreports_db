@@ -8,24 +8,29 @@
 # Usage:
 #       WF_GXD_secondary.py
 #
-#	Group = GXD
-#	Status = Not Routed
-#	Is Discared = false
-#	Jnum ID is not null
-# 	Tag *not* in ('GXD:cms', 'GXD:jf', 'GXD:th', 'GXD:jx', 'GXD:ijm')
+#       Group = GXD
+#       Status = Routed
+#       
+#       Section 1
+#       Relevance = keep
 #
-#	compare embryo_set with ignore_set
-#	ignore_set = references where ignore set exists in extracted text
-#	embryo_set = references where "%embryo%" exists in extracted text
+#       Section 2
+#       Relevanve = discard
 #
-# J:249490 : has 'human embryonic stem' which gets counted for all 3:
-#	human embryonic stem
-#	human embryonic
-#	embryonic stem
+#       In each section:
+#       mgiid
+#       pubmedid
+#       Relevance Confidence score
+#       Count of embryo (exclude references)e.  
+#       Count of ignore phrases (exclude references)5.  
+#       Exclude any records with tags GXD:jf, GXD:cms, GXD:ijm, GXD:jx, GXD:th
+#       List the ‘ignore’ phrases at the top of the page
+#       Sort by MGI ID descending
 #
 # History:
 #
-# 12/15/2017
+# 01/22/2021    lec
+#       - TR13349/Genome Build 39 project
 #	- TR12717/GXD secondary screening
 #
 '''
@@ -43,203 +48,109 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+searchTerms = [
+'embryo',
+]
+
+excludedTerms = ''
+sql = ''
+extractedSql = ''
+
+def process(sql):
+
+        # general processing
+        results = db.sql(sql, 'auto')
+
+        # iterate thru each distinct reference
+        for r in results:
+
+                totalMatchesTerm = 0
+                totalMatchesExcludedTerm = 0
+
+                eresults = db.sql(extractedSql % (r['_refs_key']), 'auto')
+                for e in eresults:
+                    matchesExcludedTerm = 0
+                    extractedText = e['extractedText']
+                    extractedText = extractedText.replace('\n', ' ')
+                    extractedText = extractedText.replace('\r', ' ')
+
+                    for s in searchTerms:
+                        for match in re.finditer(s, extractedText):
+                            subText = extractedText[match.start()-50:match.end()+50]
+                            if len(subText) == 0:
+                                subText = extractedText[match.start()-50:match.end()+50]
+
+                            matchesExcludedTerm = 0
+                            for e in excludedTerms:
+                                for match2 in re.finditer(e, subText):
+                                    matchesExcludedTerm = 1
+
+                            # if subText matches excluded term
+                            if matchesExcludedTerm == 0:
+                                fp.write(subText + '\n')
+                                totalMatchesTerm += 1
+                            else:
+                                totalMatchesExcludedTerm += 1
+                                                
+                fp.write(r['mgiid'] + TAB)
+                fp.write(str(r['pubmedid']) + TAB)
+                fp.write(str(r['confidence']) + TAB)
+                fp.write(str(totalMatchesTerm) + TAB)
+                fp.write(str(totalMatchesExcludedTerm) + CRT*2)
+
+        fp.write('\n(%d rows affected)\n' % len(results))
+
 #
-# find each searcht term in extractedText field
-# save results in ignoreLookup
-#
-def findExtractedText(extractedText):
-
-    ignoreLookup = []
-    ignoreCount = 0
-
-    for s in ignoreSearchTerms:
-
-        # count each instance of search term
-        counter = extractedText.count(s)
-
-        if counter > 0:
-
-            #
-            # this will be counted 3 times, but only count 1
-            # human embryonic stem, human embryonic, embryonic stem
-            #
-            if s == 'human embryonic stem':
-                counter = counter - 2
-
-            ignoreCount += counter
-
-            if s not in ignoreLookup:
-                ignoreLookup.append(s)
-
-    #print ignoreLookup, ignoreCount
-    return ignoreLookup, ignoreCount
-
-#
-# Main
+#  MAIN
 #
 
-#
-# ignored search terms 
-#
-ignoreSearchTerms = []
-results = db.sql('select term from VOC_Term where _Vocab_key = 135 order by term', 'auto')
-for r in results:
-    ignoreSearchTerms.append(r['term'])
-
-#
-# references : see rules at top
-# exclude extractedText not in 'reference' section
-#
-db.sql('''
-select r._Refs_key, r.jnumID, 
-        lower(regexp_replace(d.extractedtext, E'\n', ' ', 'g')) as extractedText
-into temp table refs
-from BIB_Citation_Cache r, BIB_Workflow_Status s, BIB_Workflow_Data d, BIB_Workflow_Relevance v
-where r.jnumID is not null
-and r._Refs_key = v._Refs_key
-and v._Relevance_key != 70594666
+# distinct references
+# where relevance = '?'
+#       status = 'Routed'
+#       non-reference extracted text exists
+sql = '''
+select distinct c._refs_key, c.mgiid, c.pubmedid, s._group_key, v.confidence
+from bib_citation_cache c, bib_refs r, bib_workflow_relevance v, bib_workflow_status s
+where r._refs_key = c._refs_key
+and r._refs_key = v._refs_key
 and v.isCurrent = 1
-and r._Refs_key = s._Refs_key
+and v._relevance_key = %s
+and r._refs_key = s._refs_key
+and s._status_key = 31576670
+and s._group_key = 31576665
 and s.isCurrent = 1
-and s._Group_key = 31576665
-and s._Status_key = 31576669
-and r._Refs_key = d._Refs_key
-and d._ExtractedText_key not in (48804491)
-and not exists (select 1 from BIB_Workflow_Tag t, VOC_Term v 
-         where r._Refs_key = t._Refs_key
-         and t._Tag_key = v._Term_key
-         and v.term in ('GXD:cms', 'GXD:jf', 'GXD:th', 'GXD:jx', 'GXD:ijm')
-         )
-''', None)
+and exists (select 1 from bib_workflow_data d
+    where r._refs_key = d._refs_key
+    and d._extractedtext_key not in (48804491)
+    and d.extractedText is not null
+    )
+order by mgiid desc
+'''
 
-db.sql('create index idx_refs on refs(_Refs_key)', None)
+# extracted_text by _refs_key where extracted text type != 'reference'
+extractedSql = '''
+    select lower(d.extractedText) as extractedText
+    from bib_workflow_data d
+    where d._refs_key = %s
+    and d._extractedtext_key not in (48804491)
+    and d.extractedText is not null
+'''
 
-#results = db.sql('select * from refs', 'auto')
-#print results
-
-#
-# create ignore_set
-#
-db.sql('''
-select r.*
-into temp table ignore_set
-from refs r, VOC_Term t
-where r.extractedText like '%' || t.term || '%'
-and t._Vocab_key = 135
-''', None)
-
-db.sql('create index idx_ignore on ignore_set(_Refs_key)', None)
-
-#
-# create embryo_set
-#
-db.sql('''
-select r.*
-into temp table embryo_set
-from refs r
-where r.extractedText like '%embryo%'
-''', None)
-
-db.sql('create index idx_embryo on embryo_set(_Refs_key)', None)
-
-fp1 = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-
-fp1.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):\n')
-fp1.write('\n'.join(ignoreSearchTerms) + '\n\n')
-
-fp1.write('ignore_set = references where ignore set exists in extracted text\n')
-fp1.write('embryo_set = references where "%embryo%" exists in extracted text\n')
-
-#
-# embryo_set count of "%embryo%" results 
-# use regexp_match() to get counts of each instance of match
-#
-embryoLookup = {}
-results = db.sql('''
-select _Refs_key, count(*) as set_count 
-from embryo_set, regexp_matches(extractedText, '(embryo)', 'g')
-group by _Refs_key
-''', 'auto')
+excludedTerms = []
+results = db.sql('select lower(term) as term from voc_term where _vocab_key = 135 order by term', 'auto')
 for r in results:
-    key = r['_Refs_key']
-    value = r['set_count']
-    if key not in embryoLookup:
-        embryoLookup[key] = []
-    embryoLookup[key] = value
-#print embryoLookup
+    excludedTerms.append(r['term'])
+#print(excludedTerms)
 
-#
-# embryo_set; store output in a list so it can be sorted
-#
-embryoList = {}
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
+fp.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):\n')
+fp.write('\n'.join(excludedTerms) + '\n\n')
 
-#
-# references in embryo_set and not in ignore_set
-#
-fp1.write('\nreferences in embryo_set and not in ignore_set : good')
-fp1.write('\nreferences in embryo_set and in ignore_set : good\n\n')
-count = 0
-results = db.sql('''
-select distinct s2._Refs_key, s2.jnumID, s2.extractedText
-from embryo_set s2
-where not exists (select 1 from ignore_set s1 where s2._Refs_key = s1._Refs_key)
-order by s2.jnumID
-''', 'auto')
-for r in results:
-    ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
-    count +=1
-    if r['jnumID'] not in embryoList:
-        embryoList[r['jnumID']] = []
-    embryoList[r['jnumID']].append('|'.join(ignoreLookup))
-#
-# references in embryo_set and in ignore_set 
-# where embryo_set count > ignoreCount
-#
-results = db.sql('''
-select distinct s2._Refs_key, s2.jnumID, s2.extractedText
-from ignore_set s1, embryo_set s2
-where s1._Refs_key = s2._Refs_key
-order by s2.jnumID
-''', 'auto')
-for r in results:
-    ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
-    if embryoLookup[r['_Refs_key']] > ignoreCount:
-        count += 1
-        if r['jnumID'] not in embryoList:
-            embryoList[r['jnumID']] = []
-        embryoList[r['jnumID']].append('|'.join(ignoreLookup))
+fp.write('\nkeep\n')
+process(sql % (70594667))
 
-#
-# sort by jnum & write to report
-#
-keys = list(embryoList.keys())
-keys.sort()
-count = 0
-for r in keys:
-    fp1.write(r + TAB)
-    fp1.write(str(embryoList[r][0]) + CRT)
-    count += 1
-fp1.write('\n(%d rows affected)\n' % (count))
+fp.write('\ndiscard\n')
+process(sql % (70594666))
 
-#
-# references in ignore_set but not in embryo_set
-# where embryo_set count == ignoreCount
-#
-fp1.write('\nreferences in ignore_set and not in embryo_set : bad\n\n')
-count = 0
-ignoreLookup = []
-results = db.sql('''
-select distinct s2._Refs_key, s2.jnumID, s2.extractedText
-from ignore_set s1, embryo_set s2
-where s1._Refs_key = s2._Refs_key
-order by s2.jnumID
-''', 'auto')
-for r in results:
-    ignoreLookup, ignoreCount = findExtractedText(r['extractedText'])
-    if embryoLookup[r['_Refs_key']] == ignoreCount:
-        fp1.write(r['jnumID'] + TAB)
-        fp1.write('|'.join(ignoreLookup) + CRT)
-        count += 1
-fp1.write('\n(%d rows affected)\n' % (count))
+reportlib.finish_nonps(fp)
 
-reportlib.finish_nonps(fp1)

@@ -7,13 +7,14 @@
 #
 # 	References where:
 #	- has J#
-#	- is not Discard
+#	- is keep
 #	- is-reviewe-article = No
 #	- supplemental in:
 #		'Db found supplement'
 #		'Curator found supplement'
 #	- Status in ('Chosen', 'Indexed')
 #	- Journal not in 'Elife'
+#       - SOrted by Curator, Status, J#
 #
 #	because the J: assignment triggered a search for:
 #	- supplemental
@@ -64,7 +65,7 @@ fp = reportlib.init(sys.argv[0], 'Supplemental Data Needed', os.environ['QCOUTPU
 
 fp.write('\tReferences where:\n')
 fp.write('\t- has J#\n')
-fp.write('\t- is not Discard\n')
+fp.write('\t- is keep\n')
 fp.write('\t- is-reviewe-article = No\n')
 fp.write('\t- supplemental in:\n')
 fp.write('\t\tDb found supplement\n')
@@ -85,7 +86,7 @@ results = db.sql('''
 select distinct r.jnumID, t.term
 from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Workflow_Status s, BIB_Workflow_Relevance v, VOC_Term t, MGI_User u
 where r._Refs_key = v._Refs_key
-and v._Relevance_key != 70594666
+and v._Relevance_key = 70594667
 and v.isCurrent = 1
 and r.isReviewArticle = 0
 and r.jnumID is not null
@@ -111,7 +112,7 @@ results = db.sql('''
 select distinct r.jnumID, t.term
 from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Workflow_Status s, BIB_Workflow_Relevance v, VOC_Term t, MGI_User u
 where r._Refs_key = v._Refs_key
-and v._Relevance_key != 70594666
+and v._Relevance_key = 70594667
 and v.isCurrent = 1
 and r.isReviewArticle = 0
 and r.jnumID is not null
