@@ -41,7 +41,7 @@ import re
 import reportlib
 import db
 
-db.setTrace()
+#db.setTrace()
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE

@@ -88,20 +88,14 @@ byDate = {}
 byStatus = {}
 byText = {}
 
-searchSQL = ''
-for s in searchTerms:
-        searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
-searchSQL = searchSQL[:-2]
-
 # read non-null extracted text
 # exclude extractedText not in 'reference' section
 sql = '''
-select r._Refs_key, c.jnumID, lower(d.extractedText) as extractedText,
+select r._Refs_key, c.mgiid, c.jnumid, lower(d.extractedText) as extractedText,
         to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
 from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v
-where c.jnumID is not null
-and r._Refs_key = v._Refs_key
+where r._Refs_key = v._Refs_key
 and v._Relevance_key != 70594666
 and v.isCurrent = 1
 and r._Refs_key = c._Refs_key
@@ -131,14 +125,14 @@ db.sql('create index ref_idx on extractedText(_Refs_key)', None)
 results = db.sql('select * from extractedText', 'auto')
 for r in results:
 
-        jnumID = r['jnumID']
+        mgiid = r['mgiid']
 
-        if jnumID not in byDate:
-            byDate[jnumID] = []
-            byDate[jnumID].append(r['cdate'])
+        if mgiid not in byDate:
+            byDate[mgiid] = []
+            byDate[mgiid].append(r['cdate'])
 
-        if jnumID not in byText:
-            byText[jnumID] = []
+        if mgiid not in byText:
+            byText[mgiid] = []
 
         extractedText = r['extractedText']
         extractedText = extractedText.replace('\n', ' ')
@@ -148,13 +142,13 @@ for r in results:
                 subText = extractedText[match.start()-40:match.end()+40]
                 if len(subText) == 0:
                     subText = extractedText[match.start()-10:match.end()+40]
-                byText[jnumID].append(subText)
+                byText[mgiid].append(subText)
 
 #
 # process group/status
 #
 sql = '''
-select r._Refs_key, r.jnumID, concat(g.abbreviation||'|'||s.term) as groupstatus
+select r._Refs_key, r.mgiid, r.jnumid, concat(g.abbreviation||'|'||s.term) as groupstatus
 from extractedText r, BIB_Workflow_Status wfs, VOC_Term g, VOC_Term s
 where r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
@@ -166,13 +160,13 @@ results = db.sql(sql, 'auto')
 
 for r in results:
 
-        jnumID = r['jnumID']
+        mgiid = r['mgiid']
         groupstatus = r['groupstatus']
 
-        if jnumID not in byStatus:
-            byStatus[jnumID] = []
-        if groupstatus not in byStatus[jnumID]:
-            byStatus[jnumID].append(groupstatus)
+        if mgiid not in byStatus:
+            byStatus[mgiid] = []
+        if groupstatus not in byStatus[mgiid]:
+            byStatus[mgiid].append(groupstatus)
 
 #
 # print report
