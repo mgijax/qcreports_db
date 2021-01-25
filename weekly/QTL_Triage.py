@@ -1,4 +1,3 @@
-
 '''
 #
 # QTL_Triage.py
@@ -34,9 +33,7 @@ import sys
 import os
 import mgi_utils
 import reportlib
-import Set
 import db
-import string
 
 db.setTrace()
 db.useOneConnection(1)
