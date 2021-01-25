@@ -7,10 +7,11 @@
 #
 #	Review for AP:NewAlleleNomenclature tag
 #
-#	The reference must be:
-#	group = AP, status = 'Routed', 'Chosen'
-#	group = AP, tag != 'AP:NewAlleleNomenclature'
-#		    and tag != 'AP:NewTransgene'
+#       The reference must be:
+#            group = AP, status = 'Routed' or 'Chosen'
+#            group = AP, tag != 'AP:NewAlleleNomenclature'
+#                    and tag != 'AP:NewTransgene'
+#                    and tag != ‘AP:New_allele_New_gene’
 #	not discarded
 #
 #	output:
@@ -51,26 +52,18 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Review for AP:NewAlleleNomenclature tag', os.environ['QCOUTPUTDIR'])
 
 searchTerms = [
-'we generated',
-'we have generated',
-'we created',
-'we have created',
-'mice were generated',
-'mice were created',
-'targeting vector',
-' es cell',             # note the space is important (avoids matches like "increases cell")
-'targeting construct',
-'novel mutation',
-'novel mutant',
-'spontaneous mutation',
-'spontaneous mutant',
-'generation of mice',
-'generation of mutant mice',
-'generation of transgenic mice',
-'gene trapped',
-'gene-trapped',
-'gene trap',
-'gene-trap'
+'we generated', 
+'we have generated', 
+'we created', 
+'we have created', 
+'mice were generated', 
+'mice were created', 
+'targeting vector', 
+' es cell', 
+'targeting construct', 
+'generation of mice', 
+'generation of mutant mice', 
+'generation of transgenic mice'
 ]
 
 searchTerms = [x.lower() for x in searchTerms]
@@ -80,6 +73,7 @@ fp.write('''
              group = AP, status = 'Routed' or 'Chosen'
              group = AP, tag != 'AP:NewAlleleNomenclature'
                      and tag != 'AP:NewTransgene'
+                     and tag != 'AP:New_allele_New_gene'
              not discarded
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
@@ -112,7 +106,7 @@ and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
 
 and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
         where r._Refs_key = wftag._Refs_key
-        and wftag._Tag_key in (31576700, 31576702)
+        and wftag._Tag_key in (31576700, 31576702, 35710200)
         )
 '''
 

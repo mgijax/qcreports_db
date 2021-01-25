@@ -60,7 +60,7 @@ fp.write('Status,J:,Year,QTL symbol,Curator,QTL tags' + 2*CRT)
 # no Mapping records
 #
 db.sql('''
-        select distinct r._Refs_key, t.term as status, c.jnumID, r.year, u.login
+        select distinct r._Refs_key, t.term as status, c.mgiID, c.jnumID, r.year, u.login
         into temporary table qtl_refs
         from BIB_Refs r, BIB_Citation_Cache c, BIB_WorkFlow_Status wfs, VOC_Term t, MGI_User u
         where r._Refs_key = c._Refs_key
@@ -123,7 +123,8 @@ results = db.sql('''select * from qtl_refs where status = 'Routed' ''', 'auto')
 for r in results:
     key = r['_Refs_key']
     fp.write('R' + TAB)
-    fp.write(r['jnumID'] + TAB)
+    fp.write(r['mgiID'] + TAB)
+    fp.write(str(r['jnumID']) + TAB)
     fp.write(str(r['year']) + TAB)
     if key in markerLookup:
         fp.write(';'.join(markerLookup[key]))
@@ -141,7 +142,8 @@ results = db.sql('''select * from qtl_refs where status = 'Chosen' ''', 'auto')
 for r in results:
     key = r['_Refs_key']
     fp.write('C' + TAB)
-    fp.write(r['jnumID'] + TAB)
+    fp.write(r['mgiID'] + TAB)
+    fp.write(str(r['jnumID']) + TAB)
     fp.write(str(r['year']) + TAB)
     if key in markerLookup:
         fp.write(';'.join(markerLookup[key]))

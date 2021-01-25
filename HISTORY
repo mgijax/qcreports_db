@@ -13,6 +13,7 @@ WF_GXD_Secondary.py
 WF_AP_Discard.py
 WF_AP_NewAlleleNomenTag.py
 WF_AP_Tags.py
+QTL_Triage.py
 
 TAG: qcreports_db-6-0-16-12
 DATE: 10/23/2020
