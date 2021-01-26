@@ -36,6 +36,10 @@
 #
 # History:
 #
+# dbm   01/26/2020
+#       - TR13430 exclude references tagged with "GO:QC4_NoGO_exclude"
+#       (_Term_key = 71460411)
+#
 # lec	11/27/2017
 #	- TR12678
 #	- column GXD? = set to Y if GXD workflow status = Indexed or Chosen
@@ -230,6 +234,9 @@ def reportD():
         where r._Refs_key = e._Refs_key 
         and e._Annot_key = a._Annot_key 
         and a._AnnotType_key = 1000) 
+        and not exists (select 1 from BIB_Workflow_Tag wt
+        where wt._Refs_key = r._Refs_key
+        and wt._Tag_key = 71460411)
         ''', None)
 
     # number of unique MGI gene

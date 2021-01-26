@@ -46,6 +46,10 @@
 #
 # History:
 #
+# dbm   01/26/2020
+#       TR13430 exclude references tagged with "GO:QC5_IEA-only_exclude"
+#       (_Term_key = 71460412)
+#
 # sc	03/07/2018
 #	- If Indexed or Chosen or Full-coded 'ref in GXD' = 'Y'
 #	- add explanation of 'ref in GXD' column to report header
@@ -255,6 +259,9 @@ db.sql('''select distinct r._Marker_key, r._Refs_key, r.symbol, r.name, r.mgiID,
         where r._Refs_key = e._Refs_key
         and e._Annot_key = a._Annot_key
         and a._AnnotType_key = 1000)
+        and not exists (select 1 from BIB_Workflow_Tag wt
+        where wt._Refs_key = r._Refs_key
+        and wt._Tag_key = 71460412)
         ''', None)
 # number of unique MGI gene
 results = db.sql('select distinct _Marker_key from fpD', 'auto')
