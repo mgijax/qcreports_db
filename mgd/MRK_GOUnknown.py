@@ -17,6 +17,10 @@
 #
 # History:
 #
+# dbm	01/26/2020
+#	TR13430 exclude references tagged with "GO:QC1_GOunknown_exclude"
+#	(_Term_key = 71460409)
+#
 # sc	11/03/17
 #	TR12607 exclude cre transgene refs from GO QC 15 (14 after littriage release)
 #
@@ -164,6 +168,9 @@ db.sql('''select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID,
             and s.isCurrent = 1)
     and not exists (select 1 from exclude e
             where e._Refs_key = t._Refs_key) 
+    and not exists (select 1 from BIB_Workflow_Tag wt
+            where wt._Refs_key = t._Refs_key
+            and wt._Tag_key = 71460409) 
     and not exists (select 1 from BIB_Workflow_Status s
             where t._Refs_key = s._Refs_key
             and s._Group_key in (31576664, 31576668, 31576665) 
@@ -185,6 +192,9 @@ select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jn
             and t.pubmedID = t3.pubmedID)
     and not exists (select 1 from exclude e
             where e._Refs_key = t._Refs_key)
+    and not exists (select 1 from BIB_Workflow_Tag wt
+            where wt._Refs_key = t._Refs_key
+            and wt._Tag_key = 71460409) 
     and exists (select 1 from BIB_Workflow_Status s
             where t._Refs_key = s._Refs_key
             and s._Group_key = 31576666
@@ -211,6 +221,9 @@ select t._Refs_key, t._Marker_key, t.symbol, t.mgiID, t.jnumID, t.pubmedID, t.jn
             and t.pubmedID = t3.pubmedID)
     and not exists (select 1 from exclude e
             where e._Refs_key = t._Refs_key)
+    and not exists (select 1 from BIB_Workflow_Tag wt
+            where wt._Refs_key = t._Refs_key
+            and wt._Tag_key = 71460409) 
     and exists (select 1 from BIB_Workflow_Status s
             where t._Refs_key = s._Refs_key
             and s._Group_key = 31576666
