@@ -8,8 +8,8 @@
 #	Review for AP:NewAlleleNomenclature tag
 #
 #       The reference must be:
-#            group = AP, status = 'Routed' or 'Chosen'
-#            group = AP, 
+#            group = AP
+#            status = 'Routed' or 'Chosen'
 #            and tag != 'AP:Incomplete'
 #            and tag != 'AP:New_allele_New_gene'
 #            and tag != 'AP:NewAlleleNomenclature'
@@ -79,8 +79,8 @@ searchTerms = [x.lower() for x in searchTerms]
 
 fp.write('''
         The reference must be:
-             group = AP, status = 'Routed' or 'Chosen'
              group = AP
+             status = 'Routed' or 'Chosen'
              and tag != 'AP:Incomplete'
              and tag != 'AP:New_allele_New_gene'
              and tag != 'AP:NewAlleleNomenclature'
