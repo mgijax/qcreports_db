@@ -23,7 +23,7 @@
 #       Relevance Confidence score
 #       Count of embryo (exclude references)e.  
 #       Count of ignore phrases (exclude references)5.  
-#       Exclude any records with tags GXD:jf, GXD:cms, GXD:ijm, GXD:jx, GXD:th
+#       Exclude any records with tags 'GXD:jf', 'GXD:cms', 'GXD:ijm', 'GXD:jx', 'GXD:th'
 #       List the ‘ignore’ phrases at the top of the page
 #       Sort by MGI ID descending
 #
@@ -123,6 +123,10 @@ and exists (select 1 from bib_workflow_data d
     where r._refs_key = d._refs_key
     and d._extractedtext_key not in (48804491)
     and d.extractedText is not null
+    )
+and not exists (select 1 from bib_workflow_tag t
+    where r._refs_key = t._refs_key
+    and t._tag_key in (34447095,36021716,34447096,34447098,34447097)
     )
 order by mgiid desc
 '''
