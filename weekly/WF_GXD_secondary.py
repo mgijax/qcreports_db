@@ -58,6 +58,8 @@ extractedSql = ''
 
 def process(sql):
 
+        fp.write('MGI ID, pmid, Confidence, Good embryo, Ignore phrases\n')
+
         # general processing
         results = db.sql(sql, 'auto')
 
@@ -87,7 +89,7 @@ def process(sql):
 
                             # if subText matches excluded term
                             if matchesExcludedTerm == 0:
-                                fp.write(subText + '\n')
+                                #fp.write(subText + '\n')
                                 totalMatchesTerm += 1
                             else:
                                 totalMatchesExcludedTerm += 1
@@ -96,7 +98,7 @@ def process(sql):
                 fp.write(str(r['pubmedid']) + TAB)
                 fp.write(str(r['confidence']) + TAB)
                 fp.write(str(totalMatchesTerm) + TAB)
-                fp.write(str(totalMatchesExcludedTerm) + CRT*2)
+                fp.write(str(totalMatchesExcludedTerm) + CRT)
 
         fp.write('\n(%d rows affected)\n' % len(results))
 
@@ -147,8 +149,8 @@ for r in results:
 #print(excludedTerms)
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):\n')
-fp.write('\n'.join(excludedTerms) + '\n\n')
+fp.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):\n\n')
+fp.write('\n'.join(excludedTerms) + '\n')
 
 fp.write('\nkeep\n')
 process(sql % (70594667))
