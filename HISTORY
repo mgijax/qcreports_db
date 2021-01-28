@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-16-14
+DATE: 01/28/2021
+STAFF: sc
+TR13433 - New GO report: pm2gene Refs not in MGI
+mgd/GO_PM2GeneRefsNotInMGI.py
+
 TAG: qcreports_db-6-0-16-13
 DATE: 01/26/2026
 STAFF: dbm
