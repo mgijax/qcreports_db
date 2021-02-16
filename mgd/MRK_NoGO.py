@@ -36,6 +36,10 @@
 #
 # History:
 #
+# sc    02/11/2021
+#       TR13349 - B39 project. Update to use alliance direct homology
+#               (was using Homologene)
+#
 # dbm   01/26/2020
 #       - TR13430 exclude references tagged with "GO:QC4_NoGO_exclude"
 #       (_Term_key = 71460411)
@@ -156,7 +160,7 @@ def runQueries():
 
     db.sql('''update markers set hasOrthology = 'yes'
         where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
-        where mc._ClusterSource_key = 9272151 
+        where mc._ClusterSource_key = 75885739
         and mc._Cluster_key = hm1._Cluster_key 
         and hm1._Marker_key = markers._Marker_key 
         and hm1._Cluster_key = hm2._Cluster_key 
@@ -166,7 +170,7 @@ def runQueries():
 
     db.sql('''update markers set hasOrthology = 'yes' 
         where exists (select 1 from MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker mh 
-        where mc._ClusterSource_key = 9272151 
+        where mc._ClusterSource_key = 75885739
         and mc._Cluster_key = hm1._Cluster_key 
         and hm1._Marker_key = markers._Marker_key 
         and hm1._Cluster_key = hm2._Cluster_key 

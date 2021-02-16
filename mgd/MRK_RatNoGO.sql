@@ -29,7 +29,7 @@ create index markers2_idx on markers2(_Marker_key)
 select distinct m.accID, m.symbol, m.name
 INTO TEMPORARY TABLE markersA
 from markers2 m, MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker m2
-where mc._ClusterSource_key = 9272151
+where mc._ClusterSource_key = 75885739
 and mc._Cluster_key = hm1._Cluster_key
 and m._Marker_key = hm1._Marker_key
 and hm1._Cluster_key = hm2._Cluster_key
@@ -40,7 +40,7 @@ and m2._Organism_key = 40
 select distinct m.accID, m.symbol, m.name
 INTO TEMPORARY TABLE markersB
 from markers2 m, MRK_Cluster mc, MRK_ClusterMember hm1, MRK_ClusterMember hm2, MRK_Marker m2
-where mc._ClusterSource_key = 9272151
+where mc._ClusterSource_key = 75885739
 and mc._Cluster_key = hm1._Cluster_key
 and m._Marker_key = hm1._Marker_key
 and hm1._Cluster_key = hm2._Cluster_key

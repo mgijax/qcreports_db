@@ -16,6 +16,9 @@
 #
 # History:
 #
+# sc    02/11/2021
+#       TR13349 - B39 project. Update to use alliance direct homology
+#
 # lec   05/15/2015
 #	- TR11652/convert to new MRK_Cluster tables/other changes per Monica
 #
@@ -67,7 +70,7 @@ def runQueries(includeRiken):
              MRK_ClusterMember h1, 
              MRK_ClusterMember h2, 
              MRK_Marker m1, MRK_Marker m2, MRK_Status ms 
-        where mc._ClusterSource_key = 9272151
+        where mc._ClusterSource_key = 75885739
         and mc._Cluster_key = h1._Cluster_key
         and h1._Marker_key = m1._Marker_key 
         and m1._Organism_key = 1 
