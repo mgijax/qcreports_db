@@ -336,8 +336,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="homology"><B>Homology (jblake, mdolan) </B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class1.rpt">Classes for which there are > 10 Genes From a Single Species</A> 
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class2.rpt">Classes with no Mouse Genes</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class3.rpt">Classes with only Mouse Genes</A>
 </OL>
 
 <A NAME="tumor"><B>Tumor (dab, dmk) </B></A>
