@@ -152,10 +152,10 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('\nset of "Lit Triage GXD ignore extracted text" (_vocab_key = 135):\n\n')
 fp.write('\n'.join(excludedTerms) + '\n')
 
-fp.write('\nkeep\n')
+fp.write('\nKeep - papers routed to GXD\n')
 process(sql % (70594667))
 
-fp.write('\ndiscard\n')
+fp.write('\nDiscard - papers routed to GXD\n')
 process(sql % (70594666))
 
 reportlib.finish_nonps(fp)
