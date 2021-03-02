@@ -15,6 +15,11 @@ WF_AP_NewAlleleNomenTag.py
 WF_AP_Tags.py
 QTL_Triage.py
 
+TAG: qcreports_db-6-0-16-15
+DATE: 03/02/2021
+STAFF: lec
+TR13469/proisoformload/GAF2.2 changes
+
 TAG: qcreports_db-6-0-16-14
 DATE: 01/28/2021
 STAFF: sc
