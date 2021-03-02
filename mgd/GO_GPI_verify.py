@@ -62,9 +62,11 @@ for line in gpiFile.readlines():
     if line[:1] == '!':
         continue
     tokens = line[:-1].split('\t')
-    if tokens[0] in gpiSet:
-        key = tokens[0] + ':' + tokens[1]
+    isPrefix = tokens[0].split(':')
+    if isPrefix[0] in gpiSet:
+        key = tokens[0]
         gpiLookup.append(key)
+#print(gpiLookup)
 
 results = db.sql('''select distinct p.value, m.symbol
         from VOC_Annot a, VOC_Evidence e, VOC_Evidence_Property p, MRK_Marker m
