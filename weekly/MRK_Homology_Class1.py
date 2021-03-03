@@ -46,7 +46,7 @@ ZFISH_KEY = 84
 MAX = 10
 fp = reportlib.init(sys.argv[0], 'Homology classes for which there are > 10 genes from a single species ', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('HomoloGeneID%sHuman gene count%sMouse gene count%sRat gene count%sZebrafish gene count%s' % (TAB, TAB, TAB, TAB, CRT))
+fp.write('Cluster Key%sHuman gene count%sMouse gene count%sRat gene count%sZebrafish gene count%s' % (TAB, TAB, TAB, TAB, CRT))
 
 #
 # get all clusters and their members for cluster source 'HomoloGene' and
