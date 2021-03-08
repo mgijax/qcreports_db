@@ -273,9 +273,6 @@ byCopyrightDelay = [
 def runreport(fp, assayType):
     global byPublisher
 
-    if assayType == 'not ':
-        byPublisher += byPublisherPHENO
-
     count = 0
     fp.write(TAB + 'By Publisher permission:' + CRT + 2*TAB)
     for j in byPublisher:
@@ -284,11 +281,6 @@ def runreport(fp, assayType):
         if count > 2:
           fp.write(CRT + 2*TAB)
           count = 0
-    fp.write(2*CRT)
-
-    fp.write(TAB + 'Journals > 2006:' + CRT)
-    for j in by2006:
-        fp.write(2*TAB + j + CRT)
     fp.write(2*CRT)
 
     fp.write(TAB + str.ljust('J#', 12))
@@ -301,9 +293,6 @@ def runreport(fp, assayType):
     byPublisherIn = '\'' + '\',\''.join(byPublisher) + '\''
     print('byPublisherIn: %s' % byPublisherIn)
 
-    by2006In = '\'' + '\',\''.join(by2006) + '\''
-    print('by2006In: %s' % by2006In)
-
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
           into temporary table refs 
@@ -314,11 +303,10 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and ((b.journal in (%s)) 
-                    or (b.journal in (%s) and year >= 2006))
+                and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byPublisherIn, by2006In), None)
+          ''' % (assayType, byPublisherIn), None)
 
     db.sql('''
           insert into refs
@@ -330,11 +318,10 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and ((b.journal in (%s)) 
-                    or (b.journal in (%s) and year >= 2006)) 
+                and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byPublisherIn, by2006In), None)
+          ''' % (assayType, byPublisherIn), None)
 
     db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
@@ -579,6 +566,9 @@ def runreport(fp, assayType):
                         fp.write(CRT + 2*TAB)
                         count = 0
     fp.write(2*CRT)
+
+    by2006In = '\'' + '\',\''.join(by2006) + '\''
+    print('by2006In: %s' % by2006In)
 
     fp.write(TAB + 'Journals > 2006:' + CRT)
     for j in by2006:
