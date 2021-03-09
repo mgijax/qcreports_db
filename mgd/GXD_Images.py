@@ -207,18 +207,20 @@ byHybrid = [
 'Cell Death Differ',
 'Cell Mol Immunol',
 'Cell Res',
-'Chromosoma Chromosome Res',
+'Chromosoma',
+'Chromosome Res',
 'Diabetologia',
 'Eur J Clin Nutr',
 'Eur J Hum Genet',
-'Exp Mol Med Eye (Lond)Gene Ther'
+'Exp Mol Med',
+'Eye (Lond)',
+'Gene Ther'
 'Glycobiology',
 'Hum Mol Genet',
 'Hum Reprod',
 'J Gerontol A Biol Sci Med Sci',
 'Mol Biol Evol',
 'Toxicol Sci',
-'Springer Nature',
 'Genes Immun',
 'Heredity (Edinb)',
 'Hypertens Res',
@@ -231,7 +233,7 @@ byHybrid = [
 'Oncogene',
 'Pediatr Res',
 'Pharmacogenomics J',
-'Prostate Cancer Prostatic Dis'
+'Prostate Cancer Prostatic Dis',
 'Spinal Cord',
 'Transgenic Res'
 ]
@@ -240,6 +242,7 @@ byOtherHybrid = [
 'Cell Cycle', 
 'EMBO J', 
 'J Invest Dermatol', 
+'Immunol Cell Biol',
 'Mol Psychiatry'
 ]
 
@@ -247,7 +250,8 @@ byCopyrightDelay = [
 'J Neurosci', 
 'J Cell Biol',
 'J Exp Med',
-'J Gen Physiol']
+'J Gen Physiol'
+]
 
 def runreport(fp, assayType):
 
@@ -342,7 +346,7 @@ def runreport(fp, assayType):
     #
 
     count = 0
-    fp.write(TAB + 'By Hybrid:' + CRT + 2*TAB)
+    fp.write(TAB + 'Hybrid Oxford and Springer Nature:' + CRT + 2*TAB)
     for j in byHybrid:
         fp.write(str.ljust(j, 25) + TAB)
         count = count + 1
@@ -521,6 +525,7 @@ def runreport(fp, assayType):
     refprinted = []
     for r in results:
         if r['_Refs_key'] not in refprinted:
+            print(r)
             fp.write(TAB + str.ljust(r['jnumID'], 12))
             fp.write(str.ljust(r['short_citation'], 75))
             fp.write(str.ljust(','.join(fLabels[r['_Refs_key']]), 50) + CRT)
@@ -535,15 +540,16 @@ def runreport(fp, assayType):
 
     fp.write(TAB + 'Full open access using Creative commons licenses' + 2*CRT + 2*TAB)
 
-    for journals in byCreativeComments, byHybrid, byOtherHybrid, byCopyrightDelay:
-        count = 0
-        for j in journals:
-                fp.write(str.ljust(j, 25) + TAB)
-                count = count + 1
-                if count > 2:
-                        fp.write(CRT + 2*TAB)
-                        count = 0
+    for j in byCreativeComments:
+        fp.write(str.ljust(j, 25) + TAB)
+        count = count + 1
+        if count > 2:
+          fp.write(CRT + 2*TAB)
+          count = 0
     fp.write(2*CRT)
+
+    byCreativeCommentsIn = '\'' + '\',\''.join(byCreativeComments) + '\''
+    print('byCreativeCommentsIn: %s' % byCreativeCommentsIn)
 
     by2006In = '\'' + '\',\''.join(by2006) + '\''
     print('by2006In: %s' % by2006In)
@@ -563,11 +569,11 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s)
+                and (b.journal in (%s)
                     or (b.journal in (%s) and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byHybridIn, byOtherHybridIn, byCopyrightDelayIn, by2006In)
+          ''' % (assayType, byCreativeCommentsIn, by2006In)
     sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
@@ -587,11 +593,11 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s)
+                and (b.journal in (%s)
                     or (b.journal in (%s) and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byHybridIn, byOtherHybridIn, byCopyrightDelayIn, by2006In)
+          ''' % (assayType, byCreativeCommentsIn, by2006In)
 
     sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
                         where r._Image_key = n._Object_key 
