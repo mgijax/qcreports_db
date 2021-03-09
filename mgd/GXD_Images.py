@@ -195,7 +195,7 @@ by2006 = ['Nucleic Acids Res', 'DNA Res']
 
 byHybrid = [
 'Acta Biochim Biophys Sin (Shanghai)',
-'Acta Pharmacol Sin'
+'Acta Pharmacol Sin',
 'Bone Marrow Transplant',
 'Br J Cancer',
 'Brain',
