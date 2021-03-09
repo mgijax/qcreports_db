@@ -271,7 +271,6 @@ byCopyrightDelay = [
 'J Gen Physiol']
 
 def runreport(fp, assayType):
-    global byPublisher
 
     count = 0
     fp.write(TAB + 'By Publisher permission:' + CRT + 2*TAB)

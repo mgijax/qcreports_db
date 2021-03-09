@@ -42,10 +42,6 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-# py3 convert to tuple mapping each member of list to a string, then repr as
-# string e.g. "('BMC Biochem', 'BMC Biol', and so on )"
-# this can be plugged into the query which uses 'in'
-
 journals = [
 'BMC Biochem',
 'BMC Biol',
@@ -76,12 +72,29 @@ journals = [
 'PLoS Genet',
 'PLoS Med',
 'PLoS ONE',
-'Proc Natl Acad Sci U S A'
+'Proc Natl Acad Sci U S A',
+'Breast Cancer Res',
+'Cell Commun Signal',
+'Cell Death Dis',
+'Dis Model Mech',
+'Elife',
+'Exp Mol Med',
+'Genes Dev',
+'Genome Biol',
+'J Biol',
+'J Biomed Sci',
+'J Neurosci',
+'Mamm Genome',
+'Nat Commun',
+'Neural Dev',
+'PeerJ',
+'Sci Rep',
+'Vasc Cell'
 ]
 
-print('journals: %s' % journals)
-journalsSQL = repr(tuple(map(str, journals)))
+journalsSQL = '\'' + '\',\''.join(journals) + '\''
 print('journalsSQL: %s' % journalsSQL)
+
 #
 # Main
 #
@@ -97,6 +110,7 @@ for j in journals:
       fp.write(CRT + 2*TAB)
       count = 0
 fp.write(2*CRT)
+
 fp.write('Excludes References with AP:NoImages Tag\n\n')
 fp.write(str.ljust('J#', 12))
 fp.write(str.ljust('PubMed', 12))
@@ -126,7 +140,7 @@ db.sql('''
       where a._AnnotType_key = 1002
             and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-            and b.journal in %s 
+            and b.journal in (%s)
             and b.year > 2008
             and a._Object_key = g._Genotype_key
             and exists (select 1 from IMG_ImagePane_Assoc_View v
@@ -153,7 +167,7 @@ db.sql('''
       where a._AnnotType_key = 1002
             and a._Annot_key = e._Annot_key
             and e._Refs_key = b._Refs_key
-            and b.journal in %s 
+            and b.journal in (%s)
             and b.year > 2008
             and a._Object_key = g._Genotype_key
             and not exists (select 1 from exists r where b._Refs_key = r._Refs_key)
