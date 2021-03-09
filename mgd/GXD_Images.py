@@ -371,6 +371,8 @@ def runreport(fp, assayType):
     byOtherHybridIn = '\'' + '\',\''.join(byOtherHybrid) + '\''
     print('byOtherHybridIn: %s' % byOtherHybridIn)
 
+    byJournal = byHybridIn + ',' + byOtherHybridIn
+
     db.sql('''
           select distinct a._Refs_key, a.creation_date 
           into temporary table refs3
@@ -381,7 +383,7 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s))
+                and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
                 and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -389,7 +391,7 @@ def runreport(fp, assayType):
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
                         and n._Note_key = c._Note_key)
-          ''' % (assayType, byHybridIn, byOtherHybridIn), None)
+          ''' % (assayType, byJournal), None)
 
     db.sql('''
           insert into refs3
@@ -401,7 +403,7 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s))
+                and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
                 and exists (select 1 from MGI_Note n, MGI_NoteChunk c
@@ -409,7 +411,7 @@ def runreport(fp, assayType):
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
                         and n._Note_key = c._Note_key)
-          ''' % (assayType, byHybridIn, byOtherHybridIn), None)
+          ''' % (assayType, byJournal), None)
 
     db.sql('create index refs3_idx1 on refs3(_Refs_key)', None)
 
@@ -535,8 +537,8 @@ def runreport(fp, assayType):
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*4)
 
     # TR13398 - Creative Commons license issues (Part IV)
-    # Other hybrid journals using Creative commons licenses
-    # search for any ‘creative commons’ copyright that isn’t from a journal listed in any of the above sections
+    # Other hybrid journals using Creative Commons licenses
+    # search for any copyright that isn’t from a journal listed in any of the above sections
 
     fp.write(TAB + 'Full open access using Creative commons licenses' + 2*CRT + 2*TAB)
 
@@ -559,7 +561,7 @@ def runreport(fp, assayType):
         fp.write(2*TAB + j + CRT)
     fp.write(2*CRT)
 
-    sql = '''
+    db.sql('''
           select distinct a._Refs_key, a.creation_date 
           into temporary table refs5
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
@@ -573,17 +575,14 @@ def runreport(fp, assayType):
                     or (b.journal in (%s) and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byCreativeCommentsIn, by2006In)
-    sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                and exists (select 1 from MGI_Note n
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key
-                        and c.note ilike '%creative commons%')
-          '''
-    db.sql(sql, None)
+                        )
+          ''' % (assayType, byCreativeCommentsIn, by2006In), None)
 
-    sql = '''
+    db.sql('''
           insert into refs5
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
@@ -597,16 +596,12 @@ def runreport(fp, assayType):
                     or (b.journal in (%s) and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byCreativeCommentsIn, by2006In)
-
-    sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                and exists (select 1 from MGI_Note n
                         where r._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key
-                        and c.note ilike '%creative commons%')
-          '''
-    db.sql(sql, None)
+                        )
+          ''' % (assayType, byCreativeCommentsIn, by2006In), None)
 
     db.sql('create index refs5_idx1 on refs5(_Refs_key)', None)
 
@@ -643,10 +638,102 @@ def runreport(fp, assayType):
     
     fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*4)
 
+    # 
+    # all other journals that contain copyright 'creative commons'
+    #
+
+    fp.write(TAB + 'All other journals that contain copyright = "creative commons"' + 2*CRT)
+
+    byJournal = byPublisherIn + ',' + byHybridIn + ',' + byOtherHybridIn + ',' + byCopyrightDelayIn + ',' + byCreativeCommentsIn + ',' + by2006In
+
+    sql = '''
+          select distinct a._Refs_key, a.creation_date 
+          into temporary table refs6
+          from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+               IMG_Image i, IMG_ImagePane p
+          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+                and a._ImagePane_key = p._ImagePane_key 
+                and p._Image_key = i._Image_key 
+                and i.xDim is NULL 
+                and a._Refs_key = b._Refs_key 
+                and b.journal not in (%s)
+                and a._Assay_key = ac._Object_key 
+                and ac._MGIType_key = 8 
+          ''' % (assayType, byJournal)
+
+    sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                        where i._Image_key = n._Object_key
+                        and n._NoteType_key = 1023
+                        and n._MGIType_key = 9
+                        and n._Note_key = c._Note_key
+                        and c.note ilike '%creative commons%')
+          '''
+    db.sql(sql, None)
+
+    sql = '''
+          insert into refs6
+          select distinct a._Refs_key, a.creation_date 
+          from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
+               GXD_Specimen g, GXD_ISResultImage_View r
+          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+                and a._Assay_key = g._Assay_key 
+                and g._Specimen_key = r._Specimen_key 
+                and r.xDim is NULL 
+                and a._Refs_key = b._Refs_key 
+                and b.journal not in (%s)
+                and a._Assay_key = ac._Object_key 
+                and ac._MGIType_key = 8 
+          ''' % (assayType, byJournal)
+
+    sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                        where r._Image_key = n._Object_key
+                        and n._NoteType_key = 1023
+                        and n._MGIType_key = 9
+                        and n._Note_key = c._Note_key
+                        and c.note ilike '%creative commons%')
+          '''
+    db.sql(sql, None)
+
+    db.sql('create index refs6_idx1 on refs5(_Refs_key)', None)
+
+    results = db.sql('''
+            select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
+            from refs6 r, IMG_Image i
+            where r._Refs_key = i._Refs_key
+            order by figureLabel
+            ''', 'auto')
+    fLabels = {}
+    for r in results:
+        key = r['_Refs_key']
+        value = r['figureLabel']
+        if key not in fLabels:
+            fLabels[key] = []
+        fLabels[key].append(value)
+
+    results = db.sql('''
+        select r._Refs_key, b.jnumID, b.short_citation 
+        from refs6 r, BIB_All_View b
+        where r._Refs_key = b._Refs_key 
+        order by r.creation_date, b.jnumID
+        ''', 'auto')
+
+    count = 0
+    refprinted = []
+    for r in results:
+        if r['_Refs_key'] not in refprinted:
+            fp.write(TAB + str.ljust(r['jnumID'], 12))
+            fp.write(str.ljust(r['short_citation'], 75))
+            fp.write(str.ljust(','.join(fLabels[r['_Refs_key']]), 50) + CRT)
+            refprinted.append(r['_Refs_key'])
+            count = count + 1
+    
+    fp.write(CRT + 'Total J numbers: ' + str(count) + CRT*4)
+
     db.sql('drop table refs',None)
     db.sql('drop table refs3',None)
     db.sql('drop table refs4',None)
     db.sql('drop table refs5',None)
+    db.sql('drop table refs6',None)
 
 #
 # main
@@ -659,3 +746,4 @@ reportlib.finish_nonps(fp1)
 fp2 = reportlib.init('RECOMB_Images', 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
 runreport(fp2, 'not ')
 reportlib.finish_nonps(fp2)
+
