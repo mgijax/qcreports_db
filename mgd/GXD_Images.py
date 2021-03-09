@@ -214,7 +214,7 @@ byHybrid = [
 'Eur J Hum Genet',
 'Exp Mol Med',
 'Eye (Lond)',
-'Gene Ther'
+'Gene Ther',
 'Glycobiology',
 'Hum Mol Genet',
 'Hum Reprod',
