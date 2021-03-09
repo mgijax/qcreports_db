@@ -535,7 +535,7 @@ def runreport(fp, assayType):
 
     fp.write(TAB + 'Full open access using Creative commons licenses' + 2*CRT + 2*TAB)
 
-    for journals in byPublisher, byCreativeComments, byHybrid, byOtherHybrid, byCopyrightDelay:
+    for journals in byCreativeComments, byHybrid, byOtherHybrid, byCopyrightDelay:
         count = 0
         for j in journals:
                 fp.write(str.ljust(j, 25) + TAB)
@@ -563,11 +563,11 @@ def runreport(fp, assayType):
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s) or b.journal in (%s)
+                and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s)
                     or (b.journal in (%s) and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byPublisherIn, byHybridIn, byOtherHybridIn, byCopyrightDelayIn, by2006In)
+          ''' % (assayType, byHybridIn, byOtherHybridIn, byCopyrightDelayIn, by2006In)
     sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
@@ -587,11 +587,11 @@ def runreport(fp, assayType):
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
                 and a._Refs_key = b._Refs_key 
-                and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s) or b.journal in (%s)
+                and (b.journal in (%s) or b.journal in (%s) or b.journal in (%s)
                     or (b.journal in (%s) and year >= 2006)) 
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byPublisherIn, byHybridIn, byOtherHybridIn, byCopyrightDelayIn, by2006In)
+          ''' % (assayType, byHybridIn, byOtherHybridIn, byCopyrightDelayIn, by2006In)
 
     sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
                         where r._Image_key = n._Object_key 

@@ -82,7 +82,6 @@ journals = [
 'Dis Model Mech',
 'Elife',
 'Exp Mol Med',
-'Genes Dev',
 'Genome Biol',
 'J Biol',
 'J Biomed Sci',
