@@ -15,9 +15,13 @@
 #
 # History:
 #
+# lec   03/08/2021
+#       TR13398 - Creative Commons license issues (Part IV)
+#
 # sc	10/12/2017 
 #	- TR12250 Littriage Project
 #	exclude AP:NoImages tag (33436864)
+#
 # lec   10/22/2014
 #       - TR11750/postres complient
 #
@@ -31,7 +35,6 @@
  
 import sys
 import os
-import string
 import reportlib
 import db
 

@@ -110,7 +110,6 @@
  
 import sys
 import os
-import string
 import reportlib
 import db
 
@@ -136,26 +135,6 @@ byPublisher = [
 'Mech Dev', 
 'Mol Reprod Dev',
 'Proc Natl Acad Sci U S A'
-]
-
-byPublisherPHENO = [
-'Breast Cancer Res',
-'Cell Commun Signal',
-'Cell Death Dis',
-'Dis Model Mech',
-'Elife',
-'Exp Mol Med',
-'Genes Dev',
-'Genome Biol',
-'J Biol',
-'J Biomed Sci',
-'J Neurosci',
-'Mamm Genome',
-'Nat Commun',
-'Neural Dev',
-'PeerJ',
-'Sci Rep',
-'Vasc Cell'
 ]
 
 byCreativeComments = [
