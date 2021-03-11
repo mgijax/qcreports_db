@@ -66,7 +66,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Images.rpt">Phenotype Annotations Requiring Images</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_SequenceReference.sql.rpt">Reference associations created by the gene trap load</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_GermlineTransmission.sql.rpt">Germline Transmission Checks</A>
-<LI><A HREF="/data/reports/qcreports_db/output/allstrain.rpt">Allele Strain of Origin vs. Parent Cell Line Strain</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_AllelePairCheck.sql.rpt">Genotypes where Allele Pairs are associated with different Markers</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_UncodedReference.rpt">Alleles with most uncoded references</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoPhenoRef.rpt">Alleles with no phenotype but have additional references</A>
