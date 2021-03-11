@@ -14,6 +14,7 @@ WF_AP_Discard.py
 WF_AP_NewAlleleNomenTag.py
 WF_AP_Tags.py
 QTL_Triage.py
+allstrain/Allele Strain of Origin vs. Parent Cell Line Strain (see allcacheload/allstrain.py)
 
 changes:
 mgd/GXD_ImageCheck.sql
