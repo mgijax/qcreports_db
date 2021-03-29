@@ -22,6 +22,16 @@ mgd/GXD_Images.py
 mgd/GXD_LackingImages.py
 weekly/PHENO_ImageCheck.sql
 
+Alliance Homology Report changes:
+MRK_RatNoGO.sql
+GO_Combined_Report.py
+MRK_Homology_Class1.py
+HMD_SymbolDiffs.py
+
+obsolete homology reports:
+MRK_Homology_Class2.py - uses homologene to determine homology clusters with no mouse genes - REMOVED OBSOLETE
+MRK_Homology_Class3.py - uses homologene to determine homology classes with > n genes from a single species - REMOVED OBSOLETE
+
 TAG: qcreports_db-6-0-16-15
 DATE: 03/02/2021
 STAFF: lec
