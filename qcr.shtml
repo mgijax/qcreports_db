@@ -211,7 +211,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">QC: Genes with no GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">QC: Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO associations</A>
+<LI><A HREF="/data/loads/go/goamouse/output/pubmed.error">QC: GOAMouse/invalid pubmedids</A>
+<LI><A HREF="/data/loads/go/gomousenoctua/output/pubmed.error">QC: GOMouseNoctua/invalid pubmedids</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A>

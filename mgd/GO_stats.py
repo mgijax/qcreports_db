@@ -64,6 +64,12 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
+#Protein coding
+PROTEIN_CODING_CLAUSE="and va._Term_key = 6238161"
+
+#Non-Protein coding
+NON_PROTEIN_CODING_CLAUSE="and va._Term_key != 6238161"
+
 #ROOT="J:73796"
 ROOT_CLAUSE="(74750)"
 
@@ -106,6 +112,57 @@ byCreatedBy = 'and u.login %s'
 byEvidenceCode = 'and e._EvidenceTerm_key %s'
 
 #
+# temp table for protein coding or non-protein coding genes
+#
+tempCoding = '''
+select m._Marker_key
+into temporary table temp_genes
+from MRK_Marker m, ACC_Accession a, VOC_Annot va
+where m._Organism_key = 1
+      and m._Marker_Type_key = 1
+      and m._Marker_Status_key = 1
+      and m._Marker_key = a._Object_key
+      and a._MGIType_key = 2
+      and a._LogicalDB_key = 1
+      and a.prefixPart = 'MGI:'
+      and a.preferred = 1
+      and m._Marker_key = va._Object_key
+      and va._AnnotType_key = 1011
+      %s
+'''
+
+#
+# count by gene or annotation, 
+#
+byCoding1 = '''
+select %s
+from temp_genes g, VOC_Annot a, VOC_Evidence e, MGI_User u,
+     DAG_Node n, DAG_DAG d
+where g._Marker_key = a._Object_key
+      and a._AnnotType_key = 1000
+      and a._Annot_key = e._Annot_key
+      and e._CreatedBy_key = u._User_key
+      and a._Term_key = n._Object_key
+      and n._DAG_key = d._DAG_key
+'''
+
+#
+# count by gene or annotation, grouped by dag name
+#
+byCoding2 = '''
+select %s
+from temp_genes g, VOC_Annot a, VOC_Evidence e, MGI_User u,
+     DAG_Node n, DAG_DAG d
+where g._Marker_key = a._Object_key
+      and a._AnnotType_key = 1000
+      and a._Annot_key = e._Annot_key
+      and e._CreatedBy_key = u._User_key
+      and a._Term_key = n._Object_key
+      and n._DAG_key = d._DAG_key
+group by d.name
+'''
+
+#
 # count by gene
 #
 byGene1 = '''
@@ -114,6 +171,7 @@ from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
 where a._AnnotType_key  = 1000
 and a._Object_key = m._Marker_key
 and m._Marker_Type_key in (1)
+and m._Marker_Status_key = 1
 and a._Annot_key = e._Annot_key
 and e._CreatedBy_key = u._User_Key
 %s
@@ -131,6 +189,7 @@ where a._AnnotType_key = 1000
 and a._Term_key = n._Object_key
 and a._Object_key = m._Marker_key
 and m._Marker_Type_key in (1)
+and m._Marker_Status_key = 1
 and d._DAG_Key = n._DAG_Key
 and a._Annot_key = e._Annot_key
 and e._CreatedBy_key = u._User_Key
@@ -150,6 +209,7 @@ where a._AnnotType_key  = 1000
 and a._Annot_key = e._Annot_key
 and a._Object_key = m._Marker_key
 and m._Marker_Type_key in (1)
+and m._Marker_Status_key = 1
 and e._CreatedBy_key = u._User_Key
 %s
 %s
@@ -166,6 +226,7 @@ where a._AnnotType_key = 1000
 and a._Term_key = n._Object_key
 and a._Object_key = m._Marker_key
 and m._Marker_Type_key in (1)
+and m._Marker_Status_key = 1
 and d._DAG_Key = n._DAG_Key
 and a._Annot_key = e._Annot_key
 and e._CreatedBy_key = u._User_Key
@@ -248,6 +309,30 @@ def writeCount(name):
        results2 = db.sql(byGene2 % ('', '', ''), 'auto')
        results3 = db.sql(byAnnot1 % ('', '', ''), 'auto')
        results4 = db.sql(byAnnot2 % ('', '', ''), 'auto')
+
+   elif name == "Protein Coding":
+        # protein coding gene/annotation counts
+
+       db.sql(tempCoding % (' ' + PROTEIN_CODING_CLAUSE), None)
+
+       results1 = db.sql(byCoding1 % ('count(distinct g._Marker_key) as cnt '), 'auto')
+       results2 = db.sql(byCoding2 % ('d.name, count(distinct g._Marker_key) as terms '), 'auto')
+       results3 = db.sql(byCoding1 % ('count(*) as cnt '), 'auto')
+       results4 = db.sql(byCoding2 % ('d.name, count(*) as terms '), 'auto')
+
+       db.sql('drop table temp_genes', None)
+
+   elif name == "Non-Protein Coding":
+        # non-protein coding gene/annotation counts
+
+       db.sql(tempCoding % (' ' + NON_PROTEIN_CODING_CLAUSE), None)
+
+       results1 = db.sql(byCoding1 % ('count(distinct g._Marker_key) as cnt '), 'auto')
+       results2 = db.sql(byCoding2 % ('d.name, count(distinct g._Marker_key) as terms '), 'auto')
+       results3 = db.sql(byCoding1 % ('count(*) as cnt '), 'auto')
+       results4 = db.sql(byCoding2 % ('d.name, count(*) as terms '), 'auto')
+
+       db.sql('drop table temp_genes', None)
 
    elif name == "Total Non-IEA":
         # not in IEA references
@@ -465,6 +550,8 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 goSummary1()
 goSummary2()
 writeCount('ALL')
+writeCount('Protein Coding')
+writeCount('Non-Protein Coding')
 writeCount('Total Non-IEA')
 writeCount('GOC')
 writeCount('Curator')
