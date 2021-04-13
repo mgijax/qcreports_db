@@ -389,6 +389,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/emalload/index.html">Endonuclease-mediated Allele Load (IMPC CRISPR)</A> <B>(laurens)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/omim_hpoload/index.html">OMIM/HPO Annotation Load</A> <B>(smb)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(mdolan)</B>
 </OL>
 
 <HR>
