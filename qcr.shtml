@@ -19,7 +19,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#references">References</A>
 <LI><A HREF="#alleles">Alleles</A>
 <LI><A HREF="#variants">Allele Variants</A>
-<LI><A HREF="#phenoannot">Phenotype Vocabulary Annotation</A>
+<LI><A HREF="#phenoannot">Phenotype and Disease Vocabulary Annotation</A>
 <LI><A HREF="#gxd">GXD</A>
 <LI><A HREF="#gxdht">GXD HT Experiments</A>
 <LI><A HREF="#recomb">Recombinase and Transgenic Reporter Data</A>
@@ -104,7 +104,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantCheckRefVarSeq.rpt">Variants where reference and variant sequences are the same.</A>
 </OL>
 
-<A NAME="phenoannot"><B>Phenotype Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
+<A NAME="phenoannot"><B>Phenotype and Disease Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_MPObsolete.sql.rpt">Genotype Annotations to Obsolete MP Terms</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DOObsolete.sql.rpt">Genotype Annotations to Obsolete DO Terms</A>
@@ -117,6 +117,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOMult.rpt">DO terms that have multiple OMIM xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOObsolete.rpt">Obsolete OMIM terms in DO as xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DOAnnotNotInSlim.sql.rpt">DO terms not in the DO slim</A>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_DODups.sql.rpt">Duplicate Disease Annotations</A>
 </OL>
 
 <A NAME="gxd"><B>GXD (cms, jfinger, ijm, terryh)</B></A>
