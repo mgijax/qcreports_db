@@ -7,7 +7,7 @@
 \echo 'Duplicate DO/Allele Annotations'
 \echo ''
 
-select a.accid as genoID, vav.accid as doID, vev.jnumid
+select a.accid as alleleID, vav.accid as doID, vev.jnumid
 from voc_annot_view vav, voc_evidence_view vev, acc_accession a
 where vav._annottype_key = 1021
 and vav._annot_key = vev._annot_key
@@ -26,7 +26,7 @@ order by a.accid
 \echo 'Duplicate DO/Genotype Annotations'
 \echo ''
 
-select a.accid as genoID, vav.accid as doID, vev.jnumid
+select a.accid as genotypeID, vav.accid as doID, vev.jnumid
 from voc_annot_view vav, voc_evidence_view vev, acc_accession a
 where vav._annottype_key = 1020
 and vav._annot_key = vev._annot_key
