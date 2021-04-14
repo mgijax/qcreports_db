@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-16-22
+DATE: 04/14/2021
+STAFF: lec
+add to qcnightly_reports.csh
+${DBUTILS}/mgidbmigration/tr13272/go_cam.csh
+
 TAG: qcreports_db-6-0-16-21
 TAG: qcreports_db-6-0-16-20
 DATE: 04/14/2021
