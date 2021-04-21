@@ -50,7 +50,7 @@ and a1._LogicalDB_key = 189
 ;
 
 \echo ''
-\echo 'postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
+\echo 'agemin >=21.01 AND agemax <=25.00, but not TS27'
 \echo 'Relevance = Yes'
 \echo ''
 
@@ -59,18 +59,7 @@ from GXD_HTSample s, GXD_TheilerStage t, ACC_Accession a1
 where s._Relevance_key = 20475450
 and s._Stage_key = t._Stage_key
 and t.stage not in (27)
-and
-(
-s.age = 'postnatal day 0' or
-s.age = 'postnatal day 0.5' or
-s.age = 'postnatal day 1' or
-s.age = 'postnatal day 1.5' or
-s.age = 'postnatal day 2' or
-s.age = 'postnatal day 2.5' or
-s.age = 'postnatal day 3' or
-s.age = 'postnatal day 3.5' or
-s.age like 'postnatal newborn%'
-)
+and (agemin >=21.01 AND agemax <=25.00)
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
 and a1._LogicalDB_key = 189

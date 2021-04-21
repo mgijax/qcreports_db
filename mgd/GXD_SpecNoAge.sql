@@ -134,7 +134,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 ;
 
 \echo ''
-\echo 'In Situ Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
+\echo 'In Situ Specimens with (agemin >=21.01 AND agemax <=25.00), but not TS27'
 \echo ''
 
 select distinct s._Specimen_key
@@ -151,18 +151,7 @@ create index temp3_idx on temp3(_Specimen_key )
 
 select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
 from GXD_Specimen s, GXD_Assay_View a
-where
-(
-s.age = 'postnatal day 0' or
-s.age = 'postnatal day 0.5' or
-s.age = 'postnatal day 1' or
-s.age = 'postnatal day 1.5' or
-s.age = 'postnatal day 2' or
-s.age = 'postnatal day 2.5' or
-s.age = 'postnatal day 3' or
-s.age = 'postnatal day 3.5' or
-s.age like 'postnatal newborn%'
-)
+where (s.ageMin >= 21.01 and s.ageMax < 25.00)
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 and not exists (select 1 from temp3 t
@@ -170,7 +159,7 @@ where s._Specimen_key = t._Specimen_key)
 ;
 
 \echo ''
-\echo 'Gel Lane Specimens with postnatal age in (''day 0'', ''day 0.5'', ''day 1'', ''day 1.5'', ''day 2'', ''day 2.5'', ''day 3'', ''day 3.5'', ''newborn''), but not TS27'
+\echo 'Gel Lane Specimens with (agemin >=21.01 AND agemax <=25.00), but not TS27'
 \echo ''
 
 select distinct i._GelLane_key
@@ -187,18 +176,7 @@ create index temp4_idx on temp4(_GelLane_key )
 
 select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
 from GXD_GelLane s, GXD_Assay_View a
-where
-(
-s.age = 'postnatal day 0' or
-s.age = 'postnatal day 0.5' or
-s.age = 'postnatal day 1' or 
-s.age = 'postnatal day 1.5' or
-s.age = 'postnatal day 2' or
-s.age = 'postnatal day 2.5' or
-s.age = 'postnatal day 3' or
-s.age = 'postnatal day 3.5' or
-s.age like 'postnatal newborn%'
-)
+where (s.ageMin >= 21.01 and s.ageMax < 25.00)
 and s._GelControl_key = 1
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
