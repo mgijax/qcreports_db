@@ -6,10 +6,6 @@
 
 cd `dirname $0` && source ./Configuration
 
-
-# Create server side include file for ftp url
-echo "$FTPURL" > includes/ftp_url.html
-
 # Create symlink for consistent web links
 rm -f qcr.html
 ln -s qcr.shtml qcr.html
