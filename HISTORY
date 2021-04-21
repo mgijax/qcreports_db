@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-16-24
+DATE: 04/21/2021
+STAFF: lec
+WTS2-600/mgd/GXD_ImageCheck.sql
+also removed egload/dummy.py : obsolete/not used
+
 TAG: qcreports_db-6-0-16-23
 TAG: qcreports_db-6-0-16-22
 DATE: 04/14/2021, 04/21/2021

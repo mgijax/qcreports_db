@@ -78,6 +78,7 @@ order by i.jnumID
 
 \echo ''
 \echo 'non-Elsevier: the first author in the copyright does not match the first author in the paper'
+\echo 'exclude: J:228563'
 \echo ''
 
 select distinct i.jnumID, i.mgiID, r._primary, 
@@ -87,6 +88,7 @@ from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._ImageClass_key = 6481781
 and n._NoteType_key = 1023
 and lower(n.note) like 'this image is from%'
+and i._Refs_key not in (229658)
 and i._Refs_key = r._Refs_key
 and n._Object_key = i._Image_key
 ;
