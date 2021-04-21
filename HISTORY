@@ -32,10 +32,19 @@ obsolete homology reports:
 MRK_Homology_Class2.py - uses homologene to determine homology clusters with no mouse genes - REMOVED OBSOLETE
 MRK_Homology_Class3.py - uses homologene to determine homology classes with > n genes from a single species - REMOVED OBSOLETE
 
-TAG: qcreports_db-6-0-16-22
-DATE: 04/14/2021
+TAG: qcreports_db-6-0-16-25
+TAG: qcreports_db-6-0-16-24
+DATE: 04/21/2021
 STAFF: lec
-add to qcnightly_reports.csh
+WTS2-600/mgd/GXD_ImageCheck.sql
+also removed egload/dummy.py : obsolete/not used
+
+TAG: qcreports_db-6-0-16-23
+>>>>>>> master
+TAG: qcreports_db-6-0-16-22
+DATE: 04/14/2021, 04/21/2021
+STAFF: lec
+add go_cam.csh to qcnightly_reports.csh
 ${DBUTILS}/mgidbmigration/tr13272/go_cam.csh
 
 TAG: qcreports_db-6-0-16-21
