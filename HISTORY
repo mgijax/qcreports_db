@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-16-28
+DATE: 04/26/2021
+STAFF: dbm
+1) Remove egload directory: not used
+2) Remove pirsfload directory: moved script to pirsfload product
+3) qcr.shtml: Removed link to Unigene load (retired)
+
 TAG: qcreports_db-6-0-16-27
 DATE: 04/21/2021
 STAFF: sc
