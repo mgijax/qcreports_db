@@ -207,9 +207,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_E.rpt">QC: Genes with DO Annotations and either GO Annotations of evidence IEA only or no GO Annotations</A> <B>(ln)</B>
+<LI>QC: saving for future use
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">QC: Genes with no GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(dmitrys)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA_D.html">QC: Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA.html">QC: Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A>
 <LI><A HREF="/data/loads/go/goamouse/output/pubmed.error">QC: GOAMouse/invalid pubmedids</A>
 <LI><A HREF="/data/loads/go/gomousenoctua/output/pubmed.error">QC: GOMouseNoctua/invalid pubmedids</A>
