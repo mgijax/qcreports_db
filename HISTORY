@@ -1,8 +1,12 @@
-TAG: qcreports_db-6-0-16-29
+TAG: qcreports_db-6-0-16-30
 DATE: 04/27/2021
 STAFF: lec
-b39-467/GO-Done report
-GO_done.py
+b39-467/GO-Done report/GO_done.py
+
+TAG: qcreports_db-6-0-16-29
+DATE: 04/27/2021
+STAFF: dbm
+1) Remove assocload directory: move reports to assocload product
 
 TAG: qcreports_db-6-0-16-28
 DATE: 04/26/2021
