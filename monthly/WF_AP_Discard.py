@@ -100,10 +100,12 @@ results = db.sql('''
                 to_char(r.creation_date, 'MM/dd/yyyy') as cdate,
                 u.login,
                 lower(d.extractedText) as extractedText
-        from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, MGI_User u, BIB_Workflow_Data d
-        where r.isDiscard = 1
-        and r._Refs_key = c._Refs_key
+        from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Status wfs, MGI_User u, BIB_Workflow_Data d, BIB_Workflow_Relevance v
+        where r._Refs_key = c._Refs_key
         and r._ModifiedBy_key = u._User_key
+        and r._Refs_key = v._Refs_key
+        and v._Relevance_key = 70594666
+        and v.isCurrent = 1
         and r._Refs_key = wfs._Refs_key 
         and wfs._Group_key = 31576664
         and wfs.isCurrent = 1

@@ -58,6 +58,9 @@ foreach i (*.py)
     else if ( $i == "GO_stats.py" ) then
         ${PYTHON} $i >>& ${LOG}
         cp -p ${QCOUTPUTDIR}/GO_stats.rpt ${QCGOARCHIVE}/GO_stats.`date +%Y%m%d`
+    else if ( $i == "WF_GXD_secondary.py" ) then
+        ${PYTHON} $i >>& ${LOG}
+        cp -p ${QCOUTPUTDIR}/WF_GXD_secondary.rpt ${QCGXDARCHIVE}/WF_GXD_secondary.`date +%Y%m%d`
     else
         ${PYTHON} $i >>& ${LOG}
     endif

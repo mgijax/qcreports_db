@@ -7,10 +7,20 @@
 #
 #	Review for AP:NewAlleleNomenclature tag
 #
-#	The reference must be:
-#	group = AP, status = 'Routed', 'Chosen'
-#	group = AP, tag != 'AP:NewAlleleNomenclature'
-#		    and tag != 'AP:NewTransgene'
+#       The reference must be:
+#            group = AP
+#            status = 'Routed' or 'Chosen'
+#            and tag != 'AP:Incomplete'
+#            and tag != 'AP:New_allele_New_gene'
+#            and tag != 'AP:NewAlleleNomenclature'
+#            and tag != 'AP:NewRecombinase'
+#            and tag != 'AP:New_reporter/tag_allele' 
+#            and tag != 'AP:NewTransgene'
+#            and tag != 'AP:Problem' 
+#            and tag != 'AP:ProofOfPrinciple' 
+#            and tag != 'AP:strains_CHOSEN' 
+#            and reference added after 2018-01-01
+#
 #	not discarded
 #
 #	output:
@@ -51,36 +61,37 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Review for AP:NewAlleleNomenclature tag', os.environ['QCOUTPUTDIR'])
 
 searchTerms = [
-'we generated',
-'we have generated',
-'we created',
-'we have created',
-'mice were generated',
-'mice were created',
-'targeting vector',
-' es cell',             # note the space is important (avoids matches like "increases cell")
-'targeting construct',
-'novel mutation',
-'novel mutant',
-'spontaneous mutation',
-'spontaneous mutant',
-'generation of mice',
-'generation of mutant mice',
-'generation of transgenic mice',
-'gene trapped',
-'gene-trapped',
-'gene trap',
-'gene-trap'
+'we generated', 
+'we have generated', 
+'we created', 
+'we have created', 
+'mice were generated', 
+'mice were created', 
+'targeting vector', 
+' es cell', 
+'targeting construct', 
+'generation of mice', 
+'generation of mutant mice', 
+'generation of transgenic mice'
 ]
 
 searchTerms = [x.lower() for x in searchTerms]
 
 fp.write('''
         The reference must be:
-             group = AP, status = 'Routed' or 'Chosen'
-             group = AP, tag != 'AP:NewAlleleNomenclature'
-                     and tag != 'AP:NewTransgene'
+             group = AP
+             status = 'Routed' or 'Chosen'
+             and tag != 'AP:Incomplete'
+             and tag != 'AP:New_allele_New_gene'
+             and tag != 'AP:NewAlleleNomenclature'
+             and tag != 'AP:NewRecombinase'
+             and tag != 'AP:New_reporter/tag_allele' 
+             and tag != 'AP:NewTransgene'
+             and tag != 'AP:Problem' 
+             and tag != 'AP:ProofOfPrinciple' 
+             and tag != 'AP:strains_CHOSEN' 
              not discarded
+             and reference added after 2018-01-01
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
@@ -88,23 +99,21 @@ byDate = {}
 byStatus = {}
 byText = {}
 
-searchSQL = ''
-for s in searchTerms:
-        searchSQL += ' lower(d.extractedText) like lower(\'%' + s + '%\') or'
-searchSQL = searchSQL[:-2]
-
 # read non-null extracted text
 # exclude extractedText not in 'reference' section
 sql = '''
-select r._Refs_key, c.jnumID, lower(d.extractedText) as extractedText,
+select r._Refs_key, c.mgiid, c.jnumid, lower(d.extractedText) as extractedText,
         to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
-from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d
-where r.isDiscard = 0
+from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v
+where r._Refs_key = v._Refs_key
+and v._Relevance_key != 70594666
+and v.isCurrent = 1
 and r._Refs_key = c._Refs_key
 and r._Refs_key = d._Refs_key
 and d._ExtractedText_key not in (48804491)
 and d.extractedText is not null
+and r.creation_date >= '2018-01-01'::date
 
 and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
         where r._Refs_key = wfso._Refs_key
@@ -115,7 +124,8 @@ and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
 
 and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
         where r._Refs_key = wftag._Refs_key
-        and wftag._Tag_key in (31576700, 31576702)
+        and wftag._Tag_key in (31576705,35710200,31576700,31576709,45748497,31576702,31576713,31576711,44919859)
+
         )
 '''
 
@@ -128,14 +138,14 @@ db.sql('create index ref_idx on extractedText(_Refs_key)', None)
 results = db.sql('select * from extractedText', 'auto')
 for r in results:
 
-        jnumID = r['jnumID']
+        mgiid = r['mgiid']
 
-        if jnumID not in byDate:
-            byDate[jnumID] = []
-            byDate[jnumID].append(r['cdate'])
+        if mgiid not in byDate:
+            byDate[mgiid] = []
+            byDate[mgiid].append(r['cdate'])
 
-        if jnumID not in byText:
-            byText[jnumID] = []
+        if mgiid not in byText:
+            byText[mgiid] = []
 
         extractedText = r['extractedText']
         extractedText = extractedText.replace('\n', ' ')
@@ -145,13 +155,13 @@ for r in results:
                 subText = extractedText[match.start()-40:match.end()+40]
                 if len(subText) == 0:
                     subText = extractedText[match.start()-10:match.end()+40]
-                byText[jnumID].append(subText)
+                byText[mgiid].append(subText)
 
 #
 # process group/status
 #
 sql = '''
-select r._Refs_key, r.jnumID, concat(g.abbreviation||'|'||s.term) as groupstatus
+select r._Refs_key, r.mgiid, r.jnumid, concat(g.abbreviation||'|'||s.term) as groupstatus
 from extractedText r, BIB_Workflow_Status wfs, VOC_Term g, VOC_Term s
 where r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
@@ -163,13 +173,13 @@ results = db.sql(sql, 'auto')
 
 for r in results:
 
-        jnumID = r['jnumID']
+        mgiid = r['mgiid']
         groupstatus = r['groupstatus']
 
-        if jnumID not in byStatus:
-            byStatus[jnumID] = []
-        if groupstatus not in byStatus[jnumID]:
-            byStatus[jnumID].append(groupstatus)
+        if mgiid not in byStatus:
+            byStatus[mgiid] = []
+        if groupstatus not in byStatus[mgiid]:
+            byStatus[mgiid].append(groupstatus)
 
 #
 # print report

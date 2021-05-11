@@ -33,6 +33,41 @@ mgd/GXD_HTSampleNoAge.sql
 mgd/GXD_SpecNoAge.sql
 mgd/RECOMB_SpecNoAge.sql
 
+TAG: qcreports_db-6-0-?-?
+DATE: ?
+STAFF: lec
+TR13349/Genome Build 39 project
+obsolete reports:
+WF_AP_Routed.py
+changes:
+MRK_BIB_Discard.py
+GXD_Referenes.sql
+GXD_Triage.py
+WF_SupplimentalData.py
+WF_GXD_Secondary.py
+WF_AP_Discard.py
+WF_AP_NewAlleleNomenTag.py
+WF_AP_Tags.py
+QTL_Triage.py
+allstrain/Allele Strain of Origin vs. Parent Cell Line Strain (see allcacheload/allstrain.py)
+
+changes:
+mgd/GXD_ImageCheck.sql
+mgd/GXD_Images.py
+mgd/GXD_LackingImages.py
+weekly/PHENO_ImageCheck.sql
+
+Alliance Homology Report changes:
+MRK_RatNoGO.sql
+GO_Combined_Report.py
+MRK_Homology_Class1.py
+HMD_SymbolDiffs.py
+
+obsolete homology reports:
+MRK_Homology_Class2.py - uses homologene to determine homology clusters with no mouse genes - REMOVED OBSOLETE
+MRK_Homology_Class3.py - uses homologene to determine homology classes with > n genes from a single species - REMOVED OBSOLETE
+>>>>>>> tr13349
+
 TAG: qcreports_db-6-0-16-25
 TAG: qcreports_db-6-0-16-24
 DATE: 04/21/2021
@@ -41,6 +76,7 @@ WTS2-600/mgd/GXD_ImageCheck.sql
 also removed egload/dummy.py : obsolete/not used
 
 TAG: qcreports_db-6-0-16-23
+>>>>>>> master
 TAG: qcreports_db-6-0-16-22
 DATE: 04/14/2021, 04/21/2021
 STAFF: lec
@@ -57,6 +93,7 @@ TAG: qcreports_db-6-0-16-19
 DATE: 04/13/2021
 STAFF: dbm
 TR13481/New GO Text Load
+>>>>>>> master
 
 TAG: qcreports_db-6-0-16-18
 DATE: 04/08/2021

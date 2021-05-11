@@ -15,6 +15,9 @@
 #
 # History:
 #
+# sc    02/11/2021
+#       TR13349 - B39 project. Update to use alliance direct homology
+#
 # 04/09/2012	lec
 #	- and m.name not like 'predicted gene %'
 #	changed to
@@ -139,7 +142,7 @@ db.sql('''
         into temporary table tmp_homology
         from MRK_Cluster mc, MRK_ClusterMember mh, MRK_ClusterMember hh,
                 validMarkers mm, MRK_Marker hm
-        where mc._ClusterSource_key = 9272151
+        where mc._ClusterSource_key = 75885739
         and mc._Cluster_key = mh._Cluster_key
         and mh._Cluster_key = hh._Cluster_key
         and mh._Marker_key = mm._Marker_key

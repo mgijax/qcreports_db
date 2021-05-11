@@ -1,39 +1,11 @@
-
-/* select all Gel Assays with Image Panes that have JPGs (xDim is not null) */
-
-select distinct a._Assay_key, a._ImagePane_key, ip._Image_key
-INTO TEMPORARY TABLE assays 
-from GXD_Assay a, IMG_Image i, IMG_ImagePane ip 
-where a._AssayType_key in (1,2,3,4,5,6,8,9)
-and a._ImagePane_key = ip._ImagePane_key 
-and ip._Image_key = i._Image_key 
-and i.xDim is not null
-;
-
-/* select all InSitu Assays with Image Panes that have JPGs (xDim is not null) */
-
-INSERT INTO assays 
-select distinct s._Assay_key, iri._ImagePane_key, ip._Image_key
-from GXD_InSituResultImage iri, GXD_InSituResult r, GXD_Specimen s, GXD_Assay a, IMG_Image i, IMG_ImagePane ip 
-where iri._ImagePane_key = ip._ImagePane_key 
-and ip._Image_key = i._Image_key 
-and i.xDim is not null 
-and iri._Result_key = r._Result_key 
-and r._Specimen_key = s._Specimen_key
-and s._Assay_key = a._Assay_key
-and a._AssayType_key in (1,2,3,4,5,6,8,9)
-;
-
-create index assays_idx1 on assays(_ImagePane_key)
-;
-
 \echo ''
 \echo 'GXD Image Figure Labels Beginning ''Fig''.'
 \echo ''
 
 select distinct i.jnumID, i.figureLabel
 from IMG_Image_View i
-where i.figureLabel like 'Fig%'
+where i._ImageClass_key = 6481781
+and i.figureLabel like 'Fig%'
 order by i.jnumID
 ;
 
@@ -49,16 +21,6 @@ and n._MGIType_key = 9
 and n._NoteType_key = 1023
 and n._Note_key = nc._Note_key
 and nc.note like '%(||)%'
-order by i.jnumID
-;
-
-\echo ''
-\echo 'GXD Image Pane Labels containing a comma'
-\echo ''
-
-select distinct i.jnumID, i.figureLabel
-from IMG_Image_View i, IMG_ImagePane p
-where p.paneLabel like '%,%' and p._Image_key = i._Image_key
 order by i.jnumID
 ;
 
@@ -83,7 +45,7 @@ order by i.jnumID
 
 select distinct i.jnumID, i.mgiID, r._primary, 
        n.note, substring(r._primary, 1, position(' ' in r._primary) - 1) as p
-INTO TEMPORARY TABLE a
+into temporary table author_tmp
 from IMG_Image_View i, MGI_Note_Image_View n, BIB_Refs r
 where i._ImageClass_key = 6481781
 and n._NoteType_key = 1023
@@ -94,7 +56,7 @@ and n._Object_key = i._Image_key
 ;
 
 select jnumID, mgiID, _primary
-from a
+from author_tmp
 where note not like '%' || p || '%'
 order by jnumID
 ;
@@ -113,5 +75,35 @@ and not exists
 where i._Image_key = mn._Object_key
 and mn._MGIType_key = 9
 and mn._NoteType_key = 1023)
+;
+
+\echo ''
+\echo 'Multiple copyright statements for the same J#'
+\echo ''
+
+select distinct i._refs_key, regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g') as notes
+into temporary table notes_tmp
+from IMG_Image i, MGI_Note n, MGI_NoteChunk nc
+where i._ImageClass_key = 6481781
+and i._ImageType_key = 1072158
+and i._Image_key = n._Object_key
+and n._NoteType_key = 1023
+and n._Note_key = nc._Note_key
+and i._Refs_key not in (102083,104515,127085,129637,140270,144871,154591,158912,163316,172505,185674,185675,217962,227123,94290)
+group by i._Refs_key, regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g') having count(*) > 1
+;
+
+create index notes_idx1 on notes_tmp(_refs_key)
+;
+
+with refs as (
+select _Refs_key from notes_tmp
+group by _Refs_key having count(*) > 1
+)
+select distinct c.jnumid, n.notes
+from refs r, BIB_Citation_cache c, notes_tmp n
+where r._Refs_key = c._Refs_key
+and r._Refs_key = n._Refs_key
+order by c.jnumid
 ;
 

@@ -30,6 +30,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="#sequencegroup">Sequence Group</A>
 <LI><A HREF="#sequence">Sequence</A>
 <LI><A HREF="#homology">Homology</A>
+<LI><A HREF="#tumor">Tumor</A>
 <LI><A HREF="#metrics">Curation Metrics</A>
 <LI><A HREF="#dataloads">Data Loads</A>
 <LI><A HREF="<!--#include file="includes/ftp_url.html" -->/reports/index.html">Public Reports</A>
@@ -65,7 +66,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Images.rpt">Phenotype Annotations Requiring Images</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_SequenceReference.sql.rpt">Reference associations created by the gene trap load</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_GermlineTransmission.sql.rpt">Germline Transmission Checks</A>
-<LI><A HREF="/data/reports/qcreports_db/output/allstrain.rpt">Allele Strain of Origin vs. Parent Cell Line Strain</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_AllelePairCheck.sql.rpt">Genotypes where Allele Pairs are associated with different Markers</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_UncodedReference.rpt">Alleles with most uncoded references</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoPhenoRef.rpt">Alleles with no phenotype but have additional references</A>
@@ -83,12 +83,12 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoOrigRef.sql.rpt">Alleles with status approved or autoload that have no original reference</A> <B> (smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-ExpComp.rpt">All expresses component relationship report </A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-MutInv.rpt">All mutation involves relationship report </A> <B> (mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Routed.rpt">Review for AP routed workflow status</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewAlleleNomenTag.rpt">Review for AP:NewAlleleNomenclature tag</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_StatusMismatch_AP.sql.rpt">References with AP status not matching curated data</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Discard.rpt">Discarded AP relevant references</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Tags.rpt">AP tagged references for curation</A> <B> (mnk)</B>
+<LI><A HREF="/data/loads/mgi/littriageload/output/AP.txt">Secondary Triage</A> 
 </OL>
 
 <A NAME="variants"><B>Allele Variants (laurens)</B> </A>
@@ -174,6 +174,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_EMAPS_Terms.rpt">EMAPS Terms</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_CellLine.sql.rpt">Cell Lines</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/gxd">Archived GXD Reports</A>
+<LI><A HREF="/data/loads/mgi/littriageload/output/GXD.txt">Secondary Triage</A> 
 </OL>
 <A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>
 <OL>
@@ -316,6 +317,7 @@ be used at times to test reports for <I>future</I> public consumption.)
     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_5.rpt">QTL markers that are in Nomen and have not been broadcast</A> <B>(jrecla)</B>
     <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Literature Triage QTL Report</A> <B>(jrecla)</B>
     <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A> <B>(jrecla)</B>
+    <LI><A HREF="/data/loads/mgi/littriageload/output/QTL.txt">Secondary Triage</A> 
     </OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM.rpt">Genes/Pseudogenes with C4AM Coordinates from provider collection “MGI"</A> <B>(yz)</B>
@@ -337,8 +339,11 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="homology"><B>Homology (jblake, mdolan) </B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class1.rpt">Classes for which there are > 10 Genes From a Single Species</A> 
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class2.rpt">Classes with no Mouse Genes</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class3.rpt">Classes with only Mouse Genes</A>
+</OL>
+
+<A NAME="tumor"><B>Tumor (dab, dmk) </B></A>
+<OL>
+<LI><A HREF="/data/loads/mgi/littriageload/output/Tumor.txt">Secondary Triage</A> 
 </OL>
 
 <A NAME="metrics"><B>Curation Metrics</B></A>
