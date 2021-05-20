@@ -113,7 +113,7 @@ order by accID
 \echo 'Multiple copyright statements for the same J#'
 \echo ''
 
-select distinct i._refs_key, regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g') as notes
+select distinct i._refs_key, trim(regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g')) as notes
 into temporary table notes_tmp
 from IMG_Image i, MGI_Note n, MGI_NoteChunk nc
 where i._ImageClass_key in (6481782, 6481783)
