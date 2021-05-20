@@ -90,7 +90,6 @@ and i._Image_key = n._Object_key
 and n._NoteType_key = 1023
 and n._Note_key = nc._Note_key
 and i._Refs_key not in (102083,104515,127085,129637,140270,144871,154591,158912,163316,172505,185674,185675,217962,227123,94290)
-group by i._Refs_key, regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g') having count(*) > 1
 ;
 
 create index notes_idx1 on notes_tmp(_refs_key)
