@@ -7,6 +7,9 @@
 #
 # History:
 #
+# 05/25/2021    sc
+#       WTS2-616 AP QC report 37: AP tagged references for curation - add indexed genes column
+#
 # 09/04/2020    lec
 #	- TR13327
 #       1) References tagged with AP:New_allele_new_gene
@@ -20,6 +23,7 @@
 #       AP reference status (i.e. routed, chosen, indexed, etc)
 #       All AP or MGI:curator reference tags (pipe delimited)
 #       text of reference note  (leave blank if null)
+#       MGI ID of genes indexed to the paper (blank if null, pipe delimited)
 #
 #       sort all by 
 #       1) publication year, oldest to newest
@@ -94,6 +98,24 @@ for r in results:
         allNotes[key].append(value)
 #print(allNotes)
 
+allGenes = {}
+results = db.sql('''
+select ra._refs_key, a.accid
+from mgi_reference_assoc ra, acc_accession a
+where ra._refassoctype_key = 1018
+and ra._object_key = a._object_key
+and a._mgitype_key = 2
+and a._logicaldb_key = 1
+and a.preferred = 1
+and a.prefixPart = 'MGI:'
+order by ra._refs_key, a.accid
+''', 'auto')
+for r in results:
+    key = r['_refs_key']
+    if key not in allGenes:
+        allGenes[key] = []
+    allGenes[key].append(r['accid'])
+
 results = db.sql('select * from refs', 'auto')
 for r in results:
         key = r['_Refs_key']
@@ -107,6 +129,9 @@ for r in results:
         fp.write(TAB)
         if key in allNotes:
                 fp.write('|'.join(allNotes[key]))
+        fp.write(TAB)
+        if key in allGenes:
+            fp.write('|'.join(allGenes[key]))
         fp.write(CRT)
 
 reportlib.finish_nonps(fp)

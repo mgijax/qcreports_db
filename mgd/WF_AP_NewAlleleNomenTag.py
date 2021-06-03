@@ -19,6 +19,8 @@
 #            and tag != 'AP:Problem' 
 #            and tag != 'AP:ProofOfPrinciple' 
 #            and tag != 'AP:strains_CHOSEN' 
+             and tag != 'AP:new_allele_docking_site'
+             and tag != 'AP:transgene_new_line'
 #            and reference added after 2018-01-01
 #
 #	not discarded
@@ -90,6 +92,8 @@ fp.write('''
              and tag != 'AP:Problem' 
              and tag != 'AP:ProofOfPrinciple' 
              and tag != 'AP:strains_CHOSEN' 
+             and tag != 'AP:new_allele_docking_site'
+             and tag != 'AP:transgene_new_line'
              not discarded
              and reference added after 2018-01-01
 ''')
@@ -102,7 +106,7 @@ byText = {}
 # read non-null extracted text
 # exclude extractedText not in 'reference' section
 sql = '''
-select r._Refs_key, c.mgiid, c.jnumid, lower(d.extractedText) as extractedText,
+select r._Refs_key, c.jnumid, lower(d.extractedText) as extractedText,
         to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
 from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v
@@ -138,14 +142,14 @@ db.sql('create index ref_idx on extractedText(_Refs_key)', None)
 results = db.sql('select * from extractedText', 'auto')
 for r in results:
 
-        mgiid = r['mgiid']
+        jnumid = r['jnumid']
 
-        if mgiid not in byDate:
-            byDate[mgiid] = []
-            byDate[mgiid].append(r['cdate'])
+        if jnumid not in byDate:
+            byDate[jnumid] = []
+            byDate[jnumid].append(r['cdate'])
 
-        if mgiid not in byText:
-            byText[mgiid] = []
+        if jnumid not in byText:
+            byText[jnumid] = []
 
         extractedText = r['extractedText']
         extractedText = extractedText.replace('\n', ' ')
@@ -155,13 +159,36 @@ for r in results:
                 subText = extractedText[match.start()-40:match.end()+40]
                 if len(subText) == 0:
                     subText = extractedText[match.start()-10:match.end()+40]
-                byText[mgiid].append(subText)
+                byText[jnumid].append(subText)
+
+allGenes = {}
+results = db.sql('''
+select ra._refs_key, a1.accid as markerID, a2.accid as jnumID
+    from mgi_reference_assoc ra, acc_accession a1, acc_accession a2
+    where ra._refassoctype_key = 1018
+    and ra._object_key = a1._object_key
+    and a1._mgitype_key = 2
+    and a1._logicaldb_key = 1
+    and a1.preferred = 1
+    and a1.prefixPart = 'MGI:'
+    and ra._refs_key = a2._object_key
+    and a2._mgitype_key = 1
+    and a2._logicaldb_key = 1
+    and a2.preferred = 1
+    and a2.prefixPart = 'J:'
+    order by ra._refs_key, a1.accid
+    ''', 'auto')
+for r in results:
+    key = r['jnumID']
+    if key not in allGenes:
+        allGenes[key] = []
+    allGenes[key].append(r['markerID'])
 
 #
 # process group/status
 #
 sql = '''
-select r._Refs_key, r.mgiid, r.jnumid, concat(g.abbreviation||'|'||s.term) as groupstatus
+select r._Refs_key, r.jnumid, concat(g.abbreviation||'|'||s.term) as groupstatus
 from extractedText r, BIB_Workflow_Status wfs, VOC_Term g, VOC_Term s
 where r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
@@ -173,13 +200,13 @@ results = db.sql(sql, 'auto')
 
 for r in results:
 
-        mgiid = r['mgiid']
+        jnumid = r['jnumid']
         groupstatus = r['groupstatus']
 
-        if mgiid not in byStatus:
-            byStatus[mgiid] = []
-        if groupstatus not in byStatus[mgiid]:
-            byStatus[mgiid].append(groupstatus)
+        if jnumid not in byStatus:
+            byStatus[jnumid] = []
+        if groupstatus not in byStatus[jnumid]:
+            byStatus[jnumid].append(groupstatus)
 
 #
 # print report
@@ -188,11 +215,15 @@ counter = 0
 keys = list(byStatus.keys())
 keys.sort()
 for r in keys:
+        geneIds = ''
+        if r in allGenes:
+            geneIds = '|'.join(allGenes[r])
         if len(byText[r]) > 0:
             fp.write(r + TAB)
             fp.write(byDate[r][0] + TAB)
             fp.write('\t'.join(byStatus[r]) + TAB)
-            fp.write('|'.join(byText[r]) + CRT)
+            fp.write('|'.join(byText[r]) + TAB)
+            fp.write(geneIds + CRT)
             counter += 1
 
 fp.write('\n(%d rows affected)\n' % counter)
