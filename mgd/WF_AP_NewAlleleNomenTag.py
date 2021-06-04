@@ -10,20 +10,11 @@
 #       The reference must be:
 #            group = AP
 #            status = 'Routed' or 'Chosen'
-#            and tag != 'AP:Incomplete'
-#            and tag != 'AP:New_allele_New_gene'
-#            and tag != 'AP:NewAlleleNomenclature'
-#            and tag != 'AP:NewRecombinase'
-#            and tag != 'AP:New_reporter/tag_allele' 
-#            and tag != 'AP:NewTransgene'
-#            and tag != 'AP:Problem' 
-#            and tag != 'AP:ProofOfPrinciple' 
-#            and tag != 'AP:strains_CHOSEN' 
-             and tag != 'AP:new_allele_docking_site'
-             and tag != 'AP:transgene_new_line'
+#            and tag not like 'AP:%'
+#            and tag not like 'COV:%'
 #            and reference added after 2018-01-01
 #
-#	not discarded
+#	     and not discarded
 #
 #	output:
 #	1. J#
@@ -38,6 +29,10 @@
 #
 # History:
 #
+# 05/06/2021
+#       WTS2-614/WTS2-615 - add exclusion of 'AP:new_allele_docking_site'
+#      'AP:transgene_new_line', 'AP:Indexing_needed', 'AP:NewDiseaseModel'
+#       Add indexed genes column
 # 09/29/2017
 #	- TR12250/Lit Triage
 #
@@ -83,17 +78,8 @@ fp.write('''
         The reference must be:
              group = AP
              status = 'Routed' or 'Chosen'
-             and tag != 'AP:Incomplete'
-             and tag != 'AP:New_allele_New_gene'
-             and tag != 'AP:NewAlleleNomenclature'
-             and tag != 'AP:NewRecombinase'
-             and tag != 'AP:New_reporter/tag_allele' 
-             and tag != 'AP:NewTransgene'
-             and tag != 'AP:Problem' 
-             and tag != 'AP:ProofOfPrinciple' 
-             and tag != 'AP:strains_CHOSEN' 
-             and tag != 'AP:new_allele_docking_site'
-             and tag != 'AP:transgene_new_line'
+             and tag not like 'AP:%'
+             and tag not like 'COV:%'
              not discarded
              and reference added after 2018-01-01
 ''')
@@ -107,9 +93,9 @@ byText = {}
 # exclude extractedText not in 'reference' section
 sql = '''
 select r._Refs_key, c.jnumid, lower(d.extractedText) as extractedText,
-        to_char(r.creation_date, 'MM/dd/yyyy') as cdate
+      to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
-from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v
+from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v, BIB_Workflow_Status wfso, BIB_Workflow_Tag wftag, VOC_Term t
 where r._Refs_key = v._Refs_key
 and v._Relevance_key != 70594666
 and v.isCurrent = 1
@@ -118,19 +104,14 @@ and r._Refs_key = d._Refs_key
 and d._ExtractedText_key not in (48804491)
 and d.extractedText is not null
 and r.creation_date >= '2018-01-01'::date
-
-and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
-        where r._Refs_key = wfso._Refs_key
+and r._Refs_key = wfso._Refs_key
         and wfso._Group_key in (31576664)
         and wfso._Status_key in (31576670, 31576671)
         and wfso.isCurrent = 1
-        )
-
-and not exists (select wftag._Refs_key from BIB_Workflow_Tag wftag
-        where r._Refs_key = wftag._Refs_key
-        and wftag._Tag_key in (31576705,35710200,31576700,31576709,45748497,31576702,31576713,31576711,44919859)
-
-        )
+        and r._Refs_key = wftag._Refs_key
+        and wftag._Tag_key = t._Term_key
+        and t.term not like 'COV:%'
+        and t.term not like 'AP:%'
 '''
 
 db.sql(sql, None)

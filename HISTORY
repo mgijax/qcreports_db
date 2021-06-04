@@ -1,3 +1,12 @@
+TAG: qcreports_db-6-0-17-6
+TAG: qcreports_db-6-0-17-5
+DATE: 06/03/2021
+STAFF: sc
+WTS2-615 - mgd/WF_AP_NewAlleleNomenTag.py - new column: indexed genes
+WTS2-614 - mgd/WF_AP_NewAlleleNomenTag.py - new exclusions
+WTS2-616 - weekly/WF_AP_Tags.py - new column: indexed genes
+WTS2-619 - mgd/WF_AP_IndexingNeeded.py - new report
+
 TAG: qcreports_db-6-0-17-4
 TAG: qcreports_db-6-0-17-3
 TAG: qcreports_db-6-0-17-2
