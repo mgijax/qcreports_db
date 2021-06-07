@@ -85,6 +85,31 @@ fp.write('''
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
+# temp table of refsKeys that have no AP or COV tag
+
+noAPDict = {}
+noAPList = []
+results = db.sql('''select distinct a.accid as jnumid, t.term
+    from BIB_Workflow_Tag wftag, VOC_Term t, ACC_Accession a
+    where wftag._Tag_key = t._term_key
+    and wftag._Refs_key = a._Object_key
+    and a._mgitype_key = 1
+    and a._logicaldb_key = 1
+    and a.preferred = 1
+    and a.prefixPart = 'J:' ''', 'auto')
+
+for r in results:
+        key = r['jnumid']
+        tag = r['term']
+        prefix = ':'
+        if key not in noAPDict:
+            noAPDict[key] = []
+        noAPDict[key].append(str.split(tag, ':')[0])
+for key in noAPDict:
+        if 'AP' in noAPDict[key] or 'COV' in noAPDict[key]:
+            continue
+        noAPList.append(key)
+
 byDate = {}
 byStatus = {}
 byText = {}
@@ -92,10 +117,10 @@ byText = {}
 # read non-null extracted text
 # exclude extractedText not in 'reference' section
 sql = '''
-select r._Refs_key, c.jnumid, lower(d.extractedText) as extractedText,
-      to_char(r.creation_date, 'MM/dd/yyyy') as cdate
+select r._Refs_key, c.mgiid, c.jnumid, lower(d.extractedText) as extractedText,
+        to_char(r.creation_date, 'MM/dd/yyyy') as cdate
 into temp table extractedText
-from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v, BIB_Workflow_Status wfso, BIB_Workflow_Tag wftag, VOC_Term t
+from BIB_Refs r, BIB_Citation_Cache c, BIB_Workflow_Data d, BIB_Workflow_Relevance v
 where r._Refs_key = v._Refs_key
 and v._Relevance_key != 70594666
 and v.isCurrent = 1
@@ -104,14 +129,12 @@ and r._Refs_key = d._Refs_key
 and d._ExtractedText_key not in (48804491)
 and d.extractedText is not null
 and r.creation_date >= '2018-01-01'::date
-and r._Refs_key = wfso._Refs_key
+and exists (select wfso._Refs_key from BIB_Workflow_Status wfso
+        where r._Refs_key = wfso._Refs_key
         and wfso._Group_key in (31576664)
         and wfso._Status_key in (31576670, 31576671)
         and wfso.isCurrent = 1
-        and r._Refs_key = wftag._Refs_key
-        and wftag._Tag_key = t._Term_key
-        and t.term not like 'COV:%'
-        and t.term not like 'AP:%'
+        )
 '''
 
 db.sql(sql, None)
@@ -196,6 +219,8 @@ counter = 0
 keys = list(byStatus.keys())
 keys.sort()
 for r in keys:
+        if r not in noAPList:
+            continue
         geneIds = ''
         if r in allGenes:
             geneIds = '|'.join(allGenes[r])
