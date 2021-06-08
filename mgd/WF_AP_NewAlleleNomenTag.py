@@ -89,19 +89,18 @@ fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
 noAPDict = {}
 noAPList = []
-results = db.sql('''select distinct a.accid as jnumid, t.term
+results = db.sql('''select distinct a.accid as mgiid, t.term
     from BIB_Workflow_Tag wftag, VOC_Term t, ACC_Accession a
     where wftag._Tag_key = t._term_key
     and wftag._Refs_key = a._Object_key
     and a._mgitype_key = 1
     and a._logicaldb_key = 1
     and a.preferred = 1
-    and a.prefixPart = 'J:' ''', 'auto')
+    and a.prefixPart = 'MGI:' ''', 'auto')
 
 for r in results:
-        key = r['jnumid']
+        key = r['mgiid']
         tag = r['term']
-        prefix = ':'
         if key not in noAPDict:
             noAPDict[key] = []
         noAPDict[key].append(str.split(tag, ':')[0])
@@ -146,14 +145,14 @@ db.sql('create index ref_idx on extractedText(_Refs_key)', None)
 results = db.sql('select * from extractedText', 'auto')
 for r in results:
 
-        jnumid = r['jnumid']
+        mgiid = r['mgiid']
 
-        if jnumid not in byDate:
-            byDate[jnumid] = []
-            byDate[jnumid].append(r['cdate'])
+        if mgiid not in byDate:
+            byDate[mgiid] = []
+            byDate[mgiid].append(r['cdate'])
 
-        if jnumid not in byText:
-            byText[jnumid] = []
+        if mgiid not in byText:
+            byText[mgiid] = []
 
         extractedText = r['extractedText']
         extractedText = extractedText.replace('\n', ' ')
@@ -163,11 +162,11 @@ for r in results:
                 subText = extractedText[match.start()-40:match.end()+40]
                 if len(subText) == 0:
                     subText = extractedText[match.start()-10:match.end()+40]
-                byText[jnumid].append(subText)
+                byText[mgiid].append(subText)
 
 allGenes = {}
 results = db.sql('''
-select ra._refs_key, a1.accid as markerID, a2.accid as jnumID
+select ra._refs_key, a1.accid as markerID, a2.accid as mgiid
     from mgi_reference_assoc ra, acc_accession a1, acc_accession a2
     where ra._refassoctype_key = 1018
     and ra._object_key = a1._object_key
@@ -179,11 +178,11 @@ select ra._refs_key, a1.accid as markerID, a2.accid as jnumID
     and a2._mgitype_key = 1
     and a2._logicaldb_key = 1
     and a2.preferred = 1
-    and a2.prefixPart = 'J:'
+    and a2.prefixPart = 'MGI:'
     order by ra._refs_key, a1.accid
     ''', 'auto')
 for r in results:
-    key = r['jnumID']
+    key = r['mgiid']
     if key not in allGenes:
         allGenes[key] = []
     allGenes[key].append(r['markerID'])
@@ -192,7 +191,7 @@ for r in results:
 # process group/status
 #
 sql = '''
-select r._Refs_key, r.jnumid, concat(g.abbreviation||'|'||s.term) as groupstatus
+select r._Refs_key, r.mgiid, concat(g.abbreviation||'|'||s.term) as groupstatus
 from extractedText r, BIB_Workflow_Status wfs, VOC_Term g, VOC_Term s
 where r._Refs_key = wfs._Refs_key
 and wfs._Group_key = g._Term_key
@@ -204,13 +203,13 @@ results = db.sql(sql, 'auto')
 
 for r in results:
 
-        jnumid = r['jnumid']
+        mgiid = r['mgiid']
         groupstatus = r['groupstatus']
 
-        if jnumid not in byStatus:
-            byStatus[jnumid] = []
-        if groupstatus not in byStatus[jnumid]:
-            byStatus[jnumid].append(groupstatus)
+        if mgiid not in byStatus:
+            byStatus[mgiid] = []
+        if groupstatus not in byStatus[mgiid]:
+            byStatus[mgiid].append(groupstatus)
 
 #
 # print report
