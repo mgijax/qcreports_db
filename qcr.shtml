@@ -360,7 +360,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/unigeneload">UniGene Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(jblake)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MAindex.html">Adult Mouse Anatomy Vocabulary/DAG Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/mp_emapaload/index.html">MP/EMAPA Relationships Load</A> <B>(terryh)</B>
