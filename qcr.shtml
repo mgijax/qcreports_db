@@ -204,7 +204,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase allele without driver gene check</A>
 </OL>
 
-<A NAME="go"> <B>GO (hjd, dph, jblake, dsitnikov, ln, mdolan)</B></A>
+<A NAME="go"> <B>GO (hjd, dph, dsitnikov, ln, mdolan)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A>
@@ -229,7 +229,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_GO_FullCodeNoAnnot.rpt">Report: Papers marked as Full-coded with no GO annotations</A> <B>(hjd)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Report: Total GO Annotations per Gene</A> <B>(jblake)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Report: Total GO Annotations per Gene</A> <B>(hjd)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Report: Verify GPI file</A> <B>(dph)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_PM2GeneRefsNotInMGI.rpt">Report: Papers not in MGI for genes without experimental GO annotations</A> <B>(krc)</B>
 </OL>
@@ -335,19 +335,17 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
 </OL>
 
-<A NAME="homology"><B>Homology (jblake, mdolan) </B></A>
+<A NAME="homology"><B>Homology (mdolan) </B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class1.rpt">Classes for which there are > 10 Genes From a Single Species</A> 
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class2.rpt">Classes with no Mouse Genes</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class3.rpt">Classes with only Mouse Genes</A>
 </OL>
 
 <A NAME="metrics"><B>Curation Metrics</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationMetrics.sql.rpt">J: Numbers Assigned</A> <B>(jfinger)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_CurationMetrics.sql.rpt">GO Curation</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A> <B>(jfinger)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FullCoded.sql.rpt">GXD Curation - Full-coded</A> <B>(jfinger)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_CurationMetrics.sql.rpt">GO Curation</A> <B>(mmh)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A> <B>(mnk)</B>
 </OL>
 
@@ -359,38 +357,38 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,jrecla)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(jblake)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MAindex.html">Adult Mouse Anatomy Vocabulary/DAG Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/mp_emapaload/index.html">MP/EMAPA Relationships Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/geoload/index.html">GEO Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gensatload/index.html">GENSAT Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/arrayexpload/index.html">Expression Atlas/ArrayExpress Load</A> <B>(cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/GOindex.html">GO Vocabulary/DAG Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/goamouse/index.html">GOA/Mouse Load</A> <B>(hjd)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/gomousenoctua/index.html">GO/Mouse/Noctua Load</A> <B>(dph)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/goahuman/index.html">GOA/Human Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gorat/index.html">GO/Rat Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gorefgen/index.html">GO/PAINT Load</A> <B>(hjd)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/gocfp/index.html">GO/CFP (aka GOC) Load</A> <B>(hjd)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/goload/gomousenoctua/index.html">GO/Mouse/Noctua Load</A> <B>(dph)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(dph)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A> <B>(mmh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/OMIMindex.html">OMIM Vocabulary Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/DOindex.html">Disease Ontology (DO) Vocabulary Load</A> <B>(smb)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(dph)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/genmapload/index.html">Genetic Map Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
-<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/omim_hpoload/index.html">OMIM/HPO Annotation Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MPindex.html">Mammalian Phenotype Vocabulary/DAG Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/targetedalleleload/index.html">Targeted Allele Load</A> <B>(csmith)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT ArrayExpress Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A> <B>(paul hale)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/emalload/index.html">Endonuclease-mediated Allele Load (IMPC CRISPR)</A> <B>(laurens)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/omim_hpoload/index.html">OMIM/HPO Annotation Load</A> <B>(smb)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(mdolan)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(mdolan)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
+<LI><A HREF="/usrlocalmgi/live/dataload/genmapload/index.html">Genetic Map Load</A>
 </OL>
 
 <HR>
