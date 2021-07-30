@@ -88,7 +88,7 @@ results = db.sql('''select a1.accid as aeId, a2.accid as geoId, e._Experiment_ke
         left outer join VOC_Term vt on (v._term_key = vt._term_key)
         where e._Experiment_key = a1._Object_key
             and a1._MGIType_key = 42
-            and a1._LogicalDB_key = 189
+            and a1._LogicalDB_key in (189, 190)
             and a1.preferred = 1
             and e._ExperimentType_key = t1._Term_key
             and e._EvaluationState_key = t2._Term_key
