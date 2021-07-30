@@ -6,8 +6,8 @@
 # Report:
 #
 # GXD HT Overview report
-#    Col 1: List of AE ids loaded in to MGI typeKey=42, ldbKey=189
-#    Col 2: GEO id, if applicable ldbKey=190
+#    Col 1: List of primary ids loaded in to MGI typeKey=42, ldbKey in (189, 190)
+#    Col 2: secondary GEO id, if applicable ldbKey=190
 #    Col 3: experiment type vocabKey=121
 #    Col 4: evaluation state  vocabKey=116
 #    Col 5: study type vocabKey=124
@@ -25,6 +25,10 @@
 # Notes:
 #
 # History:
+#
+# sc    07/30/2021
+#       - YAKS project - load GEO experiments epic
+#       - update to take primary id of both AE and GEO
 #
 # sc	08/23/2019
 #	- GRSD project story 290, add columns for in RNA-Seq Load and 
@@ -113,7 +117,7 @@ for r in results:
     exptDict[exptKey].append(r)
 
 ct = 0
-fp.write('ArrayExpress ID%sGEO ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%sExpression Atlas?%sRNA-Seq Load?%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT))
+fp.write('Primary ID%sSecondary ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%sExpression Atlas?%sRNA-Seq Load?%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT))
 for key in exptDict:
     # if there are > 1 row then there are > 1 variable, all other info repeated
     r = exptDict[key][0]
