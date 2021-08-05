@@ -77,7 +77,7 @@ for r in results:
 
 fp = reportlib.init(sys.argv[0], 'GXD Overview QC', os.environ['QCOUTPUTDIR'])
 
-results = db.sql('''select a1.accid as aeId, a2.accid as geoId, e._Experiment_key, 
+results = db.sql('''select a1.accid as primary, a2.accid as secondary, e._Experiment_key, 
             t1.term as exptType, t2.term as evalState, t3.term as studyType, 
             t4.term as curationState, v._Term_key as varTermKey, 
             vt.Term as varTerm
@@ -85,7 +85,7 @@ results = db.sql('''select a1.accid as aeId, a2.accid as geoId, e._Experiment_ke
             VOC_Term t4, GXD_HTExperiment e
         left outer join ACC_Accession a2 on (e._Experiment_key = a2._Object_key
             and a2._MGIType_key = 42
-            and a2._LogicalDB_key = 190
+            and a2._LogicalDB_key in(189, 190)
             and a2.preferred = 0)
         left outer join GXD_HTExperimentVariable v 
             on (e._Experiment_key = v._Experiment_key )
@@ -121,8 +121,8 @@ fp.write('Primary ID%sSecondary ID%sExperiment Type%sEvaluation State%sStudy Typ
 for key in exptDict:
     # if there are > 1 row then there are > 1 variable, all other info repeated
     r = exptDict[key][0]
-    aeId = r['aeId']
-    geoId = r['geoId']
+    primary = r['primary']
+    secondary = r['secondary']
     exptType = r['exptType']
     evalState = r['evalState']
     studyType = r['studyType']
@@ -140,7 +140,7 @@ for key in exptDict:
     rnaSeqSet = 'No'
     if key in rnaSeqList:
         rnaSeqSet = 'Yes'
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (aeId, TAB, geoId, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, TAB, eaSet, TAB, rnaSeqSet, CRT ))
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (primary, TAB, secondary, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, TAB, eaSet, TAB, rnaSeqSet, CRT ))
     ct += 1
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))
