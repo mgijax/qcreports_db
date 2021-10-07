@@ -133,6 +133,7 @@ byPublisher = [
 'J Comp Neurol', 
 'J Lipid Res', 
 'Mech Dev', 
+'Cells Dev', 
 'Mol Reprod Dev',
 'Proc Natl Acad Sci U S A'
 ]
