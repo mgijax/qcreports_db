@@ -1,8 +1,10 @@
+TAG: qcreports_db-6-0-17-16
 TAG: qcreports_db-6-0-17-15
 DATE: 10/29/2021
 STAFF: sc
 yaks-319 Cell Type QC Report - all CL terms with synonyms
 new: mgd/GXD_CellType_Terms.py
+exclude obsolete
 
 TAG: qcreports_db-6-0-17-14
 DATE: 10/28/2021
