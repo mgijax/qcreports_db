@@ -49,6 +49,7 @@ for r in results:
 results = db.sql('''select t._Term_key, t.term, a.accid
     from VOC_Term t, ACC_Accession a
     where t._Vocab_key = 102
+    and t.isobsolete = 0
     and t._Term_key = a._Object_key
     and a._MGIType_key = 13
     and a._LogicalDB_key = 173
