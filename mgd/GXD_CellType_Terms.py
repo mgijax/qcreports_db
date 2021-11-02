@@ -36,7 +36,8 @@ results = db.sql('''select t._Term_key, s.synonym
     from VOC_Term t, MGI_Synonym s
     where t._Vocab_key = 102
     and t._Term_key = s._Object_key
-    and s._MGIType_key = 13''', 'auto')
+    and s._MGIType_key = 13
+    and s._SynonymType_key = 1017''', 'auto')
 
 for r in results:
     termKey = r['_Term_key']
