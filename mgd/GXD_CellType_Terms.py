@@ -59,7 +59,7 @@ results = db.sql('''select t._Term_key, t.term, a.accid
 
 numResults = len(results)
 # write report
-fp.write('CellType ID%sTerm%sSynonyms%s' % (TAB, TAB, CRT))
+fp.write('CellType ID%sTerm%sExactSynonyms%s' % (TAB, TAB, CRT))
 for r in results:
     termKey = r['_Term_key']
     term = r['term']

@@ -1,3 +1,4 @@
+TAG: qcreports_db-6-0-17-18
 TAG: qcreports_db-6-0-17-17
 TAG: qcreports_db-6-0-17-16
 TAG: qcreports_db-6-0-17-15
@@ -8,6 +9,7 @@ new: mgd/GXD_CellType_Terms.py
 tweaks:
     exclude obsolete
     include only exact synonyms
+    change syn col hdr to ExactSynonyms
 
 TAG: qcreports_db-6-0-17-14
 DATE: 10/28/2021
