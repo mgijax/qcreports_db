@@ -100,6 +100,7 @@ db.sql('''
 select distinct _Refs_key, _Marker_key, _AssayType_key
 into temporary table tmp_gxd_expression
 from GXD_Expression
+where _AssayType_key != 11
 ''', None)
 
 db.sql('create index idx6 on tmp_gxd_expression(_Refs_key)', None)
