@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-17-22
+DATE: 12/09/2021
+STAFF: lec
+wts2-739/add references = discard used in Annotations to existing MRK_BIB_Discard.py report
+#       deleted:    mgd/MRK_BIB_Discard.py
+#       new file:   mgd/MRK_BIB_Discard.sql
+
 TAG: qcreports_db-6-0-17-21
 DATE: 12/01/2021
 STAFF: lec
