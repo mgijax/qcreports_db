@@ -188,7 +188,7 @@ db.sql('''
     into temporary table finalGel 
     from gels ss, ACC_Accession a1, ACC_Accession a2 
     where ss._Assay_key = a1._Object_key 
-    as.celltypeTermd a1._MGIType_key = 8 
+    and a1._MGIType_key = 8 
     and a1._LogicalDB_key = 1 
     and a1.prefixPart = 'MGI:' 
     and ss._Refs_key = a2._Object_key 
