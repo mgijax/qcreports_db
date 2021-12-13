@@ -15,6 +15,7 @@
 #    3) Stage of the structures in question
 #    4) Parent structure (with absent annotation)
 #    5) Child structure
+#    6) cell type
 # 
 # Originally requested as a custom SQL (TR 8073).
 #
@@ -22,6 +23,9 @@
 #       GXD_ChildExpNotParent.py
 #
 # History:
+#
+# sc    12/13/2021
+#       - YAKS project - add cell type term
 #
 # lec	01/21/2016
 #	- TR12223/gxd anatomy II
@@ -63,6 +67,8 @@ fp.write(SPACE)
 fp.write(str.ljust('Parent Structure', 50))
 fp.write(SPACE)
 fp.write(str.ljust('Child Structure', 50))
+fp.write(SPACE)
+fp.write(str.ljust('Cell Type', 35))
 fp.write(CRT)
 fp.write(12*'-')
 fp.write(SPACE)
@@ -73,6 +79,8 @@ fp.write(SPACE)
 fp.write(50*'-')
 fp.write(SPACE)
 fp.write(50*'-')
+fp.write(SPACE)
+fp.write(35*'-')
 fp.write(CRT)
 
 #
@@ -85,11 +93,12 @@ db.sql('''
                a._Assay_key,
                s._EMAPA_Term_key as parentKey, 
                s._Stage_key,
-               s2._EMAPA_Term_key as childKey
+               s2._EMAPA_Term_key as childKey,
+               r2._Result_key
         INTO TEMPORARY TABLE work 
         FROM GXD_InSituResult r, GXD_InSituResult r2, 
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
-             GXD_Specimen sp, GXD_Specimen sp2,
+             GXD_Specimen sp, GXD_Specimen sp2, 
              GXD_Assay a,
              DAG_Closure c, VOC_Term_EMAPS emaps_p, VOC_Term_EMAPS emaps_c
         WHERE r._Strength_key = 1 
@@ -112,10 +121,28 @@ db.sql('''
               and a._Refs_key not in (81462,81463,92242,94290,102744,124081,154591,154591,163316,172505)
         ''', None)
 
-db.sql('create index idx1 on work(_Assay_key)', None)
-db.sql('create index idx2 on work(parentKey)', None)
-db.sql('create index idx3 on work(childKey)', None)
-db.sql('create index idx4 on work(_Stage_key)', None)
+db.sql('create index work_idx1 on work(_Assay_key)', None)
+db.sql('create index work_idx2 on work(parentKey)', None)
+db.sql('create index work_idx3 on work(childKey)', None)
+db.sql('create index work_idx4 on work(_Stage_key)', None)
+
+db.sql(''' select w.*, e._celltype_term_key
+        into temporary table work2
+        from work w, gxd_expression e
+        where w._assay_key = e._assay_key
+        ''', None)
+
+db.sql('create index work2_idx1 on work2(_celltype_term_key)', None)
+
+db.sql(''' select w2.*, t.term as celltypeTerm
+        into temporary table work3
+        from work2 w2
+        left outer join voc_term t on (w2._celltype_term_key = t._term_key)''', None)
+
+db.sql('create index work3_idx1 on work3(_Assay_key)', None)
+db.sql('create index work3_idx2 on work3(parentKey)', None)
+db.sql('create index work3_idx3 on work3(childKey)', None)
+db.sql('create index work3_idx4 on work3(_Stage_key)', None)
 
 results = db.sql('''
         SELECT DISTINCT 
@@ -123,23 +150,27 @@ results = db.sql('''
                j.accID as jnumID, 
                t.stage, 
                substring(d.term,1,50) as pterm, 
-               substring(d2.term,1,50) as cterm
-        FROM work w, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
+               substring(d2.term,1,50) as cterm,
+               substring(w3.celltypeTerm,50) as celltype
+        FROM work3 w3, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
-        WHERE w._Assay_key = ga._Assay_key
+        WHERE w3._Assay_key = ga._Assay_key
               and ga._Assay_key = a._Object_key 
               and a._MGIType_key = 8 
               and ga._Refs_key = j._Object_key 
               and j._MGIType_key = 1 
               and j.prefixPart = 'J:' 
-              and w.parentKey = d._Term_key 
-              and w.childKey = d2._Term_key
-              and w._Stage_key = t._Stage_key
+              and w3.parentKey = d._Term_key 
+              and w3.childKey = d2._Term_key
+              and w3._Stage_key = t._Stage_key
               order by mgiID desc, t.stage, pterm, cterm
         ''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
 for r in results:
+        celltype = r['celltype']
+        if celltype == None:
+            celltype = ''
         fp.write(str.ljust(r['jnumID'], 12))
         fp.write(SPACE)
         fp.write(str.ljust(r['mgiID'], 12))
@@ -149,6 +180,8 @@ for r in results:
         fp.write(str.ljust(r['pterm'], 50))
         fp.write(SPACE)
         fp.write(str.ljust(r['cterm'], 50))
+        fp.write(SPACE)
+        fp.write(str.ljust(celltype, 35))
         fp.write(CRT)
 
 reportlib.finish_nonps(fp)

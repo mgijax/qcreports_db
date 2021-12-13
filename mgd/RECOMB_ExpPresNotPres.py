@@ -30,6 +30,9 @@
 #
 # History:
 #
+# sc    12/13/2021
+#       - YAKS project - add cell type term
+#
 # lnh 11/20/2015
 #       - TR12134 GXD QC report needs more ordering
 #         sort by structure
@@ -79,10 +82,12 @@ fp.write('\treproductive system, 16-19\n\n')
 fp.write('Specimens must have the same genotype and age\n\n')
 fp.write('J Number   ')
 fp.write('MGI ID        ')
-fp.write('Stage:EMAPA' + CRT)
+fp.write('Stage:EMAPA                                         ')
+fp.write('Cell Type' + CRT)
 fp.write('---------  ')
 fp.write('------------  ')
-fp.write('----------------------------------------------------------------------------------------------------' + CRT)
+fp.write('--------------------------------------------------  ')
+fp.write('--------------------------------------------------' + CRT)
 
 db.sql('''
     SELECT DISTINCT s._EMAPA_Term_key, s._Stage_key
@@ -108,7 +113,7 @@ db.sql('create index excludeStructs_idx2 on excludeStructs(_Stage_key)', None)
 # assays with expression
 #
 db.sql('''
-        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age 
+        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age
         into temporary table expressed 
         from GXD_Expression e 
         where e.isForGXD = 0 
@@ -126,8 +131,8 @@ db.sql('create index expressed_idx5 on expressed(age)', None)
 # compare expressed/not expressed by assay, structure, stage, genotype, age
 #
 db.sql('''
-        select distinct e.* 
-        into temporary table results 
+        select distinct e.*, n._celltype_Term_key 
+        into temporary table results1
         from expressed e, GXD_Expression n 
         where e._Assay_key = n._Assay_key 
         and n.isForGXD = 0 
@@ -137,10 +142,22 @@ db.sql('''
         and e.age = n.age 
         and n.expressed = 0 
         ''', None)
-db.sql('create index results_idx1 on results(_Assay_key)', None)
-db.sql('create index results_idx2 on results(_EMAPA_Term_key)', None)
-db.sql('create index results_idx3 on results(_Stage_key)', None)
-db.sql('create index results_idx4 on results(_Refs_key)', None)
+db.sql('create index results1_idx1 on results1(_Assay_key)', None)
+db.sql('create index results1_idx2 on results1(_EMAPA_Term_key)', None)
+db.sql('create index results1_idx3 on results1(_Stage_key)', None)
+db.sql('create index results1_idx4 on results1(_Refs_key)', None)
+db.sql('create index results1_idx5 on results1(_celltype_term_key)', None)
+
+db.sql('''
+        select r.*, t.term as celltypeTerm
+        into temporary table results2
+        from results1  r
+        left outer join VOC_Term t on (r._celltype_term_key = t._term_key)''', None)
+
+db.sql('create index results2_idx1 on results2(_Assay_key)', None)
+db.sql('create index results2_idx2 on results2(_EMAPA_Term_key)', None)
+db.sql('create index results2_idx3 on results2(_Stage_key)', None)
+db.sql('create index results2_idx4 on results2(_Refs_key)', None)
 
 #
 # final results
@@ -148,8 +165,9 @@ db.sql('create index results_idx4 on results(_Refs_key)', None)
 results = db.sql('''
         select ac1.accID as jnumID, 
                ac2.accID as mgiID, 
-               t.stage::text || ':' || s.term as term
-         from results r, VOC_Term s, GXD_TheilerStage t, 
+               t.stage::text || ':' || s.term as term,
+               r.celltypeTerm
+         from results2 r, VOC_Term s, GXD_TheilerStage t, 
               ACC_Accession ac1, ACC_Accession ac2 
          where r._EMAPA_Term_key = s._Term_key 
          and r._Stage_key = t._Stage_key 
@@ -170,5 +188,9 @@ results = db.sql('''
 
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 for r in results:
-    fp.write("%-9s  %-12s  %-100s\n" % (r['jnumID'],r['mgiID'],r['term']))
+    celltypeTerm = r['celltypeTerm']
+    if celltypeTerm == None:
+        celltypeTerm = ''
+    fp.write("%-9s  %-12s  %-50s  %-35s\n" % (r['jnumID'],r['mgiID'],r['term'],celltypeTerm))
+
 fp.write('\n(%d rows affected)\n' % (len(results)))
