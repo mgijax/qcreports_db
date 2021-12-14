@@ -151,7 +151,7 @@ results = db.sql('''
                t.stage, 
                substring(d.term,1,50) as pterm, 
                substring(d2.term,1,50) as cterm,
-               substring(w3.celltypeTerm,50) as celltype        
+               substring(w3.celltypeTerm,1,50) as celltype        
         FROM work3 w3, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
         WHERE w3._Assay_key = ga._Assay_key
