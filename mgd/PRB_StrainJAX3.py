@@ -76,38 +76,6 @@ def jrs():
 
     printReport(jrsfp)
 
-def mmrrc():
-
-    mmrrcfp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmrrc.rpt')
-
-    title = 'MMRRC Strains w/ Genotype Associations where the Markers/Alleles of the Strain record\n' + \
-            'do not exactly match the Markers/Alleles of the Genotype record.'
-
-    mmrrcfp.write(title + '\n\n')
-    mmrrcfp.write('MMRRC#' + reportlib.TAB)
-    mmrrcfp.write('Strain' + reportlib.TAB)
-    mmrrcfp.write('Genotypes' + reportlib.TAB)
-    mmrrcfp.write(reportlib.CRT)
-
-    # MMNC Strains w/ Genotype Associations; exclude wild type alleles
-    db.sql('''
-            select distinct sa.accID, s.strain, g._Genotype_key, g._Strain_key, a._Marker_key, a._Allele_key 
-            into temporary table strains 
-            from PRB_Strain s, PRB_Strain_Genotype g, GXD_AlleleGenotype a, ALL_Allele aa, ACC_Accession sa 
-            where s.strain like '%/Mmnc'
-            and s._Strain_key = g._Strain_key 
-            and g._Genotype_key = a._Genotype_key 
-            and a._Allele_key = aa._Allele_key 
-            and aa.isWildType = 0 
-            and s._Strain_key = sa._Object_key 
-            and sa._MGIType_key = 10 
-            and sa._LogicalDB_key = 38 
-            and sa.preferred = 1 
-            ''', None)
-    db.sql('create index strains_idx2 on strains(_Strain_key)', None)
-
-    printReport(mmrrcfp)
-
 def printReport(fp):
 
     # Same Strains and the Marker/Allele associations
@@ -169,5 +137,4 @@ def printReport(fp):
 
 db.useOneConnection(1)
 jrs()
-mmrrc()
 db.useOneConnection(0)

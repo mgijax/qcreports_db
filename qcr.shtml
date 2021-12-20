@@ -56,7 +56,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Alleles.sql.rpt">Allele Anomalies</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_Progress.current.rpt">Allele Progress Report</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/archive/alleles">Allele Progress Archive</A> <B>(csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_NoMutantSentence.rpt">Genes w/Phenotypic Alleles and No Mutant Sentence</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_DupGenotype.rpt">Duplicate Genotypes</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoMolMutation.rpt">Alleles that have Molecular Notes but no Molecular Mutation</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_MolNotesNoMP.rpt">Alleles that have Molecular Notes but no MP Annotations</A> <B>(mnk)</B>
@@ -64,29 +63,21 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_CellLineProvider.sql.rpt">Mutant ES Cell Line Provider Check</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_ImageCheck.sql.rpt">Image Check</A> <B>(monikat)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Images.rpt">Phenotype Annotations Requiring Images</A> <B>(monikat)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_SequenceReference.sql.rpt">Reference associations created by the gene trap load</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_GermlineTransmission.sql.rpt">Germline Transmission Checks</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/allstrain.rpt">Allele Strain of Origin vs. Parent Cell Line Strain</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_AllelePairCheck.sql.rpt">Genotypes where Allele Pairs are associated with different Markers</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_UncodedReference.rpt">Alleles with most uncoded references</A>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_NoPhenoRef.rpt">Alleles with no phenotype but have additional references</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoMCL.sql.rpt">Alleles of type Targeted or Gene Trap that have no MCL association</A> <B>(csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_MCLAllele.sql.rpt">MCL's that are associated with more than one Allele</A>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_Notes.rpt">Allele Notes with HTML errors</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_OrphanGenotype.sql.rpt">Orphan Genotypes</A>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_Notes.rpt">Allele Notes with HTML errors</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NewAllele.current.rpt">New Allele Report</A> <B>(acv)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_RefCounts.rpt">Number of Allele References By Year</A> <B>(csmith, steve-rockwood)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ExpressedComp.sql.rpt">Allele Missing Expressed Component Attribute</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_WithdrawnMarker.sql.rpt">Alleles with Withdrawn Markers</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/archive/alleles">New Allele Archive</A>
+<LI><A HREF="/data/reports/qcreports_db/archive/alleles">New Allele Archive</A> <B>(acv)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoSubType.rpt">Alleles with molecular notes but no attribute</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ExpressedSeq.rpt">Alleles with molecular notes and expressed sequence attribute</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_NoOrigRef.sql.rpt">Alleles with status approved or autoload that have no original reference</A> <B> (smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-ExpComp.rpt">All expresses component relationship report </A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-MutInv.rpt">All mutation involves relationship report </A> <B> (mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Routed.rpt">Review for AP routed workflow status</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewAlleleNomenTag.rpt">Review for AP:NewAlleleNomenclature tag</A> <B> (mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_StatusMismatch_AP.sql.rpt">References with AP status not matching curated data</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Tags.rpt">AP tagged references for curation</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_IndexingNeeded.rpt">AP:Indexing_needed papers with genes</A> <B> (csmith)</B>
@@ -273,10 +264,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX4.sql.current.rpt">New JR#s created in the past week</A> <B>(dlb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX5.sql.current.rpt">JR#s with alleles added within the past week</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/strain">Strain Archive</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX2.mmrrc.current.rpt">Public MMRRC strains/Alleles used in Genotype/No Strain/Genotype Association</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX3.mmrrc.rpt">MMRRC Strains w/ Genotype Associations where the Markers/Alleles of the Strain record do not exactly match the Markers/Alleles of the Genotype record</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX7.sql.current.rpt">New MMRRC JR#s created in the past week</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX8.sql.current.rpt">MMRRC JR#s with alleles added within the past week</A>
 </OL>
 
 <A NAME="sequencegroup"><B>Sequence Group (rmb, cjb, jrecla, yz)</B></A>
