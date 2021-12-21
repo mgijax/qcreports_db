@@ -1,5 +1,6 @@
+TAG: qcreports_db-6-0-17-24
 TAG: qcreports_db-6-0-17-23
-DATE: 12/20/2021
+DATE: 12/20/2021, 12/21/2021
 STAFF: lec
 wts2-752/add all root section to GO Stats report/GO_stats.py
 wts2-747/add resonsible person to Allele QC reports

@@ -64,7 +64,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_ImageCheck.sql.rpt">Image Check</A> <B>(monikat)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_Images.rpt">Phenotype Annotations Requiring Images</A> <B>(monikat)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_GermlineTransmission.sql.rpt">Germline Transmission Checks</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/allstrain.rpt">Allele Strain of Origin vs. Parent Cell Line Strain</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_AllelePairCheck.sql.rpt">Genotypes where Allele Pairs are associated with different Markers</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoMCL.sql.rpt">Alleles of type Targeted or Gene Trap that have no MCL association</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_Notes.rpt">Allele Notes with HTML errors</A> <B>(mnk)</B>
