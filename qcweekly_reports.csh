@@ -49,12 +49,9 @@ foreach i (*.py)
         ln -s $QCOUTPUTDIR/`basename $i py`${DATE}.rpt $QCOUTPUTDIR/`basename $i py`current.rpt
     else if ( $i == "PRB_StrainJAX2.py" ) then
         mv -f $QCOUTPUTDIR/`basename $i py`jrs.[0-9]*.rpt $QCSTRAINARCHIVE
-        mv -f $QCOUTPUTDIR/`basename $i py`mmrrc.[0-9]*.rpt $QCSTRAINARCHIVE
         rm -rf $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
-        rm -rf $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
         ${PYTHON}  $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`jrs.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
-        ln -s $QCOUTPUTDIR/`basename $i py`mmrrc.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`mmrrc.current.rpt
     else if ( $i == "GO_stats.py" ) then
         ${PYTHON} $i >>& ${LOG}
         cp -p ${QCOUTPUTDIR}/GO_stats.rpt ${QCGOARCHIVE}/GO_stats.`date +%Y%m%d`
