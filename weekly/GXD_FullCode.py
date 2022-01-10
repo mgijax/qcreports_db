@@ -60,7 +60,7 @@ TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
 # The list of journals; one report for the set of papers within each sub list
-journals = [ ['Mech Dev'], ['Gene Expr Patterns', 'Brain Res Gene Expr Patterns' ] , ['Dev Biol'], ['Development'], ['Dev Dyn'] ]
+journals = [ ['Dev Biol'], ['Development'], ['Dev Dyn'] ]
 
 def processJournal(jList, fileName):
 

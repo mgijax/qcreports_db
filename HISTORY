@@ -1,3 +1,43 @@
+TAG: qcreports_db-6-0-17-19
+TAG: qcreports_db-6-0-17-18
+TAG: qcreports_db-6-0-17-17
+TAG: qcreports_db-6-0-17-16
+TAG: qcreports_db-6-0-17-15
+DATE: 10/29/2021
+STAFF: sc
+yaks-319 Cell Type QC Report - all CL terms with synonyms
+new: mgd/GXD_CellType_Terms.py
+tweaks:
+    exclude obsolete
+    include only exact synonyms
+    change syn col hdr to ExactSynonyms
+
+TAG: qcreports_db-6-0-17-14
+DATE: 10/28/2021
+STAFF: lec
+wts2-556/Request for additional GO QC report: under-annotated genes  (TR13434)
+
+TAG: qcreports_db-6-0-17-13
+DATE: 10/8/2021
+STAFF: dbm
+wts2-675/changes to GXD_Images.py
+
+TAG: qcreports_db-6-0-17-12
+DATE: 10/7/2021
+STAFF: dbm
+wts2-682/added BIB_COVRefTagCounts.py and updated qcr.shtml
+
+TAG: qcreports_db-6-0-17-11
+DATE: 10/7/2021
+STAFF: dbm
+wts2-684/changes to GXD_Images.py, GXD_FullCode.py and qcr.shtml
+
+TAG: qcreports_db-6-0-17-10
+DATE: 06/21/2021
+STAFF: lec
+yaks-39/Identify curator contacts for all loads
+qcr.shtml updates
+
 TAG: qcreports_db-6-0-17-9
 DATE: 06/10/2021
 STAFF: lec
