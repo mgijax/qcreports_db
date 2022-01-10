@@ -29,10 +29,15 @@
 #
 # History:
 #
+# 12/22/2021    lec
+#       wts2-750/Allele report "Review for AP:NewAlleleNomenclature tag" not finding all relevant "routed" pdfs
+#       fixed bug that was not addressing the excludedTag set properly
+#
 # 05/06/2021
 #       WTS2-614/WTS2-615 - add exclusion of 'AP:new_allele_docking_site'
 #      'AP:transgene_new_line', 'AP:Indexing_needed', 'AP:NewDiseaseModel'
 #       Add indexed genes column
+#
 # 09/29/2017
 #	- TR12250/Lit Triage
 #
@@ -85,29 +90,23 @@ fp.write('''
 ''')
 fp.write('\n\tterm search:\n' + str(searchTerms) + '\n\n')
 
-# temp table of refsKeys that have no AP or COV tag
-
-noAPDict = {}
-noAPList = []
-results = db.sql('''select distinct a.accid as mgiid, t.term
-    from BIB_Workflow_Tag wftag, VOC_Term t, ACC_Accession a
-    where wftag._Tag_key = t._term_key
-    and wftag._Refs_key = a._Object_key
-    and a._mgitype_key = 1
-    and a._logicaldb_key = 1
-    and a.preferred = 1
-    and a.prefixPart = 'MGI:' ''', 'auto')
-
+# excluded tags = mgiids that have AP: or COV: tag
+excludedTags = []
+results = db.sql('''
+select distinct a.accid as mgiid
+from BIB_Workflow_Tag wftag, VOC_Term t, ACC_Accession a
+where wftag._Tag_key = t._term_key
+and (t.term like 'AP:%' or t.term like 'COV:%')
+and wftag._Refs_key = a._Object_key
+and a._mgitype_key = 1
+and a._logicaldb_key = 1
+and a.preferred = 1
+and a.prefixPart = 'MGI:' 
+''', 'auto')
 for r in results:
         key = r['mgiid']
-        tag = r['term']
-        if key not in noAPDict:
-            noAPDict[key] = []
-        noAPDict[key].append(str.split(tag, ':')[0])
-for key in noAPDict:
-        if 'AP' in noAPDict[key] or 'COV' in noAPDict[key]:
-            continue
-        noAPList.append(key)
+        excludedTags.append(key)
+#print(excludedTags)
 
 byDate = {}
 byStatus = {}
@@ -218,11 +217,14 @@ counter = 0
 keys = list(byStatus.keys())
 keys.sort()
 for r in keys:
-        if r not in noAPList:
+
+        if r in excludedTags:
             continue
+
         geneIds = ''
         if r in allGenes:
             geneIds = '|'.join(allGenes[r])
+
         if len(byText[r]) > 0:
             fp.write(r + TAB)
             fp.write(byDate[r][0] + TAB)

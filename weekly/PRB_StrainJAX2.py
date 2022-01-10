@@ -82,44 +82,6 @@ def jrs():
 
     printReport(jrsfp)
 
-def mmrrc():
-
-    title = 'Public MMRRC strains whose Alleles are used in a Genotype'
-    title = title + ' but there is no corresponding Strain/Genotype association\n'
-    title = title + '(where Genotypes have been created within the last week)'
-
-
-    mmrrcfp = reportlib.init(sys.argv[0], title, \
-                        outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.mmrrc.' + os.environ['DATE'] + '.rpt')
-
-    mmrrcfp.write('MMRRC' + TAB)
-    mmrrcfp.write('Strain' + TAB)
-    mmrrcfp.write('Genotypes' + CRT*2)
-    
-    # Retrieve all Strains that have a MMRRC ID and whose Alleles are used in a Genotype
-
-    db.sql('drop table strains', None)
-
-    db.sql('''
-        select distinct s._Strain_key, 
-                        substring(s.strain,1,70) as strain, 
-                        a.accID, 
-                        a.numericPart,
-                        g._Genotype_key 
-        into temporary table strains 
-        from PRB_Strain s, ACC_Accession a, PRB_Strain_Marker sm, GXD_Genotype g, GXD_AlleleGenotype ag 
-        where s.private = 0 
-        and s._Strain_key = a._Object_key 
-        and a._MGIType_key = 10 
-        and a._LogicalDB_key = 38 
-        and s._Strain_key = sm._Strain_key 
-        and sm._Allele_key = ag._Allele_key 
-        and ag._Genotype_key = g._Genotype_key
-        and g.creation_date between %s and current_date
-        ''' % (fromDate), None)
-
-    printReport(mmrrcfp)
-
 def printReport(fp):
 
     db.sql('create index idx1 on strains(_Strain_key)', None)
@@ -169,4 +131,3 @@ def printReport(fp):
 #
 
 jrs()
-mmrrc()

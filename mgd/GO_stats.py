@@ -5,6 +5,9 @@
 #
 # Report:
 #
+# lec   12/20/2021
+#       wts2-752/add all root section to GO Stats report
+#
 # sc	04/24/2017
 #	TR12466 add Noctua section
 #
@@ -72,6 +75,11 @@ NON_PROTEIN_CODING_CLAUSE="and va._Term_key != 6238161"
 
 #ROOT="J:73796"
 ROOT_CLAUSE="(74750)"
+ALL_ROOT_CLAUSE = '''
+and exists (select 1 from VOC_Annot aa where a._Object_key = aa._Object_key and aa._Term_key = 120)
+and exists (select 1 from VOC_Annot aa where a._Object_key = aa._Object_key and aa._Term_key = 1098)
+and exists (select 1 from VOC_Annot aa where a._Object_key = aa._Object_key and aa._Term_key = 6113)
+'''
 
 #ORTHOLOGY="J:73065,J:155856,J:164563"/74017/156949/165659
 ORTHOLOGY_CLAUSE="(74017,156949,165659)"
@@ -498,6 +506,14 @@ def writeCount(name):
        results3 = db.sql(byAnnot1 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
 
+   elif name == "ALL_ROOT":
+        # contains all ROOT annotations
+
+       results1 = db.sql(byGene1 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
+       results2 = db.sql(byGene2 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
+       results3 = db.sql(byAnnot1 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
+       results4 = db.sql(byAnnot2 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
+
    elif name == "NOCTUA":
         # not in IEA references
         # loaded by gomousenoctua load
@@ -566,5 +582,6 @@ writeCount('SWISS_PROT')
 writeCount('INTERPRO')
 writeCount('EC')
 writeCount('ROOT')
+writeCount('ALL_ROOT')
 
 reportlib.finish_nonps(fp)
