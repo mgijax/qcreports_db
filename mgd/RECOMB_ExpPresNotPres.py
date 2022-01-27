@@ -147,7 +147,7 @@ db.sql('''
         select distinct e.*
         from expressed e, GXD_Expression n
         where e._Assay_key = n._Assay_key
-        and n.isForGXD = 1
+        and n.isForGXD = 0 
         and e._EMAPA_Term_key = n._EMAPA_Term_key
         and e._Stage_key = n._Stage_key
         and e._Genotype_key = n._Genotype_key
