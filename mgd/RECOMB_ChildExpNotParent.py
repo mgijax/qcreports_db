@@ -126,14 +126,17 @@ db.sql('create index work_idx2 on work(parentKey)', None)
 db.sql('create index work_idx3 on work(childKey)', None)
 db.sql('create index work_idx4 on work(_Stage_key)', None)
 
+# bring in the cell type term key associated with the parent structure, which can be null
 db.sql(''' select w.*, e._celltype_term_key
         into temporary table work2
         from work w, gxd_expression e
         where w._assay_key = e._assay_key
+        and w.parentKey = e._EMAPA_Term_key
         ''', None)
 
 db.sql('create index work2_idx1 on work2(_celltype_term_key)', None)
 
+# get the term if the celltype term key is not null
 db.sql(''' select w2.*, t.term as celltypeTerm
         into temporary table work3
         from work2 w2

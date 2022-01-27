@@ -113,7 +113,7 @@ db.sql('create index excludeStructs_idx2 on excludeStructs(_Stage_key)', None)
 # assays with expression
 #
 db.sql('''
-        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age
+        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age, e._celltype_Term_key
         into temporary table expressed 
         from GXD_Expression e 
         where e.isForGXD = 0 
@@ -126,12 +126,13 @@ db.sql('create index expressed_idx2 on expressed(_EMAPA_Term_key)', None)
 db.sql('create index expressed_idx3 on expressed(_Stage_key)', None)
 db.sql('create index expressed_idx4 on expressed(_Genotype_key)', None)
 db.sql('create index expressed_idx5 on expressed(age)', None)
+db.sql('create index expressed_idx6 on expressed(_celltype_Term_key)', None)
 
 #
-# compare expressed/not expressed by assay, structure, stage, genotype, age
+# compare expressed/not expressed by assay, structure, stage, genotype, age and cell type
 #
 db.sql('''
-        select distinct e.*, n._celltype_Term_key 
+        select distinct e.*
         into temporary table results1
         from expressed e, GXD_Expression n 
         where e._Assay_key = n._Assay_key 
@@ -140,13 +141,23 @@ db.sql('''
         and e._Stage_key = n._Stage_key 
         and e._Genotype_key = n._Genotype_key 
         and e.age = n.age 
+        and e._celltype_Term_key =  n._celltype_Term_key
         and n.expressed = 0 
+        union
+        select distinct e.*
+        from expressed e, GXD_Expression n
+        where e._Assay_key = n._Assay_key
+        and n.isForGXD = 1
+        and e._EMAPA_Term_key = n._EMAPA_Term_key
+        and e._Stage_key = n._Stage_key
+        and e._Genotype_key = n._Genotype_key
+        and e.age = n.age
+        and e._celltype_Term_key is null
+        and n._celltype_Term_key is null
+        and n.expressed = 0
+
         ''', None)
-db.sql('create index results1_idx1 on results1(_Assay_key)', None)
-db.sql('create index results1_idx2 on results1(_EMAPA_Term_key)', None)
-db.sql('create index results1_idx3 on results1(_Stage_key)', None)
-db.sql('create index results1_idx4 on results1(_Refs_key)', None)
-db.sql('create index results1_idx5 on results1(_celltype_term_key)', None)
+db.sql('create index results1_idx1 on results1(_celltype_term_key)', None)
 
 db.sql('''
         select r.*, t.term as celltypeTerm

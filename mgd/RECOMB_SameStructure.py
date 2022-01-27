@@ -114,15 +114,26 @@ db.sql('create index dupspec_idx3 on dupspecimens (_celltype_term_key)', None)
 # get the specimen label _Refs_key and  _Assay_key, and structure for each dup
 
 db.sql('''
-        select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, s1.term as emapaTerm, s2.term as celltypeTerm, t.stage
+        select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, s1.term as emapaTerm, t.stage
         into temporary table specimens 
-        from dupspecimens ss, GXD_Specimen gs, GXD_Assay ga, VOC_Term s1, VOC_Term s2, GXD_TheilerStage t
+        from dupspecimens ss, GXD_Specimen gs, GXD_Assay ga, VOC_Term s1, GXD_TheilerStage t
         where ss._Specimen_key= gs._Specimen_key 
         and gs._Assay_key = ga._Assay_key 
         and ss._EMAPA_Term_key = s1._Term_key 
-        and ss._celltype_term_key = s2._Term_key
         and ss._Stage_key = t._Stage_key
         ''', None)
+
+db.sql('''create index specimens_idx1 on specimens(_celltype_term_key)''', None)
+
+# get the cell type term
+db.sql('''
+    select s.*, t.term as celltypeTerm
+    into temporary table specimens_ct
+    from specimens s
+    left outer join VOC_Term t on (s._celltype_term_key = t._term_key)
+     ''', None)
+
+db.sql('''create index specimens_ct_idx1 on specimens(_refs_key)''', None)
 
 # get the all gel/structure pairs
 
@@ -166,7 +177,7 @@ db.sql('''
 db.sql('''
         select distinct ss.specimenLabel, ss.emapaTerm, ss.celltypeTerm, ss.stage, a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
         into temporary table finalSpecimen 
-        from specimens ss, ACC_Accession a1, ACC_Accession a2 
+        from specimens_ct ss, ACC_Accession a1, ACC_Accession a2 
         where ss._Assay_key = a1._Object_key 
         and a1._MGIType_key = 8 
         and a1._LogicalDB_key = 1 
