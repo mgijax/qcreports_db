@@ -209,23 +209,35 @@ results = db.sql('''
         select specimenLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart
         from finalSpecimen''', 'auto')
 for r in results:
-    finalDict[r['numericPart']] = r
+    key = r['numericPart']
+    if key not in finalDict:
+        finalDict[key] = []
+    finalDict[key].append(r)
 
 results = db.sql('''select laneLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart
         from finalGel''', 'auto')
+    
 for r in results:
-    finalDict[r['numericPart']] = r
+    key = r['numericPart']
+    if key not in finalDict:
+        finalDict[key] = []
+    finalDict[key].append(r)
 
 sortOrder = sorted(finalDict.keys())
 for k in sortOrder:
-    r = finalDict[k]
-    fp.write(str.ljust(r['jnumID'], 35))
-    fp.write(str.ljust(r['mgiID'], 35))
-    fp.write(str.ljust(r['specimenLabel'], 45))
-    fp.write(str.ljust(r['emapaTerm'], 50))
-    fp.write(str.ljust(str(r['stage']), 10))
-    fp.write(str.ljust(str(r['celltypeTerm']), 50))
-    fp.write(CRT)
+    rList = finalDict[k]
+    for r in rList:
+        celltypeTerm = r['celltypeTerm']
+        if celltypeTerm == None:
+            celltypeTerm = ''
+
+        fp.write(str.ljust(r['jnumID'], 35))
+        fp.write(str.ljust(r['mgiID'], 35))
+        fp.write(str.ljust(r['specimenLabel'], 45))
+        fp.write(str.ljust(r['emapaTerm'], 50))
+        fp.write(str.ljust(str(r['stage']), 10))
+        fp.write(str.ljust(celltypeTerm, 50))
+        fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(finalDict)))
 
