@@ -71,14 +71,13 @@ db.sql('''
 db.sql('create index idex1 on alleles(_Allele_key)', None)
 
 results = db.sql('''
-        select a._Allele_key, nc.note 
-        from alleles a, MGI_Note n, MGI_NoteType nt, MGI_NoteChunk nc 
+        select a._Allele_key, n.note 
+        from alleles a, MGI_Note n, MGI_NoteType nt
         where a._Allele_key = n._Object_key 
         and n._MGIType_key = 11 
         and n._NoteType_key = nt._NoteType_key 
         and nt.noteType = 'Molecular' 
-        and n._Note_key = nc._Note_key 
-        order by a._Allele_key, nc.sequenceNum
+        order by a._Allele_key
         ''', 'auto')
 notes = {}
 for r in results:

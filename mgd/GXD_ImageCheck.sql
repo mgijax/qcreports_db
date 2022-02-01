@@ -14,13 +14,12 @@ order by i.jnumID
 \echo ''
 
 select distinct i.jnumID, i.figureLabel
-from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
+from IMG_Image_View i, MGI_Note n
 where i._ImageClass_key = 6481781
 and i._Image_key = n._Object_key
 and n._MGIType_key = 9
 and n._NoteType_key = 1023
-and n._Note_key = nc._Note_key
-and nc.note like '%(||)%'
+and n.note like '%(||)%'
 order by i.jnumID
 ;
 
@@ -81,14 +80,13 @@ and mn._NoteType_key = 1023)
 \echo 'Multiple copyright statements for the same J#'
 \echo ''
 
-select distinct i._refs_key, trim(regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g')) as notes
+select distinct i._refs_key, trim(regexp_replace(rtrim(n.note), E'[\\n\\r]+', '', 'g')) as notes
 into temporary table notes_tmp
-from IMG_Image i, MGI_Note n, MGI_NoteChunk nc
+from IMG_Image i, MGI_Note n
 where i._ImageClass_key = 6481781
 and i._ImageType_key = 1072158
 and i._Image_key = n._Object_key
 and n._NoteType_key = 1023
-and n._Note_key = nc._Note_key
 and i._Refs_key not in (102083,104515,127085,129637,140270,144871,154591,158912,163316,172505,185674,185675,217962,227123,94290)
 ;
 

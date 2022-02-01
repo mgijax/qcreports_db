@@ -139,10 +139,9 @@ for r in results:
 
 # variant curator notes lookup
 variantNoteDict = {}
-results = db.sql('''select n._Object_key as _Variant_key, nc.note
-    from MGI_Note n, MGI_NoteChunk nc, ALL_Variant v
+results = db.sql('''select n._Object_key as _Variant_key, n.note
+    from MGI_Note n, ALL_Variant v
     where n._NoteType_key = 1050
-    and n._Note_key = nc._Note_key
     and n._Object_key = v._Variant_key
     and v._SourceVariant_key is not null''', 'auto')
 for r in results:

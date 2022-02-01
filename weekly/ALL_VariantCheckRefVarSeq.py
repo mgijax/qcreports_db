@@ -59,11 +59,10 @@ db.sql('''select aa.accid, a.symbol, vs.referencesequence,
 
 db.sql('''create index idx1 on variants(_variant_key)''')
 
-db.sql('''select n._object_key, nc.note
+db.sql('''select n._object_key, n.note
     into temporary table variantNotes
-    from MGI_Note n, MGI_NoteChunk nc
-    where n._NoteType_key = 1050
-    and n._note_key = nc._note_key''', None)
+    from MGI_Note n
+    where n._NoteType_key = 1050''', None)
 
 db.sql('''create index idx2 on variantNotes(_object_key)''', None)
 

@@ -425,11 +425,10 @@ def runreport(fp, assayType):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                and exists (select 1 from MGI_Note n
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
-                        and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key)
+                        and n._MGIType_key = 9)
           ''' % (assayType, byJournal), None)
 
     db.sql('''
@@ -445,11 +444,10 @@ def runreport(fp, assayType):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                and exists (select 1 from MGI_Note n
                         where r._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
-                        and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key)
+                        and n._MGIType_key = 9)
           ''' % (assayType, byJournal), None)
 
     db.sql('create index refs3_idx1 on refs3(_Refs_key)', None)
@@ -512,11 +510,10 @@ def runreport(fp, assayType):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                and exists (select 1 from MGI_Note n
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
-                        and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key)
+                        and n._MGIType_key = 9)
           ''' % (assayType, byCopyrightDelayIn), None)
 
     db.sql('''
@@ -532,11 +529,10 @@ def runreport(fp, assayType):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-                and exists (select 1 from MGI_Note n, MGI_NoteChunk c
+                and exists (select 1 from MGI_Note n
                         where r._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
-                        and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key)
+                        and n._MGIType_key = 9)
           ''' % (assayType, byCopyrightDelayIn), None)
 
     db.sql('create index refs4_idx1 on refs4(_Refs_key)', None)
@@ -700,12 +696,11 @@ def runreport(fp, assayType):
                 and ac._MGIType_key = 8 
           ''' % (assayType, byJournal)
 
-    sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
+    sql += '''\nand exists (select 1 from MGI_Note n
                         where i._Image_key = n._Object_key
                         and n._NoteType_key = 1023
-                        and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key
-                        and c.note ilike '%creative commons%')
+                        and n._MGIType_key = 9)
+                        and n.note ilike '%creative commons%')
           '''
     db.sql(sql, None)
 
@@ -724,12 +719,11 @@ def runreport(fp, assayType):
                 and ac._MGIType_key = 8 
           ''' % (assayType, byJournal)
 
-    sql += '''\nand exists (select 1 from MGI_Note n, MGI_NoteChunk c
+    sql += '''\nand exists (select 1 from MGI_Note n
                         where r._Image_key = n._Object_key
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
-                        and n._Note_key = c._Note_key
-                        and c.note ilike '%creative commons%')
+                        and n.note ilike '%creative commons%')
           '''
     db.sql(sql, None)
 

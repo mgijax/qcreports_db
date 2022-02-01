@@ -73,11 +73,10 @@ def doSQL(category):
     db.sql('create index idx1 on relationships (_Relationship_key)', None)
     
     # get the notes for subsequent left outer join
-    db.sql('''select n._Note_key, nc.Note, n._Object_key
+    db.sql('''select n._Note_key, n.Note, n._Object_key
             into temporary table notes
-            from MGI_Note n, MGI_NoteChunk nc
-            where n._Note_key = nc._Note_key
-            and n._NoteType_key = 1042''', None)
+            from MGI_Note n
+            where n._NoteType_key = 1042''', None)
 
     db.sql('create index idx2 on notes(_Object_key)', None)
 

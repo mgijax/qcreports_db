@@ -66,20 +66,19 @@ fp.write('MCV ID%sMarker MGI ID%sJ:%sEvidence Code Abbreviation%sInferred From%s
 # _MGIType_key = 25 # - annotation evidence
 noteLookup = {}
 results = db.sql('''
-        select n._Object_key as annotKey, nc.note as chunk
-        from MGI_Note n, MGI_NoteChunk nc
+        select n._Object_key as annotKey, n.note
+        from MGI_Note n
         where n._NoteType_key = 1008
         and n._MGIType_key = 25
-        and n._Note_key = nc._Note_key
-        order by n._Object_key, nc.sequenceNum
+        order by n._Object_key
         ''', 'auto')
 
 for r in results:
     annotKey = r['annotKey']
-    chunk = r['chunk']
+    note = r['note']
     if annotKey not in noteLookup:
         noteLookup[annotKey] = []
-    noteLookup[annotKey].append(chunk)
+    noteLookup[annotKey].append(note)
 
 db.sql('''
     select va.*, t1.term as mcvTerm, t2.term as qualifier, a1.accid as mcvID, a2.accid as mgiID
@@ -135,8 +134,8 @@ for r in results:
     note = ''
     col10 = '' # always empty as supposed to follow mcvload format
     if evidKey in noteLookup:
-        chunkList = noteLookup[evidKey]
-        note = ''.join(chunkList).strip()
+        noteList = noteLookup[evidKey]
+        note = ''.join(noteList).strip()
         note = str.replace(note, '\n', ' ')
     fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (mcvID, TAB, mgiID, TAB, jnum, TAB, evidCode, TAB, inferredFrom, TAB, qualifier, TAB, login, TAB, date, TAB, note, TAB, col10, TAB, mcvTerm, CRT))
 

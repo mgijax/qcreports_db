@@ -15,13 +15,12 @@ order by i.jnumID
 \echo ''
 
 select distinct i.jnumID, i.figureLabel
-from IMG_Image_View i, MGI_Note n, MGI_NoteChunk nc
+from IMG_Image_View i, MGI_Note n
 where i._ImageClass_key in (6481782, 6481783)
 and i._Image_key = n._Object_key
 and n._MGIType_key = 12
 and n._NoteType_key = 1023
-and n._Note_key = nc._Note_key
-and nc.note like '%(||)%'
+and n.note like '%(||)%'
 order by i.jnumID
 ;
 
@@ -113,16 +112,15 @@ order by accID
 \echo 'Multiple copyright statements for the same J#'
 \echo ''
 
-select distinct i._refs_key, trim(regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g')) as notes
+select distinct i._refs_key, trim(regexp_replace(rtrim(n.note), E'[\\n\\r]+', '', 'g')) as notes
 into temporary table notes_tmp
-from IMG_Image i, MGI_Note n, MGI_NoteChunk nc
+from IMG_Image i, MGI_Note n
 where i._ImageClass_key in (6481782, 6481783)
 and i._ImageType_key = 1072158
 and i._Image_key = n._Object_key
 and n._NoteType_key = 1023
-and n._Note_key = nc._Note_key
 and i._Refs_key not in (111326, 176309)
-group by i._Refs_key, regexp_replace(rtrim(nc.note), E'[\\n\\r]+', '', 'g') having count(*) > 1
+group by i._Refs_key, regexp_replace(rtrim(n.note), E'[\\n\\r]+', '', 'g') having count(*) > 1
 ;
 
 create index notes_idx1 on notes_tmp(_refs_key)

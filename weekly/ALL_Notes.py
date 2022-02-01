@@ -74,28 +74,22 @@ def alleleNotes():
                 and a._Allele_Status_key = t._Term_key
                 and a._CreatedBy_key = u1._User_key
                 and a._ModifiedBy_key = u2._User_key
-                and exists (select * from MGI_Note n, MGI_NoteChunk c
-                where a._Allele_key = n._Object_key
-                and n._NoteType_key = %s
+                and exists (select * from MGI_Note n 
+                        where a._Allele_key = n._Object_key 
+                        and n._NoteType_key = %s
                 ''' % (n)
 
-        db.sql(sql + '''
-                and n._Note_key = c._Note_key
-                and (lower(c.note) like '%<sup>%' or lower(c.note) like '%<sub>%'
-                ))
-                ''', None)
-
+        db.sql(sql + ''' and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%' )) ''', None)
         db.sql('create index alleles_idx1 on alleles(_Allele_key)', None)
 
         #
         # concatenate notes
         #
         results = db.sql('''
-                select a._Allele_key, c.note
-                from alleles a, MGI_Note n, MGI_NoteChunk c
+                select a._Allele_key, n.note
+                from alleles a, MGI_Note n
                 where a._Allele_key = n._Object_key
                 and n._NoteType_key = %s
-                and n._Note_key = c._Note_key
                 order by n._Note_key
                   ''' % (n), 'auto')
 
@@ -188,8 +182,7 @@ def mpNotes():
            and v._Annot_key = e._Annot_key
            and e._AnnotEvidence_key = n._Object_key
            and n._NoteType_key = 1008
-           and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'
-           ))
+           and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'))
            ''', None)
 
     db.sql('create index genotype_idx1 on genotypes(_Genotype_key)', None)
@@ -277,8 +270,8 @@ def markerNotes():
           and aa._LogicalDB_key = 1
           and aa.preferred = 1
           and exists (select * from MRK_Notes n
-          where a._Marker_key = n._Marker_key
-          and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'))
+                where a._Marker_key = n._Marker_key
+                and (lower(n.note) like '%<sup>%' or lower(n.note) like '%<sub>%'))
           ''', None)
 
     results = db.sql('''
