@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-18-5
+DATE: 02/09/2020
+STAFF: lec
+wts2-773/Adding curator column to New Allele Report
+#       modified:   weekly/ALL_NewAllele.py
+
 TAG: qcreports_db-6-0-18-4
 TAG: qcreports_db-6-0-18-3
 TAG: qcreports_db-6-0-18-2

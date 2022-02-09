@@ -67,8 +67,9 @@ results = db.sql('''
         substring(m.name,1,60) as markerName,
         substring(t1.term,1,15) as status, 
         substring(t2.term, 1, 60) as type,
-        ac.accID
-        from ALL_Allele a, MRK_Marker m, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
+        ac.accID,
+        u.login
+        from ALL_Allele a, MRK_Marker m, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac, MGI_User u
         where a._Allele_Status_key = t1._Term_key
         and a._Allele_Type_key = t2._Term_key
         and a.creation_date between %s and %s
@@ -81,14 +82,16 @@ results = db.sql('''
         and ac._LogicalDB_key = 1
         and ac.prefixPart = 'J:'
         and ac.preferred = 1
+        and a._modifiedby_key = u._user_key
         union
         select a._Allele_key, a.symbol, 
         substring(a.name,1,60) as name, 
         null,
         substring(t1.term,1,15) as status, 
         substring(t2.term, 1, 60) as type,
-        ac.accID
-        from ALL_Allele a, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac
+        ac.accID,
+        u.login
+        from ALL_Allele a, VOC_Term t1, VOC_Term t2, MGI_Reference_Assoc r, ACC_Accession ac, MGI_User u
         where a._Allele_Status_key = t1._Term_key
         and a._Allele_Type_key = t2._Term_key
         and a.creation_date between %s and %s
@@ -101,6 +104,7 @@ results = db.sql('''
         and ac._LogicalDB_key = 1
         and ac.prefixPart = 'J:'
         and ac.preferred = 1
+        and a._modifiedby_key = u._user_key
         )
         order by symbol
         ''' % (fromDate, toDate, fromDate, toDate), 'auto')
@@ -119,6 +123,7 @@ for r in results:
 
         fp.write(mgi_utils.prvalue(r['type']) + TAB)
         fp.write(mgi_utils.prvalue(r['status']) + TAB)
-        fp.write(mgi_utils.prvalue(r['accID']) + CRT)
+        fp.write(mgi_utils.prvalue(r['accID']) + TAB)
+        fp.write(mgi_utils.prvalue(r['login']) + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
