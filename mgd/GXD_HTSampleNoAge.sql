@@ -105,7 +105,7 @@ and a1._LogicalDB_key = 189
 ;
 
 \echo ''
-\echo 'Age contains "day", "week", "month", "year" and ageMin is null'
+\echo 'Age contains "day", "week", "month", "year" and ageMin < 0'
 \echo 'Relevance = Yes'
 \echo ''
 
@@ -113,7 +113,7 @@ select s.age, s.ageMin, a1.accID as exptID, s.name
 from GXD_HTSample s, ACC_Accession a1
 where s._Relevance_key = 20475450
 and s.age in ('embryonic day', 'postnatal day', 'postnatal week', 'postnatal month', 'postnatal year')
-and s.ageMin is null
+and s.ageMin < 0
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
 and a1._LogicalDB_key = 189
