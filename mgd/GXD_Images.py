@@ -699,7 +699,7 @@ def runreport(fp, assayType):
     sql += '''\nand exists (select 1 from MGI_Note n
                         where i._Image_key = n._Object_key
                         and n._NoteType_key = 1023
-                        and n._MGIType_key = 9)
+                        and n._MGIType_key = 9
                         and n.note ilike '%creative commons%')
           '''
     db.sql(sql, None)
