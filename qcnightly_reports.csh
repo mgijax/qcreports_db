@@ -43,7 +43,4 @@ foreach i (*.py)
     endif
 end
 
-# temporary
-${DBUTILS}/mgidbmigration/tr13272/go_cam.csh | tee -a ${LOG}
-
 echo `date`: End nightly QC reports | tee -a ${LOG}

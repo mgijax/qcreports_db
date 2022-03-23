@@ -74,8 +74,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/archive/alleles">New Allele Archive</A> <B>(acv)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoSubType.rpt">Alleles with molecular notes but no attribute</A> <B>(mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ExpressedSeq.rpt">Alleles with molecular notes and expressed sequence attribute</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-ExpComp.rpt">All expresses component relationship report </A> <B> (mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/PHENO_Features-MutInv.rpt">All mutation involves relationship report </A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_NewAlleleNomenTag.rpt">Review for AP:NewAlleleNomenclature tag</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Tags.rpt">AP tagged references for curation</A> <B> (mnk)</B>
@@ -202,7 +200,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA.html">QC: Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A>
 <LI><A HREF="/data/loads/go/goamouse/output/pubmed.error">QC: GOAMouse/invalid pubmedids</A> <B>(hjd)</B>
-<LI><A HREF="/data/loads/go/gomousenoctua/output/pubmed.error">QC: GOMouseNoctua/invalid pubmedids</A> <B>(hjd)</B>
+<LI><A HREF="/data/loads/go/gomousenoctua/input/gomousenoctua.error">QC: GOMouseNoctua/invalid pubmedids</A> <B>(hjd)</B>
 <LI><A HREF="https://docs.google.com/spreadsheets/d/1_Mnbsej6X2jQYt_bf7f3KbaQ5l66hWtp8QTGCNDQ_u8/edit?ts=5b50b643#gid=1424399446">QC: Underannotated genes</A> <B>(mdolan)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A>
