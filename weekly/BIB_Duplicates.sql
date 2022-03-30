@@ -9,6 +9,11 @@
 select _Refs_key, lower(btrim(title)) as title, lower(btrim(journal)) as journal
 into temp table lower_refs
 from bib_refs
+where title not like '%.'
+union
+select _Refs_key, lower(substring(btrim(title), 1, length(title) - 1)) as title, lower(btrim(journal)) as journal
+from bib_refs
+where title like '%.'
 ;
 
 create index idx1 on lower_refs(title)

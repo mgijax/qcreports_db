@@ -5,6 +5,7 @@ wts2-703/new Noctua -> GO Annotation pipeline
 #	modified:   qcnightly_reports.csh
 remove: mgidbmigration/tr13272/go_cam.csh
 remove: weekly/PHENO_Features.py per Allele Relationship PWI
+wts2-804/modify BIB_Duplicates.sql.rpt to "ignore" period at end of title
 
 TAG: qcreports_db-6-0-18-7
 TAG: qcreports_db-6-0-18-6
