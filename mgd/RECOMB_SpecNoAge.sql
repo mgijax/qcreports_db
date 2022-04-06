@@ -234,3 +234,48 @@ and a1._LogicalDB_key = 1
 and a1.prefixPart = 'MGI:'
 ;
 
+\echo ''
+\echo 'InSitu Specimens with Age either ''embryonic day'', ''postnatal day'', ''postnatal week'', ''postnatal month'', ''postnatal year'' but no age range entered'
+\echo ''
+
+select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+from GXD_Specimen s, GXD_Assay_View a
+where
+(
+s.age ~ 'embryonic day'
+or
+s.age ~ 'postnatal day'
+or
+s.age ~ 'postnatal week'
+or
+s.age ~ 'postnatal month'
+or
+s.age ~ 'postnatal year'
+)
+and s.ageMin is null
+and s._Assay_key = a._Assay_key
+and a._AssayType_key in (10,11)
+;
+
+\echo ''
+\echo 'Gel Lane with Age either ''embryonic day'', ''postnatal day'', ''postnatal week'', ''postnatal month'', ''postnatal year'' but no age range entered'
+\echo ''
+
+select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+from GXD_GelLane s, GXD_Assay_View a
+where
+(
+s.age ~ 'embryonic day'
+or
+s.age ~ 'postnatal day'
+or
+s.age ~ 'postnatal week'
+or
+s.age ~ 'postnatal month'
+or
+s.age ~ 'postnatal year'
+)
+and s.ageMin is null
+and s._Assay_key = a._Assay_key
+and a._AssayType_key in (10,11)
+;

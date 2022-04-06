@@ -1,4 +1,4 @@
-TAG: qcreports_db-6-0-18-?
+TAG: qcreports_db-6-0-18-10
 DATE: 04/06/2022
 STAFF: lec
 wts2-802/HT index custom & QC reports don't work with GEO primary ids
@@ -8,6 +8,9 @@ added logicaldb = 190
 #       modified:   GXD_HTSampleNoAge.sql
 #       modified:   GXD_HTSampleNoStructure.py
 #       modified:   GXD_HTSampleTheilerAge.py
+wts2-792/QC for GXD & Cre: specimens/gel lanes lacking an age min/max
+#       modified:   mgd/GXD_SpecNoAge.sql
+#       modified:   mgd/RECOMB_SpecNoAge.sql
 
 TAG: qcreports_db-6-0-18-9
 TAG: qcreports_db-6-0-18-8
