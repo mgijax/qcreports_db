@@ -14,7 +14,7 @@ setenv LOG ${QCLOGSDIR}/`basename $0`.log
 rm -rf ${LOG}
 touch ${LOG}
 
-echo `date`: Start nightly QC reports | tee -a ${LOG}
+echo `date`: Start nightly GXD QC reports | tee -a ${LOG}
 
 cd ${QCMGD}
 
@@ -35,4 +35,4 @@ foreach i (GXD*.py)
     endif
 end
 
-echo `date`: End nightly QC reports | tee -a ${LOG}
+echo `date`: End nightly GXD QC reports | tee -a ${LOG}
