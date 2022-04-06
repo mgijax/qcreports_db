@@ -316,6 +316,7 @@ or
 s.age ~ 'postnatal year'
 )
 and (s.ageMin is null or s.ageMin < 0)
+and s._GelControl_key = 1
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (1,2,3,4,5,6,8,9)
 ;
