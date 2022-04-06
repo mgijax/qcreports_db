@@ -252,7 +252,7 @@ s.age ~ 'postnatal month'
 or
 s.age ~ 'postnatal year'
 )
-and s.ageMin is null
+and (s.ageMin is null or s.ageMin < 0)
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 ;
@@ -275,7 +275,7 @@ s.age ~ 'postnatal month'
 or
 s.age ~ 'postnatal year'
 )
-and s.ageMin is null
+and (s.ageMin is null or s.ageMin < 0)
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 ;
