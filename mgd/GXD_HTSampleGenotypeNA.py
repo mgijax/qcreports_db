@@ -41,7 +41,7 @@ results = db.sql('''select a.accid as exptId, s.name
     and _Genotype_key = -2
     and s._Experiment_key = a._Object_key
     and a._MGIType_key = 42
-    and a._LogicalDB_key = 189
+    and a._LogicalDB_key in (189, 190)
     and a.preferred = 1 
     order by a.accid, s.name''', 'auto') 
 

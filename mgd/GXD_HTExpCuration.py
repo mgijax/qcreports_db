@@ -64,7 +64,7 @@ results = db.sql('''select a.accid, hte._Experiment_key
         where hte._CurationState_key = 20475421
         and hte._Experiment_key = a._Object_key
         and a._MGIType_key = 42
-        and a._LogicalDB_key = 189
+        and a._LogicalDB_key in (189, 190)
         and a.preferred = 1''', 'auto') # Done
 
 ct = 0

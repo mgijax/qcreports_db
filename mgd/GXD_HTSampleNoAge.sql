@@ -9,7 +9,7 @@ where s._Relevance_key = 20475450
 and (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 
 \echo ''
@@ -25,7 +25,7 @@ and s._Stage_key = t._Stage_key
 and t.stage not in (27, 28)
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 
 \echo ''
@@ -46,7 +46,7 @@ s.age ~ 'postnatal newborn [0-9]'
 )
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 
 \echo ''
@@ -63,7 +63,7 @@ and s.age like 'postnatal%'
 and (s.agemin >=21.01 AND s.agemax <=25.00)
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 
 \echo ''
@@ -82,7 +82,7 @@ and s._emapa_key = vt._Term_key
 and vt.term not in ('placenta','decidua','decidua basalis','decidua capsularis','cumulus oophorus','uterus')
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 
 \echo ''
@@ -101,7 +101,7 @@ and s._emapa_key = vt._Term_key
 and vt.term not in ('placenta','decidua','decidua basalis','decidua capsularis','cumulus oophorus')
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 
 \echo ''
@@ -116,6 +116,6 @@ and s.age in ('embryonic day', 'postnatal day', 'postnatal week', 'postnatal mon
 and (s.ageMin < 0 or s.agemin is null)
 and s._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42
-and a1._LogicalDB_key = 189
+and a1._LogicalDB_key in (189, 190)
 ;
 

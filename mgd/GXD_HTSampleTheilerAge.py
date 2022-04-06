@@ -49,7 +49,7 @@ results = db.sql('''select distinct a.accID as exptId, t.*
     from temp1 t, ACC_Accession a
     where t._Experiment_key = a._Object_key
     and a._MGIType_key = 42
-    and a._LogicalDB_key = 189
+    and a._LogicalDB_key in (189, 190)
     and a.preferred = 1
     order by a.accID, t.name''', 'auto') 
 
@@ -101,7 +101,7 @@ results = db.sql('''select a.accid as exptId, s._Experiment_key, s.name, s.age, 
     and t.stage not in (27, 28)
     and s._Experiment_key = a._Object_key
     and a._MGIType_key = 42
-    and a._LogicalDB_key = 189
+    and a._LogicalDB_key in (189, 190)
     and a.preferred = 1
     order by a.accID, s.name''', 'auto')
 
