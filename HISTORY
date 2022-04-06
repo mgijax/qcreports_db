@@ -1,3 +1,14 @@
+TAG: qcreports_db-6-0-18-?
+DATE: 04/06/2022
+STAFF: lec
+wts2-802/HT index custom & QC reports don't work with GEO primary ids
+added logicaldb = 190
+#       modified:   GXD_HTExpCuration.py
+#       modified:   GXD_HTSampleGenotypeNA.py
+#       modified:   GXD_HTSampleNoAge.sql
+#       modified:   GXD_HTSampleNoStructure.py
+#       modified:   GXD_HTSampleTheilerAge.py
+
 TAG: qcreports_db-6-0-18-9
 TAG: qcreports_db-6-0-18-8
 DATE: 03/23/2022
