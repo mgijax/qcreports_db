@@ -132,6 +132,7 @@ db.sql(''' select w.*, e._celltype_term_key
         from work w, gxd_expression e
         where w._assay_key = e._assay_key
         and w.parentKey = e._EMAPA_Term_key
+        and w._stage_key = e._stage_key
         ''', None)
 
 db.sql('create index work2_idx1 on work2(_celltype_term_key)', None)

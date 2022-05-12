@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-18-14
+DATE: 05/12/2022
+STAFF: sc 
+mgd/GXD_ChildExpNotParent.py - bug fix
+WTS2-868 - something is scrambled on the GXD_ChildExpNotParent.rpt
+
 TAG: qcreports_db-6-0-18-13
 TAG: qcreports_db-6-0-18-12
 DATE: 04/07/2022
