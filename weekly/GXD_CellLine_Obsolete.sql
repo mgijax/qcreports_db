@@ -2,7 +2,7 @@
 \echo 'GXD Results & Cre that contains obsolete CL terms'
 \echo ''
 
-select distinct bc.jnumid, ga.accid, s.specimenlabel, t.term, va.accid, t._term_key
+select distinct bc.jnumid, ga.accid, s.specimenlabel, t.term, va.accid
 from GXD_Assay a, GXD_Specimen s, GXD_InSituResult r, GXD_ISResultCellType c, VOC_Term t,
         BIB_Citation_Cache bc, ACC_Accession ga, ACC_Accession va
 where a._assay_key = s._assay_key
@@ -25,7 +25,7 @@ order by term
 \echo 'GXD HT Indexing that contains obsolete CL terms'
 \echo ''
 
-select distinct ga.accid, c.name, t.term, va.accid, t._term_key
+select distinct ga.accid, c.name, t.term, va.accid
 from GXD_HTExperiment a, GXD_HTSample c, VOC_Term t, ACC_Accession ga, ACC_Accession va
 where a._experiment_key = c._experiment_key
 and c._celltype_term_key = t._term_key
