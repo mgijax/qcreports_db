@@ -67,10 +67,10 @@ for r in results:
 # read in all annotations that contains terms of interest
 
 db.sql('''
-        select distinct p.value, aa.accID, m.symbol
+        select distinct p.value, aa.accID, m.symbol, u.login
         into temporary table annotations 
         from VOC_Annot a, VOC_Evidence e, VOC_Evidence_Property p, VOC_Term t,
-                ACC_Accession aa, MRK_Marker m
+                ACC_Accession aa, MRK_Marker m, MGI_User u
         where a._AnnotType_key = 1000 
         and a._Annot_key = e._Annot_key 
         and e._AnnotEvidence_key = p._AnnotEvidence_key
@@ -96,6 +96,7 @@ db.sql('''
         and aa._MGIType_key = 13  
         and aa.preferred = 1 
         and a._Object_key = m._Marker_key 
+        and e._ModifiedBy_key = u._User_key
         order by p.value
         ''', None)
 
@@ -116,7 +117,8 @@ for r in results:
                 if id not in mgiLookup:
                         fp.write(r['accID'] + reportlib.TAB + \
                                 r['symbol'] + reportlib.TAB + \
-                                r['value'] + reportlib.CRT)
+                                r['value'] + reportlib.TAB + \
+                                r['login'] + reportlib.CRT)
                         rows = rows + 1 
 
 fp.write('\n(%d rows affected)\n' % (rows))
