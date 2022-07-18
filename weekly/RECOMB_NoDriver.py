@@ -19,7 +19,6 @@
 #       JNum of recombinase allele
 #	Allele MGI ID
 #	Allele symbol
-#       Curator
 #
 #	Sort: JNum newest to oldest, allele name alpha
 #
@@ -54,17 +53,15 @@ fp = reportlib.init(sys.argv[0], 'Allele Recombinase Check', os.environ['QCOUTPU
 fp.write('\t\texcludes allele status: deleted\n')
 fp.write('\t\tsorted by JNum, newest to oldest, then by allele name\n\n')
 
-fp.write('Alleles with Recombinase Attribute tag Without Driver Gen' + CRT)
+fp.write('Alleles with Recombinase Attribute tag Without Driver Gene' + CRT)
 fp.write(str.ljust('JNum', 15) + \
         str.ljust('Allele ID', 15) + \
-        str.ljust('Allele Symbol', 50) + \
-        str.ljust('Curator', 15) + CRT*2)
+        str.ljust('Allele Symbol', 50) + CRT*2)
 
 results = db.sql('''
-        select a2.accid as alleleID, a._Allele_key, a.symbol, a.name, ra._Refs_key, a1.accid as jnumID, u.login
-        from ALL_Allele a, MGI_Reference_Assoc ra, MGI_RefAssocType at, ACC_Accession a1, ACC_Accession a2, MGI_User u
+        select a2.accid as alleleID, a._Allele_key, a.symbol, a.name, ra._Refs_key, a1.accid as jnumID
+        from ALL_Allele a, MGI_Reference_Assoc ra, MGI_RefAssocType at, ACC_Accession a1, ACC_Accession a2
         where a._Allele_Status_key != 847112 --deleted
-        and a._ModifiedBy_key = u._User_key
         and a._Allele_key = ra._Object_key
         and ra._MGIType_key = 11
         and ra._refassocType_key = 1011 --general
@@ -97,21 +94,18 @@ results = db.sql('''
 for r in results:
     fp.write(str.ljust(r['jnumID'], 15) + \
              str.ljust(r['alleleID'], 15) + \
-             str.ljust(r['symbol'], 50) + \
-             str.ljust(r['login'], 50) + CRT)
+             str.ljust(r['symbol'], 50) + CRT)
 fp.write(CRT + 'Number of Alleles: ' + str(len(results)) + CRT*2)
 
 fp.write('Alleles with Driver Gene Without Recombinase Attribute tag' + CRT)
 fp.write(str.ljust('JNum', 15) + \
         str.ljust('Allele ID', 15) + \
-        str.ljust('Allele Symbol', 50) + \
-        str.ljust('Curator', 15) + CRT*2)
+        str.ljust('Allele Symbol', 50) + CRT*2)
 
 results = db.sql('''
-        select a2.accid as alleleID, a._Allele_key, a.symbol, a.name, ra._Refs_key, a1.accid as jnumID, u.login
-        from ALL_Allele a, MGI_Reference_Assoc ra, MGI_RefAssocType at, ACC_Accession a1, ACC_Accession a2, MGI_User u
+        select a2.accid as alleleID, a._Allele_key, a.symbol, a.name, ra._Refs_key, a1.accid as jnumID
+        from ALL_Allele a, MGI_Reference_Assoc ra, MGI_RefAssocType at, ACC_Accession a1, ACC_Accession a2
         where a._Allele_Status_key != 847112 --deleted
-        and a._ModifiedBy_key = u._User_key
         and a._Allele_key = ra._Object_key
         and ra._MGIType_key = 11
         and ra._refassocType_key = 1011 --general
@@ -143,8 +137,7 @@ results = db.sql('''
 for r in results:
     fp.write(str.ljust(r['jnumID'], 15) + \
              str.ljust(r['alleleID'], 15) + \
-             str.ljust(r['symbol'], 50) + \
-             str.ljust(r['login'], 50) + CRT)
+             str.ljust(r['symbol'], 50) + CRT)
 fp.write(CRT + 'Number of Alleles: ' + str(len(results)) + CRT)
 
 reportlib.finish_nonps(fp)
