@@ -303,7 +303,7 @@ be used at times to test reports for <I>future</I> public consumption.)
     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_5.rpt">QTL markers that are in Nomen and have not been broadcast</A> <B>(jrecla)</B>
     <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Literature Triage QTL Report</A> <B>(jrecla)</B>
     <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A> <B>(jrecla)</B>
-     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidate.rpt">QTL-to-Candidate Gene Relationships</A> <B>(jrecla)</B>
+     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidateGene.rpt">QTL-to-Candidate Gene Relationships</A> <B>(jrecla)</B>
     </OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(jrecla)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM.rpt">Genes/Pseudogenes with C4AM Coordinates from provider collection “MGI"</A> <B>(yz)</B>
