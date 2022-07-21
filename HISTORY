@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-21-4
+DATE: 07/21/2022
+STAFF: sc
+wts2-944 created ondemand directory
+converted the WTS2-673 customSQL report to an on demand QC report:
+BIB_ArticlesByYear.csh/BIB_ArticlesByYear.py
+
 TAG: qcreports_db-6-0-21-3
 TAG: qcreports_db-6-0-21-2
 DATE: 07/19/2022
