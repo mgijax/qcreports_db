@@ -27,6 +27,6 @@ endif
 
 echo `date`: Start BIB_ArticlesByYear.csh | tee -a ${LOG}
 
-python ./BIB_ArticlesByYear.py -y $1 > ${QCOUTPUTDIR}/BIB_ArticlesByYear.rpt
+ ${PYTHON} ./BIB_ArticlesByYear.py -y $1 > ${QCOUTPUTDIR}/BIB_ArticlesByYear.rpt
 
 echo `date`: End BIB_ArticlesByYear.csh | tee -a ${LOG}
