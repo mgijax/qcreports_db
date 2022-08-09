@@ -80,10 +80,10 @@ def monthlyCounts():
         a._AssayType_key, 
         count(*) as results
         into temporary table gelresults 
-        from GXD_Assay a, GXD_GelLane l, GXD_GelLaneStructure gls 
+        from GXD_Assay a, GXD_GelLane l, GXD_GelLaneStructure gls , VOC_Term t
         where a._AssayType_key in (1,2,3,4,5,6,8,9) 
         and a._Assay_key = l._Assay_key 
-        and l._GelControl_key = 1 
+        and l._GelControl_key = t._Term_key and t.term = 'No'
         and l._GelLane_key = gls._GelLane_key 
         group by date_part('year', a.creation_date), date_part('month', a.creation_date), a._AssayType_key
         ''', None)

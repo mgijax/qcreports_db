@@ -12,7 +12,7 @@ order by age;
 \echo ''
 
 select distinct age, agemin, agemax 
-from gxd_gellane
-where _gelcontrol_key = 1
+from gxd_gellane, voc_term t
+where _gelcontrol_key = t._term_key and t.term = 'No'
 order by age;
 

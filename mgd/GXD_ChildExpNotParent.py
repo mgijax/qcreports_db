@@ -89,84 +89,107 @@ fp.write(CRT)
 #
 
 db.sql('''
-        SELECT DISTINCT
+select distinct 
+        a._Assay_key, 
+        sp._Specimen_key as sp1Key, 
+        sp2._Specimen_key as sp2Key, 
+        r._Result_key as r1Key, 
+        r2._Result_key as r2Key
+        into temporary table work1
+        from GXD_Assay a,
+             GXD_Specimen sp,
+             GXD_Specimen sp2,
+             GXD_InSituResult r,
+             GXD_InSituResult r2,
+             VOC_Term rt,
+             VOC_Term r2t
+        where a._AssayType_key in (1,2,3,4,5,6,8,9)
+              and a._Refs_key not in (81462,81463,92242,94290,102744,124081,154591,154591,163316,172505)
+              and a._Assay_key = sp._Assay_key
+              and sp._Specimen_key = r._Specimen_key
+              and r._Strength_key = rt._term_key and rt.term = 'Absent'
+              and sp._Assay_key = sp2._Assay_key
+              and sp._Genotype_key = sp2._Genotype_key
+              and sp.age = sp2.age
+              and sp2._Specimen_key = r2._Specimen_key
+              and r2._Strength_key = r2t._term_key and r2t.term not in ('Absent', 'Not Applicable', 'Not Specified')
+              and sp._Genotype_key = sp2._Genotype_key 
+              and sp.age = sp2.age 
+        ''', None)
+
+db.sql('create index work1_idx1 on work1(_Assay_key)', None)
+db.sql('create index work1_idx2 on work1(sp1Key)', None)
+db.sql('create index work1_idx3 on work1(sp2Key)', None)
+db.sql('create index work1_idx4 on work1(r1Key)', None)
+db.sql('create index work1_idx5 on work1(r2Key)', None)
+
+db.sql('''
+        select distinct
                a._Assay_key,
                s._EMAPA_Term_key as parentKey, 
                s._Stage_key,
                s2._EMAPA_Term_key as childKey,
-               r2._Result_key
-        INTO TEMPORARY TABLE work 
-        FROM GXD_InSituResult r, GXD_InSituResult r2, 
+               a.r2Key
+        into temporary table work2
+        from work1 a,
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
-             GXD_Specimen sp, GXD_Specimen sp2, 
-             GXD_Assay a,
              DAG_Closure c, VOC_Term_EMAPS emaps_p, VOC_Term_EMAPS emaps_c
-        WHERE r._Strength_key = 1 
-              and r._Result_key = s._Result_key 
-              and r._Specimen_key = sp._Specimen_key 
-              and sp._Assay_key = a._Assay_key 
-              and a._AssayType_key in (1,2,3,4,5,6,8,9) 
-              and r2._Strength_key > 1 
-              and r2._Result_key = s2._Result_key 
-              and r2._Specimen_key = sp2._Specimen_key 
-              and sp._Assay_key = sp2._Assay_key 
-              and sp._Genotype_key = sp2._Genotype_key 
-              and sp.age = sp2.age 
+        where a.r1Key = s._Result_key
+              and a.r2Key = s2._Result_key
               and s._Stage_key = s2._Stage_key
               and s._EMAPA_Term_key = emaps_p._EMAPA_Term_key
               and emaps_p._Term_key = c._AncestorObject_key
               and c._MGIType_key = 13
               and c._DescendentObject_key = emaps_c._Term_key
               and emaps_c._EMAPA_Term_key = s2._EMAPA_Term_key
-              and a._Refs_key not in (81462,81463,92242,94290,102744,124081,154591,154591,163316,172505)
         ''', None)
 
-db.sql('create index work_idx1 on work(_Assay_key)', None)
-db.sql('create index work_idx2 on work(parentKey)', None)
-db.sql('create index work_idx3 on work(childKey)', None)
-db.sql('create index work_idx4 on work(_Stage_key)', None)
+db.sql('create index work2_idx1 on work2(_Assay_key)', None)
+db.sql('create index work2_idx2 on work2(parentKey)', None)
+db.sql('create index work2_idx3 on work2(childKey)', None)
+db.sql('create index work2_idx4 on work2(_Stage_key)', None)
 
 # bring in the cell type term key associated with the parent structure, which can be null
 db.sql(''' select w.*, e._celltype_term_key
-        into temporary table work2
-        from work w, gxd_expression e
+        into temporary table work3
+        from work2 w, gxd_expression e
         where w._assay_key = e._assay_key
         and w.parentKey = e._EMAPA_Term_key
         and w._stage_key = e._stage_key
         ''', None)
 
-db.sql('create index work2_idx1 on work2(_celltype_term_key)', None)
+db.sql('create index work3_idx1 on work3(_celltype_term_key)', None)
 
 # get the term if the celltype term key is not null
-db.sql(''' select w2.*, t.term as celltypeTerm
-        into temporary table work3
-        from work2 w2
-        left outer join voc_term t on (w2._celltype_term_key = t._term_key)''', None)
+db.sql(''' select w.*, t.term as celltypeTerm
+        into temporary table work4
+        from work3 w
+        left outer join voc_term t on (w._celltype_term_key = t._term_key)''', None)
 
-db.sql('create index work3_idx1 on work3(_Assay_key)', None)
-db.sql('create index work3_idx2 on work3(parentKey)', None)
-db.sql('create index work3_idx3 on work3(childKey)', None)
-db.sql('create index work3_idx4 on work3(_Stage_key)', None)
+db.sql('create index work4_idx1 on work4(_Assay_key)', None)
+db.sql('create index work4_idx2 on work4(parentKey)', None)
+db.sql('create index work4_idx3 on work4(childKey)', None)
+db.sql('create index work4_idx4 on work4(_Stage_key)', None)
 
 results = db.sql('''
-        SELECT DISTINCT 
+        select distinct 
                a.accID as mgiID, 
                j.accID as jnumID, 
                t.stage, 
                substring(d.term,1,50) as pterm, 
                substring(d2.term,1,50) as cterm,
-               substring(w3.celltypeTerm,1,50) as celltype
-        FROM work3 w3, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
+               substring(w.celltypeTerm,1,50) as celltype
+        from work4 w, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
              VOC_Term d, VOC_Term d2, GXD_TheilerStage t
-        WHERE w3._Assay_key = ga._Assay_key
+        where w._Assay_key = ga._Assay_key
               and ga._Assay_key = a._Object_key 
               and a._MGIType_key = 8 
               and ga._Refs_key = j._Object_key 
               and j._MGIType_key = 1 
               and j.prefixPart = 'J:' 
-              and w3.parentKey = d._Term_key 
-              and w3.childKey = d2._Term_key
-              and w3._Stage_key = t._Stage_key
+              and w.parentKey = d._Term_key 
+              and w.childKey = d2._Term_key
+              and w._Stage_key = t._Stage_key
               order by mgiID desc, t.stage, pterm, cterm
         ''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))

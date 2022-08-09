@@ -106,8 +106,8 @@ order by jnumID, mgiID, specimenLabel
 
 select g._GelLane_key
 INTO TEMPORARY TABLE gmissingstructs
-from GXD_GelLane g
-where g._GelControl_key = 1
+from GXD_GelLane g, VOC_Term t
+where g._GelControl_key = t._Term_key and t.term = 'No'
 and not exists
 (select 1 from GXD_GelLaneStructure s
 where g._GelLane_key = s._GelLane_key)
@@ -127,8 +127,8 @@ order by jnumID, mgiID, laneLabel
 
 select g._GelLane_key
 INTO TEMPORARY TABLE gmissingbands
-from GXD_GelLane g
-where g._GelControl_key = 1
+from GXD_GelLane g, VOC_Term t
+where g._GelControl_key = t._Term_key and t.term = 'No'
 and not exists
 (select 1 from GXD_GelBand b
 where g._GelLane_key = b._GelLane_key)

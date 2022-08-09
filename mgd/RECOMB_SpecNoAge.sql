@@ -6,8 +6,8 @@ where (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 
 select s._Assay_key, substring(s.laneLabel, 1, 50) as laneLabel
 INTO TEMPORARY TABLE spec2
-from GXD_GelLane s
-where s._GelControl_key = 1
+from GXD_GelLane s, VOC_Term t
+where s._GelControl_key = t._Term_key and t.term = 'No'
 and (s.age like 'Not Applicable%' or s.age like 'Not Specified%')
 ;
 
@@ -168,8 +168,8 @@ where s._Specimen_key = t._Specimen_key)
 
 select distinct i._GelLane_key
 INTO TEMPORARY TABLE temp4
-from GXD_GelLane i, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t
-where i._GelControl_key = 1
+from GXD_GelLane i, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t, VOC_Term tt
+where i._GelControl_key = tt._Term_key and tt.term = 'No'
 and i._GelLane_key = r._GelLane_key
 and r._EMAPA_Term_key = s._Term_key
 and r._Stage_key = t._Stage_key
@@ -180,10 +180,10 @@ create index temp4_idx on temp4(_GelLane_key )
 ;
 
 select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
-from GXD_GelLane s, GXD_Assay_View a
+from GXD_GelLane s, GXD_Assay_View a, VOC_Term t
 where s.age like 'postnatal%'
 and (agemin >=21.01 AND agemax <=25.00)
-and s._GelControl_key = 1
+and s._GelControl_key = t._Term_key and t.term = 'No'
 and s._Assay_key = a._Assay_key
 and a._AssayType_key in (10,11)
 and not exists (select 1 from temp4 t

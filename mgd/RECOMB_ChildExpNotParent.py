@@ -101,13 +101,14 @@ db.sql('''
              GXD_ISResultStructure s, GXD_ISResultStructure s2, 
              GXD_Specimen sp, GXD_Specimen sp2,
              GXD_Assay a,
-             DAG_Closure c, VOC_Term_EMAPS emaps_p, VOC_Term_EMAPS emaps_c
-        WHERE r._Strength_key = 1 
+             DAG_Closure c, VOC_Term_EMAPS emaps_p, VOC_Term_EMAPS emaps_c,
+             VOC_Term rt, VOC_Term r2t
+        WHERE r._Strength_key = rt._term_key and rt.term = 'Absent'
               and r._Result_key = s._Result_key 
               and r._Specimen_key = sp._Specimen_key 
               and sp._Assay_key = a._Assay_key 
               and a._AssayType_key in (10,11) 
-              and r2._Strength_key > 1 
+              and r2._Strength_key = r2t._term_key and r2t.term not in ('Absent', 'Not Applicable', 'Not Specified')
               and r2._Result_key = s2._Result_key 
               and r2._Specimen_key = sp2._Specimen_key 
               and sp._Assay_key = sp2._Assay_key 
