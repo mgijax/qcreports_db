@@ -1,8 +1,10 @@
+TAG: qcreports_db-6-0-22-3
 TAG: qcreports_db-6-0-22-2
 TAG: qcreports_db-6-0-22-1
-DATE: 08/25/2022
+DATE: 08/25/2022, 08/31/2022
 STAFF: lec
 wts2-761/MGD db cleanup - gxd vocabs -> voc_vocab/voc_term
+wts2-761/use keys for Absent/Not Applicable query
 
 TAG: qcreports_db-6-0-21-5
 TAG: qcreports_db-6-0-21-4
