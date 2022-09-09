@@ -358,29 +358,6 @@ def writeCount(name):
        results3 = db.sql(byAnnot1 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
 
-   elif name == "Curator":
-        # not in IEA references
-        # not like "GOA"
-        # not in rest of GO GAFs
-        # not in evidence codes (see above)
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
-                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
-                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
-                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('not in ' + GO_CLAUSE) + \
-                        byCreatedBy % ('not like ' + GOA_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-
    elif name == "GOA":
         # not in IEA references
         # in "GOA_%" user
@@ -570,7 +547,6 @@ writeCount('Protein Coding')
 writeCount('Non-Protein Coding')
 writeCount('Total Non-IEA')
 writeCount('GOC')
-writeCount('Curator')
 writeCount('NOCTUA')
 writeCount('GOA')
 writeCount('GO/Rat')
