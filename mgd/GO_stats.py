@@ -114,6 +114,7 @@ GORAT_CLAUSE="'RGD'"
 REFGENOME_CLAUSE="('GO_Central')"
 GO_CLAUSE="('GOC', 'UniProtKB', 'GO_Central') "
 NOCTUA_CLAUSE="'NOCTUA_%'"
+SYNGO_CLAUSE="'NOCTUA_SynGO'"
 
 byReference = 'and e._Refs_key %s'
 byCreatedBy = 'and u.login %s'
@@ -491,22 +492,40 @@ def writeCount(name):
        results3 = db.sql(byAnnot1 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
        results4 = db.sql(byAnnot2 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
 
-   elif name == "NOCTUA":
+   elif name == "NOCTUA_NonSynGO":
         # not in IEA references
         # loaded by gomousenoctua load
         # not in evidence codes (see above)
 
        results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
        results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE), \
+                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+
+   elif name == "NOCTUA_SynGO":
+        # not in IEA references
+        # loaded by gomousenoctua load
+        # not in evidence codes (see above)
+
+       results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+       results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
+                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
+       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
+                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
                         byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
 
 
@@ -547,7 +566,8 @@ writeCount('Protein Coding')
 writeCount('Non-Protein Coding')
 writeCount('Total Non-IEA')
 writeCount('GOC')
-writeCount('NOCTUA')
+writeCount('NOCTUA_NonSynGO')
+writeCount('NOCTUA_SynGO')
 writeCount('GOA')
 writeCount('GO/Rat')
 writeCount('GOA/Human')
