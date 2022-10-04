@@ -22,5 +22,5 @@ and exists (select 1 from bib_workflow_status s
         and s._group_key = 31576665
         and s._status_key in (31576671, 31576674, 31576673)
         )
-order by t2.term, t.term desc, t3.term asc, a.accid
+order by t2.term, t.term desc, t3.term desc, a.accid
 
