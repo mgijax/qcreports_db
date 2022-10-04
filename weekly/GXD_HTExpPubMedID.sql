@@ -12,7 +12,8 @@ and e._experiment_key = a._object_key
 and a._mgitype_key = 42
 and a._logicaldb_key in (189,190)
 and a.preferred = 1
-and p._propertytype_key = 1002
+and p._propertytype_key = 1002 
+and p._propertyterm_key = 20475430      -- PubMed ID
 and e._experiment_key = p._object_key
 and p.value = c.pubmedid
 and exists (select 1 from bib_workflow_status s
