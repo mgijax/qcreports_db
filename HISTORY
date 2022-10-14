@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-22-7
+DATE: 10/14/2022
+STAFF: lec
+wts2-1009/Additional GXD QC report for Probes
+mgd/GXD_ProbeAntibody.sql
+monthly/PRB_Reference.sql
+
 TAG: qcreports_db-6-0-22-6
 DATE: 10/04/2022
 STAFF: lec
