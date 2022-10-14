@@ -46,11 +46,20 @@ order by pp.name
 \echo 'Probes/Amplification Primers with No Markers in Common'
 \echo ''
 
-select pa.accid as mgiid_of_probe, p.name as name_of_probe, pamp.accid as mgdiid_of_primer, amp.name as name_of_primer, 
+select pa.accid as mgiid_of_probe, p.name as name_of_probe, pamp.accid as mgdiid_of_primer, amp.name as name_of_primer,
 m1.symbol as symbol_of_probe, m2.symbol as symbol_of_primer
 from prb_probe p, acc_accession pa, prb_marker pm, mrk_marker m1,
 prb_probe amp, acc_accession pamp, prb_marker mamp, mrk_marker m2
-where p._probe_key = pm._probe_key
+where p.ampprimer is not null
+and not exists (select 1 from prb_marker pm, mrk_marker m1, prb_probe amp, prb_marker mamp, mrk_marker m2
+        where p._probe_key = pm._probe_key
+        and pm._marker_key = m1._marker_key
+        and p.ampPrimer = amp._probe_key
+        and amp._probe_key = mamp._probe_key
+        and mamp._marker_key = m2._marker_key
+        and m1.symbol = m2.symbol
+        )
+and p._probe_key = pm._probe_key
 and p._probe_key = pa._object_key
 and pa._mgitype_key = 3
 and pa._logicaldb_key = 1
