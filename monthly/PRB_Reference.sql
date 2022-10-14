@@ -71,7 +71,7 @@ and pamp._logicaldb_key = 1
 and amp._probe_key = mamp._probe_key
 and mamp._marker_key = m2._marker_key
 and m1.symbol != m2.symbol
-order by p.name
+order by mgiid_of_probe desc
 ;
 
 select distinct c._Probe_key, s._Sequence_key, c._CreatedBy_key, c.annotation_date
