@@ -18,4 +18,4 @@
 # field 6: creation date
 #
 BIB_BioRxiv.py|BioRxiv articles and published articles with the same title||sc|Jacqueline Finger|2021-04-07
-GXD_HT_ExperimentNote.py|GXD HT Experiment Note Search|This report would display searches of the Experiment Note field.  Although I can search this field in the pwi module, it would be helpful to get the results as a report (rather than having to toggle through them).\r\n\r\nReport name: GXD HT Experiment Note Search\r\n\r\nSort:\r\n\r\nPrimary: Experiment Type\r\n\r\nSecondary: Evaluation State\r\n\r\nTertiary: Experiment ID|lec|Connie Smith|2022-10-03
+GXD_HTExperimentByNote.py|GXD HT Experiment Note Search|This report would display searches of the Experiment Note field.  Although I can search this field in the pwi module, it would be helpful to get the results as a report (rather than having to toggle through them).\r\n\r\nReport name: GXD HT Experiment Note Search\r\n\r\nSort:\r\n\r\nPrimary: Experiment Type\r\n\r\nSecondary: Evaluation State\r\n\r\nTertiary: Experiment ID|lec|Connie Smith|2022-10-03
