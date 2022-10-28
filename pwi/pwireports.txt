@@ -1,0 +1,21 @@
+#
+# purpose:
+#       this file contains the list of python reports used by the pwi/custom report index page:
+#               http://prodwww.informatics.jax.org/pwi/report/index
+#
+#       create:  add python report (xxxx.py), add xxxx.py row to this file
+#       update:  modify this file and/or the xxxx.py itself
+#       delete:  remove python report (xxxx.py) and remove row from this file
+#
+#       to test the changes, refresh the associated pwi/custom report index page and run the python report
+#
+# pipe-delimited file
+# field 1: python name  : the specific *py file that will be run from the PWI/Custom Report Index/Report Detail/Run or Download button
+# field 2: display name
+# field 3: description
+# field 4: created by
+# field 5: requested by
+# field 6: creation date
+#
+BIB_BioRxiv.py|BioRxiv articles and published articles with the same title||sc|Jacqueline Finger|2021-04-07
+GXD_HT_ExperimentNote.py|GXD HT Experiment Note Search|This report would display searches of the Experiment Note field.  Although I can search this field in the pwi module, it would be helpful to get the results as a report (rather than having to toggle through them).\r\n\r\nReport name: GXD HT Experiment Note Search\r\n\r\nSort:\r\n\r\nPrimary: Experiment Type\r\n\r\nSecondary: Evaluation State\r\n\r\nTertiary: Experiment ID|lec|Connie Smith|2022-10-03
