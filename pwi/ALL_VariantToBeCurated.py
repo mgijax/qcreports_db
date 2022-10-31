@@ -56,6 +56,9 @@ and a._object_key = t2._allele_key
 and al._allele_key = t2._allele_key order by al.symbol
 ''', 'auto')
 
+sys.stdout.write('accid' + TAB)
+sys.stdout.write('symbol' + CRT)
+
 for r in results:
         sys.stdout.write(r['accid'] + TAB)
         sys.stdout.write(r['symbol'] + CRT)

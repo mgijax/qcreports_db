@@ -41,6 +41,10 @@ where not exists (select 1 from bib_citation_cache c where s.list = c.pubmedid)
 order by relevanceterm
 ''' % (value1, value2), 'auto')
 
+sys.stdout.write('pubmedID' + TAB)
+sys.stdout.write('jnumID' + TAB)
+sys.stdout.write('relevanceterm' + CRT)
+
 for r in results:
         sys.stdout.write(r['pubmedID'] + TAB)
 

@@ -46,6 +46,11 @@ group by 1, 2, 3, 4
 order by t2.term, t.term, a.accid
 ''' % (value), 'auto')
 
+sys.stdout.write('ExperimentID' + TAB)
+sys.stdout.write('experimenttype' + TAB)
+sys.stdout.write('relevance' + TAB)
+sys.stdout.write('note' + CRT)
+
 for r in results:
         sys.stdout.write(r['ExperimentID'] + TAB)
         sys.stdout.write(r['experimenttype'] + TAB)

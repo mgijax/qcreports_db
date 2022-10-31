@@ -66,6 +66,10 @@ and a.prefixPart = 'MGI:'
 order by aa.symbol
 ''', 'auto')
 
+sys.stdout.write('alleleID' + TAB)
+sys.stdout.write('alleleSymbol' + TAB)
+sys.stdout.write('curatorNote' + CRT)
+
 for r in results:
         sys.stdout.write(r['alleleID'] + TAB)
         sys.stdout.write(r['alleleSymbol'] + TAB)

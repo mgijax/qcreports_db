@@ -73,6 +73,15 @@ from curatedNotReviewed cnr left outer join curatorNotes cn on(cnr._variant_key 
 order by cnr.alleleSymbol
 ''', 'auto')
 
+sys.stdout.write('alleleSymbol' + TAB)
+sys.stdout.write('alleleID' + TAB)
+sys.stdout.write('start' + TAB)
+sys.stdout.write('end' + TAB)
+sys.stdout.write('reference' + TAB)
+sys.stdout.write('variant' + TAB)
+sys.stdout.write('createdBy' + TAB)
+sys.stdout.write('curatorNote' + CRT)
+
 for r in results:
         sys.stdout.write(r['alleleSymbol'] + TAB)
         sys.stdout.write(r['alleleID'] + TAB)

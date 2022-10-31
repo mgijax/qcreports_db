@@ -44,6 +44,15 @@ and hts._Relevance_key = t2._Term_key
 and hts._Stage_key = ts._Stage_key      
 ''' % (value), 'auto')
 
+sys.stdout.write('expID' + TAB)
+sys.stdout.write('sampleName' + TAB)
+sys.stdout.write('relevance' + TAB)
+sys.stdout.write('sampleAge' + TAB)
+sys.stdout.write('emapaTerm' + TAB)
+sys.stdout.write('stage' + TAB)
+sys.stdout.write('cellTypeTerm' + TAB)
+sys.stdout.write('sampleNote' + CRT)
+
 for r in results:
         sys.stdout.write(r['expID'] + TAB)
         sys.stdout.write(r['sampleName'] + TAB)

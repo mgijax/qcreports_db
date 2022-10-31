@@ -27,6 +27,9 @@ and a1.preferred = 1
 and a1._LogicalDB_key in (189,190) --arrayExp, geo order by a1.accid
 ''' % (value), 'auto')
 
+sys.stdout.write('expID' + TAB)
+sys.stdout.write('title' + CRT)
+
 for r in results:
         sys.stdout.write(r['expID'] + TAB)
         sys.stdout.write(r['title'] + CRT)

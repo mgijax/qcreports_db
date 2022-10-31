@@ -96,6 +96,15 @@ r.term as biorxivTag
 from dupeswithinfo d left outer join refsbiorxivtag r on (d.journalRefsKey = r._refs_key )
 ''', 'auto')
 
+sys.stdout.write('biorxivMGI' + TAB)
+sys.stdout.write('journalMGI' + TAB)
+sys.stdout.write('biorxivTitle' + TAB)
+sys.stdout.write('journal' + TAB)
+sys.stdout.write('journalTitle' + TAB)
+sys.stdout.write('biorxivAuthors' + TAB)
+sys.stdout.write('journalAuthors' + TAB)
+sys.stdout.write('biorxivTag' + CRT)
+
 for r in results:
         sys.stdout.write(r['biorxivMGI'] + TAB)
         sys.stdout.write(r['journalMGI'] + TAB)

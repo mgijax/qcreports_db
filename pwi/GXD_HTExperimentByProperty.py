@@ -49,6 +49,13 @@ and hte._curationstate_key = t3._term_key
 order by t3.term, t2.term, a1.accid
 ''' % (value), 'auto')
 
+sys.stdout.write('expID' + TAB)
+sys.stdout.write('title' + TAB)
+sys.stdout.write('evaluationState' + TAB)
+sys.stdout.write('curationState' + TAB)
+sys.stdout.write('propertyName' + TAB)
+sys.stdout.write('propertyValue' + CRT)
+
 for r in results:
         sys.stdout.write(r['expID'] + TAB)
         sys.stdout.write(r['title'] + TAB)

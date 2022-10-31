@@ -50,6 +50,13 @@ order by t.term desc, a.accid, rs.accid
 limit 5000
 ''' % (value), 'auto')
 
+sys.stdout.write('ExperimentID' + TAB)
+sys.stdout.write('experimenttype' + TAB)
+sys.stdout.write('SampleID' + TAB)
+sys.stdout.write('relevance' + TAB)
+sys.stdout.write('keys' + TAB)
+sys.stdout.write('values' + CRT)
+
 for r in results:
         sys.stdout.write(r['ExperimentID'] + TAB)
         sys.stdout.write(r['experimenttype'] + TAB)

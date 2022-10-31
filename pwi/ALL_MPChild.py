@@ -63,6 +63,16 @@ OR exists (select 1 from acc_accession a, dag_closure dc
 order by allelepairs, genotype_id, annotatedTerm, jnum_id, mn._note_key 
 ''' % (value, value), 'auto')
 
+sys.stdout.write('genotype_id' + TAB)
+sys.stdout.write('allelepairs' + TAB)
+sys.stdout.write('geneticBackground' + TAB)
+sys.stdout.write('jnum_id' + TAB)
+sys.stdout.write('annotatedTerm' + TAB)
+sys.stdout.write('annotatedTermId' + TAB)
+sys.stdout.write('_note_key' + TAB)
+sys.stdout.write('type' + TAB)
+sys.stdout.write('note' + CRT)
+
 for r in results:
         sys.stdout.write(r['genotype_id'] + TAB)
         sys.stdout.write(r['allelepairs'].replace('\n', ' ') + TAB)

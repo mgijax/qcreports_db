@@ -63,6 +63,14 @@ and a.prefixPart = 'MGI:'
 order by aa.symbol
 ''', 'auto')
 
+sys.stdout.write('alleleID' + TAB)
+sys.stdout.write('symbol' + TAB)
+sys.stdout.write('chromosome' + TAB)
+sys.stdout.write('startCoordinate' + TAB)
+sys.stdout.write('endCoordinate' + TAB)
+sys.stdout.write('referencesequence' + TAB)
+sys.stdout.write('variantSequence' + CRT)
+
 for r in results:
         sys.stdout.write(r['alleleID'] + TAB)
         sys.stdout.write(r['symbol'] + TAB)

@@ -45,6 +45,12 @@ and acct.accid = '%s'
 order by genotype_id, jnum_id, mn._note_key
 ''' % (value), 'auto')
 
+sys.stdout.write('genotype_id' + TAB)
+sys.stdout.write('jnum_id' + TAB)
+sys.stdout.write('_note_key' + TAB)
+sys.stdout.write('notetype' + TAB)
+sys.stdout.write('note' + CRT)
+
 for r in results:
         sys.stdout.write(r['genotype_id'] + TAB)
         sys.stdout.write(r['jnum_id'] + TAB)

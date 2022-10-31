@@ -57,6 +57,15 @@ and lower(gisr.resultNote) like lower('%s')
 order by gisrs._stage_key, s.term
 ''' % (value), 'auto')
 
+sys.stdout.write('assay_mgiid' + TAB)
+sys.stdout.write('jnum_id' + TAB)
+sys.stdout.write('specimenlabel' + TAB)
+sys.stdout.write('gene' + TAB)
+sys.stdout.write('stage' + TAB)
+sys.stdout.write('structure' + TAB)
+sys.stdout.write('celltype' + TAB)
+sys.stdout.write('resultnote' + CRT)
+
 for r in results:
         sys.stdout.write(r['assay_mgiid'] + TAB)
         sys.stdout.write(r['jnum_id'] + TAB)

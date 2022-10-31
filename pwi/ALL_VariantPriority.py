@@ -65,6 +65,9 @@ and aa.preferred = 1
 and aa.prefixPart = 'MGI:' ;
 ''', 'auto')
 
+sys.stdout.write('accID' + TAB)
+sys.stdout.write('symbol' + CRT)
+
 for r in results:
         sys.stdout.write(r['accID'] + TAB)
         sys.stdout.write(r['symbol'] + CRT)

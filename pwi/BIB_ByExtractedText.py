@@ -31,6 +31,8 @@ and d._ExtractedText_key not in (48804491)
 and lower(d.extractedText) like lower('%s')
 ''' % (value), 'auto')
 
+sys.stdout.write('pubmedID' + CRT)
+
 for r in results:
         sys.stdout.write(r['pubmedID'] + CRT)
 

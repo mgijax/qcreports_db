@@ -89,6 +89,13 @@ from final f left outer join strainSynHist sh on (f._strain_key = sh._strain_key
 order by f.strain
 ''', 'auto')
 
+sys.stdout.write('strain' + TAB)
+sys.stdout.write('synonymOrHistory' + TAB)
+sys.stdout.write('mgiID' + TAB)
+sys.stdout.write('private' + TAB)
+sys.stdout.write('repoids' + TAB)
+sys.stdout.write('alleleSymbols' + CRT)
+
 for r in results:
         sys.stdout.write(r['strain'] + TAB)
         sys.stdout.write(r['synonymOrHistory'] + TAB)
