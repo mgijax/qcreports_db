@@ -41,10 +41,6 @@ order by s.strain
 ''' % (value1), None)
 db.sql('create index idx1 on strainSynHist(_strain_key)', None)
 
-#db.sql('''
-#select count(*) from strainSynHist
-#''', None)
-
 db.sql('''
 select 
 s.strain, 
