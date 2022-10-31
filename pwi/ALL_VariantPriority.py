@@ -4,10 +4,13 @@
 # Curation prioritization reporr
 #
 # A list of alleles where: 
-#    the allele has phenotypes annotations (is a phenotypic allele), 
+#    the allele has phenotypes annotations (is a phenotypic allele)
 #    the allele has variants
-#    none of the variants has curated genomic data 
-#       (version may be 'Not Specified' Columns: Allele MGI ID Allele symbol
+#    none of the variants has curated genomic data (version may be 'Not Specified' 
+#
+# Columns: 
+#       Allele MGI ID 
+#       Allele symbol
 #
 '''
  

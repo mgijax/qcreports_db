@@ -7,10 +7,10 @@
 #       all five curated genomic fields are not null
 #       reviewed box is not checked 
 #
-#       Columns: 
-#               Allele ID 
-#               Allele Symbol 
-#               Curator Notes
+# Columns: 
+#       Allele ID 
+#       Allele Symbol 
+#       Curator Notes
 #
 '''
  

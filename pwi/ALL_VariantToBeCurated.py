@@ -7,9 +7,9 @@
 #       the allele has source variant data
 #       has no curated variant data 
 #
-#       Columns: 
-#               Allele ID 
-#               Allele Symbol
+# Columns: 
+#       Allele ID 
+#       Allele Symbol
 #
 '''
  
