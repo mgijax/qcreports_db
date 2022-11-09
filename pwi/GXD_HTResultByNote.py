@@ -27,7 +27,7 @@ import reportlib
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-value = '%' + sys.argv[1] + '%'
+value = sys.argv[1]
 
 results = db.sql('''
 select distinct ac.accid as assay_mgiid, 
