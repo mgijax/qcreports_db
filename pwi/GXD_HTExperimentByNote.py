@@ -55,7 +55,8 @@ for r in results:
         sys.stdout.write(r['ExperimentID'] + TAB)
         sys.stdout.write(r['experimenttype'] + TAB)
         sys.stdout.write(r['relevance'] + TAB)
-        sys.stdout.write(r['note'] + CRT)
+        note = r['note'].replace('\n', ' ').replace('\t', ' ')
+        sys.stdout.write(note + CRT)
 
 sys.stdout.flush()
 

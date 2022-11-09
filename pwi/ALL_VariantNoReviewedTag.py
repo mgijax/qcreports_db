@@ -94,7 +94,8 @@ for r in results:
         if r['curatorNote'] == None:
                 sys.stdout.write(CRT)
         else:
-                sys.stdout.write(r['curatorNote'] + CRT)
+                note = r['curatorNote'].replace('\n', ' ').replace('\t', ' ')
+                sys.stdout.write(note + CRT)
 
 sys.stdout.flush()
 

@@ -84,7 +84,8 @@ for r in results:
         else:
                 sys.stdout.write(r['celltype'] + TAB)
 
-        sys.stdout.write(r['resultnote'] + CRT)
+        note = r['resultnote'].replace('\n', ' ').replace('\t', ' ')
+        sys.stdout.write(note + CRT)
 
 sys.stdout.flush()
 

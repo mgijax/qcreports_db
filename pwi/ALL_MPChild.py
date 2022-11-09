@@ -84,9 +84,10 @@ for r in results:
         if r['note'] == None:
                 sys.stdout.write(3*TAB + CRT)
         else:
+                note = r['note'].replace('\n', ' ').replace('\t', ' ')
                 sys.stdout.write(str(r['_note_key']) + TAB)
                 sys.stdout.write(r['type'] + TAB)
-                sys.stdout.write(r['note'] + CRT)
+                sys.stdout.write(note + CRT)
 
 sys.stdout.flush()
 
