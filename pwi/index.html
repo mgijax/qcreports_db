@@ -10,8 +10,12 @@ body {
     border: 1px solid black;
     border-collapse: collapse;
 }
-.data-table tr{
+.data-table tr {
         border: 1px solid black;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #eee;
 }
 
 .data-table th, 
@@ -173,7 +177,7 @@ function runReport (download) {
             alert("Please enter a value in the search box.")
             return
         }
-        url += `&arg=${arg}`
+        url += `&arg=${encodeURIComponent(arg)}`
     }
     if (download) {
         filename = d.script.replace(/.py/,"") + ".out.tsv"
@@ -240,7 +244,7 @@ function showSummary () {
 // the browser restores the previous hash value, which triggers the change handler.
 
 function onHashChanged () {
-    const hash = window.location.hash.substr(1).trim()
+    const hash = decodeURIComponent(window.location.hash.substr(1)).trim()
     if (hash === "") {
         showSummary()
     } else {
@@ -256,7 +260,7 @@ function setHash (rpt, arg) {
     if (rpt) {
         h = rpt + (arg ? "|" + arg : "")
     }
-    window.location.hash = h
+    window.location.hash = encodeURIComponent(h)
 }
 
 function setHash2 () {
