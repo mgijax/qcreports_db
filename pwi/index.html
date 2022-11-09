@@ -1,0 +1,340 @@
+<html>
+<head>
+<link rel="stylesheet" href="/pwi/static/pwi.css" type="text/css" />
+<!-- ************************ -->
+<style>
+body {
+    padding: 12px;
+}
+.data-table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.data-table tr{
+        border: 1px solid black;
+}
+
+.data-table th, 
+.data-table td {
+    vertical-align: top;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 5px;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size: 12px;
+}
+
+.display-name:hover {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+/* by default, show the summary and hide the report */
+#page-container #report-summary {
+    display: block;
+}
+#page-container #report-detail {
+    display: none;
+}
+/* adding class show-report to the page container hides the summary and shows the report */
+#page-container.showing-report #report-summary {
+    display: none;
+}
+#page-container.showing-report #report-detail {
+    display: block;
+}
+
+/* by default, show no-inputs section and hide the form */
+#report-detail #report-form {
+    display: none;
+}
+#report-detail #report-no-form {
+    display: block;
+}
+/* if detail container has class report-has-form, show the form and hide the no-form section */
+#report-detail.report-has-form #report-form {
+    display: block;
+}
+#report-detail.report-has-form #report-no-form {
+    display: none;
+}
+
+/* report results section is hidden by default. Made visible when .showing-results added to container. */
+#report-detail #report-results {
+    display: none;
+}
+#report-detail.showing-results #report-results {
+    display: block;
+}
+</style>
+<!-- ************************ -->
+<script>
+
+// list of available reports (will be fetched)
+let reports = null
+
+// which report's detail to show. When null, shows the report summary
+let currentReport = null
+
+function fetchText (url, postData) {
+  //  
+  function status(response) {
+    if (response.status >= 200 && response.status < 300) {
+        return Promise.resolve(response)
+    } else {
+        return Promise.reject(response.status + ': ' + response.statusText)
+    }   
+  }
+  //  
+  let opts = undefined
+  if (postData) {
+    opts = { 
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      },  
+      body: postData
+    }   
+  }
+  return  self.fetch(url, opts).then(status).then(r => r.text())  
+}
+
+function parseTabDelimited (s) {
+    const tbl = s.split(/\n/).map(l => l.split(/\t/))
+    tbl.pop()
+    return tbl 
+}
+
+function parsePipeDelimited (s) {
+    const tbl = s.split(/\n/).map(l => l.split(/\|/))
+    tbl.pop()
+    return tbl 
+}
+
+function sanitize (s) {
+    return s.replace("<", "&lt;")
+}
+
+// Returns a promise for a list of descriptors for the available reports
+// Each descriptor is an object with the fields:
+//   script name , display name , description , created by , requested by , creation date, argument label
+function getReportsData () {
+  return fetchText("pwireports.txt", "text").then(data => {
+    reports = parsePipeDelimited(data).filter(row => row.length === 7).map(r => {
+        return {
+          script:      r[0],
+          displayName: r[1],
+          description: r[2].replaceAll("\\r\\n", "\n"),
+          createdBy:   r[3],
+          requestedBy: r[4],
+          creationDate:r[5],
+          argLabel:    r[6]
+        }
+    })
+    return reports
+  })
+}
+
+function findReport (arg) {
+    if (typeof(arg) === 'number') {
+        return reports[arg]
+    } else {
+        return reports.filter(r => r.script === arg)[0]
+    }
+}
+
+function showResults (rows) {
+    document.getElementById("report-detail").classList.add("showing-results")
+    document.getElementById("result-count").innerText = ""+(rows.length - 1) // first row = column labels
+    const tbl = document.querySelector("#report-results > table")
+    tbl.innerHTML = rows.map((r,i) => {
+        if (i === 0) {
+            return '<tr>' + r.map(val => `<th>${sanitize(val)}</th>`).join('') + '</tr>'
+        } else {
+            return '<tr>' + r.map(val => `<td>${sanitize(val)}</td>`).join('') + '</tr>'
+        }
+    }).join('')
+}
+
+// Runs the current report, passing whatever value is in the input box (if appropriate).
+// 
+function runReport (download) {
+    const d = currentReport
+    let url = `./pwireports.cgi?cmd=run&rpt=${d.script}`
+    if (d.argLabel) {
+        arg = document.getElementById("arg-input").value
+        if (!arg) {
+            alert("Please enter a value in the search box.")
+            return
+        }
+        url += `&arg=${arg}`
+    }
+    if (download) {
+        filename = d.script.replace(/.py/,"") + ".out.tsv"
+        url += `&filename=${filename}`
+        window.location = url
+    } else {
+        fetchText(url).then(data => {
+            rows = parseTabDelimited(data)
+            showResults(rows)
+        })
+    }
+}
+
+function showReport (ri, arg) {
+    const d = currentReport = findReport(ri)
+    document.getElementById('page-container').classList.add("showing-report")
+    document.getElementById('display-name').innerText = d.displayName
+    document.getElementById('description').innerHTML = '<pre>' + d.description + '</pre>'
+    document.getElementById('requested-by').innerText = d.requestedBy
+    document.getElementById('created-by').innerText = d.createdBy
+    document.getElementById('creation-date').innerText = d.creationDate
+    if (d.argLabel) {
+        document.getElementById('report-detail').classList.add("report-has-form")
+        document.getElementById('report-detail').classList.remove("showing-results")
+        document.getElementById('arg-label').innerText = d.argLabel
+        document.getElementById('arg-input').value = arg || ""
+        if (arg) {
+            runReport()
+        }
+    } else {
+        document.getElementById('report-detail').classList.remove("report-has-form")
+        runReport()
+    }
+}
+
+let summaryDrawn = false
+function showSummary () {
+  document.getElementById('page-container').classList.remove("showing-report")
+  // only draw it once
+  if (summaryDrawn) return
+  const tbl = document.querySelector("#report-summary > table")
+  const tbody = tbl.querySelector("tbody")
+  reports.forEach((r,ri) => {
+    const displayRow = [
+        `<span class="display-name" onclick="setHash('${r.script}')">${r.displayName}</span>`,
+        r.requestedBy,
+        r.creationDate,
+        r.createdBy
+        ]
+    const tr = document.createElement("TR")
+    tbody.appendChild(tr);
+    tr.innerHTML = displayRow.map(d => '<td>' + d + '</td>').join('')
+  })
+  summaryDrawn = true
+}
+
+// This is a single page app, which normally doesn't play well with the browser history.
+// (E.g. the back button doesn't work the way the user expects.) To fix this, we use the hash portion
+// of the URL to drive state changes: (1) attach a change handler so that anytime the window.location.hash
+// changes, we get control, and the display is updated based on the hash value; (2) when the user clicks
+// a report name in the summary or the "run" button on a report detail page, all that does (directly) is
+// set window.location.hash - the change is detected and the hash change handler is called.
+// This approach works naturally with the browser's history mechanism; if the user hits a back button,
+// the browser restores the previous hash value, which triggers the change handler.
+
+function onHashChanged () {
+    const hash = window.location.hash.substr(1).trim()
+    if (hash === "") {
+        showSummary()
+    } else {
+        const parts = hash.split("|")
+        const rptName = parts[0]
+        const arg = parts[1]
+        showReport(rptName,arg)
+    }
+}
+
+function setHash (rpt, arg) {
+    let h = ""
+    if (rpt) {
+        h = rpt + (arg ? "|" + arg : "")
+    }
+    window.location.hash = h
+}
+
+function setHash2 () {
+   setHash(currentReport.script, document.getElementById('arg-input').value)
+}
+
+</script>
+</head>
+<!-- ************************ -->
+<body>
+
+<div id="page-container" class="showing-summary">
+
+<!-- Report Summary -->
+<div id="report-summary">
+  <table class="data-table" >
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Requested by</th>
+      <th>Created</th>
+      <th>Created by</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+  </table>
+</div>
+
+<!-- Report Detail -->
+<div id="report-detail">
+  <h3>Report Details</h3>
+  <dl class="detailPageListData" style="margin-bottom:0px;">
+  
+    <dt>Name</dt>
+    <dd id="display-name"> </dd>
+    
+    <dt>Requested By</dt>
+    <dd id="requested-by"> </dd>
+    
+    <dt>Description</dt>
+    <dd id="description"> </dd>
+    
+    <dt>Created On</dt>
+    <dd id="creation-date"> </dd>
+    
+    <dt>Created By</dt>
+    <dd id="created-by"> </dd>
+    
+  </dl>
+  <div id="report-no-form">
+      <br/>
+      <button onclick="runReport(true)">Download This Report</button>
+  </div>
+  <div id="report-form">
+      <h3>Run Query With...</h3>
+      
+        <br/>
+        <span><label><span id="arg-label"></span> = </label>
+        <input type="text" id="arg-input" value="" /></span>
+        <br/>
+        <br/>
+      
+      <button onclick="setHash2()">Run Query With Above Input</button>
+      
+      OR <button onclick="runReport(true)">Download to File</button>
+      
+  </div> <!-- report-form -->
+
+  <div id="report-results">
+      <br/>
+      <b>Data:</b> found <span id="result-count"></span> results.
+      <table class="data-table">
+      </table>
+  </div> <!-- report results -->
+
+</div> <!-- report detail -->
+</div> <!-- page container -->
+</body>
+<script>
+    getReportsData().then( () => {
+        window.onhashchange = onHashChanged
+        onHashChanged() 
+    })
+</script>
+</html>
