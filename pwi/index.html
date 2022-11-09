@@ -119,6 +119,7 @@ function sanitize (s) {
 // Returns a promise for a list of descriptors for the available reports
 // Each descriptor is an object with the fields:
 //   script name , display name , description , created by , requested by , creation date, argument label
+// The list is sorted by report displayName
 function getReportsData () {
   return fetchText("pwireports.txt", "text").then(data => {
     reports = parsePipeDelimited(data).filter(row => row.length === 7).map(r => {
@@ -131,6 +132,10 @@ function getReportsData () {
           creationDate:r[5],
           argLabel:    r[6]
         }
+    }).sort((a,b) => {
+        if (a.displayName < b.displayName) return -1
+        if (a.displayName > b.displayName) return 1
+        return 0
     })
     return reports
   })
