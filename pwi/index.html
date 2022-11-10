@@ -28,10 +28,24 @@ body {
     font-size: 12px;
 }
 
+.display-name {
+    color: blue;
+}
+
 .display-name:hover {
     cursor: pointer;
-    color: blue;
     text-decoration: underline;
+}
+
+/* The "working..." message. Hidden by default. */
+#page-container #working-message {
+    display: none;
+    width: 100px;
+    background: green;
+    color: white;
+}
+#page-container.running-report #working-message {
+    display: block;
 }
 
 /* by default, show the summary and hide the report */
@@ -156,7 +170,7 @@ function findReport (arg) {
 function showResults (rows) {
     document.getElementById("report-detail").classList.add("showing-results")
     document.getElementById("result-count").innerText = ""+(rows.length - 1) // first row = column labels
-    const tbl = document.querySelector("#report-results > table")
+    const tbl = document.querySelector("#results-table")
     tbl.innerHTML = rows.map((r,i) => {
         if (i === 0) {
             return '<tr>' + r.map(val => `<th>${sanitize(val)}</th>`).join('') + '</tr>'
@@ -184,9 +198,14 @@ function runReport (download) {
         url += `&filename=${filename}`
         window.location = url
     } else {
+        document.getElementById('page-container').classList.add("running-report")
         fetchText(url).then(data => {
+            document.getElementById('page-container').classList.remove("running-report")
             rows = parseTabDelimited(data)
             showResults(rows)
+        }).catch(err => {
+            document.getElementById('page-container').classList.remove("running-report")
+            alert(err)
         })
     }
 }
@@ -333,9 +352,12 @@ function setHash2 () {
   <div id="report-results">
       <br/>
       <b>Data:</b> found <span id="result-count"></span> results.
-      <table class="data-table">
+      <table id="results-table" class="data-table">
       </table>
   </div> <!-- report results -->
+  <div id="working-message">
+     Working...
+  </div>
 
 </div> <!-- report detail -->
 </div> <!-- page container -->
