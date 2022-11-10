@@ -25,6 +25,7 @@ and hts._Experiment_key = a1._Object_key
 and a1._MGIType_key = 42 
 and a1.preferred = 1 
 and a1._LogicalDB_key in (189,190) --arrayExp, geo order by a1.accid
+order by a1.accid
 ''' % (value), 'auto')
 
 sys.stdout.write('expID' + TAB)
