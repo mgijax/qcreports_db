@@ -80,8 +80,8 @@ def runQueries(includeRiken):
         and h1._Cluster_key = h2._Cluster_key 
         and h2._Marker_key = m2._Marker_key 
         and m2._Organism_key = 2 
-        and lower(m1.symbol) != lower(m2.symbol)
         ''' + riken, None)
+        #and lower(m1.symbol)!= lower(m2.symbol)
 
     db.sql('create index homology_idx1 on homology(m_Marker_key)', None)
     db.sql('create index homology_idx2 on homology(h_Marker_key)', None)
@@ -98,6 +98,7 @@ def runQueries(includeRiken):
         and a._LogicalDB_key = 1 
         and a.prefixPart = 'MGI:' 
         and a.preferred = 1 
+        and lower(h.msymbol)!= lower(h.hsymbol)
         ''', 'auto')
     for r in results:
         mgiID[r['m_Marker_key']] = r['accID']
@@ -113,7 +114,6 @@ def runQueries(includeRiken):
         select h.msymbol
         from homology h, radar.DP_EntrezGene_Info e
         where h.hsymbol = e.symbol and e.taxID = 9606
-        group by h.msymbol having count(*) = 1
         )
         select h.hsymbol
         into temporary table results_onetoone
@@ -209,11 +209,13 @@ def report1(fp, includeRiken, isOneToOne):
         from homology h, radar.DP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606 
         and exists (select 1 from %s r where r.hsymbol = h.hsymbol)
+        and lower(h.msymbol)!= lower(h.hsymbol)
         union 
         select h.*, '?' as hstatus
         from homology h 
         where not exists (select 1 from radar.DP_EntrezGene_Info e where h.hsymbol = e.symbol and e.taxID = 9606)
         and exists (select 1 from %s r where r.hsymbol = h.hsymbol)
+        and lower(h.msymbol)!= lower(h.hsymbol)
         ''' % (other_results, other_results), None)
 
     results = db.sql('select * from results order by modification_date desc, hstatus desc, msymbol', 'auto')
@@ -258,10 +260,12 @@ def report2(fp, includeRiken):
         into temporary table results 
         from homology h, radar.DP_EntrezGene_Info e 
         where h.hsymbol = e.symbol and e.taxID = 9606 
+        and lower(h.msymbol)!= lower(h.hsymbol)
         union 
         select h.*, '?' as hstatus
         from homology h 
         where not exists (select 1 from radar.DP_EntrezGene_Info e where h.hsymbol = e.symbol and e.taxID = 9606)
+        and lower(h.msymbol)!= lower(h.hsymbol)
         ''', None)
 
     results = db.sql('select * from results order by hstatus desc, mstatus desc, msymbol', 'auto')
