@@ -48,6 +48,7 @@ for i in range(numBatches):
 
         for r in results:
                 sys.stdout.write(r['pubmedID'] + CRT)
+                sys.stdout.flush()
 
 sys.stdout.flush()
 
