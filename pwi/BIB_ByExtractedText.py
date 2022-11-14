@@ -27,8 +27,8 @@ sys.stdout.write('pubmedID' + CRT)
 
 # batch this query by batchSize so CGI does not timeout
 batchSize = 10000
-results = db.sql('select last_value from bib_workflow_data_seq', 'auto')
-maxKey = results[0]['last_value']
+results = db.sql('select max(_refs_key) as maxKey from BIB_Workflow_Data', 'auto')
+maxKey = results[0]['maxKey']
 numBatches = int((maxKey / batchSize) + 1)
 
 for i in range(numBatches):
@@ -42,7 +42,7 @@ for i in range(numBatches):
         where r._Refs_key = d._Refs_key 
         and d._ExtractedText_key not in (48804491) 
         and lower(d.extractedText) like lower('%s')
-        and d._assoc_key >= %s and d._assoc_key <= %s
+        and d._refs_key >= %s and d._refs_key <= %s
         ''' % (value, startKey, endKey), 'auto')
 
         for r in results:
