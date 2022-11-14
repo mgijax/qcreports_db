@@ -46,7 +46,10 @@ for i in range(numBatches):
         ''' % (value, startKey, endKey), 'auto')
 
         for r in results:
-                sys.stdout.write(r['pubmedID'] + CRT)
+                if r['pubmedID'] is None:
+                        sys.stdout.write(CRT)
+                else:
+                        sys.stdout.write(r['pubmedID'] + CRT)
                 sys.stdout.flush()
 
 sys.stdout.flush()
