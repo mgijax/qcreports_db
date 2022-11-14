@@ -23,19 +23,31 @@ TAB = reportlib.TAB
 
 value = sys.argv[1]
 
-results = db.sql('''
-select r.pubmedID 
-from BIB_Citation_Cache r, BIB_Workflow_Data d 
-where r.pubmedid is not null
-and r._Refs_key = d._Refs_key 
-and d._ExtractedText_key not in (48804491) 
-and lower(d.extractedText) like lower('%s')
-''' % (value), 'auto')
-
 sys.stdout.write('pubmedID' + CRT)
 
-for r in results:
-        sys.stdout.write(r['pubmedID'] + CRT)
+# batch this query by batchSize so CGI does not timeout
+batchSize = 1000
+results = db.sql('select last_value from bib_workflow_data_seq', 'auto')
+maxKey = results[0]['last_value']
+numBatches = int((maxKey / batchSize) + 1)
+
+for i in range(numBatches):
+
+        startKey = i * batchSize
+        endKey = startKey + batchSize
+
+        results = db.sql('''
+        select r.pubmedID 
+        from BIB_Citation_Cache r, BIB_Workflow_Data d 
+        where r.pubmedid is not null
+        and r._Refs_key = d._Refs_key 
+        and d._ExtractedText_key not in (48804491) 
+        and lower(d.extractedText) like lower('%s')
+        and d._assoc_key >= %s and d._assoc_key <= %s
+        ''' % (value, startKey, endKey), 'auto')
+
+        for r in results:
+                sys.stdout.write(r['pubmedID'] + CRT)
 
 sys.stdout.flush()
 
