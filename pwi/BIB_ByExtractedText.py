@@ -27,7 +27,6 @@ results = db.sql('''
 select r.pubmedID 
 from BIB_Citation_Cache r, BIB_Workflow_Data d 
 where r.pubmedid is not null
-and r.pubmedid is not null
 and r._Refs_key = d._Refs_key 
 and d._ExtractedText_key not in (48804491) 
 and lower(d.extractedText) like lower('%s')
