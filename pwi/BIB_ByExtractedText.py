@@ -26,7 +26,7 @@ value = sys.argv[1]
 sys.stdout.write('pubmedID' + CRT)
 
 # batch this query by batchSize so CGI does not timeout
-batchSize = 1000
+batchSize = 10000
 results = db.sql('select last_value from bib_workflow_data_seq', 'auto')
 maxKey = results[0]['last_value']
 numBatches = int((maxKey / batchSize) + 1)
