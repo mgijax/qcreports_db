@@ -21,7 +21,7 @@ import reportlib
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-value = sys.argv[1]
+value = '%' + sys.argv[1] + '%'
 
 sys.stdout.write('pubmedID' + CRT)
 
