@@ -1,4 +1,3 @@
-
 '''
 #
 # Papers used by GXD that were Not Routed
@@ -19,7 +18,7 @@
 # History:
 #
 # lec   12/01/2022
-#       fl2-55/GXD Secondary Triage
+#       fl2-55/gxd secondary triage
 #
 '''
  
