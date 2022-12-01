@@ -36,14 +36,16 @@ fp = reportlib.init(sys.argv[0], 'Papers used by GXD that were Not Routed', os.e
 
 results = db.sql('''
 WITH refs AS (
-select c._refs_key, c.jnumid, t1.term as statusTerm
-from bib_citation_cache c, bib_workflow_status s1, voc_term t1
+select c._refs_key, c.jnumid, t1.term as statusTerm, v.confidence
+from bib_citation_cache c, bib_workflow_status s1, voc_term t1, bib_workflow_relevance v
 where c.jnumid is not null
 and c._refs_key = s1._refs_key
 and s1.isCurrent = 1
 and s1._group_key = 31576665
 and s1._status_key in (31576671, 31576673, 31576674)
 and s1._status_key = t1._term_key
+and c._refs_key = v._refs_key
+and v._modifiedby_key = 1617
 and exists (select 1 from bib_workflow_status s0 where c._refs_key = s0._refs_key
         and s0.isCurrent = 0
         and s0._group_key = 31576665
@@ -70,6 +72,12 @@ order by jnumid desc, statusTerm
 
 for r in results:
         fp.write(r['jnumid'] + TAB)
+
+        if r['confidence'] == None:
+                fp.write(TAB)
+        else:
+                fp.write(str(r['confidence']) + TAB)
+
         fp.write(r['statusTerm'] + TAB)
 
         if r['tagTerm'] == None:
