@@ -1,9 +1,11 @@
+TAG: qcreports_db-6-0-22-21
 TAG: qcreports_db-6-0-22-20
 TAG: qcreports_db-6-0-22-19
-DATE: 12/01/2022
+DATE: 12/01/2022, 12/07/2022
 STAFF: lec
 fl2/gxd secondary triage
 monthly/GXD_NotRouted.py
+weekly/WF_GXD_secondary.py
 
 TAG: qcreports_db-6-0-22-18
 DATE: 11/30/2022
