@@ -11,7 +11,7 @@
 select c.mgiid, r.title
 from bib_refs r, bib_citation_cache c
 where
-(r.title like '%double dagger%' or r.title like '%dagger.' or r.title like '%(dagger).')
+(r.title like '%double dagger%' or r.title like '%dagger.' or r.title like '%dagger..' or r.title like '%(dagger).')
 and r._refs_key = c._refs_key
 order by c.mgiid
 
