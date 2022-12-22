@@ -26,6 +26,9 @@
 #
 # History:
 #
+# sc    12/22/2022
+#       - WTS2-1077 add PubMed ids to HT overview report
+#
 # sc    07/30/2021
 #       - YAKS project - load GEO experiments epic
 #       - update to take primary id of both AE and GEO
@@ -37,7 +40,7 @@
 # sc	04/06/2017
 #	- TR12523 add curation state as field 5
 #
-# sc   11/04/2061
+# sc   11/04/2016
 #       - TR12370 created
 #
 '''
@@ -61,6 +64,9 @@ eaList = []
 # experiments in this list are in the RNA-Seq Load set
 rnaSeqList = []
 
+# experiments that have pubmed id properties
+pubMedIdDict = {}
+
 results = db.sql('''select sm._object_key 
         from MGI_SetMember sm, MGI_Set s
         where s.name = 'Expression Atlas Experiments'
@@ -74,6 +80,17 @@ results = db.sql('''select sm._object_key
         and s._Set_key = sm._Set_key''', 'auto')
 for r in results:
     rnaSeqList.append(r['_object_key'])
+
+results = db.sql('''select _Object_key as _experiment_key, value as pubMedId
+    from mgi_property
+    where _propertytype_key = 1002
+    and _propertyterm_key = 20475430
+    order by _object_key''', 'auto')
+for r in results:
+   expKey = r['_experiment_key']
+   if expKey not in pubMedIdDict:
+        pubMedIdDict[expKey] = []
+   pubMedIdDict[expKey].append(r['pubMedId'])
 
 fp = reportlib.init(sys.argv[0], 'GXD Overview QC', os.environ['QCOUTPUTDIR'])
 
@@ -117,7 +134,7 @@ for r in results:
     exptDict[exptKey].append(r)
 
 ct = 0
-fp.write('Primary ID%sSecondary ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%sExpression Atlas?%sRNA-Seq Load?%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT))
+fp.write('Primary ID%sSecondary ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%sExpression Atlas?%sRNA-Seq Load?%sPubMed IDs%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT))
 for key in exptDict:
     # if there are > 1 row then there are > 1 variable, all other info repeated
     r = exptDict[key][0]
@@ -140,7 +157,11 @@ for key in exptDict:
     rnaSeqSet = 'No'
     if key in rnaSeqList:
         rnaSeqSet = 'Yes'
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (primary, TAB, secondary, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, TAB, eaSet, TAB, rnaSeqSet, CRT ))
+    pubMedIds = ''
+    if key in pubMedIdDict:
+        pubMedIds = '|'.join(pubMedIdDict[key])
+
+    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (primary, TAB, secondary, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, TAB, eaSet, TAB, rnaSeqSet, TAB, pubMedIds, CRT ))
     ct += 1
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))

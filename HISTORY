@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-22-26
+DATE: 12/22/2022
+STAFF: sc
+WTS2-1077 add PubMed ids to HT overview report
+mgd/GXD_HTOverview.py
+
 TAG: qcreports_db-6-0-22-25
 TAG: qcreports_db-6-0-22-24
 TAG: qcreports_db-6-0-22-23
