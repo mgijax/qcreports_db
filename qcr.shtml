@@ -79,6 +79,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_ConditionalNeedsReview.rpt">Genotypes where the conditional flag setting needs review</A> <B>(smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_Tags.rpt">AP tagged references for curation</A> <B> (mnk)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_AP_IndexingNeeded.rpt">AP:Indexing_needed papers with genes</A> <B> (csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_NomenCheck.rpt">Weekly Report for Alleles with Improper Nomenclature in Symbols and Synonyms</A> <B> (anna)</B>
 </OL>
 
 <A NAME="variants"><B>Allele Variants (laurens)</B> </A>
