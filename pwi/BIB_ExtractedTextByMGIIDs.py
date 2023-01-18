@@ -23,8 +23,8 @@ sys.stdout.write('J#' + TAB)
 sys.stdout.write('pmid' + TAB)
 sys.stdout.write('creation date' + TAB)
 sys.stdout.write('section label' + TAB)
-sys.stdout.write('extracted text' + TAB)
-sys.stdout.write('count of characters in section' + CRT)
+sys.stdout.write('count of characters in section' + TAB)
+sys.stdout.write('extracted text' + CRT)
 
 results = db.sql('''
 select c.mgiid, c.jnumid, c.pubmedid, t.term, char_length(d.extractedtext) as textcount, d.creation_date, d.extractedtext
