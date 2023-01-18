@@ -27,7 +27,7 @@ sys.stdout.write('extracted text' + TAB)
 sys.stdout.write('count of characters in section' + CRT)
 
 results = db.sql('''
-select c.mgiid, c.jnumid, c.pubmedid, t.term, char_length(d.extractedtext) as textcount, d.* 
+select c.mgiid, c.jnumid, c.pubmedid, t.term, char_length(d.extractedtext) as textcount, d.creation_date, d.extractedtext
 from BIB_Citation_Cache c, BIB_Workflow_Data d, VOC_Term t
 where c.mgiid in (%s)
 and c._refs_key = d._refs_key
@@ -52,8 +52,19 @@ for r in results:
 
         sys.stdout.write(r['creation_date'] + TAB)
         sys.stdout.write(r['term'] + TAB)
-        sys.stdout.write(r['extractedtext'] + TAB)
-        sys.stdout.write(r['textcount'] + TAB)
+
+        extractedtext = r['extractedtext']
+        extractedtext = extractedtext.replace("\\r\\n", "\n")
+
+        if extractedtext is None:
+                sys.stdout.write(TAB)
+        else:
+                sys.stdout.write(extractedtext + TAB)
+
+        if r['textcount'] is None:
+                sys.stdout.write('0' + TAB)
+        else:
+                sys.stdout.write(str(r['textcount']) + TAB)
 
         sys.stdout.flush()
 
