@@ -62,7 +62,7 @@ for r in results:
                 sys.stdout.write(CRT)
         else:
                 extractedtext = r['extractedtext']
-                extractedtext = extractedtext.replace("\\n", " ")
+                extractedtext = extractedtext.replace("\n", " ")
                 sys.stdout.write(extractedtext + CRT)
 
         sys.stdout.flush()
