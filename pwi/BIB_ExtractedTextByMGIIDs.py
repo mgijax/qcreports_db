@@ -64,7 +64,7 @@ for r in results:
         if r['textcount'] is None:
                 sys.stdout.write('0' + TAB)
         else:
-                sys.stdout.write(str(r['textcount']) + TAB)
+                sys.stdout.write(str(r['textcount']) + CRT)
 
         sys.stdout.flush()
 
