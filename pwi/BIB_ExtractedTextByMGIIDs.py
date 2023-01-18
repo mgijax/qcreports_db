@@ -53,18 +53,17 @@ for r in results:
         sys.stdout.write(r['creation_date'] + TAB)
         sys.stdout.write(r['term'] + TAB)
 
+        if r['textcount'] is None:
+                sys.stdout.write('0' + TAB)
+        else:
+                sys.stdout.write(str(r['textcount']) + TAB)
+
         if r['extractedtext'] is None:
-                sys.stdout.write(TAB)
+                sys.stdout.write(CRT)
         else:
                 extractedtext = r['extractedtext']
-                extractedtext = extractedtext.replace("\\r\\n", " ")
-                #sys.stdout.write(extractedtext + TAB)
-                sys.stdout.write(TAB)
-
-        if r['textcount'] is None:
-                sys.stdout.write('0' + CRT)
-        else:
-                sys.stdout.write(str(r['textcount']) + CRT)
+                extractedtext = extractedtext.replace("\\n", " ")
+                sys.stdout.write(extractedtext + CRT)
 
         sys.stdout.flush()
 
