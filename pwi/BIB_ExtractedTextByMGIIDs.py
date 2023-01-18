@@ -58,7 +58,8 @@ for r in results:
         else:
                 extractedtext = r['extractedtext']
                 extractedtext = extractedtext.replace("\\r\\n", " ")
-                sys.stdout.write(extractedtext + TAB)
+                #sys.stdout.write(extractedtext + TAB)
+                sys.stdout.write(TAB)
 
         if r['textcount'] is None:
                 sys.stdout.write('0' + CRT)
