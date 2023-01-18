@@ -36,7 +36,7 @@ and d._extractedtext_key = t._term_key
 order by c.mgiid, t.term
 ''' % (value), 'auto')
 
-for i in results:
+for r in results:
 
         sys.stdout.write(r['mgiid'] + TAB)
 
