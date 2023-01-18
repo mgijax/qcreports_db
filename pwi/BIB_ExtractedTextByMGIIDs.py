@@ -28,7 +28,7 @@ sys.stdout.write('count of characters in section' + CRT)
 
 results = db.sql('''
 select c.mgiid, c.jnumid, c.pubmedid, t.term, char_length(d.extractedtext) as textcount, d.* 
-from BIB_Citation_Cache, BIB_Workflow_Data d, VOC_Term t
+from BIB_Citation_Cache c, BIB_Workflow_Data d, VOC_Term t
 where c.mgiid in (%s)
 and c._refs_key = d._refs_key
 and d._extractedtext_key != 48804491
