@@ -18,6 +18,9 @@
 #	exclude Alleles of type QTL
 #	exclude Alleles of type all "transgenic"
 #	exclude Alleles of type "gene trapped" and status = 'Autoload'
+#       exclude Alleles where the transmission status = Cell Line
+#       exclude Alleles where the allele status = Deleted (in addition to Autoload already excluded in report)
+#       exclude Alleles where the original reference = J:293217 (in addition to many other referenc
 #
 # Usage:
 #       ALL_MolNotesNoMP.py
@@ -25,6 +28,13 @@
 # Notes:
 #
 # History:
+#
+# lec   01/30/2023
+#       - fl2-171/exclude cell line, deleted and certain other alleles
+#       exclude Alleles where the transmission status = Cell Line
+#       exclude Alleles where the allele status = Deleted (in addition to Autoload already excluded in report)
+#       exclude Alleles where the original reference = J:293217 (in addition to many other referenc
+#       J:238766 J:237616 J:265051
 #
 # lec	10/27/2014
 #	- TR11544/add J;141210
@@ -86,11 +96,12 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Alleles that have Molecular Notes but no MP Annotations', os.environ['QCOUTPUTDIR'])
 fp.write('\texcludes allele types: Transgenic, QTL, Not Applicable\n')
-fp.write('\texcludes allele status: Autoload\n')
+fp.write('\texcludes allele status: Autoload, Deleted\n')
+fp.write('\texcludes allele transmission: Cell Line\n')
 fp.write('\texcludes J:94077, J:94338, J:136110, J:148605, J:155845\n')
 fp.write('\texcludes J:157064, J:157065, J:165963, J:165964, J:173534, J:188991, J:200814\n')
 fp.write('\texcludes J:161922, J:164356, J:171883, J:174268, J:201630\n')
-fp.write('\texcludes J:204739, J:204812, J:141210\n\n')
+fp.write('\texcludes J:204739, J:204812, J:141210, J:293217, J:238766, J:237616, J:265051\n\n')
 
 fp.write(str.ljust('Approval', 15) + \
          str.ljust('Acc ID', 15) + \
@@ -103,8 +114,9 @@ db.sql('''
         into temporary table alleles  
         from ALL_Allele a, VOC_Term t 
         where a.approval_date is not NULL 
-        and a._Allele_Type_key not in (847130, 847126, 847131) 
-        and a._Allele_Status_key != 3983021 
+        and a._Allele_Type_key not in (847130,847126,847131) 
+        and a._Allele_Status_key not in (3983021,847112)
+        and a._Transmission_key != 3982953
         and a._Allele_Type_key = t._Term_key 
         and exists (select 1 from MGI_Note n, MGI_NoteType nt  
         where a._Allele_key = n._Object_key  
@@ -131,7 +143,7 @@ results = db.sql('''
         and a1._MGIType_key = 1 
         and a1._LogicalDB_key = 1 
         and a1.prefixPart = 'J:' 
-        and a1.numericPart not in (94077,94338,136110,148605,155845,157064,157065,165963,165964,173534,188991,200814,161922,164356,171883,174268,201630,204739,204812,141210)
+        and a1.numericPart not in (94077,94338,136110,148605,155845,157064,157065,165963,165964,173534,188991,200814,161922,164356,171883,174268,201630,204739,204812,141210,293217,238766,237616,265051)
         and a1.preferred = 1 
         order by a._Allele_key, a1.numericPart desc
         ''', 'auto')
