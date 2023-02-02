@@ -368,7 +368,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/OMIMindex.html">OMIM Vocabulary Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/DOindex.html">Disease Ontology (DO) Vocabulary Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/omim_hpoload/index.html">OMIM/HPO Annotation Load</A> <B>(smb)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/mp_hpoload/index.html">MP HPO Relationship Load </A> <B>(smb)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mp_hpoload/index.html">MP HPO Header Mapping Load </A> <B>(smb)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mp_hpmappingload/index.html">MP HPO Relationship Load </A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MPindex.html">Mammalian Phenotype Vocabulary/DAG Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz</A> <B>(csmith)</B>
