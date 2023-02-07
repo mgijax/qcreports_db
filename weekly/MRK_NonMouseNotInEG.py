@@ -85,7 +85,7 @@ and not exists (select 1 from VOC_Annot va
         )
 
 )
-order by commonname, symbol, egID
+order by commonname, msymbol, egID
 ''', 'auto')
 
 for r in results:
