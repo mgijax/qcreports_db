@@ -201,7 +201,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A>
-<LI>QC: saving for future use
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOSymbolChange.sql.rpt">QC: MGI gene symbols that have changed and with Noctua GO annotationsi</A><B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">QC: Genes with no GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA.html">QC: Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A>
