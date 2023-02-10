@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-22-33
+DATE: 02/09/2023
+STAFF: lec
+wts2-1097/fl2-203/add Experiments where Curation State=Done and Evaluation !=Yes
+mgd/GXD_HTExpCuration.py
+
 TAG: no tag
 DATE: 02/07/2023
 STAFF: lec
