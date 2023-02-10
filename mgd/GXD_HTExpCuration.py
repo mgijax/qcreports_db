@@ -62,6 +62,7 @@ results = db.sql('''
                 --  experimental variables = Not Curated
                 or hv._Term_key = 20475439
         )
+        order by a.accid
         ''', 'auto')
 
 for r in results:
