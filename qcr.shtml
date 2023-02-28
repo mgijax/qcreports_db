@@ -271,26 +271,26 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainJAX7.sql.current.rpt">New MMRRC JR#s created in the past week</A>
 </OL>
 
-<A NAME="sequencegroup"><B>Sequence Group (rmb, cjb, jrecla, yz)</B></A>
+<A NAME="sequencegroup"><B>Sequence Group (rmb, cjb, , yz)</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz, jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz, )</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(?)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz, jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz, jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz, )</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz, )</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GeneNoMcvAnnot.rpt">Genes with no MCV Annotation</A> <B>(yz)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>(jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnot.rpt">Marker MCV Annotations</A> <B>(yz, jrecla)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A> <B>(jrecla)</B>
-<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A>  <B>(jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>()</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnot.rpt">Marker MCV Annotations</A> <B>(yz, )</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A> <B>()</B>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A>  <B>()</B>
 <BR>This report contains the following sections:
     <OL>
     <LI>Markers  with conflict between the Marker Type and the MCV Marker Type
     <LI>Markers Annotated to Grouping Terms
     <LI>Markers with Multiple MCV Annotations
     </OL>
-<LI>The following logs report: <B>(jrecla)</B>
+<LI>The following logs report: <B>()</B>
     <BR>* Gene Models in MGI that have been obsoleted by the provider 
     <BR> * Gene Model biotypes not loaded because unable to translate biotype. 
     <OL>
@@ -302,30 +302,30 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/reports_db/output/MGI_BioTypeConflict.rpt">MGI Biotype Conflict Public Report</A> <B>(cjb)</B>
 <LI>QTL Reports
     <OL>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_1.rpt">QTL markers that have no mapping and no allele associations</A> <B>(jrecla)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_2.rpt">QTL markers that have mapping but no allele associations</A> <B>(jrecla)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_3.rpt">QTL markers that have no mapping but have allele associations</A> <B>(jrecla)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_4.rpt">QTL markers that have assigned reference of J:23000 or J:85000</A> <B>(jrecla)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_5.rpt">QTL markers that are in Nomen and have not been broadcast</A> <B>(jrecla)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Literature Triage QTL Report</A> <B>(jrecla)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A> <B>(jrecla)</B>
-     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidateGene.rpt">QTL-to-Candidate Gene Relationships</A> <B>(jrecla)</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_1.rpt">QTL markers that have no mapping and no allele associations</A> <B>()</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_2.rpt">QTL markers that have mapping but no allele associations</A> <B>()</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_3.rpt">QTL markers that have no mapping but have allele associations</A> <B>()</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_4.rpt">QTL markers that have assigned reference of J:23000 or J:85000</A> <B>()</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_5.rpt">QTL markers that are in Nomen and have not been broadcast</A> <B>()</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Literature Triage QTL Report</A> <B>()</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A> <B>()</B>
+     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidateGene.rpt">QTL-to-Candidate Gene Relationships</A> <B>()</B>
     </OL>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>()</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM.rpt">Genes/Pseudogenes with C4AM Coordinates from provider collection “MGI"</A> <B>(yz)</B>
 
 </OL>
 
-<A NAME="sequence"><B>Sequences (rmb, cjb, jrecla, yz)</B></A>
+<A NAME="sequence"><B>Sequences (rmb, cjb, , yz)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Deleted.sql.rpt">Deleted Sequences with MGI Associations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Split.sql.rpt">Split Sequences</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_MarkerAnnotation.sql.rpt">Markers Annotated to a Secondary Sequence Accession ID</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Dummy.sql.rpt">Dummy Sequences Annotated to Mouse Marker (report a) & Molecular Segments (report b) </A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultCoordinate.sql.rpt">Symbols w/ > 1 Ensembl, NCBI Gene Model Association</A> <B>(yz,jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,jrecla)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultCoordinate.sql.rpt">Symbols w/ > 1 Ensembl, NCBI Gene Model Association</A> <B>(yz,)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz,)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz,)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz,)</B>
 </OL>
 
 <A NAME="homology"><B>Homology (mdolan) </B></A>
@@ -347,8 +347,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/littriageload/index.html">Literature Triage Load</A> <B>(jfinger)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/pubmed2geneload/index.html">PubMed to Gene Load</A> <B>(jfinger)</B>
 <LI><A HREF="/usrlocalmgi/live/pdfdownload/index.html">PDF Download (PLOS, etc.)</A> <B>(jfinger)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,jrecla)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,jrecla)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz,)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz,)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MAindex.html">Adult Mouse Anatomy Vocabulary/DAG Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/mp_emapaload/index.html">MP/EMAPA Relationships Load</A> <B>(terryh)</B>
