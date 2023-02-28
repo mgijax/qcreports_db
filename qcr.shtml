@@ -300,16 +300,16 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GIA_MRK_ENSEMBL.rpt">Ensembl Associations for Gene Index</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GIA_MRK_Sequence.rpt">Sequence Associations for Gene Index</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/reports_db/output/MGI_BioTypeConflict.rpt">MGI Biotype Conflict Public Report</A> <B>(cjb)</B>
-<LI>QTL Reports
+<LI>QTL Reports (yz)
     <OL>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_1.rpt">QTL markers that have no mapping and no allele associations</A> <B>(?)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_2.rpt">QTL markers that have mapping but no allele associations</A> <B>(?)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_3.rpt">QTL markers that have no mapping but have allele associations</A> <B>(?)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_4.rpt">QTL markers that have assigned reference of J:23000 or J:85000</A> <B>(?)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_5.rpt">QTL markers that are in Nomen and have not been broadcast</A> <B>(?)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Literature Triage QTL Report</A> <B>(?)</B>
-    <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A> <B>(?)</B>
-     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidateGene.rpt">QTL-to-Candidate Gene Relationships</A> <B>(?)</B>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_1.rpt">QTL markers that have no mapping and no allele associations</A>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_2.rpt">QTL markers that have mapping but no allele associations</A>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_3.rpt">QTL markers that have no mapping but have allele associations</A>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_4.rpt">QTL markers that have assigned reference of J:23000 or J:85000</A>
+    <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_5.rpt">QTL markers that are in Nomen and have not been broadcast</A> 
+    <LI><A HREF="/data/reports/qcreports_db/output/QTL_Triage.rpt">Literature Triage QTL Report</A>
+    <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A>
+     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidateGene.rpt">QTL-to-Candidate Gene Relationships</A>
     </OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(?)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM.rpt">Genes/Pseudogenes with C4AM Coordinates from provider collection “MGI"</A> <B>(yz)</B>
