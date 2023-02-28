@@ -197,7 +197,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase Allele Check</A>
 </OL>
 
-<A NAME="go"> <B>GO (dph, dsitnikov, ln, csmith)</B></A>
+<A NAME="go"> <B>GO (dph, dmitrys, ln, csmith)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dph, krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A>
@@ -207,7 +207,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A>
 <LI><A HREF="/data/loads/go/goamouse/output/pubmed.error">QC: GOAMouse/invalid pubmedids</A> <B>(ln)</B>
 <LI><A HREF="/data/loads/go/gomousenoctua/output/pubmed.error">QC: GOMouseNoctua/invalid pubmedids</A> <B>(ln)</B>
-<LI><A HREF="https://docs.google.com/spreadsheets/d/1_Mnbsej6X2jQYt_bf7f3KbaQ5l66hWtp8QTGCNDQ_u8/edit?ts=5b50b643#gid=1424399446">QC: Underannotated genes</A> <B>(dmitrys, csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_Unannotationed.rpt">QC: Underannotated genes</A> <B>(dmitrys, csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A>
