@@ -305,7 +305,7 @@ for r in results:
         fp.write(TAB)
 
         if key in used_refs and key in outstanding_refs:
-                fp.write(str(outstanding_refs[key][0]/used_refs[key][0])) 
+                fp.write('%.2f' % (outstanding_refs[key][0]/used_refs[key][0]))
         fp.write(TAB)
 
         if key in after_completion:
