@@ -4,9 +4,10 @@
 \echo '  2. Reference has status of “Keep”'
 \echo '  3. Reference Type = “Peer Reviewed Article”'
 \echo '  4. is_review = “no”'
-\echo '  5. reference creation date   >11/01/2017 '
+\echo '  5. reference creation date >11/01/2017'
 \echo '  6. exclude journals “Mol Vis” and “Am J Trans Res”'
 \echo '  7. Reference does not have “MGI:DOI_checked” tag associated'
+\echo ''
 
 select c.mgiid, c.pubmedid, c.jnumid
 from bib_citation_cache c, bib_refs b
