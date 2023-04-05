@@ -317,7 +317,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 
 </OL>
 
-<A NAME="sequence"><B>Sequences (rmb, cjb, , yz)</B></A>
+<A NAME="sequence"><B>Sequences (rmb, cjb, yz)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Deleted.sql.rpt">Deleted Sequences with MGI Associations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_Split.sql.rpt">Split Sequences</A>
@@ -327,6 +327,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_MultMarkerGeneModels.sql.rpt">Ensembl, NCBI Gene Models w/ > 1 Marker Association</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoENSEMBL.rpt">Ensembl Gene Models with no Marker Association</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoNCBI.rpt">NCBI Gene Models with no Marker Association</A> <B>(yz)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_PAR_NCBIID.rpt">PARtner_NCBI_Discrepancy</A> <B>(yz)</B>
 </OL>
 
 <A NAME="homology"><B>Homology (mdolan) </B></A>
