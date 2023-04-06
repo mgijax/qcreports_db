@@ -30,11 +30,16 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-# Organize result set by marker asmultiple gene models per marker
-# {mgiID:[line], ...}
-reportDict = {}
-
-fp = reportlib.init(sys.argv[0], 'PARtner_NCBI_Discrepancy Report', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
+fp.write('#\n')
+fp.write('# PARtner_NCBI_Discrepancy Report\n')
+fp.write('# field 1: Marker1 ID\n')
+fp.write('# field 2: Marker1 Symbol\n')
+fp.write('# field 3: Marker1 NCBI ID\n')
+fp.write('# field 4: Marker2 ID\n')
+fp.write('# field 5: Marker2 Symbol\n')
+fp.write('# field 6: Marker2 NCBI ID\n')
+fp.write('#\n')
 
 results = db.sql('''select  a3.accid as mgiID1, m1.symbol as symbol1, 
         a1.accid as ncbiId1, a4.accid as mgiID2, m2.symbol as symbol2, a2.accid as ncbiId2
@@ -63,17 +68,21 @@ results = db.sql('''select  a3.accid as mgiID1, m1.symbol as symbol1,
     and a4.prefixPart = 'MGI:' 
     order by symbol1''', 'auto')
 
+currentParRelationships = []
 mismatchCt = 0
 for r in results:
     ncbiId1 = r['ncbiId1']
     ncbiId2 = r['ncbiId2']
     if ncbiId1 != ncbiId2:
-        mismatchCt += 1
         mgiId1 = r['mgiID1']
         symbol1 = r['symbol1']
         mgiId2 = r['mgiID2']
         symbol2 = r['symbol2']
-        fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (mgiId1, TAB, symbol1, TAB, ncbiId1, TAB, mgiId2, TAB, symbol2, TAB, ncbiId2, CRT))
+        if mgiId1 not in currentParRelationships and mgiId2 not in currentParRelationships:
+            mismatchCt += 1
+            currentParRelationships.append(mgiId1)
+            currentParRelationships.append(mgiId2)
+            fp.write('%s%s%s%s%s%s%s%s%s%s%s%s' % (mgiId1, TAB, symbol1, TAB, ncbiId1, TAB, mgiId2, TAB, symbol2, TAB, ncbiId2, CRT))
 
 fp.write(CRT)
 fp.write('Total: %s' % mismatchCt)
