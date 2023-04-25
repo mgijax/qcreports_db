@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-22-39
+DATE: 04/11/2023
+STAFF: dbm
+fl2-278/Clean up bhmgiapp14ld (scrum server) /data/downloads (includes Test and Prod)
+qcr.html: removed gensatload link (retired)
+
 TAG: qcreports_db-6-0-22-38
 DATE: 03/01/2023
 STAFF: lec
