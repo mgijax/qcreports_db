@@ -50,7 +50,6 @@ and ac_ref._mgitype_key = 1
 and ac_ref.prefixpart = 'J:' 
 and ac_ref._logicaldb_key = 1 
 and m._marker_key = ga._marker_key 
-and ac_ref.accid = 'J:42766'
 order by jnum_id, assay_mgiid
 ''' % (value), 'auto')
 
