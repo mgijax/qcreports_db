@@ -39,7 +39,8 @@ gs.specimenlabel,
 gs.age,
 gs.specimennote
 from GXD_Specimen gs , GXD_Assay ga, ACC_Accession ac, ACC_Accession ac_ref, MRK_Marker m, GXD_AssayType gat
-where ga._AssayType_key in (1, 6, 9) 
+where ga._assaytype_key in (1, 6, 9) 
+and ga._assaytype_key = gat._assaytype_key
 and lower(gs.specimennote) like lower('%s') 
 and ga._assay_key = gs._assay_key 
 and ac._object_key = ga._assay_key and ac.preferred = 1 and ac._mgitype_key = 8 and ac._logicaldb_key = 1 
@@ -49,6 +50,7 @@ and ac_ref._mgitype_key = 1
 and ac_ref.prefixpart = 'J:' 
 and ac_ref._logicaldb_key = 1 
 and m._marker_key = ga._marker_key 
+and ac_ref.accid = 'J:42766'
 order by jnum_id, assay_mgiid
 ''' % (value), 'auto')
 
