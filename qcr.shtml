@@ -275,23 +275,23 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="sequencegroup"><B>Sequence Group (rmb, cjb, , yz)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/SEQ_NMs.rpt">NM Sequences that are not associated with a MGI Marker</A> <B>(yz)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(?)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(?)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(?)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(yz)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(yz)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GeneNoMcvAnnot.rpt">Genes with no MCV Annotation</A> <B>(yz)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>(?)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnot.rpt">Marker MCV Annotations</A> <B>(yz)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A> <B>(?)</B>
-<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A>  <B>(?)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load - these reports are refreshed only when a batch annotation load is run</A> <B>(yz)</B>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load - this report is refreshed nightly M-F</A>  <B>(yz)</B>
 <BR>This report contains the following sections:
     <OL>
     <LI>Markers  with conflict between the Marker Type and the MCV Marker Type
     <LI>Markers Annotated to Grouping Terms
     <LI>Markers with Multiple MCV Annotations
     </OL>
-<LI>The following logs report: <B>(?)</B>
+<LI>The following logs report: <B>(yz)</B>
     <BR>* Gene Models in MGI that have been obsoleted by the provider 
     <BR> * Gene Model biotypes not loaded because unable to translate biotype. 
     <OL>
@@ -312,7 +312,7 @@ be used at times to test reports for <I>future</I> public consumption.)
     <LI><A HREF="/data/reports/qcreports_db/output/MGI_QTL_ReferenceNotes.sql.rpt">QTL Public Reference Notes</A>
      <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTLCandidateGene.rpt">QTL-to-Candidate Gene Relationships</A>
     </OL>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(?)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM_GeneModel.rpt">Markers with C4AM Coords and Gene Models</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_C4AM.rpt">Genes/Pseudogenes with C4AM Coordinates from provider collection “MGI"</A> <B>(yz)</B>
 
 </OL>
