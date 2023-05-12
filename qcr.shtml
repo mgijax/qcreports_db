@@ -330,7 +330,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_PAR_NCBIID.rpt">PARtner_NCBI_Discrepancy</A> <B>(yz)</B>
 </OL>
 
-<A NAME="homology"><B>Homology (mdolan) </B></A>
+<A NAME="homology"><B>Homology (csmith) </B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class1.rpt">Classes for which there are > 10 Genes From a Single Species</A> 
 </OL>
@@ -379,7 +379,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A> <B>(paul hale)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emalload/index.html">Endonuclease-mediated Allele Load (IMPC CRISPR)</A> <B>(laurens)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(csmith)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(mdolan, csmith)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
 <LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
