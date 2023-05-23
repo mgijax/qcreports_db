@@ -72,11 +72,7 @@ results = db.sql('''
         and exists (select 1 from VOC_Annot v 
                 where a._Allele_key = v._object_key
                 and v._AnnotType_key = 1014
-                and v._term_key = 11025597)
-        and exists (select 1 from VOC_Annot v 
-                where a._Allele_key = v._object_key
-                and v._AnnotType_key = 1014
-                and v._term_key = 11025589)
+                and v._term_key in (11025597,11025589)
 
         -- attribute does not exist
         and not exists (select 1 from VOC_Annot v 
