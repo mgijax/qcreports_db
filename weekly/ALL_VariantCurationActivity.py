@@ -44,7 +44,7 @@ for r in results:
 
 results = db.sql('''
 select count(distinct v._allele_key) as countByWeek, u.login, 
-	date_trunc('week', v.creation_date + interval '-1 day') - interval '1 days' as weekly
+	date_trunc('week', v.creation_date + interval '-1 day') - interval '1 day' as weekly
 from ALL_Variant v, MGI_User u
 where v._createdby_key = u._user_key
 and v._sourcevariant_key is not null
