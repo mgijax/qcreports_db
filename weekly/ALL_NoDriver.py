@@ -42,7 +42,7 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], 'Allele Missing Driver Relationship', os.environ['QCOUTPUTDIR'])
-fp.write('\t\tattribute in "inserted expressed sequence", "reporter" but not "recombinase"'\n')
+fp.write('\t\tattribute in "inserted expressed sequence", "reporter" but not "recombinase"\n')
 fp.write('\t\texcludes allele status: deleted\n')
 fp.write('\t\tsorted by JNum, newest to oldest, then by allele name\n\n')
 
@@ -72,7 +72,7 @@ results = db.sql('''
         and exists (select 1 from VOC_Annot v 
                 where a._Allele_key = v._object_key
                 and v._AnnotType_key = 1014
-                and v._term_key in (11025597,11025589)
+                and v._term_key in (11025597,11025589))
 
         -- attribute does not exist
         and not exists (select 1 from VOC_Annot v 
