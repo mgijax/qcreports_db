@@ -42,7 +42,7 @@ PAGE = reportlib.PAGE
 #
 
 fp = reportlib.init(sys.argv[0], 'Allele Missing Driver Relationship', os.environ['QCOUTPUTDIR'])
-fp.write('\t\tattribute in "inserted expressed sequence", "reporter" but not "recombinase"\n')
+fp.write('\t\tattribute in "inserted expressed sequence", "reporter" but not "recombinase"'\n')
 fp.write('\t\texcludes allele status: deleted\n')
 fp.write('\t\tsorted by JNum, newest to oldest, then by allele name\n\n')
 
