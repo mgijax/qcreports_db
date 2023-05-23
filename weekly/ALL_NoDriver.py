@@ -1,12 +1,10 @@
-
 '''
 #
 # Report:
 #	
 #       Alleles that have:
 #	1)  Allele status not deleted
-@	2)  Attribute in "inserted expressed sequence", "reporter" but not "recombinase"
-#
+#	2)  Attribute in "inserted expressed sequence", "reporter" but not "recombinase"
 #
 #	Columns:
 #       JNum of allele
@@ -16,7 +14,7 @@
 #	Sort: JNum newest to oldest, allele name alpha
 #
 # Usage:
-#       ALL_RecombNoDriver.py
+#       ALL_NoDriver.py
 #
 # Notes:
 #
