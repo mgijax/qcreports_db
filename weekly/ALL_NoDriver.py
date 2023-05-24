@@ -48,7 +48,7 @@ fp.write('\t\tsorted by JNum, newest to oldest, then by allele name\n\n')
 
 fp.write(str.ljust('JNum', 15) + \
         str.ljust('Allele ID', 15) + \
-        str.ljust('Allele Symbol', 60) + \
+        str.ljust('Allele Symbol', 70) + \
         str.ljust('Allele Status', 20) + \
         str.ljust('Allele Generation', 25) + \
         str.ljust('Attributes', 75) + CRT*2)
@@ -103,7 +103,7 @@ results = db.sql('''
 for r in results:
     fp.write(str.ljust(r['jnumID'], 15) + \
              str.ljust(r['alleleID'], 15) + \
-             str.ljust(r['symbol'], 60) + \
+             str.ljust(r['symbol'], 70) + \
              str.ljust(r['allelestatus'], 20) + \
              str.ljust(r['alleletype'], 25) + \
              str.ljust(r['attributeTypes'], 75) + CRT)
