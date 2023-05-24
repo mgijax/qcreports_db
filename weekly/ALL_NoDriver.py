@@ -11,7 +11,7 @@
 #	Allele MGI ID
 #	Allele symbol
 #
-#	Sort: JNum newest to oldest, allele symbol alpha
+#	Sort: JNum newest to oldest, allele name alpha
 #
 # Usage:
 #       ALL_NoDriver.py
@@ -44,7 +44,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Allele Missing Driver Relationship', os.environ['QCOUTPUTDIR'])
 fp.write('\t\tattribute in "inserted expressed sequence", "reporter" but not "recombinase"\n')
 fp.write('\t\texcludes allele status: deleted\n')
-fp.write('\t\tsorted by JNum, newest to oldest, then by allele symbol\n\n')
+fp.write('\t\tsorted by JNum, newest to oldest, then by allele name\n\n')
 
 fp.write(str.ljust('JNum', 15) + \
         str.ljust('Allele ID', 15) + \
