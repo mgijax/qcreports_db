@@ -33,6 +33,7 @@ ALL_VariantHGVS.py|Variants needing HGVS data|Report variants where:\r\nHGVS fie
 ALL_VariantNoReviewedTag.py|Variants no reviewed tag|Minimal Information:\r\n1. It has curated genomic coordinates\r\n2. It has ref and var seqs\r\n3. It has types and effects|sc|Laurens Wilming|2020-09-22|
 ALL_VariantToBeCurated.py|Variants to be curated|Report variants where:\r\nthe allele has source variant data, and...\r\nhas no curated variant data\r\nColumns: \r\nAllele ID\r\nAllele Symbol|sc|Laurens Wilming|2019-08-20|
 ALL_VariantToBeReviewed.py|Variants to be reviewed|Report variants where:\r\nall five curated genomic fields are not null, and...\r\nreviewed box is not checked\r\nColumns:\r\nAllele ID\r\nAllele Symbol\r\nCurator Notes|sc|Laurens Wilming|2019-08-21|
+ALL_VariantToBeReviewed2.py|Variants with "mut=" in the nomen note but no variant record.||jer|Laurens Wilming|2023-06-08|
 BIB_ByPubMedId.py|PubMed Id in/not in MGI|Enter PubMed Id.\r\n\r\nIf PubMed Id exists in MGI, then display PubMed Id and isDiscard value.\r\n \r\n|lec|Cindy Smith|2018-12-28|list of PubMed Ids
 ALL_MPChild.py|MP Term and Child Annotations|Retrieve all annotated genotypes, and any notes for the specified MP Term ID, \r\n or any of its children. \r\n \r\nOrdered by allelepairs, genotype_id, annotatedTerm, jnum, _note_key|lec|Anna Anagnostopoulos|2022-09-08|MP Term ID#
 ALL_MPGenotype.py|MP Term Genotype and Notes QC|Retrieve all directly annotated genotypes, and any notes for the specified MP Term ID. \r\nRequested in TR10423.|lec|Cindy Smith|2022-06-22|MP Term ID
