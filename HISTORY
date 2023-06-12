@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-22-??
+DATE: 06/12/2023
+STAFF: lec
+wts2-1208/fl2-402/add PMID id to GXD HT Experiment Note Search
+pwi/GXD_HTExperimentByNote.py
+
 TAG: qcreports_db-6-0-22-49
 DATE: 06/08/2023
 STAFF: jer
