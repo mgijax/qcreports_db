@@ -45,10 +45,24 @@ def runReport () :
         script = rpt + ".py"
     rptInfo = list(filter(lambda d: d["script"] == script,  getReportList()))
     if len(rptInfo) == 1:
-        # argument to pass to the script
-        arg = None
-        if "arg" in form:
-            arg = form["arg"].value
+
+        argLabel = rptInfo[0].get("argLabel",None)
+        if argLabel:
+            if argLabel != "*":
+                # old style (simple) arg
+                # look for "arg" in the form and set sys.argv
+                arg = None
+                if "arg" in form:
+                    arg = form["arg"].value
+                    sys.argv = [sys.argv[0], arg]
+                else:
+                    raise Exception("No argument for parameter: " + argLabel)
+            else:
+                # if arg label is "*", the form has custom inputs, and the
+                # imported report.py is responsible for getting them
+                # (each report.py imports cgi and gets cgi.FieldStorage)
+                pass
+
         # name to give download file
         fname = None
         if "filename" in form:
@@ -56,10 +70,6 @@ def runReport () :
         # emit the response header
         header("text-plain", fname)
         # To run the report, we just import it. 
-        # To pass an argument, we se sys.argv
-        if arg is not None:
-            sys.argv = [sys.argv[0], arg]
-        # run it!
         importlib.import_module(rpt)
     elif len(rptInfo) == 0:
         errorExit("No report with this name: " + rpt)

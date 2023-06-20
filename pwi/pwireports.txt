@@ -8,13 +8,23 @@
 #       to see a create/update/delete of this file, simply refresh the associated pwi/custom report index page
 #
 # pipe-delimited file
-# field 1: python name  : the specific *py file that will be run from the PWI/Custom Report Index/Report Detail/Run or Download button
+# field 1: script name  : the specific *py file that will be run from the PWI/Custom Report Index/Report Detail/Run or Download button
 # field 2: display name
 # field 3: description
 # field 4: created by
 # field 5: requested by
 # field 6: creation date
-# field 7: argumentLabel
+# field 7: argumentLabel : either blank, a human readable parameter label, or a "*"
+#       if blank:
+#           the report takes no user-supplied parameters
+#       if a label (anything that's not blank and not a "*"): 
+#           the report takes a single user-supplied text parameter. The user is shown a form
+#           with a type-in box labelled with the argumentLabel value. This value is supplied as sys.argv[1] to the
+#           python script in field 1
+#       if "*": 
+#           custom form parameters are defined in a .html file. If the script (field 1) is "foo.py", the file is 
+#           "foo.html" in the same directory. foo.py is responsible for getting the form parameter values (import cgi, then
+#           form = cgi.FormStorage())
 #
 BIB_BioRxiv.py|BioRxiv articles and published articles with the same title||sc|Jacqueline Finger|2021-04-07|
 GXD_HTExperimentByNote.py|GXD HT Experiment Note Search|This report would display searches of the Experiment Note field.  Although I can search this field in the pwi module, it would be helpful to get the results as a report (rather than having to toggle through them).\r\n\r\nReport name: GXD HT Experiment Note Search\r\n\r\nSort:\r\n\r\nPrimary: Experiment Type\r\n\r\nSecondary: Evaluation State\r\n\r\nTertiary: Experiment ID|lec|Connie Smith|2022-10-03|Experiment Note Text
@@ -26,7 +36,7 @@ GXD_HTSampleByNote.py|GXD HT Sample Notes Search|Search GXD_HTSample notes field
 GXD_ResultByNote.py|GXD Result Note Search|Searches InSitu Result Notes by note text (via contains search). \r\nSearch is restricted to Immunohistochemistry, In situ reporter (knock-in) and RNA in situ assays. \r\n \r\nCase insensitive.  "%" is wildcard for multiple characters. "?" is wildcard for a single character.  Spaces, alphanumerics, and most "punctuation" characters (except wildcards) are recognized literally as searchable characters.  \r\n \r\nWords are AND'ed together. Word order is enforced. Uses a Contains search on each word, so "respond to" also will return "correspond to". \r\n \r\nSome results are a little unpredictable because browsers will suppress extra spaces in the display that do exist in the data, for example, search for "section.  In" (no quotes, two spaces after the period) and compare to display.|lec|Connie Smith|2015-02-20|Result Note Text
 GXD_SpecimenByNote.py|GXD Specimen Note Search|Searches InSitu Specimen Notes by note text (via contains search). \r\nSearch is restricted to Immunohistochemistry, In situ reporter (knock-in) and RNA in situ assays. \r\n \r\nCase insensitive.  "%" is wildcard for multiple characters. "?" is wildcard for a single character.  Spaces, alphanumerics, and most "punctuation" characters (except wildcards) are recognized literally as searchable characters.  \r\n \r\nWords are AND'ed together. Word order is enforced. Uses a Contains search on each word, so "respond to" also will return "correspond to". \r\n \r\nSome results are a little unpredictable because browsers will suppress extra spaces in the display that do exist in the data, for example, search for "section.  In" (no quotes, two spaces after the period) and compare to display.|lec|Connie Smith|2023-05-09|Specimen Note Text
 GXD_AssayByNote.py|GXD Assay Note Search|Searches Assay Notes by note text (via contains search). \r\nSearch excludes In situ reporter (transgenic), Recombinase reporter\r\n \r\nCase insensitive.  "%" is wildcard for multiple characters. "?" is wildcard for a single character.  Spaces, alphanumerics, and most "punctuation" characters (except wildcards) are recognized literally as searchable characters.  \r\n \r\nWords are AND'ed together. Word order is enforced. Uses a Contains search on each word, so "respond to" also will return "correspond to". \r\n \r\nSome results are a little unpredictable because browsers will suppress extra spaces in the display that do exist in the data, for example, search for "section.  In" (no quotes, two spaces after the period) and compare to display.|lec|Connie Smith|2023-05-24|Assay Note Text
-BIB_ByExtractedText.py|Lit Triage : Search Extracted Text|Search Extracted Text : body + start methods + supplemental data + author manuscript fig legends.\r\nExclude references.\r\nNote:  extracted text is pre-supplementary data\r\n\r\n<A HREF="http://www.theasciicode.com.ar/extended-ascii-code/degree-symbol-ascii-code-248.html">http://www.theasciicode.com.ar/extended-ascii-code/degree-symbol-ascii-code-248.html</A>\r\n|lec|Jacqueline Finger|2017-08-03|Extracted Text
+BIB_ByExtractedText.py|Lit Triage : Search Extracted Text|Search Extracted Text : body + start methods + supplemental data + author manuscript fig legends.\r\nExclude references.\r\nNote:  extracted text is pre-supplementary data\r\n\r\n<A HREF="http://www.theasciicode.com.ar/extended-ascii-code/degree-symbol-ascii-code-248.html">http://www.theasciicode.com.ar/extended-ascii-code/degree-symbol-ascii-code-248.html</A>\r\n|lec|Jacqueline Finger|2017-08-03|*
 BIB_ExtractedTextByMGIIDs.py|Extracted Text in database - Search by ID|Search Extracted Text by MGI ID(s): body + start methods + supplemental data + author manuscript fig legends.\r\nExclude references.|lec|Jacqueline Finger|2023-01-18|MGI IDs (space-delimited)
 ALL_VariantPriority.py|Curation prioritization report|A list of alleles where:\r\nthe allele has phenotypes annotations (is a phenotypic allele), and...\r\nthe allele has variants, and..\r\nnone of the variants has curated genomic data (version may be 'Not Specified'\r\nColumns:\r\nAllele MGI ID\r\nAllele symbol|sc|Laurens Wilming|2019-08-20|
 ALL_VariantHGVS.py|Variants needing HGVS data|Report variants where:\r\nHGVS field is null\r\nall five curated genomic fields are not null\r\nColumns: \r\nAllele ID\r\nAllele Symbol\r\nChromosome\r\ncurated genomic Start\r\ncurated genomic Reference Allele\r\ncurated genomic Variant Allele|sc|Laurens Wilming|2019-08-21|
