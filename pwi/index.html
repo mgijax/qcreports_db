@@ -5,6 +5,14 @@
 body {
     padding: 12px;
 }
+input:invalid {
+    box-shadow: 0 0 5px 1px red;
+}
+
+input:focus:invalid {
+    box-shadow: none;
+}
+
 .data-table {
     border: 1px solid black;
     border-collapse: collapse;
@@ -173,9 +181,10 @@ function findReport (arg) {
     }
 }
 
-function showResults (rows) {
+function showResults (rows, elapsed) {
     document.getElementById("report-detail").classList.add("showing-results")
     document.getElementById("result-count").innerText = ""+(rows.length - 1) // first row = column labels
+    document.getElementById("result-time").innerText = "" + elapsed
     const tbl = document.querySelector("#results-table")
     tbl.innerHTML = rows.map((r,i) => {
         if (i === 0) {
@@ -184,6 +193,12 @@ function showResults (rows) {
             return '<tr>' + r.map(val => `<td>${sanitize(val)}</td>`).join('') + '</tr>'
         }
     }).join('')
+}
+
+function getElapsed (startTime) {
+    const tnow = new Date()
+    const sec = Math.round((tnow - startTime) / 1000)
+    return sec
 }
 
 // Runs the current report, passing whatever value is in the input box (if appropriate).
@@ -207,15 +222,14 @@ function runReport (download) {
         document.getElementById('page-container').classList.add("running-report")
         const tstart = new Date()
         const intvl = window.setInterval(function() {
-            const tnow = new Date()
-            const sec = Math.round((tnow - tstart) / 1000)
-            document.getElementById("elapsed").innerText = `(${sec} sec)`
+            document.getElementById("elapsed").innerText = `(${getElapsed(tstart)} sec)`
         }, 1000)
         fetchText(url).then(data => {
             window.clearInterval(intvl);
+            document.getElementById("elapsed").innerText = ``
             document.getElementById('page-container').classList.remove("running-report")
             rows = parseTabDelimited(data)
-            showResults(rows)
+            showResults(rows, getElapsed(tstart))
         }).catch(err => {
             document.getElementById('page-container').classList.remove("running-report")
             alert(err)
@@ -236,7 +250,7 @@ function getReportForm (rpt) {
         const fcontents = 
             `<span>
                 <label><span id="arg-label">${rpt.argLabel}</span> = </label>
-                <input type="text" id="arg" value="" />
+                <input type="text" id="arg" value="" required />
             </span>`
         return Promise.resolve(fcontents)
     } else {
@@ -417,7 +431,7 @@ function setHash2 () {
 
   <div id="report-results">
       <br/>
-      <b>Data:</b> found <span id="result-count"></span> results.
+      <b>Data:</b> found <span id="result-count"></span> results in <span id="result-time"></span> seconds.
       <table id="results-table" class="data-table">
       </table>
   </div> <!-- report results -->

@@ -29,10 +29,12 @@ TAB = reportlib.TAB
 sys.stdout.write('pubmedID\tmgiID' + CRT)
 
 # batch this query by batchSize so CGI does not timeout
-batchSize = 10000
+batchSize = 1000000
 results = db.sql('select max(_refs_key) as maxKey from BIB_Workflow_Data', 'auto')
 maxKey = results[0]['maxKey']
 numBatches = int((maxKey / batchSize) + 1)
+
+sys.stderr.write("Num batches= " + str(numBatches) + "\n")
 
 for i in range(numBatches):
 
@@ -41,38 +43,29 @@ for i in range(numBatches):
 
         relClause = ""
         if relArg != "all":
-            relClause = f"\n\tand r.relevanceterm = '{relArg}'"
+            relClause = f"and r.relevanceterm = '{relArg}'"
 
         dateClause = ""
         if dateArg:
-            dateClause = f"\n\tand br.creation_date >= '{dateArg}'"
+            dateClause = f"and br.creation_date >= '{dateArg}'"
 
         q = '''
-        with refkeys as (
-            select br._refs_key
-            from bib_refs br, BIB_Citation_Cache r
-            where br._refs_key = r._refs_key
-            and br._refs_key >= %d 
-            and br._refs_key <= %d
-            --
-            %s
-            %s
-        )
-        select r.pubmedID , r.mgiid
-        from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Refs br, refkeys rk
-        where r._refs_key = rk._refs_key
+        select distinct r.pubmedID , r.mgiid
+        from BIB_Citation_Cache r, BIB_Workflow_Data d, BIB_Refs br
+        where r._refs_key = br._refs_key
         and r._refs_key = d._refs_key 
-        and r._refs_key = br._refs_key
+        and d._refs_key >= %d 
+        and d._refs_key <= %d
+        %s
+        %s
         and d._ExtractedText_key not in (48804491) 
-        and lower(d.extractedText) like lower('%s')
+        and d.extractedText ilike '%s'
         ''' % (startKey, endKey, dateClause, relClause, f'%{textArg}%')
 
-        first = True
+        sys.stderr.write(q + '\n')
+        sys.stderr.flush()
+
         for r in db.sql(q, 'auto'):
-                if first:
-                    sys.stderr.write(q + '\n')
-                    sys.stderr.flush()
-                    first = False
                 pmid = r['pubmedID'] if r['pubmedID'] else ''
                 mgiid = r['mgiID']
                 sys.stdout.write(f'{pmid}\t{mgiid}\n')
