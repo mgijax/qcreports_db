@@ -32,8 +32,9 @@ string_agg(distinct kv.value, ', ') as values,
 case 
         when t.term = 'Predicted Yes' then 1 
         when t.term = 'Predicted No' then 2 
-        when t.term = 'Yes' then 3 
-        when t.term = 'No' then 4 
+        when t.term = 'Maybe' then 3 
+        when t.term = 'Yes' then 4 
+        when t.term = 'No' then 5
 end as relevanceOrder
 from gxd_htrawsample rs, 
      mgi_keyvalue kv, 
@@ -52,7 +53,7 @@ and a._mgitype_key = 42 -- experiment
 and a._logicaldb_key = 190 
 and a.preferred = 1 
 group by 1, 2, 3, 4 
-order by t.term desc, a.accid, rs.accid 
+order by relevanceOrder, a.accid, rs.accid 
 limit 5000
 ''' % (value), 'auto')
 
