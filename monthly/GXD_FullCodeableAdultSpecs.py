@@ -39,8 +39,6 @@ fp = reportlib.init(sys.argv[0], 'Full-coded data only from adult specimens', ou
 
 fp.write('''
         List all markers where the only full-coded data for the marker is adult or postnatal
-        For each marker list the number of papers: indexed, fullcoded
-
 ''')
 
 fp.write(str.ljust('acc id', 25))
