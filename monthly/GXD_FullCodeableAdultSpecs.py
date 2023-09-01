@@ -37,10 +37,6 @@ PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Full-coded data only from adult specimens', outputdir = os.environ['QCOUTPUTDIR'])
 
-fp.write('''
-        List all markers where the only full-coded data for the marker is adult or postnatal
-''')
-
 fp.write(str.ljust('acc id', 25))
 fp.write(SPACE)
 fp.write(str.ljust('symbol', 35))
