@@ -5,9 +5,7 @@
 #
 # Full-coded data only from large scale screens
 #
-#       J# for Large scale screens:
-#       J:101679 J:122989 J:140465 J:141291 J:143778 J:153498 J:157819 J:162220 J:171409
-#       J:215487 J:226028 J:228563 J:279207 J:46439 J:80501 J:80502 J:85124 J:91257 J:93300
+#       J# for Large scale screens: see below
 #
 #       List all markers in these J# 
 #
@@ -17,7 +15,7 @@
 #
 # History:
 #
-# lec	09/01/2023
+# lec	09/05/2023
 #	- wts2-1268/2 new GXD QC reports for fullcoding priority
 #
 '''
@@ -63,10 +61,8 @@ db.sql('''
         into temporary table indexcount
         from GXD_Index g, BIB_Citation_Cache c
         where c.jnumid in (
-        'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778',
-        'J:153498', 'J:157819', 'J:162220', 'J:171409', 'J:215487',
-        'J:226028', 'J:228563', 'J:279207', 'J:46439', 'J:80501',
-        'J:80502', 'J:85124', 'J:91257', 'J:93300'
+        'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778', 'J:153498', 'J:157819', 'J:162220', 'J:171409', 
+        'J:215487', 'J:226028', 'J:228563', 'J:279207', 'J:46439', 'J:80501', 'J:80502', 'J:85124', 'J:91257', 'J:93300'
         )
         and c._refs_key = g._refs_key
         group by g._Marker_key
