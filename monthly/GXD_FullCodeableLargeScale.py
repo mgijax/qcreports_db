@@ -5,7 +5,7 @@
 #
 # Full-coded data only from large scale screens
 #
-#       J# for Large scale screens: see below
+#       J# for large scale screens: see below
 #
 #       List all markers in these J# 
 #
@@ -35,7 +35,7 @@ PAGE = reportlib.PAGE
 fp = reportlib.init(sys.argv[0], 'Full-coded data only from large scale screens', outputdir = os.environ['QCOUTPUTDIR'])
 
 fp.write('''
-        J# for Large scale screens:
+        J# for large scale screens:
         J:101679 J:122989 J:140465 J:141291 J:143778 J:153498 J:157819 J:162220 J:171409
         J:215487 J:226028 J:228563 J:279207 J:46439 J:80501 J:80502 J:85124 J:91257 J:93300
 
