@@ -70,6 +70,7 @@ for r in results:
 
 #
 # count:  all full-coded genes in large scale references
+# where large scale references are the *only* references for the marker
 # group by marker, reference
 #
 db.sql('''
@@ -83,6 +84,15 @@ where c.jnumid in (
 and c._refs_key = a._refs_key
 and exists (select 1 from GXD_Expression g where a._Assay_key = g._Assay_key)
 and a._assaytype_key not in (10,11)
+and not exists (select 1 from GXD_Assay aa, BIB_Citation_Cache cc
+        where a._marker_key = aa._marker_key
+        and cc.jnumid not in (
+        'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778', 'J:153498', 'J:157819', 'J:162220', 'J:171409', 
+        'J:215487', 'J:226028', 'J:228563', 'J:279207', 'J:46439', 'J:80501', 'J:80502', 'J:85124', 'J:91257', 'J:93300'
+        )
+        and cc._refs_key = aa._refs_key
+        and aa._assaytype_key not in (10,11)
+        )
 group by a._marker_key, a._refs_key
 ''', None)
 db.sql('create index indexed_idx1 on refcount(_marker_key)', None)
