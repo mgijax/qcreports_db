@@ -126,7 +126,8 @@ for r in results:
     fp.write(SPACE)
     fp.write(str.ljust(r['symbol'], 35))
     fp.write(SPACE)
-    fp.write(str.ljust(str(indexcount[key]), 20))
+    if key in indexcount:
+        fp.write(str.ljust(str(indexcount[key]), 20))
     fp.write(SPACE)
     fp.write(str.ljust(str(r['idx_count']), 20) + CRT)
         
