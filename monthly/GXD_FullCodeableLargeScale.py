@@ -36,7 +36,7 @@ fp = reportlib.init(sys.argv[0], 'Full-coded data only from large scale screens'
 
 fp.write('''
         J# for large scale screens:
-        J:101679 J:122989 J:140465 J:141291 J:143778 J:153498 J:157819 J:162220 J:171409
+        J:101679 J:122989 J:140465 J:141291 J:143778 J:153498 J:157819 J:162220 J:171409 J:313619 
         J:215487 J:226028 J:228563 J:279207 J:46439 J:80501 J:80502 J:85124 J:91257 J:93300
 
         index records by marker = # of all references from gxd_index
@@ -78,7 +78,7 @@ select a._marker_key, a._refs_key, count(*) as idx_count
 into temp table refcount
 from GXD_Assay a, BIB_Citation_Cache c
 where c.jnumid in (
-'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778', 'J:153498', 'J:157819', 'J:162220', 'J:171409', 
+'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778', 'J:153498', 'J:157819', 'J:162220', 'J:171409', 'J:313619',
 'J:215487', 'J:226028', 'J:228563', 'J:279207', 'J:46439', 'J:80501', 'J:80502', 'J:85124', 'J:91257', 'J:93300'
 )
 and c._refs_key = a._refs_key
@@ -87,7 +87,7 @@ and a._assaytype_key not in (10,11)
 and not exists (select 1 from GXD_Assay aa, BIB_Citation_Cache cc
         where a._marker_key = aa._marker_key
         and cc.jnumid not in (
-        'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778', 'J:153498', 'J:157819', 'J:162220', 'J:171409', 
+        'J:101679', 'J:122989', 'J:140465', 'J:141291', 'J:143778', 'J:153498', 'J:157819', 'J:162220', 'J:171409', 'J:313619',
         'J:215487', 'J:226028', 'J:228563', 'J:279207', 'J:46439', 'J:80501', 'J:80502', 'J:85124', 'J:91257', 'J:93300'
         )
         and cc._refs_key = aa._refs_key
