@@ -128,6 +128,8 @@ for r in results:
     fp.write(SPACE)
     if key in indexcount:
         fp.write(str.ljust(str(indexcount[key]), 20))
+    else:
+        fp.write(str.ljust("0", 20))
     fp.write(SPACE)
     fp.write(str.ljust(str(r['idx_count']), 20) + CRT)
         
