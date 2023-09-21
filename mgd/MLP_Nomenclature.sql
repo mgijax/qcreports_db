@@ -8,7 +8,7 @@
 select substring(s.strain,1,60) as strain, 
        substring(m.symbol,1,25) as marker, 
        substring(a.symbol,1,25) as allele,
-       array_to_string(array_agg(distinct aa.accid),',') as externalAccId,
+       array_to_string(array_agg(distinct aa.accid),'|') as externalAccId,
        s.modification_date
 from PRB_Strain s
      INNER JOIN PRB_Strain_NeedsReview_View n on (s._Strain_key = n._Object_key
