@@ -40,11 +40,25 @@ fp = reportlib.init(sys.argv[0], 'Full-coded data only from adult specimens', ou
 fp.write(str.ljust('acc id', 25))
 fp.write(SPACE)
 fp.write(str.ljust('symbol', 35))
+fp.write(SPACE)
+fp.write(str.ljust('index records', 20))
+fp.write(SPACE)
 fp.write(CRT*2)
 
+#
+# count: all genes in the GXD index by marker
+#
+db.sql('''
+select g._Marker_key, count(*) as idx_count 
+into temp table idxcount
+from GXD_Index g
+group by g._Marker_key
+''', 'auto')
+db.sql('create index index_idx1 on idxcount(_marker_key)', None)
+
 results = db.sql('''
-        select distinct g._Marker_key, m.symbol, a.accID
-        from GXD_Expression g, MRK_Marker m, ACC_Accession a
+        select distinct g._Marker_key, m.symbol, a.accID, i.idx_count
+        from idxcount i, GXD_Expression g, MRK_Marker m, ACC_Accession a
         where g._assaytype_key not in (10,11)
         and g.age like 'postnatal%'
         and g._Marker_key = m._Marker_key
@@ -52,12 +66,14 @@ results = db.sql('''
         and a._MGIType_key = 2
         and a._LogicalDB_key = 1
         and a.preferred = 1
+        and g._Marker_key = i._Marker_key
+        and i.idx_count > 1
         and not exists (select gg._Marker_key from GXD_Expression gg
                 where g._marker_key = gg._marker_key
                 and gg._assaytype_key not in (10,11)
                 and gg.age not like 'postnatal%'
                 )
-        order by m.symbol
+        order by i.idx_count desc, m.symbol
         ''', 'auto')
 
 for r in results:
