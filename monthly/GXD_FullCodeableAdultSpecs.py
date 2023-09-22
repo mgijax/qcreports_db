@@ -84,7 +84,7 @@ for r in results:
     fp.write(SPACE)
     fp.write(str.ljust(r['symbol'], 35))
     fp.write(SPACE)
-    fp.write(str.ljust(r['idx_count'], 35))
+    fp.write(str.ljust(str(r['idx_count']), 35))
     fp.write(CRT)
         
 fp.write('\n(%d rows affected)\n' % (len(results)))
