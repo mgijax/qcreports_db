@@ -13,6 +13,10 @@
 #
 #       For each marker list the number of papers: indexed, fullcoded
 #
+# Add a new column - Difference.  It is the Index records column minus the full-coded column.
+# Suppress all rows where Difference = 0.
+# New primary sort: Difference, in Descending order (ie biggest # at top); secondary sort:  Symbol.
+# 
 # History:
 #
 # lec	09/05/2023
@@ -41,6 +45,7 @@ fp.write('''
 
         index records by marker = # of all references from gxd_index
         full-coded by marker = # of large scale references from gxd_expression_cache
+        difference = index records minus full-coded
 
 ''')
 
@@ -52,21 +57,21 @@ fp.write(str.ljust('index records', 20))
 fp.write(SPACE)
 fp.write(str.ljust('full-coded', 20))
 fp.write(SPACE)
+fp.write(str.ljust('difference', 20))
+fp.write(SPACE)
 fp.write(CRT*2)
 
 #
 # count: all genes in the GXD index by marker
 #
 indexcount = {}
-results = db.sql('''
+db.sql('''
 select g._Marker_key, count(*) as idx_count 
+into temp table idxcount
 from GXD_Index g
 group by g._Marker_key
 ''', 'auto')
-for r in results:
-        key = r['_marker_key']
-        value = r['idx_count']
-        indexcount[key] = value
+db.sql('create index full_idx1 on idxcount(_marker_key)', None)
 
 #
 # count:  all full-coded genes in large scale references
@@ -74,7 +79,7 @@ for r in results:
 # group by marker, reference
 #
 db.sql('''
-select a._marker_key, a._refs_key, count(*) as idx_count
+select a._marker_key, a._refs_key, count(*) as full_count
 into temp table refcount
 from GXD_Assay a, BIB_Citation_Cache c
 where c.jnumid in (
@@ -101,7 +106,7 @@ db.sql('create index indexed_idx1 on refcount(_marker_key)', None)
 # group by marker only
 #
 db.sql('''
-select g._marker_key, m.symbol, a.accID, count(g.idx_count) as idx_count
+select g._marker_key, m.symbol, a.accID, count(g.full_count) as full_count
 into temporary table allgenes
 from refcount g, MRK_Marker m, ACC_Accession a
 where g._marker_key = m._marker_key
@@ -116,7 +121,13 @@ db.sql('create index allgenes_idx1 on allgenes(_marker_key)', None)
 #
 # to print...
 #
-results = db.sql('select * from allgenes order by idx_count, symbol', 'auto')
+results = db.sql('''
+select a.*, i.*, i.idx_count - a.full_count as difference
+from allgenes a, idxcount i
+where a._marker_key = i._marker_key
+and i.idx_count - a.full_count > 0
+order by difference desc, symbol
+''', 'auto')
 
 for r in results:
 
@@ -126,12 +137,10 @@ for r in results:
     fp.write(SPACE)
     fp.write(str.ljust(r['symbol'], 35))
     fp.write(SPACE)
-    if key in indexcount:
-        fp.write(str.ljust(str(indexcount[key]), 20))
-    else:
-        fp.write(str.ljust("0", 20))
+    fp.write(str.ljust(str(r['idx_count']), 20))
     fp.write(SPACE)
-    fp.write(str.ljust(str(r['idx_count']), 20) + CRT)
+    fp.write(str.ljust(str(r['full_count']), 20) + SPACE)
+    fp.write(str.ljust(str(r['difference']), 20) + CRT)
         
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
