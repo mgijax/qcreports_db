@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-22-57
+DATE: 09/22/2023
+STAFF: lec
+wts2-1285/tweak to two recent QCs
+GXD_FullCodeableLargeScale.py 
+GXD_FullCodeableAdultSpecs.py
+
 TAG: qcreports_db-6-0-22-56
 DATE: 09/21/2023
 STAFF: lec
