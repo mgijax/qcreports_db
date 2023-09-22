@@ -64,14 +64,13 @@ fp.write(CRT*2)
 #
 # count: all genes in the GXD index by marker
 #
-indexcount = {}
 db.sql('''
 select g._Marker_key, count(*) as idx_count 
 into temp table idxcount
 from GXD_Index g
 group by g._Marker_key
 ''', 'auto')
-db.sql('create index full_idx1 on idxcount(_marker_key)', None)
+db.sql('create index index_idx1 on idxcount(_marker_key)', None)
 
 #
 # count:  all full-coded genes in large scale references
@@ -100,7 +99,7 @@ and not exists (select 1 from GXD_Assay aa, BIB_Citation_Cache cc
         )
 group by a._marker_key, a._refs_key
 ''', None)
-db.sql('create index indexed_idx1 on refcount(_marker_key)', None)
+db.sql('create index full_idx1 on refcount(_marker_key)', None)
 
 #
 # group by marker only
