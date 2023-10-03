@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-22-40
+DATE: 10/03/2023
+STAFF: sc
+fl2-568/move reports from targetedalleleload
+1. weekly/TAL_check_superscript.py
+2. weekly/TAL_dupe_allele.py
+3. weekly/TAL_multiple_project_ids.py
+
 TAG: qcreports_db-6-0-22-39
 DATE: 04/11/2023
 STAFF: dbm
