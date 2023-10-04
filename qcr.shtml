@@ -83,6 +83,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NomenCheck.rpt">Alleles with Potentially Improper Nomenclature in Symbols and Synonyms and Names</A> <B> (anna)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NonMouseNotInEG.rpt">Non-Mouse Expressed Component/Driver Component whose Marker does not exist in EntrezGene</A> <B>(smb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_NoDriver.rpt">Allele Missing Driver Relationship</A> <B>(smb)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/TAL_dupe_allele.rpt">Duplicated GenTar Targeted Alleles</A> <B>(anna)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/TAL_check_superscript.rpt">TAL Allele Superscript Mismatches (excluding Derivative Alleles)</A> <B>(anna)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/TAL_multiple_project_ids.rpt">Marker/Allele Superscripts with multiple Project IDs in the TAL input file</A> <B>(anna)</B>
 </OL>
 
 <A NAME="variants"><B>Allele Variants (laurens)</B> </A>
