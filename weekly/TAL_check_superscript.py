@@ -33,7 +33,6 @@ import reportlib
 import db
 import re
 
-db.setTrace()
 db.useOneConnection(1)
 
 CRT = reportlib.CRT
