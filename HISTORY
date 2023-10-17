@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-22-61
+DATE: 10/17/2023
+STAFF: sc
+Fixed bug in MRK_Withdrawn.sql - never updated when MRK_Status terms
+were moved to VOC_Term 
+
 TAG: qcreports_db-6-0-22-60
 TAG: qcreports_db-6-0-22-59
 DATE: 10/03/2023
