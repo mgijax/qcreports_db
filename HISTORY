@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-22-64
+DATE: 11/01/2023
+STAFF: lec
+wts2-1315/fl2-612/GXD HT Raw Sample Value Search: return by experiment (not sample)
+#       new file:   GXD_HTRawSampleByValue2.py
+#       modified:   pwireports.txt
+
 TAG: qcreports_db-6-0-22-63
 DATE: 10/25/2023
 STAFF: dbm
