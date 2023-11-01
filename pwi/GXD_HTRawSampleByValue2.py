@@ -29,7 +29,8 @@ value = '%' + sys.argv[1] + '%'
 results = db.sql('''
 select distinct a.accid as ExperimentID, 
 t2.term as experimenttype, 
-t.term as relevance
+t.term as relevance,
+e.name
 from gxd_htrawsample rs, 
      mgi_keyvalue kv, 
      gxd_htexperiment e, 
@@ -46,18 +47,20 @@ and e._experiment_key = a._object_key
 and a._mgitype_key = 42 -- experiment 
 and a._logicaldb_key = 190 
 and a.preferred = 1 
-order by t.term, t.term, a.accid 
+order by t2.term, t.term, a.accid 
 limit 5000
 ''' % (value), 'auto')
 
 sys.stdout.write('ExperimentID' + TAB)
 sys.stdout.write('experimenttype' + TAB)
-sys.stdout.write('relevance' + CRT)
+sys.stdout.write('relevance' + TAB)
+sys.stdout.write('title' + CRT)
 
 for r in results:
         sys.stdout.write(r['ExperimentID'] + TAB)
         sys.stdout.write(r['experimenttype'] + TAB)
-        sys.stdout.write(r['relevance'] + CRT)
+        sys.stdout.write(r['relevance'] + TAB)
+        sys.stdout.write(r['name'] + CRT)
 
 sys.stdout.flush()
 
