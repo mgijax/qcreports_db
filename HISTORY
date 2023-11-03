@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-22-65
+DATE: 11/03/2023
+STAFF: lec
+wts2-1321/fl2-616/add PMID to Invalid Inferred From Values report
+#       modified:   mgd/VOC_InvalidInferred.py
+
 TAG: qcreports_db-6-0-22-64
 DATE: 11/01/2023
 STAFF: lec
