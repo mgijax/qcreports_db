@@ -23,15 +23,14 @@
 # sc    03/30/2021
 #       - TR13485/removed the final query of the database because it was
 #       picking more ids than it should. See TR for more info:
-# for t in theDiffs:
-#
-#   infoList = inferredLookup[t]
-#   for s in infoList:
-#        fp.write(t + reportlib.TAB + s)
-#        rows = rows + 1
-#   This was being plugged into a query using the realid - but it was returning 
-#   more than it should because of the wildcard suffix:
-#   toSelect = '%' + t + '%'
+#       for t in theDiffs:
+#       infoList = inferredLookup[t]
+#       for s in infoList:
+#               fp.write(t + reportlib.TAB + s)
+#               rows = rows + 1
+#       This was being plugged into a query using the realid - 
+#       but it was returning more than it should because of the wildcard suffix:
+#       toSelect = '%' + t + '%'
 #       
 # lec	07/25/2016
 #	- TR12222/expects only one delimiter, but *any* delimiter may be used in inferredFrom field
@@ -52,7 +51,6 @@
  
 import sys
 import os
-import string
 import Set
 import mgi_utils
 import reportlib
@@ -65,11 +63,12 @@ db.setTrace()
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('\nInvalid "Inferred From" Values in GO Annotations (MGI, GO, ";")' + 2 * reportlib.CRT)
+fp.write('\nInvalid "Inferred From" Values in GO Annotations (MGI, GO, PMID, ";")' + 2 * reportlib.CRT)
 rows = 0
 
 # read in all MGI accession ids for Markers (2), Alleles (11)
 # read in all GO ids (13)
+# read in all PMID ids (29)
 # this is the list of valid accession ids
 
 mgiLookup = []
@@ -79,21 +78,22 @@ for r in results:
 results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 13 and a.prefixPart in (\'GO:\')', 'auto')
 for r in results:
     mgiLookup.append(r['accID'])
+results = db.sql('select a.accID from ACC_Accession a where a._MGIType_key = 29', 'auto')
+for r in results:
+    mgiLookup.append(r['accID'])
 bucketMGI = set(mgiLookup)
 
-# read in all annotations that contains MGD or GO
+# read in all annotations that contains MGD or GO or PMID
 
 db.sql('''
-        select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom,
-               t.abbreviation as evidenceCode, m.symbol, aa.accid as goID
+        select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, t.abbreviation as evidenceCode, m.symbol, aa.accid as goID
         into temporary table annotations 
-        from VOC_Annot a, VOC_Evidence e, VOC_Term t, MRK_Marker m, 
-                ACC_Accession aa
+        from VOC_Annot a, VOC_Evidence e, VOC_Term t, MRK_Marker m, ACC_Accession aa
         where a._AnnotType_key = 1000 
         and a._Annot_key = e._Annot_key 
         and a._Object_key = m._Marker_key
         and e.inferredFrom is not null 
-        and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%')
+        and (e.inferredFrom like '%MGI%' or e.inferredFrom like '%GO%' or e.inferredFrom like '%PMID%')
         and e._EvidenceTerm_key = t._Term_key
         and a._Term_key = aa._Object_key
         and aa._MGIType_key = 13
@@ -101,12 +101,10 @@ db.sql('''
         ''', None)
 
 #
-# set of MGI, GO ids in 'inferredFrom'
+# set of MGI, GO ids, PMIDs in 'inferredFrom'
 #
 
-results = db.sql('''select _AnnotEvidence_key, inferredFrom, symbol, 
-        evidenceCode, goID  
-        from annotations''', 'auto')
+results = db.sql('''select _AnnotEvidence_key, inferredFrom, symbol, evidenceCode, goID  from annotations''', 'auto')
 
 # {realid:[list of infoStrings], ...}
 inferredLookup = {}
@@ -135,7 +133,7 @@ for r in results:
         id.replace('"', '')
         id = id.upper()
         print('realid: %s id: %s' % (realid, id))
-        if str.find(id, 'MGI:') >= 0 or str.find(id, 'GO:') >= 0:
+        if str.find(id, 'MGI:') >= 0 or str.find(id, 'GO:') >= 0 or str.find(id, 'PMID:') >= 0:
            if realid not in inferredLookup:
               print('realid added to inferredLookup: %s' % realid)
               #inferredLookup.append(realid)
