@@ -118,24 +118,24 @@ for r in results:
     goID = r['goID']
     infoString = '%s%s%s%s%s%s' % (goID, reportlib.TAB, evidenceCode, reportlib.TAB, symbol, reportlib.CRT)
 
-    print('ids: %s' % ids)
-    print('key: %s' % key)
+    #print('ids: %s' % ids)
+    #print('key: %s' % key)
     # any of these delimiters may be used
     ids = ids.replace(',', '|')
     ids = ids.replace(', ', '|')
     ids = ids.replace(';', '|')
     idList = str.split(ids, '|')
-    print('idList: %s' % idList)
+    #print('idList: %s' % idList)
 
     for id in idList:
         # save id as-is to check for lowercase/uppercase variations
         realid = id
         id.replace('"', '')
         id = id.upper()
-        print('realid: %s id: %s' % (realid, id))
+        #print('realid: %s id: %s' % (realid, id))
         if str.find(id, 'MGI:') >= 0 or str.find(id, 'GO:') >= 0 or str.find(id, 'PMID:') >= 0:
            if realid not in inferredLookup:
-              print('realid added to inferredLookup: %s' % realid)
+              #print('realid added to inferredLookup: %s' % realid)
               #inferredLookup.append(realid)
               if realid not in inferredLookup: 
                   inferredLookup[realid] = []
@@ -147,14 +147,14 @@ for r in results:
 #
 
 bucketInferred = set(inferredLookup.keys())
-print('bucketInferred: %s' % bucketInferred)
+#print('bucketInferred: %s' % bucketInferred)
 
 #
 # compare inferred-from ids to MGI ids
 #
 
 theDiffs = bucketInferred.difference(bucketMGI)
-print('theDiffs: %s' % theDiffs)
+#print('theDiffs: %s' % theDiffs)
 row = 0
 for t in theDiffs:
 
