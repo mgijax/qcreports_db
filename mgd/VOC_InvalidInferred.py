@@ -1,4 +1,3 @@
-
 '''
 #
 # VOC_InvalidInferred.py 10/17/2003
@@ -90,9 +89,10 @@ bucketMGI = set(mgiLookup)
 # read in all annotations that contains MGD or GO or PMID
 
 db.sql('''
-        select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, t.abbreviation as evidenceCode, m.symbol, aa.accid as goID
+        select a._Term_key, a._Object_key, e._AnnotEvidence_key, e.inferredFrom, t.abbreviation as evidenceCode, 
+                m.symbol, aa.accid as goID, c.pubmedID
         into temporary table annotations 
-        from VOC_Annot a, VOC_Evidence e, VOC_Term t, MRK_Marker m, ACC_Accession aa
+        from VOC_Annot a, VOC_Evidence e, VOC_Term t, MRK_Marker m, ACC_Accession aa, BIB_Citation_Cache c
         where a._AnnotType_key = 1000 
         and a._Annot_key = e._Annot_key 
         and a._Object_key = m._Marker_key
@@ -102,13 +102,14 @@ db.sql('''
         and a._Term_key = aa._Object_key
         and aa._MGIType_key = 13
         and aa.preferred = 1
+        and e._Refs_key = c._Refs_key
         ''', None)
 
 #
 # set of MGI, GO ids, PMIDs in 'inferredFrom'
 #
 
-results = db.sql('''select _AnnotEvidence_key, inferredFrom, symbol, evidenceCode, goID  from annotations''', 'auto')
+results = db.sql('''select _AnnotEvidence_key, inferredFrom, symbol, evidenceCode, goID, pubmedID  from annotations''', 'auto')
 
 # {realid:[list of infoStrings], ...}
 inferredLookup = {}
@@ -120,7 +121,11 @@ for r in results:
     symbol = r['symbol']
     evidenceCode = r['evidenceCode']
     goID = r['goID']
-    infoString = '%s%s%s%s%s%s' % (goID, reportlib.TAB, evidenceCode, reportlib.TAB, symbol, reportlib.CRT)
+    if r['pubmedID'] != None:
+        pubmedID = r['pubmedID']
+    else:
+        pubmedID = ""
+    infoString = '%s%s%s%s%s%s%s%s' % (goID, reportlib.TAB, evidenceCode, reportlib.TAB, symbol, reportlib.TAB, pubmedID, reportlib.CRT)
 
     #print('ids: %s' % ids)
     #print('key: %s' % key)
@@ -171,8 +176,8 @@ for t in theDiffs:
 #
 
 results = db.sql('''
-        select distinct aa.accID, m.symbol, t.term, e.inferredFrom
-        from VOC_Annot a, VOC_Evidence e, VOC_Term t, ACC_Accession aa, MRK_Marker m
+        select distinct aa.accID, m.symbol, t.term, e.inferredFrom, c.pubmedID
+        from VOC_Annot a, VOC_Evidence e, VOC_Term t, ACC_Accession aa, MRK_Marker m, BIB_Citation_Cache c
         where a._AnnotType_key = 1000 
         and a._Annot_key = e._Annot_key 
         and e.inferredFrom like '%;%'
@@ -181,12 +186,16 @@ results = db.sql('''
         and aa._MGIType_key = 13 
         and aa.preferred = 1 
         and a._Object_key = m._Marker_key 
+        and e._Refs_key = c._Refs_key
         ''', 'auto')
 
 for r in results:
     fp.write(r['inferredFrom'] + reportlib.TAB + \
              r['accID'] + reportlib.TAB + \
-             r['symbol'] + reportlib.CRT)
+             r['symbol'] + reportlib.TAB)
+    if r['pubmedID'] != None:
+             fp.write(r['pubmedID'])
+    fp.write(reportlib.CRT)
 
 fp.write('\n(%d rows affected)\n' % (rows + len(results)))
 reportlib.finish_nonps(fp)
