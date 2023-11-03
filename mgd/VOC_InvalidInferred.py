@@ -67,11 +67,11 @@ db.setTrace()
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('\nInvalid "Inferred From" Values in GO Annotations (MGI, GO, PMID, ";")' + 2 * reportlib.CRT)
-fp.write('\nfield 1 : Inferred From Value that is invalid' + reportlib.CRT)
-fp.write('\nfield 2 : GO ID' + reportlib.CRT)
-fp.write('\nfield 3 : Evidence Code' + reportlib.CRT)
-fp.write('\nfield 4 : Marker Symbol' + reportlib.CRT)
-fp.write('\nfield 5 : PubMedID of GO/Reference' + 2* reportlib.CRT)
+fp.write('field 1 : Inferred From Value that is invalid' + reportlib.CRT)
+fp.write('field 2 : GO ID' + reportlib.CRT)
+fp.write('field 3 : Evidence Code' + reportlib.CRT)
+fp.write('field 4 : Marker Symbol' + reportlib.CRT)
+fp.write('field 5 : PubMedID of GO/Reference' + 2* reportlib.CRT)
 
 rows = 0
 
