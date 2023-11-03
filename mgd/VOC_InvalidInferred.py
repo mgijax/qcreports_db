@@ -20,6 +20,10 @@
 #
 # History:
 #
+# lec   11/03/2023
+#       wts2-1321/fl2-616/add PMID to Invalid Inferred From Values report
+#       commented out "print" statements; turn on for debugging only
+#
 # sc    03/30/2021
 #       - TR13485/removed the final query of the database because it was
 #       picking more ids than it should. See TR for more info:
@@ -136,7 +140,6 @@ for r in results:
         if str.find(id, 'MGI:') >= 0 or str.find(id, 'GO:') >= 0 or str.find(id, 'PMID:') >= 0:
            if realid not in inferredLookup:
               #print('realid added to inferredLookup: %s' % realid)
-              #inferredLookup.append(realid)
               if realid not in inferredLookup: 
                   inferredLookup[realid] = []
               inferredLookup[realid].append(infoString)
@@ -187,3 +190,4 @@ for r in results:
 
 fp.write('\n(%d rows affected)\n' % (rows + len(results)))
 reportlib.finish_nonps(fp)
+
