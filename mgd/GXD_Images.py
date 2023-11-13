@@ -184,8 +184,7 @@ byOtherHybrid = [
 'FASEB J',
 'FEBS Lett',
 'J Cell Sci',
-'Mol Cell Neurosci',
-'Biol Reprod'
+'Mol Cell Neurosci'
 ]
 
 byCopyrightDelay = [
