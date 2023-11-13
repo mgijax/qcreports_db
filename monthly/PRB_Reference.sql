@@ -14,7 +14,6 @@ group by pp._Probe_key, pr._Refs_key having count(*) > 1
 create index idx1_probes on probes(_Probe_key)
 ;
 create index idx1_probes2 on probes2(_Probe_key)
-
 ;
 create index idx2_probes2 on probes2(_Refs_key)
 ;
@@ -266,3 +265,57 @@ and s.description is not null
 
 select mgiID, cDNAname from probes3
 ;
+
+\echo ''
+\echo 'Duplicate RNAscope Probes (Mm-%)'
+\echo ''
+select name 
+INTO TEMPORARY TABLE probes4
+from PRB_Probe 
+where name like 'Mm-%' 
+group by name having count(*) > 1
+;
+
+create index idx4_probes on probes4(_Probe_key)
+;
+
+select p.name, p.mgiID
+from probes4 p4, PRB_Probe_View p
+where probes4.name = p.name
+;
+
+\echo ''
+\echo 'Duplicate Tagman Primer (Mm%)'
+\echo ''
+select p.name 
+INTO TEMPORARY TABLE probes5
+from PRB_Probe p
+where (p.name like 'Mm%' and p.name not like 'Mmp%')
+and p._segmenttype_key = 63473
+group by name having count(*) > 1
+union
+select p.name 
+from PRB_Probe p, MGI_Note n
+where p.name like 'Mm%' 
+and p._segmenttype_key = 63473
+and p._probe_key = n._object_key
+and n._mgitype_key = 3
+and n.note like '%tagman%'
+group by name having count(*) > 1
+union
+select p.name 
+from PRB_Probe p, MGI_Note n
+where p._probe_key = n._object_key
+and n._mgitype_key = 3
+and n.note like '%tagman%'
+group by name having count(*) > 1
+;
+
+create index idx5_probes on probes5(_Probe_key)
+;
+
+select p.name, p.mgiID
+from probes5, PRB_Probe_View p
+where probes5.name = p.name
+;
+
