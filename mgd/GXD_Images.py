@@ -26,86 +26,6 @@
 # lec	09/10/2018
 #	- TR12954/new journal : eNeuro
 #
-# lec	02/09/2017
-#	- TR12505/new journal : Biol Open, Cell Cycle
-#
-# lec	11/07/2016
-#	- TR12449/new journal : J Neurosci
-#
-# lec	08/19/2015
-#	- TR11963/new journal : Dis Model Mech
-#
-# lec	03/03/2015
-#	- TR11891/new journals
-#
-# lec	01/23/2012
-#	- TR10945/'EMBO J'
-#
-# lec	12/21/2011
-#	- TR10930/Oxford journals
-#
-# lec	08/20/2009
-#	- TR9770; Neural Develop changed to Neural Dev
-#	  Breast Cancer Res
-#	  Genome Biol
-#	  J Biol
-#
-# lec	07/14/2009
-#	- TR9717; added:
-#	  BMC Res Notes
-#
-# lec   05/12/2009
-#	- TR 9643; added:
-#	  Cell Commun Signal
-#	  J Biomed Sci
-#	  Neural Develop
-#	- alphabetize names
-#
-# lec	04/07/2009
-#	- TR 9606; The jouranls:
-#         Genesis
-#	  J Comp Neurol
-#	  Mol Reprod Dev
-#	  
-# lec	07/23/2008
-#	- TR 9163; The journals:
-#	  J Cell Biol
-#	  J Exp Med
-#	  J Gen Physiol
-#
-# lec	05/06/2008
-#	- TR 8984; The journals are:
-#         J Biol Chem
-#         J Lipid Res
-#         J Clin Invest
-#
-# lec	05/01/2008
-#	- TR 8775; on select GXD assay types
-#
-# lec	03/04/2008
-#	- TR 8826; added PLoS One
-#
-# lec	02/09/2007
-#	- TR 8147; added Proc Natl Acad Sci U S A
-#
-# lec	09/28/2006
-#	- TR 7925; added Nucleic Acids Res
-#
-# lec	10/18/2005
-#	- remove restriction on Assay Type per Connie
-#
-# lec	12/17/2004
-#	- TR 6424; added journals beginning "PLoS%" and "BMC%"
-#
-# lec	09/16/2004
-#	- TR 6205; added Dev Dyn
-#
-# lec	03/05/2004
-#	- converted to QC (TR 5636)
-#
-# dbm   12/4/2002
-#       - created (TR 4296)
-#
 '''
  
 import sys
@@ -169,49 +89,33 @@ byCreativeComments = [
 'Breast Cancer Res',
 'Cell Commun Signal',
 'Cell Death Dis',
-'Cell Prolif',
 'Cell Rep',
 'Cells',
 'Commun Biol',
 'Dis Model Mech',
 'eNeuro',
-'EBioMedicine',
 'Elife',
 'EMBO Mol Med',
 'Exp Mol Med',
-'FEBS Open Bio',
 'Front Aging Neurosci',
 'Front Behav Neurosci',
-'Front Cardiovasc Med',
 'Front Cell Dev Biol',
 'Front Cell Neurosci',
-'Front Endocrinol (Lausanne)',
 'Front Genet',
 'Front Immunol',
 'Front Mol Neurosci',
-'Front Neural Circuits',
-'Front Neuroanat',
-'Front Neurol',
 'Front Neurosci',
-'Front Pharmacol',
 'Front Physiol',
 'Genome Biol',
-'Int J Biol Sci',
 'Int J Mol Sci',
 'iScience',
 'J Biol', 
 'J Biomed Sci',
-'J Cardiovasc Dev Dis',
-'J Dev Biol',
 'JCI Insight',
-'Life Sci Alliance',
-'Mol Autism',
 'Mol Brain',
-'Mol Cells',
 'Mol Metab',
 'Nat Commun',
 'Neural Dev',
-'Open Biol',
 'PeerJ',
 'PLoS Biol', 
 'PLoS Comput Biol',
@@ -232,25 +136,20 @@ by2006 = ['Nucleic Acids Res', 'DNA Res']
 
 byHybrid = [
 'Acta Biochim Biophys Sin (Shanghai)',
-'Acta Pharmacol Sin',
-'Bone Marrow Transplant',
+'Biol Reprod',
 'Br J Cancer',
 'Brain',
 'Carcinogenesis',
 'Cardiovasc Res',
 'Cereb Cortex',
 'Chem Senses',
-'Cancer Gene Ther',
 'Cell Death Differ',
 'Cell Mol Immunol',
 'Cell Res',
+'Cell Tissue Res',
 'Chromosoma',
 'Chromosome Res',
-'Diabetologia',
-'Eur J Clin Nutr',
 'Eur J Hum Genet',
-'Exp Mol Med',
-'Eye (Lond)',
 'Gene Ther',
 'Glycobiology',
 'Hum Mol Genet',
@@ -259,19 +158,14 @@ byHybrid = [
 'Mol Biol Evol',
 'Toxicol Sci',
 'Genes Immun',
-'Heredity (Edinb)',
 'Hypertens Res',
 'Int J Obes (Lond)',
-'J Cereb Blood Flow Metab',
 'J Hum Genet',
 'Lab Invest',
 'Leukemia',
 'Mucosal Immunol',
 'Oncogene',
 'Pediatr Res',
-'Pharmacogenomics J',
-'Prostate Cancer Prostatic Dis',
-'Spinal Cord',
 'Transgenic Res'
 ]
 
@@ -282,7 +176,16 @@ byOtherHybrid = [
 'J Invest Dermatol', 
 'Immunol Cell Biol',
 'Mol Cell Biol', 
-'Mol Psychiatry'
+'Mol Psychiatry',
+'Am J Hum Genet',
+'Biochem Biophys Res Commun',
+'Differentiation',
+'Eur J neurosci',
+'FASEB J',
+'FEBS Lett',
+'J Cell Sci',
+'Mol Cell Neurosci',
+'Biol Reprod'
 ]
 
 byCopyrightDelay = [
