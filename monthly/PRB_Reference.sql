@@ -276,16 +276,16 @@ where name like 'Mm-%'
 group by name having count(*) > 1
 ;
 
-create index idx4_probes on probes4(_Probe_key)
+create index idx4_probes on probes4(name)
 ;
 
 select p.name, p.mgiID
-from probes4 p4, PRB_Probe_View p
+from probes4, PRB_Probe_View p
 where probes4.name = p.name
 ;
 
 \echo ''
-\echo 'Duplicate Tagman Primer (Mm%)'
+\echo 'Duplicate Taqman Primer (Mm%)'
 \echo ''
 select p.name 
 INTO TEMPORARY TABLE probes5
@@ -300,18 +300,18 @@ where p.name like 'Mm%'
 and p._segmenttype_key = 63473
 and p._probe_key = n._object_key
 and n._mgitype_key = 3
-and n.note like '%tagman%'
+and n.note like '%taqman%'
 group by name having count(*) > 1
 union
 select p.name 
 from PRB_Probe p, MGI_Note n
 where p._probe_key = n._object_key
 and n._mgitype_key = 3
-and n.note like '%tagman%'
+and n.note like '%taqman%'
 group by name having count(*) > 1
 ;
 
-create index idx5_probes on probes5(_Probe_key)
+create index idx5_probes on probes5(name)
 ;
 
 select p.name, p.mgiID
