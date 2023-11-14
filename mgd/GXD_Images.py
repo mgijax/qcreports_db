@@ -96,7 +96,6 @@ byCreativeComments = [
 'eNeuro',
 'Elife',
 'EMBO Mol Med',
-'Exp Mol Med',
 'Front Aging Neurosci',
 'Front Behav Neurosci',
 'Front Cell Dev Biol',
