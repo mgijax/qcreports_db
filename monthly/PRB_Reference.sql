@@ -319,3 +319,13 @@ from probes5, PRB_Probe_View p
 where probes5.name = p.name
 ;
 
+\echo ''
+\echo 'Primers whose sequence field contains a hyphen'
+\echo ''
+select p.name, a.accid
+from PRB_Probe p, ACC_Accession a
+where p._probe_key = a._object_key
+and a._mgitype_key = 3
+and (p.primer1sequence like '%-%' or p.primer2sequence like '%-%')
+order by p.name
+;
