@@ -85,8 +85,19 @@ sys.stdout.write('title' + CRT)
 
 printJnum = False
 printGel = False
+printInSitu = False
+printTitle = ""
 
 for r in results:
+
+        if printGel == True and r['assaytype'] != 'insitu':
+                sys.stdout.write('0' + TAB)
+                sys.stdout.write('0' + TAB)
+                sys.stdout.write(printTitle + CRT)
+                printJnum = False
+                printGel = False
+
+        printTitle = r['title']
 
         if printJnum == False:
                 sys.stdout.write(r['jnumid'] + TAB)
@@ -105,9 +116,14 @@ for r in results:
 
         sys.stdout.write(str(len(r['images'])) + TAB)
         sys.stdout.write(str(len(r['imagepanes'])) + TAB)
-        sys.stdout.write(r['title'] + CRT)
+        sys.stdout.write(printTitle + CRT)
         printJnum = False
         printGel = False
+
+if printGel == True and printInSitu == False:
+        sys.stdout.write('0' + TAB)
+        sys.stdout.write('0' + TAB)
+        sys.stdout.write(printTitle + CRT)
 
 sys.stdout.flush()
 
