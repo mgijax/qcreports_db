@@ -72,7 +72,7 @@ and g._specimen_key = i._specimen_key
 and i.xDim is not NULL
 group by 1,2,3,4,5
 )
-order by year, jnumid, assaytype
+order by jnumid, assaytype
 ''', 'auto')
 
 sys.stdout.write('jnumid' + TAB)
