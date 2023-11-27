@@ -50,7 +50,7 @@ and not exists (select 1 from BIB_Workflow_Tag wt
 order by year, jnumid
 )
 (
-select r.*, 'gel' as assaytype,
+select distinct r.*, 'gel' as assaytype,
 array_to_string(array_agg(distinct i._image_key),',') as images,
 array_to_string(array_agg(distinct p._imagepane_key),',') as imagepanes
 from refs_fchigh r, GXD_Assay a, IMG_Image i, IMG_ImagePane p
@@ -61,7 +61,7 @@ and p._image_key = i._image_key
 and i.xDim is not NULL
 group by 1,2,3,4,5
 union
-select r.*, 'insitu' as assaytype,
+select distinct r.*, 'insitu' as assaytype,
 array_to_string(array_agg(distinct i._image_key),',') as images,
 array_to_string(array_agg(distinct i._imagepane_key),',') as imagepanes
 from refs_fchigh r, GXD_Assay a, GXD_Specimen g, GXD_ISResultImage_View i
