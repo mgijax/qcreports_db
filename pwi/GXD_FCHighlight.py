@@ -51,8 +51,8 @@ order by year, jnumid
 )
 (
 select distinct r.*, 'gel' as assaytype,
-array_to_string(array_agg(distinct i._image_key),',') as images,
-array_to_string(array_agg(distinct p._imagepane_key),',') as imagepanes
+array_length(array_agg(distinct i._image_key),1) as images,
+array_length(array_agg(distinct p._imagepane_key),1) as imagepanes
 from refs_fchigh r, GXD_Assay a, IMG_Image i, IMG_ImagePane p
 where r._refs_key = a._refs_key
 and a._assaytype_key in (1,2,3,4,5,6,8,9)
@@ -62,8 +62,8 @@ and i.xDim is not NULL
 group by 1,2,3,4,5
 union
 select distinct r.*, 'insitu' as assaytype,
-array_to_string(array_agg(distinct i._image_key),',') as images,
-array_to_string(array_agg(distinct i._imagepane_key),',') as imagepanes
+array_length(array_agg(distinct i._image_key),1) as images,
+array_length(array_agg(distinct i._imagepane_key),1) as imagepanes
 from refs_fchigh r, GXD_Assay a, GXD_Specimen g, GXD_ISResultImage_View i
 where r._refs_key = a._refs_key
 and a._assaytype_key in (1,2,3,4,5,6,8,9)
@@ -105,8 +105,8 @@ for r in results:
                 printJnum = True
 
         if r['assaytype'] == 'gel':
-                sys.stdout.write(str(len(r['images'])) + TAB)
-                sys.stdout.write(str(len(r['imagepanes'])) + TAB)
+                sys.stdout.write(str(r['images']) + TAB)
+                sys.stdout.write(str(r['imagepanes']) + TAB)
                 printGel = True
                 continue
 
@@ -114,8 +114,8 @@ for r in results:
                 sys.stdout.write('0' + TAB)
                 sys.stdout.write('0' + TAB)
 
-        sys.stdout.write(str(len(r['images'])) + TAB)
-        sys.stdout.write(str(len(r['imagepanes'])) + TAB)
+        sys.stdout.write(str(r['images']) + TAB)
+        sys.stdout.write(str(r['imagepanes']) + TAB)
         sys.stdout.write(printTitle + CRT)
         printJnum = False
         printGel = False
