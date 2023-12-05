@@ -340,6 +340,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="homology"><B>Homology (csmith) </B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class1.rpt">Classes for which there are > 10 Genes From a Single Species</A> 
+<LI><A HREF="/data/reports/qcreports_db/output/HOM_MouseNoHuman.rpt">Mouse Genes with No Human Homolog</A>
 </OL>
 
 <A NAME="metrics"><B>Curation Metrics</B></A>
