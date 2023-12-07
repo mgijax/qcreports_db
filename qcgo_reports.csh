@@ -51,6 +51,11 @@ end
 
 cd ${QCMONTHLY}
 
+foreach i (*GO*.sql)
+    echo `date`: $i | tee -a ${LOG}
+    ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
+end
+
 foreach i (*GO*.py)
     echo `date`: $i | tee -a ${LOG}
     if ( $i == "GO_stats.py" ) then

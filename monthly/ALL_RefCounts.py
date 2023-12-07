@@ -2,6 +2,7 @@
 '''
 #
 # Report:
+#    12/04/2023 : checked with Cindy and this is still used, we think
 #    jason.beckwith@jax.org is requesting a report.  
 #
 #    The report should contain:
