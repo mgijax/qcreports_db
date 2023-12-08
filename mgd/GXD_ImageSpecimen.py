@@ -28,7 +28,6 @@
 
 import sys
 import os
-import string
 import reportlib
 import db
 
@@ -37,7 +36,6 @@ db.setTrace()
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 

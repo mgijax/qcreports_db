@@ -22,7 +22,6 @@
 
 import sys
 import os
-import string
 import reportlib
 import db
 import re
@@ -30,9 +29,7 @@ import re
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Samples whose Relevance = Yes but whose Theiler stages and age fields are incompatible', os.environ['QCOUTPUTDIR'])
 

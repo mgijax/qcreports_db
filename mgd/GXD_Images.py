@@ -36,9 +36,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 byPublisher = [
 'Brain Res Gene Expr Patterns',

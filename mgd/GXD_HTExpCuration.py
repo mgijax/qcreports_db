@@ -36,9 +36,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], '\nExperiments where Curation State=Done and (Study Type=Not Curated OR Experimental Variables=Not Curated OR Experiment Type=Not Resolved OR Evaluation!= Yes)', os.environ['QCOUTPUTDIR'])
 
@@ -71,3 +69,4 @@ for r in results:
     fp.write('%s%s' % (accid, CRT))
 
 fp.write('%sTotal:%s%s' % (CRT, len(results), CRT))
+reportlib.finish_nonps(fp)

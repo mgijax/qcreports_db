@@ -13,16 +13,11 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
-db.useOneConnection(1)
-
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], '\tNon-Mouse Expressed Component/Driver Component whose Marker does not exist in EntrezGene', os.environ['QCOUTPUTDIR'])
 
@@ -99,5 +94,4 @@ for r in results:
 fp.write(CRT)
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
-db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file

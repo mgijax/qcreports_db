@@ -34,8 +34,6 @@
  
 import sys
 import os
-import string
-import mgi_utils
 import reportlib
 import db
 
@@ -135,6 +133,4 @@ def printReport(fp):
 # main
 #
 
-db.useOneConnection(1)
 jrs()
-db.useOneConnection(0)

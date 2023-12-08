@@ -81,7 +81,6 @@
  
 import sys
 import os
-import string
 import mgi_utils
 import reportlib
 import db
@@ -783,8 +782,7 @@ def assayTypeCounts():
 #      #
 ########
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1,
-        fileExt = '.' + os.environ['DATE'] + '.rpt')
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], fileExt = '.' + os.environ['DATE'] + '.rpt')
 cdnas()
 experiments()
 indexOnly()

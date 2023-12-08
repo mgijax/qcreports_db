@@ -45,16 +45,13 @@
  
 import sys
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 journalsAll = [
 'Genes Dev',

@@ -26,9 +26,7 @@
 
 import sys 
 import os
-import string
 import reportlib
-import mgi_utils
 import db
 from Bio.Seq import Seq
 

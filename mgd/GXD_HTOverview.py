@@ -47,16 +47,13 @@
 
 import sys
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 # experments in this list are in the Expression Atlas set
 eaList = []
@@ -165,3 +162,4 @@ for key in exptDict:
     ct += 1
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))
+reportlib.finish_nonps(fp)

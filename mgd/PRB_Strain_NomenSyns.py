@@ -23,8 +23,6 @@
  
 import sys
 import os
-import string
-import mgi_utils
 import reportlib
 import db
 

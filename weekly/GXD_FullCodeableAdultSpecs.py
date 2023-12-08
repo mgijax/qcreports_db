@@ -33,7 +33,6 @@ db.setTrace()
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Full-coded data only from adult specimens', outputdir = os.environ['QCOUTPUTDIR'])
 

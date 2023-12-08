@@ -43,7 +43,6 @@
 
 import sys
 import os
-import string
 import reportlib
 import db
 
@@ -52,7 +51,6 @@ db.setTrace()
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Assays in which a parent structure is annotated as having no expression while its children have expression.', outputdir = os.environ['QCOUTPUTDIR'])
 

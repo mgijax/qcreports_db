@@ -26,7 +26,6 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
@@ -138,6 +137,7 @@ def process():
             )
             order by m.chromosome, mlc.startCoordinate
         """, 'auto')
+
     for r in results:
         fpTAB.write(writeTAB(r))
     fpTAB.write('Total: %s' % len(results))

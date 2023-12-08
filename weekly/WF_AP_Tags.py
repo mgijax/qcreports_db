@@ -40,9 +40,7 @@ import mgi_utils
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'AP tagged references for curation', os.environ['QCOUTPUTDIR'], printHeading = None)
 

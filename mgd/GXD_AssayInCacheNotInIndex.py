@@ -25,22 +25,17 @@
  
 import sys 
 import os 
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
 #
-
-db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('Full coded assays that were not indexed' + CRT)
@@ -144,5 +139,4 @@ results = db.sql('''
 for item in results:
         fp.write(item['jnum'] + TAB + item['mgiid'] + TAB + item['assayType'] + TAB + item['login'] + CRT)
 fp.write('\n(%d rows affected)\n' % (len(results)))
-
 reportlib.finish_nonps(fp)

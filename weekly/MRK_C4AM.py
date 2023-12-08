@@ -29,16 +29,11 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
-db.useOneConnection(1)
-
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 # markers with gene model ids
 #{markerKey:[gmId1, ...], ...}
@@ -114,5 +109,4 @@ for r in results2:
 fp.write(CRT)
 fp.write('Total: %s' % len(results2))
 
-db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file

@@ -44,7 +44,6 @@
 import csv
 import sys 
 import os
-import string
 import mgi_utils
 import reportlib
 import db
@@ -52,9 +51,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 IMSR_CSV = os.environ['IMSR_STRAINS_CSV']
 

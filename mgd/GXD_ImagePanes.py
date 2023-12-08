@@ -24,7 +24,6 @@
  
 import sys 
 import os
-import string
 import mgi_utils
 import reportlib
 import db
@@ -32,15 +31,11 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
 #
-
-db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], 'Panes Lacking Coordinates', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
@@ -108,7 +103,8 @@ for r in results:
 # pix id
 #
 
-cmd = ''' select i._Image_key, a.accID as pixID
+cmd = ''' 
+        select i._Image_key, a.accID as pixID
         from IMG_Image i, ACC_Accession a
         where i._ImageClass_key = 6481781
         and i._ImageType_key = 1072158
@@ -136,10 +132,8 @@ for r in results:
 # images with image panes
 #
 
-cmd = ''' select i._Image_key, i.xDim, i.yDim, i.figureLabel, 
-                p.paneLabel,
-                a1.accID, 
-                a2.accID as refID
+cmd = ''' 
+        select i._Image_key, i.xDim, i.yDim, i.figureLabel, p.paneLabel, a1.accID, a2.accID as refID
         from IMG_Image i, IMG_ImagePane p, ACC_Accession a1, ACC_Accession a2
         where i._ImageClass_key = 6481781
         and i._ImageType_key = 1072158
@@ -190,4 +184,3 @@ for r in results:
 fp.write('\n(%d rows affected)\n' % (counter))
 
 reportlib.finish_nonps(fp)	# non-postscript file
-db.useOneConnection(0)

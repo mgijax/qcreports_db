@@ -13,22 +13,17 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
 #
-
-db.useOneConnection(1)
 
 fp = reportlib.init(sys.argv[0], '', outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
 
@@ -113,4 +108,3 @@ for r in results:
     fp.write(r['hybridization'] + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
-db.useOneConnection(0)

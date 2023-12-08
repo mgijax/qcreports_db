@@ -93,8 +93,7 @@ symbol = tokens[0]
 
 # initialize report output file
 userhome = '/home/' + sys.argv[1] + '/mgireport'
-#fp = reportlib.init('GO%s' % (symbol), printHeading = None, isHTML = 1, outputdir = os.environ['EIREPORTDIR'], sqlOneConnection = 0, sqlLogging = 0)
-fp = reportlib.init('GO%s' % (symbol), printHeading = None, isHTML = 1, outputdir = userhome, sqlOneConnection = 0, sqlLogging = 0)
+fp = reportlib.init('GO%s' % (symbol), printHeading = None, isHTML = 1, outputdir = userhome)
 fp.write(EOP)
 fp.write(TITLE + 'Potential New GO References' + EOTITLE + CRT)
 fp.write(H + 'Potential New GO References' + EOH + CRT)

@@ -46,16 +46,13 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -244,5 +241,4 @@ for k in sortOrder:
         fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (rowCount))
-
 reportlib.finish_nonps(fp)	# non-postscript file

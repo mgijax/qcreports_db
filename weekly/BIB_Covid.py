@@ -12,8 +12,8 @@
  
 import sys 
 import os
-import db
 import reportlib
+import db
 
 db.setTrace()
 

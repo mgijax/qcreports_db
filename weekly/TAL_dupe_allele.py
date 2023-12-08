@@ -20,7 +20,6 @@ import reportlib
 import db
 
 db.setTrace()
-db.useOneConnection(1)
 
 TAB= reportlib.TAB
 CRT = reportlib.CRT
@@ -70,5 +69,3 @@ for r in results:
 #
 
 reportlib.finish_nonps(fp)      # non-postscript file
-
-db.useOneConnection(0)

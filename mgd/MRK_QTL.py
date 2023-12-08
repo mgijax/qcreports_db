@@ -24,15 +24,14 @@
  
 import sys 
 import os
-import string
 import mgi_utils
 import reportlib
 import db
 
 db.setTrace()
 
-TAB = reportlib.TAB
 CRT = reportlib.CRT
+TAB = reportlib.TAB
 
 query1 = '''select a1.accID as mgiID, a2.accID as refID, m.symbol, m.name
           from MRK_Marker m, ACC_Accession a1, ACC_Accession a2, refs r
@@ -241,8 +240,6 @@ def qtl5():
 # main
 #
 
-db.useOneConnection(1)
-
 # generate once
 getRefs()
 
@@ -264,4 +261,3 @@ reportlib.finish_nonps(fp3)	# non-postscript file
 reportlib.finish_nonps(fp4)	# non-postscript file
 reportlib.finish_nonps(fp5)	# non-postscript file
 
-db.useOneConnection(0)

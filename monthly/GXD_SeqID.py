@@ -44,9 +44,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 
 #
@@ -115,6 +113,4 @@ for r in results:
     #
     fp.write("%-12s    %-30s    %-12s\n" % (r['mgiID'],r['probeName'],r['seqID']))
 
-#
-#
 reportlib.finish_nonps(fp)

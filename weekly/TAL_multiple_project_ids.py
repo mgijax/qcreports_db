@@ -27,12 +27,10 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
-db.useOneConnection(1)
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -101,6 +99,4 @@ for lineList in sortedOutput:
 
 fpIn.close()
 reportlib.finish_nonps(fp)	# non-postscript file
-
-db.useOneConnection(0)
 

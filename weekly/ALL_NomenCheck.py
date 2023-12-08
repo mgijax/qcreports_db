@@ -18,10 +18,8 @@
 
 import sys 
 import os
-import string
 import re
 import reportlib
-import mgi_utils
 import db
 
 db.setTrace()

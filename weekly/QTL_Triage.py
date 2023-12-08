@@ -31,18 +31,13 @@
  
 import sys 
 import os
-import mgi_utils
 import reportlib
 import db
 
 db.setTrace()
-db.useOneConnection(1)
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
-reportlib.column_width = 150
 
 #
 # Main
@@ -151,5 +146,4 @@ for r in results:
     fp.write(CRT)
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
 
-db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file

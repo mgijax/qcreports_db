@@ -61,9 +61,7 @@ import db
 #db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -217,3 +215,4 @@ for r in results:
         celltypeTerm = ''
     fp.write("%-9s  %-12s  %-50s  %-35s\n" % (r['jnumID'],r['mgiID'],r['term'],celltypeTerm))
 fp.write('\n(%d rows affected)\n' % (len(results)))
+reportlib.finish_nonps(fp)

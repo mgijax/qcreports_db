@@ -29,16 +29,11 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
-db.useOneConnection(1)
-
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'QTL-to-Candidate Gene Relationships', os.environ['QCOUTPUTDIR'])
 
@@ -79,5 +74,4 @@ for r in results:
 fp.write(CRT)
 fp.write('Total: %s' % len(results))
 
-db.useOneConnection(0)
 reportlib.finish_nonps(fp)	# non-postscript file

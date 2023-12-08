@@ -70,7 +70,6 @@
 
 import sys
 import os
-import string
 import re
 import mgi_utils
 import reportlib
@@ -79,9 +78,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -278,5 +275,4 @@ for r in results:
 
 fp.write('Number of specimens: ' + str(count) + 2*CRT)
 fp.write(s)
-
 reportlib.finish_nonps(fp)

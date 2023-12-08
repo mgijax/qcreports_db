@@ -18,16 +18,13 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 noteType = {1020: 'General',
             1021: 'Molecular Notes'

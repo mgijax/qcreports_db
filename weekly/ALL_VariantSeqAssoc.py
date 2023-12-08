@@ -25,9 +25,7 @@
 
 import sys 
 import os
-import string
 import reportlib
-import mgi_utils
 import db
 
 db.setTrace()

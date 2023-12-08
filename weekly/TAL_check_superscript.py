@@ -28,7 +28,6 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 import re
@@ -39,7 +38,6 @@ CRT = reportlib.CRT
 TAB = reportlib.TAB
 
 superscriptRE = re.compile('.*tm[0-9]([a-z])')
-
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 

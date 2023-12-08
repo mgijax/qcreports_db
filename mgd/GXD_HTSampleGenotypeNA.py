@@ -22,16 +22,13 @@
 
 import sys
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Samples whose Relevance = Yes but whose genotype is Not Applicable (MGI:2166309)', os.environ['QCOUTPUTDIR'])
 
@@ -52,3 +49,5 @@ for r in results:
     exptId = r['exptId']
     name = r['name']
     fp.write('%s%s%s%s' % (exptId, TAB, name, CRT))
+
+reportlib.finish_nonps(fp)

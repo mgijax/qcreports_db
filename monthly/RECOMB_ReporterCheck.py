@@ -36,17 +36,13 @@
 import sys
 import os
 import re
-import string
-import mgi_utils
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main

@@ -29,14 +29,11 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 # Organize result set by marker asmultiple gene models per marker
 # {mgiID:[line], ...}

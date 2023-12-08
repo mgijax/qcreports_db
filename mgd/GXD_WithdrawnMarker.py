@@ -34,16 +34,13 @@
 
 import sys
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 fp = reportlib.init(sys.argv[0], 'Withdrawn Markers (name = withdrawn) annotated to index records and/or assays', outputdir = os.environ['QCOUTPUTDIR'])
 

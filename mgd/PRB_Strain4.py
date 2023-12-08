@@ -21,15 +21,13 @@
  
 import sys
 import os
-import string
-import mgi_utils
 import reportlib
 import db
 
 db.setTrace()
 
-TAB = reportlib.TAB
 CRT = reportlib.CRT
+TAB = reportlib.TAB
 
 #
 # Main
