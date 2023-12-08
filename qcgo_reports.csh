@@ -23,7 +23,7 @@ foreach i (*GO*.sql)
     ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
 end
 
-foreach i (*GO*.py VOC_InvalidInferred.py)
+foreach i (*GO*.py VOC_InvalidInferred.py VOC_InvalidProperties.py)
     echo `date`: $i | tee -a ${LOG}
     if ( $i == "GO_stats.py" ) then
         mv -f ${QCOUTPUTDIR}/`basename $i py`[0-9]*.rpt ${QCGOARCHIVE}
