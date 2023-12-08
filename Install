@@ -11,8 +11,9 @@ cd `dirname $0` && source ./Configuration
 echo "$FTPURL" > includes/ftp_url.html
 
 # Create symlink for consistent web links
-rm -f qcr.html
-ln -s qcr.shtml qcr.html
+# remove
+#rm -f qcr.html
+#ln -s qcr.shtml qcr.html
 
 #
 # permissions
