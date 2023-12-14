@@ -38,8 +38,6 @@
  
 import sys 
 import os
-import string
-import mgi_utils
 import reportlib
 import db
 
@@ -53,9 +51,7 @@ receiver = "mgi-go@jax.org"
 report_url= os.environ['REPORTS_URL'] + os.environ['QCOUTPUTDIR'] + '/GO_EvidenceProperty.rpt'
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 def printNoExtResults(cmd):
     results = db.sql(cmd, 'auto')
@@ -125,7 +121,6 @@ def printMissEvCodeResults(cmd,evidenceMap):
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write("Date: %s\n\n" % (mgi_utils.date()))
 
 #
 # Get all GO/Marker evidence annotations records for J:73065 -> _refs_key=74017

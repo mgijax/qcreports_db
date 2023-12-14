@@ -1,3 +1,17 @@
+TAG: qcreports_db-6-0-22-??
+DATE: 12/05/2023
+STAFF: lec
+wts2-1155/GOC taking over GOA mouse, GOA human, etc.
+#       modified:   qcr.shtml
+#       modified:   mgd/GO_InvalidInferredFrom.py
+#       modified:   mgd/GO_PM2GeneRefsNotInMGI.py
+#       modified:   mgd/GO_stats.py
+#       modified:   mgd/MRK_GOGold.py
+#       modified:   mgd/VOC_InvalidInferred.py
+#       modified:   mgd/WF_GO_FullCodeNoAnnot.py
+delete mgd/GO_EvidenceProperty.py
+delete monthly/MRK_GOAnnot.py
+
 TAG: qcreports_db-6-0-22-75
 DATE: 12/05/2023
 STAFF: sc
