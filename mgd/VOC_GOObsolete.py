@@ -26,22 +26,19 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
 #
 
-fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], sqlLogging = 1)
+fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('MGI-ID' + TAB)
 fp.write('Gene Symbol' + TAB)
 fp.write('GO ID' + 2*CRT)
