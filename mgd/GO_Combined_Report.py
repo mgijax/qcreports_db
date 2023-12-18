@@ -563,7 +563,7 @@ for r in resultsNoGO:
     fp2.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
     
     # Report #3 needs a copy of this, if they have alleles.
-    if r['hasAlleles'] == 'Yes':
+    if r['hasAlleles'] == hasAllelesYes:
         fp3.write(templateRow2 % (r['symbol'], r['mgiID'], r['name'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefcount'])))
         
 for r in resultsNDOnly:
