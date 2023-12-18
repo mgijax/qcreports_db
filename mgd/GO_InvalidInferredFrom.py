@@ -5,15 +5,13 @@
 #
 # Report:
 #       
-# GO curators can use an evidence code of IC for an annotation and use a GO id in 
-# the WITH/inferred_from field.
+# GO curators can use an evidence code of IC for an annotation and use a GO id in the WITH/inferred_from field.
 #
-# However, sometimes an id becomes secondary or is obsoleted. We currently have 
-# to check on this, as this field is a text field.
+# However, sometimes an id becomes secondary or is obsoleted. 
+# We currently have to check on this, as this field is a text field.
 #
-# Therefore, it would be helpful to have a QC run that checks annotations with 
-# evidence code IC for a valid GO id.
-
+# Therefore, it would be helpful to have a QC run that checks annotations with evidence code IC for a valid GO id.
+#
 # field 1: MGI ID
 # field 2: MGI symbol
 # field 3: Annotation that has the IC
@@ -31,7 +29,6 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 import re
@@ -67,7 +64,7 @@ fp.write('MGI-ID' + TAB)
 fp.write('MGI symbol' + TAB)
 fp.write('Annotation that has the IC' + TAB)
 fp.write('Invalid ID in WITH field' + TAB)
-fp.write('Primary ID' + CRT)
+fp.write('Primary ID' + CRT*2)
 
 #
 # select all GO annotations with IC evidence
@@ -103,7 +100,8 @@ for r in results:
         else:
             preferredList = goDict[id]
             if 0 in preferredList:
-                results = db.sql('''select distinct a2.accid
+                results = db.sql('''
+                    select distinct a2.accid
                     from ACC_Accession a1, ACC_Accession a2
                     where a1.accid = 'GO:2000898'
                     and a1._MGIType_key = 13
@@ -112,7 +110,8 @@ for r in results:
                     and a1._Object_key = a2._Object_key
                     and a2._MGIType_key = 13
                     and a2._LogicalDB_key = 31
-                    and a2.preferred = 1''', 'auto')
+                    and a2.preferred = 1
+                    ''', 'auto')
                 primaryIdList = []
                 for r in results:
                     primaryIdList.append(r['accid'])
@@ -120,4 +119,6 @@ for r in results:
 
 for i in invalidList:
     fp.write(i)
+
 reportlib.finish_nonps(fp)
+

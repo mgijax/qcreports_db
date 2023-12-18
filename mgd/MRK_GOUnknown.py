@@ -1,4 +1,3 @@
-
 '''
 #
 # MRK_GOUnknown.py 
@@ -31,17 +30,13 @@
 
 import sys
 import os
-import string
-import mgi_utils
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -254,10 +249,8 @@ db.sql('create index temp4_idx1 on temp4(symbol)', None)
 
 db.sql('create index temp4_idx2 on temp4(category)', None)
 
-fp.write( 'All genes with ''unknown'' annotations with new indexed literature\n')
-fp.write('J: creation date >= Annotation creation date)\n')
-fp.write("and if reference is 'chosen' or 'indexed' for GO and ''not used''\n")
-fp.write('for any GO annotation\n')
+fp.write('\nAll genes with ''unknown'' annotations with new indexed literature\n')
+fp.write('J: creation date >= Annotation creation date and if reference is ''chosen'' or ''indexed'' for GO and ''not used'' for any GO annotation\n')
 fp.write('(excludes FANTOM papers 11217851 and 12466851, and 14621295, 11125038, 12466854, 12466855, and 12693553)\n')
 fp.write('(excludes markers with alleles of subtype "Recombinase")\n\n')
 
@@ -272,7 +265,7 @@ for r in results:
 results = db.sql('''select count(*) as ct from temp4''', 'auto')
 for r in results:
     fp.write('Number of total rows: \t\t\t\t\t%s\n' %  r['ct'])
-fp.write('\n\n')
+fp.write('\n')
 
 fp.write('Category 1 = chosen or indexed only for GO\n')
 fp.write('Category 2 = chosen or indexed only for GO & A&P\n')
@@ -302,3 +295,6 @@ for r in results:
             cur = ', '.join(curList)
 
     fp.write('%s%s%s%s%s%s%s%s%s%s' % (str.ljust(r['symbol'], 25), str.ljust(r['mgiID'], 15), str.ljust(r['jnumID'], 15), str.ljust(r['pubmedID'], 15), str.center(r['category'], 10), str.center(r['hasDO'], 10), str.ljust(r['jnumDate'], 14), str.ljust(r['annotDate'], 14), str.ljust(cur, 50), CRT))
+
+reportlib.finish_nonps(fp)
+

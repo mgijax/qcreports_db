@@ -54,8 +54,6 @@
  
 import sys
 import os
-import Set
-import mgi_utils
 import reportlib
 import db
 

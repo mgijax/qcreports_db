@@ -36,7 +36,6 @@ db.setTrace()
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -48,7 +47,7 @@ fp.write('''
         The reference must be:
              group = GO, status = 'Full-coded'
              No GO annotation
-''')
+''' + CRT)
 
 results = db.sql('''
     select distinct a.accid as jnumID, v._Relevance_key,
@@ -84,6 +83,6 @@ for r in results:
 
         cdate = r['cdate']
         fp.write('%s%s%d%s%s%s' % (jnumID, TAB, isDiscard, TAB, cdate, CRT))
-fp.write('\nTotal: %d\n' % len(results))
 
+fp.write('\nTotal: %d\n' % len(results))
 reportlib.finish_nonps(fp)

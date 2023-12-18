@@ -53,9 +53,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -138,5 +136,4 @@ for r in results:
 
 fp.write(CRT * 2)
 fp.write('total number of completed genes: %s\n' % (str(counter)))
-
 reportlib.finish_nonps(fp)
