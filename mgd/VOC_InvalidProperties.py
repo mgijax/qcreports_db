@@ -32,16 +32,18 @@ db.setTrace()
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-fp.write('\nInvalid "Properties" Values in GO Annotations' + 2 * reportlib.CRT)
+fp.write('\nInvalid "Properties" Values in GO Annotations; Terms of interest do not exist in MGI' + reportlib.CRT)
+fp.write('\nTerms of interest:  CL, GO, MA, MGI' + 2 * reportlib.CRT
 rows = 0
 
 #
 # read in all term ids (13) of interest
 # this is the list of valid accession ids
 #
-# 4 : GO
-# 6 : Adult Mouse Anatomy
-# 102 : CL
+# 4: GO
+# 6: Adult Mouse Anatomy
+# 77: Protein Ontology
+# 102: Cell Ontology
 #
 # and MGI: ids for markers
 #
@@ -74,7 +76,8 @@ db.sql('''
         and e._AnnotEvidence_key = p._AnnotEvidence_key
         and p._PropertyTerm_key = t._Term_key
         and t._Vocab_key = 82
-        and t.term not in ('anatomy', 
+        and t.term not in (
+                'anatomy', 
                 'cell type', 
                 'dual-taxon ID', 
                 'evidence', 
