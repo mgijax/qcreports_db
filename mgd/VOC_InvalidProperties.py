@@ -13,8 +13,6 @@
 # Used by:
 #       Annotation Editors
 #
-# Notes:
-#
 # History:
 #
 #
