@@ -1,6 +1,7 @@
 
 '''
    'gene product' values that do not exist in the GPI file
+   'gene product' key = 6481775
 
 '''
 
@@ -12,9 +13,7 @@ import db
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 gpiSet = ['PR', 'EMBL', 'ENSEMBL', 'RefSeq']
 gpiFileName = os.environ['PUBREPORTDIR'] + '/output/mgi.gpi'
@@ -27,14 +26,13 @@ fp.write('Marker used in Annotation differs from Marker used in Protein Isoform 
 fp.write('value\tannotation\tontology\n\n')
 
 results = db.sql('''select p.value, m.symbol as annotation, pm.symbol as isoformlookup
-        from VOC_Annot a, VOC_Evidence e, VOC_Evidence_Property p, VOC_Term t, MRK_Marker m,
+        from VOC_Annot a, VOC_Evidence e, VOC_Evidence_Property p, MRK_Marker m,
                 ACC_Accession pa1, VOC_Annot pa, MRK_Marker pm
         where a._AnnotType_key = 1000
         and a._Object_key = m._Marker_key
         and a._Annot_key = e._Annot_key
         and e._AnnotEvidence_key = p._AnnotEvidence_key
-        and p._PropertyTerm_key = t._Term_key
-        and t.term = 'gene product'
+        and p._PropertyTerm_key = 6481775
         and p.value like 'PR:%'
         and p.value = pa1.accID
         and pa1._MGIType_key = 13
