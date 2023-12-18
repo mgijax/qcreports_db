@@ -43,16 +43,13 @@
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 def writeRecord1(fp, r):
 
@@ -85,6 +82,7 @@ def writeRecord2(fp, r):
 #
 
 fpB = reportlib.init("MRK_GOGold_B", outputdir = os.environ['QCOUTPUTDIR'])
+fpB.write('select markers of type ''gene'' where evidence code = IDA, IGI, IMP, IPI' + CRT*2)
 fpB.write('mgi ID' + TAB + \
          'symbol' + TAB + \
          'name' + TAB + \
@@ -94,6 +92,9 @@ fpB.write('mgi ID' + TAB + \
          'evidence codes' + CRT*2)
 
 fpD = reportlib.init("MRK_GOGold_D", outputdir = os.environ['QCOUTPUTDIR'])
+fpD.write('select markers of type ''gene'' ' + CRT)
+fpD.write('\twhere evidence code = IDA, IGI, IMP, IPI' + CRT)
+fpD.write('\twhere number of annoations > 1' + CRT*2)
 fpD.write('mgi ID' + TAB + \
          'symbol' + TAB + \
          'name' + TAB + \
@@ -201,7 +202,7 @@ fpD.write('Number of unique MGI Gene IDs:  %s\n' % (len(results)))
 
 # total number of rows
 results = db.sql('select * from m4', 'auto')
-fpD.write('Total number of rows:  %s\n\n' % (len(results)))
+fpD.write('Total number of rows (same gene, >1 annotation to same GO term):  %s\n\n' % (len(results)))
 
 results = db.sql('select distinct _Marker_key, symbol, name, term, goID, abbreviation from m4 order by symbol', 'auto')
 for r in results:
