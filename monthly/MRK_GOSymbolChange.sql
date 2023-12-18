@@ -1,6 +1,6 @@
 
 \echo ''
-\echo 'MGI gene symbols that have changed and with Noctua GO annotations'
+\echo 'MGI gene symbols that have changed and with GO annotations'
 \echo ''
 
 select distinct h._marker_key, m1.symbol as currentSymbol, h._history_key, mhist.symbol as oldSymbol, a1.accid as currentID, t.term as event, CAST(h.event_date AS DATE) as eventDate 
@@ -9,7 +9,7 @@ from voc_annot va, voc_evidence ve, mgi_user u, mrk_marker m1, mrk_history h, mr
 where va._annottype_key = 1000
 and va._annot_key = ve._annot_key
 and ve._createdby_key= u._user_key
-and u.login like 'NOCTUA%'
+--and u.login like 'NOCTUA%'
 and va._object_key = m1._marker_key
 and va._object_key = h._marker_key
 and h._marker_event_key in (106563607, 106563605, 106563606) -- allele of, rename, merged
