@@ -304,7 +304,7 @@ resultsNDOnly = db.sql('''
                 and a._Annot_key = e._Annot_key
                 and e._EvidenceTerm_key != 118)
         ''', 'auto')
-NDOnlyCount = len(resultsNDOnly[0])
+NDOnlyCount = len(resultsNDOnly)
 
 # markers with IEA Only
 resultsIEAOnly = db.sql('''
@@ -331,7 +331,7 @@ resultsIEAOnly = db.sql('''
                 and a._Annot_key = e._Annot_key
                 and e._EvidenceTerm_key != 115)
         ''', 'auto')
-IEAOnlyCount = len(resultsIEAOnly[0])
+IEAOnlyCount = len(resultsIEAOnly)
 
 # markers with IEA + ND
 resultsIEAAndNDOnly = db.sql('''
@@ -363,7 +363,7 @@ resultsIEAAndNDOnly = db.sql('''
                 and a._Annot_key = e._Annot_key
                 and e._EvidenceTerm_key not in (115, 118))
         ''', 'auto')
-IEAAndNDOnlyCount = len(resultsIEAAndNDOnly[0])
+IEAAndNDOnlyCount = len(resultsIEAAndNDOnly)
 
 # markers with all other annotations
 resultsAllOther = db.sql('''
@@ -389,22 +389,20 @@ resultsAllOther = db.sql('''
                 and a._Annot_key = e._Annot_key
                 and e._EvidenceTerm_key not in (115, 118))
         ''', 'auto')	
-otherCount = len(resultsAllOther[0])
+otherCount = len(resultsAllOther)
 
-# Print out the descriptive information about the genes
-
+# print out the descriptive information about the genes
 fp.write("Genes in this report are of type 'Gene', are for the mouse, and do not have a 'withdrawn' status.\n")
 fp.write("Additionally they have had the following restrictions placed on them:\n")
 fp.write("They must have a protein sequence of type Uniprot, XP or NP \n\n")
         
-# Print out the Header
-
+# print out the header
 totalCount = noGOCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
 
 fp.write("1. Total number of rows: %d" % totalCount)
 fp.write(CRT + "2. Genes with no GO Annotations: %d" % noGOCount)
 
-# The second report also needs this line, so print it out.
+# second report also needs this line, so print it out.
 fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
 
 fp.write(CRT + "3. Genes with Annotations to IEA Only: %d" % IEAOnlyCount)
