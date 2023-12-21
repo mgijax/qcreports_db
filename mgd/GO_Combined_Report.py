@@ -392,8 +392,8 @@ resultsAllOther = db.sql('''
 otherCount = len(resultsAllOther)
 
 # print out the descriptive information about the genes
-fp.write("Genes in this report are: organism = mouse, type = Gene, status = official\n")
-fp.write("Must include:  protein sequence of type Uniprot, XP or NP \n\n")
+fp.write("includes: organism = mouse, type = Gene, status = official\n")
+fp.write("includes: protein sequence of type Uniprot, XP or NP \n\n")
         
 # print out the header
 totalCount = noGOCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
