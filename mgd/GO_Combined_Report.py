@@ -15,14 +15,12 @@
 #       wts2-1155/GOC taking over GOA mouse, GOA human, etc.
 #       changed Yes/No per Karen's instructions
 #       fixed DO/Genotype, DO/Human Marker counts
+#       fixed counts at top (1-11)
+#       removed exclusion of gene symbol/name checks
+#       changed 5 fields (type1,2,3,4,5) -> one field/GO Status
 #
 # sc    02/11/2021
 #       TR13349 - B39 project. Update to use alliance direct homology
-#
-# 04/09/2012	lec
-#	- and m.name not like 'predicted gene %'
-#	changed to
-#	- and m.name not like 'predicted gene%'
 #
 # 04/03/2012	lec
 #	- fixed up some nameing issues ('go' -> 'GO')
