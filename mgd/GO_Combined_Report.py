@@ -109,17 +109,13 @@ type4 = "ND+IEA"
 type5 = "Others"
 
 # markers of type gene, status = officieal
-# sequence XP or NP
 db.sql('''
         select distinct m.* 
         into temporary table validMarkers
-        from MRK_Marker m, SEQ_Marker_Cache smc
+        from MRK_Marker m
         where m._Marker_Type_key = 1
         and m._Marker_Status_key = 1
         and m._Organism_key = 1
-        and m._Marker_key = smc._Marker_key
-        and (smc.accID like 'XP%' or smc.accID like 'NP%' 
-        or smc._logicalDB_key in (13, 41)) 
         ''', None)
 db.sql('create index vmIndex3 on validMarkers (_Marker_key)', None)
 
@@ -391,8 +387,7 @@ otherCount = len(resultsAllOther)
 
 # print out the descriptive information about the genes
 fp.write("includes: organism = mouse, type = Gene, status = official\n")
-fp.write("includes: protein sequence of type Uniprot, XP or NP \n\n")
-        
+
 # print out the header
 totalCount = noGOCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
 fp.write("1. Total number of rows: %d" % totalCount)
