@@ -204,36 +204,36 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase Allele Check</A>
 </OL>
 
-<A NAME="go"> <B>GO (dph, dmitrys, ln, csmith)</B></A>
+<A NAME="go"> <B>GO (dmitrys, krc, ln, csmith)</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dph, krc)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOSymbolChange.sql.rpt">QC: MGI gene symbols that have changed and with Noctua GO annotationsi</A><B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dmitrys)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOSymbolChange.sql.rpt">QC: MGI gene symbols that have changed and with GO annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_NoGO_D.html">QC: Genes with no GO Annotations with references with GO status = Indexed but not yet annotated</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOIEA.html">QC: Genes with only IEA GO Annotations with references with GO status = Indexed or Chosen but not yet annotated</A> <B>(ln)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A>
-<LI><A HREF="/data/loads/go/goamouse/output/pubmed.error">QC: GOAMouse/invalid pubmedids</A> <B>(ln)</B>
-<LI><A HREF="/data/loads/go/gomousenoctua/output/pubmed.error">QC: GOMouseNoctua/invalid pubmedids</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO_Has_Alleles.rpt">QC: Mouse Genes that have Alleles but no GO Annotations</A> <B>(ln)</B>
+<LI><A HREF="/data/loads/mgi/goload/input/pubmed.error">QC: GO/invalid pubmedids</A> <B>(ln)</B>
+<LI><A HREF="/data/loads/mgi/goload/output/goload.annot.error">QC: GO/obsolete terms/duplicate annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_Unannotationed.rpt">QC: Underannotated genes</A> <B>(dmitrys, csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A>
-<LI><A HREF="/data/reports/qcreports_db/archive/go">Report: Archive of GO Statistics and Reports</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Report: Combined QC Report</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">Report: GO Statistics</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">Report: IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(dph, dmitrys)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidInferred.rpt">Report: Invalid "Inferred From" Values in GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Report: Invalid "Properties" Values in GO Annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceProperty.rpt">Report: J:73065 GO annotations</A>
-<LI><A HREF="/data/reports/qcreports_db/output/VOC_GOObsolete.rpt">Report: Markers with Annotations to Obsolete GO Terms</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A> <B></B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A> <B></B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A> <B></B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A> <B></B>
+<LI><A HREF="/data/reports/qcreports_db/archive/go">Report: Archive of GO Statistics and Reports</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Report: Combined QC Report</A> <B>(krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">Report: GO Statistics</A> <B>(krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">Report: IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(dmitrys)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidInferred.rpt">Report: Invalid "Inferred From" Values in GO Annotations</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Report: Invalid "Properties" Values in GO Annotations</A> <B>(ln)</B>
+<LI>(empty)</LI>
+<LI>(empty)</LI>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A> <B>(krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_GO_FullCodeNoAnnot.rpt">Report: Papers marked as Full-coded with no GO annotations</A> <B>(ln)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A> <B></B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Report: Total GO Annotations per Gene</A> <B>(csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Report: Verify GPI file</A> <B>(dph)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Report: Verify GPI file</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_PM2GeneRefsNotInMGI.rpt">Report: Papers not in MGI for genes without experimental GO annotations</A> <B>(krc)</B>
-<LI><A HREF="/data/loads/mgi/mgicacheload/logs/inferredfrom.csh.log">Report: Sunday/Inferred From Text/linkout errors</A> <B>(ln)</B>
+<LI><A HREF="/data/loads/mgi/goload/logs/inferredfrom.log">Report: Sunday/Inferred From Text/linkout errors</A> <B>(ln)</B>
 </OL>
 
 <A NAME="nomenclature"><B>Nomenclature (mmh)</B></A>
@@ -340,7 +340,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <A NAME="homology"><B>Homology (csmith) </B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Homology_Class1.rpt">Classes for which there are > 10 Genes From a Single Species</A> 
-<LI><A HREF="/data/reports/qcreports_db/output/HOM_MouseNoHuman.rpt">Mouse Genes with No Human Homolog</A>
 </OL>
 
 <A NAME="metrics"><B>Curation Metrics</B></A>
@@ -364,15 +363,11 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/mp_emapaload/index.html">MP/EMAPA Relationships Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/geoload/index.html">GEO Load</A> <B>(cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/arrayexpload/index.html">Expression Atlas/ArrayExpress Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT GEO Load</A> <B>(cms)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/vocload/GOindex.html">GO Vocabulary/DAG Load</A> <B>(dph)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/goamouse/index.html">GOA/Mouse Load</A> <B>(krc)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/goahuman/index.html">GOA/Human Load</A> <B>(krc)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/gorat/index.html">GO/Rat Load</A> <B>(krc)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/gorefgen/index.html">GO/PAINT Load</A> <B>(krc)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/gocfp/index.html">GO/CFP (aka GOC) Load</A> <B>(krc)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/gomousenoctua/index.html">GO/Mouse/Noctua Load</A> <B>(dph)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(dph)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/vocload/GOindex.html">GO Vocabulary/DAG Load</A> <B>(ln)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/goload/index.html">GO Load</A> <B>(krc, ln)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(ln)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A> <B>(mmh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/OMIMindex.html">OMIM Vocabulary Load</A> <B>(smb)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/DOindex.html">Disease Ontology (DO) Vocabulary Load</A> <B>(smb)</B>

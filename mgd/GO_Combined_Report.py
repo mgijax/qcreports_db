@@ -103,40 +103,29 @@ fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
 fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
 
 # Type Mapping Strings
+template = "%s" + TAB
+type1 = "No GO"
+type2 = "ND Only"
+type3 = "IEA Only"
+type4 = "ND+IEA"
+type5 = "Others"
 
-template = "%s" + TAB + "%s" + TAB + "%s" + TAB + "%s" + TAB + "%s"
-
-type1 = template % ("X"," "," "," "," ")
-type2 = template % (" ","X"," "," "," ")
-type3 = template % (" "," ","X"," "," ")
-type4 = template % (" "," "," ","X"," ")
-type5 = template % (" "," "," "," ","X")
-
-# Reduce the total list of markers that we need to compare against w/ a filter versus the
-# marker table.
-
+# markers of type gene, status = officieal
+# sequence XP or NP
 db.sql('''
         select distinct m.* 
         into temporary table validMarkers
         from MRK_Marker m, SEQ_Marker_Cache smc
         where m._Marker_Type_key = 1
         and m._Marker_Status_key = 1
-        and m.name not like 'gene model %' 
-        and m.name not like 'gene trap %' 
-        and m.name not like 'predicted gene%' 
-        and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]' 
-        and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]' 
-        and m.symbol not like 'ORF%' 
         and m._Organism_key = 1
         and m._Marker_key = smc._Marker_key
         and (smc.accID like 'XP%' or smc.accID like 'NP%' 
         or smc._logicalDB_key in (13, 41)) 
         ''', None)
-
 db.sql('create index vmIndex3 on validMarkers (_Marker_key)', None)
 
-# Setup the alleles count -> markers table
-
+#  mrkAlleles = alleles count -> markers table
 db.sql('''
         select mm._Marker_key, count(_Allele_key) as hasAlleles
         into temporary table mrkAlleles
@@ -151,8 +140,7 @@ db.sql('''
         ''', None)
 db.sql('create index mrkAlleleIndex on mrkAlleles (_Marker_key)', None)
 
-# setup the mrk/DO annotations table
-
+# mrkDOAnnot = mrk/DO annotations table
 db.sql('''
         select m._Marker_key, count(vmc._Term_key) as hasDO
         into temporary table mrkDOAnnot
@@ -163,8 +151,7 @@ db.sql('''
         ''', None)
 db.sql('create index mrkDOIndex on mrkDOAnnot (_Marker_key)', None)
 
-# Setup the mrk human -> mouse orthologs relationship
-
+# mrkDOHumanAnnot = mrk human -> mouse orthologs relationship
 db.sql('''
         WITH vocabmh AS (
                 select mm._Marker_key, v._Term_key
@@ -187,8 +174,7 @@ db.sql('''
         ''', None)
 db.sql('create index mrkDOHumanIndex on mrkDOHumanAnnot (_Marker_key)', None)
 
-# Set up the marker has orthologs table
-
+# tmp_homology, mrkHomology = the marker has orthologs table
 db.sql('''
         select mm._Marker_key, count(hm._Marker_key) as hasOrtholog
         into temporary table tmp_homology
@@ -212,8 +198,7 @@ db.sql('''
        ''', None)
 db.sql('create index mrkOrthoIndex on mrkHomology (_Marker_key)', None)
 
-# Get the number of unused go references per marker
-
+# reduced_bibgo, refGOUnused = number of unused go references per marker
 db.sql('''
         select r.*
         into temporary table reduced_bibgo
@@ -236,9 +221,7 @@ db.sql('''
         ''', None)
 db.sql('create index goRefIndex on refGOUnused (_Marker_key)', None)
 
-# Collapse all these temp tables down to a single one, to make the subsequent queries easier
-# to design.
-
+# goOverall = collapse all these temp tables down to a single one, to make the subsequent queries easier to design.
 db.sql('''
         select m._Marker_key,
         case when gt.completion_date is not null then 'Yes' else 'No' end as isComplete,
@@ -260,8 +243,7 @@ db.sql('''
         ''', None)
 db.sql('create index goOverall_idx on goOverall (_Marker_key)', None)
 
-# Markers w/o GO Evidence Codes
-
+# markers w/o GO evidence codes
 resultsNoGO = db.sql('''
         select distinct '1' as type, m.symbol, a.accID as mgiID, m.name,
                 g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, 
@@ -298,8 +280,7 @@ db.sql('''
                 and a._Annot_key = e._Annot_key)
         ''', None)
 
-# Markers with ND Only
-
+# markers with ND Only
 resultsNDOnly = db.sql('''
         select distinct '2' as type, m.symbol, a.accID as mgiID, m.name,
                 g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
@@ -325,8 +306,7 @@ resultsNDOnly = db.sql('''
         ''', 'auto')
 NDOnlyCount = len(resultsNDOnly[0])
 
-# Markers with IEA Only
-
+# markers with IEA Only
 resultsIEAOnly = db.sql('''
         select distinct '3' as type, m.symbol, a.accID as mgiID, m.name,
                 g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
@@ -353,8 +333,7 @@ resultsIEAOnly = db.sql('''
         ''', 'auto')
 IEAOnlyCount = len(resultsIEAOnly[0])
 
-# Markers with IEA + ND
-
+# markers with IEA + ND
 resultsIEAAndNDOnly = db.sql('''
         select distinct '4' as type, m.symbol, a.accID as mgiID, m.name,
                 g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
@@ -386,8 +365,7 @@ resultsIEAAndNDOnly = db.sql('''
         ''', 'auto')
 IEAAndNDOnlyCount = len(resultsIEAAndNDOnly[0])
 
-# Markers with all other annotations
-
+# markers with all other annotations
 resultsAllOther = db.sql('''
         select distinct '5' as type, m.symbol, a.accID as mgiID, m.name,
                 g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefcount
@@ -416,14 +394,8 @@ otherCount = len(resultsAllOther[0])
 # Print out the descriptive information about the genes
 
 fp.write("Genes in this report are of type 'Gene', are for the mouse, and do not have a 'withdrawn' status.\n")
-fp.write("Additionally they have had the following restrictions placed on them:\n\n")
-fp.write("They cannot have a name that starts with the words 'gene model'\n")
-fp.write("They cannot have a name that starts with the words 'predicted gene'\n")
-fp.write("They cannot have a name that starts with the words 'gene trap'\n")
-fp.write("They cannot have a symbol that starts with the word 'ORF'\n")
-fp.write("They cannot have a symbol that is a single letter followed by up to 5 numbers, for example 'a12345'\n")
-fp.write("They cannot have a symbol that is two letters followed by up to 5 numbers, for example 'ab12345'\n\n\n")
-fp.write("They must have a protien sequence of type Uniprot, XP or NP \n\n\n")
+fp.write("Additionally they have had the following restrictions placed on them:\n")
+fp.write("They must have a protein sequence of type Uniprot, XP or NP \n\n")
         
 # Print out the Header
 
@@ -482,8 +454,7 @@ for r in results:
     uniqueRef = r['cnt']
 fp.write(CRT + "11. Total number of unique references: %d" % uniqueRef)
 
-# Setup the template for rows in the report
-
+# template for rows in the report
 templateRow = '%s' + TAB + \
         '%s' + TAB + \
         '%s' + TAB + \
@@ -495,8 +466,7 @@ templateRow = '%s' + TAB + \
         '%s' + TAB + \
         '%s' + CRT;
 
-# The other two reports do not need the template section, so we can remove them.
-        
+# other two reports do not need the template section, so we can remove them.
 templateRow2 = '%s' + TAB + \
         '%s' + TAB + \
         '%s' + TAB + \
@@ -507,13 +477,8 @@ templateRow2 = '%s' + TAB + \
         '%s' + TAB + \
         '%s' + CRT;
 
-# Print out the report itself
-
-fp.write(CRT + CRT + CRT + 'No GO' + TAB + \
-        'ND Only' + TAB + \
-        'IEA Only' + TAB + \
-        'ND+IEA' + TAB + \
-        'Others' + TAB + \
+# first report
+fp.write(3*CRT + 'GO Status' + TAB + \
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
         'Gene Name' + TAB + \
@@ -524,9 +489,8 @@ fp.write(CRT + CRT + CRT + 'No GO' + TAB + \
         'Annotation reviewed date?' + TAB + \
         'Number of GO References' + CRT)
 
-# Repeat for the second report
-
-fp2.write(CRT + CRT + CRT + 
+# second report
+fp2.write(3*CRT + 
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
         'Gene Name' + TAB + \
@@ -537,12 +501,9 @@ fp2.write(CRT + CRT + CRT +
         'Annotation reviewed date?' + TAB + \
         'Number of GO References' + CRT)
 
-# Repeat for the third report, maybe this could be factored out in the future.
-        
-# The third report also needs this line, so print it out.
+# third report also needs this line, so print it out.
 fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
-
-fp3.write(CRT + CRT + CRT + 
+fp3.write(3*CRT +
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
         'Gene Name' + TAB + \
