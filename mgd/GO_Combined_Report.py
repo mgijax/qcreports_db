@@ -397,13 +397,8 @@ fp.write("includes: protein sequence of type Uniprot, XP or NP \n\n")
         
 # print out the header
 totalCount = noGOCount + NDOnlyCount + IEAOnlyCount + IEAAndNDOnlyCount + otherCount
-
 fp.write("1. Total number of rows: %d" % totalCount)
 fp.write(CRT + "2. Genes with no GO Annotations: %d" % noGOCount)
-
-# second report also needs this line, so print it out.
-fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
-
 fp.write(CRT + "3. Genes with Annotations to IEA Only: %d" % IEAOnlyCount)
 fp.write(CRT + "4. Genes with Annotations to ND Only: %d" % NDOnlyCount)
 fp.write(CRT + "5. Genes with Annotations to ND+IEA: %d" % IEAAndNDOnlyCount)
@@ -487,6 +482,7 @@ fp.write(2*CRT + 'GO Status' + TAB + \
         'Number of GO References' + CRT)
 
 # second report
+fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
 fp2.write(2*CRT + 
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
