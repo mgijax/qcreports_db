@@ -476,7 +476,7 @@ templateRow2 = '%s' + TAB + \
         '%s' + CRT;
 
 # first report
-fp.write(3*CRT + 'GO Status' + TAB + \
+fp.write(2*CRT + 'GO Status' + TAB + \
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
         'Gene Name' + TAB + \
@@ -488,7 +488,7 @@ fp.write(3*CRT + 'GO Status' + TAB + \
         'Number of GO References' + CRT)
 
 # second report
-fp2.write(3*CRT + 
+fp2.write(2*CRT + 
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
         'Gene Name' + TAB + \
@@ -501,7 +501,7 @@ fp2.write(3*CRT +
 
 # third report also needs this line, so print it out.
 fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
-fp3.write(3*CRT +
+fp3.write(2*CRT +
         'Gene Symbol' + TAB + \
         'MGI ID' + TAB + \
         'Gene Name' + TAB + \
