@@ -164,22 +164,25 @@ db.sql('''
         ''', None)
 db.sql('create index vmIndex3 on validMarkers (_Marker_key)', None)
 
-#  mrkAlleles = alleles count -> markers table
+# mrkAlleles = alleles count -> markers table
+# LEFT OUTER JOIN required
 db.sql('''
         select mm._Marker_key, count(_Allele_key) as hasAlleles
         into temporary table mrkAlleles
         from validMarkers mm
              LEFT OUTER JOIN ALL_Allele aa on (mm._Marker_key = aa._Marker_key
-        and aa.isWildType = 0
-        and aa._Allele_Type_key != 847130
-        and aa._Allele_Status_key = 847114
-        and aa.isWildType = 0
-        and aa._Transmission_key != 3982953)
+                and aa.isWildType = 0
+                and aa._Allele_Type_key != 847130
+                and aa._Allele_Status_key = 847114
+                and aa.isWildType = 0
+                and aa._Transmission_key != 3982953
+                )
         group by mm._Marker_key
         ''', None)
 db.sql('create index mrkAlleleIndex on mrkAlleles (_Marker_key)', None)
 
 # mrkDOAnnot = mrk/DO annotations table
+# LEFT OUTER JOIN required
 db.sql('''
         select m._Marker_key, count(vmc._Term_key) as hasDO
         into temporary table mrkDOAnnot
@@ -190,6 +193,7 @@ db.sql('''
 db.sql('create index mrkDOIndex on mrkDOAnnot (_Marker_key)', None)
 
 # mrkDOHumanAnnot = mrk human -> mouse orthologs relationship
+# LEFT OUTER JOIN required
 db.sql('''
         WITH vocabmh AS (
                 select mm._Marker_key, v._Term_key
@@ -213,6 +217,7 @@ db.sql('''
 db.sql('create index mrkDOHumanIndex on mrkDOHumanAnnot (_Marker_key)', None)
 
 # tmp_homology, mrkHomology = the marker has orthologs table
+# LEFT OUTER JOIN required
 db.sql('''
         select mm._Marker_key, count(hm._Marker_key) as hasOrtholog
         into temporary table tmp_homology
@@ -245,20 +250,23 @@ db.sql('''
 db.sql('create index vmIndex2 on reduced_bibgo (_Marker_key)', None)
 
 # number of unqiue references by marker
+# LEFT OUTER JOIN required
 db.sql('''
         select vm._Marker_key, count(distinct r._Refs_key) as goRefCount
         into temporary table refGOUnusedByMarker
         from validMarkers vm
                 LEFT OUTER JOIN reduced_bibgo r on (vm._Marker_key = r._Marker_key
-        and not exists (select 1 from VOC_Annot a, VOC_Evidence e
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._Refs_key = r._Refs_key))
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e
+                        where a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._Refs_key = r._Refs_key)
+                )
         group by vm._Marker_key 
         ''', None)
 db.sql('create index goRefIndex on refGOUnusedByMarker (_Marker_key)', None)
 
 # goOverall = collapse all these temp tables down to a single one, to make the subsequent queries easier to design.
+# LEFT OUTER JOIN required
 db.sql('''
         select m._Marker_key,
         case when gt.completion_date is not null then 'Yes' else 'No' end as isComplete,
@@ -509,7 +517,8 @@ results = db.sql('''
         select count(distinct r._Refs_key) as goRefCount
         from validMarkers vm
                 LEFT OUTER JOIN reduced_bibgo r on (vm._Marker_key = r._Marker_key
-                and not exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000))
+                and not exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000)
+                )
         ''', 'auto')
 uniqueRefCount = results[0]['goRefCount']
 fp.write(CRT + "15. Total number of unique references that do not have GO Annotations: %d" % uniqueRefCount)
