@@ -168,13 +168,13 @@ db.sql('create index vmIndex3 on validMarkers (_Marker_key)', None)
 db.sql('''
         select mm._Marker_key, count(_Allele_key) as hasAlleles
         into temporary table mrkAlleles
-        from validMarkers mm
-             LEFT OUTER JOIN ALL_Allele aa on (mm._Marker_key = aa._Marker_key
+        from validMarkers mm, ALL_Allele aa
+        where mm._Marker_key = aa._Marker_key
         and aa.isWildType = 0 
         and aa._Allele_Type_key != 847130
         and aa._Allele_Status_key = 847114
         and aa.isWildType = 0
-        and aa._Transmission_key != 3982953)
+        and aa._Transmission_key != 3982953
         group by mm._Marker_key
         ''', None)
 db.sql('create index mrkAlleleIndex on mrkAlleles (_Marker_key)', None)
@@ -183,9 +183,9 @@ db.sql('create index mrkAlleleIndex on mrkAlleles (_Marker_key)', None)
 db.sql('''
         select m._Marker_key, count(vmc._Term_key) as hasDO
         into temporary table mrkDOAnnot
-        from validMarkers m
-             LEFT OUTER JOIN VOC_Annot vmc on (m._Marker_key = vmc._Object_key
-                 and vmc._AnnotType_key = 1020)
+        from validMarkers m, VOC_Annot vmc
+        where m._Marker_key = vmc._Object_key 
+        and vmc._AnnotType_key = 1020
         group by m._Marker_key
         ''', None)
 db.sql('create index mrkDOIndex on mrkDOAnnot (_Marker_key)', None)
@@ -207,8 +207,8 @@ db.sql('''
         )
         select m._Marker_key, count(vmh._Term_key) as hasDOHuman
         into temporary table mrkDOHumanAnnot
-        from validMarkers m
-             LEFT OUTER JOIN vocabmh vmh on (m._Marker_key = vmh._Marker_key)
+        from validMarkers m, vocabmh vmh
+        where m._Marker_key = vmh._Marker_key
         group by m._Marker_key
         ''', None)
 db.sql('create index mrkDOHumanIndex on mrkDOHumanAnnot (_Marker_key)', None)
@@ -231,8 +231,8 @@ db.sql('''
 db.sql('''
         select m._Marker_key, t.hasOrtholog as hasOrtholog
         into temporary table mrkHomology
-        from validMarkers m
-             LEFT OUTER JOIN tmp_homology t on (m._Marker_key = t._Marker_key)
+        from validMarkers m, tmp_homology t
+        where m._Marker_key = t._Marker_key
        ''', None)
 db.sql('create index mrkOrthoIndex on mrkHomology (_Marker_key)', None)
 
@@ -249,12 +249,12 @@ db.sql('create index vmIndex2 on reduced_bibgo (_Marker_key)', None)
 db.sql('''
         select vm._Marker_key, count(distinct r._Refs_key) as goRefCount
         into temporary table refGOUnusedByMarker
-        from validMarkers vm
-             LEFT OUTER JOIN reduced_bibgo r on (vm._Marker_key = r._Marker_key
+        from validMarkers vm, reduced_bibgo r
+        where vm._Marker_key = r._Marker_key
         and not exists (select 1 from VOC_Annot a, VOC_Evidence e
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
-                and e._Refs_key = r._Refs_key))
+                and e._Refs_key = r._Refs_key)
         group by vm._Marker_key 
         ''', None)
 db.sql('create index goRefIndex on refGOUnusedByMarker (_Marker_key)', None)
@@ -498,16 +498,25 @@ for r in results:
     completeYes = r['cnt']
 fp.write(CRT + "13. Genes with GO Annotation reviewed date?: %d" % completeYes)
 
-# number of unique references in validMarkers
+# number of unique references in validMarkers that have GO annotations
 results = db.sql('''
         select count(distinct r._Refs_key) as goRefCount
         from validMarkers vm, reduced_bibgo r
         where vm._Marker_key = r._Marker_key
-        --and not exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000)
+        and exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000)
         ''', 'auto')
 uniqueRefCount = results[0]['goRefCount']
+fp.write(CRT + "14. Total number of unique references that have GO Annotations: %d" % uniqueRefCount)
 
-fp.write(CRT + "14. Total number of unique references: %d" % uniqueRefCount)
+# number of unique references in validMarkers that do not have GO annotations
+results = db.sql('''
+        select count(distinct r._Refs_key) as goRefCount
+        from validMarkers vm, reduced_bibgo r
+        where vm._Marker_key = r._Marker_key
+        and not exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000)
+        ''', 'auto')
+uniqueRefCount = results[0]['goRefCount']
+fp.write(CRT + "15. Total number of unique references that do not have GO Annotations: %d" % uniqueRefCount)
 
 # template for rows in the report
 templateRow = '%s' + TAB + \
