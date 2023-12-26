@@ -674,7 +674,7 @@ def openRpts():
 
 def printFeatures():
 
-        fp.write(str.ljust('Feature type', 55))
+        fp.write(str.ljust('\nFeature type', 55))
         fp.write(str.ljust('gene', 10))
         fp.write(str.ljust('predicted gene', 10) + '\n')
 
