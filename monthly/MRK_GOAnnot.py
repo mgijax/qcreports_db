@@ -42,16 +42,13 @@
  
 import sys 
 import os 
-import string
 import reportlib
 import db
 
 db.setTrace()
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
 
 #
 # Main
@@ -207,8 +204,6 @@ results = db.sql('''
         and e._Refs_key not in (74750, 61933,73199,73197)
         and e._EvidenceTerm_key not in (115,118)
         and e._CreatedBy_key = u._User_key
-        and u.login not like ('GOA_%')
-        and u.login not in ('GOC', 'GO_Central', 'UniProtKB')
         group by m._Marker_key
      ''', 'auto')
 for r in results:
