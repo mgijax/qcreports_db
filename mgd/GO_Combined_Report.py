@@ -662,12 +662,69 @@ def processStats():
         resultsAllOther = db.sql('select * from hasOther', 'auto')
         otherCount = len(resultsAllOther)
 
-def printRpt1():
+def openRpts():
         global fp
-        global allelesYes
+        global fp2
+        global fp3
 
         fp = reportlib.init(sys.argv[0], 'GO Combined Report', os.environ['QCOUTPUTDIR'])
         fp.write("includes: organism = mouse, type = Gene, status = official\n")
+        fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
+        fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
+
+def printFeatures():
+
+        fp.write(str.ljust('Feature type', 55))
+        fp.write(str.ljust('gene', 10))
+        fp.write(str.ljust('predicted gene', 10) + '\n')
+
+        results = db.sql('''
+                select featureType, predictedGene, count(predictedGene) as genecount
+                from validMarkers
+                group by featureType, predictedGene
+                order by featureType, predictedGene asc
+                ;
+        ''', 'auto')
+
+        featureTypes = {}
+        for r in results:
+                
+                key = r['featureType']
+                value = r
+
+                if key not in featureTypes:
+                        featureTypes[key] = []
+
+                featureTypes[key].append(r)
+        #print(featureTypes)
+
+        for key in featureTypes:
+                fp.write(str.ljust(str(key), 55))
+
+                foundNo = False
+                foundYes = False
+
+                for r in featureTypes[key]:
+
+                        if r['predictedGene'] == 'No':
+                                fp.write(str.ljust(str(r['genecount']), 10))
+                                foundNo = True
+
+                        if r['predictedGene'] == 'Yes':
+                                if foundNo == False:
+                                        fp.write(str.ljust(str(0), 10))
+                                fp.write(str.ljust(str(r['genecount']), 10))
+                                foundYes = True
+
+                if foundYes == False:
+                        fp.write(str.ljust(str(0), 10))
+
+                fp.write("\n")
+
+        fp.write("\n\n")
+
+def printRpt1():
+        global allelesYes
 
         totalGeneCount = 0
         totalPredictedCount = 0
@@ -831,9 +888,7 @@ def printRpt1():
                 'Number of GO References' + CRT)
 
 def printRpt2():
-        global fp2
 
-        fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
         fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
         fp2.write(2*CRT + 
                 'Gene Symbol' + TAB + \
@@ -849,9 +904,7 @@ def printRpt2():
                 'Number of GO References' + CRT)
 
 def printRpt3():
-        global fp3
 
-        fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
         fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
         fp3.write(2*CRT +
                 'Gene Symbol' + TAB + \
@@ -922,6 +975,8 @@ def printAllStats():
                 r = setPrintYesNo(r)
                 fp.write(templateRow % (type5, r['symbol'], r['accID'], r['name'], r['featureType'], r['predictedGene'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefCount'])))    
 
+def closeRpts():
+
         reportlib.finish_nonps(fp)
         reportlib.finish_nonps(fp2)
         reportlib.finish_nonps(fp3)
@@ -938,8 +993,11 @@ getOrthologs()
 getRefs()
 getOverall()
 processStats()
+openRpts()
+printFeatures()
 printRpt1()
 printRpt2()
 printRpt3()
 printAllStats()
+closeRpts()
 
