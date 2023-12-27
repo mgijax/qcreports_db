@@ -378,10 +378,10 @@ def processStats():
         global resultsIBA
         global resultsIBAND
         global resultsIBAIEAND
-        global resultsAllOther
         global resultsEXP
         global resultsHTP
         global resultsIBAIEA
+        global resultsAllOther
 
         global noGOCount, noGOGeneCount, noGOPredictedCount
         global NDCount, NDGeneCount, NDPredictedCount
@@ -750,8 +750,8 @@ def processStats():
                 and go.hasOrtholog = 'Yes' 
                 and go._Marker_key = hng._Marker_key 
                 ''', None)
-        resultsOrtholog = db.sql('select * from hasOrtholog', 'auto')
-        hasOrthologCount = len(resultsOrtholog)
+        results = db.sql('select count(*) as counter from hasOrtholog', 'auto')
+        hasOrthologCount = results[0]['counter']
         results = db.sql(''' select count(*) as counter from hasOrtholog where predictedGene = 'No' ''', 'auto')
         hasOrthologGeneCount = results[0]['counter']
         results = db.sql(''' select count(*) as counter from hasOrtholog where predictedGene = 'Yes' ''', 'auto')
