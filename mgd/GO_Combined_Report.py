@@ -457,7 +457,7 @@ def processStats():
         resultsIEA = db.sql('select * from hasIEAOnly', 'auto')
         IEACount = len(resultsIEA)
 
-        # markers with IEA + ND
+        # markers with IEA + ND Only
         db.sql('''
                 select distinct '4' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
                         g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
@@ -504,7 +504,7 @@ def processStats():
         resultsIBA = db.sql('select * from hasIDAOnly', 'auto')
         IBACount = len(resultsIBA)
 
-        # markers with IBA + ND
+        # markers with IBA + ND Only
         db.sql('''
                 select distinct '7' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
                         g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
@@ -530,7 +530,7 @@ def processStats():
         resultsIBAND = db.sql('select * from hasIBAND', 'auto')
         IBANDCount = len(resultsIBAND)
 
-        # markers with IBA + IEA + ND
+        # markers with IBA + IEA + ND Only
         db.sql('''
                 select distinct '8' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
                         g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
@@ -561,7 +561,7 @@ def processStats():
         resultsIBAIEAND = db.sql('select * from hasIBAIEAND', 'auto')
         IBAIEANDCount = len(resultsIBAIEAND)
 
-        # markers with IBA + IEA
+        # markers with IBA + IEA Only
         db.sql('''
                 select distinct '11' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
                         g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
@@ -578,6 +578,11 @@ def processStats():
                         and a._AnnotType_key = 1000
                         and a._Annot_key = e._Annot_key
                         and e._EvidenceTerm_key = 115)
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e
+                        where m._Marker_key = a._Object_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key not in (7428292, 115))
                 ''', None)
         resultsIBAIEA = db.sql('select * from hasIBAIEA', 'auto')
         IBAIEACount = len(resultsIBAIEA)
@@ -674,9 +679,9 @@ def openRpts():
 
 def printFeatures():
 
-        fp.write(str.ljust('\nFeature type', 55))
-        fp.write(str.ljust('gene', 10))
-        fp.write(str.ljust('predicted gene', 10) + '\n')
+        fp.write(str.ljust("\nFeature type", 55))
+        fp.write(str.ljust("gene", 10))
+        fp.write(str.ljust("predicted gene", 10) + "\n")
 
         results = db.sql('''
                 select featureType, predictedGene, count(predictedGene) as genecount
@@ -796,20 +801,37 @@ def printRpt1():
         totalPredictedCount += results[0]['predictedCount']
 
         # print out the header
-        totalCount = noGOCount + IEACount + NDCount + IEANDCount + IBACount + IBANDCount + IBAIEACount + IBAIEANDCount + EXPCount + HTPCount + otherCount
-        fp.write("1. Total number of rows: %d (Genes = %d; Predicted genes = %d)" % (totalCount, totalGeneCount, totalPredictedCount))
+        fp.write(str.ljust("\nCategory", 75))
+        fp.write(str.ljust("total", 10))
+        fp.write(str.ljust("gene", 10))
+        fp.write(str.ljust("predicted gene", 10) + "\n")
 
-        fp.write(CRT + "2. Genes with no GO Annotations: %d" % noGOCount)
-        fp.write(CRT + "3. Genes with Annotations to IEA Only: %d" % IEACount)
-        fp.write(CRT + "4. Genes with Annotations to ND Only: %d" % NDCount)
-        fp.write(CRT + "5. Genes with Annotations to ND+IEA: %d" % IEANDCount)
-        fp.write(CRT + "6. Genes with Annotations to IBA Only: %d" % IBACount)
-        fp.write(CRT + "7. Genes with Annotations to ND+IBA: %d" % IBANDCount)
-        fp.write(CRT + "8. Genes with Annotations to IBA+IEA: %d" % IBAIEACount)
-        fp.write(CRT + "9. Genes with Annotations to ND+IBA+IEA: %d" % IBAIEANDCount)
-        fp.write(CRT + "10. Genes with many EXP Annotations: %d" % EXPCount)
-        fp.write(CRT + "11. Genes with HTP but not manual EXP Annotations: %d" % HTPCount)
-        fp.write(CRT + "12. Genes with Annotations to All other: %d" % otherCount)
+        totalCount = noGOCount + IEACount + NDCount + IEANDCount + IBACount + IBANDCount + IBAIEACount + IBAIEANDCount + EXPCount + HTPCount + otherCount
+        fp.write(str.ljust("1. Total number of rows:", 75))
+        fp.write(str.ljust(str(totalCount), 10) + str.ljust(str(totalGeneCount), 10) + str.ljust(str(totalPredictedCount), 10))
+
+        fp.write(2*CRT + str.ljust("2. Genes with no GO Annotations:", 75))
+        fp.write(str.ljust(str(noGOCount), 10))
+        fp.write(2*CRT + str.ljust("3. Genes with Annotations to ND Only:", 75))
+        fp.write(str.ljust(str(NDCount), 10))
+        fp.write(2*CRT + str.ljust("4. Genes with Annotations to IEA Only:", 75))
+        fp.write(str.ljust(str(IEACount), 10))
+        fp.write(2*CRT + str.ljust("5. Genes with Annotations to ND+IEA Only:", 75))
+        fp.write(str.ljust(str(IEANDCount), 10))
+        fp.write(2*CRT + str.ljust("6. Genes with Annotations to IBA Only:", 75))
+        fp.write(str.ljust(str(IBACount), 10))
+        fp.write(2*CRT + str.ljust("7. Genes with Annotations to ND+IBA Only:", 75))
+        fp.write(str.ljust(str(IBANDCount), 10))
+        fp.write(2*CRT + str.ljust("8. Genes with Annotations to IBA+IEA Only:", 75))
+        fp.write(str.ljust(str(IBAIEACount), 10))
+        fp.write(2*CRT + str.ljust("9. Genes with Annotations to ND+IBA+IEA Only:", 75))
+        fp.write(str.ljust(str(IBAIEANDCount), 10))
+        fp.write(2*CRT + str.ljust("10. Genes with many EXP Annotations:", 75))
+        fp.write(str.ljust(str(EXPCount), 10))
+        fp.write(2*CRT + str.ljust("11. Genes with HTP but not manual EXP Annotations:", 75))
+        fp.write(str.ljust(str(HTPCount), 10))
+        fp.write(2*CRT + str.ljust("12. Genes with Annotations to All other:", 75))
+        fp.write(str.ljust(str(otherCount), 10))
 
         # Gather all of the other statistical data.
         results = db.sql('''
@@ -817,7 +839,8 @@ def printRpt1():
                 where go.hasOrtholog = 'Yes' and go._Marker_key = hng._Marker_key 
                 ''', 'auto')
         for r in results:
-                fp.write(CRT + "13. Mouse Genes that have Rat/Human Homologs and NO GO annotations: %d" % r['cnt'])
+                fp.write(2*CRT + str.ljust("13. Mouse Genes that have Rat/Human Homologs and NO GO annotations:", 75))
+                fp.write(str.ljust(str(r['cnt']), 10))
 
         # Count of markers with do/genotype annotations and no GO annotations
         results = db.sql('''
@@ -825,7 +848,8 @@ def printRpt1():
                 where go.hasDO = 'Yes' and go._Marker_key = hng._Marker_key 
                 ''', 'auto')
         for r in results:
-                fp.write(CRT + "14. Mouse Genes with DO Genotype Annotations and NO GO annotations: %d" % r['cnt'])
+                fp.write(2*CRT + str.ljust("14. Mouse Genes with DO Genotype Annotations and NO GO annotations:", 75))
+                fp.write(str.ljust(str(r['cnt']), 10))
 
         # Count of markers with human disease annotations
         results = db.sql('''
@@ -833,7 +857,8 @@ def printRpt1():
                 where go.hasHumanDO = 'Yes' and go._Marker_key = hng._Marker_key 
                 ''', 'auto')
         for r in results:
-                fp.write(CRT + "15. Mouse Genes with Human Disease Annotations and NO GO annotations: %d" % r['cnt'])
+                fp.write(2*CRT + str.ljust("15. Mouse Genes with Human Disease Annotations and NO GO annotations:", 75))
+                fp.write(str.ljust(str(r['cnt']), 10))
 
         # Count of markers that have alleles	
         results = db.sql('''
@@ -842,7 +867,8 @@ def printRpt1():
                 ''', 'auto')	
         for r in results:
                 allelesYes = r['cnt']
-                fp.write(CRT + "16. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
+                fp.write(2*CRT + str.ljust("16. Genes with Mutant Alleles and NO GO Annotations:", 75))
+                fp.write(str.ljust(str(allelesYes), 10))
 
         # Count of markers marked complete in go	
         results = db.sql('''
@@ -850,7 +876,8 @@ def printRpt1():
                 where isComplete = 'Yes' 
                 ''', 'auto')
         for r in results:
-                fp.write(CRT + "17. Genes with GO Annotation reviewed date?: %d" % r['cnt'])
+                fp.write(2*CRT + str.ljust("17. Genes with GO Annotation reviewed date?:", 75))
+                fp.write(str.ljust(str(r['cnt']), 10))
 
         # number of unique references in validMarkers that have GO annotations
         results = db.sql('''
@@ -860,7 +887,8 @@ def printRpt1():
                         and exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000))
                 ''', 'auto')
         uniqueRefCount = results[0]['goRefCount']
-        fp.write(CRT + "18. Total number of unique references that have GO Annotations: %d" % uniqueRefCount)
+        fp.write(2*CRT + str.ljust("18. Total number of unique references that have GO Annotations:", 75))
+        fp.write(str.ljust(str(uniqueRefCount), 10))
 
         # number of unique references in validMarkers that do not have GO annotations
         results = db.sql('''
@@ -871,53 +899,54 @@ def printRpt1():
                         )
                 ''', 'auto')
         uniqueRefCount = results[0]['goRefCount']
-        fp.write(CRT + "19. Total number of unique references that do not have GO Annotations: %d" % uniqueRefCount)
+        fp.write(2*CRT + str.ljust("19. Total number of unique references that do not have GO Annotations:", 75))
+        fp.write(str.ljust(str(uniqueRefCount), 10))
 
         # first report
-        fp.write(2*CRT + 'GO Status' + TAB + \
-                'Gene Symbol' + TAB + \
-                'MGI ID' + TAB + \
-                'Gene Name' + TAB + \
-                'Feature Type' + TAB + \
-                'Predicted Gene' + TAB + \
-                'Rat/Human Orthologs?' + TAB + \
-                'DO Genotype Annotations?' + TAB + \
-                'DO Human Annotations?' + TAB + \
-                'Alleles?' + TAB + \
-                'Annotation reviewed date?' + TAB + \
-                'Number of GO References' + CRT)
+        fp.write(2*CRT + "GO Status" + TAB + \
+                "Gene Symbol" + TAB + \
+                "MGI ID" + TAB + \
+                "Gene Name" + TAB + \
+                "Feature Type" + TAB + \
+                "Predicted Gene" + TAB + \
+                "Rat/Human Orthologs?" + TAB + \
+                "DO Genotype Annotations?" + TAB + \
+                "DO Human Annotations?" + TAB + \
+                "Alleles?" + TAB + \
+                "Annotation reviewed date?" + TAB + \
+                "Number of GO References" + CRT)
 
 def printRpt2():
 
         fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
         fp2.write(2*CRT + 
-                'Gene Symbol' + TAB + \
-                'MGI ID' + TAB + \
-                'Gene Name' + TAB + \
-                'Feature Type' + TAB + \
-                'Predicted Gene' + TAB + \
-                'Rat/Human Orthologs?' + TAB + \
-                'DO Genotype Annotations?' + TAB + \
-                'DO Human Annotations?' + TAB + \
-                'Alleles?' + TAB + \
-                'Annotation reviewed date?' + TAB + \
-                'Number of GO References' + CRT)
+                "Gene Symbol" + TAB + \
+                "MGI ID" + TAB + \
+                "Gene Name" + TAB + \
+                "Feature Type" + TAB + \
+                "Predicted Gene" + TAB + \
+                "Rat/Human Orthologs?" + TAB + \
+                "DO Genotype Annotations?" + TAB + \
+                "DO Human Annotations?" + TAB + \
+                "Alleles?" + TAB + \
+                "Annotation reviewed date?" + TAB + \
+                "Number of GO References" + CRT)
 
 def printRpt3():
 
         fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
         fp3.write(2*CRT +
-                'Gene Symbol' + TAB + \
-                'MGI ID' + TAB + \
-                'Gene Name' + TAB + \
-                'Feature Type' + TAB + \
-                'Predicted Gene' + TAB + \
-                'Rat/Human Orthologs?' + TAB + \
-                'DO Genotype Annotations?' + TAB + \
-                'DO Human Annotations?' + TAB + \
-                'Alleles?' + TAB + \
-                'Annotation reviewed date?' + TAB + \
-                'Number of GO References' + CRT)
+                "Gene Symbol" + TAB + \
+                "MGI ID" + TAB + \
+                "Gene Name" + TAB + \
+                "Feature Type" + TAB + \
+                "Predicted Gene" + TAB + \
+                "Rat/Human Orthologs?" + TAB + \
+                "DO Genotype Annotations?" + TAB + \
+                "DO Human Annotations?" + TAB + \
+                "Alleles?" + TAB + \
+                "Annotation reviewed date?" + TAB + \
+                "Number of GO References" + CRT)
         
 def printAllStats():
         #
