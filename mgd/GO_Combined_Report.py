@@ -487,7 +487,7 @@ def processStats():
         db.sql('''
                 select distinct '6' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
                         g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
-                into temporary table hasIDAOnly
+                into temporary table hasIBAOnly
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
                 and exists (select 1 from  VOC_Annot a, VOC_Evidence e
@@ -501,7 +501,7 @@ def processStats():
                         and a._Annot_key = e._Annot_key
                         and e._EvidenceTerm_key != 7428292)
                 ''', 'auto')
-        resultsIBA = db.sql('select * from hasIDAOnly', 'auto')
+        resultsIBA = db.sql('select * from hasIBAOnly', 'auto')
         IBACount = len(resultsIBA)
 
         # markers with IBA + ND Only
@@ -726,7 +726,7 @@ def printFeatures():
 
                 fp.write("\n")
 
-        fp.write("\n\n")
+        fp.write("\n")
 
 def printRpt1():
         global allelesYes
@@ -737,71 +737,93 @@ def printRpt1():
         # noGOCount
         results = db.sql(''' select count(*) as geneCount from hasNoGO where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        noGOGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasNoGO where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        noGOPredictedCount = results[0]['predictedCount']
 
         # NDCount
         results = db.sql(''' select count(*) as geneCount from hasNDOnly where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        NDGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasNDOnly where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        NDPredictedCount = results[0]['predictedCount']
 
         # IEACount
         results = db.sql(''' select count(*) as geneCount from hasIEAOnly where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        IEAGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasIEAOnly where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        IEAPredictedCount = results[0]['predictedCount']
 
         # IEANDCount
         results = db.sql(''' select count(*) as geneCount from hasIEANDOnly where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        IEANDGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasIEANDOnly where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        IEANDPredictedCount = results[0]['predictedCount']
 
         # IBACount
-        results = db.sql(''' select count(*) as geneCount from hasIDAOnly where predictedGene = 'No' ''', 'auto')
+        results = db.sql(''' select count(*) as geneCount from hasIBAOnly where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIDAOnly where predictedGene = 'Yes' ''', 'auto')
+        IBAGeneCount = results[0]['geneCount']
+        results = db.sql(''' select count(*) as predictedCount from hasIBAOnly where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        IBAPredictedCount = results[0]['predictedCount']
 
         # IBANDCount
         results = db.sql(''' select count(*) as geneCount from hasIBAND where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        IBANDGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasIBAND where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        IBANDPredictedCount = results[0]['predictedCount']
 
         # IBAIEACount
         results = db.sql(''' select count(*) as geneCount from hasIBAIEA where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        IBAIEAGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasIBAIEA where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        IBAIEAPredictedCount = results[0]['predictedCount']
 
         # IBAIEANDCount
         results = db.sql(''' select count(*) as geneCount from hasIBAIEAND where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        IBAIEANDGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasIBAIEAND where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        IBAIEANDPredictedCount = results[0]['predictedCount']
 
         # EXPCount
         results = db.sql(''' select count(*) as geneCount from hasEXP where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        EXPGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasEXP where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        EXPPredictedCount = results[0]['predictedCount']
 
         # HTPCount
         results = db.sql(''' select count(*) as geneCount from hasHTP where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        HTPGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasHTP where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        HTPPredictedCount = results[0]['predictedCount']
 
         # otherCount
         results = db.sql(''' select count(*) as geneCount from hasOther where predictedGene = 'No' ''', 'auto')
         totalGeneCount += results[0]['geneCount']
+        otherGeneCount = results[0]['geneCount']
         results = db.sql(''' select count(*) as predictedCount from hasOther where predictedGene = 'Yes' ''', 'auto')
         totalPredictedCount += results[0]['predictedCount']
+        otherPredictedCount = results[0]['predictedCount']
 
         # print out the header
-        fp.write(str.ljust("\nCategory", 75))
+        fp.write(str.ljust("Category", 75))
         fp.write(str.ljust("total", 10))
         fp.write(str.ljust("gene", 10))
         fp.write(str.ljust("predicted gene", 10) + "\n")
@@ -811,27 +833,27 @@ def printRpt1():
         fp.write(str.ljust(str(totalCount), 10) + str.ljust(str(totalGeneCount), 10) + str.ljust(str(totalPredictedCount), 10))
 
         fp.write(2*CRT + str.ljust("2. Genes with no GO Annotations:", 75))
-        fp.write(str.ljust(str(noGOCount), 10))
+        fp.write(str.ljust(str(noGOCount), 10) + str.ljust(str(noGOGeneCount), 10) + str.ljust(str(noGOPredictedCount), 10))
         fp.write(2*CRT + str.ljust("3. Genes with Annotations to ND Only:", 75))
-        fp.write(str.ljust(str(NDCount), 10))
+        fp.write(str.ljust(str(NDCount), 10) + str.ljust(str(NDGeneCount), 10) + str.ljust(str(NDPredictedCount), 10))
         fp.write(2*CRT + str.ljust("4. Genes with Annotations to IEA Only:", 75))
-        fp.write(str.ljust(str(IEACount), 10))
+        fp.write(str.ljust(str(IEACount), 10) + str.ljust(str(IEAGeneCount), 10) + str.ljust(str(IEAPredictedCount), 10))
         fp.write(2*CRT + str.ljust("5. Genes with Annotations to ND+IEA Only:", 75))
-        fp.write(str.ljust(str(IEANDCount), 10))
+        fp.write(str.ljust(str(IEANDCount), 10) + str.ljust(str(IEANDGeneCount), 10) + str.ljust(str(IEANDPredictedCount), 10))
         fp.write(2*CRT + str.ljust("6. Genes with Annotations to IBA Only:", 75))
-        fp.write(str.ljust(str(IBACount), 10))
+        fp.write(str.ljust(str(IBACount), 10) + str.ljust(str(IBAGeneCount), 10) + str.ljust(str(IBAPredictedCount), 10))
         fp.write(2*CRT + str.ljust("7. Genes with Annotations to ND+IBA Only:", 75))
-        fp.write(str.ljust(str(IBANDCount), 10))
+        fp.write(str.ljust(str(IBANDCount), 10) + str.ljust(str(IBANDGeneCount), 10) + str.ljust(str(IBANDPredictedCount), 10))
         fp.write(2*CRT + str.ljust("8. Genes with Annotations to IBA+IEA Only:", 75))
-        fp.write(str.ljust(str(IBAIEACount), 10))
+        fp.write(str.ljust(str(IBAIEACount), 10) + str.ljust(str(IBAIEAGeneCount), 10) + str.ljust(str(IBAIEAPredictedCount), 10))
         fp.write(2*CRT + str.ljust("9. Genes with Annotations to ND+IBA+IEA Only:", 75))
-        fp.write(str.ljust(str(IBAIEANDCount), 10))
+        fp.write(str.ljust(str(IBAIEANDCount), 10) + str.ljust(str(IBAIEANDGeneCount), 10) + str.ljust(str(IBAIEANDPredictedCount), 10))
         fp.write(2*CRT + str.ljust("10. Genes with many EXP Annotations:", 75))
-        fp.write(str.ljust(str(EXPCount), 10))
+        fp.write(str.ljust(str(EXPCount), 10) + str.ljust(str(EXPGeneCount), 10) + str.ljust(str(EXPPredictedCount), 10))
         fp.write(2*CRT + str.ljust("11. Genes with HTP but not manual EXP Annotations:", 75))
-        fp.write(str.ljust(str(HTPCount), 10))
+        fp.write(str.ljust(str(HTPCount), 10) + str.ljust(str(HTPGeneCount), 10) + str.ljust(str(HTPPredictedCount), 10))
         fp.write(2*CRT + str.ljust("12. Genes with Annotations to All other:", 75))
-        fp.write(str.ljust(str(otherCount), 10))
+        fp.write(str.ljust(str(otherCount), 10) + str.ljust(str(otherGeneCount), 10) + str.ljust(str(otherPredictedCount), 10))
 
         # Gather all of the other statistical data.
         results = db.sql('''
