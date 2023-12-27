@@ -395,6 +395,7 @@ def processStats():
         global HTPCount, HTPGeneCount, HTPPredictedCount
         global otherCount, otherGeneCount, otherPredictedCount
         global hasOrthologCount, hasOrthologGeneCount, hasOrthologPredictedCount
+        global hasDOCount, hasDOGeneCount, hasDOPredictedCount
 
         global totalGeneCount, totalPredictedCount
 
@@ -755,6 +756,22 @@ def processStats():
         results = db.sql(''' select count(*) as predictedCount from hasOrtholog where predictedGene = 'Yes' ''', 'auto')
         hasOrthologPredictedCount = results[0]['predictedCount']
 
+        # Count of markers with do/genotype annotations and no GO annotations
+        db.sql('''
+                select go._Marker_key, m.predictedGene 
+                into temporary table hasDO
+                from validMarkers m, goOverall go, hasNoGO hng
+                where m._Marker_key = go._Marker_key
+                and go.hasDO = 'Yes' 
+                and go._Marker_key = hng._Marker_key 
+                ''', 'auto')
+        resultsDO = db.sql('select * from hasDO', 'auto')
+        hasDOCount = len(resultsDO)
+        results = db.sql(''' select count(*) as geneCount from hasDO where predictedGene = 'No' ''', 'auto')
+        hasDOGeneCount = results[0]['geneCount']
+        results = db.sql(''' select count(*) as predictedCount from hasDO where predictedGene = 'Yes' ''', 'auto')
+        hasDOPredictedCount = results[0]['predictedCount']
+
 def openRpts():
         global fp
         global fp2
@@ -853,15 +870,8 @@ def printRpt1():
         fp.write(str.ljust(str(otherCount), 10) + str.ljust(str(otherGeneCount), 10) + str.ljust(str(otherPredictedCount), 10))
         fp.write(2*CRT + str.ljust("13. Mouse Genes that have Rat/Human Homologs and NO GO annotations:", 75))
         fp.write(str.ljust(str(hasOrthologCount), 10) + str.ljust(str(hasOrthologGeneCount), 10) + str.ljust(str(hasOrthologPredictedCount), 10))
-
-        # Count of markers with do/genotype annotations and no GO annotations
-        results = db.sql('''
-                select count(go._Marker_key) as cnt from goOverall go, hasNoGO hng
-                where go.hasDO = 'Yes' and go._Marker_key = hng._Marker_key 
-                ''', 'auto')
-        for r in results:
-                fp.write(2*CRT + str.ljust("14. Mouse Genes with DO Genotype Annotations and NO GO annotations:", 75))
-                fp.write(str.ljust(str(r['cnt']), 10))
+        fp.write(2*CRT + str.ljust("14. Mouse Genes with DO Genotype Annotations and NO GO annotations:", 75))
+        fp.write(str.ljust(str(hasDOCount), 10) + str.ljust(str(hasDOGeneCount), 10) + str.ljust(str(hasDOPredictedCount), 10))
 
         # Count of markers with human disease annotations
         results = db.sql('''
