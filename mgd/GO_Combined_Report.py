@@ -422,12 +422,12 @@ def processStats():
         results = db.sql('select count(*) as noGOCount from hasNoGO', 'auto')
         noGOCount = results[0]['noGOCount']
         resultsNoGO = db.sql('select * from hasNoGO', 'auto')
-        results = db.sql(''' select count(*) as geneCount from hasNoGO where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        noGOGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasNoGO where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        noGOPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasNoGO where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        noGOGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasNoGO where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        noGOPredictedCount = results[0]['counter']
 
         # markers with ND Only
         db.sql('''
@@ -449,12 +449,12 @@ def processStats():
                 ''', None)
         resultsND = db.sql('select * from hasNDOnly', 'auto')
         NDCount = len(resultsND)
-        results = db.sql(''' select count(*) as geneCount from hasNDOnly where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        NDGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasNDOnly where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        NDPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasNDOnly where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        NDGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasNDOnly where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        NDPredictedCount = results[0]['counter']
 
         # markers with IEA Only
         db.sql('''
@@ -476,12 +476,12 @@ def processStats():
                 ''', None)
         resultsIEA = db.sql('select * from hasIEAOnly', 'auto')
         IEACount = len(resultsIEA)
-        results = db.sql(''' select count(*) as geneCount from hasIEAOnly where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        IEAGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIEAOnly where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        IEAPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasIEAOnly where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        IEAGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasIEAOnly where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        IEAPredictedCount = results[0]['counter']
 
         # markers with IEA + ND Only
         db.sql('''
@@ -508,12 +508,12 @@ def processStats():
                 ''', None)
         resultsIEAND = db.sql('select * from hasIEANDOnly', 'auto')
         IEANDCount = len(resultsIEAND)
-        results = db.sql(''' select count(*) as geneCount from hasIEANDOnly where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        IEANDGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIEANDOnly where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        IEANDPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasIEANDOnly where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        IEANDGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasIEANDOnly where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        IEANDPredictedCount = results[0]['counter']
 
         # markers with IBA Only
         db.sql('''
@@ -535,12 +535,12 @@ def processStats():
                 ''', 'auto')
         resultsIBA = db.sql('select * from hasIBAOnly', 'auto')
         IBACount = len(resultsIBA)
-        results = db.sql(''' select count(*) as geneCount from hasIBAOnly where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        IBAGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIBAOnly where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        IBAPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasIBAOnly where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        IBAGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasIBAOnly where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        IBAPredictedCount = results[0]['counter']
 
         # markers with IBA + ND Only
         db.sql('''
@@ -567,12 +567,12 @@ def processStats():
                 ''', None)
         resultsIBAND = db.sql('select * from hasIBAND', 'auto')
         IBANDCount = len(resultsIBAND)
-        results = db.sql(''' select count(*) as geneCount from hasIBAND where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        IBANDGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIBAND where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        IBANDPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasIBAND where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        IBANDGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasIBAND where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        IBANDPredictedCount = results[0]['counter']
 
         # markers with IBA + IEA + ND Only
         db.sql('''
@@ -604,12 +604,12 @@ def processStats():
                 ''', None)
         resultsIBAIEAND = db.sql('select * from hasIBAIEAND', 'auto')
         IBAIEANDCount = len(resultsIBAIEAND)
-        results = db.sql(''' select count(*) as geneCount from hasIBAIEAND where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        IBAIEANDGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIBAIEAND where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        IBAIEANDPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasIBAIEAND where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        IBAIEANDGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasIBAIEAND where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        IBAIEANDPredictedCount = results[0]['counter']
 
         # markers with IBA + IEA Only
         db.sql('''
@@ -636,12 +636,12 @@ def processStats():
                 ''', None)
         resultsIBAIEA = db.sql('select * from hasIBAIEA', 'auto')
         IBAIEACount = len(resultsIBAIEA)
-        results = db.sql(''' select count(*) as geneCount from hasIBAIEA where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        IBAIEAGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasIBAIEA where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        IBAIEAPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasIBAIEA where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        IBAIEAGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasIBAIEA where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        IBAIEAPredictedCount = results[0]['counter']
 
         # markers that includes: EXP, IDA, IEP, IGI, IMP, & IPI
         db.sql('''
@@ -658,12 +658,12 @@ def processStats():
                 ''', None)
         resultsEXP = db.sql('select * from hasEXP', 'auto')
         EXPCount = len(resultsEXP)
-        results = db.sql(''' select count(*) as geneCount from hasEXP where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        EXPGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasEXP where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        EXPPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasEXP where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        EXPGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasEXP where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        EXPPredictedCount = results[0]['counter']
 
         # markers that include: HDA, HEP, HGI, HMP, HTP
         # but does NOT include ANY : EXP, IDA, IEP, IGI, IMP, IPI
@@ -711,12 +711,12 @@ def processStats():
                 ''', None)
         resultsHTP = db.sql('select * from hasHTP', 'auto')
         HTPCount = len(resultsHTP)
-        results = db.sql(''' select count(*) as geneCount from hasHTP where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        HTPGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasHTP where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        HTPPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasHTP where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        HTPGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasHTP where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        HTPPredictedCount = results[0]['counter']
 
         # markers with all other annotations
         db.sql('''
@@ -734,12 +734,12 @@ def processStats():
                 ''', None)
         resultsAllOther = db.sql('select * from hasOther', 'auto')
         otherCount = len(resultsAllOther)
-        results = db.sql(''' select count(*) as geneCount from hasOther where predictedGene = 'No' ''', 'auto')
-        totalGeneCount += results[0]['geneCount']
-        otherGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasOther where predictedGene = 'Yes' ''', 'auto')
-        totalPredictedCount += results[0]['predictedCount']
-        otherPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasOther where predictedGene = 'No' ''', 'auto')
+        totalGeneCount += results[0]['counter']
+        otherGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasOther where predictedGene = 'Yes' ''', 'auto')
+        totalPredictedCount += results[0]['counter']
+        otherPredictedCount = results[0]['counter']
 
         # rat/human homologs
         db.sql('''
@@ -752,10 +752,10 @@ def processStats():
                 ''', None)
         resultsOrtholog = db.sql('select * from hasOrtholog', 'auto')
         hasOrthologCount = len(resultsOrtholog)
-        results = db.sql(''' select count(*) as geneCount from hasOrtholog where predictedGene = 'No' ''', 'auto')
-        hasOrthologGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasOrtholog where predictedGene = 'Yes' ''', 'auto')
-        hasOrthologPredictedCount = results[0]['predictedCount']
+        results = db.sql(''' select count(*) as counter from hasOrtholog where predictedGene = 'No' ''', 'auto')
+        hasOrthologGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasOrtholog where predictedGene = 'Yes' ''', 'auto')
+        hasOrthologPredictedCount = results[0]['counter']
 
         # Count of markers with do/genotype annotations and no GO annotations
         db.sql('''
@@ -766,12 +766,12 @@ def processStats():
                 and go.hasDO = 'Yes' 
                 and go._Marker_key = hng._Marker_key 
                 ''', 'auto')
-        resultsDO = db.sql('select * from hasDO', 'auto')
-        hasDOCount = len(resultsDO)
-        results = db.sql(''' select count(*) as geneCount from hasDO where predictedGene = 'No' ''', 'auto')
-        hasDOGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasDO where predictedGene = 'Yes' ''', 'auto')
-        hasDOPredictedCount = results[0]['predictedCount']
+        results = db.sql('select count(*) as counter from hasDO', 'auto')
+        hasDOCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasDO where predictedGene = 'No' ''', 'auto')
+        hasDOGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasDO where predictedGene = 'Yes' ''', 'auto')
+        hasDOPredictedCount = results[0]['counter']
 
         # Count of markers with human disease annotations
         db.sql('''
@@ -782,12 +782,12 @@ def processStats():
                 and go.hasHumanDO = 'Yes' 
                 and go._Marker_key = hng._Marker_key 
                 ''', 'auto')
-        resultsHumanDO = db.sql('select * from hasHumanDO', 'auto')
-        hasHumanDOCount = len(resultsHumanDO)
-        results = db.sql(''' select count(*) as geneCount from hasHumanDO where predictedGene = 'No' ''', 'auto')
-        hasHumanDOGeneCount = results[0]['geneCount']
-        results = db.sql(''' select count(*) as predictedCount from hasHumanDO where predictedGene = 'Yes' ''', 'auto')
-        hasHumanDOPredictedCount = results[0]['predictedCount']
+        results = db.sql('select count(*) as counter from hasHumanDO', 'auto')
+        hasHumanDOCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasHumanDO where predictedGene = 'No' ''', 'auto')
+        hasHumanDOGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasHumanDO where predictedGene = 'Yes' ''', 'auto')
+        hasHumanDOPredictedCount = results[0]['counter']
 
 def openRpts():
         global fp
