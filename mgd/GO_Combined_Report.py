@@ -857,12 +857,13 @@ def openRpts():
         fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
 
 def printFeatures():
+        #
+        # feature types counts:  total, gene, predicted gene
+        #
 
-        fp.write(str.ljust(CRT + "Feature type", 55))
-        fp.write(str.ljust("total", 10))
-        fp.write(str.ljust("gene", 10))
-        fp.write(str.ljust("predicted gene", 10) + CRT)
+        fp.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
 
+        # 'gene', 'predictedGene' counts by feature type
         results = db.sql('''
                 select featureType, predictedGene, count(predictedGene) as genecount
                 from validMarkers
@@ -870,7 +871,6 @@ def printFeatures():
                 order by featureType, predictedGene asc
                 ;
         ''', 'auto')
-
         featureType = {}
         for r in results:
                 key = r['featureType']
@@ -880,13 +880,13 @@ def printFeatures():
                 featureType[key].append(r)
         #print(featureType)
 
+        # total count by featurea type
         results = db.sql('''
                 select featureType, count(_marker_key) as totalcount
                 from validMarkers
                 group by featureType
                 order by featureType asc
                 ''', 'auto')
-
         featureTotal = {}
         for r in results:
                 key = r['featureType']
@@ -894,6 +894,7 @@ def printFeatures():
                 if key not in featureTotal:
                         featureTotal[key] = []
                 featureTotal[key].append(value)
+        #print(featureTotal)
 
         for key in featureType:
 
@@ -925,10 +926,7 @@ def printFeatures():
 def printRpt1():
 
         # print out the header
-        fp.write(str.ljust("Category", 75))
-        fp.write(str.ljust("total", 10))
-        fp.write(str.ljust("gene", 10))
-        fp.write(str.ljust("predicted gene", 10) + CRT)
+        fp.write(str.ljust("Category", 75) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
 
         totalCount = noGOCount + IEACount + NDCount + IEANDCount + IBACount + IBANDCount + IBAIEACount + IBAIEANDCount + EXPCount + HTPCount + otherCount
         fp.write(str.ljust("1. Total number of rows:", 75))
@@ -986,10 +984,7 @@ def printRpt1():
 
 def printRpt2():
 
-        fp2.write(str.ljust("Category", 75))
-        fp2.write(str.ljust("total", 10))
-        fp2.write(str.ljust("gene", 10))
-        fp2.write(str.ljust("predicted gene", 10) + CRT)
+        fp2.write(str.ljust("Category", 75) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
         fp2.write(str.ljust("1. Genes with no GO Annotations:", 75))
         fp2.write(str.ljust(str(noGOCount), 10) + str.ljust(str(noGOGeneCount), 10) + str.ljust(str(noGOPredictedCount), 10))
         fp2.write(2*CRT + 
@@ -1007,10 +1002,7 @@ def printRpt2():
 
 def printRpt3():
 
-        fp3.write(str.ljust("Category", 75))
-        fp3.write(str.ljust("total", 10))
-        fp3.write(str.ljust("gene", 10))
-        fp3.write(str.ljust("predicted gene", 10) + CRT)
+        fp3.write(str.ljust("Category", 75) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
         fp3.write(str.ljust("1. Genes with Mutant Alleles and NO GO Annotations:", 75))
         fp3.write(str.ljust(str(hasAlleleCount), 10) + str.ljust(str(hasAlleleGeneCount), 10) + str.ljust(str(hasAllelePredictedCount), 10))
         fp3.write(2*CRT +
