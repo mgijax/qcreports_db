@@ -13,23 +13,20 @@
 #
 # lec   12/15/2023
 #       wts2-1155/GOC taking over GOA mouse, GOA human, etc.
-#       changed Yes/No per Karen's instructions
-#       fixed DO/Genotype, DO/Human Marker counts
-#       fixed counts at top (1-11)
-#       removed exclusion of gene symbol/name checks
-#       changed 5 fields (type1,2,3,4,5) -> one field/GO Status
-#       added: field 5/feature type
-#       added: field 6/predicted gene
-#       added: "IBA Only" "ND+IBA" "ND+IBA+IEA"
+#       https://mgi-jira.atlassian.net/browse/FL2-644
+#       per Karen Christie
+#               changed Yes/No per Karen's instructions
+#               fixed DO/Genotype, DO/Human Marker counts
+#               fixed counts at top (1-11)
+#               removed exclusion of gene symbol/name checks
+#               changed 5 fields (type1,2,3,4,5) -> one field/GO Status
+#               added: field 5/feature type
+#               added: field 6/predicted gene
+#               added: "IBA Only" "ND+IBA" "ND+IBA+IEA"
+#               etc., etc., etc.
 #
 # sc    02/11/2021
 #       TR13349 - B39 project. Update to use alliance direct homology
-#
-# 04/03/2012	lec
-#	- fixed up some nameing issues ('go' -> 'GO')
-#
-# 12/21/2011	lec
-#	- convert to outer join
 #
 # mhall	04/01/2009
 #	- TR 9555- created
@@ -88,6 +85,7 @@ type9 = "has manual EXP"
 type10 = "has HTP but no manual EXP"
 type11 = "IBA+IEA"
 
+# translate Yes/No to these field names
 isCompleteYes = 'has annotation reviewed date'
 isCompleteNo = 'no annotation reviewed date'
 hasAllelesYes = 'has allele(s)'
@@ -102,7 +100,7 @@ isPredictedGene = 'predicted gene'
 
 def setPrintYesNo(r):
         #
-        # print better Yes/No field names per Karen
+        # print better Yes/No field names per Karen Christie
         #
 
         if r['isComplete'] == 'Yes': 
@@ -155,6 +153,7 @@ def getMarkers():
         #
         # exclude:
         #       feture type = "heritable phenotypic marker" : 6238170
+        #
 
         db.sql('''
                 WITH markers AS (
@@ -853,6 +852,7 @@ def openRpts():
 
         fp = reportlib.init(sys.argv[0], 'GO Combined Report', os.environ['QCOUTPUTDIR'])
         fp.write("includes: organism = mouse, type = Gene, status = official" + CRT)
+        fp.write("excludes: feature type = 'heritable phenotypic marker' " + CRT)
         fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
         fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
 
