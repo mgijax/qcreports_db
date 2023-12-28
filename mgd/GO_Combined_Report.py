@@ -802,6 +802,7 @@ def openRpts():
 def printFeatures():
 
         fp.write(str.ljust("\nFeature type", 55))
+        fp.write(str.ljust("total", 10))
         fp.write(str.ljust("gene", 10))
         fp.write(str.ljust("predicted gene", 10) + "\n")
 
@@ -813,25 +814,39 @@ def printFeatures():
                 ;
         ''', 'auto')
 
-        featureTypes = {}
+        featureType = {}
         for r in results:
-                
                 key = r['featureType']
                 value = r
+                if key not in featureType:
+                        featureType[key] = []
+                featureType[key].append(r)
+        #print(featureType)
 
-                if key not in featureTypes:
-                        featureTypes[key] = []
+        results = db.sql('''
+                select featureType, count(_marker_key) as totalcount
+                from validMarkers
+                group by featureType
+                order by featureType asc
+                ''', 'auto')
 
-                featureTypes[key].append(r)
-        #print(featureTypes)
+        featureTotal = {}
+        for r in results:
+                key = r['featureType']
+                value = r['totalcount']
+                if key not in featureTotal:
+                        featureTotal[key] = []
+                featureTotal[key].append(value)
 
-        for key in featureTypes:
+        for key in featureType:
+
                 fp.write(str.ljust(str(key), 55))
+                fp.write(str.ljust(str(featureTotal[key][0]), 10))
 
                 foundNo = False
                 foundYes = False
 
-                for r in featureTypes[key]:
+                for r in featureType[key]:
 
                         if r['predictedGene'] == 'No':
                                 fp.write(str.ljust(str(r['genecount']), 10))
