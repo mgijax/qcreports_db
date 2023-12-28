@@ -852,16 +852,16 @@ def openRpts():
         global fp3
 
         fp = reportlib.init(sys.argv[0], 'GO Combined Report', os.environ['QCOUTPUTDIR'])
-        fp.write("includes: organism = mouse, type = Gene, status = official\n")
+        fp.write("includes: organism = mouse, type = Gene, status = official" + CRT)
         fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
         fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
 
 def printFeatures():
 
-        fp.write(str.ljust("\nFeature type", 55))
+        fp.write(str.ljust(CRT + "Feature type", 55))
         fp.write(str.ljust("total", 10))
         fp.write(str.ljust("gene", 10))
-        fp.write(str.ljust("predicted gene", 10) + "\n")
+        fp.write(str.ljust("predicted gene", 10) + CRT)
 
         results = db.sql('''
                 select featureType, predictedGene, count(predictedGene) as genecount
@@ -918,9 +918,9 @@ def printFeatures():
                 if foundYes == False:
                         fp.write(str.ljust(str(0), 10))
 
-                fp.write("\n")
+                fp.write(CRT)
 
-        fp.write("\n")
+        fp.write(CRT)
 
 def printRpt1():
 
@@ -928,12 +928,11 @@ def printRpt1():
         fp.write(str.ljust("Category", 75))
         fp.write(str.ljust("total", 10))
         fp.write(str.ljust("gene", 10))
-        fp.write(str.ljust("predicted gene", 10) + "\n")
+        fp.write(str.ljust("predicted gene", 10) + CRT)
 
         totalCount = noGOCount + IEACount + NDCount + IEANDCount + IBACount + IBANDCount + IBAIEACount + IBAIEANDCount + EXPCount + HTPCount + otherCount
         fp.write(str.ljust("1. Total number of rows:", 75))
         fp.write(str.ljust(str(totalCount), 10) + str.ljust(str(totalGeneCount), 10) + str.ljust(str(totalPredictedCount), 10))
-
         fp.write(2*CRT + str.ljust("2. Genes with no GO Annotations:", 75))
         fp.write(str.ljust(str(noGOCount), 10) + str.ljust(str(noGOGeneCount), 10) + str.ljust(str(noGOPredictedCount), 10))
         fp.write(2*CRT + str.ljust("3. Genes with Annotations to ND Only:", 75))
@@ -987,7 +986,12 @@ def printRpt1():
 
 def printRpt2():
 
-        fp2.write(CRT + "1. Genes with no GO Annotations: %d" % noGOCount)
+        fp2.write(str.ljust("Category", 75))
+        fp2.write(str.ljust("total", 10))
+        fp2.write(str.ljust("gene", 10))
+        fp2.write(str.ljust("predicted gene", 10) + CRT)
+        fp2.write(str.ljust("1. Genes with no GO Annotations:", 75))
+        fp2.write(str.ljust(str(noGOCount), 10) + str.ljust(str(noGOGeneCount), 10) + str.ljust(str(noGOPredictedCount), 10))
         fp2.write(2*CRT + 
                 "Gene Symbol" + TAB + \
                 "MGI ID" + TAB + \
@@ -1003,7 +1007,12 @@ def printRpt2():
 
 def printRpt3():
 
-        fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % hasAlleleCount)
+        fp3.write(str.ljust("Category", 75))
+        fp3.write(str.ljust("total", 10))
+        fp3.write(str.ljust("gene", 10))
+        fp3.write(str.ljust("predicted gene", 10) + CRT)
+        fp3.write(str.ljust("1. Genes with Mutant Alleles and NO GO Annotations:", 75))
+        fp3.write(str.ljust(str(hasAlleleCount), 10) + str.ljust(str(hasAlleleGeneCount), 10) + str.ljust(str(hasAllelePredictedCount), 10))
         fp3.write(2*CRT +
                 "Gene Symbol" + TAB + \
                 "MGI ID" + TAB + \
@@ -1026,10 +1035,10 @@ def printAllStats():
                 r = setPrintYesNo(r)
                 fp.write(templateRow % (type1, r['symbol'], r['accID'], r['name'], r['featureType'], r['predictedGene'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefCount'])))
          
-                # Report #2 needs a copy of this
+                # Report #2
                 fp2.write(templateRow2 % (r['symbol'], r['accID'], r['name'], r['featureType'], r['predictedGene'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefCount'])))
          
-                # Report #3 needs a copy of this, if they have alleles.
+                # Report #3
                 if r['hasAlleles'] == hasAllelesYes:
                         fp3.write(templateRow2 % (r['symbol'], r['accID'], r['name'], r['featureType'], r['predictedGene'], r['hasOrtholog'], r['hasDO'], r['hasHumanDO'], r['hasAlleles'], r['isComplete'], str(r['goRefCount'])))
          
