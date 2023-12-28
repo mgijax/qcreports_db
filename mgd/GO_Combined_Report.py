@@ -397,6 +397,10 @@ def processStats():
         global hasOrthologCount, hasOrthologGeneCount, hasOrthologPredictedCount
         global hasDOCount, hasDOGeneCount, hasDOPredictedCount
         global hasHumanDOCount, hasHumanDOGeneCount, hasHumanDOPredictedCount
+        global hasAlleleCount, hasAlleleGeneCount, hasAllelePredictedCount
+        global hasCompleteCount, hasCompleteGeneCount, hasCompletePredictedCount
+        global hasGORef1Count
+        global hasGORef2Count
 
         global totalGeneCount, totalPredictedCount
 
@@ -765,7 +769,7 @@ def processStats():
                 where m._Marker_key = go._Marker_key
                 and go.hasDO = 'Yes' 
                 and go._Marker_key = hng._Marker_key 
-                ''', 'auto')
+                ''', None)
         results = db.sql('select count(*) as counter from hasDO', 'auto')
         hasDOCount = results[0]['counter']
         results = db.sql(''' select count(*) as counter from hasDO where predictedGene = 'No' ''', 'auto')
@@ -781,13 +785,66 @@ def processStats():
                 where m._Marker_key = go._Marker_key
                 and go.hasHumanDO = 'Yes' 
                 and go._Marker_key = hng._Marker_key 
-                ''', 'auto')
+                ''', None)
         results = db.sql('select count(*) as counter from hasHumanDO', 'auto')
         hasHumanDOCount = results[0]['counter']
         results = db.sql(''' select count(*) as counter from hasHumanDO where predictedGene = 'No' ''', 'auto')
         hasHumanDOGeneCount = results[0]['counter']
         results = db.sql(''' select count(*) as counter from hasHumanDO where predictedGene = 'Yes' ''', 'auto')
         hasHumanDOPredictedCount = results[0]['counter']
+
+        # Count of markers that have alleles	
+        db.sql('''
+                select go._Marker_key, m.predictedGene 
+                into temporary table hasAlleles
+                from validMarkers m, goOverall go, hasNoGO hng
+                where m._Marker_key = go._Marker_key
+                and go.hasAlleles = 'Yes' 
+                and go._Marker_key = hng._Marker_key 
+                ''', None)
+        results = db.sql('select count(*) as counter from hasAlleles', 'auto')
+        hasAlleleCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasAlleles where predictedGene = 'No' ''', 'auto')
+        hasAlleleGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasAlleles where predictedGene = 'Yes' ''', 'auto')
+        hasAllelePredictedCount = results[0]['counter']
+
+        # Count of markers marked complete in go	
+        db.sql('''
+                select go._Marker_key, m.predictedGene 
+                into temporary table hasComplete
+                from validMarkers m, goOverall go
+                where m._Marker_key = go._Marker_key
+                and go.isComplete = 'Yes'
+                ''', None)
+        results = db.sql('select count(*) as counter from hasComplete', 'auto')
+        hasCompleteCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasComplete where predictedGene = 'No' ''', 'auto')
+        hasCompleteGeneCount = results[0]['counter']
+        results = db.sql(''' select count(*) as counter from hasComplete where predictedGene = 'Yes' ''', 'auto')
+        hasCompletePredictedCount = results[0]['counter']
+
+        # number of unique references in validMarkers that have GO annotations
+        db.sql('''
+                select distinct r._refs_key
+                into temporary table hasGORef1
+                from validMarkers m
+                        LEFT OUTER JOIN reduced_bibgo r on (m._Marker_key = r._Marker_key
+                        and exists (select 1 from VOC_Annot a where m._Marker_key = a._Object_key and a._AnnotType_key = 1000))
+                ''', None)
+        results = db.sql('select count(*) as counter from hasGORef1', 'auto')
+        hasGORef1Count = results[0]['counter']
+
+        # number of unique references in validMarkers that do not have GO annotations
+        results = db.sql('''
+                select distinct r._refs_key
+                into temporary table hasGORef2
+                from validMarkers m
+                        LEFT OUTER JOIN reduced_bibgo r on (m._Marker_key = r._Marker_key
+                        and not exists (select 1 from VOC_Annot a where m._Marker_key = a._Object_key and a._AnnotType_key = 1000))
+                ''', 'auto')
+        results = db.sql('select count(*) as counter from hasGORef2', 'auto')
+        hasGORef2Count = results[0]['counter']
 
 def openRpts():
         global fp
@@ -866,7 +923,6 @@ def printFeatures():
         fp.write("\n")
 
 def printRpt1():
-        global allelesYes
 
         # print out the header
         fp.write(str.ljust("Category", 75))
@@ -906,48 +962,14 @@ def printRpt1():
         fp.write(str.ljust(str(hasDOCount), 10) + str.ljust(str(hasDOGeneCount), 10) + str.ljust(str(hasDOPredictedCount), 10))
         fp.write(2*CRT + str.ljust("15. Mouse Genes with Human Disease Annotations and NO GO annotations:", 75))
         fp.write(str.ljust(str(hasHumanDOCount), 10) + str.ljust(str(hasHumanDOGeneCount), 10) + str.ljust(str(hasHumanDOPredictedCount), 10))
-
-        # Count of markers that have alleles	
-        results = db.sql('''
-                select count(distinct go._Marker_key) as cnt from goOverall go, hasNoGO hng
-                where go.hasAlleles = 'Yes' and go._Marker_key = hng._Marker_key
-                ''', 'auto')	
-        for r in results:
-                allelesYes = r['cnt']
-                fp.write(2*CRT + str.ljust("16. Genes with Mutant Alleles and NO GO Annotations:", 75))
-                fp.write(str.ljust(str(allelesYes), 10))
-
-        # Count of markers marked complete in go	
-        results = db.sql('''
-                select count(_Marker_key) as cnt from goOverall
-                where isComplete = 'Yes' 
-                ''', 'auto')
-        for r in results:
-                fp.write(2*CRT + str.ljust("17. Genes with GO Annotation reviewed date?:", 75))
-                fp.write(str.ljust(str(r['cnt']), 10))
-
-        # number of unique references in validMarkers that have GO annotations
-        results = db.sql('''
-                select count(distinct r._Refs_key) as goRefCount
-                from validMarkers vm
-                        LEFT OUTER JOIN reduced_bibgo r on (vm._Marker_key = r._Marker_key
-                        and exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000))
-                ''', 'auto')
-        uniqueRefCount = results[0]['goRefCount']
+        fp.write(2*CRT + str.ljust("16. Genes with Mutant Alleles and NO GO Annotations:", 75))
+        fp.write(str.ljust(str(hasAlleleCount), 10) + str.ljust(str(hasAlleleGeneCount), 10) + str.ljust(str(hasAllelePredictedCount), 10))
+        fp.write(2*CRT + str.ljust("17. Genes with GO Annotation reviewed date?:", 75))
+        fp.write(str.ljust(str(hasCompleteCount), 10) + str.ljust(str(hasCompleteGeneCount), 10) + str.ljust(str(hasCompletePredictedCount), 10))
         fp.write(2*CRT + str.ljust("18. Total number of unique references that have GO Annotations:", 75))
-        fp.write(str.ljust(str(uniqueRefCount), 10))
-
-        # number of unique references in validMarkers that do not have GO annotations
-        results = db.sql('''
-                select count(distinct r._Refs_key) as goRefCount
-                from validMarkers vm
-                        LEFT OUTER JOIN reduced_bibgo r on (vm._Marker_key = r._Marker_key
-                        and not exists (select 1 from VOC_Annot a where vm._Marker_key = a._Object_key and a._AnnotType_key = 1000)
-                        )
-                ''', 'auto')
-        uniqueRefCount = results[0]['goRefCount']
+        fp.write(str.ljust(str(hasGORef1Count), 10))
         fp.write(2*CRT + str.ljust("19. Total number of unique references that do not have GO Annotations:", 75))
-        fp.write(str.ljust(str(uniqueRefCount), 10))
+        fp.write(str.ljust(str(hasGORef2Count), 10))
 
         # first report
         fp.write(2*CRT + "GO Status" + TAB + \
@@ -981,7 +1003,7 @@ def printRpt2():
 
 def printRpt3():
 
-        fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % allelesYes)
+        fp3.write(CRT + "1. Genes with Mutant Alleles and NO GO Annotations: %d" % hasAlleleCount)
         fp3.write(2*CRT +
                 "Gene Symbol" + TAB + \
                 "MGI ID" + TAB + \
