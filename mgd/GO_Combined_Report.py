@@ -158,6 +158,9 @@ def getMarkers():
         # exclude:
         #       feture type = "heritable phenotypic marker" : 6238170
         #
+        #       markers we may need to add to exclude list:
+        #       Gt(ROSA)26Sor    37270
+        #
 
         db.sql('''
                 WITH markers AS (
@@ -172,9 +175,10 @@ def getMarkers():
                         and a.prefixPart = 'MGI:'
                         and a.preferred = 1
                         and m._Marker_key = va._Object_key
-                        and va._AnnotType_key = 1011
+                        and va._AnnotType_key = 1011    -- MCV/Marker
                         and va._Term_key = t._Term_key
                         and t._term_key not in (6238170)
+                        --and m._Marker_key not in (37270)
                 )
                 select m.*, 'Yes' as predictedGene
                 into temporary table validMarkers
@@ -891,27 +895,26 @@ def openRpts():
         fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
         fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
 
-def printFeatures():
+def printFeatures(fpFeature, fpType):
         #
         # feature types counts:  total, gene, predicted gene
         #
 
-        fp.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
-        fp2.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
-        fp3.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
+        fpFeature.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
 
         totalFeature = 0
         totalFeatureGene = 0
         totalFeaturePredicted = 0
 
         # 'gene', 'predictedGene' counts by feature type
-        results = db.sql('''
-                select featureType, predictedGene, count(predictedGene) as genecount
-                from validMarkers
-                group by featureType, predictedGene
-                order by featureType, predictedGene asc
-                ;
-        ''', 'auto')
+        cmd = ''' select vm.featureType, vm.predictedGene, count(vm.predictedGene) as genecount from validMarkers vm '''
+
+        if fpType == 2:
+                cmd += '''\nwhere exists (select 1 from hasNoGO ma where vm._marker_key = ma._marker_key) '''
+        elif fpType == 3:
+                cmd += '''\nwhere exists (select 1 from mrkAlleles ma where vm._marker_key = ma._marker_key and ma.hasAlleles > 0) '''
+
+        results = db.sql(cmd + '''\ngroup by vm.featureType, vm.predictedGene order by vm.featureType, vm.predictedGene asc ''', 'auto')
         featureType = {}
         for r in results:
                 key = r['featureType']
@@ -922,12 +925,12 @@ def printFeatures():
         #print(featureType)
 
         # total count by featurea type
-        results = db.sql('''
-                select featureType, count(_marker_key) as totalcount
-                from validMarkers
-                group by featureType
-                order by featureType asc
-                ''', 'auto')
+        cmd = ''' select vm.featureType, count(vm._marker_key) as totalcount from validMarkers vm '''
+        if fpType == 2:
+                cmd += '''\nwhere exists (select 1 from hasNoGO ma where vm._marker_key = ma._marker_key) '''
+        elif fpType == 3:
+                cmd += '''\nwhere exists (select 1 from mrkAlleles ma where vm._marker_key = ma._marker_key and ma.hasAlleles > 0) '''
+        results = db.sql(cmd + '''\n group by featureType order by featureType asc ''', 'auto')
         featureTotal = {}
         for r in results:
                 key = r['featureType']
@@ -939,12 +942,8 @@ def printFeatures():
 
         for key in featureType:
 
-                fp.write(str.ljust(str(key), 55))
-                fp.write(str.ljust(str(featureTotal[key][0]), 10))
-                fp2.write(str.ljust(str(key), 55))
-                fp2.write(str.ljust(str(featureTotal[key][0]), 10))
-                fp3.write(str.ljust(str(key), 55))
-                fp3.write(str.ljust(str(featureTotal[key][0]), 10))
+                fpFeature.write(str.ljust(str(key), 55))
+                fpFeature.write(str.ljust(str(featureTotal[key][0]), 10))
                 totalFeature += featureTotal[key][0]
 
                 foundNo = False
@@ -953,47 +952,27 @@ def printFeatures():
                 for r in featureType[key]:
 
                         if r['predictedGene'] == 'No':
-                                fp.write(str.ljust(str(r['genecount']), 10))
-                                fp2.write(str.ljust(str(r['genecount']), 10))
-                                fp3.write(str.ljust(str(r['genecount']), 10))
+                                fpFeature.write(str.ljust(str(r['genecount']), 10))
                                 totalFeatureGene += r['genecount']
                                 foundNo = True
 
                         if r['predictedGene'] == 'Yes':
                                 if foundNo == False:
-                                        fp.write(str.ljust(str(0), 10))
-                                fp.write(str.ljust(str(r['genecount']), 10))
-                                fp2.write(str.ljust(str(r['genecount']), 10))
-                                fp3.write(str.ljust(str(r['genecount']), 10))
+                                        fpFeature.write(str.ljust(str(0), 10))
+                                fpFeature.write(str.ljust(str(r['genecount']), 10))
                                 totalFeaturePredicted += r['genecount']
                                 foundYes = True
 
                 if foundYes == False:
-                        fp.write(str.ljust(str(0), 10))
-                        fp2.write(str.ljust(str(0), 10))
-                        fp3.write(str.ljust(str(0), 10))
+                        fpFeature.write(str.ljust(str(0), 10))
 
-                fp.write(CRT)
-                fp2.write(CRT)
-                fp3.write(CRT)
+                fpFeature.write(CRT)
 
-        fp.write(str.ljust("Totals:", 55))
-        fp.write(str.ljust(str(totalFeature), 10))
-        fp.write(str.ljust(str(totalFeatureGene), 10))
-        fp.write(str.ljust(str(totalFeaturePredicted), 10))
-        fp.write(2*CRT)
-
-        fp2.write(str.ljust("Totals:", 55))
-        fp2.write(str.ljust(str(totalFeature), 10))
-        fp2.write(str.ljust(str(totalFeatureGene), 10))
-        fp2.write(str.ljust(str(totalFeaturePredicted), 10))
-        fp2.write(2*CRT)
-
-        fp3.write(str.ljust("Totals:", 55))
-        fp3.write(str.ljust(str(totalFeature), 10))
-        fp3.write(str.ljust(str(totalFeatureGene), 10))
-        fp3.write(str.ljust(str(totalFeaturePredicted), 10))
-        fp3.write(2*CRT)
+        fpFeature.write(str.ljust("Totals:", 55))
+        fpFeature.write(str.ljust(str(totalFeature), 10))
+        fpFeature.write(str.ljust(str(totalFeatureGene), 10))
+        fpFeature.write(str.ljust(str(totalFeaturePredicted), 10))
+        fpFeature.write(2*CRT)
 
 def printRpt1():
 
@@ -1171,7 +1150,9 @@ getRefs()
 getOverall()
 processStats()
 openRpts()
-printFeatures()
+printFeatures(fp,1)
+printFeatures(fp2,2)
+printFeatures(fp3,3)
 printRpt1()
 printRpt2()
 printRpt3()
