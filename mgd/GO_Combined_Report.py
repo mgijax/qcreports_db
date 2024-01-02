@@ -414,9 +414,7 @@ def processStats():
 
         # markers w/o GO annotations
         db.sql('''
-                select distinct '1' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, 
-                        g.goRefCount, m._Marker_key
+                select distinct '1' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasNoGO
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -434,8 +432,7 @@ def processStats():
 
         # markers with ND Only
         db.sql('''
-                select distinct '2' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '2' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasNDOnly
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -461,8 +458,7 @@ def processStats():
 
         # markers with IEA Only
         db.sql('''
-                select distinct '3' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '3' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasIEAOnly
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -488,8 +484,7 @@ def processStats():
 
         # markers with IEA + ND Only
         db.sql('''
-                select distinct '4' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '4' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasIEANDOnly
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -520,8 +515,7 @@ def processStats():
 
         # markers with IBA Only
         db.sql('''
-                select distinct '6' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '6' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasIBAOnly
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -547,8 +541,7 @@ def processStats():
 
         # markers with IBA + ND Only
         db.sql('''
-                select distinct '7' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '7' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasIBAND
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -579,8 +572,7 @@ def processStats():
 
         # markers with IBA + IEA + ND Only
         db.sql('''
-                select distinct '8' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '8' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasIBAIEAND
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -616,8 +608,7 @@ def processStats():
 
         # markers with IBA + IEA Only
         db.sql('''
-                select distinct '11' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '11' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasIBAIEA
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -648,8 +639,7 @@ def processStats():
 
         # markers that includes: EXP, IDA, IEP, IGI, IMP, & IPI
         db.sql('''
-                select distinct '9' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '9' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasEXP
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -671,8 +661,7 @@ def processStats():
         # markers that include: HDA, HEP, HGI, HMP, HTP
         # but does NOT include ANY : EXP, IDA, IEP, IGI, IMP, IPI
         resultsHTP = db.sql('''
-                select distinct '10' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '10' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasHTP
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
@@ -723,17 +712,20 @@ def processStats():
 
         # markers with all other annotations
         db.sql('''
-                select distinct '5' as type, m.symbol, m.accID, m.name, m.featureType, m.predictedGene,
-                        g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
+                select distinct '5' as type, m.*, g.isComplete, g.hasAlleles, g.hasDO, g.hasHumanDO, g.hasOrtholog, g.goRefCount
                 into temporary table hasOther
                 from validMarkers m, goOverall g
                 where m._Marker_key = g._Marker_key
-                and exists (select 1 from  VOC_Annot a where m._Marker_key = a._Object_key and a._AnnotType_key = 1000)
-                and exists (select 1 from  VOC_Annot a, VOC_Evidence e
-                        where m._Marker_key = a._Object_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key not in (115, 118))
+                and exists (select 1 from VOC_Annot a where a._AnnotType_key = 1000 and m._Marker_key = a._Object_key)
+                and not exists (select 1 from hasNDOnly r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasIEAOnly r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasIEANDOnly r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasIBAOnly r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasIBAND r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasIBAIEAND r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasIBAIEA r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasEXP r where m._Marker_key = r._Marker_key)
+                and not exists (select 1 from hasHTP r where m._Marker_key = r._Marker_key)
                 ''', None)
         resultsAllOther = db.sql('select * from hasOther', 'auto')
         otherCount = len(resultsAllOther)
