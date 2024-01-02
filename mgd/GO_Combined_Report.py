@@ -855,6 +855,10 @@ def printFeatures():
 
         fp.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
 
+        totalFeature = 0
+        totalFeatureGene = 0
+        totalFeaturePredicted = 0
+
         # 'gene', 'predictedGene' counts by feature type
         results = db.sql('''
                 select featureType, predictedGene, count(predictedGene) as genecount
@@ -892,6 +896,7 @@ def printFeatures():
 
                 fp.write(str.ljust(str(key), 55))
                 fp.write(str.ljust(str(featureTotal[key][0]), 10))
+                totalFeature += featureTotal[key][0]
 
                 foundNo = False
                 foundYes = False
@@ -900,12 +905,14 @@ def printFeatures():
 
                         if r['predictedGene'] == 'No':
                                 fp.write(str.ljust(str(r['genecount']), 10))
+                                totalFeatureGene += r['genecount']
                                 foundNo = True
 
                         if r['predictedGene'] == 'Yes':
                                 if foundNo == False:
                                         fp.write(str.ljust(str(0), 10))
                                 fp.write(str.ljust(str(r['genecount']), 10))
+                                totalFeaturePredicted += r['genecount']
                                 foundYes = True
 
                 if foundYes == False:
@@ -913,7 +920,11 @@ def printFeatures():
 
                 fp.write(CRT)
 
-        fp.write(CRT)
+        fp.write(str.ljust("Totals:", 55))
+        fp.write(str.ljust(str(totalFeature), 10))
+        fp.write(str.ljust(str(totalFeatureGene), 10))
+        fp.write(str.ljust(str(totalFeaturePredicted), 10))
+        fp.write(2*CRT)
 
 def printRpt1():
 
