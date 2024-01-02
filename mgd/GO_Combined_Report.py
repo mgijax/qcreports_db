@@ -1053,7 +1053,8 @@ def printRpt1():
                 "Alleles?" + TAB + \
                 "Annotation reviewed date?" + TAB + \
                 "Unused GO Papers" + TAB + \
-                "Used GO Papers" + CRT)
+                "Used GO Papers" + TAB + \
+                "Total GO Papers" + CRT)
 
 def printRpt2():
 
@@ -1072,7 +1073,8 @@ def printRpt2():
                 "Alleles?" + TAB + \
                 "Annotation reviewed date?" + TAB + \
                 "Unused GO Papers" + TAB + \
-                "Used GO Papers" + CRT)
+                "Used GO Papers" + TAB + \
+                "Total GO Papers" + CRT)
 
 def printRpt3():
 
@@ -1091,7 +1093,8 @@ def printRpt3():
                 "Alleles?" + TAB + \
                 "Annotation reviewed date?" + TAB + \
                 "Unused GO Papers" + TAB + \
-                "Used GO Papers" + CRT)
+                "Used GO Papers" + TAB + \
+                "Total GO Papers" + CRT)
         
 def printAllStats():
         #
