@@ -854,6 +854,8 @@ def printFeatures():
         #
 
         fp.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
+        fp2.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
+        fp3.write(CRT + str.ljust("Feature type", 55) + str.ljust("total", 10) + str.ljust("gene", 10) + str.ljust("predicted gene", 10) + CRT)
 
         totalFeature = 0
         totalFeatureGene = 0
@@ -896,6 +898,10 @@ def printFeatures():
 
                 fp.write(str.ljust(str(key), 55))
                 fp.write(str.ljust(str(featureTotal[key][0]), 10))
+                fp2.write(str.ljust(str(key), 55))
+                fp2.write(str.ljust(str(featureTotal[key][0]), 10))
+                fp3.write(str.ljust(str(key), 55))
+                fp3.write(str.ljust(str(featureTotal[key][0]), 10))
                 totalFeature += featureTotal[key][0]
 
                 foundNo = False
@@ -905,6 +911,8 @@ def printFeatures():
 
                         if r['predictedGene'] == 'No':
                                 fp.write(str.ljust(str(r['genecount']), 10))
+                                fp2.write(str.ljust(str(r['genecount']), 10))
+                                fp3.write(str.ljust(str(r['genecount']), 10))
                                 totalFeatureGene += r['genecount']
                                 foundNo = True
 
@@ -912,19 +920,37 @@ def printFeatures():
                                 if foundNo == False:
                                         fp.write(str.ljust(str(0), 10))
                                 fp.write(str.ljust(str(r['genecount']), 10))
+                                fp2.write(str.ljust(str(r['genecount']), 10))
+                                fp3.write(str.ljust(str(r['genecount']), 10))
                                 totalFeaturePredicted += r['genecount']
                                 foundYes = True
 
                 if foundYes == False:
                         fp.write(str.ljust(str(0), 10))
+                        fp2.write(str.ljust(str(0), 10))
+                        fp3.write(str.ljust(str(0), 10))
 
                 fp.write(CRT)
+                fp2.write(CRT)
+                fp3.write(CRT)
 
         fp.write(str.ljust("Totals:", 55))
         fp.write(str.ljust(str(totalFeature), 10))
         fp.write(str.ljust(str(totalFeatureGene), 10))
         fp.write(str.ljust(str(totalFeaturePredicted), 10))
         fp.write(2*CRT)
+
+        fp2.write(str.ljust("Totals:", 55))
+        fp2.write(str.ljust(str(totalFeature), 10))
+        fp2.write(str.ljust(str(totalFeatureGene), 10))
+        fp2.write(str.ljust(str(totalFeaturePredicted), 10))
+        fp2.write(2*CRT)
+
+        fp3.write(str.ljust("Totals:", 55))
+        fp3.write(str.ljust(str(totalFeature), 10))
+        fp3.write(str.ljust(str(totalFeatureGene), 10))
+        fp3.write(str.ljust(str(totalFeaturePredicted), 10))
+        fp3.write(2*CRT)
 
 def printRpt1():
 
