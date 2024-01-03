@@ -14,7 +14,7 @@
 # lec   12/15/2023
 #       wts2-1155/GOC taking over GOA mouse, GOA human, etc.
 #       https://mgi-jira.atlassian.net/browse/FL2-644
-#       per Karen Christie
+#       per Karen Christie, we completely re-wrote this report
 #               changed Yes/No per Karen's instructions
 #               fixed DO/Genotype, DO/Human Marker counts
 #               fixed counts at top (1-11)
@@ -23,6 +23,7 @@
 #               added: field 5/feature type
 #               added: field 6/predicted gene
 #               added: "IBA Only" "ND+IBA" "ND+IBA+IEA"
+#               added: feature type counts at top of each report
 #               etc., etc., etc.
 #
 # sc    02/11/2021
@@ -30,7 +31,6 @@
 #
 # mhall	04/01/2009
 #	- TR 9555- created
-#
 #
 '''
  
