@@ -912,7 +912,7 @@ def printFeatures(fpFeature, fpType):
         if fpType == 2:
                 cmd += '''\nwhere exists (select 1 from hasNoGO ma where vm._marker_key = ma._marker_key) '''
         elif fpType == 3:
-                cmd += '''\nwhere exists (select 1 from mrkAlleles ma where vm._marker_key = ma._marker_key and ma.hasAlleles > 0) '''
+                cmd += '''\nwhere exists (select 1 from hasAlleles ma where vm._marker_key = ma._marker_key) '''
 
         results = db.sql(cmd + '''\ngroup by vm.featureType, vm.predictedGene order by vm.featureType, vm.predictedGene asc ''', 'auto')
         featureType = {}
@@ -929,7 +929,7 @@ def printFeatures(fpFeature, fpType):
         if fpType == 2:
                 cmd += '''\nwhere exists (select 1 from hasNoGO ma where vm._marker_key = ma._marker_key) '''
         elif fpType == 3:
-                cmd += '''\nwhere exists (select 1 from mrkAlleles ma where vm._marker_key = ma._marker_key and ma.hasAlleles > 0) '''
+                cmd += '''\nwhere exists (select 1 from hasAlleles ma where vm._marker_key = ma._marker_key) '''
         results = db.sql(cmd + '''\n group by featureType order by featureType asc ''', 'auto')
         featureTotal = {}
         for r in results:
