@@ -104,7 +104,7 @@ isPredictedGene = 'predicted gene'
 
 def setPrintYesNo(r):
         #
-        # print better Yes/No field names per Karen Christie
+        # print better Yes/No field names 
         #
 
         if r['isComplete'] == 'Yes': 
@@ -206,10 +206,10 @@ def getAlleles():
         #
         # mrkAlleles
         # Markers with Alleles where:
-        #       Allele Status = Approved
-        #       Allele Type != QTL
-        #       Allele Transmission != Cell Line
-        #       Allele is not a wild type
+        #       Allele Status = Approved (847114)
+        #       Allele Type != QTL (847130)
+        #       Allele Transmission != Cell Line (3982953)
+        #       Allele is not a wild type (0)
         #
         # LEFT OUTER JOIN required
         #
@@ -310,8 +310,10 @@ def getOrthologs():
         db.sql('create index mrkOrtholog_idx on mrkOrtholog (_Marker_key)', None)
 
 def getRefs():
+
         #
         # reduced_bibgo, refGOUnused = number of unused go references per marker
+        #
         db.sql('''
                 select r.*
                 into temporary table reduced_bibgo
@@ -321,8 +323,9 @@ def getRefs():
 
         db.sql('create index reduced_bibgo_idx on reduced_bibgo (_Marker_key)', None)
 
+        #
         # number of unqiue references by marker not used by GO
-        # LEFT OUTER JOIN required
+        #
         db.sql('''
                 (
                 select vm._Marker_key, count(distinct r._Refs_key) as goRefUnusedCount
@@ -343,7 +346,9 @@ def getRefs():
 
         db.sql('create index refGOUnused_idx on refGOUnused (_Marker_key)', None)
 
+        #
         # number of unqiue references by marker used by GO
+        #
         db.sql('''
                 (
                 select distinct vm._Marker_key, count(distinct e._Refs_key) as goRefUsedCount
@@ -375,6 +380,7 @@ def getRefs():
         db.sql('create index refGOUsed_idx on refGOUsed (_Marker_key)', None)
 
 def getOverall():
+        #
         # goOverall = validMarkers (basic marker info) plus other temp tables:
         #       mrkAlleles
         #       mrkDOAnnot
@@ -398,12 +404,12 @@ def getOverall():
                 rgt.goRefUsedCount
                 into temporary table goOverall
                 from validMarkers m LEFT OUTER JOIN GO_Tracking gt on (m._Marker_key = gt._Marker_key),
-                mrkAlleles ma, 
-                mrkDOAnnot moa,
-                mrkDOHumanAnnot moha, 
-                mrkOrtholog mho,
-                refGOUnused rgs,
-                refGoUsed rgt
+                     mrkAlleles ma, 
+                     mrkDOAnnot moa,
+                     mrkDOHumanAnnot moha, 
+                     mrkOrtholog mho,
+                     refGOUnused rgs,
+                     refGoUsed rgt
                 where m._Marker_key = ma._Marker_key
                 and m._Marker_key = moa._Marker_key
                 and m._Marker_key = mho._Marker_key
@@ -414,8 +420,10 @@ def getOverall():
 
         db.sql('create index goOverall_idx on goOverall (_Marker_key)', None)
 
-
 def processStats():
+        #
+        # create temp tables to organize results, counts, etc.
+        #
 
         global resultsNoGO
         global resultsND
