@@ -178,7 +178,7 @@ def getMarkers():
                         and va._AnnotType_key = 1011    -- MCV/Marker
                         and va._Term_key = t._Term_key
                         and t._term_key not in (6238170)
-                        --and m._Marker_key not in (37270)
+                        and m._Marker_key not in (37270)
                 )
                 select m.*, 'Yes' as predictedGene
                 into temporary table validMarkers
