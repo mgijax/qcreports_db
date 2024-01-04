@@ -897,11 +897,23 @@ def openRpts():
         global fp2
         global fp3
 
+        header = "includes: organism = mouse, type = Gene, status = official" + CRT
+        header += "excludes: feature type = 'heritable phenotypic marker' " + CRT
+        header += "excludes: Gt(ROSA)26Sor" + 2*CRT
+        header += "'Predicted genes' are those that:" + CRT
+        header += "- have a name that starts with the words 'gene model'" + CRT
+        header += "- have a name that starts with the words 'predicted gene'" + CRT
+        header += "- have a name that starts with the words 'gene trap'" + CRT
+        header += "- have a symbol that starts with the word 'ORF'" + CRT
+        header += "- have a symbol that is a single letter followed by up to 5 numbers, for example 'a12345'" + CRT
+        header += "- have a symbol that is two letters followed by up to 5 numbers, for example 'ab12345'" + CRT
+
         fp = reportlib.init(sys.argv[0], 'GO Combined Report', os.environ['QCOUTPUTDIR'])
-        fp.write("includes: organism = mouse, type = Gene, status = official" + CRT)
-        fp.write("excludes: feature type = 'heritable phenotypic marker' " + CRT)
+        fp.write(header)
         fp2 = reportlib.init('GO_MRK_NoGO', 'Marker No GO', os.environ['QCOUTPUTDIR'])
+        fp2.write(header)
         fp3 = reportlib.init('GO_MRK_NoGO_Has_Alleles', 'Marker No GO w/ Alleles', os.environ['QCOUTPUTDIR'])
+        fp3.write(header)
 
 def printFeatures(fpFeature, fpType):
         #
