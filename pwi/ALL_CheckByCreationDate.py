@@ -20,9 +20,9 @@ TAB = reportlib.TAB
 value = sys.argv[1]
 
 results = db.sql('''
-select aa.accid as mgi_id, a.symbol, u.login as created_by
+select aa.accid as mgi_id, a.symbol, u.login as created_by, n.note
 from ALL_Allele a
-        left outer join MGI_Note mn on (mn._object_key = a._allele_key and mn._mgitype_key = 8 and mn._notetype_key = 1022)
+        left outer join MGI_Note n on (n._object_key = a._allele_key and n._mgitype_key = 8 and n._notetype_key = 1022)
         ,
 ACC_Accession aa, MGI_User u
 where a._allele_key = aa._object_key
