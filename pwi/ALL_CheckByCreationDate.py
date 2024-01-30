@@ -41,11 +41,10 @@ for r in results:
         sys.stdout.write(r['symbol'] + TAB)
         sys.stdout.write(r['mgi_id'] + TAB)
 
-        if r['note'] == None:
-                sys.stdout.write(3*TAB + TAB)
-        else:
+        if r['note'] != None:
                 note = r['note'].replace('\n', ' ').replace('\t', ' ')
-                sys.stdout.write(note + TAB)
+                sys.stdout.write(note)
+        sys.stdout.write(TAB)
 
         sys.stdout.write(r['created_by'] + CRT)
 
