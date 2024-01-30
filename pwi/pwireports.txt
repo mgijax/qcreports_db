@@ -51,3 +51,4 @@ ALL_MPGenotype.py|MP Term Genotype and Notes QC|Retrieve all directly annotated 
 PRB_StrainNomenCheck.py|Strain Check by Strain Nomenclature|Lookup IMSR Strain Info by Strain Nomenclature\r\nEnter a space delimited set of strain names\r\nExamples: MRL/MpJ    129.B6-GIX<->/Rbrc|sc|Michelle Perry|2020-03-13|list of Strain Nomenclature
 PRB_StrainRepoCheck.py|Strain Check by Strain Repository ID|Lookup IMSR Strain Info by Repository IDs\r\nEnter a space delimited set of Repository IDs\r\nExamples: MMRRC:037343   RBRC00257   000486|sc|Michelle Perry|2020-03-13|list of Strain Repository ID
 GXD_FCHighlight.py|GXD FC Highlight|GXD recently coded highlights. Lists papers that have images attached, less than 2 years old, and do not have the GXD:HighlightReference tag.|lec|Jacqueline Finger|2023-11-27|
+ALL_CheckByCreationDate.py|Allele Check by Creation Date|Allele Check by Creation Date|lec|Michelle Perry|2024-01-30|
