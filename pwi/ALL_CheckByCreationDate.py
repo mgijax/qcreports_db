@@ -29,6 +29,7 @@ where a._allele_key = aa._object_key
 and aa._mgitype_key = 11
 and a._createdby_key = u._user_key
 and (a.creation_date between '%s' and ('%s'::date + '1 day'::interval))
+order by a.symbol
 ''' % (value, value), 'auto')
 
 sys.stdout.write('symbol' + TAB)
