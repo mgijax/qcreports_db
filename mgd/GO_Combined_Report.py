@@ -156,9 +156,7 @@ def getMarkers():
         # else predicatedGene = No
         #
         # exclude:
-        #       feture type = "heritable phenotypic marker" : 6238170
-        #
-        #       markers we may need to add to exclude list:
+        #       feature type = "heritable phenotypic marker" : 6238170
         #       Gt(ROSA)26Sor    37270
         #
 

@@ -3,581 +3,711 @@
 #
 # GO_stats.py
 #
-# Report:
-#
-# lec   12/20/2021
-#       wts2-752/add all root section to GO Stats report
-#
-# sc	04/24/2017
-#	TR12466 add Noctua section
-#
-# kstone 04/15/2015
-#	- TR11932 GO Central -> GO_Central
-#
-#
-# lec	11/20/2014
-#	- TR11863/add "GO Central" to REFGENOME_CLAUSE
-#
-# lec   10/22/2014
-#       - TR11750/postres complient
-#
-# 08/04/2014
-#	- TR 11745/add 'GO Central' to the GO_CLAUSE
-#
-# 11/03/2010	lec
-#	- TR 10437/marker type = 'gene' only
-#
-# 10/12/2010	lec
-#	- add GOA/Human to ORTHOLOGY_CLAUSE (J:164563/165659)
-#	- add GOA/Human to CURATOR_CLAUSE (J:164563/165659)
-#
-# 09/30/2010	lec
-#	- moved goStats.sh to python
-#
-# 09/01/2010    lec
-#       - TR 9962/TR10341
-#       "HAND" renamed "Total Non-IEA"
-#
-# 08/18/2010    lec
-#       - TR 10318/add GOC Annotations, Curator Annotations
-#       - Curator Annotations: CURATOR_CLAUSE
-#                              EVIDENCE_CLAUSE
-#                              created by not in GOC_CLAUSE
-#
-# 02/23/2010    lec
-#       - TR 10035/add J:155856 to orthology section
-#       - change EQUALS "=" to "in"
-#
-# 10/20/2009    lec
-#       - TR 9894/add a GOA annotation check: setCreatedByClause, GOA_CLAUSE
-#       this report can/should probably be moved to a python report
-#
+# 1    : Annotation Category
+# 2    : GO_REF
+# 3    : Contribor, Feature Type, or Summary row description
+# DEFGH,4-8  : Total # of Genes
+# IJKLM,9-13 : Total # of Predicted Genes
+# NOPQR,14-18: Total # of Annotations
+# S,19   : Classification Axis
+# T,20   : Sorting Classification
+# 
 '''
  
 import sys 
 import os
-import string
 import reportlib
 import db
 
 db.setTrace(True)
 
 CRT = reportlib.CRT
-SPACE = reportlib.SPACE
 TAB = reportlib.TAB
-PAGE = reportlib.PAGE
-
-#Protein coding
-PROTEIN_CODING_CLAUSE="and va._Term_key = 6238161"
-
-#Non-Protein coding
-NON_PROTEIN_CODING_CLAUSE="and va._Term_key != 6238161"
-
-#ROOT="J:73796"
-ROOT_CLAUSE="(74750)"
-ALL_ROOT_CLAUSE = '''
-and exists (select 1 from VOC_Annot aa where a._Object_key = aa._Object_key and aa._Term_key = 120)
-and exists (select 1 from VOC_Annot aa where a._Object_key = aa._Object_key and aa._Term_key = 1098)
-and exists (select 1 from VOC_Annot aa where a._Object_key = aa._Object_key and aa._Term_key = 6113)
-'''
-
-#ORTHOLOGY="J:73065,J:155856,J:164563"/74017/156949/165659
-ORTHOLOGY_CLAUSE="(74017,156949,165659)"
-
-#SWISS_PROT="J:60000"
-SWISSPROT_CLAUSE="(61933)"
-
-#INTERPRO="J:72247"
-INTERPRO_CLAUSE="(73199)"
-
-#EC="J:72245"
-EC_CLAUSE="(73197)"
-
-#SWISS_PROT, INTERPRO, EC
-IEA_CLAUSE="(61933,73199,73197)"
-
-#RGD="J:155856"/156949
-#UniProtKB="J:164563"/165659
-#SWISS_PROT, INTERPRO, EC, RGD
-# curator clauses that we exclude
-CURATOR_CLAUSE="(61933,73199,73197,156949,165659)"
-
-# 115 = IEA
-# 118 = ND
-EVIDENCE_CLAUSE="(115,118)"
-
-# MGI_User.login names
-GOA_CLAUSE="'GOA_%'"
-GOC_CLAUSE="'GOC'"
-GOA_HUMAN_CLAUSE="'UniProtKB'"
-GORAT_CLAUSE="'RGD'"
-REFGENOME_CLAUSE="('GO_Central')"
-GO_CLAUSE="('GOC', 'UniProtKB', 'GO_Central') "
-NOCTUA_CLAUSE="'NOCTUA_%'"
-SYNGO_CLAUSE="'NOCTUA_SynGO'"
-
-byReference = 'and e._Refs_key %s'
-byCreatedBy = 'and u.login %s'
-byEvidenceCode = 'and e._EvidenceTerm_key %s'
-
-#
-# temp table for protein coding or non-protein coding genes
-#
-tempCoding = '''
-select m._Marker_key
-into temporary table temp_genes
-from MRK_Marker m, ACC_Accession a, VOC_Annot va
-where m._Organism_key = 1
-      and m._Marker_Type_key = 1
-      and m._Marker_Status_key = 1
-      and m._Marker_key = a._Object_key
-      and a._MGIType_key = 2
-      and a._LogicalDB_key = 1
-      and a.prefixPart = 'MGI:'
-      and a.preferred = 1
-      and m._Marker_key = va._Object_key
-      and va._AnnotType_key = 1011
-      %s
-'''
-
-#
-# count by gene or annotation, 
-#
-byCoding1 = '''
-select %s
-from temp_genes g, VOC_Annot a, VOC_Evidence e, MGI_User u,
-     DAG_Node n, DAG_DAG d
-where g._Marker_key = a._Object_key
-      and a._AnnotType_key = 1000
-      and a._Annot_key = e._Annot_key
-      and e._CreatedBy_key = u._User_key
-      and a._Term_key = n._Object_key
-      and n._DAG_key = d._DAG_key
-'''
-
-#
-# count by gene or annotation, grouped by dag name
-#
-byCoding2 = '''
-select %s
-from temp_genes g, VOC_Annot a, VOC_Evidence e, MGI_User u,
-     DAG_Node n, DAG_DAG d
-where g._Marker_key = a._Object_key
-      and a._AnnotType_key = 1000
-      and a._Annot_key = e._Annot_key
-      and e._CreatedBy_key = u._User_key
-      and a._Term_key = n._Object_key
-      and n._DAG_key = d._DAG_key
-group by d.name
-'''
-
-#
-# count by gene
-#
-byGene1 = '''
-select count(distinct a._Object_key) as cnt
-from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
-where a._AnnotType_key  = 1000
-and a._Object_key = m._Marker_key
-and m._Marker_Type_key in (1)
-and m._Marker_Status_key = 1
-and a._Annot_key = e._Annot_key
-and e._CreatedBy_key = u._User_Key
-%s
-%s
-%s
-'''
-
-#
-# count by gene, grouped by dag name
-#
-byGene2 = '''
-select d.name, count(distinct a._Object_key) as terms
-from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, MRK_Marker m
-where a._AnnotType_key = 1000
-and a._Term_key = n._Object_key
-and a._Object_key = m._Marker_key
-and m._Marker_Type_key in (1)
-and m._Marker_Status_key = 1
-and d._DAG_Key = n._DAG_Key
-and a._Annot_key = e._Annot_key
-and e._CreatedBy_key = u._User_Key
-%s
-%s
-%s
-group by d.name
-'''
-
-#
-# count by annotation
-#
-byAnnot1 = '''
-select count(a._Annot_key) as cnt
-from VOC_Annot a, VOC_Evidence e, MGI_User u, MRK_Marker m
-where a._AnnotType_key  = 1000
-and a._Annot_key = e._Annot_key
-and a._Object_key = m._Marker_key
-and m._Marker_Type_key in (1)
-and m._Marker_Status_key = 1
-and e._CreatedBy_key = u._User_Key
-%s
-%s
-%s
-'''
-
-#
-# count by annotation, group by dag name
-#
-byAnnot2 = '''
-select d.name, count(a._Annot_key) as terms
-from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, MRK_Marker m
-where a._AnnotType_key = 1000
-and a._Term_key = n._Object_key
-and a._Object_key = m._Marker_key
-and m._Marker_Type_key in (1)
-and m._Marker_Status_key = 1
-and d._DAG_Key = n._DAG_Key
-and a._Annot_key = e._Annot_key
-and e._CreatedBy_key = u._User_Key
-%s
-%s
-%s
-group by d.name
-'''
-
-#
-# summary 1
-# number of GO Terms per Ontology
-#
-def goSummary1():
-
-    fp.write('*********************************************************************\n')
-    fp.write('GO Ontology Summary - Number of GO Terms per Ontology\n\n')
-    fp.write(str.ljust('ontology', 25) + TAB)
-    fp.write(str.ljust('number of terms', 25) + CRT)
-    fp.write(str.ljust('--------', 25) + TAB)
-    fp.write(str.ljust('---------------', 25) + CRT)
-
-    results = db.sql('''
-           select substring(d.name,1,30) as name, count(n._Object_key) as terms
-           from DAG_DAG d, DAG_Node n
-           where d._DAG_key in (1,2,3)
-           and d._DAG_key = n._DAG_key
-           group by d.name
-           order by d.name
-           ''', 'auto')
-
-    for r in results:
-        fp.write(str.ljust(r['name'], 25) + TAB)
-        fp.write(str.ljust(str(r['terms']), 25) + CRT)
-
-    fp.write('\n*********************************************************************\n')
-
-#
-# summary 2
-# number of GO Terms per Ontology used in MGI
-#
-def goSummary2():
-
-    fp.write('*********************************************************************\n')
-    fp.write('GO Ontology Summary - Number of GO Terms per Ontology Used in MGI\n\n')
-    fp.write(str.ljust('ontology', 25) + TAB)
-    fp.write(str.ljust('number of terms', 25) + CRT)
-    fp.write(str.ljust('--------', 25) + TAB)
-    fp.write(str.ljust('---------------', 25) + CRT)
-
-    results = db.sql('''
-           select substring(d.name,1,30) as name, count(n._Object_key) as terms
-           from DAG_DAG d, DAG_Node n
-           where d._DAG_key in (1,2,3)
-           and d._DAG_key = n._DAG_key
-           and exists (select 1 from VOC_Annot a where n._Object_key = a._Term_key)
-           group by d.name
-           order by d.name
-           ''', 'auto')
-
-    for r in results:
-        fp.write(str.ljust(r['name'], 25) + TAB)
-        fp.write(str.ljust(str(r['terms']), 35) + CRT)
-
-    fp.write('\n*********************************************************************\n')
-
-#
-# specific annotation counts by annotation "name"
-#
-def writeCount(name):
-
-   fp.write('*********************************************************************\n')
-   fp.write('%s Annotations:\n' % (name))
-   fp.write('======================\n')
-
-   if name == "ALL":
-        # all annotations
-
-       results1 = db.sql(byGene1 % ('', '', ''), 'auto')
-       results2 = db.sql(byGene2 % ('', '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % ('', '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % ('', '', ''), 'auto')
-
-   elif name == "Protein Coding":
-        # protein coding gene/annotation counts
-
-       db.sql(tempCoding % (' ' + PROTEIN_CODING_CLAUSE), None)
-
-       results1 = db.sql(byCoding1 % ('count(distinct g._Marker_key) as cnt '), 'auto')
-       results2 = db.sql(byCoding2 % ('d.name, count(distinct g._Marker_key) as terms '), 'auto')
-       results3 = db.sql(byCoding1 % ('count(*) as cnt '), 'auto')
-       results4 = db.sql(byCoding2 % ('d.name, count(*) as terms '), 'auto')
-
-       db.sql('drop table temp_genes', None)
-
-   elif name == "Non-Protein Coding":
-        # non-protein coding gene/annotation counts
-
-       db.sql(tempCoding % (' ' + NON_PROTEIN_CODING_CLAUSE), None)
-
-       results1 = db.sql(byCoding1 % ('count(distinct g._Marker_key) as cnt '), 'auto')
-       results2 = db.sql(byCoding2 % ('d.name, count(distinct g._Marker_key) as terms '), 'auto')
-       results3 = db.sql(byCoding1 % ('count(*) as cnt '), 'auto')
-       results4 = db.sql(byCoding2 % ('d.name, count(*) as terms '), 'auto')
-
-       db.sql('drop table temp_genes', None)
-
-   elif name == "Total Non-IEA":
-        # not in IEA references
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), '', ''), 'auto')
-
-   elif name == "Total IEA":
-        # in IEA references
-
-       results1 = db.sql(byGene1 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('in ' + IEA_CLAUSE), '', ''), 'auto')
-
-   elif name == "GOA":
-        # not in IEA references
-        # in "GOA_%" user
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('like ' + GOA_CLAUSE), \
-                        ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('like ' + GOA_CLAUSE), \
-                        ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('like ' + GOA_CLAUSE), \
-                        ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('like ' + GOA_CLAUSE), \
-                        ''), 'auto')
-
-   elif name == "GOC":
-        # not in IEA references
-        # in "GOC" user
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOC_CLAUSE), \
-                        ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOC_CLAUSE), \
-                        ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOC_CLAUSE), \
-                        ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOC_CLAUSE), \
-                        ''), 'auto')
-
-   elif name == "GO/PAINT":
-        # not in IEA references
-        # in "GO_Central" user
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-                        ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-                        ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-                        ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('in ' + REFGENOME_CLAUSE), \
-                        ''), 'auto')
-
-   elif name == "GO/Rat":
-        # not in IEA references
-        # in "RGD" user
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
-                        ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
-                        ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
-                        ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GORAT_CLAUSE), \
-                        ''), 'auto')
-
-   elif name == "GOA/Human":
-        # not in IEA references
-        # in "UniProtKB" user
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-                        ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-                        ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-                        ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + IEA_CLAUSE), \
-                        byCreatedBy % ('= ' + GOA_HUMAN_CLAUSE), \
-                        ''), 'auto')
-
-   elif name == "ORTHOLOGY":
-        # in orthology reference
-
-       results1 = db.sql(byGene1 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('in ' + ORTHOLOGY_CLAUSE), '', ''), 'auto')
-
-   elif name == "SWISS_PROT":
-        # in SWISS_PROT reference
-
-       results1 = db.sql(byGene1 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('in ' + SWISSPROT_CLAUSE), '', ''), 'auto')
-
-   elif name == "INTERPRO":
-        # in INTERPRO reference
-
-       results1 = db.sql(byGene1 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('in ' + INTERPRO_CLAUSE), '', ''), 'auto')
-
-   elif name == "EC":
-        # in EC reference
-
-       results1 = db.sql(byGene1 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('in ' + EC_CLAUSE), '', ''), 'auto')
-
-   elif name == "ROOT":
-        # in ROOT reference
-
-       results1 = db.sql(byGene1 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('in ' + ROOT_CLAUSE), '', ''), 'auto')
-
-   elif name == "ALL_ROOT":
-        # contains all ROOT annotations
-
-       results1 = db.sql(byGene1 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
-       results2 = db.sql(byGene2 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
-       results3 = db.sql(byAnnot1 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
-       results4 = db.sql(byAnnot2 % (ALL_ROOT_CLAUSE, '', ''), 'auto')
-
-   elif name == "NOCTUA_NonSynGO":
-        # not in IEA references
-        # loaded by gomousenoctua load
-        # not in evidence codes (see above)
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + NOCTUA_CLAUSE + ' and u.login not like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-
-   elif name == "NOCTUA_SynGO":
-        # not in IEA references
-        # loaded by gomousenoctua load
-        # not in evidence codes (see above)
-
-       results1 = db.sql(byGene1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results2 = db.sql(byGene2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results3 = db.sql(byAnnot1 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-       results4 = db.sql(byAnnot2 % (byReference % ('not in ' + CURATOR_CLAUSE), \
-                        byCreatedBy % ('like ' + SYNGO_CLAUSE), \
-                        byEvidenceCode % ('not in ' + EVIDENCE_CLAUSE)), 'auto')
-
-
-   # total by gene
-   fp.write('Total Number of Genes Annotated to:' + TAB + str(results1[0]['cnt']) + '\n')
-
-   # breakdown by ontology/dag
-   fp.write('Breakdown by OntologyName:\n')
-
-   for r in results2:
-        fp.write(str.ljust(r['name'], 25) + TAB)
-        fp.write(str.ljust(str(r['terms']), 45) + CRT)
-
-   fp.write('---------------------------------------------------------------------\n')
-
-   # total by annotation
-   fp.write('Total Number of Annotations:' + TAB + str(results3[0]['cnt']) + '\n')
-
-   # breakdown by ontology/dag
-   fp.write('Breakdown by OntologyName:\n')
-
-   for r in results4:
-        fp.write(str.ljust(r['name'], 25) + TAB)
-        fp.write(str.ljust(str(r['terms']), 45) + CRT)
-
-   fp.write('*********************************************************************\n')
 
+totalGene = {}
+dagGene = {}
+totalPredicted = {}
+dagPredicted = {}
+totalAll = {}
+dagAll = {}
+totalSummary = {}
+
+def getMarkers():
+        #
+        # validMarkers : distinct set of markers used for all reports
+        #
+        # mouse markers that contains GO Annotations (_vocab_key = 1000)
+        #
+        # if marker matches one of the criteria, then preditedGene = Yes
+        #       name that starts with the words 'gene model'
+        #       name that starts with the words 'predicted gene'
+        #       name that starts with the words 'gene trap'
+        #       symbol that starts with the word 'ORF'
+        #       symbol that is a single letter followed by up to 5 numbers, for example 'a12345'
+        #       symbol that is two letters followed by up to 5 numbers, for example 'ab12345'
+        #
+        # else predicatedGene = No
+        #
+
+        db.sql('''
+                WITH markers AS (
+                        select distinct m.*, t.term as featureType
+                        from MRK_Marker m, VOC_Annot va, VOC_Term t
+                        where m._Marker_key = va._Object_key
+                        and va._AnnotType_key = 1011    -- MCV/Marker
+                        and va._Term_key = t._Term_key
+                        and exists (select 1 from VOC_Annot gva where gva._annottype_key = 1000 and m._marker_key = gva._object_key)
+                )
+                select m.*, 'Yes' as predictedGene
+                into temporary table validMarkers
+                from markers m
+                where m._organism_key = 1
+                and m._marker_status_key = 1
+                and (
+                        m.name like 'gene model %'
+                        or m.name like 'gene trap %'
+                        or m.name like 'predicted gene%'
+                        or m.symbol like 'ORF%'
+                        or m.symbol ~ '[A-Z][0-9][0-9][0-9][0-9][0-9]'
+                        or m.symbol ~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]'
+                )
+                union
+                select m.*, 'No' as predictedGene
+                from markers m
+                where m._organism_key = 1
+                and m._marker_status_key = 1
+                and m.name not like 'gene model %'
+                and m.name not like 'gene trap %'
+                and m.name not like 'predicted gene%'
+                and m.symbol not like 'ORF%'
+                and m.symbol !~ '[A-Z][0-9][0-9][0-9][0-9][0-9]'
+                and m.symbol !~ '[A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]'
+                ''', None)
+
+        db.sql('create index validMarkers_idx on validMarkers (_Marker_key)', None)
+
+def goSummary():
+        #
+        # GO Ontology Summary
+        # number of GO terms per ontology
+        # number of GO terms per ontology used in MGI
+        #
+
+        fp.write(4*TAB + 'Biological Process' + TAB + 'Cellular Component' + TAB + 'Molecular Function' + CRT)
+
+        results = db.sql('''
+                select d._dag_key, d.name, count(distinct a._term_key) as counter
+                from VOC_Term a, DAG_Node n, DAG_DAG d
+                where a._Vocab_key = 4
+                and a._Term_key = n._Object_key
+                and n._DAG_key = d._DAG_key
+                and d._dag_key in (1,2,3)
+                group by d.name, d._dag_key
+                order by d.name
+        ''', 'auto')
+
+        fp.write('Gene Ontology Summary - Number of GO Terms per Ontology' + 3*TAB)
+        for r in results:
+                fp.write(TAB + str(r['counter']))
+        fp.write(CRT)
+
+        results = db.sql('''
+                select d._dag_key, d.name, count(distinct a._term_key) as counter
+                from VOC_Annot a, DAG_Node n, DAG_DAG d
+                where a._AnnotType_key = 1000
+                and a._Term_key = n._Object_key
+                and n._DAG_key = d._DAG_key
+                and d._dag_key in (1,2,3)
+                group by d.name, d._dag_key
+                order by d.name
+        ''', 'auto')
+
+        fp.write('Gene Ontology Summary - Number of GO Terms per Ontology Used in MGI' + 3*TAB)
+        for r in results:
+                fp.write(TAB + str(r['counter']))
+        fp.write(2*CRT)
+
+def processDag(results):
+
+        dagResults = {}
+
+        for r in results:
+                key = r['login']
+                value = r
+                if key not in dagResults:
+                        dagResults[key] = []
+                dagResults[key].append(value)
+
+        #print(dagResults)
+        return dagResults
+
+def getExperimental():
+        #
+        # classification: Experimental
+        #
+
+        fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
+
+        getExperimentalGene()
+        getExperimentalPredicted()
+        getExperimentalTotal()
+
+def getExperimentalGene():
+        global totalGene, dagGene, totalSummary
+
+        print('DEFGH,4-8  : Total # of Genes')
+
+        results = db.sql('''
+                select u.login, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                group by u.login 
+                order by u.login
+        ''', 'auto')
+        for r in results:
+                key = r['login']
+                value = r['counter']
+                totalGene[key] = []
+                totalGene[key].append(value)
+                
+        results = db.sql('''
+                select 'D' as column, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+        ''', 'auto')
+        for r in results:
+                key = r['column']
+                value = r['counter']
+                totalSummary[key] = []
+                totalSummary[key].append(value)
+                
+        results = db.sql('''
+                select d._dag_key, d.name, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                group by d.name, d._dag_key
+        ''', 'auto')
+        for r in results:
+                if r['_dag_key'] == 3:
+                        key = 'E'
+                elif r['_dag_key'] == 1:
+                        key = 'F'
+                elif r['_dag_key'] == 2:
+                        key = 'G'
+                else:
+                        key = 'H'
+                value = r['counter']
+                totalSummary[key] = []
+                totalSummary[key].append(value)
+                
+        results = db.sql('''
+                (
+                select d._dag_key, d.name, u.login, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                group by d.name, d._dag_key, u.login
+                union
+                select distinct 1 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (1)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                        )
+                union
+                select distinct 2 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (2)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                        )
+                union
+                select distinct 3 as _dag_key, 'Biological Process' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (3)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                        )
+                union
+                select distinct 4 as _dag_key, 'Obsolete' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (4)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                        )
+                )
+                order by login, name
+        ''', 'auto')
+        dagGene = processDag(results)
+
+def getExperimentalPredicted():
+        global totalPredicted, dagPredicted, totalSummary
+
+        print('IJKLM,9-13 : Total # of Predicted Genes')
+
+        results = db.sql('''
+                select u.login, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                group by u.login 
+                order by u.login
+        ''', 'auto')
+        for r in results:
+                key = r['login']
+                value = r['counter']
+                totalPredicted[key] = []
+                totalPredicted[key].append(value)
+                
+        results = db.sql('''
+                select 'I' as column, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+        ''', 'auto')
+        for r in results:
+                key = r['column']
+                value = r['counter']
+                totalSummary[key] = []
+                totalSummary[key].append(value)
+                
+        results = db.sql('''
+                select d._dag_key, d.name, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                group by d.name, d._dag_key
+        ''', 'auto')
+        for r in results:
+                if r['_dag_key'] == 3:
+                        key = 'J'
+                elif r['_dag_key'] == 1:
+                        key = 'K'
+                elif r['_dag_key'] == 2:
+                        key = 'L'
+                else:
+                        key = 'M'
+                value = r['counter']
+                totalSummary[key] = []
+                totalSummary[key].append(value)
+                
+        results = db.sql('''
+                (
+                select d._dag_key, d.name, u.login, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                group by d.name, d._dag_key, u.login
+                union
+                select distinct 1 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (1)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                        )
+                union
+                select distinct 2 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (2)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                        )
+                union
+                select distinct 3 as _dag_key, 'Biological Process' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (3)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                        )
+                union
+                select distinct 4 as _dag_key, 'Obsolete' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (4)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                        )
+                )
+                order by login, name
+        ''', 'auto')
+        dagPredicted = processDag(results)
+
+def getExperimentalTotal():
+        global totalAll, dagAll, totalSummary
+
+        print('NOPQR,14-18: Total # of Annotations')
+
+        results = db.sql('''
+                select u.login, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                group by u.login 
+                order by u.login
+        ''', 'auto')
+        for r in results:
+                key = r['login']
+                value = r['counter']
+                totalAll[key] = []
+                totalAll[key].append(value)
+        #print(totalAll)
+
+        results = db.sql('''
+                select 'N' as column, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+        ''', 'auto')
+        for r in results:
+                key = r['column']
+                value = r['counter']
+                totalSummary[key] = []
+                totalSummary[key].append(value)
+                
+        results = db.sql('''
+                select d._dag_key, d.name, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                group by d.name, d._dag_key
+        ''', 'auto')
+        for r in results:
+                if r['_dag_key'] == 3:
+                        key = 'O'
+                elif r['_dag_key'] == 1:
+                        key = 'P'
+                elif r['_dag_key'] == 2:
+                        key = 'Q'
+                else:
+                        key = 'R'
+                value = r['counter']
+                totalSummary[key] = []
+                totalSummary[key].append(value)
+                
+        results = db.sql('''
+                (
+                select d._dag_key, d.name, u.login, count(a._annot_key) as counter
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                group by d.name, d._dag_key, u.login
+                union
+                select distinct 1 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (1)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                        )
+                union
+                select distinct 2 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (2)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                        )
+                union
+                select distinct 3 as _dag_key, 'Biological Process' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (3)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                        )
+                union
+                select distinct 4 as _dag_key, 'Obsolete' as name, u.login, 0 as counter
+                from VOC_Annot a, VOC_Evidence e, MGI_User u
+                where a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
+                        where n._dag_key in (4)
+                        and n._Object_key = a._Term_key
+                        and a._AnnotType_key = 1000
+                        and a._Annot_key = e._Annot_key
+                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                        and e._ModifiedBy_key = u._User_key
+                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                        )
+                )
+                order by login, name
+        ''', 'auto')
+
+        dagAll = processDag(results)
+        #print(dagAll)
+
+        # for each login
+        #       DEFGH,4-8  : Total # of Genes
+        #       IJKLM,9-13 : Total # of Predicted Genes
+        #       NOPQR,14-18: Total # of Annotations
+        for login in dagAll:
+
+                fp.write(2*TAB + str(login) + TAB)
+
+                # dags for given login, print total, b, c, m, obsolete
+                if login in dagGene:
+                        totalCount = totalGene[login][0]
+                        fp.write(str(totalCount) + TAB)
+                        dags = dagGene[login]
+                        for d in dags:
+                                fp.write(str(d['counter']) + TAB)
+                else:
+                        fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
+
+                if login in dagPredicted:
+                        totalCount = totalPredicted[login][0]
+                        fp.write(str(totalCount) + TAB)
+                        dags = dagPredicted[login]
+                        for d in dags:
+                                fp.write(str(d['counter']) + TAB)
+                else:
+                        fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
+
+                if login in dagAll:
+                        totalCount = totalAll[login][0]
+                        fp.write(str(totalCount) + TAB)
+                        dags = dagAll[login]
+                        for d in dags:
+                                fp.write(str(d['counter']) + TAB)
+                else:
+                        fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
+
+                fp.write('Evidence type' + TAB + 'Experimental' + CRT)
+
+        fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
+        fp.write(str(totalSummary['D'][0]) + TAB)
+        fp.write(str(totalSummary['E'][0]) + TAB)
+        fp.write(str(totalSummary['F'][0]) + TAB)
+        fp.write(str(totalSummary['G'][0]) + TAB)
+
+        if 'H' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['H'][0]) + TAB)
+
+        fp.write(str(totalSummary['I'][0]) + TAB)
+        fp.write(str(totalSummary['J'][0]) + TAB)
+        fp.write(str(totalSummary['K'][0]) + TAB)
+        fp.write(str(totalSummary['L'][0]) + TAB)
+
+        if 'M' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['M'][0]) + TAB)
+
+        fp.write(str(totalSummary['N'][0]) + TAB)
+        fp.write(str(totalSummary['O'][0]) + TAB)
+        fp.write(str(totalSummary['P'][0]) + TAB)
+        fp.write(str(totalSummary['Q'][0]) + TAB)
+
+        if 'R' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['R'][0]) + TAB)
+
+        fp.write('Evidence type' + TAB + 'Summary Row' + CRT)
 #
 # Main
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
-goSummary1()
-goSummary2()
-writeCount('ALL')
-writeCount('Protein Coding')
-writeCount('Non-Protein Coding')
-writeCount('Total Non-IEA')
-writeCount('GOC')
-writeCount('NOCTUA_NonSynGO')
-writeCount('NOCTUA_SynGO')
-writeCount('GOA')
-writeCount('GO/Rat')
-writeCount('GOA/Human')
-writeCount('ORTHOLOGY')
-writeCount('GO/PAINT')
-writeCount('Total IEA')
-writeCount('SWISS_PROT')
-writeCount('INTERPRO')
-writeCount('EC')
-writeCount('ROOT')
-writeCount('ALL_ROOT')
+fp.write('includes: all GO annotations' + 2*CRT)
+fp.write('\'Predicted genes\' are those that:' + CRT)
+fp.write('- have a name that starts with the words \'gene model\'' + CRT)
+fp.write('- have a name that starts with the words \'predicted gene\'' + CRT)
+fp.write('- have a name that starts with the words \'gene trap\'' + CRT)
+fp.write('- have a symbol that starts with the word \'ORF\'' + CRT)
+fp.write('- have a symbol that is a single letter followed by up to 5 numbers, for example \'a12345\'' + CRT)
+fp.write('- have a symbol that is two letters followed by up to 5 numbers, for example \'ab12345\'' + CRT)
+fp.write(CRT)
+fp.write('This report is best viewed by importing into Excel')
+fp.write(2*CRT)
+
+getMarkers()
+goSummary()
+
+fp.write(str.ljust('Annotation Category', 25) + TAB)
+fp.write('GO_REF' + TAB)
+fp.write('Contribor, Feature Type, or Summary row description' + TAB)
+fp.write('Total Number of Genes Annotated:' + TAB)
+fp.write('Biological Process' + TAB)
+fp.write('Cellular Component' + TAB)
+fp.write('Molecular Funcation' + TAB)
+fp.write('Obsolete' + TAB)
+fp.write('Total Number of Predicted Genes Annotated:' + TAB)
+fp.write('Biological Process' + TAB)
+fp.write('Cellular Component' + TAB)
+fp.write('Molecular Funcation' + TAB)
+fp.write('Obsolete' + TAB)
+fp.write('Total Number of Annotations:' + TAB)
+fp.write('Biological Process' + TAB)
+fp.write('Cellular Component' + TAB)
+fp.write('Molecular Funcation' + TAB)
+fp.write('Obsolete' + TAB)
+fp.write('Classification Axis' + TAB)
+fp.write('Sorting Classification' + CRT)
+
+getExperimental()
 
 reportlib.finish_nonps(fp)
