@@ -1,20 +1,8 @@
-TAG: qcreports_db-6-0-23-??
-DATE: 12/05/2023
+TAG: qcreports_db-6-0-22-76
+DATE: 01/30/2024
 STAFF: lec
-wts2-1155/GOC taking over GOA mouse, GOA human, etc.
-#       modified:   qcr.shtml
-#       modified:   mgd/GO_PM2GeneRefsNotInMGI.py
-#       modified:   mgd/GO_Combined_Report.py
-#       modified:   mgd/GO_InvalidInferredFrom.py
-#       modified:   mgd/GO_GPI_verify.py
-#       modified:   mgd/MRK_GOGold.py
-#       modified:   mgd/MRK_GOGold.py
-#       modified:   mgd/VOC_InvalidInferred.py
-#       modified:   mgd/VOC_InvalidProperties.py
-#       modified:   mgd/WF_GO_FullCodeNoAnnot.py
-#       deleted:    mgd/GO_EvidenceProperty.py
-#       deleted:    mgd/VOC_GOObsolete.py
-#
+wts2-1390/fl2-712/Custom report for batch allele retrieval
+(qcreports/pwi/ALL_CheckByCreationDate.py)
 
 TAG: qcreports_db-6-0-22-75
 DATE: 12/05/2023
