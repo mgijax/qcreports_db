@@ -158,7 +158,7 @@ def getExperimentalGene():
         print('DEFGH,4-8  : Total # of Genes')
 
         results = db.sql('''
-                select u.login, count(a._annot_key) as counter
+                select u.login, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -175,7 +175,7 @@ def getExperimentalGene():
                 totalGene[key].append(value)
                 
         results = db.sql('''
-                select 'D' as column, count(a._annot_key) as counter
+                select 'D' as column, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -189,7 +189,7 @@ def getExperimentalGene():
                 totalSummary[key].append(value)
                 
         results = db.sql('''
-                select d._dag_key, d.name, count(a._annot_key) as counter
+                select d._dag_key, d.name, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
                 where d._dag_key in (1,2,3,4)
                 and d._dag_key = n._dag_key
@@ -215,7 +215,7 @@ def getExperimentalGene():
                 
         results = db.sql('''
                 (
-                select d._dag_key, d.name, u.login, count(a._annot_key) as counter
+                select d._dag_key, d.name, u.login, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
                 where d._dag_key in (1,2,3,4)
                 and d._dag_key = n._dag_key
@@ -227,7 +227,7 @@ def getExperimentalGene():
                 and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
                 group by d.name, d._dag_key, u.login
                 union
-                select distinct 1 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
+                select distinct 1 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -244,7 +244,7 @@ def getExperimentalGene():
                         and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
                         )
                 union
-                select distinct 2 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
+                select distinct 2 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -305,7 +305,7 @@ def getExperimentalPredicted():
         print('IJKLM,9-13 : Total # of Predicted Genes')
 
         results = db.sql('''
-                select u.login, count(a._annot_key) as counter
+                select u.login, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -322,7 +322,7 @@ def getExperimentalPredicted():
                 totalPredicted[key].append(value)
                 
         results = db.sql('''
-                select 'I' as column, count(a._annot_key) as counter
+                select 'I' as column, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -336,7 +336,7 @@ def getExperimentalPredicted():
                 totalSummary[key].append(value)
                 
         results = db.sql('''
-                select d._dag_key, d.name, count(a._annot_key) as counter
+                select d._dag_key, d.name, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
                 where d._dag_key in (1,2,3,4)
                 and d._dag_key = n._dag_key
@@ -362,7 +362,7 @@ def getExperimentalPredicted():
                 
         results = db.sql('''
                 (
-                select d._dag_key, d.name, u.login, count(a._annot_key) as counter
+                select d._dag_key, d.name, u.login, count(distinct a._object_key) as counter
                 from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
                 where d._dag_key in (1,2,3,4)
                 and d._dag_key = n._dag_key
@@ -374,7 +374,7 @@ def getExperimentalPredicted():
                 and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
                 group by d.name, d._dag_key, u.login
                 union
-                select distinct 1 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
+                select distinct 1 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -391,7 +391,7 @@ def getExperimentalPredicted():
                         and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
                         )
                 union
-                select distinct 2 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
+                select distinct 2 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -522,7 +522,7 @@ def getExperimentalTotal():
                 and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                 group by d.name, d._dag_key, u.login
                 union
-                select distinct 1 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
+                select distinct 1 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
@@ -539,7 +539,7 @@ def getExperimentalTotal():
                         and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                         )
                 union
-                select distinct 2 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
+                select distinct 2 as _dag_key, 'Moleclar Function' as name, u.login, 0 as counter
                 from VOC_Annot a, VOC_Evidence e, MGI_User u
                 where a._AnnotType_key = 1000
                 and a._Annot_key = e._Annot_key
