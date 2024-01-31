@@ -132,6 +132,7 @@ def createTempTables():
                 and a._Annot_key = e._Annot_key
                 and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
                 and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                 ''', None)
 
         db.sql('create index validAnnotations_idx on validAnnotations (_annot_key)', None)
@@ -152,6 +153,7 @@ def goSummary():
                 and a._Term_key = n._Object_key
                 and n._DAG_key = d._DAG_key
                 and d._dag_key in (1,2,3)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                 group by d.name, d._dag_key
                 order by d.name
         ''', 'auto')
@@ -168,6 +170,7 @@ def goSummary():
                 and a._Term_key = n._Object_key
                 and n._DAG_key = d._DAG_key
                 and d._dag_key in (1,2,3)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                 group by d.name, d._dag_key
                 order by d.name
         ''', 'auto')
