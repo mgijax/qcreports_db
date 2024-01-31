@@ -32,9 +32,12 @@ totalAll = {}
 dagAll = {}
 totalSummary = {}
 
-def getMarkers():
+def createTempTables():
         #
-        # validMarkers : distinct set of markers used for all reports
+        # validMarkers    : distinct set of markers used for all reports
+        # validGenes      : set of marker by dag where predited = 'No'
+        # validPredicted  : set of marker by dag where predicted = 'Yes'
+        # validAnnoations : set of annotations by dag
         #
         # mouse markers that contains GO Annotations (_vocab_key = 1000)
         #
@@ -85,6 +88,53 @@ def getMarkers():
                 ''', None)
 
         db.sql('create index validMarkers_idx on validMarkers (_Marker_key)', None)
+
+        db.sql('''
+                select a._object_key, d._dag_key, d.name, u.login
+                into temporary table validGenes
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+                ''', None)
+
+        db.sql('create index validGenes_idx on validGenes (_object_key)', None)
+
+        db.sql('''
+                select a._object_key, d._dag_key, d.name, u.login
+                into temporary table validPredicted
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                ''', None)
+
+        db.sql('create index validPredicted_idx on validPredicted (_object_key)', None)
+
+        db.sql('''
+                select a._annot_key, d._dag_key, d.name, u.login
+                into temporary table validAnnotations
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                ''', None)
+
+        db.sql('create index validAnnotations_idx on validAnnotations (_annot_key)', None)
 
 def goSummary():
         #
@@ -158,15 +208,7 @@ def getExperimentalGene():
         print('DEFGH,4-8  : Total # of Genes')
 
         results = db.sql('''
-                select u.login, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                group by u.login 
-                order by u.login
+                select login, count(distinct _object_key) as counter from validGenes group by login order by login
         ''', 'auto')
         for r in results:
                 key = r['login']
@@ -174,13 +216,8 @@ def getExperimentalGene():
                 totalGene[key] = []
                 totalGene[key].append(value)
                 
-        results = db.sql('''
-                select 'D' as column, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
+        results = db.sql(''' 
+                select 'D' as column, count(distinct _object_key) as counter from validGenes 
         ''', 'auto')
         for r in results:
                 key = r['column']
@@ -189,16 +226,7 @@ def getExperimentalGene():
                 totalSummary[key].append(value)
                 
         results = db.sql('''
-                select d._dag_key, d.name, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
-                where d._dag_key in (1,2,3,4)
-                and d._dag_key = n._dag_key
-                and n._Object_key = a._Term_key
-                and a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                group by d.name, d._dag_key
+                select _dag_key, name, count(distinct _object_key) as counter from validGenes group by name, _dag_key
         ''', 'auto')
         for r in results:
                 if r['_dag_key'] == 3:
@@ -215,85 +243,21 @@ def getExperimentalGene():
                 
         results = db.sql('''
                 (
-                select d._dag_key, d.name, u.login, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
-                where d._dag_key in (1,2,3,4)
-                and d._dag_key = n._dag_key
-                and n._Object_key = a._Term_key
-                and a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                group by d.name, d._dag_key, u.login
+                select _dag_key, name, login, count(distinct _object_key) as counter
+                from validGenes
+                group by name, _dag_key, login
                 union
-                select distinct 1 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (1)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                        )
+                select distinct 1 as _dag_key, 'Cellular Component' as name, login, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.login = v2.login and v2._dag_key in (1))
                 union
-                select distinct 2 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (2)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                        )
+                select distinct 2 as _dag_key, 'Molecular Function' as name, login, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.login = v2.login and v2._dag_key in (2))
                 union
-                select distinct 3 as _dag_key, 'Biological Process' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (3)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                        )
+                select distinct 3 as _dag_key, 'Biological Process' as name, login, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.login = v2.login and v2._dag_key in (3))
                 union
-                select distinct 4 as _dag_key, 'Obsolete' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (4)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'No')
-                        )
+                select distinct 4 as _dag_key, 'Obsolete' as name, login, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.login = v2.login and v2._dag_key in (4))
                 )
                 order by login, name
         ''', 'auto')
@@ -305,15 +269,7 @@ def getExperimentalPredicted():
         print('IJKLM,9-13 : Total # of Predicted Genes')
 
         results = db.sql('''
-                select u.login, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                group by u.login 
-                order by u.login
+                select login, count(distinct _object_key) as counter from validPredicted group by login order by login
         ''', 'auto')
         for r in results:
                 key = r['login']
@@ -322,12 +278,7 @@ def getExperimentalPredicted():
                 totalPredicted[key].append(value)
                 
         results = db.sql('''
-                select 'I' as column, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
+                select 'I' as column, count(distinct _object_key) as counter from validPredicted
         ''', 'auto')
         for r in results:
                 key = r['column']
@@ -336,16 +287,7 @@ def getExperimentalPredicted():
                 totalSummary[key].append(value)
                 
         results = db.sql('''
-                select d._dag_key, d.name, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
-                where d._dag_key in (1,2,3,4)
-                and d._dag_key = n._dag_key
-                and n._Object_key = a._Term_key
-                and a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                group by d.name, d._dag_key
+                select _dag_key, name, count(distinct _object_key) as counter from validPredicted group by name, _dag_key
         ''', 'auto')
         for r in results:
                 if r['_dag_key'] == 3:
@@ -362,85 +304,21 @@ def getExperimentalPredicted():
                 
         results = db.sql('''
                 (
-                select d._dag_key, d.name, u.login, count(distinct a._object_key) as counter
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
-                where d._dag_key in (1,2,3,4)
-                and d._dag_key = n._dag_key
-                and n._Object_key = a._Term_key
-                and a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                group by d.name, d._dag_key, u.login
+                select _dag_key, name, login, count(distinct _object_key) as counter
+                from validPredicted
+                group by name, _dag_key, login
                 union
-                select distinct 1 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (1)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                        )
+                select distinct 1 as _dag_key, 'Cellular Component' as name, login, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.login = v2.login and v2._dag_key in (1))
                 union
-                select distinct 2 as _dag_key, 'Molecular Function' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (2)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                        )
+                select distinct 2 as _dag_key, 'Molecular Function' as name, login, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.login = v2.login and v2._dag_key in (2))
                 union
-                select distinct 3 as _dag_key, 'Biological Process' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (3)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                        )
+                select distinct 3 as _dag_key, 'Biological Process' as name, login, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.login = v2.login and v2._dag_key in (3))
                 union
-                select distinct 4 as _dag_key, 'Obsolete' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (4)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key and m.predictedGene = 'Yes')
-                        )
+                select distinct 4 as _dag_key, 'Obsolete' as name, login, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.login = v2.login and v2._dag_key in (4))
                 )
                 order by login, name
         ''', 'auto')
@@ -452,15 +330,7 @@ def getExperimentalTotal():
         print('NOPQR,14-18: Total # of Annotations')
 
         results = db.sql('''
-                select u.login, count(a._annot_key) as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                group by u.login 
-                order by u.login
+                select login, count(_annot_key) as counter from validAnnotations group by login order by login
         ''', 'auto')
         for r in results:
                 key = r['login']
@@ -470,12 +340,7 @@ def getExperimentalTotal():
         #print(totalAll)
 
         results = db.sql('''
-                select 'N' as column, count(a._annot_key) as counter
-                from VOC_Annot a, VOC_Evidence e
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                select 'N' as column, count(_annot_key) as counter from validAnnotations
         ''', 'auto')
         for r in results:
                 key = r['column']
@@ -484,16 +349,7 @@ def getExperimentalTotal():
                 totalSummary[key].append(value)
                 
         results = db.sql('''
-                select d._dag_key, d.name, count(a._annot_key) as counter
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d
-                where d._dag_key in (1,2,3,4)
-                and d._dag_key = n._dag_key
-                and n._Object_key = a._Term_key
-                and a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                group by d.name, d._dag_key
+                select _dag_key, name, count(_annot_key) as counter from validAnnotations group by name, _dag_key
         ''', 'auto')
         for r in results:
                 if r['_dag_key'] == 3:
@@ -510,85 +366,21 @@ def getExperimentalTotal():
                 
         results = db.sql('''
                 (
-                select d._dag_key, d.name, u.login, count(a._annot_key) as counter
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
-                where d._dag_key in (1,2,3,4)
-                and d._dag_key = n._dag_key
-                and n._Object_key = a._Term_key
-                and a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                group by d.name, d._dag_key, u.login
+                select _dag_key, name, login, count(distinct _annot_key) as counter
+                from validAnnotations
+                group by name, _dag_key, login
                 union
-                select distinct 1 as _dag_key, 'Cellular Component' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (1)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                        )
+                select distinct 1 as _dag_key, 'Cellular Component' as name, login, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.login = v2.login and v2._dag_key in (1))
                 union
-                select distinct 2 as _dag_key, 'Moleclar Function' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (2)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                        )
+                select distinct 2 as _dag_key, 'Molecular Function' as name, login, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.login = v2.login and v2._dag_key in (2))
                 union
-                select distinct 3 as _dag_key, 'Biological Process' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (3)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                        )
+                select distinct 3 as _dag_key, 'Biological Process' as name, login, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.login = v2.login and v2._dag_key in (3))
                 union
-                select distinct 4 as _dag_key, 'Obsolete' as name, u.login, 0 as counter
-                from VOC_Annot a, VOC_Evidence e, MGI_User u
-                where a._AnnotType_key = 1000
-                and a._Annot_key = e._Annot_key
-                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                and e._ModifiedBy_key = u._User_key
-                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                and not exists (select 1 from VOC_Annot a, VOC_Evidence e, DAG_Node n 
-                        where n._dag_key in (4)
-                        and n._Object_key = a._Term_key
-                        and a._AnnotType_key = 1000
-                        and a._Annot_key = e._Annot_key
-                        and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
-                        and e._ModifiedBy_key = u._User_key
-                        and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
-                        )
+                select distinct 4 as _dag_key, 'Obsolete' as name, login, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.login = v2.login and v2._dag_key in (4))
                 )
                 order by login, name
         ''', 'auto')
@@ -684,7 +476,7 @@ fp.write(CRT)
 fp.write('This report is best viewed by importing into Excel')
 fp.write(2*CRT)
 
-getMarkers()
+createTempTables()
 goSummary()
 
 fp.write(str.ljust('Annotation Category', 25) + TAB)
