@@ -19,7 +19,7 @@ import os
 import reportlib
 import db
 
-db.setTrace()
+#db.setTrace()
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -108,26 +108,14 @@ for r in results:
     mrkGOAnnotList.append(r['egID'])
 
 db.sql('''
-    select a1._Object_key as refsKey, a1.accid as mgiID, a3.accid as pubmedid
+    select c._refs_key as refsKey, c.mgiID, c.pubmedid
     into temporary table pmInMGIwithJnum
-    from ACC_Accession a1, ACC_Accession a2, ACC_Accession a3
-    where a1._MGIType_key = 1
-    and a1._LogicalDB_key = 1
-    and a1.preferred = 1
-    and a1.prefixPart = 'MGI:'
-    and a1._Object_key = a2._Object_key
-    and a2._MGIType_key = 1
-    and a2._LogicalDB_key = 1
-    and a2.prefixPart = 'J:'
-    and a2.preferred = 1
-    and a1._Object_key = a3._Object_key
-    and a3._MGIType_key = 1
-    and a3._LogicalDB_key = 29
-    and a3.preferred = 1
+    from BIB_Citation_Cache c
+    where c.jnumID is not null
     ''', None) # 28,4770
+db.sql('''create index idx1 on pmInMGIwithJnum(pubmedid)''', None)
 
 # EG Mouse PubMed IDs 
-db.sql('''create index idx1 on pmInMGIwithJnum(pubmedid)''', None)
 db.sql('''
     select geneid, pubmedid
     into temporary table egPMIDs
@@ -140,9 +128,7 @@ db.sql('''create index idx2 on egPMIDs(pubmedid)''', None)
 results = db.sql('''
     select eg.*
     from egPMIDs eg
-    where not exists (select 1
-    from pmInMGIwithJnum inMGI
-    where eg.pubmedid = inMGI.pubmedid)
+    where not exists (select 1 from pmInMGIwithJnum inMGI where eg.pubmedid = inMGI.pubmedid)
     ''', 'auto') # 203,864
 
 for r in results:
@@ -186,8 +172,15 @@ for pmID in inputPmToEgDict:
             break # skip this pmID
 
     if skipPmID == 0:
+        # adding relevanceTerm
+        relResults = db.sql(''' select relevanceTerm from BIB_Citation_Cache where pubmedid = '%s' ''' % (pmID), 'auto')
+        if len(relResults) > 0:
+                relevanceTerm = relResults[0]['relevanceTerm']
+        else:
+                relevanceTerm = ''
+
         # Otherwise write the pmID and its set of egIDs to the report
-        fp.write('%s%s%s%s' % (pmID, TAB, ', '.join(egList), CRT))    
+        fp.write('%s%s%s%s%s%s' % (pmID, TAB, ', '.join(egList), TAB, relevanceTerm, CRT))    
         pmIdCt += 1
 
 fp.write('Total: %s' % pmIdCt)
