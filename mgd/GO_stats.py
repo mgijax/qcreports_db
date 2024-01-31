@@ -169,6 +169,7 @@ def goSummary():
                 and a._Term_key = n._Object_key
                 and n._DAG_key = d._DAG_key
                 and d._dag_key in (1,2,3)
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                 group by d.name, d._dag_key
                 order by d.name
         ''', 'auto')
