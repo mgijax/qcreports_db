@@ -1,9 +1,9 @@
 
 '''
-   pm2gene Refs not in MGI
+   Papers not in Public MGI for genes without experimental GO annotations
 
     * Mouse
-    * PubMedID not in MGI
+    * PubMedID not in MGI OR PubMedID is in MGI/J# is null
     * <= 15 egIDs/PubMedID
     * ALL egIDs in MGI
     * ALL egIDs for markers with feature type "protein coding gene" or "miRNA gene"
@@ -27,8 +27,7 @@ TAB = reportlib.TAB
 # pmID:[egID, ...], ...}
 inputPmToEgDict = {}
 
-# lookup of egIDs for marker with GO annotations excluding ISO, IBA, IEA
-# evidence codes
+# lookup of egIDs for marker with GO annotations excluding ISO, IBA, IEA evidence codes
 mrkGOAnnotList = []
 
 # list of markers with feature type protein coding gene or miRNA gene
@@ -39,9 +38,9 @@ dbEgToMarkerDict = {}
 
 fp = reportlib.init(sys.argv[0], '', os.environ['QCOUTPUTDIR'])
 
-fp.write('PM2Gene References not in MGI\n\n')
+fp.write('Papers not in Public MGI for genes without experimental GO annotations\n\n')
 fp.write('    * Mouse\n')
-fp.write('    * PubMedID not in MGI\n')
+fp.write('    * PubMedID not in MGI OR PubMedID is in MGI/J# is null\n')
 fp.write('    * <= 15 egIDs/PubMedID\n')
 fp.write('    * ALL egIDs in MGI\n')
 fp.write('    * ALL egIDs for markers with feature type "protein coding gene" or "miRNA gene"\n')
@@ -49,7 +48,7 @@ fp.write('    * ALL egIDs associated with a single marker\n')
 fp.write('''    * ALL egIDs (markers represented by) NOT used in a GO annotation, unless 
        evidence code is (ISO, IBA or IEA), i.e. if the GO annotation has one of 
        these evidence codes, it's not a condition to exclude the marker.\n\n''')
-fp.write('PM ID%sEG IDs%s%s' % (TAB, TAB, CRT))
+fp.write('PM ID%sRelevance%sEG IDs%s' % (TAB, TAB, CRT))
 
 # -- use to determine if egID assoc >1 marker
 # -- report EG ID and gene mgiID and marker symbol
@@ -107,14 +106,6 @@ results = db.sql('''
 for r in results:
     mrkGOAnnotList.append(r['egID'])
 
-db.sql('''
-    select c._refs_key as refsKey, c.mgiID, c.pubmedid
-    into temporary table pmInMGIwithJnum
-    from BIB_Citation_Cache c
-    where c.jnumID is not null
-    ''', None) # 28,4770
-db.sql('''create index idx1 on pmInMGIwithJnum(pubmedid)''', None)
-
 # EG Mouse PubMed IDs 
 db.sql('''
     select geneid, pubmedid
@@ -124,13 +115,18 @@ db.sql('''
     ''', None) # 1,202,493
 db.sql('''create index idx2 on egPMIDs(pubmedid)''', None)
 
-# EG Mouse PubMed IDs not in MGI
+# EG Mouse PubMed IDs
+# pubmedid does does not exist in MGI
+# pubmedid exists in MGI with null J:
 results = db.sql('''
     select eg.*
     from egPMIDs eg
-    where not exists (select 1 from pmInMGIwithJnum inMGI where eg.pubmedid = inMGI.pubmedid)
+    where not exists (select 1 from BIB_Citation_Cache c where eg.pubmedid = c.pubmedid)
+    union
+    select eg.*
+    from egPMIDs eg
+    where exists (select 1 from BIB_Citation_Cache c where eg.pubmedid = c.pubmedid and c.jnumid is null)
     ''', 'auto') # 203,864
-
 for r in results:
     pmID = r['pubmedid']
     egID = r['geneid']
@@ -142,6 +138,7 @@ pmIdCt = 0
 for pmID in inputPmToEgDict:
 
     egList = inputPmToEgDict[pmID]
+    #print(egList)
 
     skipPmID = 0
 
@@ -154,18 +151,22 @@ for pmID in inputPmToEgDict:
 
         # egID must be protein coding or miRNA feature type, if one isn't skip this pmID
         if egID not in goReportMarkers: # 99391 /99533
+            #print('egID not in goReportMarkers')
             skipPmID = 1
 
         #  if any egID not in the the database, skip
         if egID not in dbEgToMarkerDict: # 99533
+            #print('if any egID not in the the database, skip')
             skipPmID = 1
 
         # if any egID assoc > 1 marker skip
         if egID in dbEgToMarkerDict and len(dbEgToMarkerDict[egID]) > 1: # 0
+            #print('if any egID assoc > 1 marker skip')
             skipPmID = 1
 
         # if any egID has GO annotations (see excluded evidenc above, skip
         if egID in mrkGOAnnotList: # 0
+            #print('if any egID has GO annotations')
             skipPmID = 1
 
         if skipPmID == 1:
@@ -180,8 +181,8 @@ for pmID in inputPmToEgDict:
                 relevanceTerm = ''
 
         # Otherwise write the pmID and its set of egIDs to the report
-        fp.write('%s%s%s%s%s%s' % (pmID, TAB, ', '.join(egList), TAB, relevanceTerm, CRT))    
+        fp.write('%s%s%s%s%s%s' % (pmID, TAB, relevanceTerm, TAB, ', '.join(egList), CRT))    
         pmIdCt += 1
 
-fp.write('Total: %s' % pmIdCt)
+fp.write('Total: %s\n' % pmIdCt)
 reportlib.finish_nonps(fp)
