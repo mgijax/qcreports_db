@@ -121,10 +121,21 @@ def createTempTables():
 
         db.sql('create index validPredicted_idx on validPredicted (_object_key)', None)
 
+        # interested in distinct annotations
+        # from the GAF (gene_association.mgi)
+        #2 = Marker ID          : not used for this temp table
+        #4 = Qualifier          : property = go_qualifier_id
+        #5 = GO ID              : _term_key
+        #6 = Reference          : _refs_key
+        #7 = Evidence code      : _evidenceterm_key
+        #8 = Inferred from      : inferredFrom
+        #17 = Proteoform        : property = gene_product and value like ‘PR:%’
+
         db.sql('''
-                select a._annot_key, d._dag_key, d.name, u.login
+                select distinct a._annot_key, a._term_key, e._refs_key, e._evidenceterm_key, e.inferredfrom, 
+                        q.value as qualifier, p.value as proteoform, d._dag_key, d.name, u.login
                 into temporary table validAnnotations
-                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, VOC_Evidence_Property q, VOC_Term qt, VOC_Evidence_Property p
                 where d._dag_key in (1,2,3,4)
                 and d._dag_key = n._dag_key
                 and n._Object_key = a._Term_key
@@ -132,6 +143,23 @@ def createTempTables():
                 and a._Annot_key = e._Annot_key
                 and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
                 and e._ModifiedBy_key = u._User_key
+                and e._annotevidence_key = q._annotevidence_key and q._propertyterm_key = qt._term_key and qt.term = 'go_qualifier_id'
+                and e._annotevidence_key = p._annotevidence_key and p._propertyterm_key = 6481775 and p.value like '%PR:%'
+                and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
+                union
+                select distinct a._annot_key, a._term_key, e._refs_key, e._evidenceterm_key, e.inferredfrom, 
+                        q.value as qualifier, null, d._dag_key, d.name, u.login
+                from VOC_Annot a, VOC_Evidence e, DAG_Node n, DAG_DAG d, MGI_User u, VOC_Evidence_Property q, VOC_Term qt
+                where d._dag_key in (1,2,3,4)
+                and d._dag_key = n._dag_key
+                and n._Object_key = a._Term_key
+                and a._AnnotType_key = 1000
+                and a._Annot_key = e._Annot_key
+                and e._EvidenceTerm_key in (4003114,109,117,112,110,111)
+                and e._ModifiedBy_key = u._User_key
+                and e._annotevidence_key = q._annotevidence_key and q._propertyterm_key = qt._term_key and qt.term = 'go_qualifier_id'
+                and not exists 
+                        (select 1 from VOC_Evidence_Property p where e._annotevidence_key = p._annotevidence_key and p._propertyterm_key = 6481775 and p.value like '%PR:%')
                 and exists (select 1 from validMarkers m where a._Object_key = m._Marker_key)
                 ''', None)
 
@@ -180,6 +208,9 @@ def goSummary():
         fp.write(2*CRT)
 
 def processDag(results):
+        #
+        # load the dagResults by login (assignedBy) and return
+        #
 
         dagResults = {}
 
@@ -368,7 +399,7 @@ def getExperimentalTotal():
                 
         results = db.sql('''
                 (
-                select _dag_key, name, login, count(distinct _annot_key) as counter
+                select _dag_key, name, login, count(_annot_key) as counter
                 from validAnnotations
                 group by name, _dag_key, login
                 union
