@@ -11,6 +11,9 @@
 # S,19   : Classification Axis
 # T,20   : Sorting Classification
 # 
+#
+# This report is a set of counts of the mgi-GAF file
+#
 '''
  
 import sys 
@@ -31,6 +34,65 @@ totalAll = {}
 dagAll = {}
 totalSummary = {}
 
+def createTempGAFTable():
+        #
+        # Use the mgi-GAF file:
+        #       see reports_db/daily/GO_gene_association.py
+        #       /data/reports/qcreports_db/output/gene_association.mgi
+        #       
+        # to create a temporary GAF table : gafAnnotations
+        # i.e., bcp the mgi-GAF file into the temporary GAF table
+        #
+
+        # this must be in sync with gaf-version: 2.2
+        # the ** are the columns used in this report
+        #!1  DB
+        #!2  **DB Object ID (MGI ID)
+        #!3  DB Object Symbol
+        #!4  **Qualifier
+        #!5  **GO ID
+        #!6  **DB:Reference (|DB:Reference)
+        #!7  **Evidence Code              
+        #!8  **With (or) From             
+        #!9  Aspect
+        #!10 DB Object Name
+        #!11 DB Object Synonym (|Synonym)
+        #!12 DB Object Type
+        #!13 Taxon(|taxon)
+        #!14 Date
+        #!15 **Assigned By                
+        #!16 Annotation Extension
+        #!17 **Gene Product Form ID (proteoform)
+
+        db.sql('drop table if exists gafAnnotations;', None)
+        db.sql('''
+        create table gafAnnotations (
+                db text,
+                mgiid text,
+                symbol text,
+                qualifier text,
+                goid text,
+                refs text,
+                evidenceCode text,
+                inferredFrom text,
+                aspect text,
+                name text,
+                synonyms text,
+                dbType text,
+                taxon text,
+                dbDate text,
+                assignedBy text,
+                extensions text,
+                proteoform text
+        );
+        ''', None)
+        db.commit()
+        gafFileName = os.environ['QCREPORTDIR'] + '/output/gene_association.mgi'
+        db.bcp(gafFileName, 'gafAnnotations')
+        db.commit()
+        db.sql('create index gaf_idx1 on gafAnnotations (mgiid)', None)
+        db.sql('create index gaf_idx2 on gafAnnotations (goid)', None)
+
 def createTempTables():
         #
         # validMarkers    : distinct set of markers used for all reports
@@ -50,53 +112,6 @@ def createTempTables():
         #
         # else predicatedGene = No
         #
-
-        #!1  DB
-        #!2  DB Object ID
-        #!3  DB Object Symbol
-        #!4  Qualifier
-        #!5  GO ID
-        #!6  DB:Reference (|DB:Reference)
-        #!7  Evidence Code
-        #!8  With (or) From
-        #!9  Aspect
-        #!10 DB Object Name
-        #!11 DB Object Synonym (|Synonym)
-        #!12 DB Object Type
-        #!13 Taxon(|taxon)
-        #!14 Date
-        #!15 Assigned By
-        #!16 Annotation Extension
-        #!17 Gene Product Form ID
-
-        #db.sql('drop table if exists gafAnnotations;', None)
-        #db.sql('''
-        #create table gafAnnotations (
-        #        db text,
-        #        mgiid text,
-        #        dbSymbol text,
-        #        qualifier text,
-        #        goid text,
-        #        dbRefs text,
-        #        evidenceCode text,
-        #        inferredFrom text,
-        #        aspect text,
-        #        dbName text,
-        #        dbSynonyms text,
-        #        dbType text,
-        #        taxon text,
-        #        dbDate text,
-        #        assignedBy text,
-        #        extensions text,
-        #        proteoform text
-        #);
-        #''', None)
-        #db.commit()
-        #gafFileName = os.environ['QCREPORTDIR'] + '/output/gene_association.mgi'
-        #db.bcp(gafFileName, 'gafAnnotations')
-        #db.commit()
-        #db.sql('create index gaf_idx1 on gafAnnotations (mgiid)', None)
-        #db.sql('create index gaf_idx2 on gafAnnotations (goid)', None)
 
         db.sql('''
                 WITH markers AS (
@@ -172,18 +187,18 @@ def createTempTables():
 
         db.sql('create index validPredicted_idx on validPredicted (mgiid)', None)
 
-        # interested in distinct annotations
-        # from the GAF (gene_association.mgi)
-        #2 = Marker ID          
-        #4 = Qualifier          
-        #5 = GO ID              
-        #6 = Reference          
-        #7 = Evidence code      
-        #8 = Inferred from      
-        #17 = Proteoform
+        # interested in distinct annotations using these columns:
+        #!2  **DB Object ID (MGI ID)
+        #!4  **Qualifier
+        #!5  **GO ID
+        #!6  **DB:Reference (|DB:Reference)
+        #!7  **Evidence Code              
+        #!8  **With (or) From             
+        #!15 **Assigned By                
+        #!17 **Gene Product Form ID (proteoform)
 
         db.sql('''
-                select distinct gaf.mgiid, gaf.goid, gaf.dbRefs, gaf.qualifier, gaf.evidenceCode, gaf.inferredFrom, gaf.proteoform, gaf.assignedBy,
+                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
@@ -201,13 +216,24 @@ def createTempTables():
         db.sql('create index validAnnotations_idx1 on validAnnotations (mgiid)', None)
         db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
 
-def goSummary():
+def processSummary():
         #
         # GO Ontology Summary
         # number of GO terms per ontology
         # number of GO terms per ontology used in MGI
         #
 
+        fp.write('includes: all GO annotations' + 2*CRT)
+        fp.write('\'Predicted genes\' are those that:' + CRT)
+        fp.write('- have a name that starts with the words \'gene model\'' + CRT)
+        fp.write('- have a name that starts with the words \'predicted gene\'' + CRT)
+        fp.write('- have a name that starts with the words \'gene trap\'' + CRT)
+        fp.write('- have a symbol that starts with the word \'ORF\'' + CRT)
+        fp.write('- have a symbol that is a single letter followed by up to 5 numbers, for example \'a12345\'' + CRT)
+        fp.write('- have a symbol that is two letters followed by up to 5 numbers, for example \'ab12345\'' + CRT)
+        fp.write(CRT)
+        fp.write('This report is best viewed by importing into Excel')
+        fp.write(2*CRT)
         fp.write(4*TAB + 'Biological Process' + TAB + 'Cellular Component' + TAB + 'Molecular Function' + CRT)
 
         results = db.sql('''
@@ -261,18 +287,38 @@ def processDag(results):
         #print(dagResults)
         return dagResults
 
-def getExperimental():
+def processExperimental():
         #
         # classification: Experimental
         #
 
+        fp.write(str.ljust('Annotation Category', 25) + TAB)
+        fp.write('GO_REF' + TAB)
+        fp.write('Contribor, Feature Type, or Summary row description' + TAB)
+        fp.write('Total Number of Genes Annotated:' + TAB)
+        fp.write('Biological Process' + TAB)
+        fp.write('Cellular Component' + TAB)
+        fp.write('Molecular Funcation' + TAB)
+        fp.write('Obsolete' + TAB)
+        fp.write('Total Number of Predicted Genes Annotated:' + TAB)
+        fp.write('Biological Process' + TAB)
+        fp.write('Cellular Component' + TAB)
+        fp.write('Molecular Funcation' + TAB)
+        fp.write('Obsolete' + TAB)
+        fp.write('Total Number of Annotations:' + TAB)
+        fp.write('Biological Process' + TAB)
+        fp.write('Cellular Component' + TAB)
+        fp.write('Molecular Funcation' + TAB)
+        fp.write('Obsolete' + TAB)
+        fp.write('Classification Axis' + TAB)
+        fp.write('Sorting Classification' + CRT)
         fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
 
-        getExperimentalGene()
-        getExperimentalPredicted()
-        getExperimentalTotal()
+        processExperimentalGene()
+        processExperimentalPredicted()
+        processExperimentalTotal()
 
-def getExperimentalGene():
+def processExperimentalGene():
         global totalGene, dagGene, totalSummary
 
         print('DEFGH,4-8  : Total # of Genes')
@@ -333,7 +379,7 @@ def getExperimentalGene():
         ''', 'auto')
         dagGene = processDag(results)
 
-def getExperimentalPredicted():
+def processExperimentalPredicted():
         global totalPredicted, dagPredicted, totalSummary
 
         print('IJKLM,9-13 : Total # of Predicted Genes')
@@ -395,7 +441,7 @@ def getExperimentalPredicted():
         ''', 'auto')
         dagPredicted = processDag(results)
 
-def getExperimentalTotal():
+def processExperimentalTotal():
         global totalAll, dagAll, totalSummary
 
         print('NOPQR,14-18: Total # of Annotations')
@@ -534,45 +580,11 @@ def getExperimentalTotal():
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-
-fp.write('includes: all GO annotations' + 2*CRT)
-fp.write('\'Predicted genes\' are those that:' + CRT)
-fp.write('- have a name that starts with the words \'gene model\'' + CRT)
-fp.write('- have a name that starts with the words \'predicted gene\'' + CRT)
-fp.write('- have a name that starts with the words \'gene trap\'' + CRT)
-fp.write('- have a symbol that starts with the word \'ORF\'' + CRT)
-fp.write('- have a symbol that is a single letter followed by up to 5 numbers, for example \'a12345\'' + CRT)
-fp.write('- have a symbol that is two letters followed by up to 5 numbers, for example \'ab12345\'' + CRT)
-fp.write(CRT)
-fp.write('This report is best viewed by importing into Excel')
-fp.write(2*CRT)
-
+createTempGAFTable()
 createTempTables()
-goSummary()
-
-fp.write(str.ljust('Annotation Category', 25) + TAB)
-fp.write('GO_REF' + TAB)
-fp.write('Contribor, Feature Type, or Summary row description' + TAB)
-fp.write('Total Number of Genes Annotated:' + TAB)
-fp.write('Biological Process' + TAB)
-fp.write('Cellular Component' + TAB)
-fp.write('Molecular Funcation' + TAB)
-fp.write('Obsolete' + TAB)
-fp.write('Total Number of Predicted Genes Annotated:' + TAB)
-fp.write('Biological Process' + TAB)
-fp.write('Cellular Component' + TAB)
-fp.write('Molecular Funcation' + TAB)
-fp.write('Obsolete' + TAB)
-fp.write('Total Number of Annotations:' + TAB)
-fp.write('Biological Process' + TAB)
-fp.write('Cellular Component' + TAB)
-fp.write('Molecular Funcation' + TAB)
-fp.write('Obsolete' + TAB)
-fp.write('Classification Axis' + TAB)
-fp.write('Sorting Classification' + CRT)
-
-getExperimental()
-
-#db.sql('drop table if exists gafAnnotations;', None)
-
+processSummary()
+processExperimental()
+#drop the temporary GAF table
+db.sql('drop table if exists gafAnnotations;', None)
 reportlib.finish_nonps(fp)
+
