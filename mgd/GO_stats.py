@@ -11,7 +11,6 @@
 # S,19   : Classification Axis
 # T,20   : Sorting Classification
 # 
-#
 # This report is a set of counts of the mgi-GAF file
 #
 '''
