@@ -86,7 +86,7 @@ def createTempGAFTable():
         );
         ''', None)
         db.commit()
-        gafFileName = os.environ['QCREPORTDIR'] + '/output/gene_association.mgi'
+        gafFileName = os.environ['QCREPORTDIR'] + '/output/GO_MGIGAF.rpt'
         db.bcp(gafFileName, 'gafAnnotations')
         db.commit()
         db.sql('create index gaf_idx1 on gafAnnotations (mgiid)', None)
