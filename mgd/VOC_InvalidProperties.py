@@ -31,7 +31,7 @@ db.setTrace()
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 fp.write('\nInvalid "Properties" Values in GO Annotations; Terms of interest do not exist in MGI' + reportlib.CRT)
-fp.write('\nTerms of interest:  CL, GO, MA, MGI' + 2 * reportlib.CRT
+fp.write('\nTerms of interest:  CL, GO, MA, MGI' + 2 * reportlib.CRT)
 rows = 0
 
 #
