@@ -223,7 +223,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Report: Archive of GO Statistics and Reports</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Report: Combined QC Report</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">Report: GO Statistics</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_MGIGAF.rpt">Report: GO MGI GAF</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">Report: IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(dph, dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidInferred.rpt">Report: Invalid "Inferred From" Values in GO Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Report: Invalid "Properties" Values in GO Annotations</A>
