@@ -165,7 +165,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_Development.rpt">Development papers to full code</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_GeneExprPatterns.rpt">Gene Expr Patterns papers to full code</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_EarlyEmbPapers.rpt">Early embryonic expression papers</A>
-<LI><A HREF="/data/reports/qcreports_db/output/WF_GXD_secondary.rpt">GXD secondary for very short papers</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_StatsMonthly.rpt">GXD Monthly Statistics by Assay</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_DistinctAge.sql.rpt">Distinct Age, AgeMin, AgeMax</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_GenotypeHemi.sql.rpt">Hemizygous Genotype Check</A>
