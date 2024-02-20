@@ -15,8 +15,8 @@ and va._object_key = h._marker_key
 and h._marker_event_key in (106563607, 106563605, 106563606) -- allele of, rename, merged
 and h._marker_event_key = t._term_key
 and h._history_key = mhist._marker_key
---and h.event_date >= '03-28-22'
---and h.event_date <= now()
+and h.event_date >= '03-28-22'
+and h.event_date <= now()
 and h.event_date between (now() + interval '-31 day') and now()
 and m1._marker_key = a1._object_key
 and a1._mgitype_key = 2
@@ -34,8 +34,8 @@ union
 select h.event, h.history as oldSymbol, a.accid as oldID, null as currentSymbol,  null as currentID, CAST(h.event_date AS DATE) as eventDate 
 from mrk_history_view h, acc_accession a
 where h._marker_event_key in (106563609) -- deleted
---and h.event_date >= '03-28-22'
---and h.event_date <= now()
+and h.event_date >= '03-28-22'
+and h.event_date <= now()
 and h.event_date between (now() + interval '-31 day') and now()
 and a._object_key = h._history_key
 and a._mgitype_key = 2
