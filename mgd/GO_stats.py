@@ -127,6 +127,7 @@ def createTempTables():
                         and m._organism_key = 1
                         and m._marker_status_key = 1
                         and exists (select 1 from gafAnnotations gaf where gaf.mgiid = a.accid)
+                        and m.symbol in ('Trp53')
                 )
                 select m.*, 'Yes' as predictedGene
                 into temporary table validMarkers
@@ -554,19 +555,46 @@ def processExperimentalTotal():
                 fp.write(str(totalSummary['H'][0]) + TAB)
 
         fp.write(str(totalSummary['I'][0]) + TAB)
-        fp.write(str(totalSummary['J'][0]) + TAB)
-        fp.write(str(totalSummary['K'][0]) + TAB)
-        fp.write(str(totalSummary['L'][0]) + TAB)
+
+        if 'J' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['J'][0]) + TAB)
+
+        if 'K' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['K'][0]) + TAB)
+
+        if 'L' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['L'][0]) + TAB)
 
         if 'M' not in totalSummary:
                 fp.write('0' + TAB)
         else:
                 fp.write(str(totalSummary['M'][0]) + TAB)
 
-        fp.write(str(totalSummary['N'][0]) + TAB)
-        fp.write(str(totalSummary['O'][0]) + TAB)
-        fp.write(str(totalSummary['P'][0]) + TAB)
-        fp.write(str(totalSummary['Q'][0]) + TAB)
+        if 'N' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['N'][0]) + TAB)
+
+        if 'O' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['O'][0]) + TAB)
+
+        if 'P' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['P'][0]) + TAB)
+
+        if 'Q' not in totalSummary:
+                fp.write('0' + TAB)
+        else:
+                fp.write(str(totalSummary['Q'][0]) + TAB)
 
         if 'R' not in totalSummary:
                 fp.write('0' + TAB)
