@@ -544,64 +544,16 @@ def processExperimentalTotal():
                 fp.write('Evidence type' + TAB + 'Experimental' + CRT)
 
         fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
-        fp.write(str(totalSummary['D'][0]) + TAB)
-        fp.write(str(totalSummary['E'][0]) + TAB)
-        fp.write(str(totalSummary['F'][0]) + TAB)
-        fp.write(str(totalSummary['G'][0]) + TAB)
 
-        if 'H' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['H'][0]) + TAB)
-
-        fp.write(str(totalSummary['I'][0]) + TAB)
-
-        if 'J' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['J'][0]) + TAB)
-
-        if 'K' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['K'][0]) + TAB)
-
-        if 'L' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['L'][0]) + TAB)
-
-        if 'M' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['M'][0]) + TAB)
-
-        if 'N' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['N'][0]) + TAB)
-
-        if 'O' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['O'][0]) + TAB)
-
-        if 'P' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['P'][0]) + TAB)
-
-        if 'Q' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['Q'][0]) + TAB)
-
-        if 'R' not in totalSummary:
-                fp.write('0' + TAB)
-        else:
-                fp.write(str(totalSummary['R'][0]) + TAB)
+        outputCols = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R']
+        for c in outputCols: 
+                if c not in totalSummary:
+                        fp.write('0' + TAB)
+                else:
+                        fp.write(str(totalSummary[c][0]) + TAB)
 
         fp.write('Evidence type' + TAB + 'Summary Row' + CRT)
+
 #
 # Main
 #
