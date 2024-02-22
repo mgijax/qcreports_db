@@ -60,7 +60,7 @@ def createTempGAFTable():
         #!13 Taxon(|taxon)
         #!14 Date
         #!15 **Assigned By                
-        #!16 Annotation Extension
+        #!16 **Annotation Extension
         #!17 **Gene Product Form ID (proteoform)
 
         db.sql('drop table if exists gafAnnotations;', None)
@@ -127,7 +127,7 @@ def createTempTables():
                         and m._organism_key = 1
                         and m._marker_status_key = 1
                         and exists (select 1 from gafAnnotations gaf where gaf.mgiid = a.accid)
-                        --and m.symbol in ('Trp53')
+                        --and m.symbol in ('Nrg1')
                 )
                 select m.*, 'Yes' as predictedGene
                 into temporary table validMarkers
@@ -195,10 +195,12 @@ def createTempTables():
         #!7  **Evidence Code              
         #!8  **With (or) From             
         #!15 **Assigned By                
+        #!16 **Annotation Extension
         #!17 **Gene Product Form ID (proteoform)
 
         db.sql('''
-                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy, gaf.proteoform,
+                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy, gaf.extensions, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
