@@ -127,7 +127,7 @@ def createTempTables():
                         and m._organism_key = 1
                         and m._marker_status_key = 1
                         and exists (select 1 from gafAnnotations gaf where gaf.mgiid = a.accid)
-                        and m.symbol in ('Trp53')
+                        --and m.symbol in ('Trp53')
                 )
                 select m.*, 'Yes' as predictedGene
                 into temporary table validMarkers
