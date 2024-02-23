@@ -39,14 +39,7 @@ cd ${QCWEEKLY}
 
 foreach i (*GO*.py)
     echo `date`: $i | tee -a ${LOG}
-    if ( $i == "GO_stats.py" ) then
-        mv -f ${QCOUTPUTDIR}/`basename $i py`[0-9]*.rpt ${QCGOARCHIVE}
-        rm -rf ${QCOUTPUTDIR}/`basename $i py`current.rpt
-        ${PYTHON} $i >>& ${LOG}
-        ln -s ${QCOUTPUTDIR}/`basename $i py`${DATE}.rpt ${QCOUTPUTDIR}/`basename $i py`current.rpt
-    else
-         ${PYTHON} $i >>& ${LOG}
-    endif
+    ${PYTHON} $i >>& ${LOG}
 end
 
 cd ${QCMONTHLY}
