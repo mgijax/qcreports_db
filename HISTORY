@@ -1,8 +1,15 @@
+
 TAG: qcreports_db-6-0-23-
 DATE: 02/19/2024
 STAFF: lec
 wts2-1155/GOC taking over GOA mouse, GOA human, etc.
 wts2-1412/retire WF_GXD_secondary.rpt QC
+
+TAG: qcreports_db-6-0-23-3
+DATE: 02/27/2024
+STAFF: lec
+wts2-1412/fl2-758/retire WF_GXD_secondary.rpt QC
+#       deleted:    weekly/WF_GXD_secondary.py
 
 TAG: qcreports_db-6-0-23-2
 DATE: 02/01/2024
