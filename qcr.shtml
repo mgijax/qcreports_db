@@ -360,6 +360,8 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/egload/index.html">EntrezGene Load Mouse</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/uniprotload">UniProt Load Data and Logs</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/genemodelload/index.html">Gene Model/Association Loads</A> <B>(yz)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A> <B>(yz)</B>
+<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A> <B>(yz)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MAindex.html">Adult Mouse Anatomy Vocabulary/DAG Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/mp_emapaload/index.html">MP/EMAPA Relationships Load</A> <B>(terryh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
@@ -387,9 +389,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
-<LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
 </OL>
 
 <HR>
