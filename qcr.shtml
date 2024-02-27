@@ -384,7 +384,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/mcvload/index.html">MCV Annotation Load</A>
 <LI><A HREF="/data/loads/mgi/mrkcacheload/logs/mrkmcv.curator.log">MCV Cache Load</A>
 <LI><A HREF="/usrlocalmgi/live/dataload/ccdsload/index.html">CCDS Load</A>
-<LI><A HREF="/usrlocalmgi/live/dataload/genmapload/index.html">Genetic Map Load</A>
 </OL>
 
 <HR>
