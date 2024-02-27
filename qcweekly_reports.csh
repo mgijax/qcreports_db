@@ -52,9 +52,6 @@ foreach i (*.py)
         rm -rf $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
         ${PYTHON}  $i >>& ${LOG}
         ln -s $QCOUTPUTDIR/`basename $i py`jrs.${DATE}.rpt $QCOUTPUTDIR/`basename $i py`jrs.current.rpt
-    else if ( $i == "WF_GXD_secondary.py" ) then
-        ${PYTHON} $i >>& ${LOG}
-        cp -p ${QCOUTPUTDIR}/WF_GXD_secondary.rpt ${QCGXDARCHIVE}/WF_GXD_secondary.`date +%Y%m%d`
     else
         ${PYTHON} $i >>& ${LOG}
     endif
