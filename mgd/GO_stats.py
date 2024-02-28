@@ -2,37 +2,41 @@
 #
 # GO_stats.py
 #
-# 1    : Annotation Category
-# 2    : GO_REF
-# 3    : Contribor, Feature Type, or Summary row description
-#
-# Section III(3) - Counts by "Assigned By"
-#
-# DEFGH,4-8  : Total # of Genes
-# IJKLM,9-13 : Total # of Predicted Genes
-# NOPQR,14-18: Total # of Annotations
-# S,19   : Classification Axis
-# T,20   : Sorting Classification
+# Section I   - GO Ontology Summary      : processSection1()
+# Section II  - Counts by Features types : processSection2()
+# Section III - Counts by "Assigned By"  : processSection3()
+#       DEFGH,4-8   : Total # of Genes
+#       IJKLM,9-13  : Total # of Predicted Genes
+#       NOPQR,14-18 : Total # of Annotations
+#       S,19        : Classification Axis
+#       T,20        : Sorting Classification
 # 
-# III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-# III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
-# III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
-# III.D - Total RCA Annotations by Contributor (assigned by)
-# III.E - Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
-# III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+#       A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
+#       B: High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+#       C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
+#       D: Total RCA Annotations by Contributor (assigned by)
+#       E: Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
+#       F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+#       G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
+#       H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
+#       I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
+#       J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
 #
-# This report is a set of counts of the mgi-GAF file
+# This report:
+#       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
+#       . is a set of counts taken from the GO_MGIGAF.rpt file
 #
-# interested in distinct annotations using these columns:
-# !2  **DB Object ID (MGI ID)
-# !4  **Qualifier
-# !5  **GO ID
-# !6  **DB:Reference (|DB:Reference)
-# !7  **Evidence Code              
-# !8  **With (or) From             
-# !15 **Assigned By                
-# !16 **Annotation Extension
-# !17 **Gene Product Form ID (proteoform)
+# The GO_MGIGAF.rpt file is read into temp table 'gafAnnotations': createTempGAF()
+# columns used in gafAnnotations to generate the Annotation counts: using "group" by clause
+#       !2  **DB Object ID (MGI ID)
+#       !4  **Qualifier
+#       !5  **GO ID
+#       !6  **DB:Reference (|DB:Reference)
+#       !7  **Evidence Code              
+#       !8  **With (or) From             
+#       !15 **Assigned By                
+#       !16 **Annotation Extension
+#       !17 **Gene Product Form ID (proteoform)
 #
 '''
  
@@ -53,6 +57,10 @@ dagPredicted = {}
 totalAll = {}
 dagAll = {}
 totalSummary = {}
+
+#
+# start: creating temp tables
+#
 
 def createTempGAF():
         #
@@ -173,21 +181,19 @@ def createTempMarkers():
 
 def createTempSection3(subsection):
         #
+        # section 3 : create the temp tables for given susection A-J
+        #
         # III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
         # III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
         # III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
         # III.D - Total RCA Annotations by Contributor (assigned by)
         # III.E - Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
         # III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+        # III.G - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
+        # III.H - Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
+        # III.I - Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
+        # III.J - IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
         #
-        # not used:
-        # IAS          |   7428291
-        # IAS          |   7428291
-        # IBA          |   7428292
-        # IBD          |   7428293
-        # IEA          |       115
-        # IRD          |   7428290
-
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
         # validAnnoations : set of annotations by dag
@@ -200,26 +206,33 @@ def createTempSection3(subsection):
         # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
         if subsection == 'A':
                 addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
-
         # HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
                 addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171)'
-                
         # IC|25238 TAS|113 NAS|116
         elif subsection == 'C':
                 addSQL = 'and ec._term_key in (25238,113,116)'
-
         # RCA|514597
         elif subsection == 'D':
                 addSQL = 'and ec._term_key in (514597)'
-
         # ND|118
         elif subsection == 'E':
                 addSQL = 'and ec._term_key in (118)'
-
         # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
+        # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        elif subsection == 'G':
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
+        # ISO|3251466
+        elif subsection == 'H':
+                addSQL = 'and ec._term_key in (3251466)'
+        # IBA|7428292
+        elif subsection == 'I':
+                addSQL = 'and ec._term_key in (7428292)'
+        # IEA|115
+        elif subsection == 'J':
+                addSQL = 'and ec._term_key in (115)'
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy, d._dag_key, d.name
@@ -255,6 +268,23 @@ def createTempSection3(subsection):
 
         db.sql('create index validPredicted_idx on validPredicted (mgiid)', None)
 
+        # 
+        # select the columns from gafAnnotations that are needed to determine an Annotation row
+        # the Annotation rows will be counted by DAG name/assignedBy
+        # to change the count set/algorithm, add or remove the proper gafAnnotations column
+        #
+        # the current set of gafAnnotations columns used to count the Annotations is:
+        #       !2  **DB Object ID (MGI ID)
+        #       !4  **Qualifier
+        #       !5  **GO ID
+        #       !6  **DB:Reference (|DB:Reference)
+        #       !7  **Evidence Code              
+        #       !8  **With (or) From             
+        #       !15 **Assigned By                
+        #       !16 **Annotation Extension
+        #       !17 **Gene Product Form ID (proteoform)
+        #       + _dag_key, name
+        #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
                         gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy, gaf.extensions, gaf.proteoform,
@@ -275,7 +305,15 @@ def createTempSection3(subsection):
         db.sql('create index validAnnotations_idx1 on validAnnotations (mgiid)', None)
         db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
 
-def processSummary():
+#
+# end: creating temp tables
+#
+
+#
+# start: processing
+#
+
+def processSection1():
         #
         # GO Ontology Summary
         # number of GO terms per ontology
@@ -329,8 +367,16 @@ def processSummary():
                 fp.write(TAB + str(r['counter']))
         fp.write(2*CRT)
 
+def processSection2():
+        #
+        # Counts by Features types
+        #
+
+        return
+
 def processDag(results):
         #
+        # used by processSection3()
         # load the dagResults by assignedBy and return
         #
 
@@ -408,7 +454,35 @@ def processSection3():
         processSection3Predicted()
         processSection3Total('F')
 
+        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor' + CRT)
+        createTempSection3('G')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('G')
+
+        fp.write(CRT + 'Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor' + CRT)
+        createTempSection3('H')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('H')
+
+        fp.write(CRT + 'Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor' + CRT)
+        createTempSection3('I')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('I')
+
+        fp.write(CRT + 'IEA methods (IEA using a GO_REF) by GO_REF & Contributor' + CRT)
+        createTempSection3('J')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('J')
+
 def processSection3Gene():
+        #
+        # section 3 : process the genes : validGenes
+        #
+
         global totalGene, dagGene, totalSummary
 
         print('DEFGH,4-8  : Total # of Genes')
@@ -470,6 +544,10 @@ def processSection3Gene():
         dagGene = processDag(results)
 
 def processSection3Predicted():
+        #
+        # section 3 : process the predicted genes : validPredicted
+        #
+
         global totalPredicted, dagPredicted, totalSummary
 
         print('IJKLM,9-13 : Total # of Predicted Genes')
@@ -532,6 +610,11 @@ def processSection3Predicted():
         dagPredicted = processDag(results)
 
 def processSection3Total(subsection):
+        #
+        # section 3 : process the total annotations : validAnnotations
+        # where subsection in A-J
+        #
+
         global totalAll, dagAll, totalSummary
 
         print('NOPQR,14-18: Total # of Annotations')
@@ -607,6 +690,14 @@ def processSection3Total(subsection):
                 evidenceType = 'Root'
         elif subsection == 'F':
                 evidenceType = 'Manual Sequence'
+        elif subsection == 'G':
+                evidenceType = 'Manual Sequence'
+        elif subsection == 'H':
+                evidenceType = 'Automated orthology'
+        elif subsection == 'I':
+                evidenceType = 'Phylogenetic'
+        elif subsection == 'J':
+                evidenceType = 'IEA methods'
 
         # for each assignedBy
         #       DEFGH,4-8  : Total # of Genes
@@ -658,6 +749,14 @@ def processSection3Total(subsection):
                 fp.write(2*TAB + 'Total Root Annotations' + TAB)
         elif subsection == 'F':
                 fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
+        elif subsection == 'G':
+                fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
+        elif subsection == 'H':
+                fp.write(2*TAB + 'Total Automated orthology Annotations' + TAB)
+        elif subsection == 'I':
+                fp.write(2*TAB + 'Total Phylogenetic Annotations' + TAB)
+        elif subsection == 'J':
+                fp.write(2*TAB + 'Total IEA methods' + TAB)
 
         outputCols = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R']
         for c in outputCols: 
@@ -669,15 +768,22 @@ def processSection3Total(subsection):
         fp.write('Evidence type' + TAB + 'Summary Row' + CRT)
 
 #
+# end: processing
+#
+
+#
 # Main
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
+# comment out during testing if you don't want to rebuild the gaf temp table each time
 createTempGAF()
 createTempMarkers()
-processSummary()
+processSection1()
+#processSection2()
 processSection3()
-#drop the temporary GAF table
+# comment out during testing if you don't want to rebuild the gaf temp table each time
+# drop the temporary GAF table
 db.sql('drop table if exists gafAnnotations;', None)
 reportlib.finish_nonps(fp)
 
