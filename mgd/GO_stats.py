@@ -5,13 +5,34 @@
 # 1    : Annotation Category
 # 2    : GO_REF
 # 3    : Contribor, Feature Type, or Summary row description
+#
+# Section III(3) - Counts by "Assigned By"
+#
 # DEFGH,4-8  : Total # of Genes
 # IJKLM,9-13 : Total # of Predicted Genes
 # NOPQR,14-18: Total # of Annotations
 # S,19   : Classification Axis
 # T,20   : Sorting Classification
 # 
+# III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
+# III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+# III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
+# III.D - Total RCA Annotations by Contributor (assigned by)
+# III.E - Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
+# III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+#
 # This report is a set of counts of the mgi-GAF file
+#
+# interested in distinct annotations using these columns:
+# !2  **DB Object ID (MGI ID)
+# !4  **Qualifier
+# !5  **GO ID
+# !6  **DB:Reference (|DB:Reference)
+# !7  **Evidence Code              
+# !8  **With (or) From             
+# !15 **Assigned By                
+# !16 **Annotation Extension
+# !17 **Gene Product Form ID (proteoform)
 #
 '''
  
@@ -33,7 +54,7 @@ totalAll = {}
 dagAll = {}
 totalSummary = {}
 
-def createTempGAFTable():
+def createTempGAF():
         #
         # Use the mgi-GAF file:
         #       see reports_db/daily/GO_gene_association.py
@@ -92,12 +113,9 @@ def createTempGAFTable():
         db.sql('create index gaf_idx1 on gafAnnotations (mgiid)', None)
         db.sql('create index gaf_idx2 on gafAnnotations (goid)', None)
 
-def createTempTables():
+def createTempMarkers():
         #
         # validMarkers    : distinct set of markers used for all reports
-        # validGenes      : set of marker by dag where predited = 'No'
-        # validPredicted  : set of marker by dag where predicted = 'Yes'
-        # validAnnoations : set of annotations by dag
         #
         # mouse markers that contains GO Annotations (_vocab_key = 1000)
         #
@@ -153,6 +171,52 @@ def createTempTables():
 
         db.sql('create index validMarkers_idx on validMarkers (mgiid)', None)
 
+def createTempSection3(subsection):
+        #
+        # III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
+        # III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+        # III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
+        # III.D - Total RCA Annotations by Contributor (assigned by)
+        # III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+        #
+        # not used:
+        # IAS          |   7428291
+        # IAS          |   7428291
+        # IBA          |   7428292
+        # IBD          |   7428293
+        # IEA          |       115
+        # IRD          |   7428290
+        # ND           |       118
+
+        # validGenes      : set of marker by dag where predited = 'No'
+        # validPredicted  : set of marker by dag where predicted = 'Yes'
+        # validAnnoations : set of annotations by dag
+        #
+
+        db.sql('drop table if exists validGenes;', None)
+        db.sql('drop table if exists validPredicted;', None)
+        db.sql('drop table if exists validAnnotations;', None)
+
+        # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
+        if subsection == 'A':
+                addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
+
+        # HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
+        elif subsection == 'B':
+                addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171)'
+                
+        # IC|25238 TAS|113 NAS|116
+        elif subsection == 'C':
+                addSQL = 'and ec._term_key in (25238,113,116)'
+
+        # RCA|514597
+        elif subsection == 'D':
+                addSQL = 'and ec._term_key in (514597)'
+
+        # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        elif subsection == 'F':
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
+
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy, d._dag_key, d.name
                 into temporary table validGenes
@@ -161,12 +225,12 @@ def createTempTables():
                 and a._logicaldb_key = 31
                 and gaf.evidenceCode = ec.abbreviation
                 and ec._vocab_key = 3
-                and ec._term_key in (4003114,109,117,112,110,111)
+                %s
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
                 and d._dag_key in (1,2,3,4)
                 and exists (select 1 from validMarkers m where gaf.mgiid = m.mgiid and m.predictedGene = 'No')
-                ''', None)
+                ''' % (addSQL), None)
 
         db.sql('create index validGenes_idx on validGenes (mgiid)', None)
 
@@ -178,25 +242,14 @@ def createTempTables():
                 and a._logicaldb_key = 31
                 and gaf.evidenceCode = ec.abbreviation
                 and ec._vocab_key = 3
-                and ec._term_key in (4003114,109,117,112,110,111)
+                %s
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
                 and d._dag_key in (1,2,3,4)
                 and exists (select 1 from validMarkers m where gaf.mgiid = m.mgiid and m.predictedGene = 'Yes')
-                ''', None)
+                ''' % (addSQL), None)
 
         db.sql('create index validPredicted_idx on validPredicted (mgiid)', None)
-
-        # interested in distinct annotations using these columns:
-        #!2  **DB Object ID (MGI ID)
-        #!4  **Qualifier
-        #!5  **GO ID
-        #!6  **DB:Reference (|DB:Reference)
-        #!7  **Evidence Code              
-        #!8  **With (or) From             
-        #!15 **Assigned By                
-        #!16 **Annotation Extension
-        #!17 **Gene Product Form ID (proteoform)
 
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
@@ -208,12 +261,12 @@ def createTempTables():
                 and a._logicaldb_key = 31
                 and gaf.evidenceCode = ec.abbreviation
                 and ec._vocab_key = 3
-                and ec._term_key in (4003114,109,117,112,110,111)
+                %s
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
                 and d._dag_key in (1,2,3,4)
                 and exists (select 1 from validMarkers m where gaf.mgiid = m.mgiid)
-                ''', None)
+                ''' % (addSQL), None)
 
         db.sql('create index validAnnotations_idx1 on validAnnotations (mgiid)', None)
         db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
@@ -289,7 +342,7 @@ def processDag(results):
         #print(dagResults)
         return dagResults
 
-def processExperimental():
+def processSection3():
         #
         # classification: Experimental
         #
@@ -314,13 +367,38 @@ def processExperimental():
         fp.write('Obsolete' + TAB)
         fp.write('Classification Axis' + TAB)
         fp.write('Sorting Classification' + CRT)
+
         fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
+        createTempSection3('A')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('A')
 
-        processExperimentalGene()
-        processExperimentalPredicted()
-        processExperimentalTotal()
+        fp.write(CRT + 'High-throughput Annotations (HDA, HMP, HGI, or HEP) by Contributor' + CRT)
+        createTempSection3('B')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('B')
 
-def processExperimentalGene():
+        fp.write(CRT + 'Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor' + CRT)
+        createTempSection3('C')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('C')
+
+        fp.write(CRT + 'Total RCA Annotations by Contributor' + CRT)
+        createTempSection3('D')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('D')
+
+        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor' + CRT)
+        createTempSection3('F')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('F')
+
+def processSection3Gene():
         global totalGene, dagGene, totalSummary
 
         print('DEFGH,4-8  : Total # of Genes')
@@ -381,7 +459,7 @@ def processExperimentalGene():
         ''', 'auto')
         dagGene = processDag(results)
 
-def processExperimentalPredicted():
+def processSection3Predicted():
         global totalPredicted, dagPredicted, totalSummary
 
         print('IJKLM,9-13 : Total # of Predicted Genes')
@@ -443,7 +521,7 @@ def processExperimentalPredicted():
         ''', 'auto')
         dagPredicted = processDag(results)
 
-def processExperimentalTotal():
+def processSection3Total(subsection):
         global totalAll, dagAll, totalSummary
 
         print('NOPQR,14-18: Total # of Annotations')
@@ -507,6 +585,17 @@ def processExperimentalTotal():
         dagAll = processDag(results)
         #print(dagAll)
 
+        if subsection == 'A':
+                evidenceType = 'Experimental'
+        elif subsection == 'B':
+                evidenceType = 'High-throughput'
+        elif subsection == 'C':
+                evidenceType = 'Curator/Author Statement'
+        elif subsection == 'D':
+                evidenceType = 'RCA'
+        elif subsection == 'F':
+                evidenceType = 'Manual Sequence'
+
         # for each assignedBy
         #       DEFGH,4-8  : Total # of Genes
         #       IJKLM,9-13 : Total # of Predicted Genes
@@ -543,9 +632,18 @@ def processExperimentalTotal():
                 else:
                         fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
 
-                fp.write('Evidence type' + TAB + 'Experimental' + CRT)
+                fp.write('Evidence type' + TAB + evidenceType + CRT)
 
-        fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
+        if subsection == 'A':
+                fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
+        elif subsection == 'B':
+                fp.write(2*TAB + 'Total High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP)' + TAB)
+        elif subsection == 'C':
+                fp.write(2*TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
+        elif subsection == 'D':
+                fp.write(2*TAB + 'Total Total RCA Annotations' + TAB)
+        elif subsection == 'F':
+                fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
 
         outputCols = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R']
         for c in outputCols: 
@@ -561,11 +659,11 @@ def processExperimentalTotal():
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-createTempGAFTable()
-createTempTables()
+#createTempGAF()
+createTempMarkers()
 processSummary()
-processExperimental()
+processSection3()
 #drop the temporary GAF table
-db.sql('drop table if exists gafAnnotations;', None)
+#db.sql('drop table if exists gafAnnotations;', None)
 reportlib.finish_nonps(fp)
 
