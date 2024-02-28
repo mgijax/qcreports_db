@@ -29,6 +29,13 @@
 # The GO_MGIGAF.rpt file is read into temp table 'gafAnnotations'      : createTempGAF()
 # Columns are used in gafAnnotations to generate the Annotation counts : createTempSection3()
 #
+# Contact person:  Karen.Christie@jax.org
+#
+# History:
+#
+# 02/28/2024    lec
+#       wts2-1155/GOC taking over GOA mouse, GOA human, etc.
+#
 '''
  
 import sys 
@@ -56,33 +63,33 @@ totalSummary = {}
 def createTempGAF():
         #
         # Use the mgi-GAF file:
-        #       gaf-version: 2.2
         #       os.environ['QCREPORTDIR'] + '/output/GO_MGIGAF.rpt'
         #       
         # to create a temporary GAF table : gafAnnotations
         # i.e., bcp the mgi-GAF file into the temporary GAF table
-        # if the GAF format changes, then the temp table format below may also have to change
+        # if the GAF format changes, then the gafAnnotations format may need to change
         #
-
         # this must be in sync with gaf-version: 2.2
         # the ** are the columns used in this report
-        #!1  DB
-        #!2  **DB Object ID (MGI ID)
-        #!3  DB Object Symbol
-        #!4  **Qualifier
-        #!5  **GO ID
-        #!6  **DB:Reference (|DB:Reference)
-        #!7  **Evidence Code              
-        #!8  **With (or) From             
-        #!9  Aspect
-        #!10 DB Object Name
-        #!11 DB Object Synonym (|Synonym)
-        #!12 DB Object Type
-        #!13 Taxon(|taxon)
-        #!14 Date
-        #!15 **Assigned By                
-        #!16 **Annotation Extension
-        #!17 **Gene Product Form ID (proteoform)
+        #
+        # !1  DB
+        # !2  **DB Object ID (MGI ID)
+        # !3  DB Object Symbol
+        # !4  **Qualifier
+        # !5  **GO ID
+        # !6  **DB:Reference (|DB:Reference)
+        # !7  **Evidence Code              
+        # !8  **With (or) From             
+        # !9  Aspect
+        # !10 DB Object Name
+        # !11 DB Object Synonym (|Synonym)
+        # !12 DB Object Type
+        # !13 Taxon(|taxon)
+        # !14 Date
+        # !15 **Assigned By                
+        # !16 **Annotation Extension
+        # !17 **Gene Product Form ID (proteoform)
+        #
 
         db.sql('drop table if exists gafAnnotations;', None)
         db.sql('''
@@ -115,7 +122,7 @@ def createTempGAF():
 
 def createTempMarkers():
         #
-        # validMarkers    : distinct set of markers used for all reports
+        # validMarkers : distinct set of markers used for this report
         #
         # mouse markers that contains GO Annotations (_vocab_key = 1000)
         #
@@ -173,7 +180,7 @@ def createTempMarkers():
 
 def createTempSection3(subsection):
         #
-        # section 3 : create the temp tables for given subsection A-J
+        # section 3: create the temp tables for given subsection A-J
         #
         # III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
         # III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
@@ -261,11 +268,10 @@ def createTempSection3(subsection):
         db.sql('create index validPredicted_idx on validPredicted (mgiid)', None)
 
         # 
-        # select the columns from gafAnnotations that are needed to determine an Annotation row
+        # select the columns from gafAnnotations that are needed to determine a distinct Annotation row
         # the Annotation rows will be counted by DAG name/assignedBy
-        # to change the count set/algorithm, add or remove the proper gafAnnotations column
+        # to change the distinct Annotation row logic, add or remove the proper gafAnnotations column to this set:
         #
-        # the current set of gafAnnotations columns used to count the Annotations is:
         #       !2  **DB Object ID (MGI ID)
         #       !4  **Qualifier
         #       !5  **GO ID
@@ -276,6 +282,8 @@ def createTempSection3(subsection):
         #       !16 **Annotation Extension
         #       !17 **Gene Product Form ID (proteoform)
         #       + _dag_key, name
+        #
+        # addSQL is used to determine the specific set of evidence codes used for a given A-J subsection
         #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
@@ -386,7 +394,18 @@ def processDag(results):
 
 def processSection3():
         #
-        # classification: Experimental
+        # Section III - Counts by "Assigned By"
+        #
+        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
+        # B: High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
+        # D: Total RCA Annotations by Contributor (assigned by)
+        # E: Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
+        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+        # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
+        # H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
+        # I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
+        # J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
         #
 
         fp.write(str.ljust('Annotation Category', 25) + TAB)
