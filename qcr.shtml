@@ -225,7 +225,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">Report: IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidInferred.rpt">Report: Invalid "Inferred From" Values in GO Annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Report: Invalid "Properties" Values in GO Annotations</A> <B>(ln)</B>
-<LI>(empty)</LI>
+<LI><A HREF="/usrlocalmgi/live/dataload/goload/index.html">GO Load</A> <B>(krc, ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A> <B>(krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_GO_FullCodeNoAnnot.rpt">Report: Papers marked as Full-coded with no GO annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A> <B></B>
@@ -367,7 +367,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/arrayexpload/index.html">Expression Atlas/ArrayExpress Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT GEO Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/GOindex.html">GO Vocabulary/DAG Load</A> <B>(ln)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/index.html">GO Load</A> <B>(krc, ln)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(ln)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A> <B>(mmh)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/OMIMindex.html">OMIM Vocabulary Load</A> <B>(smb)</B>
