@@ -173,7 +173,7 @@ def createTempMarkers():
 
 def createTempSection3(subsection):
         #
-        # section 3 : create the temp tables for given susection A-J
+        # section 3 : create the temp tables for given subsection A-J
         #
         # III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
         # III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
