@@ -659,11 +659,11 @@ def processSection3Total(subsection):
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-#createTempGAF()
+createTempGAF()
 createTempMarkers()
 processSummary()
 processSection3()
 #drop the temporary GAF table
-#db.sql('drop table if exists gafAnnotations;', None)
+db.sql('drop table if exists gafAnnotations;', None)
 reportlib.finish_nonps(fp)
 
