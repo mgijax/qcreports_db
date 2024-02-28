@@ -177,6 +177,7 @@ def createTempSection3(subsection):
         # III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
         # III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
         # III.D - Total RCA Annotations by Contributor (assigned by)
+        # III.E - Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
         # III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
         #
         # not used:
@@ -186,7 +187,6 @@ def createTempSection3(subsection):
         # IBD          |   7428293
         # IEA          |       115
         # IRD          |   7428290
-        # ND           |       118
 
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -212,6 +212,10 @@ def createTempSection3(subsection):
         # RCA|514597
         elif subsection == 'D':
                 addSQL = 'and ec._term_key in (514597)'
+
+        # ND|118
+        elif subsection == 'E':
+                addSQL = 'and ec._term_key in (118)'
 
         # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
@@ -391,6 +395,12 @@ def processSection3():
         processSection3Gene()
         processSection3Predicted()
         processSection3Total('D')
+
+        fp.write(CRT + 'Root Annotations (ND & GO_REF:0000015) by Contributor' + CRT)
+        createTempSection3('E')
+        processSection3Gene()
+        processSection3Predicted()
+        processSection3Total('E')
 
         fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor' + CRT)
         createTempSection3('F')
@@ -593,6 +603,8 @@ def processSection3Total(subsection):
                 evidenceType = 'Curator/Author Statement'
         elif subsection == 'D':
                 evidenceType = 'RCA'
+        elif subsection == 'E':
+                evidenceType = 'Root'
         elif subsection == 'F':
                 evidenceType = 'Manual Sequence'
 
@@ -641,7 +653,9 @@ def processSection3Total(subsection):
         elif subsection == 'C':
                 fp.write(2*TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
         elif subsection == 'D':
-                fp.write(2*TAB + 'Total Total RCA Annotations' + TAB)
+                fp.write(2*TAB + 'Total RCA Annotations' + TAB)
+        elif subsection == 'E':
+                fp.write(2*TAB + 'Total Root Annotations' + TAB)
         elif subsection == 'F':
                 fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
 
