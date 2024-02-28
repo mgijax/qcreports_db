@@ -26,17 +26,8 @@
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
 #       . is a set of counts taken from the GO_MGIGAF.rpt file
 #
-# The GO_MGIGAF.rpt file is read into temp table 'gafAnnotations': createTempGAF()
-# columns used in gafAnnotations to generate the Annotation counts: using "group" by clause
-#       !2  **DB Object ID (MGI ID)
-#       !4  **Qualifier
-#       !5  **GO ID
-#       !6  **DB:Reference (|DB:Reference)
-#       !7  **Evidence Code              
-#       !8  **With (or) From             
-#       !15 **Assigned By                
-#       !16 **Annotation Extension
-#       !17 **Gene Product Form ID (proteoform)
+# The GO_MGIGAF.rpt file is read into temp table 'gafAnnotations'      : createTempGAF()
+# Columns are used in gafAnnotations to generate the Annotation counts : createTempSection3()
 #
 '''
  
@@ -65,11 +56,12 @@ totalSummary = {}
 def createTempGAF():
         #
         # Use the mgi-GAF file:
-        #       see reports_db/daily/GO_gene_association.py
-        #       /data/reports/qcreports_db/output/gene_association.mgi
+        #       gaf-version: 2.2
+        #       os.environ['QCREPORTDIR'] + '/output/GO_MGIGAF.rpt'
         #       
         # to create a temporary GAF table : gafAnnotations
         # i.e., bcp the mgi-GAF file into the temporary GAF table
+        # if the GAF format changes, then the temp table format below may also have to change
         #
 
         # this must be in sync with gaf-version: 2.2
