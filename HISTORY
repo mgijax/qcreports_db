@@ -7,6 +7,18 @@ TAG: qcreports_db-6-0-23-?
 DATE: 03/??/2024
 STAFF: lec
 wts2-1419/fl2-761/Alicia Valenzuela QC, etc.
+wts2-1421/obsolete QC reports
+#       deleted:    mgd/PRB_Strain5.py
+#       deleted:    mgd/PRB_Strain6.py
+#       deleted:    mgd/PRB_StrainDup.sql
+#       deleted:    mgd/PRB_StrainTrans.sql
+#       deleted:    mgd/PRB_Strain_MultNoAlleles.sql
+#       deleted:    mgd/PRB_Strain_NoAlleles1.sql
+#       deleted:    mgd/PRB_Strain_NomenSyns.py
+#       deleted:    mgd/PRB_Strain_OtherSyns.py
+#       deleted:    mgd/PRB_Strain_SingleNoAlleles1.sql
+#       deleted:    mgd/PRB_Strain_SingleNoAlleles2.sql
+#       deleted:    mgd/PRB_Strain_Standard.sql
 
 TAG: qcreports_db-6-0-23-3
 DATE: 02/27/2024

@@ -186,7 +186,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpPubMedID.sql.rpt">HT Experiments with PMIDs used by GXD</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTDistinctAge.sql.rpt">Distinct Age, AgeMin, AgeMax</A>
 </OL>
-<A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (mnk, cms)</B></A>
+<A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (cms)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NotInCache.sql.rpt">Recombinant/Transgenic Assays missing from Cache Table</A>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_SpecNoAge.sql.rpt">Recombinant/Transgenic Specimens with incorrect age/age range values</A>
@@ -244,28 +244,17 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_Withdrawn.sql.rpt">Withdrawn Markers</A>
 </OL>
 
-<A NAME="strains"><B>Strains (mnk)</B></A>
+<A NAME="strains"><B>Strains (csmith)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainStd.sql.rpt">Strains (Standard only)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainNonStd.sql.rpt">Strains (Non Standard excluding F1 and F2)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainF1F2.sql.rpt">Strains Containing F1 or F2</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainDup.sql.rpt">Duplicate Strains</A> <B>(dlb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_NonStdNoAttributes.rpt">Strains (Non Standard - Sorted by Creation Date)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain.rpt">Tab-delimited File of All Strains (MGI Acc ID, Strain, Markers, Synonyms, External Acc IDs)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain2.rpt">Tab-delimited File of All Strains (Strain/Standard)</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainTrans.sql.rpt">Strains - Transgenic or Targeted Mutation</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainNonStdNoData.sql.rpt">Non-Standard Strains with no JR# and no data attached</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_MultNoAlleles.sql.rpt">Mutant Strains w/ Multiple Markers and No Alleles</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_SingleNoAlleles1.sql.rpt">Mutant Strains w/ Single Markers, No Alleles and Allele Symbol is in MGI</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_SingleNoAlleles2.sql.rpt">Mutant Strains w/ Single Markers, No Alleles and Allele Symbol is not in MGI</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_NoAlleles1.sql.rpt">Strains w/ Markers, No Alleles and Allele Symbol is in MGI</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MLP_Nomenclature.sql.rpt">Strains Affected by recent Nomenclature changes</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_NomenSyns.rpt">Strain Nomenclature Synonyms</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_OtherSyns.rpt">Strain Other Synonyms</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain4.rpt">Strains with MGI IDs that have more than one additional external ID</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain5.rpt">Strains where any of their IDs contain an "O"</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain6.rpt">Strains containing "either" or "involves" and marked STANDARD</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_Standard.sql.rpt">STOCK or 'semicolon' strains marked standard</A>
 </OL>
 
 <A NAME="strainsjax"><B>Strains - JAX (honda)</B></A>
