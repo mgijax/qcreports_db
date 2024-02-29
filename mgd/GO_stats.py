@@ -12,7 +12,7 @@
 #       T,20        : Sorting Classification
 # 
 #       A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-#       B: High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+#       B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
 #       C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
 #       D: Total RCA Annotations by Contributor (assigned by)
 #       E: Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
@@ -183,7 +183,7 @@ def createTempSection3(subsection):
         # section 3: create the temp tables for given subsection A-J
         #
         # III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-        # III.B - High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+        # III.B - High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
         # III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
         # III.D - Total RCA Annotations by Contributor (assigned by)
         # III.E - Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
@@ -205,7 +205,7 @@ def createTempSection3(subsection):
         # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
         if subsection == 'A':
                 addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
-        # HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
+        # HTP:xxxx HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
                 addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171)'
         # IC|25238 TAS|113 NAS|116
@@ -217,9 +217,10 @@ def createTempSection3(subsection):
         # ND|118
         elif subsection == 'E':
                 addSQL = 'and ec._term_key in (118)'
-        # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL += '''\nand gaf.refs like 'PMID:%' '''
         # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'G':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
@@ -397,7 +398,7 @@ def processSection3():
         # Section III - Counts by "Assigned By"
         #
         # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-        # B: High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP) by Contributor (assigned by)
+        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
         # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
         # D: Total RCA Annotations by Contributor (assigned by)
         # E: Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
@@ -435,7 +436,7 @@ def processSection3():
         processSection3Predicted()
         processSection3Total('A')
 
-        fp.write(CRT + 'High-throughput Annotations (HDA, HMP, HGI, or HEP) by Contributor' + CRT)
+        fp.write(CRT + 'High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor' + CRT)
         createTempSection3('B')
         processSection3Gene()
         processSection3Predicted()
@@ -453,11 +454,11 @@ def processSection3():
         processSection3Predicted()
         processSection3Total('D')
 
-        fp.write(CRT + 'Root Annotations (ND & GO_REF:0000015) by Contributor' + CRT)
-        createTempSection3('E')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('E')
+        #fp.write(CRT + 'Root Annotations (ND & GO_REF:0000015) by Contributor' + CRT)
+        #createTempSection3('E')
+        #processSection3Gene()
+        #processSection3Predicted()
+        #processSection3Total('E')
 
         fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor' + CRT)
         createTempSection3('F')
@@ -465,29 +466,29 @@ def processSection3():
         processSection3Predicted()
         processSection3Total('F')
 
-        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor' + CRT)
-        createTempSection3('G')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('G')
+        #fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor' + CRT)
+        #createTempSection3('G')
+        #processSection3Gene()
+        #processSection3Predicted()
+        #processSection3Total('G')
 
-        fp.write(CRT + 'Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor' + CRT)
-        createTempSection3('H')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('H')
+        #fp.write(CRT + 'Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor' + CRT)
+        #createTempSection3('H')
+        #processSection3Gene()
+        #processSection3Predicted()
+        #processSection3Total('H')
 
-        fp.write(CRT + 'Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor' + CRT)
-        createTempSection3('I')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('I')
+        #fp.write(CRT + 'Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor' + CRT)
+        #createTempSection3('I')
+        #processSection3Gene()
+        #processSection3Predicted()
+        #processSection3Total('I')
 
-        fp.write(CRT + 'IEA methods (IEA using a GO_REF) by GO_REF & Contributor' + CRT)
-        createTempSection3('J')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('J')
+        #fp.write(CRT + 'IEA methods (IEA using a GO_REF) by GO_REF & Contributor' + CRT)
+        #createTempSection3('J')
+        #processSection3Gene()
+        #processSection3Predicted()
+        #processSection3Total('J')
 
 def processSection3Gene():
         #
@@ -751,7 +752,7 @@ def processSection3Total(subsection):
         if subsection == 'A':
                 fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
         elif subsection == 'B':
-                fp.write(2*TAB + 'Total High-throughput Annotations (HTP, HAD, HMP, HGI, or HEP)' + TAB)
+                fp.write(2*TAB + 'Total High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP)' + TAB)
         elif subsection == 'C':
                 fp.write(2*TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
         elif subsection == 'D':
@@ -796,5 +797,6 @@ processSection3()
 # comment out during testing if you don't want to rebuild the gaf temp table each time
 # drop the temporary GAF table
 db.sql('drop table if exists gafAnnotations;', None)
+db.commit()
 reportlib.finish_nonps(fp)
 
