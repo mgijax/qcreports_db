@@ -377,9 +377,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/MPindex.html">Mammalian Phenotype Vocabulary/DAG Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/alomrkload/index.html">ALO Marker Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz</A> <B>(csmith)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A> <B>(paul hale)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(csmith)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A> <B>(paul hale)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emalload/index.html">Endonuclease-mediated Allele Load (IMPC CRISPR)</A> <B>(laurens)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
 </OL>
