@@ -19,6 +19,7 @@ wts2-1421/obsolete QC reports
 #       deleted:    mgd/PRB_Strain_SingleNoAlleles1.sql
 #       deleted:    mgd/PRB_Strain_SingleNoAlleles2.sql
 #       deleted:    mgd/PRB_Strain_Standard.sql
+#       deleted:    weekly/BIB_Duplicates.sql
 
 TAG: qcreports_db-6-0-23-3
 DATE: 02/27/2024

@@ -40,11 +40,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_NoAbstract.sql.rpt">References w/ PubMed ID and No Abstract</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_DupPM_DOI.sql.rpt">References w/ Duplicated PubMed and DOI IDs</A> <B>(jeo)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_Duplicates.sql.rpt">References with Duplicate Titles</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_BIB_Discard.sql.rpt">MGI Discard References with associated data</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingPDFs.sql.rpt">J#'s missing PDF's</A> <B>(jeo)</B>
-<LI><A HREF="/data/loads/mgi/pdfdownload/logs/identify_missed_papers_plos.sh.log">Overdue PLOS DOI IDs - not in PubMed Central, no longer within timeframe of PLOS downloader</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_SupplementalData.rpt">Supplemental Data Needed</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_Covid.rpt">Coronaviruas related references</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_COVRefTagCounts.rpt">COV reference tag count report</A> <B>(cjb)</B>
