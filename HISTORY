@@ -16,6 +16,7 @@ wts2-1421/obsolete QC reports
 #       deleted:    mgd/PRB_Strain_Standard.sql
 #       deleted:    weekly/BIB_Duplicates.sql
 #       deleted:    weekly/GO_CurationMetrics.sql
+#       deleted:    monthly/BIB_Dagger.sql
 
 TAG: qcreports_db-6-0-23-3
 DATE: 02/27/2024
