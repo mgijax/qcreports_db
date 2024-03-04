@@ -499,6 +499,8 @@ def processSection3Gene():
 
         print('DEFGH,4-8  : Total # of Genes')
 
+        totalSummary = {}
+
         results = db.sql('''
                 select assignedBy, count(distinct mgiid) as counter from validGenes group by assignedBy order by assignedBy
         ''', 'auto')
