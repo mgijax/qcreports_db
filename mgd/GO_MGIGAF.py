@@ -38,7 +38,8 @@ MGIPREFIX = 'MGI'
 # see doSetup()
 dag = {}
 syns = {}
-pubMed = {}
+pubMedId = {}
+doiId = {}
 
 # mapping of load reference keys to GO_REF IDs/per TR11772
 # see _LogicalDB_key = 185 (GO_REF)
@@ -225,14 +226,15 @@ def doSetup2():
 def doSetup():
     global dag
     global syns
-    global pubMed
+    global pubMedId, doiId
     global goQualifierGAF
     global goRefDict
 
     # since this is called twice...reset
     dag = {}
     syns = {}
-    pubMed = {}
+    pubMedId = {}
+    doiId = {}
     goQualifierGAF = {}
     goRefDict = {}
 
@@ -304,16 +306,29 @@ def doSetup():
     # resolve PubMed IDs for References
     #
     results = db.sql('''
-        select distinct r._Refs_key, a.accID 
-        from gomarker2 r, ACC_Accession a 
-        where r._Refs_key = a._Object_key 
-        and a._MGIType_key = 1 
-        and a._LogicalDB_key = 29
+        select distinct r._Refs_key, a.pubmedid
+        from gomarker2 r, BIB_Citation_Cache a
+        where r._Refs_key = a._Refs_key 
+        and a.pubmedid is not null
         ''', 'auto')
     for r in results:
         key = r['_Refs_key']
-        value = r['accID']
-        pubMed[key] = value
+        value = r['pubmedid']
+        pubMedId[key] = value
+
+    #
+    # resolve DOI IDs for References
+    #
+    results = db.sql('''
+        select distinct r._Refs_key, a.doiid
+        from gomarker2 r, BIB_Citation_Cache a
+        where r._Refs_key = a._Refs_key 
+        and a.doiid is not null
+        ''', 'auto')
+    for r in results:
+        key = r['_Refs_key']
+        value = r['doiid']
+        doiId[key] = value
 
     #
     # gpadCol3 : go_qualifier_id
@@ -558,10 +573,16 @@ def doGAFFinish():
 
         #!6  DB:Reference (|DB:Reference) 
         references = []
+        # If a GO_REF ID is available, use the GO_REF ID
         if r['_Refs_key'] in goRefDict:
                 references.append(goRefDict[r['_Refs_key']])
-        elif r['_Refs_key'] in pubMed:
-            references.append('PMID:' + pubMed[r['_Refs_key']])
+        # elif a PMID is available, use the PMID
+        elif r['_Refs_key'] in pubMedId:
+            references.append('PMID:' + pubMedId[r['_Refs_key']])
+        # elif a DOI is available, use the DOI ID
+        elif r['_Refs_key'] in doiId:
+            references.append('DOI:' + doiId[r['_Refs_key']])
+        # else, use the MGI_ID
         else:
             references.append(r['markerID'])
         reportRow = reportRow + '|'.join(references) + TAB
