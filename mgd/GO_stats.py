@@ -178,6 +178,104 @@ def createTempMarkers():
 
         db.sql('create index validMarkers_idx on validMarkers (mgiid)', None)
 
+def createTempSection2(subsection):
+        #
+        # section 2: create the temp tables for given subsection A-J
+        #
+        # II.A - ALL Annotations
+        # II.B - Protein Coding Features
+        # II.C - RNA Features
+        # II.D - Other Features
+        #
+        # validGenes      : set of marker by dag 
+        # validAnnoations : set of annotations by dag
+        #
+
+        db.sql('drop table if exists validGenes;', None)
+        db.sql('drop table if exists validAnnotations;', None)
+
+        # all annotations
+        if subsection == 'A':
+                addSQL = ''
+        # protein coding features
+        elif subsection == 'B':
+                addSQL = ''' and gaf.dbType in ('gene_segment', 'protein_coding_gene') '''
+        # RNA features
+        elif subsection == 'C':
+                addSQL = ''' and gaf.dbType in (
+                        'antisense_lncRNA_gene',
+                        'bidirectional_promoter_lncRNA',
+                        'lincRNA_gene',
+                        'lncRNA_gene',
+                        'miRNA_gene',
+                        'ncRNA_gene',
+                        'RNase_MRP_RNA_gene',
+                        'RNase_P_RNA_gene',
+                        'rRNA_gene',
+                        'scRNA_gene',
+                        'sense_intronic_ncRNA_gene',
+                        'sense_overlap_ncRNA_gene',
+                        'snoRNA_gene',
+                        'snRNA_gene',
+                        'SRP_RNA_gene',
+                        'telomerase_RNA_gene',
+                        'tRNA_gene'
+                        )
+                        '''
+        # other features
+        elif subsection == 'D':
+                addSQL = ''' and gaf.dbType in ('biological_region', 'gene', 'pseudogene') '''
+
+        db.sql('''
+                select gaf.mgiid, gaf.dbType as groupBy, d._dag_key, d.name
+                into temporary table validGenes
+                from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
+                where gaf.goid = a.accid
+                and a._logicaldb_key = 31
+                %s
+                and a._object_key = n._object_key
+                and n._dag_key = d._dag_key
+                and d._dag_key in (1,2,3,4)
+                ''' % (addSQL), None)
+
+        db.sql('create index validGenes_idx on validGenes (mgiid)', None)
+
+        # 
+        # select the columns from gafAnnotations that are needed to determine a distinct Annotation row
+        # the Annotation rows will be counted by DAG name/assignedBy
+        # to change the distinct Annotation row logic, add or remove the proper gafAnnotations column to this set:
+        #
+        #       !2  **DB Object ID (MGI ID)
+        #       !4  **Qualifier
+        #       !5  **GO ID
+        #       !6  **DB:Reference (|DB:Reference)
+        #       !7  **Evidence Code              
+        #       !8  **With (or) From             
+        #       !12 **DB Object Type
+        #       !16 **Annotation Extension
+        #       !17 **Gene Product Form ID (proteoform)
+        #       + _dag_key, name
+        #
+        # addSQL is used to determine the specific set of feature types used for a given A-J subsection
+        #
+        db.sql('''
+                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
+                        gaf.inferredFrom, gaf.dbType as groupBy, gaf.extensions, gaf.proteoform,
+                        d._dag_key, d.name
+                into temporary table validAnnotations
+                from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
+                where gaf.goid = a.accid
+                and a._logicaldb_key = 31
+                %s
+                and a._object_key = n._object_key
+                and n._dag_key = d._dag_key
+                and d._dag_key in (1,2,3,4)
+                and exists (select 1 from validMarkers m where gaf.mgiid = m.mgiid)
+                ''' % (addSQL), None)
+
+        db.sql('create index validAnnotations_idx1 on validAnnotations (mgiid)', None)
+        db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
+
 def createTempSection3(subsection):
         #
         # section 3: create the temp tables for given subsection A-J
@@ -235,7 +333,7 @@ def createTempSection3(subsection):
                 addSQL = 'and ec._term_key in (115)'
 
         db.sql('''
-                select gaf.mgiid, gaf.assignedBy, d._dag_key, d.name
+                select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
                 into temporary table validGenes
                 from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
@@ -252,7 +350,7 @@ def createTempSection3(subsection):
         db.sql('create index validGenes_idx on validGenes (mgiid)', None)
 
         db.sql('''
-                select gaf.mgiid, gaf.assignedBy, d._dag_key, d.name
+                select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
                 into temporary table validPredicted
                 from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
@@ -270,7 +368,7 @@ def createTempSection3(subsection):
 
         # 
         # select the columns from gafAnnotations that are needed to determine a distinct Annotation row
-        # the Annotation rows will be counted by DAG name/assignedBy
+        # the Annotation rows will be counted by DAG name/groupBy
         # to change the distinct Annotation row logic, add or remove the proper gafAnnotations column to this set:
         #
         #       !2  **DB Object ID (MGI ID)
@@ -288,7 +386,7 @@ def createTempSection3(subsection):
         #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
-                        gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy, gaf.extensions, gaf.proteoform,
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy as groupBy, gaf.extensions, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
@@ -313,6 +411,24 @@ def createTempSection3(subsection):
 #
 # start: processing
 #
+
+def processDag(results):
+        #
+        # used by processSection2(), processSection3()
+        # load the dagResults by groupBy and return
+        #
+
+        dagResults = {}
+
+        for r in results:
+                key = r['groupBy']
+                value = r
+                if key not in dagResults:
+                        dagResults[key] = []
+                dagResults[key].append(value)
+
+        #print(dagResults)
+        return dagResults
 
 def processSection1():
         #
@@ -370,28 +486,35 @@ def processSection1():
 
 def processSection2():
         #
-        # Counts by Features types
+        # Section II - Counts by Features types
         #
+        # A: All Annotations
+        # B: Protein Coding Features
+        # C: RNA Features
+        # D: Other Features
+        #
+
+        fp.write(CRT + 'All Annotations' + CRT)
+        createTempSection2('A')
+        processSectionGene()
+        processSectionTotal(2,'A')
+
+        fp.write(CRT + 'Protein Coding Features' + CRT)
+        createTempSection2('B')
+        processSectionGene()
+        processSectionTotal(2,'B')
+
+        fp.write(CRT + 'RNA Features' + CRT)
+        createTempSection2('C')
+        processSectionGene()
+        processSectionTotal(2,'C')
+
+        fp.write(CRT + 'Other Features' + CRT)
+        createTempSection2('D')
+        processSectionGene()
+        processSectionTotal(2,'D')
 
         return
-
-def processDag(results):
-        #
-        # used by processSection3()
-        # load the dagResults by assignedBy and return
-        #
-
-        dagResults = {}
-
-        for r in results:
-                key = r['assignedBy']
-                value = r
-                if key not in dagResults:
-                        dagResults[key] = []
-                dagResults[key].append(value)
-
-        #print(dagResults)
-        return dagResults
 
 def processSection3():
         #
@@ -409,103 +532,83 @@ def processSection3():
         # J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
         #
 
-        fp.write(str.ljust('Annotation Category', 25) + TAB)
-        fp.write('GO_REF' + TAB)
-        fp.write('Contribor, Feature Type, or Summary row description' + TAB)
-        fp.write('Total Number of Genes Annotated:' + TAB)
-        fp.write('Biological Process' + TAB)
-        fp.write('Cellular Component' + TAB)
-        fp.write('Molecular Funcation' + TAB)
-        fp.write('Obsolete' + TAB)
-        fp.write('Total Number of Predicted Genes Annotated:' + TAB)
-        fp.write('Biological Process' + TAB)
-        fp.write('Cellular Component' + TAB)
-        fp.write('Molecular Funcation' + TAB)
-        fp.write('Obsolete' + TAB)
-        fp.write('Total Number of Annotations:' + TAB)
-        fp.write('Biological Process' + TAB)
-        fp.write('Cellular Component' + TAB)
-        fp.write('Molecular Funcation' + TAB)
-        fp.write('Obsolete' + TAB)
-        fp.write('Classification Axis' + TAB)
-        fp.write('Sorting Classification' + CRT)
-
         fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
         createTempSection3('A')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('A')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'A')
 
         fp.write(CRT + 'High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor' + CRT)
         createTempSection3('B')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('B')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'B')
 
         fp.write(CRT + 'Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor' + CRT)
         createTempSection3('C')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('C')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'C')
 
         fp.write(CRT + 'Total RCA Annotations by Contributor' + CRT)
         createTempSection3('D')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('D')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'D')
 
         #fp.write(CRT + 'Root Annotations (ND & GO_REF:0000015) by Contributor' + CRT)
         #createTempSection3('E')
-        #processSection3Gene()
-        #processSection3Predicted()
-        #processSection3Total('E')
+        #processSectionGene()
+        #processSectionPredicted()
+        #processSectionTotal(3,'E')
 
         fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor' + CRT)
         createTempSection3('F')
-        processSection3Gene()
-        processSection3Predicted()
-        processSection3Total('F')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'F')
 
         #fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor' + CRT)
         #createTempSection3('G')
-        #processSection3Gene()
-        #processSection3Predicted()
-        #processSection3Total('G')
+        #processSectionGene()
+        #processSectionPredicted()
+        #processSectionTotal(3,'G')
 
         #fp.write(CRT + 'Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor' + CRT)
         #createTempSection3('H')
-        #processSection3Gene()
-        #processSection3Predicted()
-        #processSection3Total('H')
+        #processSectionGene()
+        #processSectionPredicted()
+        #processSectionTotal(3,'H')
 
         #fp.write(CRT + 'Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor' + CRT)
         #createTempSection3('I')
-        #processSection3Gene()
-        #processSection3Predicted()
-        #processSection3Total('I')
+        #processSectionGene()
+        #processSectionPredicted()
+        #processSectionTotal(3,'I')
 
         #fp.write(CRT + 'IEA methods (IEA using a GO_REF) by GO_REF & Contributor' + CRT)
         #createTempSection3('J')
-        #processSection3Gene()
-        #processSection3Predicted()
-        #processSection3Total('J')
+        #processSectionGene()
+        #processSectionPredicted()
+        #processSectionTotal(3,'J')
 
-def processSection3Gene():
+def processSectionGene():
         #
+        # section 2 : process the genes : validGenes
         # section 3 : process the genes : validGenes
         #
 
         global totalGene, dagGene, totalSummary
 
-        print('DEFGH,4-8  : Total # of Genes')
+        print('processSectionGene:DEFGH,4-8')
 
         totalSummary = {}
 
         results = db.sql('''
-                select assignedBy, count(distinct mgiid) as counter from validGenes group by assignedBy order by assignedBy
+                select groupBy, count(distinct mgiid) as counter from validGenes group by groupBy order by groupBy
         ''', 'auto')
         for r in results:
-                key = r['assignedBy']
+                key = r['groupBy']
                 value = r['counter']
                 totalGene[key] = []
                 totalGene[key].append(value)
@@ -537,40 +640,40 @@ def processSection3Gene():
                 
         results = db.sql('''
                 (
-                select _dag_key, name, assignedBy, count(distinct mgiid) as counter
+                select _dag_key, name, groupBy, count(distinct mgiid) as counter
                 from validGenes
-                group by name, _dag_key, assignedBy
+                group by name, _dag_key, groupBy
                 union
-                select distinct 1 as _dag_key, 'Cellular Component' as name, assignedBy, 0 as counter
-                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (1))
+                select distinct 1 as _dag_key, 'Cellular Component' as name, groupBy, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.groupBy = v2.groupBy and v2._dag_key in (1))
                 union
-                select distinct 2 as _dag_key, 'Molecular Function' as name, assignedBy, 0 as counter
-                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (2))
+                select distinct 2 as _dag_key, 'Molecular Function' as name, groupBy, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.groupBy = v2.groupBy and v2._dag_key in (2))
                 union
-                select distinct 3 as _dag_key, 'Biological Process' as name, assignedBy, 0 as counter
-                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (3))
+                select distinct 3 as _dag_key, 'Biological Process' as name, groupBy, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.groupBy = v2.groupBy and v2._dag_key in (3))
                 union
-                select distinct 4 as _dag_key, 'Obsolete' as name, assignedBy, 0 as counter
-                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (4))
+                select distinct 4 as _dag_key, 'Obsolete' as name, groupBy, 0 as counter
+                from validGenes v1 where not exists (select 1 from validGenes v2 where v1.groupBy = v2.groupBy and v2._dag_key in (4))
                 )
-                order by assignedBy, name
+                order by groupBy, name
         ''', 'auto')
         dagGene = processDag(results)
 
-def processSection3Predicted():
+def processSectionPredicted():
         #
         # section 3 : process the predicted genes : validPredicted
         #
 
         global totalPredicted, dagPredicted, totalSummary
 
-        print('IJKLM,9-13 : Total # of Predicted Genes')
+        print('processSectionPredicted:IJKLM,9-13')
 
         results = db.sql('''
-                select assignedBy, count(distinct mgiid) as counter from validPredicted group by assignedBy order by assignedBy
+                select groupBy, count(distinct mgiid) as counter from validPredicted group by groupBy order by groupBy
         ''', 'auto')
         for r in results:
-                key = r['assignedBy']
+                key = r['groupBy']
                 value = r['counter']
                 totalPredicted[key] = []
                 totalPredicted[key].append(value)
@@ -603,41 +706,41 @@ def processSection3Predicted():
                 
         results = db.sql('''
                 (
-                select _dag_key, name, assignedBy, count(distinct mgiid) as counter
+                select _dag_key, name, groupBy, count(distinct mgiid) as counter
                 from validPredicted
-                group by name, _dag_key, assignedBy
+                group by name, _dag_key, groupBy
                 union
-                select distinct 1 as _dag_key, 'Cellular Component' as name, assignedBy, 0 as counter
-                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (1))
+                select distinct 1 as _dag_key, 'Cellular Component' as name, groupBy, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.groupBy = v2.groupBy and v2._dag_key in (1))
                 union
-                select distinct 2 as _dag_key, 'Molecular Function' as name, assignedBy, 0 as counter
-                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (2))
+                select distinct 2 as _dag_key, 'Molecular Function' as name, groupBy, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.groupBy = v2.groupBy and v2._dag_key in (2))
                 union
-                select distinct 3 as _dag_key, 'Biological Process' as name, assignedBy, 0 as counter
-                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (3))
+                select distinct 3 as _dag_key, 'Biological Process' as name, groupBy, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.groupBy = v2.groupBy and v2._dag_key in (3))
                 union
-                select distinct 4 as _dag_key, 'Obsolete' as name, assignedBy, 0 as counter
-                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (4))
+                select distinct 4 as _dag_key, 'Obsolete' as name, groupBy, 0 as counter
+                from validPredicted v1 where not exists (select 1 from validPredicted v2 where v1.groupBy = v2.groupBy and v2._dag_key in (4))
                 )
-                order by assignedBy, name
+                order by groupBy, name
         ''', 'auto')
         dagPredicted = processDag(results)
 
-def processSection3Total(subsection):
+def processSectionTotal(section, subsection):
         #
-        # section 3 : process the total annotations : validAnnotations
+        # process the total annotations : validAnnotations
         # where subsection in A-J
         #
 
         global totalAll, dagAll, totalSummary
 
-        print('NOPQR,14-18: Total # of Annotations')
+        print('processSectionTotal:NOPQR,14-18')
 
         results = db.sql('''
-                select assignedBy, count(*) as counter from validAnnotations group by assignedBy order by assignedBy
+                select groupBy, count(*) as counter from validAnnotations group by groupBy order by groupBy
         ''', 'auto')
         for r in results:
-                key = r['assignedBy']
+                key = r['groupBy']
                 value = r['counter']
                 totalAll[key] = []
                 totalAll[key].append(value)
@@ -670,80 +773,94 @@ def processSection3Total(subsection):
                 
         results = db.sql('''
                 (
-                select _dag_key, name, assignedBy, count(*) as counter
+                select _dag_key, name, groupBy, count(*) as counter
                 from validAnnotations
-                group by name, _dag_key, assignedBy
+                group by name, _dag_key, groupBy
                 union
-                select distinct 1 as _dag_key, 'Cellular Component' as name, assignedBy, 0 as counter
-                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (1))
+                select distinct 1 as _dag_key, 'Cellular Component' as name, groupBy, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.groupBy = v2.groupBy and v2._dag_key in (1))
                 union
-                select distinct 2 as _dag_key, 'Molecular Function' as name, assignedBy, 0 as counter
-                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (2))
+                select distinct 2 as _dag_key, 'Molecular Function' as name, groupBy, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.groupBy = v2.groupBy and v2._dag_key in (2))
                 union
-                select distinct 3 as _dag_key, 'Biological Process' as name, assignedBy, 0 as counter
-                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (3))
+                select distinct 3 as _dag_key, 'Biological Process' as name, groupBy, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.groupBy = v2.groupBy and v2._dag_key in (3))
                 union
-                select distinct 4 as _dag_key, 'Obsolete' as name, assignedBy, 0 as counter
-                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.assignedBy = v2.assignedBy and v2._dag_key in (4))
+                select distinct 4 as _dag_key, 'Obsolete' as name, groupBy, 0 as counter
+                from validAnnotations v1 where not exists (select 1 from validAnnotations v2 where v1.groupBy = v2.groupBy and v2._dag_key in (4))
                 )
-                order by assignedBy, name
+                order by groupBy, name
         ''', 'auto')
 
         dagAll = processDag(results)
         #print(dagAll)
 
-        if subsection == 'A':
-                evidenceType = 'Experimental'
-        elif subsection == 'B':
-                evidenceType = 'High-throughput'
-        elif subsection == 'C':
-                evidenceType = 'Curator/Author Statement'
-        elif subsection == 'D':
-                evidenceType = 'RCA'
-        elif subsection == 'E':
-                evidenceType = 'Root'
-        elif subsection == 'F':
-                evidenceType = 'Manual Sequence'
-        elif subsection == 'G':
-                evidenceType = 'Manual Sequence'
-        elif subsection == 'H':
-                evidenceType = 'Automated orthology'
-        elif subsection == 'I':
-                evidenceType = 'Phylogenetic'
-        elif subsection == 'J':
-                evidenceType = 'IEA methods'
+        if section == 2:
+                if subsection == 'A':
+                        evidenceType = 'All Annotations'
+                elif subsection == 'B':
+                        evidenceType = 'Protein Coding Features'
+                elif subsection == 'C':
+                        evidenceType = 'RNA Features'
+                elif subsection == 'D':
+                        evidenceType = 'Other Features'
+        elif section == 3:
+                if subsection == 'A':
+                        evidenceType = 'Experimental'
+                elif subsection == 'B':
+                        evidenceType = 'High-throughput'
+                elif subsection == 'C':
+                        evidenceType = 'Curator/Author Statement'
+                elif subsection == 'D':
+                        evidenceType = 'RCA'
+                elif subsection == 'E':
+                        evidenceType = 'Root'
+                elif subsection == 'F':
+                        evidenceType = 'Manual Sequence'
+                elif subsection == 'G':
+                        evidenceType = 'Manual Sequence'
+                elif subsection == 'H':
+                        evidenceType = 'Automated orthology'
+                elif subsection == 'I':
+                        evidenceType = 'Phylogenetic'
+                elif subsection == 'J':
+                        evidenceType = 'IEA methods'
 
-        # for each assignedBy
+        # for each groupBy
         #       DEFGH,4-8  : Total # of Genes
         #       IJKLM,9-13 : Total # of Predicted Genes
         #       NOPQR,14-18: Total # of Annotations
-        for assignedBy in dagAll:
+        for groupBy in dagAll:
 
-                fp.write(2*TAB + str(assignedBy) + TAB)
+                # section 2/subsection 'A' -> skip
+                if section == 2 and subsection == 'A':
+                        continue
 
-                # dags for given assignedBy, print total, b, c, m, obsolete
-                if assignedBy in dagGene:
-                        totalCount = totalGene[assignedBy][0]
+                fp.write(2*TAB + str(groupBy) + TAB)
+
+                # dags for given groupBy, print total, b, c, m, obsolete
+                if groupBy in dagGene:
+                        totalCount = totalGene[groupBy][0]
                         fp.write(str(totalCount) + TAB)
-                        dags = dagGene[assignedBy]
+                        dags = dagGene[groupBy]
                         for d in dags:
                                 fp.write(str(d['counter']) + TAB)
                 else:
                         fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
 
-                if assignedBy in dagPredicted:
-                        totalCount = totalPredicted[assignedBy][0]
+                if groupBy in dagPredicted:
+                        totalCount = totalPredicted[groupBy][0]
                         fp.write(str(totalCount) + TAB)
-                        dags = dagPredicted[assignedBy]
+                        dags = dagPredicted[groupBy]
                         for d in dags:
                                 fp.write(str(d['counter']) + TAB)
                 else:
                         fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
 
-                if assignedBy in dagAll:
-                        totalCount = totalAll[assignedBy][0]
+                if groupBy in dagAll:
+                        totalCount = totalAll[groupBy][0]
                         fp.write(str(totalCount) + TAB)
-                        dags = dagAll[assignedBy]
+                        dags = dagAll[groupBy]
                         for d in dags:
                                 fp.write(str(d['counter']) + TAB)
                 else:
@@ -751,26 +868,36 @@ def processSection3Total(subsection):
 
                 fp.write('Evidence type' + TAB + evidenceType + CRT)
 
-        if subsection == 'A':
-                fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
-        elif subsection == 'B':
-                fp.write(2*TAB + 'Total High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP)' + TAB)
-        elif subsection == 'C':
-                fp.write(2*TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
-        elif subsection == 'D':
-                fp.write(2*TAB + 'Total RCA Annotations' + TAB)
-        elif subsection == 'E':
-                fp.write(2*TAB + 'Total Root Annotations' + TAB)
-        elif subsection == 'F':
-                fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
-        elif subsection == 'G':
-                fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
-        elif subsection == 'H':
-                fp.write(2*TAB + 'Total Automated orthology Annotations' + TAB)
-        elif subsection == 'I':
-                fp.write(2*TAB + 'Total Phylogenetic Annotations' + TAB)
-        elif subsection == 'J':
-                fp.write(2*TAB + 'Total IEA methods' + TAB)
+        if section == 2:
+                if subsection == 'A':
+                        fp.write(2*TAB + 'Total All Annotations' + TAB)
+                elif subsection == 'B':
+                        fp.write(2*TAB + 'Total protein coding features' + TAB)
+                elif subsection == 'C':
+                        fp.write(2*TAB + 'Total RNA features' + TAB)
+                elif subsection == 'D':
+                        fp.write(2*TAB + 'Total other features' + TAB)
+        elif section == 3:
+                if subsection == 'A':
+                        fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
+                elif subsection == 'B':
+                        fp.write(2*TAB + 'Total High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP)' + TAB)
+                elif subsection == 'C':
+                        fp.write(2*TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
+                elif subsection == 'D':
+                        fp.write(2*TAB + 'Total RCA Annotations' + TAB)
+                elif subsection == 'E':
+                        fp.write(2*TAB + 'Total Root Annotations' + TAB)
+                elif subsection == 'F':
+                        fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
+                elif subsection == 'G':
+                        fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
+                elif subsection == 'H':
+                        fp.write(2*TAB + 'Total Automated orthology Annotations' + TAB)
+                elif subsection == 'I':
+                        fp.write(2*TAB + 'Total Phylogenetic Annotations' + TAB)
+                elif subsection == 'J':
+                        fp.write(2*TAB + 'Total IEA methods' + TAB)
 
         outputCols = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R']
         for c in outputCols: 
@@ -790,12 +917,37 @@ def processSection3Total(subsection):
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
+
 # comment out during testing if you don't want to rebuild the gaf temp table each time
 createTempGAF()
+
 createTempMarkers()
 processSection1()
-#processSection2()
+
+fp.write(str.ljust('Annotation Category', 25) + TAB)
+fp.write('GO_REF' + TAB)
+fp.write('Contribor, Feature Type, or Summary row description' + TAB)
+fp.write('Total Number of Genes Annotated:' + TAB)
+fp.write('Biological Process' + TAB)
+fp.write('Cellular Component' + TAB)
+fp.write('Molecular Funcation' + TAB)
+fp.write('Obsolete' + TAB)
+fp.write('Total Number of Predicted Genes Annotated:' + TAB)
+fp.write('Biological Process' + TAB)
+fp.write('Cellular Component' + TAB)
+fp.write('Molecular Funcation' + TAB)
+fp.write('Obsolete' + TAB)
+fp.write('Total Number of Annotations:' + TAB)
+fp.write('Biological Process' + TAB)
+fp.write('Cellular Component' + TAB)
+fp.write('Molecular Funcation' + TAB)
+fp.write('Obsolete' + TAB)
+fp.write('Classification Axis' + TAB)
+fp.write('Sorting Classification' + CRT)
+
+processSection2()
 processSection3()
+
 # comment out during testing if you don't want to rebuild the gaf temp table each time
 # drop the temporary GAF table
 db.sql('drop table if exists gafAnnotations;', None)
