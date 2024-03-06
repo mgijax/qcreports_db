@@ -558,11 +558,12 @@ def doGAFFinish():
 
         #!6  DB:Reference (|DB:Reference) 
         references = []
-        if r['_Refs_key'] in pubMed:
+        if r['_Refs_key'] in goRefDict:
+                references.append(goRefDict[r['_Refs_key']])
+        elif r['_Refs_key'] in pubMed:
             references.append('PMID:' + pubMed[r['_Refs_key']])
         else:
-            if r['_Refs_key'] in goRefDict:
-                references.append(goRefDict[r['_Refs_key']])
+            references.append(r['markerID'])
         reportRow = reportRow + '|'.join(references) + TAB
 
         #!7  Evidence Code               
