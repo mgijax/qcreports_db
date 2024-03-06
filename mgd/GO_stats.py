@@ -249,7 +249,6 @@ def createTempSection2(subsection):
         #       !4  **Qualifier
         #       !5  **GO ID
         #       !6  **DB:Reference (|DB:Reference)
-        #       !7  **Evidence Code              
         #       !8  **With (or) From             
         #       !12 **DB Object Type
         #       !16 **Annotation Extension
