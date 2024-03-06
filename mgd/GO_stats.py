@@ -909,7 +909,10 @@ def processSectionTotal(section, subsection):
                 else:
                         fp.write(str(totalSummary[c][0]) + TAB)
 
-        fp.write('Evidence type' + TAB + 'Summary Row' + CRT)
+        if section == 2:
+                fp.write('Feature type' + TAB + 'Summary Row' + CRT)
+        elif section == 3:
+                fp.write('Evidence type' + TAB + 'Summary Row' + CRT)
 
 #
 # end: processing
