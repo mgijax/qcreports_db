@@ -393,7 +393,6 @@ def doGAFCol16():
                 'anatomy',
                 'cell type',
                 'contributor',
-                'dual-taxon ID',
                 'evidence',
                 'external ref',
                 'go_qualifier_id',
