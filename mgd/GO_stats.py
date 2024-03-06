@@ -797,34 +797,34 @@ def processSectionTotal(section, subsection):
 
         if section == 2:
                 if subsection == 'A':
-                        evidenceType = 'All Annotations'
+                        displayType = 'All Annotations'
                 elif subsection == 'B':
-                        evidenceType = 'Protein Coding Features'
+                        displayType = 'Protein Coding Features'
                 elif subsection == 'C':
-                        evidenceType = 'RNA Features'
+                        displayType = 'RNA Features'
                 elif subsection == 'D':
-                        evidenceType = 'Other Features'
+                        displayType = 'Other Features'
         elif section == 3:
                 if subsection == 'A':
-                        evidenceType = 'Experimental'
+                        displayType = 'Experimental'
                 elif subsection == 'B':
-                        evidenceType = 'High-throughput'
+                        displayType = 'High-throughput'
                 elif subsection == 'C':
-                        evidenceType = 'Curator/Author Statement'
+                        displayType = 'Curator/Author Statement'
                 elif subsection == 'D':
-                        evidenceType = 'RCA'
+                        displayType = 'RCA'
                 elif subsection == 'E':
-                        evidenceType = 'Root'
+                        displayType = 'Root'
                 elif subsection == 'F':
-                        evidenceType = 'Manual Sequence'
+                        displayType = 'Manual Sequence'
                 elif subsection == 'G':
-                        evidenceType = 'Manual Sequence'
+                        displayType = 'Manual Sequence'
                 elif subsection == 'H':
-                        evidenceType = 'Automated orthology'
+                        displayType = 'Automated orthology'
                 elif subsection == 'I':
-                        evidenceType = 'Phylogenetic'
+                        displayType = 'Phylogenetic'
                 elif subsection == 'J':
-                        evidenceType = 'IEA methods'
+                        displayType = 'IEA methods'
 
         # for each groupBy
         #       DEFGH,4-8  : Total # of Genes
@@ -866,7 +866,10 @@ def processSectionTotal(section, subsection):
                 else:
                         fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
 
-                fp.write('Evidence type' + TAB + evidenceType + CRT)
+                if section == 2:
+                        fp.write('Feature type' + TAB + displayType + CRT)
+                elif section == 3:
+                        fp.write('Evidence type' + TAB + displayType + CRT)
 
         if section == 2:
                 if subsection == 'A':
