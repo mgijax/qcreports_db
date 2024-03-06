@@ -199,32 +199,32 @@ def createTempSection2(subsection):
                 addSQL = ''
         # protein coding features
         elif subsection == 'B':
-                addSQL = ''' and gaf.dbType in ('gene_segment', 'protein_coding_gene') '''
+                addSQL = ''' and gaf.dbType in ('gene segment', 'protein coding gene') '''
         # RNA features
         elif subsection == 'C':
                 addSQL = ''' and gaf.dbType in (
-                        'antisense_lncRNA_gene',
-                        'bidirectional_promoter_lncRNA',
-                        'lincRNA_gene',
-                        'lncRNA_gene',
-                        'miRNA_gene',
-                        'ncRNA_gene',
-                        'RNase_MRP_RNA_gene',
-                        'RNase_P_RNA_gene',
-                        'rRNA_gene',
-                        'scRNA_gene',
-                        'sense_intronic_ncRNA_gene',
-                        'sense_overlap_ncRNA_gene',
-                        'snoRNA_gene',
-                        'snRNA_gene',
-                        'SRP_RNA_gene',
-                        'telomerase_RNA_gene',
-                        'tRNA_gene'
+                        'antisense lncRNA gene',
+                        'bidirectional promoter lncRNA gene',
+                        'lincRNA gene',
+                        'lncRNA gene',
+                        'miRNA gene',
+                        'non-coding RNA gene',
+                        'RNase MRP RNA gene',
+                        'RNase P RNA gene',
+                        'rRNA gene',
+                        'scRNA gene',
+                        'sense intronic lncRNA gene',
+                        'sense overlapping lncRNA gene',
+                        'snoRNA gene',
+                        'snRNA gene',
+                        'SRP RNA gene',
+                        'telomerase RNA gene',
+                        'tRNA gene'
                         )
                         '''
         # other features
         elif subsection == 'D':
-                addSQL = ''' and gaf.dbType in ('biological_region', 'gene', 'pseudogene') '''
+                addSQL = ''' and gaf.dbType in ('biological region', 'pseudogene', 'pseudogenic gene segment', 'unclassified gene', 'unclassified non-coding RNA gene') '''
 
         db.sql('''
                 select gaf.mgiid, gaf.dbType as groupBy, d._dag_key, d.name

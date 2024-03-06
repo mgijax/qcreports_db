@@ -606,60 +606,7 @@ def doGAFFinish():
             reportRow = reportRow + TAB
 
         #!12 DB Object Type             
-        if r['_Marker_Type_key'] == 1 and r['featureType'] == 'unclassified gene':
-                reportRow = reportRow + 'gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'protein coding gene':
-                reportRow = reportRow + 'protein_coding_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'non-coding RNA gene':
-                reportRow = reportRow + 'ncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'heritable phenotypic marker':
-                reportRow = reportRow + 'genetic_marker' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'antisense lncRNA gene':      
-                reportRow = reportRow + 'antisense_lncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'bidirectional promoter lncRNA gene':  
-                reportRow = reportRow + 'bidirectional_promoter_lncRNA' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'lincRNA gene':        
-                reportRow = reportRow + 'lincRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'lncRNA gene': 
-                reportRow = reportRow + 'lncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'miRNA gene':  
-                reportRow = reportRow + 'miRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'non-coding RNA gene': 
-                reportRow = reportRow + 'ncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'ribozyme gene':       
-                reportRow = reportRow + 'ribozyme_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'RNase MRP RNA gene':  
-                reportRow = reportRow + 'RNase_MRP_RNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'RNase P RNA gene':    
-                reportRow = reportRow + 'RNase_P_RNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'rRNA gene':   
-                reportRow = reportRow + 'rRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'scRNA gene':  
-                reportRow = reportRow + 'scRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'sense intronic lncRNA gene':  
-                reportRow = reportRow + 'sense_intronic_ncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'sense overlapping lncRNA gene':       
-                reportRow = reportRow + 'sense_overlap_ncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'snoRNA gene': 
-                reportRow = reportRow + 'snoRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'snRNA gene':  
-                reportRow = reportRow + 'snRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'SRP RNA gene':        
-                reportRow = reportRow + 'SRP_RNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'telomerase RNA gene': 
-                reportRow = reportRow + 'telomerase_RNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'tRNA gene':   
-                reportRow = reportRow + 'tRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'unclassified non-coding RNA gene':    
-                reportRow = reportRow + 'ncRNA_gene' + TAB
-        elif r['_Marker_Type_key'] == 1 and r['featureType'] == 'gene segment':
-                reportRow = reportRow + 'gene_segment' + TAB
-        elif r['_Marker_Type_key'] == 7:
-                reportRow = reportRow + 'pseudogene' + TAB
-        elif r['_Marker_Type_key'] == 10:
-                reportRow = reportRow + 'biological_region' + TAB
-        else:
-                reportRow = reportRow + 'bad feature type = ' + r['featureType'] + TAB
+        reportRow = reportRow + r['featureType'] + TAB
 
         #!13 Taxon(|taxon)             
         reportRow = reportRow + 'taxon:10090' + TAB
