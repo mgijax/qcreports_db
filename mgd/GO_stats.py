@@ -185,13 +185,16 @@ def createTempSection2(subsection):
         # II.A - ALL Annotations
         # II.B - Protein Coding Features
         # II.C - RNA Features
-        # II.D - Other Features
+        # II.D - Pseudogenic Features
+        # II.E - Other Features
         #
-        # validGenes      : set of marker by dag 
+        # validGenes      : set of marker by dag where predited = 'No'
+        # validPredicted  : set of marker by dag where predicted = 'Yes'
         # validAnnoations : set of annotations by dag
         #
 
         db.sql('drop table if exists validGenes;', None)
+        db.sql('drop table if exists validPredicted;', None)
         db.sql('drop table if exists validAnnotations;', None)
 
         # all annotations
@@ -199,7 +202,7 @@ def createTempSection2(subsection):
                 addSQL = ''
         # protein coding features
         elif subsection == 'B':
-                addSQL = ''' and gaf.dbType in ('gene segment', 'protein coding gene') '''
+                addSQL = ''' and gaf.dbType in ('gene', 'gene segment', 'protein coding gene') '''
         # RNA features
         elif subsection == 'C':
                 addSQL = ''' and gaf.dbType in (
@@ -222,13 +225,43 @@ def createTempSection2(subsection):
                         'tRNA gene'
                         )
                         '''
-        # other features
-        elif subsection == 'D':
-                addSQL = ''' and gaf.dbType in ('biological region', 'pseudogene', 'pseudogenic gene segment', 'unclassified gene', 'unclassified non-coding RNA gene') '''
 
+        # pseudogenic features
+        elif subsection == 'D':
+                addSQL = ''' and gaf.dbType in (
+                        'polymorphic pseudogene', 
+                        'pseudogene', 
+                        'pseudogenic gene segment'
+                        )
+                        '''
+
+        # other features
+        elif subsection == 'E':
+                addSQL = ''' and gaf.dbType in (
+                        'unclassified gene', 
+                        'unclassified non-coding RNA gene'
+                        )
+                        '''
         db.sql('''
                 select gaf.mgiid, gaf.dbType as groupBy, d._dag_key, d.name
                 into temporary table validGenes
+                from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d, VOC_Term t
+                where gaf.goid = a.accid
+                and a._logicaldb_key = 31
+                %s
+                and gaf.dbType = t.term
+                and t._vocab_key = 79
+                and a._object_key = n._object_key
+                and n._dag_key = d._dag_key
+                and d._dag_key in (1,2,3,4)
+                and exists (select 1 from validMarkers m where gaf.mgiid = m.mgiid and m.predictedGene = 'No')
+                ''' % (addSQL), None)
+
+        db.sql('create index validGenes_idx on validGenes (mgiid)', None)
+
+        db.sql('''
+                select gaf.mgiid, gaf.dbType as groupBy, d._dag_key, d.name
+                into temporary table validPredicted
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
                 and a._logicaldb_key = 31
@@ -236,9 +269,10 @@ def createTempSection2(subsection):
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
                 and d._dag_key in (1,2,3,4)
+                and exists (select 1 from validMarkers m where gaf.mgiid = m.mgiid and m.predictedGene = 'Yes')
                 ''' % (addSQL), None)
 
-        db.sql('create index validGenes_idx on validGenes (mgiid)', None)
+        db.sql('create index validPredicted_idx on validPredicted (mgiid)', None)
 
         # 
         # select the columns from gafAnnotations that are needed to determine a distinct Annotation row
@@ -274,6 +308,19 @@ def createTempSection2(subsection):
 
         db.sql('create index validAnnotations_idx1 on validAnnotations (mgiid)', None)
         db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
+
+        # find all _vocab_key = 79 terms that do not exist/are not used in gaf.dbType, add gaf.dbType(groupBy) to validAnnotations
+        if subsection == 'E':
+                results = db.sql('''
+                        select t.term
+                        from voc_term t
+                        where t._vocab_key = 79
+                        and t._term_key not in (6238159, 6442608, 6238177, 6238175, 6238176, 6238179, 6442610, 6238173, 6238174, 6442609)
+                        and not exists (select 1 from gafAnnotations gaf where gaf.dbType = t.term)
+                        order by t.term
+                        ''', 'auto')
+                for r in results:
+                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, '%s', null, null, v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
 
 def createTempSection3(subsection):
         #
@@ -490,28 +537,39 @@ def processSection2():
         # A: All Annotations
         # B: Protein Coding Features
         # C: RNA Features
-        # D: Other Features
+        # D: Pseudogenic Features
+        # E: Other Features
         #
 
         fp.write(CRT + 'All Annotations' + CRT)
         createTempSection2('A')
         processSectionGene()
+        processSectionPredicted()
         processSectionTotal(2,'A')
 
         fp.write(CRT + 'Protein Coding Features' + CRT)
         createTempSection2('B')
         processSectionGene()
+        processSectionPredicted()
         processSectionTotal(2,'B')
 
         fp.write(CRT + 'RNA Features' + CRT)
         createTempSection2('C')
         processSectionGene()
+        processSectionPredicted()
         processSectionTotal(2,'C')
 
-        fp.write(CRT + 'Other Features' + CRT)
+        fp.write(CRT + 'Pseudogenic Features' + CRT)
         createTempSection2('D')
         processSectionGene()
+        processSectionPredicted()
         processSectionTotal(2,'D')
+
+        fp.write(CRT + 'Other Features' + CRT)
+        createTempSection2('E')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(2,'E')
 
         return
 
@@ -736,7 +794,7 @@ def processSectionTotal(section, subsection):
         print('processSectionTotal:NOPQR,14-18')
 
         results = db.sql('''
-                select groupBy, count(*) as counter from validAnnotations group by groupBy order by groupBy
+                select groupBy, count(*) as counter from validAnnotations where mgiid is not null group by groupBy order by groupBy
         ''', 'auto')
         for r in results:
                 key = r['groupBy']
@@ -746,16 +804,17 @@ def processSectionTotal(section, subsection):
         #print(totalAll)
 
         results = db.sql('''
-                select 'N' as column, count(*) as counter from validAnnotations
+                select 'N' as column, count(*) as counter from validAnnotations where mgiid is not null
         ''', 'auto')
         for r in results:
                 key = r['column']
                 value = r['counter']
                 totalSummary[key] = []
                 totalSummary[key].append(value)
-                
+        #print(totalSummary)
+
         results = db.sql('''
-                select _dag_key, name, count(*) as counter from validAnnotations group by name, _dag_key
+                select _dag_key, name, count(*) as counter from validAnnotations where mgiid is not null group by name, _dag_key
         ''', 'auto')
         for r in results:
                 if r['_dag_key'] == 3:
@@ -802,6 +861,8 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'C':
                         displayType = 'RNA Features'
                 elif subsection == 'D':
+                        displayType = 'Pseudogenic Features'
+                elif subsection == 'E':
                         displayType = 'Other Features'
         elif section == 3:
                 if subsection == 'A':
@@ -856,7 +917,7 @@ def processSectionTotal(section, subsection):
                 else:
                         fp.write("0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB + "0" + TAB)
 
-                if groupBy in dagAll:
+                if groupBy in dagAll and groupBy in totalAll:
                         totalCount = totalAll[groupBy][0]
                         fp.write(str(totalCount) + TAB)
                         dags = dagAll[groupBy]
@@ -878,6 +939,8 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'C':
                         fp.write(2*TAB + 'Total RNA features' + TAB)
                 elif subsection == 'D':
+                        fp.write(2*TAB + 'Total Pseudogenic features' + TAB)
+                elif subsection == 'E':
                         fp.write(2*TAB + 'Total other features' + TAB)
         elif section == 3:
                 if subsection == 'A':
@@ -925,8 +988,8 @@ fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
 
 # comment out during testing if you don't want to rebuild the gaf temp table each time
 createTempGAF()
-
 createTempMarkers()
+
 processSection1()
 
 fp.write(str.ljust('Annotation Category', 25) + TAB)
