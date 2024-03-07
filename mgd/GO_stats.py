@@ -15,7 +15,9 @@
 #       B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
 #       C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
 #       D: Total RCA Annotations by Contributor (assigned by)
-#       E: Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
+#       E: Root Annotations (ND) by Contributor (assigned by)
+#       E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
+#       E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
 #       F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
 #       G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
 #       H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
@@ -330,7 +332,9 @@ def createTempSection3(subsection):
         # III.B - High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
         # III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
         # III.D - Total RCA Annotations by Contributor (assigned by)
-        # III.E - Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
+        # III.E - Root Annotations (ND) by Contributor (assigned by)
+        # III.E1- Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
+        # III.E2- Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
         # III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
         # III.G - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
         # III.H - Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
@@ -361,6 +365,12 @@ def createTempSection3(subsection):
         # ND|118
         elif subsection == 'E':
                 addSQL = 'and ec._term_key in (118)'
+        # ND|118, GO_REF:0000015
+        elif subsection == 'E1':
+                addSQL = ''' and ec._term_key in (118) and gaf.refs = 'GO_REF:0000015' '''
+        # ND|118, != GO_REF:0000015
+        elif subsection == 'E2':
+                addSQL = ''' and ec._term_key in (118) and gaf.refs != 'GO_REF:0000015' '''
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
@@ -581,7 +591,9 @@ def processSection3():
         # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
         # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
         # D: Total RCA Annotations by Contributor (assigned by)
-        # E: Root Annotations (ND & GO_REF:0000015) by Contributor (assigned by)
+        # E: Root Annotations (ND) by Contributor (assigned by)
+        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
+        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
         # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
         # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
         # H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
@@ -613,11 +625,23 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'D')
 
-        #fp.write(CRT + 'Root Annotations (ND & GO_REF:0000015) by Contributor' + CRT)
-        #createTempSection3('E')
-        #processSectionGene()
-        #processSectionPredicted()
-        #processSectionTotal(3,'E')
+        fp.write(CRT + 'Root Annotations (ND)' + CRT)
+        createTempSection3('E')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'E')
+
+        fp.write(CRT + 'Root Annotations (ND) with GO_REF:0000015 - Use of the ND evidence code' + CRT)
+        createTempSection3('E1')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'E1')
+
+        fp.write(CRT + 'Other Root Annotations (ND & NOT GO_REF:0000015) by Contributor (assigned by)' + CRT)
+        createTempSection3('E2')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'E2')
 
         fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor' + CRT)
         createTempSection3('F')
@@ -875,6 +899,10 @@ def processSectionTotal(section, subsection):
                         displayType = 'RCA'
                 elif subsection == 'E':
                         displayType = 'Root'
+                elif subsection == 'E1':
+                        displayType = 'Root'
+                elif subsection == 'E2':
+                        displayType = 'Root'
                 elif subsection == 'F':
                         displayType = 'Manual Sequence'
                 elif subsection == 'G':
@@ -952,7 +980,11 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'D':
                         fp.write(TAB + 'Total RCA Annotations' + TAB)
                 elif subsection == 'E':
-                        fp.write(TAB + 'Total Root Annotations' + TAB)
+                        fp.write(TAB + 'All Root Annotations (ND)' + TAB)
+                elif subsection == 'E1':
+                        fp.write(TAB + 'Total Root Annotations (ND & GO_REF:0000015)' + TAB)
+                elif subsection == 'E2':
+                        fp.write(TAB + 'Total Root Annotations (ND & NOT GO_REF:0000015)' + TAB)
                 elif subsection == 'F':
                         fp.write(TAB + 'Total Manual Sequence Annotations' + TAB)
                 elif subsection == 'G':
