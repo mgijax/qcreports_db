@@ -5,11 +5,11 @@
 # Section I   - GO Ontology Summary      : processSection1()
 # Section II  - Counts by Features types : processSection2()
 # Section III - Counts by "Assigned By"  : processSection3()
-#       DEFGH,4-8   : Total # of Genes
-#       IJKLM,9-13  : Total # of Predicted Genes
-#       NOPQR,14-18 : Total # of Annotations
-#       S,19        : Classification Axis
-#       T,20        : Sorting Classification
+#       CDEFG,3-7   : Total # of Genes
+#       HIJKL,8-12  : Total # of Predicted Genes
+#       MNOPQ,13-17 : Total # of Annotations
+#       R,18        : Classification Axis
+#       S,19        : Sorting Classification
 # 
 #       A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
 #       B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
@@ -494,7 +494,7 @@ def processSection1():
         fp.write(CRT)
         fp.write('This report is best viewed by importing into Excel')
         fp.write(2*CRT)
-        fp.write(4*TAB + 'Biological Process' + TAB + 'Cellular Component' + TAB + 'Molecular Function' + CRT)
+        fp.write(3*TAB + 'Biological Process' + TAB + 'Cellular Component' + TAB + 'Molecular Function' + CRT)
 
         results = db.sql('''
                 select d._dag_key, d.name, count(distinct a._term_key) as counter
@@ -507,7 +507,7 @@ def processSection1():
                 order by d.name
         ''', 'auto')
 
-        fp.write('Gene Ontology Summary - Number of GO Terms per Ontology' + 3*TAB)
+        fp.write('Gene Ontology Summary - Number of GO Terms per Ontology' + 2*TAB)
         for r in results:
                 fp.write(TAB + str(r['counter']))
         fp.write(CRT)
@@ -525,7 +525,7 @@ def processSection1():
                 order by d.name
         ''', 'auto')
 
-        fp.write('Gene Ontology Summary - Number of GO Terms per Ontology Used in MGI' + 3*TAB)
+        fp.write('Gene Ontology Summary - Number of GO Terms per Ontology Used in MGI' + 2*TAB)
         for r in results:
                 fp.write(TAB + str(r['counter']))
         fp.write(2*CRT)
@@ -657,7 +657,7 @@ def processSectionGene():
 
         global totalGene, dagGene, totalSummary
 
-        print('processSectionGene:DEFGH,4-8')
+        print('processSectionGene:CDEFG,3-7')
 
         totalSummary = {}
 
@@ -671,7 +671,7 @@ def processSectionGene():
                 totalGene[key].append(value)
                 
         results = db.sql(''' 
-                select 'D' as column, count(distinct mgiid) as counter from validGenes 
+                select 'C' as column, count(distinct mgiid) as counter from validGenes 
         ''', 'auto')
         for r in results:
                 key = r['column']
@@ -684,13 +684,13 @@ def processSectionGene():
         ''', 'auto')
         for r in results:
                 if r['_dag_key'] == 3:
-                        key = 'E'
+                        key = 'D'
                 elif r['_dag_key'] == 1:
-                        key = 'F'
+                        key = 'E'
                 elif r['_dag_key'] == 2:
-                        key = 'G'
+                        key = 'F'
                 else:
-                        key = 'H'
+                        key = 'G'
                 value = r['counter']
                 totalSummary[key] = []
                 totalSummary[key].append(value)
@@ -724,7 +724,7 @@ def processSectionPredicted():
 
         global totalPredicted, dagPredicted, totalSummary
 
-        print('processSectionPredicted:IJKLM,9-13')
+        print('processSectionPredicted:HIJKL,8-12')
 
         results = db.sql('''
                 select groupBy, count(distinct mgiid) as counter from validPredicted group by groupBy order by groupBy
@@ -736,7 +736,7 @@ def processSectionPredicted():
                 totalPredicted[key].append(value)
                 
         results = db.sql('''
-                select 'I' as column, count(distinct mgiid) as counter from validPredicted
+                select 'H' as column, count(distinct mgiid) as counter from validPredicted
         ''', 'auto')
         for r in results:
                 key = r['column']
@@ -750,13 +750,13 @@ def processSectionPredicted():
         
         for r in results:
                 if r['_dag_key'] == 3:
-                        key = 'J'
+                        key = 'I'
                 elif r['_dag_key'] == 1:
-                        key = 'K'
+                        key = 'J'
                 elif r['_dag_key'] == 2:
-                        key = 'L'
+                        key = 'K'
                 else:
-                        key = 'M'
+                        key = 'L'
                 value = r['counter']
                 totalSummary[key] = []
                 totalSummary[key].append(value)
@@ -791,7 +791,7 @@ def processSectionTotal(section, subsection):
 
         global totalAll, dagAll, totalSummary
 
-        print('processSectionTotal:NOPQR,14-18')
+        print('processSectionTotal:MNOPQ,13-17')
 
         results = db.sql('''
                 select groupBy, count(*) as counter from validAnnotations where mgiid is not null group by groupBy order by groupBy
@@ -804,7 +804,7 @@ def processSectionTotal(section, subsection):
         #print(totalAll)
 
         results = db.sql('''
-                select 'N' as column, count(*) as counter from validAnnotations where mgiid is not null
+                select 'M' as column, count(*) as counter from validAnnotations where mgiid is not null
         ''', 'auto')
         for r in results:
                 key = r['column']
@@ -818,13 +818,13 @@ def processSectionTotal(section, subsection):
         ''', 'auto')
         for r in results:
                 if r['_dag_key'] == 3:
-                        key = 'O'
+                        key = 'N'
                 elif r['_dag_key'] == 1:
-                        key = 'P'
+                        key = 'O'
                 elif r['_dag_key'] == 2:
-                        key = 'Q'
+                        key = 'P'
                 else:
-                        key = 'R'
+                        key = 'Q'
                 value = r['counter']
                 totalSummary[key] = []
                 totalSummary[key].append(value)
@@ -887,16 +887,16 @@ def processSectionTotal(section, subsection):
                         displayType = 'IEA methods'
 
         # for each groupBy
-        #       DEFGH,4-8  : Total # of Genes
-        #       IJKLM,9-13 : Total # of Predicted Genes
-        #       NOPQR,14-18: Total # of Annotations
+        #       CDEFG,3-7   : Total # of Genes
+        #       HIJKL,8-12  : Total # of Predicted Genes
+        #       MNOPQ,13-17 : Total # of Annotations
         for groupBy in dagAll:
 
                 # section 2/subsection 'A' -> skip
                 if section == 2 and subsection == 'A':
                         continue
 
-                fp.write(2*TAB + str(groupBy) + TAB)
+                fp.write(TAB + str(groupBy) + TAB)
 
                 # dags for given groupBy, print total, b, c, m, obsolete
                 if groupBy in dagGene:
@@ -933,38 +933,38 @@ def processSectionTotal(section, subsection):
 
         if section == 2:
                 if subsection == 'A':
-                        fp.write(2*TAB + 'Total All Annotations' + TAB)
+                        fp.write(TAB + 'Total All Annotations' + TAB)
                 elif subsection == 'B':
-                        fp.write(2*TAB + 'Total protein coding features' + TAB)
+                        fp.write(TAB + 'Total protein coding features' + TAB)
                 elif subsection == 'C':
-                        fp.write(2*TAB + 'Total RNA features' + TAB)
+                        fp.write(TAB + 'Total RNA features' + TAB)
                 elif subsection == 'D':
-                        fp.write(2*TAB + 'Total Pseudogenic features' + TAB)
+                        fp.write(TAB + 'Total Pseudogenic features' + TAB)
                 elif subsection == 'E':
-                        fp.write(2*TAB + 'Total other features' + TAB)
+                        fp.write(TAB + 'Total other features' + TAB)
         elif section == 3:
                 if subsection == 'A':
-                        fp.write(2*TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
+                        fp.write(TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
                 elif subsection == 'B':
-                        fp.write(2*TAB + 'Total High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP)' + TAB)
+                        fp.write(TAB + 'Total High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP)' + TAB)
                 elif subsection == 'C':
-                        fp.write(2*TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
+                        fp.write(TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
                 elif subsection == 'D':
-                        fp.write(2*TAB + 'Total RCA Annotations' + TAB)
+                        fp.write(TAB + 'Total RCA Annotations' + TAB)
                 elif subsection == 'E':
-                        fp.write(2*TAB + 'Total Root Annotations' + TAB)
+                        fp.write(TAB + 'Total Root Annotations' + TAB)
                 elif subsection == 'F':
-                        fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations' + TAB)
                 elif subsection == 'G':
-                        fp.write(2*TAB + 'Total Manual Sequence Annotations' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations' + TAB)
                 elif subsection == 'H':
-                        fp.write(2*TAB + 'Total Automated orthology Annotations' + TAB)
+                        fp.write(TAB + 'Total Automated orthology Annotations' + TAB)
                 elif subsection == 'I':
-                        fp.write(2*TAB + 'Total Phylogenetic Annotations' + TAB)
+                        fp.write(TAB + 'Total Phylogenetic Annotations' + TAB)
                 elif subsection == 'J':
-                        fp.write(2*TAB + 'Total IEA methods' + TAB)
+                        fp.write(TAB + 'Total IEA methods' + TAB)
 
-        outputCols = ['D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R']
+        outputCols = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
         for c in outputCols: 
                 if c not in totalSummary:
                         fp.write('0' + TAB)
@@ -993,7 +993,6 @@ createTempMarkers()
 processSection1()
 
 fp.write(str.ljust('Annotation Category', 25) + TAB)
-fp.write('GO_REF' + TAB)
 fp.write('Contribor, Feature Type, or Summary row description' + TAB)
 fp.write('Total Number of Genes Annotated:' + TAB)
 fp.write('Biological Process' + TAB)
