@@ -24,10 +24,6 @@ import reportlib
 import db
 import go_isoforms
 
-goloadpath = os.environ['GOLOAD'] + '/lib'
-sys.path.insert(0, goloadpath)
-import ecolib
-
 db.setTrace()
 
 TAB = reportlib.TAB

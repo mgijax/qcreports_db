@@ -18,18 +18,19 @@
 # E: Other Features
 #
 # Section III - Counts by Assigned By  : processSection3()
-# A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-# B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
-# C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
-# D: Total RCA Annotations by Contributor (assigned by)
-# E: Root Annotations (ND) by Contributor (assigned by)
-# E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
-# E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
-# F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
-# F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
-# F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
-# F3: Manual Sequence Annotations with GO_REF:0000024
-# F4: Manual Sequence Annotations with GO_REF:0000114
+# A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor 
+# B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor
+# C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor
+# D: Total RCA Annotations by Contributor
+# E: Root Annotations (ND) by Contributor
+# E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
+# E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
+#
+# F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+# F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor
+# F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065) by Contributor
+# F3: Manual Sequence Annotations with GO_REF:0000024 by Contributor
+# F4: Manual Sequence Annotations with GO_REF:0000114 by Contributor
 #
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
@@ -388,19 +389,18 @@ def createTempSection3(subsection):
         #
         # section 3: create the temp tables for given subsection A-J
         #
-        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
-        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
-        # D: Total RCA Annotations by Contributor (assigned by)
-        # E: Root Annotations (ND) by Contributor (assigned by)
-        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
-        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
-        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
-        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
+        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor
+        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor
+        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor
+        # D: Total RCA Annotations by Contributor
+        # E: Root Annotations (ND) by Contributor
+        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
+        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
+        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor
         # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
         # F3: Manual Sequence Annotations with GO_REF:0000024
         # F4: Manual Sequence Annotations with GO_REF:0000114
-        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -440,7 +440,6 @@ def createTempSection3(subsection):
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
-                addSQL += '''\nand gaf.refs like 'PMID:%' '''
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F1':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
@@ -675,19 +674,18 @@ def processSection3():
         #
         # Section III - Counts by "Assigned By"
         #
-        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
-        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
-        # D: Total RCA Annotations by Contributor (assigned by)
-        # E: Root Annotations (ND) by Contributor (assigned by)
-        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
-        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
-        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
-        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
+        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor
+        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor
+        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor
+        # D: Total RCA Annotations by Contributor
+        # E: Root Annotations (ND) by Contributor
+        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
+        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
+        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor
         # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
         # F3: Manual Sequence Annotations with GO_REF:0000024
         # F4: Manual Sequence Annotations with GO_REF:0000114
-        # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
         #
 
         fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
@@ -1016,6 +1014,9 @@ def processSectionTotal(section, subsection):
                 # section 2/subsection 'A' -> skip
                 if section == 2 and subsection == 'A':
                         continue
+                # section 3/subsection 'F' -> skip
+                if section == 3 and subsection == 'F':
+                        continue
 
                 fp.write(TAB + str(groupBy) + TAB)
 
@@ -1081,7 +1082,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'E2':
                         fp.write(TAB + 'Total Root Annotations (ND & NOT GO_REF:0000015)' + TAB)
                 elif subsection == 'F':
-                        fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)' + TAB)
                 elif subsection == 'F1':
                         fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF' + TAB)
                 elif subsection == 'F2':
