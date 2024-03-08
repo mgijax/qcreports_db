@@ -414,7 +414,7 @@ def createTempSection3(subsection):
         # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
         if subsection == 'A':
                 addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
-        # HTP:xxxx HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
+        # HTP:114159319 HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
                 addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171,114159319)'
         # IC|25238 TAS|113 NAS|116
@@ -434,23 +434,23 @@ def createTempSection3(subsection):
         elif subsection == 'E2':
                 addSQL = ''' and ec._term_key in (118) and gaf.refs != 'GO_REF:0000015' '''
 
-        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs like 'PMID:%' '''
-        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F1':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs not like 'GO_REF:%' '''
-        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F2':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000008' '''
-        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F3':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000024' '''
-        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F4':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
