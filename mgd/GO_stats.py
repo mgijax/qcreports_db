@@ -722,7 +722,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'E2')
 
-        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations' + CRT)
         createTempSection3('F')
         processSectionGene()
         processSectionPredicted()
@@ -734,19 +734,19 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'F2')
 
-        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000008 (J:73065)' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000008 (J:73065) - Gene Ontology annotation by the MGI curatorial staff, curated orthology' + CRT)
         createTempSection3('F2')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F2')
 
-        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000024' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000024 - Manual transfer of experimentally-verified manual GO annotation data to orthologs by curator judgment of sequence similarity.' + CRT)
         createTempSection3('F3')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F3')
 
-        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000114' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000114 - Manual transfer of experimentally-verified manual GO annotation data to homologous complexes by curator judgment of sequence, composition and function similarity' + CRT)
         createTempSection3('F4')
         processSectionGene()
         processSectionPredicted()
