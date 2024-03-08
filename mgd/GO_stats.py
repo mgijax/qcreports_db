@@ -19,6 +19,10 @@
 #       E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
 #       E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
 #       F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+#       F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
+#       F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
+#       F3: Manual Sequence Annotations with GO_REF:0000024
+#       F4: Manual Sequence Annotations with GO_REF:0000114
 #       G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
 #       H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
 #       I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
@@ -317,8 +321,55 @@ def createTempSection2(subsection):
                         select t.term
                         from voc_term t
                         where t._vocab_key = 79
-                        and t._term_key not in (6238159, 6442608, 6238177, 6238175, 6238176, 6238179, 6442610, 6238173, 6238174, 6442609)
                         and not exists (select 1 from gafAnnotations gaf where gaf.dbType = t.term)
+                        and exists (select 1 from VOC_Annot va where t._term_key = va._term_key and va._annottype_key = 1011)
+                        and t.term not in (
+                                'all feature types',
+                                'QTL',
+                                'transgene',
+                                'complex/cluster/region',
+                                'cytogenetic marker',
+                                'BAC/YAC end',
+                                'DNA segment',
+                                'BAC end',
+                                'PAC end',
+                                'chromosomal deletion',
+                                'chromosomal duplication',
+                                'chromosomal inversion',
+                                'chromosomal translocation',
+                                'chromosomal transposition',
+                                'CpG island',
+                                'CTCF binding site',
+                                'endogenous retroviral region',
+                                'enhancer',
+                                'heritable phenotypic marker',
+                                'histone modification',
+                                'imprinting control region',
+                                'insertion',
+                                'insulator',
+                                'insulator binding site',
+                                'intronic regulatory region',
+                                'locus control region',
+                                'minisatellite',
+                                'mutation defined region',
+                                'open chromatin region',
+                                'origin of replication',
+                                'other feature type',
+                                'other genome feature',
+                                'promoter',
+                                'promoter flanking region',
+                                'reciprocal chromosomal translocation',
+                                'response element',
+                                'retrotransposon',
+                                'Robertsonian fusion',
+                                'silencer',
+                                'splice enhancer',
+                                'telomere',
+                                'transcriptional cis regulatory region',
+                                'transcription factor binding site',
+                                'TSS cluster',
+                                'unclassified cytogenetic marker'
+                                )
                         order by t.term
                         ''', 'auto')
                 for r in results:
@@ -328,18 +379,23 @@ def createTempSection3(subsection):
         #
         # section 3: create the temp tables for given subsection A-J
         #
-        # III.A - Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-        # III.B - High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
-        # III.C - Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
-        # III.D - Total RCA Annotations by Contributor (assigned by)
-        # III.E - Root Annotations (ND) by Contributor (assigned by)
-        # III.E1- Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
-        # III.E2- Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
-        # III.F - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
-        # III.G - Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
-        # III.H - Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
-        # III.I - Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
-        # III.J - IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
+        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
+        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
+        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
+        # D: Total RCA Annotations by Contributor (assigned by)
+        # E: Root Annotations (ND) by Contributor (assigned by)
+        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
+        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
+        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
+        # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
+        # F3: Manual Sequence Annotations with GO_REF:0000024
+        # F4: Manual Sequence Annotations with GO_REF:0000114
+        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+        # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
+        # H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
+        # I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
+        # J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -362,6 +418,7 @@ def createTempSection3(subsection):
         # RCA|514597
         elif subsection == 'D':
                 addSQL = 'and ec._term_key in (514597)'
+
         # ND|118
         elif subsection == 'E':
                 addSQL = 'and ec._term_key in (118)'
@@ -371,10 +428,28 @@ def createTempSection3(subsection):
         # ND|118, != GO_REF:0000015
         elif subsection == 'E2':
                 addSQL = ''' and ec._term_key in (118) and gaf.refs != 'GO_REF:0000015' '''
+
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
                 addSQL += '''\nand gaf.refs like 'PMID:%' '''
+        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        elif subsection == 'F1':
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL += '''\nand gaf.refs not like 'GO_REF:%' '''
+        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        elif subsection == 'F2':
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL += '''\nand gaf.refs = 'GO_REF:0000008' '''
+        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        elif subsection == 'F3':
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL += '''\nand gaf.refs = 'GO_REF:0000024' '''
+        # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        elif subsection == 'F4':
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
+
         # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'G':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
@@ -595,6 +670,10 @@ def processSection3():
         # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
         # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
         # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
+        # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
+        # F3: Manual Sequence Annotations with GO_REF:0000024
+        # F4: Manual Sequence Annotations with GO_REF:0000114
         # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
         # H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
         # I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
@@ -637,7 +716,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'E1')
 
-        fp.write(CRT + 'Other Root Annotations (ND & NOT GO_REF:0000015) by Contributor (assigned by)' + CRT)
+        fp.write(CRT + 'Other Root Annotations (ND & NOT GO_REF:0000015) by Contributor' + CRT)
         createTempSection3('E2')
         processSectionGene()
         processSectionPredicted()
@@ -649,11 +728,29 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'F')
 
-        #fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor' + CRT)
-        #createTempSection3('G')
-        #processSectionGene()
-        #processSectionPredicted()
-        #processSectionTotal(3,'G')
+        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor' + CRT)
+        createTempSection3('F1')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'F2')
+
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000008 (J:73065)' + CRT)
+        createTempSection3('F2')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'F2')
+
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000024' + CRT)
+        createTempSection3('F3')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'F3')
+
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000114' + CRT)
+        createTempSection3('F4')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'F4')
 
         #fp.write(CRT + 'Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor' + CRT)
         #createTempSection3('H')
@@ -905,7 +1002,13 @@ def processSectionTotal(section, subsection):
                         displayType = 'Root'
                 elif subsection == 'F':
                         displayType = 'Manual Sequence'
-                elif subsection == 'G':
+                elif subsection == 'F1':
+                        displayType = 'Manual Sequence'
+                elif subsection == 'F2':
+                        displayType = 'Manual Sequence'
+                elif subsection == 'F3':
+                        displayType = 'Manual Sequence'
+                elif subsection == 'F4':
                         displayType = 'Manual Sequence'
                 elif subsection == 'H':
                         displayType = 'Automated orthology'
@@ -986,7 +1089,15 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'E2':
                         fp.write(TAB + 'Total Root Annotations (ND & NOT GO_REF:0000015)' + TAB)
                 elif subsection == 'F':
-                        fp.write(TAB + 'Total Manual Sequence Annotations' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs' + TAB)
+                elif subsection == 'F1':
+                        fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF' + TAB)
+                elif subsection == 'F2':
+                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000008 (J:73065)' + TAB)
+                elif subsection == 'F3':
+                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
+                elif subsection == 'F4':
+                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
                 elif subsection == 'G':
                         fp.write(TAB + 'Total Manual Sequence Annotations' + TAB)
                 elif subsection == 'H':
