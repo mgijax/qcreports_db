@@ -2,31 +2,39 @@
 #
 # GO_stats.py
 #
+# CDEFG,3-7   : Total # of Genes
+# HIJKL,8-12  : Total # of Predicted Genes
+# MNOPQ,13-17 : Total # of Annotations
+# R,18        : Classification Axis
+# S,19        : Sorting Classification
+#
 # Section I   - GO Ontology Summary      : processSection1()
+#
 # Section II  - Counts by Features types : processSection2()
-# Section III - Counts by "Assigned By"  : processSection3()
-#       CDEFG,3-7   : Total # of Genes
-#       HIJKL,8-12  : Total # of Predicted Genes
-#       MNOPQ,13-17 : Total # of Annotations
-#       R,18        : Classification Axis
-#       S,19        : Sorting Classification
-# 
-#       A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
-#       B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
-#       C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
-#       D: Total RCA Annotations by Contributor (assigned by)
-#       E: Root Annotations (ND) by Contributor (assigned by)
-#       E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
-#       E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
-#       F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
-#       F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
-#       F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
-#       F3: Manual Sequence Annotations with GO_REF:0000024
-#       F4: Manual Sequence Annotations with GO_REF:0000114
-#       G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
-#       H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
-#       I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
-#       J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
+# A: All Annotations
+# B: Protein Coding Features
+# C: RNA Features
+# D: Pseudogenic Features
+# E: Other Features
+#
+# Section III - Counts by Assigned By  : processSection3()
+# A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor (assigned by)
+# B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor (assigned by)
+# C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor (assigned by)
+# D: Total RCA Annotations by Contributor (assigned by)
+# E: Root Annotations (ND) by Contributor (assigned by)
+# E1: Root Annotations (ND & GO_REFS:0000015) by Contributor (assigned by)
+# E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor (assigned by)
+# F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
+# F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor (assigned by)
+# F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
+# F3: Manual Sequence Annotations with GO_REF:0000024
+# F4: Manual Sequence Annotations with GO_REF:0000114
+# not done yet:
+# G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
+# H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
+# I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
+# J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
 #
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
@@ -188,11 +196,11 @@ def createTempSection2(subsection):
         #
         # section 2: create the temp tables for given subsection A-J
         #
-        # II.A - ALL Annotations
-        # II.B - Protein Coding Features
-        # II.C - RNA Features
-        # II.D - Pseudogenic Features
-        # II.E - Other Features
+        # A: All Annotations
+        # B: Protein Coding Features
+        # C: RNA Features
+        # D: Pseudogenic Features
+        # E: Other Features
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -1129,43 +1137,42 @@ def processSectionTotal(section, subsection):
 # end: processing
 #
 
+def printHeader():
+        #
+        # the header for section 2,3
+        #
+
+        fp.write(str.ljust('Annotation Category', 25) + TAB)
+        fp.write('Contribor, Feature Type, or Summary row description' + TAB)
+        fp.write('Total Number of Genes Annotated:' + TAB)
+        fp.write('Biological Process' + TAB)
+        fp.write('Cellular Component' + TAB)
+        fp.write('Molecular Funcation' + TAB)
+        fp.write('Obsolete' + TAB)
+        fp.write('Total Number of Predicted Genes Annotated:' + TAB)
+        fp.write('Biological Process' + TAB)
+        fp.write('Cellular Component' + TAB)
+        fp.write('Molecular Funcation' + TAB)
+        fp.write('Obsolete' + TAB)
+        fp.write('Total Number of Annotations:' + TAB)
+        fp.write('Biological Process' + TAB)
+        fp.write('Cellular Component' + TAB)
+        fp.write('Molecular Funcation' + TAB)
+        fp.write('Obsolete' + TAB)
+        fp.write('Classification Axis' + TAB)
+        fp.write('Sorting Classification' + CRT)
+
 #
 # Main
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'])
-
-# comment out during testing if you don't want to rebuild the gaf temp table each time
 createTempGAF()
 createTempMarkers()
-
 processSection1()
-
-fp.write(str.ljust('Annotation Category', 25) + TAB)
-fp.write('Contribor, Feature Type, or Summary row description' + TAB)
-fp.write('Total Number of Genes Annotated:' + TAB)
-fp.write('Biological Process' + TAB)
-fp.write('Cellular Component' + TAB)
-fp.write('Molecular Funcation' + TAB)
-fp.write('Obsolete' + TAB)
-fp.write('Total Number of Predicted Genes Annotated:' + TAB)
-fp.write('Biological Process' + TAB)
-fp.write('Cellular Component' + TAB)
-fp.write('Molecular Funcation' + TAB)
-fp.write('Obsolete' + TAB)
-fp.write('Total Number of Annotations:' + TAB)
-fp.write('Biological Process' + TAB)
-fp.write('Cellular Component' + TAB)
-fp.write('Molecular Funcation' + TAB)
-fp.write('Obsolete' + TAB)
-fp.write('Classification Axis' + TAB)
-fp.write('Sorting Classification' + CRT)
-
+printHeader()
 processSection2()
 processSection3()
-
-# comment out during testing if you don't want to rebuild the gaf temp table each time
-# drop the temporary GAF table
 db.sql('drop table if exists gafAnnotations;', None)
 db.commit()
 reportlib.finish_nonps(fp)
