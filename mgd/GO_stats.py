@@ -208,7 +208,11 @@ def createTempSection2(subsection):
                 addSQL = ''
         # protein coding features
         elif subsection == 'B':
-                addSQL = ''' and gaf.dbType in ('gene', 'gene segment', 'protein coding gene') '''
+                addSQL = ''' and gaf.dbType in (
+                        'gene segment', 
+                        'protein coding gene'
+                        ) 
+                        '''
         # RNA features
         elif subsection == 'C':
                 addSQL = ''' and gaf.dbType in (
@@ -316,6 +320,7 @@ def createTempSection2(subsection):
         db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
 
         # find all _vocab_key = 79 terms that do not exist/are not used in gaf.dbType, add gaf.dbType(groupBy) to validAnnotations
+        # exclude the feature types below from consideration
         if subsection == 'E':
                 results = db.sql('''
                         select t.term
@@ -368,7 +373,8 @@ def createTempSection2(subsection):
                                 'transcriptional cis regulatory region',
                                 'transcription factor binding site',
                                 'TSS cluster',
-                                'unclassified cytogenetic marker'
+                                'unclassified cytogenetic marker',
+                                'YAC end'
                                 )
                         order by t.term
                         ''', 'auto')
