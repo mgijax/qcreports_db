@@ -414,12 +414,15 @@ def createTempSection3(subsection):
         # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
         if subsection == 'A':
                 addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
+
         # HTP:114159319 HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
                 addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171,114159319)'
+
         # IC|25238 TAS|113 NAS|116
         elif subsection == 'C':
                 addSQL = 'and ec._term_key in (25238,113,116)'
+
         # RCA|514597
         elif subsection == 'D':
                 addSQL = 'and ec._term_key in (514597)'
@@ -458,12 +461,15 @@ def createTempSection3(subsection):
         # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'G':
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
+
         # ISO|3251466
         elif subsection == 'H':
                 addSQL = 'and ec._term_key in (3251466)'
+
         # IBA|7428292
         elif subsection == 'I':
                 addSQL = 'and ec._term_key in (7428292)'
+
         # IEA|115
         elif subsection == 'J':
                 addSQL = 'and ec._term_key in (115)'
