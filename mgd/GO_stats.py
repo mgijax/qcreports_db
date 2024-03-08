@@ -30,11 +30,6 @@
 # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
 # F3: Manual Sequence Annotations with GO_REF:0000024
 # F4: Manual Sequence Annotations with GO_REF:0000114
-# not done yet:
-# G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
-# H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
-# I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
-# J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
 #
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
@@ -406,10 +401,6 @@ def createTempSection3(subsection):
         # F3: Manual Sequence Annotations with GO_REF:0000024
         # F4: Manual Sequence Annotations with GO_REF:0000114
         # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from PMIDs by Contributor (assigned by)
-        # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
-        # H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
-        # I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
-        # J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -425,7 +416,7 @@ def createTempSection3(subsection):
                 addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
         # HTP:xxxx HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
-                addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171)'
+                addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171,114159319)'
         # IC|25238 TAS|113 NAS|116
         elif subsection == 'C':
                 addSQL = 'and ec._term_key in (25238,113,116)'
@@ -445,23 +436,23 @@ def createTempSection3(subsection):
 
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs like 'PMID:%' '''
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F1':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs not like 'GO_REF:%' '''
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F2':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000008' '''
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F3':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000024' '''
         # IGC|xxxx IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F4':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)' 
+                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
 
         # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
@@ -582,6 +573,8 @@ def processSection1():
         # number of GO terms per ontology used in MGI
         #
 
+        # header for section 1
+
         fp.write('includes: all GO annotations' + 2*CRT)
         fp.write('\'Predicted genes\' are those that:' + CRT)
         fp.write('- have a name that starts with the words \'gene model\'' + CRT)
@@ -689,9 +682,6 @@ def processSection3():
         # F3: Manual Sequence Annotations with GO_REF:0000024
         # F4: Manual Sequence Annotations with GO_REF:0000114
         # G: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using GO_REFs by GO_REF & Contributor (assigned by)
-        # H: Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor (assigned by)
-        # I: Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor (assigned by)
-        # J: IEA methods (IEA using a GO_REF) by GO_REF & Contributor (assigned by)
         #
 
         fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
@@ -765,24 +755,6 @@ def processSection3():
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F4')
-
-        #fp.write(CRT + 'Automated orthology Annotations (ISO using GO_REFs) by GO_REF & Contributor' + CRT)
-        #createTempSection3('H')
-        #processSectionGene()
-        #processSectionPredicted()
-        #processSectionTotal(3,'H')
-
-        #fp.write(CRT + 'Phylogenetic Annotations (IBA using GO_REF:0000033) by Contributor' + CRT)
-        #createTempSection3('I')
-        #processSectionGene()
-        #processSectionPredicted()
-        #processSectionTotal(3,'I')
-
-        #fp.write(CRT + 'IEA methods (IEA using a GO_REF) by GO_REF & Contributor' + CRT)
-        #createTempSection3('J')
-        #processSectionGene()
-        #processSectionPredicted()
-        #processSectionTotal(3,'J')
 
 def processSectionGene():
         #
@@ -1024,12 +996,6 @@ def processSectionTotal(section, subsection):
                         displayType = 'Manual Sequence'
                 elif subsection == 'F4':
                         displayType = 'Manual Sequence'
-                elif subsection == 'H':
-                        displayType = 'Automated orthology'
-                elif subsection == 'I':
-                        displayType = 'Phylogenetic'
-                elif subsection == 'J':
-                        displayType = 'IEA methods'
 
         # for each groupBy
         #       CDEFG,3-7   : Total # of Genes
@@ -1112,14 +1078,6 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
                 elif subsection == 'F4':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
-                elif subsection == 'G':
-                        fp.write(TAB + 'Total Manual Sequence Annotations' + TAB)
-                elif subsection == 'H':
-                        fp.write(TAB + 'Total Automated orthology Annotations' + TAB)
-                elif subsection == 'I':
-                        fp.write(TAB + 'Total Phylogenetic Annotations' + TAB)
-                elif subsection == 'J':
-                        fp.write(TAB + 'Total IEA methods' + TAB)
 
         outputCols = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
         for c in outputCols: 
