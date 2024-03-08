@@ -764,6 +764,8 @@ def processSection3():
 
 def processSectionGene():
         #
+        # gene section CDEFG,3-7
+        #
         # section 2 : process the genes : validGenes
         # section 3 : process the genes : validGenes
         #
@@ -832,6 +834,8 @@ def processSectionGene():
 
 def processSectionPredicted():
         #
+        # predicted section HIJKL,8-12
+        #
         # section 3 : process the predicted genes : validPredicted
         #
 
@@ -899,7 +903,7 @@ def processSectionPredicted():
 def processSectionTotal(section, subsection):
         #
         # process the total annotations : validAnnotations
-        # where subsection in A-J
+        # MNOPQ,13-17
         #
 
         global totalAll, dagAll, totalSummary
@@ -1059,6 +1063,8 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total Pseudogenic features' + TAB)
                 elif subsection == 'E':
                         fp.write(TAB + 'Total other features' + TAB)
+                classificationAxis = 'Feature type'
+                sortingClassification = 'Summary Row'
         elif section == 3:
                 if subsection == 'A':
                         fp.write(TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
@@ -1084,6 +1090,8 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
                 elif subsection == 'F4':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
+                classificationAxis = 'Evidence type'
+                sortingClassification = 'Summary Row'
 
         outputCols = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
         for c in outputCols: 
@@ -1092,10 +1100,8 @@ def processSectionTotal(section, subsection):
                 else:
                         fp.write(str(totalSummary[c][0]) + TAB)
 
-        if section == 2:
-                fp.write('Feature type' + TAB + 'Summary Row' + CRT)
-        elif section == 3:
-                fp.write('Evidence type' + TAB + 'Summary Row' + CRT)
+        # R,18: Classification Axis, S,19: Sorting Classification
+        fp.write(classificationAxis + TAB + sortingClassification + CRT)
 
 #
 # end: processing
