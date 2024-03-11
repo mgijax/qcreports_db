@@ -465,14 +465,14 @@ def createTempSection3(subsection):
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
 
         elif subsection == 'G':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
         elif subsection == 'G1':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000096' '''
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000096' '''
         elif subsection == 'G2':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000119' '''
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000119' '''
 
         elif subsection == 'H':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += ''' and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
 
         elif subsection == 'J1':
