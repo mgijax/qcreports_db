@@ -536,7 +536,7 @@ def createTempSection3(subsection):
         elif subsection == 'K10':
                 addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000041' '''
         elif subsection == 'K11':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118' '''
+                addSQL = ''' and ec._term_key in (115) and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
