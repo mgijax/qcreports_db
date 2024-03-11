@@ -39,6 +39,8 @@
 # H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: 
 #       GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
 #
+# I: not used
+#
 # J1: Phylogenetic annotations (IBA using GO_REF:0000033) by Contributor
 # J2: Phylogenetic annotations (IBA NOT using GO_REF:0000033) by Contributor
 #
@@ -53,7 +55,8 @@
 # K8: GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mapping
 # K9: GO_REF:0000044 - IEAs based on UniProtKB/Swiss-Prot Subcellular Location vocabulary 
 # K10: GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping
-# K11: IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
+# K11: IEA Annotations NOT using any of: 
+#       GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
 #
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
@@ -153,6 +156,14 @@ def createTempGAF():
         db.sql('create index gaf_idx1 on gafAnnotations (mgiid)', None)
         db.sql('create index gaf_idx2 on gafAnnotations (goid)', None)
 
+def closeTempGAF():
+        #
+        # close temp table gafAnnotations
+        #
+
+        db.sql('drop table if exists gafAnnotations;', None)
+        db.commit()
+
 def createTempMarkers():
         #
         # validMarkers : distinct set of markers used for this report
@@ -215,11 +226,7 @@ def createTempSection2(subsection):
         #
         # section 2: create the temp tables for given subsection A-J
         #
-        # A: All Annotations
-        # B: Protein Coding Features
-        # C: RNA Features
-        # D: Pseudogenic Features
-        # E: Other Features
+        # see overview at top of script
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -412,38 +419,7 @@ def createTempSection3(subsection):
         #
         # section 3: create the temp tables for given subsection A-J
         #
-        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor
-        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor
-        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor
-        # D: Total RCA Annotations by Contributor
-        # E: Root Annotations (ND) by Contributor
-        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
-        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
-        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
-        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor
-        # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
-        # F3: Manual Sequence Annotations with GO_REF:0000024
-        # F4: Manual Sequence Annotations with GO_REF:0000114
-        # G: All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
-        # G1: Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer 
-        # G2: Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer
-        # H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: 
-        #       GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
-        # I: Phylogenetic annotations (IBA using GO_REF:0000033) by Contributor
-        # K: IEA methods by Reference & Contributor (assigned by)
-        # K1: GO_REF:0000107 - IEAs to orthologs using Ensembl Compara.
-        # K2: GO_REF:0000002 -IEAs based on InterPro record links with GO terms.
-        # K3: GO_REF:0000116 -IEAs based on Rhea mapping.
-        # K4: GO_REF:0000003 - IEAs based on Enzyme Commission mapping
-        # K5: GO_REF:0000118 - IEAs from TreeGrafter
-        # K6: GO_REF:0000104 - IEAs for related proteins with shared sequence features
-        # K7: GO_REF:0000117 - IEAs created by ARBA machine learning models
-        # K8: GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mapping
-        # K9: GO_REF:0000044 - IEAs based on UniProtKB/Swiss-Prot Subcellular Location vocabulary 
-        # K10: GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping
-        # K11: IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
-        #
-        #
+        # see overview at top of script
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -544,7 +520,8 @@ def createTempSection3(subsection):
         elif subsection == 'K10':
                 addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000041' '''
         elif subsection == 'K11':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
+                addSQL = ' and ec._term_key in (115)'
+                addSQL += ''' and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
@@ -1383,7 +1360,6 @@ processSection1()
 printHeader()
 processSection2()
 processSection3()
-db.sql('drop table if exists gafAnnotations;', None)
-db.commit()
+closeTempGAF()
 reportlib.finish_nonps(fp)
 
