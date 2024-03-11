@@ -32,6 +32,29 @@
 # F3: Manual Sequence Annotations with GO_REF:0000024 by Contributor
 # F4: Manual Sequence Annotations with GO_REF:0000114 by Contributor
 #
+# G: All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+# G1: Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer 
+# G2: Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer
+#
+# H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
+#
+# I: 
+#
+# J: 
+#
+# K: IEA methods by Reference & Contributor (assigned by)
+# K1: GO_REF:0000107 - IEAs to orthologs using Ensembl Compara.
+# K2: GO_REF:0000002 -IEAs based on InterPro record links with GO terms.
+# K3: GO_REF:0000116 -IEAs based on Rhea mapping.
+# K4: GO_REF:0000003 - IEAs based on Enzyme Commission mapping
+# K5: GO_REF:0000118 - IEAs from TreeGrafter
+# K6: GO_REF:0000104 - IEAs for related proteins with shared sequence features
+# K7: GO_REF:0000117 - IEAs created by ARBA machine learning models
+# K8: GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mapping
+# K9: GO_REF:0000044 - IEAs based on UniProtKB/Swiss-Prot Subcellular Location vocabulary 
+# K10: GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping
+# K11: IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
+#
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
 #       . is a set of counts taken from the GO_MGIGAF.rpt file
@@ -401,6 +424,24 @@ def createTempSection3(subsection):
         # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
         # F3: Manual Sequence Annotations with GO_REF:0000024
         # F4: Manual Sequence Annotations with GO_REF:0000114
+        # G: All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+        # G1: Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer 
+        # G2: Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer
+        # H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
+        # K: IEA methods by Reference & Contributor (assigned by)
+        # K1: GO_REF:0000107 - IEAs to orthologs using Ensembl Compara.
+        # K2: GO_REF:0000002 -IEAs based on InterPro record links with GO terms.
+        # K3: GO_REF:0000116 -IEAs based on Rhea mapping.
+        # K4: GO_REF:0000003 - IEAs based on Enzyme Commission mapping
+        # K5: GO_REF:0000118 - IEAs from TreeGrafter
+        # K6: GO_REF:0000104 - IEAs for related proteins with shared sequence features
+        # K7: GO_REF:0000117 - IEAs created by ARBA machine learning models
+        # K8: GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mapping
+        # K9: GO_REF:0000044 - IEAs based on UniProtKB/Swiss-Prot Subcellular Location vocabulary 
+        # K10: GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping
+        # K11: IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
+        #
+        #
         #
         # validGenes      : set of marker by dag where predited = 'No'
         # validPredicted  : set of marker by dag where predicted = 'Yes'
@@ -457,21 +498,45 @@ def createTempSection3(subsection):
                 addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
 
-        # IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # IKR|7428294 IGC|114159318 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'G':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466)'
+                addSQL = 'and ec._term_key in (7428294,114159318,3251497,3251496,114,3251466)'
+        elif subsection == 'G1':
+                addSQL = ''' and ec._term_key in (3251466) and gaf.refs = 'GO_REF:0000096' '''
+        elif subsection == 'G2':
+                addSQL = ''' and ec._term_key in (3251466) and gaf.refs = 'GO_REF:0000119' '''
 
-        # ISO|3251466
+        # IKR|7428294 IGC|114159318 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
+        # NOT GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
         elif subsection == 'H':
-                addSQL = 'and ec._term_key in (3251466)'
-
-        # IBA|7428292
-        elif subsection == 'I':
-                addSQL = 'and ec._term_key in (7428292)'
+                addSQL = 'and ec._term_key in (7428294,114159318,3251497,3251496,114,3251466)'
+                addSQL += ''' and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
 
         # IEA|115
-        elif subsection == 'J':
-                addSQL = 'and ec._term_key in (115)'
+        elif subsection == 'K':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000107' '''
+        elif subsection == 'K1':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000107' '''
+        elif subsection == 'K2':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000002' '''
+        elif subsection == 'K3':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000116' '''
+        elif subsection == 'K4':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000003' '''
+        elif subsection == 'K5':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000118' '''
+        elif subsection == 'K6':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000104' '''
+        elif subsection == 'K7':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000117' '''
+        elif subsection == 'K8':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000043' '''
+        elif subsection == 'K9':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000044' '''
+        elif subsection == 'K10':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000041' '''
+        elif subsection == 'K11':
+                addSQL = ''' and ec._term_key in (115) and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118' '''
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
@@ -674,18 +739,7 @@ def processSection3():
         #
         # Section III - Counts by "Assigned By"
         #
-        # A: Experimental Annotations (EXP, IDA, IEP, IGI, IMP, or IPI) by Contributor
-        # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor
-        # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor
-        # D: Total RCA Annotations by Contributor
-        # E: Root Annotations (ND) by Contributor
-        # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
-        # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
-        # F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
-        # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor
-        # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065)
-        # F3: Manual Sequence Annotations with GO_REF:0000024
-        # F4: Manual Sequence Annotations with GO_REF:0000114
+        # A-K
         #
 
         fp.write(CRT + 'Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI) by Contributor' + CRT)
@@ -759,6 +813,102 @@ def processSection3():
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F4')
+
+        fp.write(CRT + 'Computational Sequence Annotations' + CRT)
+        createTempSection3('G')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'G')
+
+        fp.write(CRT + 'Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer' + CRT)
+        createTempSection3('G1')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'G1')
+
+        fp.write(CRT + 'Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfe' + CRT)
+        createTempSection3('G2')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'G2')
+
+        fp.write(CRT + 'Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:000011' + CRT)
+        createTempSection3('H')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'H')
+
+        fp.write(CRT + 'IEA methods by Reference & Contributor (assigned by' + CRT)
+        createTempSection3('K')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K')
+
+        fp.write(CRT + 'GO_REF:0000107 - IEAs to orthologs using Ensembl Compara' + CRT)
+        createTempSection3('K1')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K1')
+
+        fp.write(CRT + 'GO_REF:0000002 -IEAs based on InterPro record links with GO terms' + CRT)
+        createTempSection3('K2')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K2')
+
+        fp.write(CRT + 'GO_REF:0000116 -IEAs based on Rhea mapping' + CRT)
+        createTempSection3('K3')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K3')
+
+        fp.write(CRT + 'GO_REF:0000003 - IEAs based on Enzyme Commission mappin' + CRT)
+        createTempSection3('K4')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K4')
+
+        fp.write(CRT + 'GO_REF:0000118 - IEAs from TreeGrafte' + CRT)
+        createTempSection3('K5')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K5')
+
+        fp.write(CRT + 'GO_REF:0000104 - IEAs for related proteins with shared sequence feature' + CRT)
+        createTempSection3('K6')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K6')
+
+        fp.write(CRT + 'GO_REF:0000117 - IEAs created by ARBA machine learning model' + CRT)
+        createTempSection3('K7')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K7')
+
+        fp.write(CRT + 'GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mappin' + CRT)
+        createTempSection3('K8')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K8')
+
+        fp.write(CRT + 'GO_REF:0000044 - IEAs based on UniProtKB/Swiss-Prot Subcellular Location vocabulary' + CRT)
+        createTempSection3('K9')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K9')
+
+        fp.write(CRT + 'GO_REF:0000041 - IEAs based on UniPathway vocabulary mappin' + CRT)
+        createTempSection3('K10')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K10')
+
+        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:000011' + CRT)
+        createTempSection3('K11')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K11')
 
 def processSectionGene():
         #
@@ -1004,6 +1154,38 @@ def processSectionTotal(section, subsection):
                         displayType = 'Manual Sequence'
                 elif subsection == 'F4':
                         displayType = 'Manual Sequence'
+                elif subsection in ('G', 'G1', 'G2'):
+                        displayType = 'Computational SO'
+                elif subsection in ('H'):
+                        displayType = 'Sequence annotations with unexpected GO_REF(s)'
+                elif subsection in ('I'):
+                        displayType = 'Phylogenetic annotations (IBA) using GO_REF:0000033'
+                elif subsection in ('J'):
+                        displayType = 'Total Phylogenetic annotations (IBA) & NOT GO_REF:0000033'
+                elif subsection in ('K'):
+                        displayType = 'Group summary'
+                elif subsection in ('K1'):
+                        displayType = '1. IEAs from GO_REF:0000107 - Ensembl Compara'
+                elif subsection in ('K2'):
+                        displayType = '2. IEAs from GO_REF:0000002 - InterPro to GO mapping'
+                elif subsection in ('K3'):
+                        displayType = '3. IEAs from GO_REF:0000116 - Rhea mapping'
+                elif subsection in ('K4'):
+                        displayType = '4. IEAs from GO_REF:0000003 - Enzyme Commission mapping'
+                elif subsection in ('K5'):
+                        displayType = '5. IEAs from GO_REF:0000118 - TreeGrafter'
+                elif subsection in ('K6'):
+                        displayType = '6. IEAs from GO_REF:0000104 - related proteins with shared sequence features.'
+                elif subsection in ('K7'):
+                        displayType = '7. IEAs from GO_REF:0000117 - ARBA machine learning models'
+                elif subsection in ('K8'):
+                        displayType = '8. IEAs from  GO_REF:0000043 - UniProtKB/Swiss-Prot keyword mapping'
+                elif subsection in ('K9'):
+                        displayType = '9. IEAs from  GO_REF:0000044 - UniProtKB/Swiss-Prot Subcellular Location vocabulary mapping'
+                elif subsection in ('K10'):
+                        displayType = '10. IEAs from  GO_REF:0000041 - UniPathway vocabulary mapping'
+                elif subsection in ('K11'):
+                        displayType = '11. Total IEAs from unexpected GO_REF(s)'
 
         # for each groupBy
         #       CDEFG,3-7   : Total # of Genes
@@ -1014,8 +1196,8 @@ def processSectionTotal(section, subsection):
                 # section 2/subsection 'A' -> skip
                 if section == 2 and subsection == 'A':
                         continue
-                # section 3/subsection 'F' -> skip
-                if section == 3 and subsection == 'F':
+                # section 3/subsection 'F', 'G', "K" -> skip
+                if section == 3 and subsection in ('F', 'G', 'K'):
                         continue
 
                 fp.write(TAB + str(groupBy) + TAB)
@@ -1091,6 +1273,43 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
                 elif subsection == 'F4':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
+                elif subsection == 'G':
+                        fp.write(TAB + 'All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)' + TAB)
+                elif subsection == 'G1':
+                        fp.write(TAB + 'Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer ' + TAB)
+                elif subsection == 'G2':
+                        fp.write(TAB + 'Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer' + TAB)
+                elif subsection == 'H':
+                        fp.write(TAB + 'Sequence annotations with unexpected GO_REF(s)' + TAB)
+                elif subsection == 'I':
+                        fp.write(TAB + 'Total Phylogenetic annotations (IBA) using GO_REF:0000033' + TAB)
+                elif subsection == 'J':
+                        fp.write(TAB + 'Total Phylogenetic annotations (IBA) & NOT GO_REF:0000033' + TAB)
+                elif subsection == 'K':
+                        fp.write(TAB + 'All Electronic Annotations (IEA)' + TAB)
+                elif subsection == 'K1':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000107 - Ensembl Compara' + TAB)
+                elif subsection == 'K2':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000002 - InterPro to GO mapping' + TAB)
+                elif subsection == 'K3':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000116 - Rhea mapping' + TAB)
+                elif subsection == 'K4':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000003 - Enzyme Comission mapping' + TAB)
+                elif subsection == 'K5':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000118 - TreeGrafter' + TAB)
+                elif subsection == 'K6':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000104 - related proteins with shared sequence features' + TAB)
+                elif subsection == 'K7':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000117 - ARBA machine learning models' + TAB)
+                elif subsection == 'K8':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000043 - UniProtKB/Swiss-Prot keyword mapping' + TAB)
+                elif subsection == 'K9':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000044 - UniProtKB/Swiss-Prot Subcellular Location vocabulary ' + TAB)
+                elif subsection == 'K10':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000041 - UniPathway vocabulary mapping' + TAB)
+                elif subsection == 'K11':
+                        fp.write(TAB + 'Total IEAs from unexpected GO_REF(s)' + TAB)
+
                 classificationAxis = 'Evidence type'
                 sortingClassification = 'Summary Row'
 
