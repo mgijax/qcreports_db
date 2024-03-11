@@ -119,7 +119,7 @@ def createTempGAF():
         # !9  Aspect
         # !10 DB Object Name
         # !11 DB Object Synonym (|Synonym)
-        # !12 DB Object Type
+        # !12 **DB Object Type
         # !13 Taxon(|taxon)
         # !14 Date
         # !15 **Assigned By                
@@ -432,105 +432,103 @@ def createTempSection3(subsection):
 
         # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
         if subsection == 'A':
-                addSQL = 'and ec._term_key in (4003114,109,117,112,110,111)'
+                addSQL = ''' and gaf.evidenceCode in ('EXP', 'IDA', 'IEP', 'IGI', 'IMP', 'IPI') '''
 
         # HTP:114159319 HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
-                addSQL = 'and ec._term_key in (37264173,37264174,37264172,37264171,114159319)'
+                addSQL = ''' and gaf.evidenceCode in ('HTP', 'HDA', 'HEP', 'HGI', 'HMP') '''
 
         # IC|25238 TAS|113 NAS|116
         elif subsection == 'C':
-                addSQL = 'and ec._term_key in (25238,113,116)'
+                addSQL = ''' and gaf.evidenceCode in ('IC', 'TAS', 'NAS') '''
 
         # RCA|514597
         elif subsection == 'D':
-                addSQL = 'and ec._term_key in (514597)'
+                addSQL = ''' and gaf.evidenceCode in ('RCA') '''
 
         # ND|118
         elif subsection == 'E':
-                addSQL = 'and ec._term_key in (118)'
+                addSQL = ''' and gaf.evidenceCode in ('ND') '''
         # ND|118, GO_REF:0000015
         elif subsection == 'E1':
-                addSQL = ''' and ec._term_key in (118) and gaf.refs = 'GO_REF:0000015' '''
+                addSQL = ''' and gaf.evidenceCode in ('ND') and gaf.refs = 'GO_REF:0000015' '''
         # ND|118, != GO_REF:0000015
         elif subsection == 'E2':
-                addSQL = ''' and ec._term_key in (118) and gaf.refs != 'GO_REF:0000015' '''
+                addSQL = ''' and gaf.evidenceCode in ('ND') and gaf.refs != 'GO_REF:0000015' '''
 
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F1':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs not like 'GO_REF:%' '''
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F2':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000008' '''
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F3':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000024' '''
         # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F4':
-                addSQL = 'and ec._term_key in (7428294,3251497,3251496,114,3251466,114159318)' 
+                addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
 
         # IKR|7428294 IGC|114159318 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'G':
-                addSQL = 'and ec._term_key in (7428294,114159318,3251497,3251496,114,3251466)'
+                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
         elif subsection == 'G1':
-                addSQL = ''' and ec._term_key in (3251466) and gaf.refs = 'GO_REF:0000096' '''
+                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000096' '''
         elif subsection == 'G2':
-                addSQL = ''' and ec._term_key in (3251466) and gaf.refs = 'GO_REF:0000119' '''
+                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000119' '''
 
         # IKR|7428294 IGC|114159318 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         # NOT GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
         elif subsection == 'H':
-                addSQL = 'and ec._term_key in (7428294,114159318,3251497,3251496,114,3251466)'
+                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += ''' and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
 
         # IBA|7428292
         elif subsection == 'J1':
-                addSQL = ''' and ec._term_key in (7428292) and gaf.refs = 'GO_REF:0000033' '''
+                addSQL = ''' and gaf.evidenceCode in ('IBA') '''
         elif subsection == 'J2':
-                addSQL = ''' and ec._term_key in (7428292) and gaf.refs != 'GO_REF:0000033' '''
+                addSQL = ''' and gaf.evidenceCode in ('IBA') '''
 
         # IEA|115
         elif subsection == 'K':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000107' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') '''
         elif subsection == 'K1':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000107' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000107' '''
         elif subsection == 'K2':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000002' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000002' '''
         elif subsection == 'K3':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000116' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000116' '''
         elif subsection == 'K4':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000003' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000003' '''
         elif subsection == 'K5':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000118' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000118' '''
         elif subsection == 'K6':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000104' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000104' '''
         elif subsection == 'K7':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000117' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000117' '''
         elif subsection == 'K8':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000043' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000043' '''
         elif subsection == 'K9':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000044' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000044' '''
         elif subsection == 'K10':
-                addSQL = ''' and ec._term_key in (115) and gaf.refs = 'GO_REF:0000041' '''
+                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000041' '''
         elif subsection == 'K11':
-                addSQL = ' and ec._term_key in (115)'
+                addSQL = ''' and gaf.evidenceCode in ('IEA') '''
                 addSQL += ''' and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
                 into temporary table validGenes
-                from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
+                from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
                 and a._logicaldb_key = 31
-                and gaf.evidenceCode = ec.abbreviation
-                and ec._vocab_key = 3
                 %s
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
@@ -543,11 +541,9 @@ def createTempSection3(subsection):
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
                 into temporary table validPredicted
-                from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
+                from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
                 and a._logicaldb_key = 31
-                and gaf.evidenceCode = ec.abbreviation
-                and ec._vocab_key = 3
                 %s
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
@@ -580,11 +576,9 @@ def createTempSection3(subsection):
                         gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy as groupBy, gaf.extensions, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
-                from gafAnnotations gaf, ACC_Accession a, VOC_Term ec, DAG_Node n, DAG_DAG d
+                from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
                 and a._logicaldb_key = 31
-                and gaf.evidenceCode = ec.abbreviation
-                and ec._vocab_key = 3
                 %s
                 and a._object_key = n._object_key
                 and n._dag_key = d._dag_key
