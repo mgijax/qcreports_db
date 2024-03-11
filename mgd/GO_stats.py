@@ -36,11 +36,11 @@
 # G1: Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer 
 # G2: Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer
 #
-# H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
+# H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: 
+#       GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
 #
-# I: 
-#
-# J: 
+# J1: Phylogenetic annotations (IBA using GO_REF:0000033) by Contributor
+# J2: Phylogenetic annotations (IBA NOT using GO_REF:0000033) by Contributor
 #
 # K: IEA methods by Reference & Contributor (assigned by)
 # K1: GO_REF:0000107 - IEAs to orthologs using Ensembl Compara.
@@ -427,7 +427,9 @@ def createTempSection3(subsection):
         # G: All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
         # G1: Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer 
         # G2: Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer
-        # H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
+        # H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: 
+        #       GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
+        # I: Phylogenetic annotations (IBA using GO_REF:0000033) by Contributor
         # K: IEA methods by Reference & Contributor (assigned by)
         # K1: GO_REF:0000107 - IEAs to orthologs using Ensembl Compara.
         # K2: GO_REF:0000002 -IEAs based on InterPro record links with GO terms.
@@ -511,6 +513,12 @@ def createTempSection3(subsection):
         elif subsection == 'H':
                 addSQL = 'and ec._term_key in (7428294,114159318,3251497,3251496,114,3251466)'
                 addSQL += ''' and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
+
+        # IBA|7428292
+        elif subsection == 'J1':
+                addSQL = ''' and ec._term_key in (7428292) and gaf.refs = 'GO_REF:0000033' '''
+        elif subsection == 'J2':
+                addSQL = ''' and ec._term_key in (7428292) and gaf.refs != 'GO_REF:0000033' '''
 
         # IEA|115
         elif subsection == 'K':
@@ -838,6 +846,18 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'H')
 
+        fp.write(CRT + 'Phylogenetic annotations (IBA) using GO_REF:0000033' + CRT)
+        createTempSection3('J1')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'J1')
+
+        fp.write(CRT + 'Phylogenetic annotations (IBA) NOT using GO_REF:0000033' + CRT)
+        createTempSection3('J2')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'J2')
+
         fp.write(CRT + 'IEA methods by Reference & Contributor (assigned by' + CRT)
         createTempSection3('K')
         processSectionGene()
@@ -1158,10 +1178,10 @@ def processSectionTotal(section, subsection):
                         displayType = 'Computational SO'
                 elif subsection in ('H'):
                         displayType = 'Sequence annotations with unexpected GO_REF(s)'
-                elif subsection in ('I'):
+                elif subsection in ('J1'):
                         displayType = 'Phylogenetic annotations (IBA) using GO_REF:0000033'
-                elif subsection in ('J'):
-                        displayType = 'Total Phylogenetic annotations (IBA) & NOT GO_REF:0000033'
+                elif subsection in ('J2'):
+                        displayType = 'Phylogenetic annotations (IBA) NOT using GO_REF:0000033'
                 elif subsection in ('K'):
                         displayType = 'Group summary'
                 elif subsection in ('K1'):
@@ -1281,9 +1301,9 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer' + TAB)
                 elif subsection == 'H':
                         fp.write(TAB + 'Sequence annotations with unexpected GO_REF(s)' + TAB)
-                elif subsection == 'I':
+                elif subsection == 'J1':
                         fp.write(TAB + 'Total Phylogenetic annotations (IBA) using GO_REF:0000033' + TAB)
-                elif subsection == 'J':
+                elif subsection == 'J2':
                         fp.write(TAB + 'Total Phylogenetic annotations (IBA) & NOT GO_REF:0000033' + TAB)
                 elif subsection == 'K':
                         fp.write(TAB + 'All Electronic Annotations (IEA)' + TAB)
