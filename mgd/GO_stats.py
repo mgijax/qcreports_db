@@ -430,53 +430,40 @@ def createTempSection3(subsection):
         db.sql('drop table if exists validPredicted;', None)
         db.sql('drop table if exists validAnnotations;', None)
 
-        # EXP|4003114 IDA|109 IEP|117 IGI|112 IMP|110 IPI|111
         if subsection == 'A':
                 addSQL = ''' and gaf.evidenceCode in ('EXP', 'IDA', 'IEP', 'IGI', 'IMP', 'IPI') '''
 
-        # HTP:114159319 HDA|37264173 HEP|37264174 HGI|37264172 HMP|37264171
         elif subsection == 'B':
                 addSQL = ''' and gaf.evidenceCode in ('HTP', 'HDA', 'HEP', 'HGI', 'HMP') '''
 
-        # IC|25238 TAS|113 NAS|116
         elif subsection == 'C':
                 addSQL = ''' and gaf.evidenceCode in ('IC', 'TAS', 'NAS') '''
 
-        # RCA|514597
         elif subsection == 'D':
                 addSQL = ''' and gaf.evidenceCode in ('RCA') '''
 
-        # ND|118
         elif subsection == 'E':
                 addSQL = ''' and gaf.evidenceCode in ('ND') '''
-        # ND|118, GO_REF:0000015
         elif subsection == 'E1':
                 addSQL = ''' and gaf.evidenceCode in ('ND') and gaf.refs = 'GO_REF:0000015' '''
-        # ND|118, != GO_REF:0000015
         elif subsection == 'E2':
                 addSQL = ''' and gaf.evidenceCode in ('ND') and gaf.refs != 'GO_REF:0000015' '''
 
-        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F':
                 addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
-        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F1':
                 addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs not like 'GO_REF:%' '''
-        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F2':
                 addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000008' '''
-        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F3':
                 addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000024' '''
-        # IGC|114159318 IKR|7428294 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'F4':
                 addSQL = ''' and gaf.evidenceCode in ('IGC', 'IKR', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
 
-        # IKR|7428294 IGC|114159318 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
         elif subsection == 'G':
                 addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
         elif subsection == 'G1':
@@ -484,19 +471,15 @@ def createTempSection3(subsection):
         elif subsection == 'G2':
                 addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000119' '''
 
-        # IKR|7428294 IGC|114159318 ISM|3251497 ISA|3251496 ISS|114 ISO|3251466
-        # NOT GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
         elif subsection == 'H':
                 addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += ''' and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
 
-        # IBA|7428292
         elif subsection == 'J1':
                 addSQL = ''' and gaf.evidenceCode in ('IBA') '''
         elif subsection == 'J2':
                 addSQL = ''' and gaf.evidenceCode in ('IBA') '''
 
-        # IEA|115
         elif subsection == 'K':
                 addSQL = ''' and gaf.evidenceCode in ('IEA') '''
         elif subsection == 'K1':
