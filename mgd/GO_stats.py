@@ -22,7 +22,6 @@
 # B: High-throughput Annotations (HTP, HDA, HMP, HGI, or HEP) by Contributor
 # C: Curator/Author Statement Annotations (IC, TAS, NAS) by Contributor
 # D: Total RCA Annotations by Contributor
-# E: Root Annotations (ND) by Contributor
 # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
 # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
 #
@@ -242,14 +241,14 @@ def createTempSection2(subsection):
                 addSQL = ''
         # protein coding features
         elif subsection == 'B':
-                addSQL = ''' and gaf.dbType in (
+                addSQL = '''and gaf.dbType in (
                         'gene segment', 
                         'protein coding gene'
                         ) 
                         '''
         # RNA features
         elif subsection == 'C':
-                addSQL = ''' and gaf.dbType in (
+                addSQL = '''and gaf.dbType in (
                         'antisense lncRNA gene',
                         'bidirectional promoter lncRNA gene',
                         'lincRNA gene',
@@ -272,7 +271,7 @@ def createTempSection2(subsection):
 
         # pseudogenic features
         elif subsection == 'D':
-                addSQL = ''' and gaf.dbType in (
+                addSQL = '''and gaf.dbType in (
                         'polymorphic pseudogene', 
                         'pseudogene', 
                         'pseudogenic gene segment'
@@ -281,7 +280,7 @@ def createTempSection2(subsection):
 
         # other features
         elif subsection == 'E':
-                addSQL = ''' and gaf.dbType in (
+                addSQL = '''and gaf.dbType in (
                         'unclassified gene', 
                         'unclassified non-coding RNA gene'
                         )
@@ -366,7 +365,6 @@ def createTempSection2(subsection):
                                 'all feature types',
                                 'QTL',
                                 'transgene',
-                                'complex/cluster/region',
                                 'cytogenetic marker',
                                 'BAC/YAC end',
                                 'DNA segment',
@@ -431,80 +429,79 @@ def createTempSection3(subsection):
         db.sql('drop table if exists validAnnotations;', None)
 
         if subsection == 'A':
-                addSQL = ''' and gaf.evidenceCode in ('EXP', 'IDA', 'IEP', 'IGI', 'IMP', 'IPI') '''
+                addSQL = '''and gaf.evidenceCode in ('EXP', 'IDA', 'IEP', 'IGI', 'IMP', 'IPI') '''
 
         elif subsection == 'B':
-                addSQL = ''' and gaf.evidenceCode in ('HTP', 'HDA', 'HEP', 'HGI', 'HMP') '''
+                addSQL = '''and gaf.evidenceCode in ('HTP', 'HDA', 'HEP', 'HGI', 'HMP') '''
 
         elif subsection == 'C':
-                addSQL = ''' and gaf.evidenceCode in ('IC', 'TAS', 'NAS') '''
+                addSQL = '''and gaf.evidenceCode in ('IC', 'TAS', 'NAS') '''
 
         elif subsection == 'D':
-                addSQL = ''' and gaf.evidenceCode in ('RCA') '''
+                addSQL = '''and gaf.evidenceCode in ('RCA') '''
 
-        elif subsection == 'E':
-                addSQL = ''' and gaf.evidenceCode in ('ND') '''
         elif subsection == 'E1':
-                addSQL = ''' and gaf.evidenceCode in ('ND') and gaf.refs = 'GO_REF:0000015' '''
+                addSQL = '''and gaf.evidenceCode in ('ND') and gaf.refs = 'GO_REF:0000015' '''
         elif subsection == 'E2':
-                addSQL = ''' and gaf.evidenceCode in ('ND') and gaf.refs != 'GO_REF:0000015' '''
+                addSQL = '''and gaf.evidenceCode in ('ND') and gaf.refs != 'GO_REF:0000015' '''
 
         elif subsection == 'F':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
         elif subsection == 'F1':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
-                addSQL += '''\nand gaf.refs not like 'GO_REF:%' '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and gaf.refs not like 'GO_REF:%' '''
         elif subsection == 'F2':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
-                addSQL += '''\nand gaf.refs = 'GO_REF:0000008' '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and gaf.refs = 'GO_REF:0000008' '''
         elif subsection == 'F3':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
-                addSQL += '''\nand gaf.refs = 'GO_REF:0000024' '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and gaf.refs = 'GO_REF:0000024' '''
         elif subsection == 'F4':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
-                addSQL += '''\nand gaf.refs = 'GO_REF:0000114' '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and gaf.refs = 'GO_REF:0000114' '''
 
         elif subsection == 'G':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
         elif subsection == 'G1':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000096' '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000096' '''
         elif subsection == 'G2':
                 addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000119' '''
 
         elif subsection == 'H':
-                addSQL = ''' and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
-                addSQL += ''' and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
+                addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and gaf.refs like 'GO_REF%' '''
+                addSQL += '''and gaf.refs not in ('GO_REF:0000008', 'GO_REF:0000096', 'GO_REF:0000119', 'GO_REF:0000024', 'GO_REF:0000114') '''
 
         elif subsection == 'J1':
-                addSQL = ''' and gaf.evidenceCode in ('IBA') '''
+                addSQL = '''and gaf.evidenceCode in ('IBA') '''
         elif subsection == 'J2':
                 addSQL = ''' and gaf.evidenceCode not in ('IBA') '''
 
         elif subsection == 'K':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') '''
         elif subsection == 'K1':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000107' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000107' '''
         elif subsection == 'K2':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000002' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000002' '''
         elif subsection == 'K3':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000116' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000116' '''
         elif subsection == 'K4':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000003' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000003' '''
         elif subsection == 'K5':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000118' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000118' '''
         elif subsection == 'K6':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000104' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000104' '''
         elif subsection == 'K7':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000117' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000117' '''
         elif subsection == 'K8':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000043' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000043' '''
         elif subsection == 'K9':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000044' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000044' '''
         elif subsection == 'K10':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000041' '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000041' '''
         elif subsection == 'K11':
-                addSQL = ''' and gaf.evidenceCode in ('IEA') '''
-                addSQL += ''' and gaf.refs in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
+                addSQL = '''and gaf.evidenceCode in ('IEA') '''
+                addSQL += '''and gaf.refs not in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
@@ -728,12 +725,6 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'D')
 
-        fp.write(CRT + 'Root Annotations (ND)' + CRT)
-        createTempSection3('E')
-        processSectionGene()
-        processSectionPredicted()
-        processSectionTotal(3,'E')
-
         fp.write(CRT + 'Root Annotations (ND) with GO_REF:0000015 - Use of the ND evidence code' + CRT)
         createTempSection3('E1')
         processSectionGene()
@@ -794,7 +785,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'G2')
 
-        fp.write(CRT + 'Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:000011' + CRT)
+        fp.write(CRT + 'Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using a GO_REF NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:000011' + CRT)
         createTempSection3('H')
         processSectionGene()
         processSectionPredicted()
@@ -1112,8 +1103,6 @@ def processSectionTotal(section, subsection):
                         displayType = 'Curator/Author Statement'
                 elif subsection == 'D':
                         displayType = 'RCA'
-                elif subsection == 'E':
-                        displayType = 'Root'
                 elif subsection == 'E1':
                         displayType = 'Root'
                 elif subsection == 'E2':
@@ -1222,6 +1211,8 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total other features' + TAB)
                 classificationAxis = 'Feature type'
                 sortingClassification = 'Summary Row'
+                if section == 2 and subsection == 'A':
+                        sortingClassification = 'Group Summary Row'
         elif section == 3:
                 if subsection == 'A':
                         fp.write(TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
@@ -1231,8 +1222,6 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total Curator/Author Statement Annotations (IC, TAS, NAS)' + TAB)
                 elif subsection == 'D':
                         fp.write(TAB + 'Total RCA Annotations' + TAB)
-                elif subsection == 'E':
-                        fp.write(TAB + 'All Root Annotations (ND)' + TAB)
                 elif subsection == 'E1':
                         fp.write(TAB + 'Total Root Annotations (ND & GO_REF:0000015)' + TAB)
                 elif subsection == 'E2':
@@ -1286,6 +1275,8 @@ def processSectionTotal(section, subsection):
 
                 classificationAxis = 'Evidence type'
                 sortingClassification = 'Summary Row'
+                if section == 3 and subsection in ('J', 'K'):
+                        sortingClassification = 'Group Summary Row'
 
         outputCols = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
         for c in outputCols: 
