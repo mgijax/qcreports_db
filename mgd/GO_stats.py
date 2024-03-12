@@ -478,7 +478,7 @@ def createTempSection3(subsection):
         elif subsection == 'J1':
                 addSQL = ''' and gaf.evidenceCode in ('IBA') '''
         elif subsection == 'J2':
-                addSQL = ''' and gaf.evidenceCode in ('IBA') '''
+                addSQL = ''' and gaf.evidenceCode not in ('IBA') '''
 
         elif subsection == 'K':
                 addSQL = ''' and gaf.evidenceCode in ('IEA') '''
