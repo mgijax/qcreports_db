@@ -9,12 +9,13 @@
 #    Col 1: List of primary ids loaded in to MGI typeKey=42, ldbKey in (189, 190)
 #    Col 2: secondary GEO id, if applicable ldbKey=190
 #    Col 3: experiment type vocabKey=121
-#    Col 4: evaluation state  vocabKey=116
-#    Col 5: study type vocabKey=124
-#    Col 6: curation state vocabKey=117
-#    Col 7: experimental variables, multiples separated by pipes vocabKey=122
-#    Col 8: In Expression Atlas Set Y/N
-#    Col 9: In RNA-Seq Load Set Y/N
+#    Col 4: raw sample count
+#    Col 5: evaluation state  vocabKey=116
+#    Col 6: study type vocabKey=124
+#    Col 7: curation state vocabKey=117
+#    Col 8: experimental variables, multiples separated by pipes vocabKey=122
+#    Col 9: In Expression Atlas Set Y/N
+#    Col 10: In RNA-Seq Load Set Y/N
 #
 #    monthly run sufficient for this one
 #    make in a format that will load into excel easily (such as tab delimited)
@@ -89,14 +90,13 @@ for r in results:
         pubMedIdDict[expKey] = []
    pubMedIdDict[expKey].append(r['pubMedId'])
 
-fp = reportlib.init(sys.argv[0], 'GXD Overview QC', os.environ['QCOUTPUTDIR'])
-
-results = db.sql('''select a1.accid as primary, a2.accid as secondary, e._Experiment_key, 
+results = db.sql('''
+        select a1.accid as primary, a2.accid as secondary, e._Experiment_key, p.value as rawCounts,
             t1.term as exptType, t2.term as evalState, t3.term as studyType, 
             t4.term as curationState, v._Term_key as varTermKey, 
             vt.Term as varTerm
         from ACC_Accession a1, VOC_Term t1, VOC_Term t2, VOC_Term t3, 
-            VOC_Term t4, GXD_HTExperiment e
+            VOC_Term t4, MGI_Property p, GXD_HTExperiment e
         left outer join ACC_Accession a2 on (e._Experiment_key = a2._Object_key
             and a2._MGIType_key = 42
             and a2._LogicalDB_key in(189, 190)
@@ -111,28 +111,35 @@ results = db.sql('''select a1.accid as primary, a2.accid as secondary, e._Experi
             and e._ExperimentType_key = t1._Term_key
             and e._EvaluationState_key = t2._Term_key
             and e._StudyType_key = t3._Term_key
-            and e._CurationState_key = t4._Term_key''', 'auto')
+            and e._CurationState_key = t4._Term_key
+            and e._Experiment_key = p._Object_key
+            and p._MGIType_key = 42
+            and p._PropertyTerm_key = 20475424
+            ''', 'auto')
 exptDict = {}
 for r in results:
-    #    Col 1: List of AE ids loaded in to MGI typeKey=42, ldbKey=189
-    #    Col 2: GEO id, if applicable ldbKey=190
-    #    Col 3: experiment type vocabKey=121
-    #    Col 4: evaluation state  vocabKey=11
-    #    Col 5: study type vocabKey=124
-    #    Col 6: curationState vocabKey=117
-    #    Col 7: experimental variables, multiples separated by '|' vocabKey=122
-    #    Col 8: In Expression Atlas Set Y/N
-    #    Col 9: In RNA-Seq Load Set Y/N
-
     exptKey = r['_Experiment_key']
     
     if not exptKey in exptDict:
         exptDict[exptKey] = []
     exptDict[exptKey].append(r)
 
+fp = reportlib.init(sys.argv[0], 'GXD Overview QC', os.environ['QCOUTPUTDIR'])
+fp.write('Primary ID' + TAB)
+fp.write('Secondary ID' + TAB)
+fp.write('Experiment Type' + TAB)
+fp.write('Raw Counts' + TAB)
+fp.write('Evaluation State' + TAB)
+fp.write('Study Type' + TAB)
+fp.write('Curation State' + TAB)
+fp.write('Variables' + TAB)
+fp.write('Expression Atlas?' + TAB)
+fp.write('RNA-Seq Load?' + TAB)
+fp.write('PubMed IDs' + CRT)
+
 ct = 0
-fp.write('Primary ID%sSecondary ID%sExperiment Type%sEvaluation State%sStudy Type%sCuration State%sVariables%sExpression Atlas?%sRNA-Seq Load?%sPubMed IDs%s' % (TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, TAB, CRT))
 for key in exptDict:
+
     # if there are > 1 row then there are > 1 variable, all other info repeated
     r = exptDict[key][0]
     primary = r['primary']
@@ -141,6 +148,8 @@ for key in exptDict:
     evalState = r['evalState']
     studyType = r['studyType']
     curationState = r['curationState']
+    rawCounts = r['rawCounts']
+
     varList = []
     for r in exptDict[key]:
         varTerm = r['varTerm']
@@ -148,17 +157,31 @@ for key in exptDict:
         if varTerm != None:
             varList.append(varTerm)
     varTerms = '|'.join(varList)
+
     eaSet = 'No'
     if key in eaList:
         eaSet = 'Yes'
+
     rnaSeqSet = 'No'
     if key in rnaSeqList:
         rnaSeqSet = 'Yes'
+
     pubMedIds = ''
     if key in pubMedIdDict:
         pubMedIds = '|'.join(pubMedIdDict[key])
 
-    fp.write('%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s' % (primary, TAB, secondary, TAB, exptType, TAB,  evalState, TAB, studyType, TAB, curationState, TAB, varTerms, TAB, eaSet, TAB, rnaSeqSet, TAB, pubMedIds, CRT ))
+    fp.write(primary + TAB)
+    fp.write(str(secondary) + TAB)
+    fp.write(exptType + TAB)
+    fp.write(str(rawCounts) + TAB)
+    fp.write(evalState + TAB)
+    fp.write(studyType + TAB)
+    fp.write(curationState + TAB)
+    fp.write(varTerms + TAB)
+    fp.write(eaSet + TAB)
+    fp.write(rnaSeqSet + TAB)
+    fp.write(pubMedIds + CRT)
+
     ct += 1
 
 fp.write('%sTotal:%s%s' % (CRT, ct, CRT))
