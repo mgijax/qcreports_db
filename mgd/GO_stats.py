@@ -1110,15 +1110,19 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F':
                         displayType = 'Manual Sequence'
                 elif subsection == 'F1':
-                        displayType = 'Manual Sequence'
+                        displayType = 'Manual Sequence - non GO_REF'
                 elif subsection == 'F2':
-                        displayType = 'Manual Sequence'
+                        displayType = 'Manual Sequence - MGI curated orthology'
                 elif subsection == 'F3':
-                        displayType = 'Manual Sequence'
+                        displayType = 'Manual Sequence - to orthologs by curator judgement'
                 elif subsection == 'F4':
-                        displayType = 'Manual Sequence'
-                elif subsection in ('G', 'G1', 'G2'):
+                        displayType = 'Manual Sequence - to complexes by curator judgement'
+                elif subsection == 'G':
                         displayType = 'Computational SO'
+                elif subsection == 'G1':
+                        displayType = 'Computational SO: Rat to Mouse'
+                elif subsection == 'G2':
+                        displayType = 'Computational SO: Human to Mouse'
                 elif subsection in ('H'):
                         displayType = 'Sequence annotations with unexpected GO_REF(s)'
                 elif subsection in ('J1'):
@@ -1128,27 +1132,27 @@ def processSectionTotal(section, subsection):
                 elif subsection in ('K'):
                         displayType = 'Group summary'
                 elif subsection in ('K1'):
-                        displayType = '1. IEAs from GO_REF:0000107 - Ensembl Compara'
+                        displayType = 'IEAs from GO_REF:0000107 - Ensembl Compara'
                 elif subsection in ('K2'):
-                        displayType = '2. IEAs from GO_REF:0000002 - InterPro to GO mapping'
+                        displayType = 'IEAs from GO_REF:0000002 - InterPro to GO mapping'
                 elif subsection in ('K3'):
-                        displayType = '3. IEAs from GO_REF:0000116 - Rhea mapping'
+                        displayType = 'IEAs from GO_REF:0000116 - Rhea mapping'
                 elif subsection in ('K4'):
-                        displayType = '4. IEAs from GO_REF:0000003 - Enzyme Commission mapping'
+                        displayType = 'IEAs from GO_REF:0000003 - Enzyme Commission mapping'
                 elif subsection in ('K5'):
-                        displayType = '5. IEAs from GO_REF:0000118 - TreeGrafter'
+                        displayType = 'IEAs from GO_REF:0000118 - TreeGrafter'
                 elif subsection in ('K6'):
-                        displayType = '6. IEAs from GO_REF:0000104 - related proteins with shared sequence features.'
+                        displayType = 'IEAs from GO_REF:0000104 - related proteins with shared sequence features'
                 elif subsection in ('K7'):
-                        displayType = '7. IEAs from GO_REF:0000117 - ARBA machine learning models'
+                        displayType = 'IEAs from GO_REF:0000117 - ARBA machine learning models'
                 elif subsection in ('K8'):
-                        displayType = '8. IEAs from  GO_REF:0000043 - UniProtKB/Swiss-Prot keyword mapping'
+                        displayType = 'IEAs from  GO_REF:0000043 - UniProtKB/Swiss-Prot keyword mapping'
                 elif subsection in ('K9'):
-                        displayType = '9. IEAs from  GO_REF:0000044 - UniProtKB/Swiss-Prot Subcellular Location vocabulary mapping'
+                        displayType = 'IEAs from  GO_REF:0000044 - UniProtKB/Swiss-Prot Subcellular Location vocabulary mapping'
                 elif subsection in ('K10'):
-                        displayType = '10. IEAs from  GO_REF:0000041 - UniPathway vocabulary mapping'
+                        displayType = 'IEAs from  GO_REF:0000041 - UniPathway vocabulary mapping'
                 elif subsection in ('K11'):
-                        displayType = '11. Total IEAs from unexpected GO_REF(s)'
+                        displayType = 'IEAs from unexpected GO_REF(s)'
 
         # for each groupBy
         #       CDEFG,3-7   : Total # of Genes
@@ -1210,9 +1214,10 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'E':
                         fp.write(TAB + 'Total other features' + TAB)
                 classificationAxis = 'Feature type'
-                sortingClassification = 'Summary Row'
-                if section == 2 and subsection == 'A':
-                        sortingClassification = 'Group Summary Row'
+                if subsection == 'A':
+                        sortingClassification = 'Summary Row for Group'
+                else:
+                        sortingClassification = 'Summary Row'
         elif section == 3:
                 if subsection == 'A':
                         fp.write(TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
@@ -1236,8 +1241,6 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
                 elif subsection == 'F4':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
-                elif subsection == 'G':
-                        fp.write(TAB + 'All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)' + TAB)
                 elif subsection == 'G1':
                         fp.write(TAB + 'Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer ' + TAB)
                 elif subsection == 'G2':
@@ -1274,9 +1277,10 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total IEAs from unexpected GO_REF(s)' + TAB)
 
                 classificationAxis = 'Evidence type'
-                sortingClassification = 'Summary Row'
-                if section == 3 and subsection in ('J', 'K'):
-                        sortingClassification = 'Group Summary Row'
+                if subsection in ('J', 'G', 'K'):
+                        sortingClassification = 'Summary Row for Group'
+                else:
+                        sortingClassification = 'Summary Row'
 
         outputCols = ['C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q']
         for c in outputCols: 
