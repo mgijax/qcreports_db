@@ -779,7 +779,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'G1')
 
-        fp.write(CRT + 'Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfe' + CRT)
+        fp.write(CRT + 'Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer' + CRT)
         createTempSection3('G2')
         processSectionGene()
         processSectionPredicted()
@@ -1242,7 +1242,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F4':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
                 elif subsection == 'G1':
-                        fp.write(TAB + 'Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer ' + TAB)
+                        fp.write(TAB + 'Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer' + TAB)
                 elif subsection == 'G2':
                         fp.write(TAB + 'Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer' + TAB)
                 elif subsection == 'H':
