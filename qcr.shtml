@@ -84,6 +84,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/TAL_dupe_allele.rpt">Duplicated GenTar Targeted Alleles</A> <B>(anna)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/TAL_check_superscript.rpt">TAL Allele Superscript Mismatches (excluding Derivative Alleles)</A> <B>(anna)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/TAL_multiple_project_ids.rpt">Marker/Allele Superscripts with multiple Project IDs in the TAL input file</A> <B>(anna)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_PM2GeneNoMP.rpt">Papers not in public MGI for genes with no MP annotations</A> <B>(csmith)</B>
 </OL>
 
 <A NAME="variants"><B>Allele Variants (laurens)</B> </A>
