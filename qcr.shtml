@@ -352,7 +352,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/emageload/index.html">EMAGE Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/geoload/index.html">GEO Load</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/arrayexpload/index.html">Expression Atlas/ArrayExpress Load</A> <B>(cms)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT GEO Load</A> <B>(cms)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/gxdhtload/index.html">GXD HT GEO and ArrayExpress Loads</A> <B>(cms)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/GOindex.html">GO Vocabulary/DAG Load</A> <B>(ln)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/vocload/CLindex.html">Cell Ontology (CL) Vocabulary Load</A> <B>(ln)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/homologyload/index.html">Homology Load</A> <B>(mmh)</B>
