@@ -3,6 +3,13 @@ DATE: 04/2024
 STAFF: lec
 wts2-1155/GOC taking over GOA mouse, GOA human, etc.
 
+TAG: qcreports_db-6-0-23-10
+DATE: 03/14/2024
+STAFF: lec
+wts2-1439/fl2-784/HT/remove Raw Sample Count from PWI & QC
+undo:
+wts2-1430/fl2-778/add column to existing GXD_HTOverview
+
 TAG: qcreports_db-6-0-23-9
 DATE: 03/13/2024
 STAFF: lec
