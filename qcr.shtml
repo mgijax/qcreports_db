@@ -214,9 +214,9 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/loads/mgi/goload/output/goload.annot.error">QC: GO/obsolete terms/duplicate annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_Unannotationed.rpt">QC: Underannotated genes</A> <B>(dmitrys, csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A> <B>csmith</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A> <B>csmith</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A> <B>csmith</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A> <B>csmith</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Report: Archive of GO Statistics and Reports</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Report: Combined QC Report</A> <B>(krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">Report: GO Statistics</A> <B>(krc)</B>
@@ -227,7 +227,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/goload/index.html">Report: GO Load</A> <B>(krc, ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A> <B>(krc)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_GO_FullCodeNoAnnot.rpt">Report: Papers marked as Full-coded with no GO annotations</A> <B>(ln)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A> <B>csmith</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Report: Total GO Annotations per Gene</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Report: Verify GPI file</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_PM2GeneRefsNotInMGI.rpt">Report: Papers not in MGI for genes without experimental GO annotations</A> <B>(krc)</B>
