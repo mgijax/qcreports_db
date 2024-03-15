@@ -324,6 +324,7 @@ def createTempSection2(subsection):
         #       !4  **Qualifier
         #       !5  **GO ID
         #       !6  **DB:Reference (|DB:Reference)
+        #       !7  **Evidence Code
         #       !8  **With (or) From             
         #       !12 **DB Object Type
         #       !16 **Annotation Extension
@@ -333,7 +334,7 @@ def createTempSection2(subsection):
         # addSQL is used to determine the specific set of feature types used for a given A-J subsection
         #
         db.sql('''
-                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
+                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, gaf.evidenceCode,
                         gaf.inferredFrom, gaf.dbType as groupBy, gaf.extensions, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
