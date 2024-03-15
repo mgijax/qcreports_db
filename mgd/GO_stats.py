@@ -410,7 +410,7 @@ def createTempSection2(subsection):
                         order by t.term
                         ''', 'auto')
                 for r in results:
-                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, '%s', null, null, v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
+                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, null, '%s', null, null, v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
 
 def createTempSection3(subsection):
         #
