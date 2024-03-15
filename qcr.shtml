@@ -213,7 +213,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/loads/mgi/goload/input/pubmed.error">QC: GO/invalid pubmedids</A> <B>(ln)</B>
 <LI><A HREF="/data/loads/mgi/goload/output/goload.annot.error">QC: GO/obsolete terms/duplicate annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_Unannotationed.rpt">QC: Underannotated genes</A> <B>(dmitrys, csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A> <B>csmith</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_RatNoGO.sql.rpt">Report: Mouse Genes that have Rat/Human Homologs but no GO Annotations</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_MRK_NoGO.rpt">Report: Mouse Genes with no GO Annotations</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A> <B>(csmith)</B>
