@@ -334,8 +334,8 @@ def createTempSection2(subsection):
         # addSQL is used to determine the specific set of feature types used for a given A-J subsection
         #
         db.sql('''
-                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, gaf.evidenceCode,
-                        gaf.inferredFrom, gaf.dbType as groupBy, gaf.extensions, gaf.proteoform,
+                select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.dbType as groupBy, gaf.extensions, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
