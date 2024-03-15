@@ -278,7 +278,7 @@ def createTempSection2(subsection):
         # other features
         elif subsection == 'E':
                 addSQL = '''and gaf.dbType in (
-                        'complex/cluster/region',
+                        'biological_region',
                         'unclassified gene', 
                         'unclassified non-coding RNA gene'
                         )
