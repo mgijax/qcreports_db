@@ -182,19 +182,16 @@ def createTempMarkers():
 
         db.sql('''
                 WITH markers AS (
-                        select distinct a.accid as mgiid, m.symbol, m.name, t.term as featureType
-                        from MRK_Marker m, ACC_Accession a, VOC_Annot va, VOC_Term t
-                        where m._marker_key = va._object_key
-                        and va._annottype_key = 1011    -- MCV/Marker
-                        and va._term_key = t._term_key
-                        and m._marker_key = a._object_key
+                        select distinct a.accid as mgiid, m.symbol, m.name, gaf.dbType as featureType
+                        from MRK_Marker m, ACC_Accession a, gafAnnotations gaf
+                        where m._marker_key = a._object_key
                         and a._mgitype_key = 2
                         and a._logicaldb_key = 1
                         and a.prefixPart = 'MGI:'
                         and a.preferred = 1
                         and m._organism_key = 1
                         and m._marker_status_key = 1
-                        and exists (select 1 from gafAnnotations gaf where gaf.mgiid = a.accid)
+                        and a.accid = gaf.mgiid
                         --and m.symbol in ('Nrg1')
                 )
                 select m.*, 'Yes' as predictedGene
@@ -672,6 +669,11 @@ def processSection2():
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(2,'A')
+
+        #results = db.sql('select distinct mgiid from validAnnotations order by mgiid', 'auto')
+        #for r in results:
+        #        fp.write(r['mgiid'] + CRT)
+        #return
 
         fp.write(CRT + 'Protein Coding Features' + CRT)
         createTempSection2('B')
