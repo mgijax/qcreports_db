@@ -281,6 +281,7 @@ def createTempSection2(subsection):
         # other features
         elif subsection == 'E':
                 addSQL = '''and gaf.dbType in (
+                        'complex/cluster/region',
                         'unclassified gene', 
                         'unclassified non-coding RNA gene'
                         )
@@ -447,6 +448,8 @@ def createTempSection3(subsection):
 
         elif subsection == 'F':
                 addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and (gaf.refs not like 'GO_REF:%' '''
+                addSQL += '''or gaf.refs in ('GO_REF:0000008', 'GO_REF:0000024', 'GO_REF:0000114')) '''
         elif subsection == 'F1':
                 addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
                 addSQL += '''and gaf.refs not like 'GO_REF:%' '''
@@ -462,6 +465,7 @@ def createTempSection3(subsection):
 
         elif subsection == 'G':
                 addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') '''
+                addSQL += '''and gaf.refs in ('GO_REF:0000096', 'GO_REF:0000119') '''
         elif subsection == 'G1':
                 addSQL = '''and gaf.evidenceCode in ('IKR', 'IGC', 'ISM', 'ISA', 'ISS', 'ISO') and gaf.refs = 'GO_REF:0000096' '''
         elif subsection == 'G2':
@@ -475,7 +479,8 @@ def createTempSection3(subsection):
         elif subsection == 'J1':
                 addSQL = '''and gaf.evidenceCode in ('IBA') '''
         elif subsection == 'J2':
-                addSQL = ''' and gaf.evidenceCode not in ('IBA') '''
+                addSQL = '''and gaf.evidenceCode in ('IBA') '''
+                addSQL += '''and gaf.refs = 'GO_REF:0000033' '''
 
         elif subsection == 'K':
                 addSQL = '''and gaf.evidenceCode in ('IEA') '''
@@ -827,7 +832,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K3')
 
-        fp.write(CRT + 'GO_REF:0000003 - IEAs based on Enzyme Commission mappin' + CRT)
+        fp.write(CRT + 'GO_REF:0000003 - IEAs based on Enzyme Commission mapping' + CRT)
         createTempSection3('K4')
         processSectionGene()
         processSectionPredicted()
@@ -1112,7 +1117,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F1':
                         displayType = 'Manual Sequence - non GO_REF'
                 elif subsection == 'F2':
-                        displayType = 'Manual Sequence - MGI curated orthology'
+                        displayType = 'Manual Sequence - non GO_REF'
                 elif subsection == 'F3':
                         displayType = 'Manual Sequence - to orthologs by curator judgement'
                 elif subsection == 'F4':
@@ -1163,7 +1168,7 @@ def processSectionTotal(section, subsection):
                 # section 2/subsection 'A' -> skip
                 if section == 2 and subsection == 'A':
                         continue
-                # section 3/subsection 'F', 'G', "K" -> skip
+                # section 3/subsection 'F', 'G', 'K' -> skip
                 if section == 3 and subsection in ('F', 'G', 'K'):
                         continue
 
@@ -1236,11 +1241,13 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F1':
                         fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF' + TAB)
                 elif subsection == 'F2':
-                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000008 (J:73065)' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations with a non-GO_REF' + TAB)
                 elif subsection == 'F3':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
                 elif subsection == 'F4':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
+                elif subsection == 'G':
+                        fp.write(TAB + 'Total Computational Sequence Annotations' + TAB)
                 elif subsection == 'G1':
                         fp.write(TAB + 'Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer' + TAB)
                 elif subsection == 'G2':
@@ -1277,7 +1284,7 @@ def processSectionTotal(section, subsection):
                         fp.write(TAB + 'Total IEAs from unexpected GO_REF(s)' + TAB)
 
                 classificationAxis = 'Evidence type'
-                if subsection in ('J', 'G', 'K'):
+                if subsection in ('F', 'J', 'G', 'K'):
                         sortingClassification = 'Summary Row for Group'
                 else:
                         sortingClassification = 'Summary Row'
