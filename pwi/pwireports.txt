@@ -28,7 +28,7 @@
 #
 BIB_BioRxiv.py|BioRxiv articles and published articles with the same title||sc|Jacqueline Finger|2021-04-07|
 GXD_HTExperimentByNote.py|GXD HT Experiment Note Search|This report would display searches of the Experiment Note field.  Although I can search this field in the pwi module, it would be helpful to get the results as a report (rather than having to toggle through them).\r\n\r\nReport name: GXD HT Experiment Note Search\r\n\r\nSort:\r\n\r\nPrimary: Experiment Type\r\n\r\nSecondary: Evaluation State\r\n\r\nTertiary: Experiment ID|lec|Connie Smith|2022-10-03|Experiment Note Text
-GXD_HTExperimentCuratedNote.py|GXD HT Experiment Notes for Curated Experiments|This report would display |lec|Connie Smith|2024-03-18||
+GXD_HTExperimentCuratedNote.py|GXD HT Experiment Notes for Curated Experiments|This report would display Experiment Notes for all HT Experiments whose curation status = done.\nSort:\r\n\r\nExperiment ID|lec|Connie Smith|2024-03-18||
 GXD_HTExperimentByProperty.py|GXD HT Experiment Properties Search|Search GXD HT Experiment Properties:\r\n-- Raw Experimental Factor\r\n-- Raw Experiment Type\r\n-- Raw Contact Name (Provider)\r\n-- PubMed ID|sc|Connie Smith|2018-08-31|Property Term Text
 GXD_HTRawSampleByKey.py|GXD HT Raw Sample Key Search|Search GXD HT Raw Sample Key\r\n-- sort by relevance (custom ordering), experiment ID, sample ID\r\n-- results limited to 5000\r\n-- both key and value columns are aggregated|sc|Connie Smith|2022-01-12|Raw Sample Key
 GXD_HTRawSampleByValue.py|GXD HT Raw Sample Value Search|Search GXD HT Raw Sample Value\r\n-- sort by relevance (custom ordering), experiment ID, sample ID\r\n-- results limited to 5000\r\n-- both key and value columns are aggregated|sc|Connie Smith|2022-01-12|Raw Sample Value
