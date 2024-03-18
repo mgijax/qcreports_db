@@ -478,7 +478,7 @@ def createTempSection3(subsection):
                 addSQL = '''and gaf.evidenceCode in ('IBA') '''
         elif subsection == 'J2':
                 addSQL = '''and gaf.evidenceCode in ('IBA') '''
-                addSQL += '''and gaf.refs = 'GO_REF:0000033' '''
+                addSQL += '''and gaf.refs != 'GO_REF:0000033' '''
 
         elif subsection == 'K':
                 addSQL = '''and gaf.evidenceCode in ('IEA') '''
@@ -1120,11 +1120,11 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F1':
                         displayType = 'Manual Sequence - non GO_REF'
                 elif subsection == 'F2':
-                        displayType = 'Manual Sequence - non GO_REF'
+                        displayType = 'Manual Sequence - MGI curators (J:73065)'
                 elif subsection == 'F3':
-                        displayType = 'Manual Sequence - to orthologs by curator judgement'
+                        displayType = 'Manual Sequence Annotations with GO_REF:0000024 - transfer to orthologs'
                 elif subsection == 'F4':
-                        displayType = 'Manual Sequence - to complexes by curator judgement'
+                        displayType = 'Total Manual Sequence Annotations with GO_REF:0000114 - transfer to complexes'
                 elif subsection == 'G':
                         displayType = 'Computational SO'
                 elif subsection == 'G1':
@@ -1244,7 +1244,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F1':
                         fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF' + TAB)
                 elif subsection == 'F2':
-                        fp.write(TAB + 'Total Manual Sequence Annotations with a non-GO_REF' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000008 (J:73065) - MGI curators' + TAB)
                 elif subsection == 'F3':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
                 elif subsection == 'F4':
@@ -1262,7 +1262,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'J2':
                         fp.write(TAB + 'Total Phylogenetic annotations (IBA) & NOT GO_REF:0000033' + TAB)
                 elif subsection == 'K':
-                        fp.write(TAB + 'All Electronic Annotations (IEA)' + TAB)
+                        fp.write(TAB + 'IEA methods by Reference & Contributor' + TAB)
                 elif subsection == 'K1':
                         fp.write(TAB + 'Total IEAs from GO_REF:0000107 - Ensembl Compara' + TAB)
                 elif subsection == 'K2':
