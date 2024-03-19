@@ -333,13 +333,14 @@ def createTempSection2(subsection):
         #       + _dag_key, name
         #
         # cut -f2,4,5,6,7,8,12,15,16,17 GO_MGIGAF.rpt | sort | uniq | grep "xxxxx" | wc -l
+        # note:  will group by gaf.dbType
         #
         # addSQL is used to determine the specific set of feature types used for a given A-J subsection
         #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
-                        gaf.evidenceCode, gaf.inferredFrom, gaf.dbType as groupBy, 
-                        gaf.assignedBy, gaf.extensions, gaf.proteoform, d._dag_key, d.name
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.extensions, gaf.proteoform, 
+                        gaf.assignedBy, gaf.dbType as groupBy, d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
@@ -413,7 +414,7 @@ def createTempSection2(subsection):
                         order by t.term
                         ''', 'auto')
                 for r in results:
-                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, null, '%s', null, null, null, v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
+                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, null, null, null, null, '%s', v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
 
 def createTempSection3(subsection):
         #
@@ -557,13 +558,14 @@ def createTempSection3(subsection):
         #       + _dag_key, name
         #
         # cut -f2,4,5,6,7,8,12,15,16,17 GO_MGIGAF.rpt | sort | uniq | grep "xxxxx" | wc -l
+        # note:  will group by gaf.assignedBy
         #
         # addSQL is used to determine the specific set of evidence codes used for a given A-J subsection
         #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
-                        gaf.evidenceCode, gaf.inferredFrom, gaf.dbType,
-                        gaf.assignedBy as groupBy, gaf.extensions, gaf.proteoform, d._dag_key, d.name
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.extensions, gaf.proteoform, 
+                        gaf.dbType, gaf.assignedBy as groupBy, d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
