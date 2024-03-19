@@ -355,7 +355,8 @@ def createTempSection2(subsection):
         db.sql('create index validAnnotations_idx1 on validAnnotations (mgiid)', None)
         db.sql('create index validAnnotations_idx2 on validAnnotations (goid)', None)
 
-        # find all _vocab_key = 79 terms that do not exist/are not used in gaf.dbType, add gaf.dbType(groupBy) to validAnnotations
+        # find all _vocab_key = 79 terms that do not exist/are not used in gaf.dbType
+        # add gaf.dbType(groupBy) to validAnnotations
         # exclude the feature types below from consideration
         if subsection == 'E':
                 results = db.sql('''
