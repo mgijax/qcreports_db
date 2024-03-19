@@ -339,8 +339,7 @@ def createTempSection2(subsection):
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
                         gaf.evidenceCode, gaf.inferredFrom, gaf.dbType as groupBy, 
-                        gaf.assignedBy, gaf.extensions, gaf.proteoform,
-                        d._dag_key, d.name
+                        gaf.assignedBy, gaf.extensions, gaf.proteoform, d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
