@@ -332,6 +332,8 @@ def createTempSection2(subsection):
         #       !17 **Gene Product Form ID (proteoform)
         #       + _dag_key, name
         #
+        # cut -f2,4,5,6,7,8,12,15,16,17 GO_MGIGAF.rpt | sort | uniq | grep "xxxxx" | wc -l
+        #
         # addSQL is used to determine the specific set of feature types used for a given A-J subsection
         #
         db.sql('''
@@ -554,6 +556,8 @@ def createTempSection3(subsection):
         #       !16 **Annotation Extension
         #       !17 **Gene Product Form ID (proteoform)
         #       + _dag_key, name
+        #
+        # cut -f2,4,5,6,7,8,12,15,16,17 GO_MGIGAF.rpt | sort | uniq | grep "xxxxx" | wc -l
         #
         # addSQL is used to determine the specific set of evidence codes used for a given A-J subsection
         #
