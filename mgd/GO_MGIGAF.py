@@ -105,7 +105,7 @@ def doSetup1():
         select distinct a._Term_key, t.term, ta.accID as termID, q.term as qualifier, a._Object_key, 
             e._AnnotEvidence_key, e.inferredFrom, e._EvidenceTerm_key, 
             e._Refs_key, e._CreatedBy_key, e._ModifiedBy_key, e.creation_date, e.modification_date,
-            m.symbol, m.name, m._Marker_Type_key, 'biological_region'
+            m.symbol, m.name, m._Marker_Type_key, 'complex/cluster/region'
         from VOC_Annot a, 
              ACC_Accession ta, 
              VOC_Term t, 
@@ -125,89 +125,7 @@ def doSetup1():
         and a._Qualifier_key = q._Term_key 
         and e._ModifiedBy_key = u._User_key
         ''', None)
-    db.sql('create index gomarker1_idx1 on gomarker1(_Object_key)', None)
-    db.sql('create index gomarker1_idx2 on gomarker1(_EvidenceTerm_key)', None)
-    db.sql('create index gomarker1_idx3 on gomarker1(_Refs_key)', None)
-    db.sql('create index gomarker1_idx4 on gomarker1(_ModifiedBy_key)', None)
-    db.sql('create index gomarker1_idx5 on gomarker1(_AnnotEvidence_key)', None)
 
-    doSetup()
-
-#
-# begin doSetup2()
-# query for all GO annotations except NOCTUA and GO_Central
-#
-def doSetup2():
-
-    #
-    # retrieve data set to process
-    #
-    #   and m.symbol = 'Asap1'
-    #   and m.symbol = 'Mbd2'
-    #   and m.symbol = 'Adipoq'
-    #   and m.symbol = 'Birc3'
-    #	and m.symbol = 'Hk1'
-    #
-
-    db.sql('drop table if exists gomarker1;', None)
-    db.commit()
-
-    db.sql('''
-        -- any mouse marker that has feature types
-        select distinct a._Term_key, t.term, ta.accID as termID, q.term as qualifier, a._Object_key, 
-            e._AnnotEvidence_key, e.inferredFrom, e._EvidenceTerm_key, 
-            e._Refs_key, e._CreatedBy_key, e._ModifiedBy_key, e.creation_date, e.modification_date,
-            m.symbol, m.name, m._Marker_Type_key, vf.term as featureType
-        into temporary table gomarker1 
-        from VOC_Annot a, 
-             ACC_Accession ta, 
-             VOC_Term t, 
-             VOC_Evidence e, 
-             MRK_Marker m, 
-             VOC_Annot v,
-             VOC_Term vf,
-             VOC_Term q,
-             MGI_User u
-        where a._AnnotType_key = 1000 
-        and a._Annot_key = e._Annot_key 
-        and a._Object_key = m._Marker_key 
-        and m._Marker_Status_key = 1
-        and a._Term_key = t._Term_key 
-        and a._Term_key = ta._Object_key 
-        and ta._MGIType_key = 13 
-        and ta.preferred = 1 
-        and m._Marker_key = v._Object_key
-        and v._AnnotType_key = 1011
-        and v._Term_key = vf._Term_key
-        and a._Qualifier_key = q._Term_key 
-        and e._ModifiedBy_key = u._User_key
-
-        -- specific for complex/cluster/region as these do not have feature types
-        union
-        select distinct a._Term_key, t.term, ta.accID as termID, q.term as qualifier, a._Object_key, 
-            e._AnnotEvidence_key, e.inferredFrom, e._EvidenceTerm_key, 
-            e._Refs_key, e._CreatedBy_key, e._ModifiedBy_key, e.creation_date, e.modification_date,
-            m.symbol, m.name, m._Marker_Type_key, 'biological_region'
-        from VOC_Annot a, 
-             ACC_Accession ta, 
-             VOC_Term t, 
-             VOC_Evidence e, 
-             MRK_Marker m, 
-             VOC_Term q,
-             MGI_User u
-        where a._AnnotType_key = 1000 
-        and a._Annot_key = e._Annot_key 
-        and a._Object_key = m._Marker_key 
-        and m._Marker_Status_key = 1
-        and m._Marker_Type_key = 10
-        and a._Term_key = t._Term_key 
-        and a._Term_key = ta._Object_key 
-        and ta._MGIType_key = 13 
-        and ta.preferred = 1 
-        and a._Qualifier_key = q._Term_key 
-        and e._ModifiedBy_key = u._User_key
-
-        ''', None)
     db.sql('create index gomarker1_idx1 on gomarker1(_Object_key)', None)
     db.sql('create index gomarker1_idx2 on gomarker1(_EvidenceTerm_key)', None)
     db.sql('create index gomarker1_idx3 on gomarker1(_Refs_key)', None)
