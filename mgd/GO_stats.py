@@ -327,6 +327,7 @@ def createTempSection2(subsection):
         #       !7  **Evidence Code
         #       !8  **With (or) From             
         #       !12 **DB Object Type
+        #       !15 **Assigned By                
         #       !16 **Annotation Extension
         #       !17 **Gene Product Form ID (proteoform)
         #       + _dag_key, name
@@ -335,7 +336,8 @@ def createTempSection2(subsection):
         #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
-                        gaf.evidenceCode, gaf.inferredFrom, gaf.dbType as groupBy, gaf.extensions, gaf.proteoform,
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.dbType as groupBy, 
+                        gaf.assignedBy, gaf.extensions, gaf.proteoform,
                         d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
@@ -410,7 +412,7 @@ def createTempSection2(subsection):
                         order by t.term
                         ''', 'auto')
                 for r in results:
-                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, null, '%s', null, null, v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
+                        db.sql(''' insert into validAnnotations select distinct null, null, null, null, null, null, '%s', null, null, null, v._dag_key, v.name from validAnnotations v; ''' % (r['term']), None)
 
 def createTempSection3(subsection):
         #
@@ -547,6 +549,7 @@ def createTempSection3(subsection):
         #       !6  **DB:Reference (|DB:Reference)
         #       !7  **Evidence Code              
         #       !8  **With (or) From             
+        #       !12 **DB Object Type
         #       !15 **Assigned By                
         #       !16 **Annotation Extension
         #       !17 **Gene Product Form ID (proteoform)
@@ -556,8 +559,8 @@ def createTempSection3(subsection):
         #
         db.sql('''
                 select distinct gaf.mgiid, gaf.qualifier, gaf.goid, gaf.refs, 
-                        gaf.evidenceCode, gaf.inferredFrom, gaf.assignedBy as groupBy, gaf.extensions, gaf.proteoform,
-                        d._dag_key, d.name
+                        gaf.evidenceCode, gaf.inferredFrom, gaf.dbType,
+                        gaf.assignedBy as groupBy, gaf.extensions, gaf.proteoform, d._dag_key, d.name
                 into temporary table validAnnotations
                 from gafAnnotations gaf, ACC_Accession a, DAG_Node n, DAG_DAG d
                 where gaf.goid = a.accid
