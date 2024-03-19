@@ -52,12 +52,17 @@ dagQualifierGAF = {'C':'located_in', 'P':'acts_upstream_of_or_within', 'F':'enab
 goQualifierGAF = {}
 
 #
-# begin doSetup1()
-# query for all GO annotations
+# begin doSetup()
 #
-def doSetup1():
+def doSetup():
+    global dag
+    global syns
+    global pubMedId, doiId
+    global goQualifierGAF
+    global goRefDict
 
     #
+    # query for all GO annotations
     # retrieve data set to process
     #
     #   and m.symbol = 'Asap1'
@@ -131,18 +136,6 @@ def doSetup1():
     db.sql('create index gomarker1_idx3 on gomarker1(_Refs_key)', None)
     db.sql('create index gomarker1_idx4 on gomarker1(_ModifiedBy_key)', None)
     db.sql('create index gomarker1_idx5 on gomarker1(_AnnotEvidence_key)', None)
-
-    doSetup()
-
-#
-# begin doSetup()
-#
-def doSetup():
-    global dag
-    global syns
-    global pubMedId, doiId
-    global goQualifierGAF
-    global goRefDict
 
     # since this is called twice...reset
     dag = {}
@@ -559,7 +552,7 @@ def doGAFFinish():
 #
 
 fp = reportlib.init(sys.argv[0], outputdir = os.environ['QCOUTPUTDIR'], printHeading = None)
-doSetup1()
+doSetup()
 doGAFCol16()
 doIsoform()
 doGAFFinish()
