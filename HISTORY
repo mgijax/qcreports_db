@@ -1,3 +1,13 @@
+TAG: qcreports_db-6-0-23-1?
+DATE: 03/??/2024
+STAFF: lec
+wts2-1447/Lit triage: journals x year of publication (QC report to track journal usage in the MasterBib)
+wts2-1448/Lit triage: journals x curatorial group (QC reports to track journal usage by group)
+wts2-1449/Lit triage: journals' keep/discard numbers
+#       new file:   monthly/BIB_JournalByYear.py
+#       new file:   monthly/BIB_JournalByGroupYear.py
+#       new file:   monthly/BIB_JournalByYearKD.py
+
 TAG: qcreports_db-6-0-23-13
 TAG: qcreports_db-6-0-23-12
 DATE: 03/19/2024

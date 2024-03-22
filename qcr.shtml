@@ -336,6 +336,12 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A> <B>(jfinger)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FullCoded.sql.rpt">GXD Curation - Full-coded</A> <B>(jfinger)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A> <B>(mnk)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYear.rpt"></A> <B>()</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYearKD.rpt"></A> <B>()</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_AP.rpt">Lit triage: journals x AP</A> <B>()</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GXD.rpt">Lit triage: journals x GXD</A> <B>()</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GO.rpt"></ALit triage: journals x GO> <B>()</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_Tumor.rpt">Lit triage: journals x Tumor</A> <B>()</B>
 </OL>
 
 <A NAME="dataloads"><B>Data Loads</B></A>
