@@ -34,6 +34,7 @@ TAB = reportlib.TAB
 def init():
         global displayByStatus
         global displayByYear
+        global fp1, fp2, fp3, fp4
 
         # 
         # set of unique status & years
@@ -56,11 +57,7 @@ def init():
         for r in results:
                 deepCopy = copy.deepcopy(displayByStatus)
                 displayByYear[r['year']] = deepCopy
-
         #print(displayByYear)
-
-def printHeaders():
-        global fp1, fp2, fp3, fp4
 
         #
         # create fp reports
@@ -84,7 +81,7 @@ def printHeaders():
                         fp.write('Not Routed' + ' ' + str(r) + TAB)
                 fp.write(CRT)
 
-def processGroup(fp, group):
+def process(fp, group):
         #
         # journal -> group -> year -> status
         #
@@ -137,11 +134,10 @@ def processGroup(fp, group):
 # main
 #
 init()
-printHeaders()
-processGroup(fp1, 'AP')
-processGroup(fp2, 'GXD')
-processGroup(fp3, 'GO')
-processGroup(fp4, 'Tumor')
+process(fp1, 'AP')
+process(fp2, 'GXD')
+process(fp3, 'GO')
+process(fp4, 'Tumor')
 reportlib.finish_nonps(fp1)
 reportlib.finish_nonps(fp2)
 reportlib.finish_nonps(fp3)

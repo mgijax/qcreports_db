@@ -22,10 +22,12 @@ CRT = reportlib.CRT
 TAB = reportlib.TAB
 
 def init():
+        global fp
         global displayByRelevance
         global displayByYear
-        global fp
         
+        fp = reportlib.init(sys.argv[0], 'For each publication year columns report the Total number of papers imported, classified as Keep, or classified as Discard from each journal.', os.environ['QCOUTPUTDIR'])
+
         # 
         # set of unique years
         #
@@ -46,8 +48,6 @@ def init():
                 deepCopy = copy.deepcopy(displayByRelevance)
                 displayByYear[r['year']] = deepCopy
         #print(displayByYear)
-
-        fp = reportlib.init(sys.argv[0], 'For each publication year columns report the Total number of papers imported, classified as Keep, or classified as Discard from each journal.', os.environ['QCOUTPUTDIR'])
 
 def process():
         #
@@ -103,7 +103,6 @@ def process():
 #
 # main
 #
-
 init()
 process()
 reportlib.finish_nonps(fp)
