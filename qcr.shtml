@@ -339,7 +339,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYearKD.rpt">Lit triage: journals keep/discard numbers</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_AP.rpt">Lit triage: journals x AP</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GXD.rpt">Lit triage: journals x GXD</A> <B>(cms)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GO.rpt"></ALit triage: journals x GO</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GO.rpt">Lit triage: journals x GO</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_Tumor.rpt">Lit triage: journals x Tumor</A> <B>(dmk)</B>
 </OL>
 
