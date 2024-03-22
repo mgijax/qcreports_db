@@ -1,7 +1,7 @@
 #
 # Report: BIB_JournalByYear.py
 #
-# Lit triage: journals x year of publication
+# wts2-1447: Lit triage: journals x year of publication
 #
 # This purpose of this report is to generate journal counts by year where:
 #       . journal must have a J:

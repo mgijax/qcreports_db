@@ -1,7 +1,7 @@
 #
 # Report: BIB_JournalByGroupYear.py
 #
-# Lit triage: journals x curatorial group
+# wts2-1448 : Lit triage: journals x curatorial group
 #
 # The purpose of this report is to generate journal counts by group:
 #       AP, GXD, GO, and Tumor.
