@@ -36,8 +36,10 @@ def init():
         global displayByYear
 
         # 
-        # set of unique years
+        # set of unique status & years
+        # year -> each status
         #
+
         displayByStatus = {}
         results = db.sql(''' select term from voc_term where _vocab_key = 128 ''', 'auto')
         for r in results:
@@ -58,21 +60,20 @@ def init():
         #print(displayByYear)
 
 def printHeaders():
+        global fp1, fp2, fp3, fp4
+
         #
         # create fp reports
         # print year headers
         #
-        global fp1, fp2, fp3, fp4
 
-        fp1 = reportlib.init('BIB_JournalByGroupYear_AP', 'AP - Group reference usage by journal reported by publication year', os.environ['QCOUTPUTDIR'])
-        fp2 = reportlib.init('BIB_JournalByGroupYear_GXD', 'GXD - Group reference usage by journal reported by publication year', os.environ['QCOUTPUTDIR'])
-        fp3 = reportlib.init('BIB_JournalByGroupYear_GO', 'GO - Group reference usage by journal reported by publication year', os.environ['QCOUTPUTDIR'])
-        fp4 = reportlib.init('BIB_JournalByGroupYear_Tumor', 'Tumor - Group reference usage by journal reported by publication year', os.environ['QCOUTPUTDIR'])
+        header = ' - Group reference usage by journal reported by publication year'
+        fp1 = reportlib.init('BIB_JournalByGroupYear_AP', 'AP' + header, os.environ['QCOUTPUTDIR'])
+        fp2 = reportlib.init('BIB_JournalByGroupYear_GXD', 'GXD' + header, os.environ['QCOUTPUTDIR'])
+        fp3 = reportlib.init('BIB_JournalByGroupYear_GO', 'GO' + header, os.environ['QCOUTPUTDIR'])
+        fp4 = reportlib.init('BIB_JournalByGroupYear_Tumor', 'Tumor' + header, os.environ['QCOUTPUTDIR'])
 
         for fp in (fp1, fp2, fp3, fp4):
-                #
-                # write the year
-                #
                 fp.write(TAB)
                 for r in displayByYear:
                         fp.write('Routed' + ' ' + str(r) + TAB)
