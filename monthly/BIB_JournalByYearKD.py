@@ -95,9 +95,8 @@ def process():
                         for t in displayByYear[y]:
                                 totalCount += displayByJournal[r][y][t]
                         fp.write(str(totalCount) + TAB)
-                for y in displayByJournal[r]:
-                        for t in displayByYear[y]:
-                                fp.write(str(displayByJournal[r][y][t]) + TAB)
+                        fp.write(str(displayByJournal[r][y]['keep']) + TAB)
+                        fp.write(str(displayByJournal[r][y]['discard']) + TAB)
                 fp.write(CRT)
 
 #
