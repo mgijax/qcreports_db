@@ -1,7 +1,7 @@
 #
 # Report: BIB_JournalByYear.py
 #
-# WTS2-1449 Lit triage: journals' keep/discard numbers
+# wts2-1449 : Lit triage: journals keep/discard numbers
 #
 # This purpose of this report is to generate journal counts by year where:
 #       . year is within the last 5 years of today's year

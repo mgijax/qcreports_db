@@ -335,11 +335,11 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A> <B>(jfinger)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FullCoded.sql.rpt">GXD Curation - Full-coded</A> <B>(jfinger)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A> <B>(mnk)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYear.rpt"></A> <B>(csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYearKD.rpt"></A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYear.rpt">Lit triage: journals x year of publication</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByYearKD.rpt">Lit triage: journals keep/discard numbers</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_AP.rpt">Lit triage: journals x AP</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GXD.rpt">Lit triage: journals x GXD</A> <B>(cms)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GO.rpt"></ALit triage: journals x GO> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_GO.rpt"></ALit triage: journals x GO</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_JournalByGroupYear_Tumor.rpt">Lit triage: journals x Tumor</A> <B>(dmk)</B>
 </OL>
 
