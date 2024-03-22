@@ -23,6 +23,7 @@ TAB = reportlib.TAB
 
 def init():
         global fp
+        global displayByYear
 
         fp = reportlib.init(sys.argv[0], 'Columns report the number of J#s created using articles from each journal during the publication year', os.environ['QCOUTPUTDIR'])
 
@@ -34,7 +35,7 @@ def init():
                 select distinct r.year
                 from BIB_Refs r
                 where r.year between date_part('year', CURRENT_DATE) - 5 and date_part('year', CURRENT_DATE) 
-                r.journal is not null
+                and r.journal is not null
                 order by year desc
                 ''', 'auto')
         for r in results:
