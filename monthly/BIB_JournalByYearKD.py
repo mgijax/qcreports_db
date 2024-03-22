@@ -83,7 +83,7 @@ def process():
                 fp.write(str(r) + ' Total' + TAB)
                 for t in displayByYear[r]:
                         fp.write(str(r) + ' ' + t + TAB)
-                fp.write(CRT)
+        fp.write(CRT)
 
         #
         # write the journals & counts
