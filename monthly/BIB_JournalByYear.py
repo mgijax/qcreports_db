@@ -58,7 +58,7 @@ def process():
                 and r.journal is not null
                 and exists (select 1 from BIB_Citation_Cache c where r._refs_key = c._refs_key and c.jnumid is not null)
                 group by r.journal, year
-                order by r.year desc, r.journal
+                order by r.journal, r.year desc
                 ''', 'auto')
         for r in results:
                 if r['journal'] not in countByJournal:
