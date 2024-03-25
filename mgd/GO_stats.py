@@ -764,7 +764,7 @@ def processSection3():
         createTempSection3('F1')
         processSectionGene()
         processSectionPredicted()
-        processSectionTotal(3,'F2')
+        processSectionTotal(3,'F1')
 
         fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000008 (J:73065) - Gene Ontology annotation by the MGI curatorial staff, curated orthology' + CRT)
         createTempSection3('F2')
