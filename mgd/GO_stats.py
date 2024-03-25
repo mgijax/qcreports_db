@@ -1127,7 +1127,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F':
                         displayType = 'Manual Sequence'
                 elif subsection == 'F1':
-                        displayType = 'Manual Sequence - MGI curators (J:73065)'
+                        displayType = 'Manual Sequence Annotations - non-GO_REF'
                 elif subsection == 'F2':
                         displayType = 'Manual Sequence - MGI curators (J:73065)'
                 elif subsection == 'F3':
@@ -1251,7 +1251,7 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F':
                         fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)' + TAB)
                 elif subsection == 'F1':
-                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000008 (J:73065) - MGI curators' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations with a non-GO_REF' + TAB)
                 elif subsection == 'F2':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000008 (J:73065) - MGI curators' + TAB)
                 elif subsection == 'F3':
