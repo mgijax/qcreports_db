@@ -748,7 +748,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'E1')
 
-        fp.write(CRT + 'Other Root Annotations (ND & NOT GO_REF:0000015) by Contributor' + CRT)
+        fp.write(CRT + 'Other Root Annotations (ND) & NOT using GO_REF:0000015)' + CRT)
         createTempSection3('E2')
         processSectionGene()
         processSectionPredicted()
@@ -760,25 +760,25 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'F')
 
-        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references' + CRT)
         createTempSection3('F1')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F1')
 
-        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000008 (J:73065) - Gene Ontology annotation by the MGI curatorial staff, curated orthology' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000008 (J:73065) - MGI curatorial staff, curated orthology' + CRT)
         createTempSection3('F2')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F2')
 
-        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000024 - Manual transfer of experimentally-verified manual GO annotation data to orthologs by curator judgment of sequence similarity.' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000024 - orthologs by curator judgment of sequence similarity.' + CRT)
         createTempSection3('F3')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'F3')
 
-        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000114 - Manual transfer of experimentally-verified manual GO annotation data to homologous complexes by curator judgment of sequence, composition and function similarity' + CRT)
+        fp.write(CRT + 'Manual Sequence Annotations with GO_REF:0000114 - homologous complexes by curator judgment of sequence, composition and function similarity' + CRT)
         createTempSection3('F4')
         processSectionGene()
         processSectionPredicted()
@@ -802,7 +802,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'G2')
 
-        fp.write(CRT + 'Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using a GO_REF NOT using any of: GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:000011' + CRT)
+        fp.write(CRT + 'Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) using a GO_REF NOT not in: (GO_REF:0000008, GO_REF:0000024, GO_REF:0000114, GO_REF:0000096, or GO_REF:0000119)' + CRT)
         createTempSection3('H')
         processSectionGene()
         processSectionPredicted()
@@ -820,7 +820,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'J2')
 
-        fp.write(CRT + 'IEA methods by Reference & Contributor (assigned by' + CRT)
+        fp.write(CRT + 'IEA methods by Reference & Contributor' + CRT)
         createTempSection3('K')
         processSectionGene()
         processSectionPredicted()
@@ -832,13 +832,13 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K1')
 
-        fp.write(CRT + 'GO_REF:0000002 -IEAs based on InterPro record links with GO terms' + CRT)
+        fp.write(CRT + 'GO_REF:0000002 - IEAs based on InterPro record links with GO terms' + CRT)
         createTempSection3('K2')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'K2')
 
-        fp.write(CRT + 'GO_REF:0000116 -IEAs based on Rhea mapping' + CRT)
+        fp.write(CRT + 'GO_REF:0000116 - IEAs based on Rhea mapping' + CRT)
         createTempSection3('K3')
         processSectionGene()
         processSectionPredicted()
@@ -850,13 +850,13 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K4')
 
-        fp.write(CRT + 'GO_REF:0000118 - IEAs from TreeGrafte' + CRT)
+        fp.write(CRT + 'GO_REF:0000118 - IEAs from TreeGrafter' + CRT)
         createTempSection3('K5')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'K5')
 
-        fp.write(CRT + 'GO_REF:0000104 - IEAs for related proteins with shared sequence feature' + CRT)
+        fp.write(CRT + 'GO_REF:0000104 - IEAs for related proteins with shared sequence features' + CRT)
         createTempSection3('K6')
         processSectionGene()
         processSectionPredicted()
@@ -868,7 +868,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K7')
 
-        fp.write(CRT + 'GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mappin' + CRT)
+        fp.write(CRT + 'GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mapping' + CRT)
         createTempSection3('K8')
         processSectionGene()
         processSectionPredicted()
@@ -880,13 +880,13 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K9')
 
-        fp.write(CRT + 'GO_REF:0000041 - IEAs based on UniPathway vocabulary mappin' + CRT)
+        fp.write(CRT + 'GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping' + CRT)
         createTempSection3('K10')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'K10')
 
-        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:000011' + CRT)
+        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000108, GO_REF:0000116, GO_REF:0000117, or GO_REF:000011' + CRT)
         createTempSection3('K11')
         processSectionGene()
         processSectionPredicted()
@@ -1245,9 +1245,9 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'D':
                         fp.write(TAB + 'Total RCA Annotations' + TAB)
                 elif subsection == 'E1':
-                        fp.write(TAB + 'Total Root Annotations (ND & GO_REF:0000015)' + TAB)
+                        fp.write(TAB + 'Total Root Annotations (ND) & GO_REF:0000015' + TAB)
                 elif subsection == 'E2':
-                        fp.write(TAB + 'Total Root Annotations (ND & NOT GO_REF:0000015)' + TAB)
+                        fp.write(TAB + 'Total Root Annotations (ND) & NOT using GO_REF:0000015)' + TAB)
                 elif subsection == 'F':
                         fp.write(TAB + 'Total Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)' + TAB)
                 elif subsection == 'F1':
@@ -1255,9 +1255,9 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'F2':
                         fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000008 (J:73065) - MGI curators' + TAB)
                 elif subsection == 'F3':
-                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000024 - transfer to orthologs' + TAB)
                 elif subsection == 'F4':
-                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114' + TAB)
+                        fp.write(TAB + 'Total Manual Sequence Annotations with GO_REF:0000114 - transfer to complexes' + TAB)
                 elif subsection == 'G':
                         fp.write(TAB + 'Total Computational Sequence Annotations' + TAB)
                 elif subsection == 'G1':
