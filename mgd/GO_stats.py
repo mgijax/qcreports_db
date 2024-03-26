@@ -25,25 +25,25 @@
 # E1: Root Annotations (ND & GO_REFS:0000015) by Contributor
 # E2: Other Root Annotations (ND & NOT GO_REFS:0000015) by Contributor
 #
-# F: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+# F:  Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
 # F1: Manual Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) from non-GO_REF references by Contributor
 # F2: Manual Sequence Annotations with GO_REF:0000008 (J:73065) by Contributor
 # F3: Manual Sequence Annotations with GO_REF:0000024 by Contributor
 # F4: Manual Sequence Annotations with GO_REF:0000114 by Contributor
 #
-# G: All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
+# G:  All Computational Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO)
 # G1: Computational ISO with GO_REF:0000096 - Rat to Mouse ISO GO transfer 
 # G2: Computational ISO with GO_REF:0000119 - Human to Mouse ISO GO transfer
 #
 # H: Sequence Annotations (IKR, IGC, ISM, ISA, ISS, or ISO) NOT using any of: 
-#       GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
+#    GO_REF:0000008, GO_REF:0000096, GO_REF:0000119, GO_REF:0000024, GO_REF:0000114
 #
 # I: not used
 #
 # J1: Phylogenetic annotations (IBA using GO_REF:0000033) by Contributor
 # J2: Phylogenetic annotations (IBA NOT using GO_REF:0000033) by Contributor
 #
-# K: IEA methods by Reference & Contributor (assigned by)
+# K:  IEA methods by Reference & Contributor (assigned by)
 # K1: GO_REF:0000107 - IEAs to orthologs using Ensembl Compara.
 # K2: GO_REF:0000002 -IEAs based on InterPro record links with GO terms.
 # K3: GO_REF:0000116 -IEAs based on Rhea mapping.
@@ -56,7 +56,9 @@
 # K10: GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping
 # K11: GO_REF:0000108 - IEAs based on inter-ontology links
 # K12: IEA Annotations NOT using any of: 
-#       GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118, GO_REF:0000108
+#      GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, 
+#      GO_REF:0000104, GO_REF:0000107, GO_REF:0000108, 
+#      GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
 #
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
