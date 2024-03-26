@@ -685,11 +685,6 @@ def processSection2():
         processSectionPredicted()
         processSectionTotal(2,'A')
 
-        #results = db.sql('select distinct mgiid from validAnnotations order by mgiid', 'auto')
-        #for r in results:
-        #        fp.write(r['mgiid'] + CRT)
-        #return
-
         fp.write(CRT + 'Protein Coding Features' + CRT)
         createTempSection2('B')
         processSectionGene()
