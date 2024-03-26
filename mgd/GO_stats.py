@@ -895,7 +895,7 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K11')
 
-        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000108, GO_REF:0000116, GO_REF:0000117, or GO_REF:0000118, GO_REF:0000108' + CRT)
+        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000108, GO_REF:0000116, GO_REF:0000117, or GO_REF:0000118' + CRT)
         createTempSection3('K12')
         processSectionGene()
         processSectionPredicted()
@@ -1172,11 +1172,11 @@ def processSectionTotal(section, subsection):
                 elif subsection in ('K7'):
                         displayType = 'IEAs from GO_REF:0000117 - ARBA machine learning models'
                 elif subsection in ('K8'):
-                        displayType = 'IEAs from  GO_REF:0000043 - UniProtKB/Swiss-Prot keyword mapping'
+                        displayType = 'IEAs from GO_REF:0000043 - UniProtKB/Swiss-Prot keyword mapping'
                 elif subsection in ('K9'):
-                        displayType = 'IEAs from  GO_REF:0000044 - UniProtKB/Swiss-Prot Subcellular Location vocabulary mapping'
+                        displayType = 'IEAs from GO_REF:0000044 - UniProtKB/Swiss-Prot Subcellular Location vocabulary mapping'
                 elif subsection in ('K10'):
-                        displayType = 'IEAs from  GO_REF:0000041 - UniPathway vocabulary mapping'
+                        displayType = 'IEAs from GO_REF:0000041 - UniPathway vocabulary mapping'
                 elif subsection in ('K11'):
                         displayType = 'IEAs from GO_REF:0000108 - IEAs based on inter-ontology links'
                 elif subsection in ('K12'):
