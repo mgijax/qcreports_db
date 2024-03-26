@@ -54,8 +54,9 @@
 # K8: GO_REF:0000043 - IEAs based on UniProtKB/Swiss-Prot keyword mapping
 # K9: GO_REF:0000044 - IEAs based on UniProtKB/Swiss-Prot Subcellular Location vocabulary 
 # K10: GO_REF:0000041 - IEAs based on UniPathway vocabulary mapping
-# K11: IEA Annotations NOT using any of: 
-#       GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118
+# K11: GO_REF:0000108 - IEAs based on inter-ontology links
+# K12: IEA Annotations NOT using any of: 
+#       GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000116, GO_REF:0000117, GO_REF:0000118, GO_REF:0000108
 #
 # This report:
 #       . depends on report GO_MGIGAF.rpt, which is genereated from GO_MGIGAF.py, which is created *before* this reprot
@@ -508,8 +509,10 @@ def createTempSection3(subsection):
         elif subsection == 'K10':
                 addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000041' '''
         elif subsection == 'K11':
+                addSQL = '''and gaf.evidenceCode in ('IEA') and gaf.refs = 'GO_REF:0000108' '''
+        elif subsection == 'K12':
                 addSQL = '''and gaf.evidenceCode in ('IEA') '''
-                addSQL += '''and gaf.refs not in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118') '''
+                addSQL += '''and gaf.refs not in ('GO_REF:0000002', 'GO_REF:0000003', 'GO_REF:0000041', 'GO_REF:0000043', 'GO_REF:0000044', 'GO_REF:0000104', 'GO_REF:0000107', 'GO_REF:0000116', 'GO_REF:0000117', 'GO_REF:0000118', 'GO_REF:0000108') '''
 
         db.sql('''
                 select gaf.mgiid, gaf.assignedBy as groupBy, d._dag_key, d.name
@@ -886,11 +889,17 @@ def processSection3():
         processSectionPredicted()
         processSectionTotal(3,'K10')
 
-        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000108, GO_REF:0000116, GO_REF:0000117, or GO_REF:000011' + CRT)
+        fp.write(CRT + 'GO_REF:0000108 - IEAs based on inter-ontology links' + CRT)
         createTempSection3('K11')
         processSectionGene()
         processSectionPredicted()
         processSectionTotal(3,'K11')
+
+        fp.write(CRT + 'IEA Annotations NOT using any of: GO_REF:0000002, GO_REF:0000003, GO_REF:0000041, GO_REF:0000043, GO_REF:0000044, GO_REF:0000104, GO_REF:0000107, GO_REF:0000108, GO_REF:0000116, GO_REF:0000117, or GO_REF:0000118, GO_REF:0000108' + CRT)
+        createTempSection3('K12')
+        processSectionGene()
+        processSectionPredicted()
+        processSectionTotal(3,'K12')
 
 def processSectionGene():
         #
@@ -1169,6 +1178,8 @@ def processSectionTotal(section, subsection):
                 elif subsection in ('K10'):
                         displayType = 'IEAs from  GO_REF:0000041 - UniPathway vocabulary mapping'
                 elif subsection in ('K11'):
+                        displayType = 'IEAs from GO_REF:0000108 - IEAs based on inter-ontology links'
+                elif subsection in ('K12'):
                         displayType = 'IEAs from unexpected GO_REF(s)'
 
         # for each groupBy
@@ -1293,6 +1304,8 @@ def processSectionTotal(section, subsection):
                 elif subsection == 'K10':
                         fp.write(TAB + 'Total IEAs from GO_REF:0000041 - UniPathway vocabulary mapping' + TAB)
                 elif subsection == 'K11':
+                        fp.write(TAB + 'Total IEAs from GO_REF:0000108 - IEAs based on inter-ontology links' + TAB)
+                elif subsection == 'K12':
                         fp.write(TAB + 'Total IEAs from unexpected GO_REF(s)' + TAB)
 
                 classificationAxis = 'Evidence type'
