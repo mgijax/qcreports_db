@@ -1243,6 +1243,7 @@ def processSectionTotal(section, subsection):
                         sortingClassification = 'Summary Row for Group'
                 else:
                         sortingClassification = 'Summary Row'
+
         elif section == 3:
                 if subsection == 'A':
                         fp.write(TAB + 'Total Experimental Annotations (EXP,IDA,IEP,IGI,IMP,IPI)' + TAB)
