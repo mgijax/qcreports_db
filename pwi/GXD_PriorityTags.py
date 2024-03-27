@@ -35,7 +35,7 @@ sys.stdout.write('note' + CRT)
 
 for r in results:
         sys.stdout.write(str(r['term']) + TAB)
-        sys.stdout.write(str(r['note'] + CRT)
+        sys.stdout.write(str(r['note']) + CRT)
 
 sys.stdout.flush()
 
