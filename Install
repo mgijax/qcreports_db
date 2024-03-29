@@ -54,7 +54,3 @@ if ( ! -d ${QCGXDARCHIVE} ) then
 	mkdir -p ${QCGXDARCHIVE}
 endif
 
-if ( ! -d ${QCMTBARCHIVE} ) then
-	mkdir -p ${QCMTBARCHIVE}
-endif
-
