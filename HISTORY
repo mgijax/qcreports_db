@@ -1,8 +1,17 @@
-TAG: qcreports_db-6-0-23-??
-DATE: 03/27/2024
+TAG: qcreports_db-6-0-23-15
+DATE: 03/29/2024
 STAFF: lec
+wts2-1155/GOC taking over GOA mouse, GOA human, etc.
 wts2-1450/Custom Report for GXD workflow tag
 #       new file:   GXD_PriorityTags.py
+mgd/GO_Combined_Report.py
+mgd/GO_MGIGAF.py
+mgd/GO_stats.py
+mgd/GO_MGIGAF.py
+monthly/MRK_GOSymbolChange.sql
+qcgo_reports.csh
+qcr.shtml
+qcweekly_reports.csh
 
 TAG: qcreports_db-6-0-23-14
 DATE: 03/25/2024
