@@ -51,7 +51,7 @@ and e._experiment_key = a._object_key
 and a._mgitype_key = 42 -- experiment 
 and a._logicaldb_key = 190 
 and a.preferred = 1 
-order by t2.term, t.term, a.accid 
+order by t2.term, t.term, t3.term, a.accid 
 limit 5000
 ''' % (value), 'auto')
 
