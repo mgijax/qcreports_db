@@ -58,6 +58,7 @@ limit 5000
 sys.stdout.write('ExperimentID' + TAB)
 sys.stdout.write('experimenttype' + TAB)
 sys.stdout.write('relevance' + TAB)
+sys.stdout.write('curation status' + TAB)
 sys.stdout.write('title' + CRT)
 
 for r in results:
