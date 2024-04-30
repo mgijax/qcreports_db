@@ -1,7 +1,9 @@
+TAG: qcreports_db-6-0-23-20
 TAG: qcreports_db-6-0-23-19
 DATE: 04/29/2024
-STAFF: lec
+STAFF: lec,jer
 wts2-???/fl2-832/Move TR12977 custom report into qcreports_db/pwi
+wts2-???/fl2-832/Move TR12977 custom report into qcreports_db/pwi - limit displayed rows to 1000.
 
 TAG: qcreports_db-6-0-23-18
 DATE: 04/02/2024
