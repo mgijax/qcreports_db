@@ -181,11 +181,19 @@ function findReport (arg) {
     }
 }
 
+var maxrows = 1000;
 function showResults (rows, elapsed) {
     document.getElementById("report-detail").classList.add("showing-results")
     document.getElementById("result-count").innerText = ""+(rows.length - 1) // first row = column labels
     document.getElementById("result-time").innerText = "" + elapsed
     const tbl = document.querySelector("#results-table")
+    const msgDiv = document.querySelector("#results-message")
+    var msg = ""
+    if (rows.length > maxrows) {
+        msg = `Showing ${maxrows} of ${rows.length-1}. Download to see all results.`
+        rows = rows.slice(0,maxrows+1)
+    }
+    //
     tbl.innerHTML = rows.map((r,i) => {
         if (i === 0) {
             return '<tr>' + r.map(val => `<th>${sanitize(val)}</th>`).join('') + '</tr>'
@@ -193,6 +201,8 @@ function showResults (rows, elapsed) {
             return '<tr>' + r.map(val => `<td>${sanitize(val)}</td>`).join('') + '</tr>'
         }
     }).join('')
+    //
+    msgDiv.innerHTML = msg
 }
 
 function getElapsed (startTime) {
@@ -432,6 +442,7 @@ function setHash2 () {
   <div id="report-results">
       <br/>
       <b>Data:</b> found <span id="result-count"></span> results in <span id="result-time"></span> seconds.
+      <div id="results-message"></div>
       <table id="results-table" class="data-table">
       </table>
   </div> <!-- report results -->
