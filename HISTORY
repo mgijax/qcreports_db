@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-23-22
+DATE: 05/29/2024
+STAFF: lec
+wts2-1480/fl2-876/move BIB Missing DOI from weekly to daily
+#       renamed:    weekly/BIB_MissingDOI.sql -> mgd/BIB_MissingDOI.sql
+
 TAG: qcreports_db-6-0-23-21
 DATE: 05/28/2024
 STAFF: lec
