@@ -52,13 +52,8 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-#
-# input file format:
-#
-# MGI:xxxx
-# MGI:xxxx
-# ...
-#
+value = list(sys.argv[1].split(' '))
+value = "'" + "','".join(value) + "'"
 
 runUber = 0
 try:
@@ -66,19 +61,6 @@ try:
         runUber = 1
 except:
     pass
-
-print(runUber)
-accidquery = ''
-if not runUber:
-    accids = []
-    inFileName = os.environ['HOME'] + '/mgireport/GXD_IndexOverview.txt'
-    inFile = open(inFileName, 'r')
-    for r in inFile.readlines():
-        value = r[:-1].replace('\t\t\r', '')
-        value = value.replace('\r', '')
-        accids.append(value)
-    inFile.close()
-    accidquery = "('" + "','".join(accids) + "')"
 
 #
 # assay terms
@@ -161,8 +143,8 @@ sql = '''
         and g._ConditionalMutants_key = t2._Term_key
         '''
 
-if len(accidquery) > 0:
-    sql = sql + '\nand a.accID in %s' % (accidquery)
+if not runUber:
+    sql = sql + '\nand a.accID in (%s)' % value
 
 db.sql(sql, None)
 db.sql('create index gxdindex_idx1 on gxdindex(_Marker_key)', None)
