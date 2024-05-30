@@ -55,3 +55,5 @@ PRB_StrainRepoCheck.py|Strain Check by Strain Repository ID|Lookup IMSR Strain I
 GXD_FCHighlight.py|GXD FC Highlight|GXD recently coded highlights. Lists papers that have images attached, less than 2 years old, and do not have the GXD:HighlightReference tag.|lec|Jacqueline Finger|2023-11-27|
 ALL_CheckByCreationDate.py|Allele Check by Creation Date|Look up allele information based on data of creation.|lec|Michelle Perry|2024-01-30|Creation Date
 GXD_HTSampleAnnotations.py|GXD HT Sample Report|Lists all curated samples and their values\r\n\r\nSort by: sample name, species (common name), relevance|sc|Connie Smith|2024-04-18|
+GXD_IndexOverview.py|GXD Index Overview||lec|Jackie Finger|2024-05-30|
+GXD_IndexOverview.py uber|GXD Index Overview/Uber||lec|Jackie Finger|2024-05-30|
