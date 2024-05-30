@@ -45,7 +45,7 @@ import mgi_utils
 import reportlib
 import db
 
-db.setTrace(False)
+#db.setTrace(False)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
