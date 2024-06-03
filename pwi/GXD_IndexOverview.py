@@ -45,7 +45,7 @@ import mgi_utils
 import reportlib
 import db
 
-#db.setTrace(False)
+db.setTrace(True)
 
 CRT = reportlib.CRT
 SPACE = reportlib.SPACE
@@ -148,6 +148,7 @@ if not runUber:
 
 db.sql(sql, None)
 db.sql('create index gxdindex_idx1 on gxdindex(_Marker_key)', None)
+db.sql('create index gxdindex_idx2 on gxdindex(_Refs_key)', None)
 
 #
 # index count by J#
@@ -268,30 +269,26 @@ for r in results:
 #
 recombinaseByJnum = {}
 results = db.sql('''
-        WITH alleles AS (
-        select distinct r._Refs_key, a._Allele_key
-        from MGI_Reference_Allele_View r, ALL_Allele a, VOC_Annot v
-        where r._Object_key = a._Allele_key
+        select r._Refs_key, count(*) as jnum_count
+        from gxdindex gr, MGI_Reference_Assoc r, ALL_Allele a, VOC_Annot v
+        where gr._Refs_key = r._Refs_key
+        and r._MGIType_key = 11
+        and r._Object_key = a._Allele_key
         and a._Allele_Status_key not in (847112)
         and a._Allele_Type_key in (847126, 847116)
         and a._Allele_key = v._Object_key
         and v._Term_key = 11025588
         and v._AnnotType_key = 1014
-        and not exists (select 1 from ALL_Allele a, VOC_Annot v
-                        where r._Object_key = a._Allele_key
+        and not exists (select 1 from gxdindex gr, ALL_Allele a, VOC_Annot v
+                        where gr._Refs_key = r._Refs_key
+                        and r._Object_key = a._Allele_key
                         and a._Allele_Status_key not in (847112)
                         and a._Allele_Type_key in (847126, 847116)
                         and a._Allele_key = v._Object_key
                         and v._Term_key = 11025592
                         and v._AnnotType_key = 1014
                         )
-        )
-        select a._Refs_key, count(*) as jnum_count
-                from alleles a
-                where exists (select 1 from gxd_index g
-                        where a._Refs_key = g._Refs_key
-        )
-        group by a._Refs_key
+        group by r._Refs_key
         ''', 'auto')
 for r in results:
     key = r['_Refs_key']
