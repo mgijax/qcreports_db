@@ -54,3 +54,6 @@ if ( ! -d ${QCGXDARCHIVE} ) then
 	mkdir -p ${QCGXDARCHIVE}
 endif
 
+cd pwi
+rm -rf GXD_IndexOverviewUber.py
+ln -s GXD_IndexOverview.py GXD_IndexOverviewUber.py

@@ -52,15 +52,13 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-value = list(sys.argv[1].split(' '))
-value = "'" + "','".join(value) + "'"
-
 runUber = 0
-try:
-    if sys.argv[1] == 'uber':
+scriptName = os.path.basename(sys.argv[0])
+if scriptName == "GXD_IndexOverviewUber.py":
         runUber = 1
-except:
-    pass
+else:
+        value = list(sys.argv[1].split(' '))
+        value = "'" + "','".join(value) + "'"
 
 #
 # assay terms
@@ -143,7 +141,7 @@ sql = '''
         and g._ConditionalMutants_key = t2._Term_key
         '''
 
-if not runUber:
+if runUber == 0:
     sql = sql + '\nand a.accID in (%s)' % value
 
 db.sql(sql, None)
@@ -153,7 +151,6 @@ db.sql('create index gxdindex_idx2 on gxdindex(_Refs_key)', None)
 #
 # index count by J#
 #
-
 indexByJnum = {}
 results = db.sql('''
         select _Refs_key, count(*) as jnum_count
@@ -170,7 +167,6 @@ for r in results:
 #
 # full-coded count
 #
-
 fullcodedByJnum = []
 results = db.sql('''
         select distinct a._Refs_key 
@@ -180,16 +176,10 @@ results = db.sql('''
         ''', 'auto')
 for r in results:
     fullcodedByJnum.append(r['_Refs_key'])
-    #key = r['_Marker_key']
-    #value = r['_Refs_key']
-    #if key not in fullcodedByJnum:
-    #    fullcodedByJnum[key] = []
-    #fullcodedByJnum[key].append(value)
 
 #
 # index-assay-stage
 #
-
 indexAssayStage = {}
 results = db.sql('''
         select distinct s._Index_key, s._IndexAssay_key, s._StageID_key
@@ -206,7 +196,6 @@ for r in results:
 #
 # unique index-stage
 #
-
 uniqIndexStage = {}
 results = db.sql('''
         select distinct s._Index_key, s._StageID_key
@@ -224,7 +213,6 @@ for r in results:
 #
 # index-stage
 #
-
 indexStage = {}
 results = db.sql('''
         select s._Index_key, s._StageID_key, t.term, count(s._StageID_key) as index_count
@@ -244,7 +232,6 @@ for r in results:
 #
 # unique index-assay
 #
-
 uniqIndexAssay = {}
 results = db.sql('''
         select distinct s._Index_key, s._IndexAssay_key
