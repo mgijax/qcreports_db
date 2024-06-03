@@ -52,13 +52,12 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-runUber = 0
-scriptName = os.path.basename(sys.argv[0])
-if scriptName == "GXD_IndexOverviewUber.py":
-        runUber = 1
-else:
+try:
+        runUber = 0
         value = list(sys.argv[1].split(' '))
         value = "'" + "','".join(value) + "'"
+except:
+        runUber = 1
 
 #
 # assay terms
