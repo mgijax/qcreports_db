@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-23-23
+DATE: 06/06/2024
+STAFF: lec
+wts2-1483/fl2-894/more exclusions for References QC 5. J#s missing PDF’s
+#       modified:   monthly/BIB_MissingPDFs.sql
+
 TAG: qcreports_db-6-0-23-22
 DATE: 05/29/2024
 STAFF: lec
