@@ -4,9 +4,9 @@
 \echo '  1. have a type of Peer Reviewed Article'
 \echo '  2. have no PDF file'
 \echo '  3. have a J: number'
-\echo 'Exclude'
-\echo '  1. any papers with status of “Discard”'
-\echo '  2. any papers tagged with either “MGI:no_pdf_avail” or “MGI:hard_copy_avail”'
+\echo 'Excludes references which'
+\echo '  1. have status = “Discard”'
+\echo '  2. have tags = “MGI:no_pdf_avail” or “MGI:hard_copy_avail”'
 \echo ''
 
 with refs_without_pdfs as (
