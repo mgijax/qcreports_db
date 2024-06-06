@@ -26,6 +26,6 @@ and not exists (select 1 from bib_workflow_tag tg , voc_term tgv
         )
 order by 1 desc
 )
-select jnumid, short_citation
+select distinct jnumid, short_citation
 from refs_without_pdfs
 ;
