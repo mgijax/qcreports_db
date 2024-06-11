@@ -1,3 +1,13 @@
+TAG: qcreports_db-6-0-23-2?
+DATE: 06/11/2024
+STAFF: lec
+wts2-1492/change the run frequency of some GXD QC reports and rearrange list to reflect this new run frequency
+#       renamed:    weekly/GXD_DupPrimers.sql -> mgd/GXD_DupPrimers.sql
+#       renamed:    mgd/GXD_FullCodeable.py -> weekly/GXD_FullCodeable.py
+#       renamed:    mgd/GXD_Images.py -> weekly/GXD_Images.py
+#       renamed:    mgd/GXD_LackingImages.py -> weekly/GXD_LackingImages.py
+#       renamed:    mgd/GXD_WithdrawnMarker.py -> weekly/GXD_WithdrawnMarker.py
+
 TAG: qcreports_db-6-0-23-23
 DATE: 06/06/2024
 STAFF: lec
