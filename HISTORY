@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-23-25
+DATE: 06/24/2024
+STAFF: lec
+wts2-1399/fl2-905/OMIM to MIM change broke 2 DO reports
+#       modified:   VOC_OMIMDOMult.py
+#       modified:   VOC_OMIMDOObsolete.py
+
 TAG: qcreports_db-6-0-23-24
 DATE: 06/12/2024
 STAFF: lec

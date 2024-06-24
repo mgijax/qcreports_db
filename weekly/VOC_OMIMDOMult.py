@@ -37,9 +37,11 @@ db.sql('''
         from ACC_Accession a1, ACC_Accession a2
         where a1._MGIType_key = 13
         and a1._LogicalDB_key = 191 
-        and a1.preferred = 1 
+        and a1.prefixPart = 'DOID:'
         and a1._Object_key = a2._Object_key
-        and a2._LogicalDB_key = 15
+        and a2._MGIType_key = 13
+        and a2._LogicalDB_key = 191
+        and a2.prefixPart = 'MIM:'
         group by a1.accID having count(*) > 1 
         ''', None)
 db.sql('create index doid_idx on doid(accID)', None)
@@ -49,14 +51,17 @@ results = db.sql('''
         from ACC_Accession a1, ACC_Accession a2, VOC_Annot va, ACC_Accession a3
         where a1._MGIType_key = 13
         and a1._LogicalDB_key = 191 
-        and a1.preferred = 1 
+        and a1.prefixPart = 'DOID:'
         and a1._Object_key = a2._Object_key
-        and a2._LogicalDB_key = 15
+        and a2._MGIType_key = 13
+        and a2._LogicalDB_key = 191
+        and a2.prefixPart = 'MIM:'
         and a1._Object_key = va._Term_key
         and va._AnnotType_key = 1020
         and va._Object_key = a3._Object_key
         and a3._MGIType_key = 12
         and a3.prefixPart = 'MGI:'
+        and a3._LogicalDB_key = 1
         and exists (select 1 from doid where a1.accID = doid.accID)
         order by a1.accID, a2.accID
         ''', 'auto')
