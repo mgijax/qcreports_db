@@ -37,10 +37,10 @@ results = db.sql('''
         from ACC_Accession a1, ACC_Accession a2
         where a1._MGIType_key = 13
         and a1._LogicalDB_key = 191 
-        and a1.prefixPart = 'DOID:'
         and a1._Object_key = a2._Object_key
-        and a2._LogicalDB_key = 191
-        and a2.prefixPart = 'MIM:'
+        and a1.preferred = 1 
+        and a2._LogicalDB_key = 15
+        and a2.accID not like 'MIM:PS%'
         and not exists (select 1 from ACC_Accession a3, VOC_Term t
                 where a2.accID = a3.accID
                 and a3._MGIType_key = 13
@@ -53,10 +53,10 @@ results = db.sql('''
         from ACC_Accession a1, ACC_Accession a2
         where a1._MGIType_key = 13
         and a1._LogicalDB_key = 191 
-        and a1.prefixPart = 'DOID:'
         and a1._Object_key = a2._Object_key
-        and a2._LogicalDB_key = 191
-        and a2.prefixPart = 'MIM:'
+        and a1.preferred = 1 
+        and a2._LogicalDB_key = 15
+        and a2.accID not like 'MIM:PS%'
         and exists (select 1 from ACC_Accession a3, VOC_Term t
                 where a2.accID = a3.accID
                 and a3._MGIType_key = 13

@@ -1,6 +1,8 @@
+TAG: qcreports_db-6-0-23-26
 TAG: qcreports_db-6-0-23-25
-DATE: 06/24/2024
+DATE: 06/25/2024
 STAFF: lec
+fixed vocload; should use ldb=15 not ldb=191
 wts2-1399/fl2-905/OMIM to MIM change broke 2 DO reports
 #       modified:   VOC_OMIMDOMult.py
 #       modified:   VOC_OMIMDOObsolete.py
