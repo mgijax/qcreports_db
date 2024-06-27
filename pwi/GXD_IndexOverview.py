@@ -255,7 +255,7 @@ for r in results:
 #
 recombinaseByJnum = {}
 results = db.sql('''
-        select r._Refs_key, count(*) as jnum_count
+        select distinct r._Refs_key, count(distinct a._Allele_key) as jnum_count
         from gxdindex gr, MGI_Reference_Assoc r, ALL_Allele a, VOC_Annot v
         where gr._Refs_key = r._Refs_key
         and r._MGIType_key = 11
@@ -282,6 +282,7 @@ for r in results:
     if key not in recombinaseByJnum:
         recombinaseByJnum[key] = []
     recombinaseByJnum[key].append(value)
+print(recombinaseByJnum[291188])
 
 #
 # index-assay
@@ -398,6 +399,9 @@ for r in results:
 
 #       12. Recombinase
     if rKey in recombinaseByJnum:
+        print('\n\n')
+        print('check:',recombinaseByJnum[rKey])
+        print('check:',recombinaseByJnum[rKey][0])
         sys.stdout.write(str(recombinaseByJnum[rKey][0]) + TAB)
     else:
         sys.stdout.write(TAB)
