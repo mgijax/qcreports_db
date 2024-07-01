@@ -43,4 +43,6 @@ foreach i (*.py)
     endif
 end
 
+chmod 666 ${QCGXDARCHIVE}/*.rpt
+
 echo `date`: End nightly QC reports | tee -a ${LOG}
