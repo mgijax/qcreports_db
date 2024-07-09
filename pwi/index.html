@@ -1,4 +1,5 @@
 <html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <head>
 <!-- ************************ -->
 <style>
@@ -70,27 +71,25 @@ input:focus:invalid {
     display: block;
 }
 
-/* by default, show no-inputs section and hide the form */
-#report-detail #report-form {
-    display: none;
-}
-#report-detail #report-no-form {
-    display: block;
-}
-/* if detail container has class report-has-form, show the form and hide the no-form section */
-#report-detail.report-has-form #report-form {
-    display: block;
-}
-#report-detail.report-has-form #report-no-form {
-    display: none;
-}
-
 /* report results section is hidden by default. Made visible when .showing-results added to container. */
 #report-detail #report-results {
     display: none;
 }
 #report-detail.showing-results #report-results {
     display: block;
+}
+.backbutton {
+    background: none;
+    border: none;
+}
+.backbutton:hover {
+    background: #ccc;
+}
+button.form-button {
+}
+button.form-button:hover {
+    cursor: pointer;
+    background-color: #ddd;
 }
 </style>
 <!-- ************************ -->
@@ -99,13 +98,9 @@ input:focus:invalid {
 // list of available reports (will be fetched)
 let reports = null
 
-// which report's detail to show. When null, shows the report summary
-let currentReport = null
-// the content of the current report's form .html file, if any. Otherise, null
-let currentReportForm = null
-
-// set to true after the summary (list of reports) is drawn
-let summaryDrawn = false
+// timestamp when form submission started
+let startTime = null
+let timer = null
 
 // Utility to fetch text from a url, optionally with posted data.
 // Returns a promise for the text
@@ -123,29 +118,22 @@ function fetchText (url, postData) {
   if (postData) {
     opts = { 
       method: 'POST',
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      },  
       body: postData
     }   
   }
   return  self.fetch(url, opts).then(status).then(r => r.text())  
 }
 
-function parseTabDelimited (s) {
-    const tbl = s.split(/\n/).map(l => l.split(/\t/))
-    tbl.pop()
-    return tbl 
+function fetchTsv (url, postData) {
+    return fetchText(url, postData).then(s => {
+        return s.trim().split('\n').map(l => l.split('\t'))
+    })
 }
 
 function parsePipeDelimited (s) {
-    const tbl = s.split(/\n/).map(l => l.split(/\|/))
+    const tbl = s.split(/\n/).filter(l => !l.startsWith('#')).map(l => l.split(/\|/))
     tbl.pop()
     return tbl 
-}
-
-function sanitize (s) {
-    return s.replace("<", "&lt;")
 }
 
 // Returns a promise for a list of descriptors for the available reports
@@ -153,7 +141,7 @@ function sanitize (s) {
 //   script name , display name , description , created by , requested by , creation date, argument label
 // The list is sorted by report displayName
 function getReportsData () {
-  return fetchText("pwireports.txt", "text").then(data => {
+  return fetchText("pwireports.txt").then(data => {
     reports = parsePipeDelimited(data).filter(row => row.length === 7).map(r => {
         return {
           script:      r[0],
@@ -181,72 +169,6 @@ function findReport (arg) {
     }
 }
 
-var maxrows = 1000;
-function showResults (rows, elapsed) {
-    document.getElementById("report-detail").classList.add("showing-results")
-    document.getElementById("result-count").innerText = ""+(rows.length - 1) // first row = column labels
-    document.getElementById("result-time").innerText = "" + elapsed
-    const tbl = document.querySelector("#results-table")
-    const msgDiv = document.querySelector("#results-message")
-    var msg = ""
-    if (rows.length > maxrows) {
-        msg = `Showing ${maxrows} of ${rows.length-1}. Download to see all results.`
-        rows = rows.slice(0,maxrows+1)
-    }
-    //
-    tbl.innerHTML = rows.map((r,i) => {
-        if (i === 0) {
-            return '<tr>' + r.map(val => `<th>${sanitize(val)}</th>`).join('') + '</tr>'
-        } else {
-            return '<tr>' + r.map(val => `<td>${sanitize(val)}</td>`).join('') + '</tr>'
-        }
-    }).join('')
-    //
-    msgDiv.innerHTML = msg
-}
-
-function getElapsed (startTime) {
-    const tnow = new Date()
-    const sec = Math.round((tnow - startTime) / 1000)
-    return sec
-}
-
-// Runs the current report, passing whatever value is in the input box (if appropriate).
-// 
-function runReport (download) {
-    const d = currentReport
-    let url = `./pwireports.cgi?cmd=run&rpt=${d.script}`
-    if (d.argLabel) {
-        form = document.getElementById("qform")
-        args = form2args(form)
-        url += '&' + args
-    }
-    //
-    console.log("Running report. URL:", url)
-    //
-    if (download) {
-        filename = d.script.replace(/.py/,"") + ".out.tsv"
-        url += `&filename=${filename}`
-        window.location = url
-    } else {
-        document.getElementById('page-container').classList.add("running-report")
-        const tstart = new Date()
-        const intvl = window.setInterval(function() {
-            document.getElementById("elapsed").innerText = `(${getElapsed(tstart)} sec)`
-        }, 1000)
-        fetchText(url).then(data => {
-            window.clearInterval(intvl);
-            document.getElementById("elapsed").innerText = ``
-            document.getElementById('page-container').classList.remove("running-report")
-            rows = parseTabDelimited(data)
-            showResults(rows, getElapsed(tstart))
-        }).catch(err => {
-            document.getElementById('page-container').classList.remove("running-report")
-            alert(err)
-        })
-    }
-}
-
 // Returns a promise for the contexts of the report query form.
 // Will be injected into the <form> as its innerHTML.
 function getReportForm (rpt) {
@@ -260,7 +182,7 @@ function getReportForm (rpt) {
         const fcontents = 
             `<span>
                 <label><span id="arg-label">${rpt.argLabel}</span> = </label>
-                <input type="text" id="arg" value="" required />
+                <input type="text" name="arg" value="" required />
             </span>`
         return Promise.resolve(fcontents)
     } else {
@@ -268,71 +190,45 @@ function getReportForm (rpt) {
     }
 }
 
-// Given form element f, returns the URL formatted argument string from it's input elements
-function form2args (f) {
-    const inputs = Array.from(f.elements)
-    const argString = inputs.map(inp => {
-        const aname = inp.name || inp.id
-        const avalue = encodeURIComponent(inp.value)
-        return `${aname}=${avalue}`
-    }).join("&")
-    return argString
-}
-
-// Given a URL encoded argument string, parses it and sets the values in the passed form.
-function args2form (argString, form) {
-    argString.split('&').forEach(arg => {
-        const pieces = arg.split('=',2)
-        const name = pieces[0]
-        const value = decodeURIComponent(pieces[1])
-        form[name].value = value
+// Shows the report indicated by ri (maybe a name or an index).
+function showReportForm (ri) {
+    const rpt = findReport(ri)
+    getReportForm(rpt).then(fcontents => {
+        const form = document.querySelector("#report-form form")
+        const fname = rpt.script + '.out.tsv'
+        const addedInputs = `
+            <input name="cmd" type="hidden" value = "run" />
+            <input name="rpt" type="hidden" value = "${rpt.script}" />
+            <p style="padding-top:20px;">
+                <button class="form-button" type="button" onclick="submitForm()" >Run Query ${fcontents ? 'With Above Inputs' : ''}</button>
+                OR
+                <button class="form-button" type="submit" name="filename" value="${fname}" >Download To File</button>
+                <p/>
+                <button class="form-button" type="reset">Reset form</button>
+            </p>
+            `
+        form.innerHTML = fcontents + addedInputs 
+        document.getElementById('page-container').classList.add("showing-report")
+        document.getElementById('display-name').innerText = rpt.displayName
+        document.getElementById('description').innerHTML = '<pre>' + rpt.description + '</pre>'
+        document.getElementById('requested-by').innerText = rpt.requestedBy
+        document.getElementById('created-by').innerText = rpt.createdBy
+        document.getElementById('creation-date').innerText = rpt.creationDate
+        if (rpt.argLabel) {
+            document.getElementById('report-detail').classList.add("report-has-form")
+        } else {
+            document.getElementById('report-detail').classList.remove("report-has-form")
+        }
     })
 }
 
-function _showReport(rpt, args) {
-    document.getElementById('page-container').classList.add("showing-report")
-    document.getElementById('display-name').innerText = rpt.displayName
-    document.getElementById('description').innerHTML = '<pre>' + rpt.description + '</pre>'
-    document.getElementById('requested-by').innerText = rpt.requestedBy
-    document.getElementById('created-by').innerText = rpt.createdBy
-    document.getElementById('creation-date').innerText = rpt.creationDate
-    if (rpt.argLabel) {
-        document.getElementById('report-detail').classList.add("report-has-form")
-        document.getElementById('report-detail').classList.remove("showing-results")
-        if (args) {
-            args2form(args, document.getElementById('qform'))
-            runReport()
-        }
-    } else {
-        document.getElementById('report-detail').classList.remove("report-has-form")
-        runReport()
-    }
-}
-
-// Shows the report indicated by ri (maybe a name or an index).
-function showReport (ri, args) {
-    const rpt = currentReport = findReport(ri)
-    if (rpt.argLabel) {
-        getReportForm(rpt).then(fcontents => {
-            const form = document.querySelector("#report-form form")
-            form.innerHTML = fcontents
-            _showReport(rpt, args);
-            return
-        })
-    } else {
-        return _showReport(rpt, args);
-    }
-}
-
-function showSummary () {
+function showReportList () {
   document.getElementById('page-container').classList.remove("showing-report")
-  // only draw it once
-  if (summaryDrawn) return
   const tbl = document.querySelector("#report-summary > table")
   const tbody = tbl.querySelector("tbody")
   reports.forEach((r,ri) => {
     const displayRow = [
-        `<span class="display-name" onclick="setHash('${r.script}')">${r.displayName}</span>`,
+        `<span class="display-name" onclick="showReportForm('${r.script}')">${r.displayName}</span>`,
         r.requestedBy,
         r.creationDate,
         r.createdBy
@@ -341,39 +237,57 @@ function showSummary () {
     tbody.appendChild(tr);
     tr.innerHTML = displayRow.map(d => '<td>' + d + '</td>').join('')
   })
-  summaryDrawn = true
 }
 
-// This is a single page app, which normally doesn't play well with the browser history.
-// (E.g. the back button doesn't work the way the user expects.) To fix this, we use the hash portion
-// of the URL to drive state changes: (1) attach a change handler so that anytime the window.location.hash
-// changes, we get control, and the display is updated based on the hash value; (2) when the user clicks
-// a report name in the summary or the "run" button on a report detail page, all that does (directly) is
-// set window.location.hash - the change is detected and the hash change handler is called.
-// This approach works naturally with the browser's history mechanism; if the user hits a back button,
-// the browser restores the previous hash value, which triggers the change handler.
-
-function onHashChanged () {
-    const hash = window.location.hash.substr(1).trim()
-    if (hash === "") {
-        showSummary()
-    } else {
-        const rptName = hash.split("!",2)[0]
-        const args = hash.split("!",2)[1]
-        showReport(rptName, args)
+function showResults (tblData) {
+    const endTime = new Date()
+    const elapsedTime = Math.round((endTime - startTime) / 1000)
+    const resLimit = 1000
+    const resCount = tblData.length - 1
+    let showingCount = resCount
+    let resMessage = ''
+    if (resCount > resLimit) {
+        showingCount = resLimit
+        tblData.splice(resLimit+1, (resCount-resLimit))
+        resMessage = `Showing ${resLimit} of ${resCount}. Download to see all results.`
     }
+    const esc = function (s) { return s.replace('<', '&lt;'); }
+    const tblHtml1 = tblData.map((r,i) => r.map(d => {
+            const tag = i === 0 ? 'th' : 'td';
+            const html = `<${tag}>${esc(d)}</${tag}>`;
+            return html;
+        }).join(''))
+    const tblHtml2 = '<tr>' + tblHtml1.join('</tr><tr>') + '</tr>'
+    document.getElementById('report-detail').classList.add('showing-results')
+    document.getElementById('result-count').innerText = '' + resCount
+    document.getElementById('result-time').innerText = '' + elapsedTime + 's'
+    document.getElementById('results-table').innerHTML = tblHtml2
+    document.getElementById('results-message').innerHTML = resMessage
+    stopTimer ()
 }
 
-function setHash (rpt, argString) {
-    let h = ""
-    if (rpt) {
-        h = rpt + (argString ? "!" + argString : "")
-    }
-    window.location.hash = h
+function startTimer () {
+    document.getElementById("page-container").classList.add("running-report")
+    startTime = new Date()
+    timer = window.setInterval(() => {
+        const currTime = new Date()
+        const elapsed = Math.round((currTime - startTime)/1000)
+        document.getElementById("elapsed").innerText = ' (' + elapsed + ' sec)'
+    }, 1000)
 }
 
-function setHash2 () {
-   setHash(currentReport.script, form2args(document.getElementById("qform")))
+function stopTimer () {
+    document.getElementById("page-container").classList.remove("running-report")
+    window.clearInterval(timer)
+    document.getElementById("elapsed").innerText = ''
+}
+
+function submitForm() {
+    const form = document.getElementById("qform")
+    if (!form.reportValidity()) return;
+    const data = new FormData(form)
+    fetchTsv("./pwireports.cgi", data).then(showResults)
+    startTimer()
 }
 
 </script>
@@ -401,6 +315,7 @@ function setHash2 () {
 
 <!-- Report Detail -->
 <div id="report-detail">
+  <button class="backbutton" onclick="window.location.reload();">&#x2190; Back</button>
   <h3>Report Details</h3>
   <dl class="detailPageListData" style="margin-bottom:0px;">
   
@@ -420,25 +335,19 @@ function setHash2 () {
     <dd id="created-by"> </dd>
     
   </dl>
-  <div id="report-no-form">
-      <br/>
-      <button onclick="runReport(true)">Download This Report</button>
-  </div>
   <div id="report-form">
-      <h3>Run Query With...</h3>
-        <br/>
-        <form id="qform">
+      <h3>Run ...</h3>
+        <form id="qform" method="POST" action="pwireports.cgi" enctype="multipart/form-data">
             <!-- form contents will be injected -->
         </form>
         <br/>
         <br/>
       
-      <button onclick="setHash2()">Run Query With Above Input</button>
-      
-      OR <button onclick="runReport(true)">Download to File</button>
-      
   </div> <!-- report-form -->
 
+  <div id="working-message">
+     <span>Working... <span id="elapsed"></span></span>
+  </div>
   <div id="report-results">
       <br/>
       <b>Data:</b> found <span id="result-count"></span> results in <span id="result-time"></span> seconds.
@@ -446,17 +355,11 @@ function setHash2 () {
       <table id="results-table" class="data-table">
       </table>
   </div> <!-- report results -->
-  <div id="working-message">
-     <span>Working... <span id="elapsed"></span></span>
-  </div>
 
 </div> <!-- report detail -->
 </div> <!-- page container -->
 </body>
 <script>
-    getReportsData().then( () => {
-        window.onhashchange = onHashChanged
-        onHashChanged() 
-    })
+    getReportsData().then(() => showReportList())
 </script>
 </html>
