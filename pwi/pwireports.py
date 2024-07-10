@@ -50,20 +50,6 @@ def runReport () :
     rpt = form["rpt"].value
     rptInfo = findReport(rpt)
     argLabel = rptInfo.get("argLabel",None)
-    if argLabel:
-        if argLabel != "*":
-            # old style (simple) arg
-            # look for "arg" in the form and set sys.argv
-            arg = None
-            if "arg" in form:
-                arg = form["arg"].value
-                sys.argv = [sys.argv[0], arg]
-            else:
-                raise Exception("No argument for parameter: " + argLabel)
-        else:
-            # if arg label is "*", the form has custom inputs, and the
-            # imported report.py is responsible for getting them
-            pass
 
     # name to give download file
     fname = None
@@ -71,9 +57,8 @@ def runReport () :
         fname = form["filename"].value
     # emit the response header
     header("text-plain", fname)
-    # Importing the module runs any global code. Many reports are run simply by importing the module.
-    # Additionally, the module can define a function named 'go' that takes a single argument: 
-    # the form from the CGI request
+
+    # Import the module and call its "go" function, passing it the form.
     mod = importlib.import_module(rpt)
     if 'go' in dir(mod):
         mod.go(form)

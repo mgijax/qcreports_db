@@ -24,61 +24,62 @@ import reportlib
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-db.sql('''
-select v._Allele_key 
-into temporary table notReviewed 
-from ALL_Variant v, ALL_Variant_Sequence s 
-where v._sourcevariant_key is not null 
-and v.isreviewed = 0 
-and v._Variant_key = s._Variant_key 
-and s._Sequence_type_key = 316347 --dna 
-and s.version is not null 
-and s.startCoordinate is not null 
-and s.endCoordinate is not null 
-and s.variantSequence is not null 
-and s.referenceSequence is not null
-''', None)
+def go (form) :
+    db.sql('''
+    select v._Allele_key 
+    into temporary table notReviewed 
+    from ALL_Variant v, ALL_Variant_Sequence s 
+    where v._sourcevariant_key is not null 
+    and v.isreviewed = 0 
+    and v._Variant_key = s._Variant_key 
+    and s._Sequence_type_key = 316347 --dna 
+    and s.version is not null 
+    and s.startCoordinate is not null 
+    and s.endCoordinate is not null 
+    and s.variantSequence is not null 
+    and s.referenceSequence is not null
+    ''', None)
 
-db.sql('create index idx1 on notReviewed(_Allele_key)', None)
+    db.sql('create index idx1 on notReviewed(_Allele_key)', None)
 
-db.sql('''
-select mn._Object_key, mn.note 
-into temporary table curNote 
-from MGI_Note mn 
-where mn._Notetype_key = 1050
-''', None)
+    db.sql('''
+    select mn._Object_key, mn.note 
+    into temporary table curNote 
+    from MGI_Note mn 
+    where mn._Notetype_key = 1050
+    ''', None)
 
-db.sql('create index idx2 on curNote(_Object_key)', None)
+    db.sql('create index idx2 on curNote(_Object_key)', None)
 
-results = db.sql('''
-select distinct a.accID as alleleID, 
-aa.symbol as alleleSymbol, 
-nn.note as curatorNote 
-from ACC_Accession a, 
-ALL_Allele aa, 
-notReviewed n left outer join curNote nn on n._Allele_key = nn._Object_key 
-where n._Allele_key = aa._Allele_key 
-and n._Allele_key = a._Object_key 
-and a._MGIType_key = 11 
-and a._LogicalDB_key = 1 
-and a.preferred = 1 
-and a.prefixPart = 'MGI:' 
-order by aa.symbol
-''', 'auto')
+    results = db.sql('''
+    select distinct a.accID as alleleID, 
+    aa.symbol as alleleSymbol, 
+    nn.note as curatorNote 
+    from ACC_Accession a, 
+    ALL_Allele aa, 
+    notReviewed n left outer join curNote nn on n._Allele_key = nn._Object_key 
+    where n._Allele_key = aa._Allele_key 
+    and n._Allele_key = a._Object_key 
+    and a._MGIType_key = 11 
+    and a._LogicalDB_key = 1 
+    and a.preferred = 1 
+    and a.prefixPart = 'MGI:' 
+    order by aa.symbol
+    ''', 'auto')
 
-sys.stdout.write('alleleID' + TAB)
-sys.stdout.write('alleleSymbol' + TAB)
-sys.stdout.write('curatorNote' + CRT)
+    sys.stdout.write('alleleID' + TAB)
+    sys.stdout.write('alleleSymbol' + TAB)
+    sys.stdout.write('curatorNote' + CRT)
 
-for r in results:
-        sys.stdout.write(r['alleleID'] + TAB)
-        sys.stdout.write(r['alleleSymbol'] + TAB)
+    for r in results:
+            sys.stdout.write(r['alleleID'] + TAB)
+            sys.stdout.write(r['alleleSymbol'] + TAB)
 
-        if r['curatorNote'] == None:
-                sys.stdout.write(CRT)
-        else:
-                note = r['curatorNote'].replace('\n', ' ').replace('\t', ' ')
-                sys.stdout.write(note + CRT)
+            if r['curatorNote'] == None:
+                    sys.stdout.write(CRT)
+            else:
+                    note = r['curatorNote'].replace('\n', ' ').replace('\t', ' ')
+                    sys.stdout.write(note + CRT)
 
-sys.stdout.flush()
+    sys.stdout.flush()
 

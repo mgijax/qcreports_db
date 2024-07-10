@@ -1,4 +1,4 @@
-# test report. Simply prin
+# test report. Simply prints the form contents.
 import sys
 import os
 

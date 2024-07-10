@@ -17,36 +17,37 @@ db.setTrace()
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-value = sys.argv[1]
+def go (form) :
+    value = form['arg'].value
 
-results = db.sql('''
-select aa.accid as mgi_id, a.symbol, u.login as created_by, n.note
-from ALL_Allele a
-        left outer join MGI_Note n on (n._object_key = a._allele_key and n._mgitype_key = 11 and n._notetype_key = 1022)
-        ,
-ACC_Accession aa, MGI_User u
-where a._allele_key = aa._object_key
-and aa._mgitype_key = 11
-and a._createdby_key = u._user_key
-and (a.creation_date between '%s' and ('%s'::date + '1 day'::interval))
-order by a.symbol
-''' % (value, value), 'auto')
+    results = db.sql('''
+    select aa.accid as mgi_id, a.symbol, u.login as created_by, n.note
+    from ALL_Allele a
+            left outer join MGI_Note n on (n._object_key = a._allele_key and n._mgitype_key = 11 and n._notetype_key = 1022)
+            ,
+    ACC_Accession aa, MGI_User u
+    where a._allele_key = aa._object_key
+    and aa._mgitype_key = 11
+    and a._createdby_key = u._user_key
+    and (a.creation_date between '%s' and ('%s'::date + '1 day'::interval))
+    order by a.symbol
+    ''' % (value, value), 'auto')
 
-sys.stdout.write('symbol' + TAB)
-sys.stdout.write('mgi_id' + TAB)
-sys.stdout.write('note' + TAB)
-sys.stdout.write('created_by' + CRT)
+    sys.stdout.write('symbol' + TAB)
+    sys.stdout.write('mgi_id' + TAB)
+    sys.stdout.write('note' + TAB)
+    sys.stdout.write('created_by' + CRT)
 
-for r in results:
-        sys.stdout.write(r['symbol'] + TAB)
-        sys.stdout.write(r['mgi_id'] + TAB)
+    for r in results:
+            sys.stdout.write(r['symbol'] + TAB)
+            sys.stdout.write(r['mgi_id'] + TAB)
 
-        if r['note'] != None:
-                note = r['note'].replace('\n', ' ').replace('\t', ' ')
-                sys.stdout.write(note)
-        sys.stdout.write(TAB)
+            if r['note'] != None:
+                    note = r['note'].replace('\n', ' ').replace('\t', ' ')
+                    sys.stdout.write(note)
+            sys.stdout.write(TAB)
 
-        sys.stdout.write(r['created_by'] + CRT)
+            sys.stdout.write(r['created_by'] + CRT)
 
-sys.stdout.flush()
+    sys.stdout.flush()
 

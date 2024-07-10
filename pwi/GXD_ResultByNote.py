@@ -27,65 +27,66 @@ import reportlib
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-value = '%' + sys.argv[1] + '%'
+def go (form) :
+    value = '%' + form['arg'].value + '%'
 
-results = db.sql('''
-select distinct ac.accid as assay_mgiid, 
-ac_ref.accid as jnum_id, 
-gs.specimenlabel, 
-m.symbol as gene, 
-gisrs._stage_key as stage, 
-s.term as structure, 
-c.term as celltype, 
-gisr.resultnote 
-from GXD_Specimen gs 
-        join GXD_Assay ga on ga._assay_key = gs._assay_key 
-        join ACC_Accession ac on ac._object_key = ga._assay_key and ac.preferred = 1 and ac._mgitype_key = 8 and ac._logicaldb_key = 1 
-        join ACC_Accession ac_ref on ac_ref._object_key = ga._refs_key 
-                and ac_ref.preferred = 1 
-                and ac_ref._mgitype_key = 1 
-                and ac_ref.prefixpart = 'J:' 
-                and ac_ref._logicaldb_key = 1 
-        join MRK_Marker m on m._marker_key = ga._marker_key 
-        join GXD_InSituResult gisr on gisr._specimen_key = gs._specimen_key 
-        join GXD_ISResultStructure gisrs on gisrs._result_key = gisr._result_key 
-        join VOC_Term s on gisrs._emapa_term_key = s._term_key 
-        left join GXD_ISResultCellType giscell on giscell._result_key = gisr._result_key 
-        left join VOC_Term c on giscell._celltype_term_key = c._term_key 
-where ga._AssayType_key in (1, 6, 9) 
-and lower(gisr.resultNote) like lower('%s') 
-order by gisrs._stage_key, s.term
-''' % (value), 'auto')
+    results = db.sql('''
+    select distinct ac.accid as assay_mgiid, 
+    ac_ref.accid as jnum_id, 
+    gs.specimenlabel, 
+    m.symbol as gene, 
+    gisrs._stage_key as stage, 
+    s.term as structure, 
+    c.term as celltype, 
+    gisr.resultnote 
+    from GXD_Specimen gs 
+            join GXD_Assay ga on ga._assay_key = gs._assay_key 
+            join ACC_Accession ac on ac._object_key = ga._assay_key and ac.preferred = 1 and ac._mgitype_key = 8 and ac._logicaldb_key = 1 
+            join ACC_Accession ac_ref on ac_ref._object_key = ga._refs_key 
+                    and ac_ref.preferred = 1 
+                    and ac_ref._mgitype_key = 1 
+                    and ac_ref.prefixpart = 'J:' 
+                    and ac_ref._logicaldb_key = 1 
+            join MRK_Marker m on m._marker_key = ga._marker_key 
+            join GXD_InSituResult gisr on gisr._specimen_key = gs._specimen_key 
+            join GXD_ISResultStructure gisrs on gisrs._result_key = gisr._result_key 
+            join VOC_Term s on gisrs._emapa_term_key = s._term_key 
+            left join GXD_ISResultCellType giscell on giscell._result_key = gisr._result_key 
+            left join VOC_Term c on giscell._celltype_term_key = c._term_key 
+    where ga._AssayType_key in (1, 6, 9) 
+    and lower(gisr.resultNote) like lower('%s') 
+    order by gisrs._stage_key, s.term
+    ''' % (value), 'auto')
 
-sys.stdout.write('assay_mgiid' + TAB)
-sys.stdout.write('jnum_id' + TAB)
-sys.stdout.write('specimenlabel' + TAB)
-sys.stdout.write('gene' + TAB)
-sys.stdout.write('stage' + TAB)
-sys.stdout.write('structure' + TAB)
-sys.stdout.write('celltype' + TAB)
-sys.stdout.write('resultnote' + CRT)
+    sys.stdout.write('assay_mgiid' + TAB)
+    sys.stdout.write('jnum_id' + TAB)
+    sys.stdout.write('specimenlabel' + TAB)
+    sys.stdout.write('gene' + TAB)
+    sys.stdout.write('stage' + TAB)
+    sys.stdout.write('structure' + TAB)
+    sys.stdout.write('celltype' + TAB)
+    sys.stdout.write('resultnote' + CRT)
 
-for r in results:
-        sys.stdout.write(r['assay_mgiid'] + TAB)
-        sys.stdout.write(r['jnum_id'] + TAB)
+    for r in results:
+            sys.stdout.write(r['assay_mgiid'] + TAB)
+            sys.stdout.write(r['jnum_id'] + TAB)
 
-        if r['specimenlabel'] == None:
-                sys.stdout.write(TAB)
-        else:
-                sys.stdout.write(r['specimenlabel'] + TAB)
+            if r['specimenlabel'] == None:
+                    sys.stdout.write(TAB)
+            else:
+                    sys.stdout.write(r['specimenlabel'] + TAB)
 
-        sys.stdout.write(r['gene'] + TAB)
-        sys.stdout.write(str(r['stage']) + TAB)
-        sys.stdout.write(r['structure'] + TAB)
+            sys.stdout.write(r['gene'] + TAB)
+            sys.stdout.write(str(r['stage']) + TAB)
+            sys.stdout.write(r['structure'] + TAB)
 
-        if r['celltype'] == None:
-                sys.stdout.write(TAB)
-        else:
-                sys.stdout.write(r['celltype'] + TAB)
+            if r['celltype'] == None:
+                    sys.stdout.write(TAB)
+            else:
+                    sys.stdout.write(r['celltype'] + TAB)
 
-        note = r['resultnote'].replace('\n', ' ').replace('\t', ' ')
-        sys.stdout.write(note + CRT)
+            note = r['resultnote'].replace('\n', ' ').replace('\t', ' ')
+            sys.stdout.write(note + CRT)
 
-sys.stdout.flush()
+    sys.stdout.flush()
 
