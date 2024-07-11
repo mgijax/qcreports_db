@@ -196,6 +196,10 @@ function showReportForm (ri) {
     getReportForm(rpt).then(fcontents => {
         const form = document.querySelector("#report-form form")
         const fname = rpt.script + '.out.tsv'
+        const resetBtn = `
+                <p/>
+                <button class="form-button" type="reset">Reset form</button>
+        `
         const addedInputs = `
             <input name="cmd" type="hidden" value = "run" />
             <input name="rpt" type="hidden" value = "${rpt.script}" />
@@ -203,8 +207,7 @@ function showReportForm (ri) {
                 <button class="form-button" type="button" onclick="submitForm()" >Run Query ${fcontents ? 'With Above Inputs' : ''}</button>
                 OR
                 <button class="form-button" type="submit" name="filename" value="${fname}" >Download To File</button>
-                <p/>
-                <button class="form-button" type="reset">Reset form</button>
+                ${rpt.argLabel ? resetBtn : ''}
             </p>
             `
         form.innerHTML = fcontents + addedInputs 
@@ -260,7 +263,7 @@ function showResults (tblData) {
     const tblHtml2 = '<tr>' + tblHtml1.join('</tr><tr>') + '</tr>'
     document.getElementById('report-detail').classList.add('showing-results')
     document.getElementById('result-count').innerText = '' + resCount
-    document.getElementById('result-time').innerText = '' + elapsedTime + 's'
+    document.getElementById('result-time').innerText = '' + elapsedTime
     document.getElementById('results-table').innerHTML = tblHtml2
     document.getElementById('results-message').innerHTML = resMessage
     stopTimer ()
