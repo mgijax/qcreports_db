@@ -25,6 +25,7 @@ def go (form) :
     arg = form['arg'].value
     # expects "MMRRC:037343 RBRC00257 000486"
     value = list(arg.split(' '))
+    value = value.lower()
 
     # example: 'MMRRC:037343','RBRC00257','000486'
     value1 = "'" + "','".join(value) + "'"
@@ -38,7 +39,7 @@ def go (form) :
     CASE WHEN s.private = 0 THEN 'No' ELSE 'Yes' END AS private 
     into temporary table strains 
     from ACC_Accession a1, ACC_Accession a2, PRB_Strain s 
-    where a1.accid in (%s) 
+    where lower(a1.accid) in (%s) 
     and a1._MGIType_key = 10 
     and a1._Object_key = a2._Object_key 
     and a2._MGIType_key = 10 
