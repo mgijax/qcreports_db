@@ -24,8 +24,7 @@ TAB = reportlib.TAB
 def go (form) :
     arg = form['arg'].value
     # expects "MMRRC:037343 RBRC00257 000486"
-    value = list(arg.split(' '))
-    value = value.lower()
+    value = list(arg.lower().split(' '))
 
     # example: 'MMRRC:037343','RBRC00257','000486'
     value1 = "'" + "','".join(value) + "'"
