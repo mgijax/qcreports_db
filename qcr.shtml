@@ -181,10 +181,10 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleTheilerAge.rpt">GXD HT Samples with incompatible Theiler stages and ages</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoAge.sql.rpt">GXD HT Samples with incorrect age/age range values</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoStructure.rpt">GXD HT Samples whose Relevance = Yes but the structure field is null</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTRNASeq.rpt">RNA seq experiments missing needed experimental variable</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpPubMedID.sql.rpt">HT Experiments with PMIDs used by GXD</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTDistinctAge.sql.rpt">Distinct Age, AgeMin, AgeMax</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTRNASeq.rpt">RNA seq experiments missing needed experimental variable</A>
 </OL>
 <A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (cms, csmith)</B></A>
 <OL>
