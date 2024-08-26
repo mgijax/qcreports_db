@@ -59,6 +59,7 @@ db.sql('''
         and t._Term_key = a._Object_key
         and a._LogicalDB_key = 34
         and a._MGIType_key = 13
+        and t.isObsolete = 0
         ''' % (fromDate, toDate), None)
 
 db.sql('''create index idx1 on triage(_Term_key)''', None)
@@ -112,6 +113,6 @@ for id in mpIds:
     fp.write(str.ljust(synonyms, 50) )
     fp.write(CRT)
 
-fp.write('%sNumber of new terms this week: %s' % (CRT, len(mpIds)) )
+fp.write('\nNumber of new terms this week: %s\n' % (len(mpIds)) )
 
 reportlib.finish_nonps(fp)	# non-postscript file
