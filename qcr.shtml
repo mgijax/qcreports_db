@@ -115,6 +115,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_OMIMDOObsolete.rpt">Obsolete OMIM terms in DO as xrefs</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DOAnnotNotInSlim.sql.rpt">DO terms not in the DO slim</A>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_DODups.sql.rpt">Duplicate Disease Annotations</A>
+<LI><A HREF="/data/reports/qcreports_db/output/VOC_OntologyExactMatch.rpt">Phenotype Terms with more than 1 exact match</A>
 </OL>
 
 <A NAME="gxd"><B>GXD (cms, jfinger, ijm, terryh)</B></A>
