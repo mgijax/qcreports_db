@@ -35,13 +35,6 @@ foreach i (*GO*.py VOC_InvalidInferred.py VOC_InvalidProperties.py)
     endif
 end
 
-cd ${QCWEEKLY}
-
-foreach i (*GO*.py)
-    echo `date`: $i | tee -a ${LOG}
-    ${PYTHON} $i >>& ${LOG}
-end
-
 cd ${QCMONTHLY}
 
 foreach i (*GO*.sql)
