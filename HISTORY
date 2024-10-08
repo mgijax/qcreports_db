@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-24-?
+DATE: 10/08/2024
+STAFF: lec
+wts2-1563/tweak to existing Unused image panes from full coded references QC (GXD #8)
+#       modified:   mgd/GXD_ImagesUnused.py
+
 TAG: qcreports_db-6-0-24-5
 DATE: 08/28/2024
 STAFF: lec

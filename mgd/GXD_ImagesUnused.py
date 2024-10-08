@@ -60,7 +60,8 @@ fp = reportlib.init(sys.argv[0], 'Unused image panes from full coded references'
 
 #
 # Select Gel Assays Image Panes that are full-coded.
-# 	Images that are "not null"
+# Images that are "not null"
+# Image Class = Expression
 #
 
 db.sql('''
@@ -114,21 +115,22 @@ db.sql('''
      select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, 
      to_char(aa.creation_date, 'MM/dd/yyyy') as cdate
      into temporary table images 
-     from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa 
+     from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa , IMG_Image i
      where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key 
      and assay._AssayType_key in (1,2,3,4,5,6,8,9)) 
      and a._Refs_key = r._Refs_key 
      and a._ImageType_key = 1072158 
      and a._Image_key = aa._Image_key 
      and aa.paneLabel is not null
+     and aa._image_key = i._image_key
+     and i._imageclass_key = 6481781
      ''', None)
 
 db.sql('create index images_idx1 on images(jnumID)', None)
 db.sql('create index images_idx2 on images(figureLabel)', None)
 
 #
-# From this list of Image Panes, select those that are not used
-# in either the Specimen or Gel table.
+# From this list of Image Panes, select those that are not used in either the Specimen or Gel table.
 #
 # That is, select Images where some Panes have been full-coded,
 # and some Image Panes have not been full-coded.
@@ -169,3 +171,4 @@ for r in results:
 fp.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
 
 reportlib.finish_nonps(fp)	# non-postscript file
+
