@@ -34,7 +34,7 @@ def go (form) :
     and e._curationstate_key = 20475421
     and e._experiment_key = n._object_key 
     and n._notetype_key = 1047 
-    order by ExperimentID
+    order by note
     ''')
 
     sys.stdout.write('ExperimentID' + TAB)

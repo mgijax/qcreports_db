@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-24-7
+DATE: 10/22/2024
+STAFF: lec
+wts2-1567/e4g-42/change sort order of custom report: GXD HT Experiment notes displayed to the public
+#       modified:   pwi/GXD_HTExperimentCuratedNote.py
+
 TAG: qcreports_db-6-0-24-6
 DATE: 10/08/2024
 STAFF: lec
