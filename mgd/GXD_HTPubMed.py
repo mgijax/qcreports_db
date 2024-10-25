@@ -31,7 +31,7 @@ db.setTrace()
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-fp = reportlib.init(sys.argv[0], 'GXD HT Experiments with PMIDs that do not exist in Lit Triage', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], 'Curated GXD HT Experiments with PMIDs that do not exist in Lit Triage', os.environ['QCOUTPUTDIR'])
 
 results = db.sql('''
     select distinct p.value, array_to_string(array_agg(distinct a.accid),'|') as exptId
