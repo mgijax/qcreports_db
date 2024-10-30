@@ -12,6 +12,7 @@
 #	- supplemental in:
 #		'Db found supplement'
 #		'Curator found supplement'
+#   - Group is not in GXDHT
 #	- Status in ('Chosen', 'Indexed')
 #	- Journal not in 'Elife'
 #       - SOrted by Curator, Status, J#
@@ -95,8 +96,10 @@ and d._Supplemental_key in (31576675, 34027000)
 and d._ExtractedText_key = 48804490
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1
+and s._Group_key != 114000000
 and s._Status_key in (31576671, 31576673)
 and s._Status_key = t._Term_key
+and s._createdby_key = u._User_key
 and s._createdby_key = u._User_key
 and u._UserType_key in (316352, 316354)
 order by t.term, r.jnumID
@@ -121,6 +124,7 @@ and d._Supplemental_key in (31576675, 34027000)
 and d._ExtractedText_key = 48804490
 and r._Refs_key = s._Refs_key
 and s.isCurrent = 1
+and s._Group_key != 114000000
 and s._Status_key in (31576671, 31576673)
 and s._Status_key = t._Term_key
 and s._createdby_key = u._User_key
