@@ -45,7 +45,8 @@ def go (form) :
         mn.note as sampleNote,
         a.accid as AEID,
         t1.term as studyType,
-        t5.term as celltype
+        t5.term as celltype,
+        t6.term as rnaSeqType
         into temporary table samples
         from GXD_HTSample gh
         join MGI_Organism mo on (gh._Organism_key = mo._Organism_key)
@@ -53,6 +54,7 @@ def go (form) :
         join VOC_Term t1 on (e._StudyType_key = t1._Term_key)
         join VOC_Term t2 on (gh._Relevance_key = t2._term_key)
         join VOC_Term t3 on (gh._Sex_key = t3._term_key)
+        join VOC_Term t6 on (gh._RNASeqType_key = t4._term_key)
         join ACC_Accession a on ( gh._Experiment_key = a._Object_key
             and a._MGIType_key = 42
             and a._LogicalDB_key in (189, 190)
@@ -154,6 +156,7 @@ def go (form) :
         sys.stdout.write(r['name'] + TAB)
         sys.stdout.write(r['commonName'] + TAB)
         sys.stdout.write(r['relevance'] + TAB)
+        sys.stdout.write(r['rnaSeqType'] + TAB)
         sys.stdout.write(hasAllelePairs + TAB)
         sys.stdout.write(r['age'] + TAB)
         sys.stdout.write(r['sex'] + TAB)
