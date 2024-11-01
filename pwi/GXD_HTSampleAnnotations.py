@@ -18,7 +18,7 @@ import os
 import db
 import reportlib
 
-#db.setTrace()
+db.setTrace()
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
