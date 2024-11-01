@@ -54,7 +54,7 @@ def go (form) :
         join VOC_Term t1 on (e._StudyType_key = t1._Term_key)
         join VOC_Term t2 on (gh._Relevance_key = t2._term_key)
         join VOC_Term t3 on (gh._Sex_key = t3._term_key)
-        join VOC_Term t6 on (gh._RNASeqType_key = t4._term_key)
+        join VOC_Term t6 on (gh._RNASeqType_key = t6._term_key)
         join ACC_Accession a on ( gh._Experiment_key = a._Object_key
             and a._MGIType_key = 42
             and a._LogicalDB_key in (189, 190)
