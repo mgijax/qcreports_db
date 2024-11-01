@@ -32,15 +32,16 @@ TAB = reportlib.TAB
 
 fp = reportlib.init(sys.argv[0], 'RNA-Seq Samples missing RNA-Seq Type', os.environ['QCOUTPUTDIR'])
 
+#    select a.accid, array_to_string(array_agg(distinct s.name),'|') as name
+#    group by accid
 results = db.sql('''
-    select a.accid, array_to_string(array_agg(distinct s.name),'|') as name
+    select a.accid, s.name
     from GXD_HTExperiment e, ACC_Accession a, GXD_HTSample s
     where e._experimenttype_key = 20475437
     and e._experiment_key = s._experiment_key
     and s._rnaseqtype_key = 114866227
     and e._experiment_key = a._object_key
     and a._logicaldb_key in (189,190)
-    group by accid
     order by accid
     ''', 'auto') 
 for r in results:

@@ -32,7 +32,6 @@ db.setTrace()
 CRT = reportlib.CRT
 TAB = reportlib.TAB
 
-#fp = reportlib.init(sys.argv[0], 'Curated GXD HT Experiments with PMIDs that do not exist in Lit Triage', os.environ['QCOUTPUTDIR'])
 fp = reportlib.init(sys.argv[0], 'Curated GXD HT Experiments with PMIDs Issues', os.environ['QCOUTPUTDIR'])
 
 fp.write('\nCurated GXD HT Experiments with PMIDs that do not exist in Lit Triage\n\n')
