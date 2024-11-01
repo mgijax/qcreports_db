@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-24-?
+DATE: 11/01/2024
+STAFF: lec
+wts2-1539/e4g-57/GXD RNA-Seq Type/Schema/Migration
+#        modified:   pwi/GXD_HTSampleAnnotations.py
+#        new file:   mgd/GXD_HTSampleNoRNAType.py
+
 TAG: qcreports_db-6-0-24-13
 DATE: 10/29/2024
 STAFF: lec
