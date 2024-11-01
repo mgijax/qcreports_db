@@ -35,7 +35,7 @@ fp = reportlib.init(sys.argv[0], 'RNA-Seq Samples missing RNA-Seq Type', os.envi
 results = db.sql('''
     select a.accid, s.name
     from GXD_HTExperiment e, ACC_Accession a, GXD_HTSample s
-    where e._experimenttype_key = 20475450
+    where e._experimenttype_key = 20475437
     and e._experiment_key = s._experiment_key
     and s._rnaseqtype_key = 114866227
     and e._experiment_key = a._object_key
