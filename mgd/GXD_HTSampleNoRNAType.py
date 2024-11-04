@@ -8,7 +8,7 @@
 #
 # Experiment type = RNA Seq
 # GXD relevance = Yes
-# RNA-Seq Type value = “Not Specified”
+# RNA-Seq Type value = “Not Specified”, "Not Applicable"
 # 
 # Columns - 1: Experiment ID  2: Sample Name
 # Sort order – Experiment ID
