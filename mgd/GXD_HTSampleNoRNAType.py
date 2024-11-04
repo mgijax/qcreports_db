@@ -39,7 +39,7 @@ results = db.sql('''
     from GXD_HTExperiment e, ACC_Accession a, GXD_HTSample s
     where e._experimenttype_key = 20475437
     and e._experiment_key = s._experiment_key
-    and s._rnaseqtype_key = 114866227
+    and s._rnaseqtype_key in (114866227,114866228)
     and e._experiment_key = a._object_key
     and a._logicaldb_key in (189,190)
     order by accid
