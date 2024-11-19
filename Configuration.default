@@ -62,7 +62,7 @@ setenv EILOGNAME		.ei-log
 setenv REPORTS_URL             http://prodwww.informatics.jax.org
 
 # set IMSR csv file
-setenv IMSR_STRAINS_CSV         ${DATADOWNLOADS}/bhmgiimsr01.jax.org/allStrains.csv
+setenv IMSR_STRAINS_CSV         ${DATADOWNLOADS}/bhmgiimsr02lp.jax.org/allStrains.csv
 
 # TAL GenTar File
 setenv TAL_FILE                 ${DATADOWNLOADS}/www.gentar.org/mgi_es_cell_current
