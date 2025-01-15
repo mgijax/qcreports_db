@@ -67,7 +67,7 @@ def go (form) :
     and a1._MGIType_key = 42 -- GXD HT Experiment
     and a1.preferred = 1
     and a1._LogicalDB_key in (189,190) --arrayExp, geo
-    order by t3.term, t2.term, a1.accid
+    order by length(a1.accid), a1.accid, pubmedids.pmid
     ''', 'auto')
 
     sys.stdout.write('expID' + TAB)
