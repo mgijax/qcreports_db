@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-24-16
+DATE: 01/16/2025
+STAFF: liangh
+wts2-1599/e4g-113/Do PMID search to find unevaluated experiments associated with papers...
+#        modified:   pwi/pwireports.txt
+#        new file:   pwi/GXD_HTExperimentPMID.py 
+
 TAG: qcreports_db-6-0-24-15
 DATE: 11/19/2024
 STAFF: lec
