@@ -49,6 +49,7 @@ results = db.sql('''
     select mcf._Object_key as markerKey, a.accid as mgiID, m.symbol, mcc.name, gm.accid as gmID
     from MAP_Coord_Feature mcf, MAP_Coordinate mc, MAP_Coord_Collection mcc, ACC_Accession a, MRK_Marker m, ACC_Accession gm
     where mcf._Map_key = mc._Map_key
+    and mc._Collection_key in (131,256,257)
     and mc._Collection_key = mcc._Collection_key
     and mcf._Object_key = a._Object_key
     and a._MGIType_key = 2
