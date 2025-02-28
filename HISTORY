@@ -1,3 +1,12 @@
+TAG: qcreports_db-6-0-25-4
+DATE: 02/28/2025
+STAFF: lec
+wts2-1617/e4g-163/Remove 3 QC reports no longer being used
+        modified:   qcr.shtml
+        deleted:    weekly/TAL_check_superscript.py
+        deleted:    weekly/TAL_dupe_allele.py
+        deleted:    weekly/TAL_multiple_project_ids.py
+
 TAG: qcreports_db-6-0-25-3
 TAG: qcreports_db-6-0-25-2
 TAG: qcreports_db-6-0-25-1
