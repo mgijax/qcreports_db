@@ -68,8 +68,11 @@ create index pdeleted_idx1 on pdeleted(seqID)
 \echo 'Includes: all marker types (gene, DNA segment, etc.)'
 \echo ''
 
+(
 select seqID, mgiID, name from mdeleted
 union
 select seqID, mgiID, name from pdeleted
+)
+order by name, seqID
 ;
 
