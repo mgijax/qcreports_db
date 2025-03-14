@@ -39,7 +39,7 @@ group by _GelLane_key having count(*) > 1
 \echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:cumulus oophorus)'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, a.modifiedby
 from temp2 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -51,7 +51,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 \echo '(excludes TS28:placenta, TS28:decidua, TS28:decidua basalis, TS28:decidua capsularis, TS28:uterus, TS28:mesometrium, TS28:cumulus oophorus)'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, a.modifiedby
 from temp4 t, GXD_GelLane s, GXD_Assay_View a
 where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
@@ -107,7 +107,7 @@ AND t.term = 'male reproductive system'
 ;
 
 /* get info about 'reproductive system;female' and children */
-select distinct s._Specimen_key, s.specimenLabel, a.jnumID, a.mgiID
+select distinct s._Specimen_key, s.specimenLabel, a.jnumID, a.mgiID, a.modifiedby
 INTO TEMPORARY TABLE fSpecimens
 from GXD_Specimen s, GXD_Assay_View a, GXD_InSituResult ir, GXD_ISResultStructure irs, femaleChild f
 where s._Assay_key = a._Assay_key
@@ -136,7 +136,7 @@ and irs._Stage_key = m._Stage_key
 \echo ''
 
 /* report all specimens with annotated to both male and female structures */
-select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel
+select distinct mgiID, jnumID, substring(specimenLabel,1,50) as specimenLabel, f.modifiedby
 from fSpecimens f, mSpecimens m
 where f._Specimen_key = m._Specimen_key
 and f.jnumID not in ('J:80502')

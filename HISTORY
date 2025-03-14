@@ -1,3 +1,18 @@
+TAG: qcreports_db-6-0-25-7
+DATE: 03/14/2025
+STAFF: lec
+wts2-1624/e4g-186/add (last) Modified By to some GXD QCs
+        modified:   mgd/GXD_ChildExpNotParent.py
+        modified:   mgd/GXD_ExpPresNotPres.py
+        modified:   mgd/GXD_ImageUnused.sql
+        modified:   mgd/GXD_ProbeAntibody.sql
+        modified:   mgd/GXD_SameStructure.py
+        modified:   mgd/GXD_SpecNoAge.sql
+        modified:   mgd/GXD_SpecTheiler.sql
+        modified:   mgd/GXD_SpecTheilerAge.py
+        modified:   monthly/GXD_KnockInGene.sql
+        modified:   weekly/GXD_GenotypeNA.sql
+
 TAG: qcreports_db-6-0-25-6
 DATE: 03/05/2025
 STAFF: lec

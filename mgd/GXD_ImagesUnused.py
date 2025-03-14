@@ -112,10 +112,10 @@ db.sql('create index specimen_idx2 on specimen(_ImagePane_key)', None)
 #
 
 db.sql('''
-     select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, 
+     select r._Refs_key, r.jnumID, a._Image_key, a.figureLabel, aa._ImagePane_key, aa.paneLabel, u.login,
      to_char(aa.creation_date, 'MM/dd/yyyy') as cdate
      into temporary table images 
-     from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa , IMG_Image i
+     from IMG_Image a, BIB_Citation_Cache r, IMG_ImagePane aa , IMG_Image i, MGI_User u
      where exists (select 1 from GXD_Assay assay where a._Refs_key = assay._Refs_key 
      and assay._AssayType_key in (1,2,3,4,5,6,8,9)) 
      and a._Refs_key = r._Refs_key 
@@ -124,6 +124,7 @@ db.sql('''
      and aa.paneLabel is not null
      and aa._image_key = i._image_key
      and i._imageclass_key = 6481781
+     and a._Modifiedby_key = u._User_key
      ''', None)
 
 db.sql('create index images_idx1 on images(jnumID)', None)
@@ -144,7 +145,7 @@ db.sql('create index images_idx2 on images(figureLabel)', None)
 #
 
 results = db.sql('''
-    select a.accID, i.jnumID, i.figureLabel, i.paneLabel, i.cdate 
+    select a.accID, i.jnumID, i.figureLabel, i.paneLabel, i.cdate, i.login
     from images i, ACC_Accession a 
     where not exists (select 1 from specimen s 
     where i._Refs_key = s._Refs_key 
@@ -166,7 +167,8 @@ for r in results:
         fp.write('None' + TAB)
     else:
         fp.write(r['paneLabel'] + TAB)
-    fp.write(r['cdate'] + CRT)
+    fp.write(r['cdate'] + TAB)
+    fp.write(r['login'] + CRT)
 
 fp.write(CRT + '(%d rows affected)' % (len(results)) + CRT)
 

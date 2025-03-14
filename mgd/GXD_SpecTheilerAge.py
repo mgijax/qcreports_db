@@ -217,9 +217,8 @@ db.sql('create index temp3_idx on temp3(_Assay_key)', None)
 ##
 
 results = db.sql('''
-        select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, 
-                        a1.accID as mgi, a2.accID as jnum
-        from temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2 
+        select distinct t.age, t.label, t.stage, t.dpcMin, t.dpcMax, a1.accID as mgi, a2.accID as jnum, u.login
+        from temp3 t, GXD_Assay a, ACC_Accession a1, ACC_Accession a2, MGI_User u
         where t._Assay_key = a._Assay_key and 
           a._Assay_key = a1._Object_key and 
           a1._MGIType_key = 8 and 
@@ -230,7 +229,8 @@ results = db.sql('''
           a2._MGIType_key = 1 and 
           a2._LogicalDB_key = 1 and 
           a2.prefixPart = 'J:' and 
-          a2.preferred = 1 
+          a2.preferred = 1 and
+          a._Modifiedby_key = u._user_key
         order by a1.accID desc
         ''', 'auto')
 
@@ -270,7 +270,7 @@ for r in results:
     # if the age min is below the dpc min or age max is above the dpc max, print
 
     if (minAge < dpcMin or maxAge > dpcMax):
-        s = s + r['mgi'] + TAB + r['jnum'] + TAB + mgi_utils.prvalue(r['label']) + TAB + str(r['stage']) + CRT
+        s = s + r['mgi'] + TAB + r['jnum'] + TAB + mgi_utils.prvalue(r['label']) + TAB + str(r['stage']) + TAB + r['login'] + CRT
         count = count + 1
 
 fp.write('Number of specimens: ' + str(count) + 2*CRT)

@@ -66,12 +66,14 @@ fp.write(str.ljust('Label', 35))
 fp.write(str.ljust('EMAPA-Term', 50))
 fp.write(str.ljust('Stage', 10))
 fp.write(str.ljust('CellType-Term', 50))
+fp.write(str.ljust('Last Modified by', 50))
 fp.write(CRT)
 fp.write(str.ljust('----------', 15))
 fp.write(str.ljust('----------', 15))
 fp.write(str.ljust('----------', 35))
 fp.write(str.ljust('----------', 50))
 fp.write(str.ljust('-----', 10))
+fp.write(str.ljust('----------', 50))
 fp.write(str.ljust('----------', 50))
 fp.write(2*CRT)
 
@@ -115,13 +117,14 @@ db.sql('create index dupspec_idx3 on dupspecimens (_celltype_term_key)', None)
 # get the specimen label _Refs_key and  _Assay_key, and structure for each dup
 
 db.sql('''
-    select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, s1.term as emapaTerm, t.stage
+    select distinct ss.*, gs.specimenLabel, ga._Refs_key, gs._Assay_key, s1.term as emapaTerm, t.stage, u.login
     into temporary table specimens
-    from dupspecimens ss, GXD_Specimen gs, GXD_Assay ga, VOC_Term s1, GXD_TheilerStage t
+    from dupspecimens ss, GXD_Specimen gs, GXD_Assay ga, VOC_Term s1, GXD_TheilerStage t, MGI_User u
     where ss._Specimen_key= gs._Specimen_key
     and gs._Assay_key = ga._Assay_key
     and ss._EMAPA_Term_key = s1._Term_key
     and ss._Stage_key = t._Stage_key
+    and ga._Modifiedby_key = u._User_key
     ''', None)
 
 db.sql('''create index specimens_idx1 on specimens(_celltype_term_key)''', None)
@@ -140,7 +143,7 @@ db.sql('''create index specimens_ct_idx1 on specimens(_refs_key)''', None)
 db.sql('''
     select gr._GelLane_key, grs._EMAPA_Term_key, grs._Stage_key
     into temporary table gelstructs 
-    from GXD_Assay a, GXD_GelLane gr, GXD_GelLaneStructure grs 
+    from GXD_Assay a, GXD_GelLane gr, GXD_GelLaneStructure grs
     where a._AssayType_key in (1,2,3,4,5,6,8,9) 
     and a._Assay_key = gr._Assay_key 
     and gr._GelLane_key = grs._GelLane_key
@@ -163,20 +166,21 @@ db.sql('create index dupgel_idx2 on dupgels (_EMAPA_Term_key)', None)
 # get the gel label _Refs_key and  _Assay_key, and structure for each dup
 
 db.sql('''
-    select distinct ss.*, gs.laneLabel, ga._Refs_key, gs._Assay_key, s.term as emapaTerm, '' as celltypeTerm, t.stage
+    select distinct ss.*, gs.laneLabel, ga._Refs_key, gs._Assay_key, s.term as emapaTerm, '' as celltypeTerm, t.stage, u.login
     into temporary table gels
-    from dupgels ss, GXD_GelLane gs, GXD_Assay ga, VOC_Term s, GXD_TheilerStage t
+    from dupgels ss, GXD_GelLane gs, GXD_Assay ga, VOC_Term s, GXD_TheilerStage t, MGI_User u
     where ss._GelLane_key= gs._GelLane_key
     and gs._Assay_key = ga._Assay_key
     and ss._EMAPA_Term_key = s._Term_key
     and ss._Stage_key = t._Stage_key
+    and ga._Modifiedby_key = u._User_key
     ''', None)
 
 # get the MGI and Jnum ids
 
 db.sql('''
     select distinct ss.specimenLabel, ss.emapaTerm, ss.celltypeTerm, ss.stage,
-           a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
+           a1.accid as mgiID, a2.accid as jnumID, a2.numericPart, ss.login
     into temporary table finalSpecimen 
     from specimens_ct ss, ACC_Accession a1, ACC_Accession a2 
     where ss._Assay_key = a1._Object_key 
@@ -192,7 +196,7 @@ db.sql('''
 
 db.sql('''
     select distinct ss.laneLabel, ss.emapaTerm, ss.celltypeTerm, ss.stage,
-           a1.accid as mgiID, a2.accid as jnumID, a2.numericPart 
+           a1.accid as mgiID, a2.accid as jnumID, a2.numericPart, ss.login
     into temporary table finalGel 
     from gels ss, ACC_Accession a1, ACC_Accession a2 
     where ss._Assay_key = a1._Object_key 
@@ -208,7 +212,7 @@ db.sql('''
 
 finalDict = {}
 results = db.sql('''
-        select specimenLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart 
+        select specimenLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart, login
         from finalSpecimen''', 'auto')
 for r in results:
     key = r['numericPart']
@@ -216,7 +220,7 @@ for r in results:
         finalDict[key] = []
     finalDict[key].append(r)
 
-results = db.sql('''select laneLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart 
+results = db.sql('''select laneLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart, login
         from finalGel''', 'auto')
 rowCount = len(results)
 for r in results:
@@ -238,6 +242,7 @@ for k in sortOrder:
         fp.write(str.ljust(r['emapaTerm'], 50))
         fp.write(str.ljust(str(r['stage']), 10))
         fp.write(str.ljust(celltypeTerm, 50))
+        fp.write(str.ljust(login, 50))
         fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (rowCount))

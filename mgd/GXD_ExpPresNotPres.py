@@ -82,11 +82,13 @@ fp.write('Specimens must have the same genotype and age\n\n')
 fp.write('J Number   ')
 fp.write('MGI ID        ')
 fp.write('Stage:EMAPA                                         ')
-fp.write('Cell Type' + CRT)
+fp.write('Cell Type                            ')
+fp.write('Last Modified by' + CRT)
 fp.write('---------  ')
 fp.write('------------  ')
-fp.write('--------------------------------------------------  ')
-fp.write('--------------------------------------------------' + CRT)
+fp.write('--------------------------------------------------- ')
+fp.write('------------------------------------- ')
+fp.write('----------------' + CRT)
 
 # excluded references
 db.sql('''
@@ -124,11 +126,13 @@ db.sql('create index excludeStructs_idx2 on excludeStructs(_Stage_key)', None)
 # assays with expression
 #
 db.sql('''
-        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age, e._celltype_Term_key
+        select distinct e._Assay_key, e._Refs_key, e._EMAPA_Term_key, e._Stage_key, e._Genotype_key, e.age, e._celltype_Term_key, u.login
         into temporary table expressed 
-        from GXD_Expression e 
+        from GXD_Expression e, GXD_Assay a, MGI_User u
         where e.isForGXD = 1 
         and e.expressed = 1 
+        and e._Assay_key = a._Assay_key
+        and a._Modifiedby_key = u._User_key
         and not exists (select 1 from excludeStructs r 
                 where e._EMAPA_Term_key = r._EMAPA_Term_key and e._Stage_key = r._Stage_key) 
         and not exists (select 1 from excludeRefs r where e._Refs_key = r._Refs_key)
@@ -188,7 +192,8 @@ results = db.sql('''
         select ac1.accID as jnumID, 
                ac2.accID as mgiID, 
                t.stage::text || ':' || s.term as term,
-               r.celltypeTerm
+               r.celltypeTerm,
+               r.login
          from results2 r, VOC_Term s, GXD_TheilerStage t, 
               ACC_Accession ac1, ACC_Accession ac2 
          where r._EMAPA_Term_key = s._Term_key 
@@ -213,6 +218,6 @@ for r in results:
     celltypeTerm = r['celltypeTerm']
     if celltypeTerm == None:
         celltypeTerm = ''
-    fp.write("%-9s  %-12s  %-50s  %-35s\n" % (r['jnumID'],r['mgiID'],r['term'],celltypeTerm))
+    fp.write("%-9s  %-12s  %-50s  %-35s  %-12s\n" % (r['jnumID'],r['mgiID'],r['term'],celltypeTerm,r['login']))
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)

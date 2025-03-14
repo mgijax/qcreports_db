@@ -67,6 +67,8 @@ fp.write(SPACE)
 fp.write(str.ljust('Child Structure', 50))
 fp.write(SPACE)
 fp.write(str.ljust('Cell Type', 35))
+fp.write(SPACE)
+fp.write(str.ljust('Last Modified by', 12))
 fp.write(CRT)
 fp.write(12*'-')
 fp.write(SPACE)
@@ -79,6 +81,8 @@ fp.write(SPACE)
 fp.write(50*'-')
 fp.write(SPACE)
 fp.write(35*'-')
+fp.write(SPACE)
+fp.write(12*'-')
 fp.write(CRT)
 
 #
@@ -176,9 +180,10 @@ results = db.sql('''
                t.stage, 
                substring(d.term,1,50) as pterm, 
                substring(d2.term,1,50) as cterm,
-               substring(w.celltypeTerm,1,50) as celltype
+               substring(w.celltypeTerm,1,50) as celltype,
+               u.login
         from work4 w, GXD_Assay ga, ACC_Accession a, ACC_Accession j,
-             VOC_Term d, VOC_Term d2, GXD_TheilerStage t
+             VOC_Term d, VOC_Term d2, GXD_TheilerStage t, MGI_User u
         where w._Assay_key = ga._Assay_key
               and ga._Assay_key = a._Object_key 
               and a._MGIType_key = 8 
@@ -188,6 +193,7 @@ results = db.sql('''
               and w.parentKey = d._Term_key 
               and w.childKey = d2._Term_key
               and w._Stage_key = t._Stage_key
+              and ga._ModifiedBy_key = u._User_key
               order by mgiID desc, t.stage, pterm, cterm
         ''', 'auto')
 fp.write('\n(%d rows affected)\n\n' % (len(results)))
@@ -207,6 +213,8 @@ for r in results:
         fp.write(str.ljust(r['cterm'], 50))
         fp.write(SPACE)
         fp.write(str.ljust(celltype, 35))
+        fp.write(SPACE)
+        fp.write(str.ljust((r['login']), 12))
         fp.write(CRT)
 
 reportlib.finish_nonps(fp)

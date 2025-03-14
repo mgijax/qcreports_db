@@ -20,8 +20,8 @@ create index spec2_idx1 on spec2(_Assay_key)
 \echo 'InSitu Specimens with Not Applicable, Not Specified'
 \echo ''
 
-select a1.accID as mgiID, a2.accID as jnumID, s.specimenLabel
-from spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
+select a1.accID as mgiID, a2.accID as jnumID, s.specimenLabel, u.login
+from spec1 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2, MGI_User u
 where s._Assay_key = ga._Assay_key
 and ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Assay_key = a1._Object_key
@@ -34,14 +34,15 @@ and a2._MGIType_key = 1
 and a2._LogicalDB_key = 1
 and a2.prefixPart = 'J:'
 and a2.preferred = 1
+and ga._Modifiedby_key = u._User_key
 ;
 
 \echo ''
 \echo 'Gel Lane Specimens with Not Applicable, Not Specified'
 \echo ''
 
-select a1.accID as mgiID, a2.accID as jnumID, s.laneLabel
-from spec2 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2
+select a1.accID as mgiID, a2.accID as jnumID, s.laneLabel, u.login
+from spec2 s, GXD_Assay ga, ACC_Accession a1, ACC_Accession a2, MGI_User u
 where s._Assay_key = ga._Assay_key
 and ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Assay_key = a1._Object_key
@@ -54,6 +55,7 @@ and a2._MGIType_key = 1
 and a2._LogicalDB_key = 1
 and a2.prefixPart = 'J:'
 and a2.preferred = 1
+and ga._Modifiedby_key = u._User_key
 ;
 
 select distinct s._Specimen_key
@@ -79,7 +81,7 @@ and t.stage not in (27, 28)
 \echo 'Postnatal Age InSitu Specimens annotated to embryonic structures'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, a.modifiedby
 from temp1 t, GXD_Specimen s, GXD_Assay_View a
 where t._Specimen_key = s._Specimen_key
 and s._Assay_key = a._Assay_key
@@ -90,7 +92,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 \echo 'Postnatal Age Gel Lanes annotated to embryonic structures'
 \echo ''
 
-select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, a.modifiedby
 from temp2 t, GXD_GelLane s, GXD_Assay_View a
 where t._GelLane_key = s._GelLane_key
 and s._Assay_key = a._Assay_key
@@ -101,7 +103,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 \echo 'InSitu Specimens with Age either ''postnatal'', ''postnatal adult'', ''postnatal newborn'' but age range entered'
 \echo ''
 
-select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, a.modifiedby
 from GXD_Specimen s, GXD_Assay_View a
 where
 (
@@ -119,7 +121,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 \echo 'Gel Lane Specimens with Age either ''postnatal'', ''postnatal adult'', ''postnatal newborn'' but age range entered'
 \echo ''
 
-select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, a.modifiedby
 from GXD_GelLane s, GXD_Assay_View a
 where
 (
@@ -149,7 +151,7 @@ and t.stage = 27
 create index temp3_idx on temp3(_Specimen_key )
 ;
 
-select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, a.modifiedby
 from GXD_Specimen s, GXD_Assay_View a
 where s.age like 'postnatal%'
 and (s.ageMin >= 21.01 and s.ageMax < 25.00)
@@ -175,7 +177,7 @@ and t.stage = 27
 create index temp4_idx on temp4(_GelLane_key )
 ;
 
-select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, a.modifiedby
 from GXD_GelLane s, GXD_Assay_View a, VOC_Term t
 where s.age like 'postnatal%'
 and (s.ageMin >= 21.01 and s.ageMax < 25.00)
@@ -191,8 +193,8 @@ where s._GelLane_key = t._GelLane_key)
 \echo 'excludes placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus, uterus'
 \echo ''
 
-select gs.age, gs.ageMin, a1.accID as mgiid, gs.specimenLabel
-from GXD_Assay ga, GXD_Specimen gs, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1
+select gs.age, gs.ageMin, a1.accID as mgiid, gs.specimenLabel, u.login
+from GXD_Assay ga, GXD_Specimen gs, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1, MGI_User u
 where ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Assay_key = gs._Assay_key
 and gs.ageMin < 21.01
@@ -206,6 +208,7 @@ and gs._Assay_key = a1._Object_key
 and a1._MGIType_key = 8
 and a1._LogicalDB_key = 1
 and a1.prefixPart = 'MGI:'
+and ga._Modifiedby_key = u._User_key
 ;
 
 \echo ''
@@ -213,8 +216,8 @@ and a1.prefixPart = 'MGI:'
 \echo 'excludes (placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus'
 \echo ''
 
-select gs.age, gs.ageMin, gs.ageMax, a1.accID as mgiid, gs.specimenLabel
-from GXD_Assay ga, GXD_Specimen gs, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1
+select gs.age, gs.ageMin, gs.ageMax, a1.accID as mgiid, gs.specimenLabel, u.login
+from GXD_Assay ga, GXD_Specimen gs, GXD_InSituResult i, GXD_ISResultStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1, MGI_User u
 where ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Assay_key = gs._Assay_key
 and (gs.ageMin < 21.01 or gs.ageMax > 28.01)
@@ -228,6 +231,7 @@ and gs._Assay_key = a1._Object_key
 and a1._MGIType_key = 8
 and a1._LogicalDB_key = 1
 and a1.prefixPart = 'MGI:'
+and ga._Modifiedby_key = u._User_key
 ;
 
 \echo ''
@@ -235,8 +239,8 @@ and a1.prefixPart = 'MGI:'
 \echo 'excludes placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus, uterus'
 \echo ''
 
-select gs.age, gs.ageMin, a1.accID as mgiid, gs.laneLabel
-from GXD_Assay ga, GXD_GelLane gs, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1, VOC_Term tt
+select gs.age, gs.ageMin, a1.accID as mgiid, gs.laneLabel, u.login
+from GXD_Assay ga, GXD_GelLane gs, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1, VOC_Term tt, MGI_User u
 where ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Assay_key = gs._Assay_key
 and gs._GelControl_key = tt._Term_key and tt.term = 'No'
@@ -250,6 +254,7 @@ and gs._Assay_key = a1._Object_key
 and a1._MGIType_key = 8
 and a1._LogicalDB_key = 1
 and a1.prefixPart = 'MGI:'
+and ga._Modifiedby_key = u._User_key
 ;
 
 \echo ''
@@ -257,8 +262,8 @@ and a1.prefixPart = 'MGI:'
 \echo 'excludes (placenta,decidua,decidua basalis,decidua capsularis, cumulus oophorus'
 \echo ''
 
-select gs.age, gs.ageMin, a1.accID as mgiid, gs.laneLabel
-from GXD_Assay ga, GXD_GelLane gs, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1, VOC_Term tt
+select gs.age, gs.ageMin, a1.accID as mgiid, gs.laneLabel, u.login
+from GXD_Assay ga, GXD_GelLane gs, GXD_GelLaneStructure r, VOC_Term s, GXD_TheilerStage t, ACC_Accession a1, VOC_Term tt, MGI_User u
 where ga._AssayType_key in (1,2,3,4,5,6,8,9)
 and ga._Assay_key = gs._Assay_key
 and gs._GelControl_key = tt._Term_key and tt.term = 'No'
@@ -272,13 +277,14 @@ and gs._Assay_key = a1._Object_key
 and a1._MGIType_key = 8
 and a1._LogicalDB_key = 1
 and a1.prefixPart = 'MGI:'
+and ga._Modifiedby_key = u._User_key
 ;
 
 \echo ''
 \echo 'InSitu Specimens with Age either ''embryonic day'', ''postnatal day'', ''postnatal week'', ''postnatal month'', ''postnatal year'' but no age range entered'
 \echo ''
 
-select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel
+select s.age, a.mgiID, a.jnumID, substring(s.specimenLabel, 1, 50) as specimenLabel, a.modifiedby
 from GXD_Specimen s, GXD_Assay_View a
 where
 (
@@ -301,7 +307,7 @@ and a._AssayType_key in (1,2,3,4,5,6,8,9)
 \echo 'Gel Lane with Age either ''embryonic day'', ''postnatal day'', ''postnatal week'', ''postnatal month'', ''postnatal year'' but no age range entered'
 \echo ''
 
-select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel
+select s.age, a.mgiID, a.jnumID, substring(s.laneLabel, 1, 50) as laneLabel, a.modifiedby
 from GXD_GelLane s, GXD_Assay_View a, VOC_Term t
 where
 (
