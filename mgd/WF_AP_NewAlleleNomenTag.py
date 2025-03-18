@@ -20,7 +20,6 @@
 #	1. J#
 #	2. Creation Date
 #	3. status/group : 1 row per group
-#	4. extracted text (80 characters/around text)
 #
 # Usage:
 #       WF_AP_NewAlleleNomenTag.py
@@ -228,7 +227,6 @@ for r in keys:
             fp.write(r + TAB)
             fp.write(byDate[r][0] + TAB)
             fp.write('\t'.join(byStatus[r]) + TAB)
-            fp.write('|'.join(byText[r]) + TAB)
             fp.write(geneIds + CRT)
             counter += 1
 
