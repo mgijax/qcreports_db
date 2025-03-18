@@ -18,12 +18,12 @@ echo `date`: Start nightly GXD QC reports | tee -a ${LOG}
 
 cd ${QCMGD}
 
-foreach i (GXD*.sql RECOMB*sql)
+foreach i (GXD*.sql)
     echo `date`: $i | tee -a ${LOG}
     ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
 end
 
-foreach i (GXD*.py RECOMB*.py)
+foreach i (GXD*.py)
     echo `date`: $i | tee -a ${LOG}
     if ( $i == "GXD_Stats.py" ) then
         mv -f ${QCOUTPUTDIR}/`basename $i py`[0-9]*.rpt ${QCGXDARCHIVE}

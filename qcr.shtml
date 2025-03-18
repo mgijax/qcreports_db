@@ -189,18 +189,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 </OL>
 <A NAME="recomb"><B>Recombinase and Transgenic Reporter Data (cms, csmith)</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NotInCache.sql.rpt">Recombinant/Transgenic Assays missing from Cache Table</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_SpecNoAge.sql.rpt">Recombinant/Transgenic Specimens with incorrect age/age range values</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_SpecTheiler.sql.rpt">Recombinant/Transgenic Specimens annotated to structures of > 1 Theiler Stage or Sex</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_SpecTheilerAge.rpt">Recombinant/Transgenic Specimens with incompatible Theiler stages and ages</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_GenotypeHemi.sql.rpt">Recombinant/Transgenic Hemizygous Genotype Check</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_SameStructure.rpt">Recombinant/Transgenic Specimens that use the same Structure > 1</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_ExpPresNotPres.rpt">Signal present and absent in the same structure in the same Recombinant/Transgenic Assay</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_ChildExpNotParent.rpt">Signal present in child but not parent in the same Recombination/Transgenic Assay</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_Images.rpt">Recombinase Papers Requiring Images</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_LackingImages.rpt">Recombinase Papers Requiring Permissions</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_Reporter.sql.rpt">Tg reporter and RR assays where the assayed Gene is not the Gene which is mutated in the Genotype</A>
-<LI><A HREF="/data/reports/qcreports_db/output/RECOMB_ReporterCheck.rpt">Recombinase reporter specimen genotype check</A>
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase Allele Check</A>
 </OL>
 

@@ -191,7 +191,7 @@ byCopyrightDelay = [
 'J Gen Physiol'
 ]
 
-def runreport(fp, assayType):
+def runreport(fp):
 
     count = 0
     fp.write(TAB + 'By Publisher permission:' + CRT + 2*TAB)
@@ -218,7 +218,7 @@ def runreport(fp, assayType):
           into temporary table refs 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p 
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
@@ -226,14 +226,14 @@ def runreport(fp, assayType):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byPublisherIn), None)
+          ''' % (byPublisherIn), None)
 
     db.sql('''
           insert into refs
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r 
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
@@ -241,7 +241,7 @@ def runreport(fp, assayType):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byPublisherIn), None)
+          ''' % (byPublisherIn), None)
 
     db.sql('create index refs_idx1 on refs(_Refs_key)', None)
 
@@ -316,7 +316,7 @@ def runreport(fp, assayType):
           into temporary table refs3
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
@@ -328,14 +328,14 @@ def runreport(fp, assayType):
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9)
-          ''' % (assayType, byJournal), None)
+          ''' % (byJournal), None)
 
     db.sql('''
           insert into refs3
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
@@ -347,7 +347,7 @@ def runreport(fp, assayType):
                         where r._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9)
-          ''' % (assayType, byJournal), None)
+          ''' % (byJournal), None)
 
     db.sql('create index refs3_idx1 on refs3(_Refs_key)', None)
 
@@ -401,7 +401,7 @@ def runreport(fp, assayType):
           into temporary table refs4
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
@@ -413,14 +413,14 @@ def runreport(fp, assayType):
                         where i._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9)
-          ''' % (assayType, byCopyrightDelayIn), None)
+          ''' % (byCopyrightDelayIn), None)
 
     db.sql('''
           insert into refs4
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
@@ -432,7 +432,7 @@ def runreport(fp, assayType):
                         where r._Image_key = n._Object_key 
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9)
-          ''' % (assayType, byCopyrightDelayIn), None)
+          ''' % (byCopyrightDelayIn), None)
 
     db.sql('create index refs4_idx1 on refs4(_Refs_key)', None)
 
@@ -500,7 +500,7 @@ def runreport(fp, assayType):
           into temporary table refs5
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
@@ -514,14 +514,14 @@ def runreport(fp, assayType):
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
                         )
-          ''' % (assayType, byCreativeCommentsIn, by2006In), None)
+          ''' % (byCreativeCommentsIn, by2006In), None)
 
     db.sql('''
           insert into refs5
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
@@ -535,7 +535,7 @@ def runreport(fp, assayType):
                         and n._NoteType_key = 1023
                         and n._MGIType_key = 9
                         )
-          ''' % (assayType, byCreativeCommentsIn, by2006In), None)
+          ''' % (byCreativeCommentsIn, by2006In), None)
 
     db.sql('create index refs5_idx1 on refs5(_Refs_key)', None)
 
@@ -585,7 +585,7 @@ def runreport(fp, assayType):
           into temporary table refs6
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                IMG_Image i, IMG_ImagePane p
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._ImagePane_key = p._ImagePane_key 
                 and p._Image_key = i._Image_key 
                 and i.xDim is NULL 
@@ -593,7 +593,7 @@ def runreport(fp, assayType):
                 and b.journal not in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byJournal)
+          ''' % (byJournal)
 
     sql += '''\nand exists (select 1 from MGI_Note n
                         where i._Image_key = n._Object_key
@@ -608,7 +608,7 @@ def runreport(fp, assayType):
           select distinct a._Refs_key, a.creation_date 
           from GXD_Assay a, BIB_Refs b, ACC_Accession ac, 
                GXD_Specimen g, GXD_ISResultImage_View r
-          where a._AssayType_key %s in (1,2,3,4,5,6,8,9) 
+          where a._AssayType_key in (1,2,3,4,5,6,8,9) 
                 and a._Assay_key = g._Assay_key 
                 and g._Specimen_key = r._Specimen_key 
                 and r.xDim is NULL 
@@ -616,7 +616,7 @@ def runreport(fp, assayType):
                 and b.journal not in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
-          ''' % (assayType, byJournal)
+          ''' % (byJournal)
 
     sql += '''\nand exists (select 1 from MGI_Note n
                         where r._Image_key = n._Object_key
@@ -672,10 +672,6 @@ def runreport(fp, assayType):
 #
 
 fp1 = reportlib.init(sys.argv[0], 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
-runreport(fp1, '')
+runreport(fp1)
 reportlib.finish_nonps(fp1)
-
-fp2 = reportlib.init('RECOMB_Images', 'Papers Requiring Images', outputdir = os.environ['QCOUTPUTDIR'])
-runreport(fp2, 'not ')
-reportlib.finish_nonps(fp2)
 

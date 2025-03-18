@@ -17,7 +17,6 @@
 #
 # lec	03/03/2015
 #	- TR11891/new journals
-#	- RECOMB_LackingImages is exactly the same, except for query
 #
 # lec	10/07/2009
 #	- TR 9876
@@ -141,30 +140,6 @@ def selectOther():
 
     db.sql('create index refs_idx2 on refs(_Refs_key)', None)
 
-def selectOther2():
-
-    #
-    # for journalsAll
-    # select references of any year
-    # for given assays (see below)
-    # with full image stubs
-    #
-
-    db.sql('''
-            select distinct r._Refs_key, r.journal, i.creation_date, 
-                   to_char(i.creation_date, 'MM/dd/yyyy') as cdate
-            into temporary table refs
-            from BIB_Refs r, GXD_Assay a, IMG_Image i
-            where r.journal in ('%s')
-            and r._Refs_key = a._Refs_key
-            and a._AssayType_key not in (1,2,3,4,5,6,8,9)
-            and r._Refs_key = i._Refs_key 
-            and i._ImageType_key = 1072158
-            and i.xDim is null
-            ''' % ("','".join(journalsAll)), None)
-
-    db.sql('create index refs_idx2 on refs(_Refs_key)', None)
-
 #
 # Main
 #
@@ -175,10 +150,3 @@ printFields(fp1)
 selectOther()
 printResults(fp1)
 reportlib.finish_nonps(fp1)
-
-fp2 = reportlib.init('RECOMB_LackingImages', 'Papers Requiring Permissions', outputdir = os.environ['QCOUTPUTDIR'])
-printAll(fp2)
-printFields(fp2)
-selectOther2()
-printResults(fp2)
-reportlib.finish_nonps(fp2)
