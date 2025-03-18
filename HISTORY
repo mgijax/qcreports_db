@@ -1,9 +1,11 @@
+TAG: qcreports_db-6-0-25-10
 TAG: qcreports_db-6-0-25-9
 TAG: qcreports_db-6-0-25-8
 DATE: 03/18/2025
 STAFF: lec
 wts2-1628/e4g-189/remove various recombinase QC reports
 wts2-1627/e4g-190/modify Alleles report 22-Review for AP:NewAlleleNomenclature tag
+wts2-1626/e4g-191/New QC: Papers in public MGI for genes with no MP annotations
         deleted:    mgd/RECOMB_ChildExpNotParent.py
         deleted:    mgd/RECOMB_ExpPresNotPres.py
         deleted:    mgd/RECOMB_GenotypeHemi.sql
@@ -14,6 +16,7 @@ wts2-1627/e4g-190/modify Alleles report 22-Review for AP:NewAlleleNomenclature t
         deleted:    mgd/RECOMB_SpecTheilerAge.py
         deleted:    monthly/RECOMB_Reporter.sql
         deleted:    monthly/RECOMB_ReporterCheck.py
+	new file:   mgd/ALL_PM2GeneNoMP2.py
 	modified:   qcgxd_reports.csh
         modified:   qcr.shtml
         modified:   weekly/GXD_Images.py
