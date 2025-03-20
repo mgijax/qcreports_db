@@ -63,6 +63,6 @@ ALL_CheckByCreationDate|Allele Check by Creation Date|Look up allele information
 GXD_HTSampleAnnotations|GXD HT Sample Report|Lists all curated samples and their values\r\n\r\nSort by: sample name, species (common name), relevance|sc|Connie Smith|2024-04-18|
 GXD_IndexOverview|GXD Index Overview|An overview of the data in the GXD index for the set of genes. Any number of genes (up to the number of genes in the GXD index). Enter into form and/or upload a file.|lec|Jackie Finger|2024-05-30|*
 GXD_IndexOverviewUber|GXD Index Uber|An overview of all data in the GXD index.|lec|Jackie Finger|2024-05-30|*
-GXD_HTExperimentPMID|GXD HT Experiment Partially Reviewed Papers|Do PMID search to find unevaluated experiments associated with papers that have an experiment chosen to be indexed.|liangh|Connie Smith|2025-01-14|
+GXD_HTExperimentPMID|GXD HT Experiment Partially Reviewed Papers|Do PMID search to find unevaluated experiments associated with papers that have an experiment chosen to be indexed.\r\nExperiment Type = RNA-Seq, Not Reviewed|liangh|Connie Smith|2025-01-14|
 # UNCOMMENT if needed for development
 #testReport|test|Test report.|jer|Joel Richardson|2024-06-27|*

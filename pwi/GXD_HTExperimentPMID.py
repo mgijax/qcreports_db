@@ -59,7 +59,7 @@ def go (form) :
     and p._PropertyTerm_key = t1._Term_key
     and p._mgitype_key = 42 -- GXD HT Experiment
     and  p._Object_key = hte._Experiment_key
-    and hte._experimenttype_key = 20475437 -- RNA-Seq
+    and hte._experimenttype_key in (20475437,20475438) -- RNA-Seq, Not Resolved
     and hte._evaluationstate_key in (99646147,99646148)  -- Predicted Yes, Predicted No
     and hte._evaluationstate_key = t2._term_key
     and hte._curationstate_key = t3._term_key
