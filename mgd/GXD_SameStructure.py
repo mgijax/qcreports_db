@@ -1,4 +1,3 @@
-
 '''
 #
 # GXD_SameStructure.py (TR 6677, TR 6724)
@@ -74,7 +73,7 @@ fp.write(str.ljust('----------', 35))
 fp.write(str.ljust('----------', 50))
 fp.write(str.ljust('-----', 10))
 fp.write(str.ljust('----------', 50))
-fp.write(str.ljust('----------', 50))
+fp.write(str.ljust('----------------', 50))
 fp.write(2*CRT)
 
 # get the all specimen/structure pairs
@@ -155,7 +154,8 @@ db.sql('create index gel_idx2 on gelstructs (_EMAPA_Term_key)', None)
 # get the duplicates
 
 db.sql('''
-    select * into temporary table dupgels 
+    select * 
+    into temporary table dupgels 
     from gelstructs 
     group by _GelLane_key, _EMAPA_Term_key, _Stage_key having count(*) > 1
     ''', None)
@@ -211,17 +211,14 @@ db.sql('''
     ''', None)
 
 finalDict = {}
-results = db.sql('''
-        select specimenLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart, login
-        from finalSpecimen''', 'auto')
+results = db.sql(''' select specimenLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart, login from finalSpecimen ''', 'auto')
 for r in results:
     key = r['numericPart']
     if key not in finalDict:
         finalDict[key] = []
     finalDict[key].append(r)
 
-results = db.sql('''select laneLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart, login
-        from finalGel''', 'auto')
+results = db.sql(''' select laneLabel, emapaTerm, celltypeTerm, stage, mgiID, jnumID, numericPart, login from finalGel ''', 'auto')
 rowCount = len(results)
 for r in results:
     key = r['numericPart']
