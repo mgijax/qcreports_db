@@ -239,7 +239,7 @@ for k in sortOrder:
         fp.write(str.ljust(r['emapaTerm'], 50))
         fp.write(str.ljust(str(r['stage']), 10))
         fp.write(str.ljust(celltypeTerm, 50))
-        fp.write(str.ljust(login, 50))
+        fp.write(str.ljust(['login'], 50))
         fp.write(CRT)
 
 fp.write('\n(%d rows affected)\n' % (rowCount))
