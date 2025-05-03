@@ -193,7 +193,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase Allele Check</A>
 </OL>
 
-<A NAME="go"> <B>GO (dmitrys, csmith, ln, csmith)</B></A>
+<A NAME="go"> <B>GO (dmitrys, ln, csmith)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A> <B>(ln)</B>
