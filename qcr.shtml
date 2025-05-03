@@ -193,7 +193,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/RECOMB_NoDriver.rpt">Recombinase Allele Check</A>
 </OL>
 
-<A NAME="go"> <B>GO (dmitrys, krc, ln, csmith)</B></A>
+<A NAME="go"> <B>GO (dmitrys, csmith, ln, csmith)</B></A>
 <OL>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOUnknown.rpt">QC: All genes with 'unknown' annotations with new indexed literature</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_done.mgi">QC: "Done" Genes with Literature</A> <B>(ln)</B>
@@ -209,19 +209,19 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_B.rpt">Report: All Genes with Annotations to IDA, IGI, IMP, IPI</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOGold_D.rpt">Report: All Genes with multiple Annotations to IDA, IGI, IMP, IPI</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/archive/go">Report: Archive of GO Statistics and Reports</A> <B>(csmith)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Report: Combined QC Report</A> <B>(krc)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">Report: GO Statistics</A> <B>(krc)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_MGIGAF.rpt">Report: GO MGI GAF</A>  <B>(krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_Combined_Report.rpt">Report: Combined QC Report</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_stats.rpt">Report: GO Statistics</A> <B>(csmith)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_MGIGAF.rpt">Report: GO MGI GAF</A>  <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_InvalidInferredFrom.rpt">Report: IC Annotations with Invalid GO IDs in With/Inferred From</A> <B>(dmitrys)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidInferred.rpt">Report: Invalid "Inferred From" Values in GO Annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/VOC_InvalidProperties.rpt">Report: Invalid "Properties" Values in GO Annotations</A> <B>(ln)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/goload/index.html">Report: GO Load</A> <B>(krc, ln)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A> <B>(krc)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/goload/index.html">Report: GO Load</A> <B>(csmith, ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_NotGene.sql.rpt">Report: Non-Gene Markers with GO Annotations</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_GO_FullCodeNoAnnot.rpt">Report: Papers marked as Full-coded with no GO annotations</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_EvidenceCodeStats.sql.rpt">Report: Total # of Annotations by GO Evidence Code</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GOAnnot.rpt">Report: Total GO Annotations per Gene</A> <B>(csmith)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Report: Verify GPI file</A> <B>(ln)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/GO_PM2GeneRefsNotInMGI.rpt">Report: Papers not in MGI for genes without experimental GO annotations</A> <B>(krc)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_PM2GeneRefsNotInMGI.rpt">Report: Papers not in MGI for genes without experimental GO annotations</A> <B>(csmith)</B>
 <LI><A HREF="/data/loads/mgi/goload/logs/inferredfrom.log">Report: Sunday/Inferred From Text/linkout errors</A> <B>(ln)</B>
 </OL>
 

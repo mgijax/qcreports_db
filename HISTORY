@@ -1,3 +1,11 @@
+TAG: qcreports_db-6-0-25-15
+DATE: 05/07/2025
+STAFF: lec
+wts2-1654/e4g-246/Karen Christie
+wts2-1658/e4g-249/Meiyee Law
+        modified:   qcr.shtml
+update mgi_user set _userstatus_key = 316351 where _user_key in (1525,1530);
+
 TAG: qcreports_db-6-0-25-14
 DATE: 04/22/2025
 STAFF: pf
