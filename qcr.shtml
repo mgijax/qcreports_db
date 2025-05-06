@@ -96,7 +96,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_Variant.rpt">Sequence variants associated with phenotypic alleles. Tab-delimited</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_Variant.json.rpt">Sequence variants associated with phenotypic alleles. JSON</A>
 <LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantCheckRefVarSeq.rpt">Variants where reference and variant sequences are the same.</A>
-<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantCurationActivity.rpt">Variant Curation Activity Report</A> <B>(cjb>
+<LI><A HREF="/data/reports/qcreports_db/output/ALL_VariantCurationActivity.rpt">Variant Curation Activity Report</A> <B>(cjb)</B>
 </OL>
 
 <A NAME="phenoannot"><B>Phenotype and Disease Vocabulary Annotation (csmith, smb, dlb, honda, mnk)</B> </A>
