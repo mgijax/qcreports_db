@@ -1,4 +1,3 @@
-
 '''
 #
 # MRK_GmNoGeneModel.py
@@ -11,21 +10,23 @@
 # 4. Chromomse
 # 5. FeatureType
 # 6. NomenJnum: the original J# used for creating the marker
-# ??7. LiteratureCount: the number of reference type “Literature”
-# 8. GeneBank: comma seperated IDs
+# 7. GenBank_RefSeq: comma seperated IDs
+# 8. Obsolete Genbank_RefSeq
 # 9. UniProt: comma seperated IDs
 # 10. EntrezID/NCBI_ID
 # 11. goCount: exclude annotations for "No experimental evidence"
 # 12. expressionCount: just classical expression data
 # 13. orthoCount
 # 14. alleleCount
-# ??15. phenoNote
-# 16. probeCount
+# 15. allNucleicCount
+# 16. microarray_probesets
 # 17. primerCount
 #
 # History:
 #
 # lec   05/06/2025
+#   wts2-1655/e4g-252/Enhance QC report MRK_GmNoGeneModel.sql.rpt
+#   moved *sql -> *py version
 #
 '''
  
@@ -55,16 +56,16 @@ fp.write('Old Symbol' + TAB)
 fp.write('Chromomse' + TAB)
 fp.write('FeatureType' + TAB)
 fp.write('NomenJnum' + TAB)
-fp.write('LiteratureCount' + TAB)
-fp.write('GeneBank' + TAB)
+fp.write('GenBank_RefSeq' + TAB)
+fp.write('Obsolete Genbank_RefSeq' + TAB)
 fp.write('UniProt' + TAB)
 fp.write('EntrezID/NCBI_ID' + TAB)
 fp.write('goCount' + TAB)
 fp.write('expressionCount' + TAB)
 fp.write('orthoCount' + TAB)
 fp.write('alleleCount' + TAB)
-fp.write('phenoNote' + TAB)
-fp.write('probeCount' + TAB)
+fp.write('allNucleicCount' + TAB)
+fp.write('microarray_probesets' + TAB)
 fp.write('primerCount' + CRT*2)
 
 db.sql('''
@@ -90,6 +91,8 @@ and a.prefixPart = 'MGI:'
 and a.preferred = 1
 ''', None)
 
+db.sql(''' create index idx_marker on markers(_marker_key); ''', None)
+
 db.sql('''
 select m._marker_key, hm.symbol as oldSymbol, substring(h.name,1,50) as oldName
 into temp table history
@@ -100,9 +103,11 @@ and h._History_key = hm._marker_key
 and m.symbol != hm.symbol
 ''', None)
 
-# 8. GeneBank: comma seperated IDs (59)
-# 9. UniProt: comma seperated IDs (13, 41)
-# 10. EntrezID/NCBI_ID (55)
+db.sql(''' create index idx_history on history(_marker_key); ''', None)
+
+# 7. GenBank_RefSeq: comma seperated IDs
+# 9. UniProt: comma seperated IDs
+# 10. EntrezID/NCBI_ID
 genbankIds = {}
 entrezIds = {}
 uniprotIds = {}
@@ -111,14 +116,14 @@ select m._marker_key, a.accid, a._logicaldb_key
 from markers m, acc_accession a
 where m._marker_key = a._object_key
 and a._mgitype_key = 2
-and a._logicaldb_key in (59, 55, 13, 41)
+and a._logicaldb_key in (9, 27, 55, 13, 41)
 ''', 'auto')
 for r in results:
     key = r['_marker_key']
     ldbkey = r['_logicaldb_key']
     accid = r['accid']
 
-    if ldbkey == 59:
+    if ldbkey in (9,27):
         if key not in genbankIds:
             genbankIds[key] = []
         genbankIds[key].append(accid)
@@ -134,7 +139,26 @@ for r in results:
 #print(entrezIds)
 #print(uniprotIds)
 
-# 7. LiteratureCount: the number of reference type “Literature”
+# 8. Obsolete Genbank_RefSeq
+obsoleteGenbankIds = {}
+results = db.sql('''
+select m._marker_key, a.accid
+from markers m, acc_accession a, acc_accession s, seq_sequence ss
+where m._marker_key = a._object_key
+and a._mgitype_key = 2
+and a._logicaldb_key in (9, 27)
+and a.accid = s.accid
+and s._mgitype_key = 19
+and s._logicaldb_key in (9, 27)
+and s._object_key = ss._sequence_key
+and ss._SequenceStatus_key = 316343
+''', 'auto')
+for r in results:
+    key = r['_marker_key']
+    accid = r['accid']
+    if key not in obsoleteGenbankIds:
+        obsoleteGenbankIds[key] = []
+    obsoleteGenbankIds[key].append(accid)
 
 # 11. goCount: exclude annotations for "No experimental evidence"
 goCount = {}
@@ -145,7 +169,7 @@ where m._marker_key = va._Object_key
 and va._AnnotType_key = 1000
 and va._Annot_key = ev._Annot_key
 and ev._EvidenceTerm_key not in (115, 118, 114, 3251496)
-group by _marker_key
+group by m._marker_key
 ''', 'auto')
 for r in results:
     key = r['_marker_key']
@@ -191,9 +215,9 @@ for r in results:
 
 # 14. alleleCount
 alleleCount = {}
-db.sql('''
+results = db.sql('''
 select m._marker_key, count(a._allele_key) as pcount
-from mrk_marker m, all_allele a
+from markers m, all_allele a
 where m._marker_key = a._marker_key
 and a.iswildtype = 0
 group by m._marker_key
@@ -204,22 +228,8 @@ for r in results:
         alleleCount[key] = []
     alleleCount[key].append(r['pcount'])
 
-# 15. phenoNote
-phenoCount = {}
-db.sql('''
-select m._marker_key, count(n._marker_key) as pcount
-from mrk_marker m, mrk_notes n
-where m._marker_key = n._marker_key
-group by m._marker_key
-''', 'auto')
-for r in results:
-    key = r['_marker_key']
-    if key not in phenoCount:
-        phenoCount[key] = []
-    phenoCount[key].append(r['pcount'])
-
-# 16. probeCount
-probeCount = {}
+# 15. allNucleicCount
+allNucleicCount = {}
 results = db.sql('''
 select m._marker_key, count(p._probe_key) as pcount
 from markers m, prb_marker p, prb_probe pp
@@ -230,10 +240,26 @@ group by m._marker_key
 ''', 'auto')
 for r in results:
     key = r['_marker_key']
-    if key not in probeCount:
-        probeCount[key] = []
-    probeCount[key].append(r['pcount'])
-#print(probeCount)
+    if key not in allNucleicCount:
+        allNucleicCount[key] = []
+    allNucleicCount[key].append(r['pcount'])
+#print(allNucleicCount)
+
+# 16. microarray_probesets
+microarrayCount = {}
+results = db.sql('''
+select m.symbol, m._marker_key, count(a._accession_key) as pcount
+from markers m, acc_accession a
+where m._marker_key = a._object_key
+and a._logicaldb_key = 122
+group by m.symbol, m._marker_key
+''', 'auto')
+for r in results:
+    key = r['_marker_key']
+    if key not in microarrayCount:
+        microarrayCount[key] = []
+    microarrayCount[key].append(r['pcount'])
+#print(microarrayCount)
 
 # 17. primerCount
 primerCount = {}
@@ -288,12 +314,14 @@ for r in results:
     # 6. NomenJnum: the original J# used for creating the marker
     fp.write(r['jnumid'] + TAB)
 
-    # 7. LiteratureCount: the number of reference type “Literature”
+    # 7. GeneBank: comma seperated IDs
+    if key in genbankIds and key not in obsoleteGenbankIds:
+        fp.write(','.join(genbankIds[key]))
     fp.write(TAB)
 
-    # 8. GeneBank: comma seperated IDs
-    if key in genbankIds:
-        fp.write(','.join(genbankIds[key]))
+    # 8. Obsolete Genbank_RefSeq
+    if key in obsoleteGenbankIds:
+        fp.write(','.join(obsoleteGenbankIds[key]))
     fp.write(TAB)
 
     # 9. UniProt: comma seperated IDs
@@ -330,15 +358,14 @@ for r in results:
     else:
         fp.write('0' + TAB)
 
-    # 15. phenoNote
-    if key in phenoCount:
-        fp.write(str(phenoCount[key][0]) + TAB)
-    else:
-        fp.write('0' + TAB)
+    # 15. allNucleicCount
+    if key in allNucleicCount:
+        fp.write(str(allNucleicCount[key][0]))
+    fp.write(TAB)
 
-    # 16. probeCount
-    if key in probeCount:
-        fp.write(str(probeCount[key][0]))
+    # 16. microarray_probesets
+    if key in microarrayCount:
+        fp.write(str(microarrayCount[key][0]))
     fp.write(TAB)
 
     # 17. primerCount

@@ -263,7 +263,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_GenesAndPseudogenesWithSequence.rpt">Genes & Pseudogenes with at least one Sequence association</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ENSEMBL_Associations.rpt">Ensembl Associations</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_NCBI_Associations.rpt">NCBI Associations</A> <B>(yz)</B>
-<LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.sql.rpt">Gm Markers without Gene Model Associations</A> <B>(yz)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/MRK_GmNoGeneModel.rpt">Gm Markers without Gene Model Associations</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MGI_ObsoleteGeneModel.sql.rpt">Obsolete Gene Models associated with Markers</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_GeneNoMcvAnnot.rpt">Genes with no MCV Annotation</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/MRK_McvAnnotByFeature.rpt">MCV Annotations by Feature</A> <B>(yz)</B>
