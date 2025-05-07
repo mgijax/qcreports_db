@@ -360,18 +360,21 @@ for r in results:
 
     # 15. allNucleicCount
     if key in allNucleicCount:
-        fp.write(str(allNucleicCount[key][0]))
-    fp.write(TAB)
+        fp.write(str(allNucleicCount[key][0]) + TAB)
+    else:
+        fp.write('0' + TAB)
 
     # 16. microarray_probesets
     if key in microarrayCount:
-        fp.write(str(microarrayCount[key][0]))
-    fp.write(TAB)
+        fp.write(str(microarrayCount[key][0]) + TAB)
+    else:
+        fp.write('0' + TAB)
 
     # 17. primerCount
     if key in primerCount:
-        fp.write(str(primerCount[key][0]))
-    fp.write(CRT)
+        fp.write(str(primerCount[key][0]) + CRT)
+    else:
+        fp.write('0' + CRT)
 
 fp.write('\n(%d rows affected)\n' % (len(results)))
 reportlib.finish_nonps(fp)
