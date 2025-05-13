@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-25-20
+DATE: 05/13/2025
+STAFF: lec
+wts2-1663/e4g-255/add confidence value to All GXD HT Experiments QC
+        modified:   mgd/GXD_HTOverview.py
+
 TAG: qcreports_db-6-0-25-19
 DATE: 05/07/2025
 STAFF: lec

@@ -13,8 +13,9 @@
 #    Col 5: study type vocabKey=124
 #    Col 6: curation state vocabKey=117
 #    Col 7: experimental variables, multiples separated by pipes vocabKey=122
-#    Col 8: In Expression Atlas Set Y/N
-#    Col 9: In RNA-Seq Load Set Y/N
+#    Col 8: confidence
+#    Col 9: In Expression Atlas Set Y/N
+#    Col 10: In RNA-Seq Load Set Y/N
 #
 #    monthly run sufficient for this one
 #    make in a format that will load into excel easily (such as tab delimited)
@@ -95,7 +96,7 @@ for r in results:
    pubMedIdDict[expKey].append(r['pubMedId'])
 
 results = db.sql('''
-        select a1.accid as primary, a2.accid as secondary, e._Experiment_key,
+        select a1.accid as primary, a2.accid as secondary, e._Experiment_key, e.confidence,
             t1.term as exptType, t2.term as evalState, t3.term as studyType, 
             t4.term as curationState, v._Term_key as varTermKey, 
             vt.Term as varTerm
@@ -133,6 +134,7 @@ fp.write('Evaluation State' + TAB)
 fp.write('Study Type' + TAB)
 fp.write('Curation State' + TAB)
 fp.write('Variables' + TAB)
+fp.write('Confidence' + TAB)
 fp.write('Expression Atlas?' + TAB)
 fp.write('RNA-Seq Load?' + TAB)
 fp.write('PubMed IDs' + CRT)
@@ -148,6 +150,7 @@ for key in exptDict:
     evalState = r['evalState']
     studyType = r['studyType']
     curationState = r['curationState']
+    confidence = str(r['confidence'])
 
     varList = []
     for r in exptDict[key]:
@@ -176,6 +179,7 @@ for key in exptDict:
     fp.write(studyType + TAB)
     fp.write(curationState + TAB)
     fp.write(varTerms + TAB)
+    fp.write(confidence + TAB)
     fp.write(eaSet + TAB)
     fp.write(rnaSeqSet + TAB)
     fp.write(pubMedIds + CRT)
