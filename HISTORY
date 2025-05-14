@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-25-21
+DATE: 05/14/2025
+STAFF: lec
+e4g-244/Add RNA-Seq Type column to the GXD_HTOverview QC report
+        modified:   mgd/GXD_HTOverview.py
+
 TAG: qcreports_db-6-0-25-20
 DATE: 05/13/2025
 STAFF: lec
