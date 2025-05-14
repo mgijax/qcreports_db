@@ -12,10 +12,11 @@
 #    Col 4: evaluation state  vocabKey=116
 #    Col 5: study type vocabKey=124
 #    Col 6: curation state vocabKey=117
-#    Col 7: experimental variables, multiples separated by pipes vocabKey=122
-#    Col 8: confidence
-#    Col 9: In Expression Atlas Set Y/N
-#    Col 10: In RNA-Seq Load Set Y/N
+#    Col 7: rna-seq type, multiples separated by pipes vocabKey=189
+#    Col 8: experimental variables, multiples separated by pipes vocabKey=122
+#    Col 9: confidence
+#    Col 10: In Expression Atlas Set Y/N
+#    Col 11: In RNA-Seq Load Set Y/N
 #
 #    monthly run sufficient for this one
 #    make in a format that will load into excel easily (such as tab delimited)
@@ -95,6 +96,24 @@ for r in results:
         pubMedIdDict[expKey] = []
    pubMedIdDict[expKey].append(r['pubMedId'])
 
+rnaSeqType = {}
+results = db.sql('''
+    select distinct a1.accid as primary, t.term
+    from GXD_HTSample e, ACC_Accession a1, VOC_Term t
+    where e._Experiment_key = a1._Object_key
+    and a1._MGIType_key = 42
+    and a1._LogicalDB_key in (189, 190)
+    and a1.preferred = 1
+    and e._rnaseqtype_key = t._term_key
+    order by t.term
+    ''', 'auto')
+for r in results:
+    key = r['primary']
+    value = r['term']
+    if key not in rnaSeqType:
+        rnaSeqType[key] = []
+    rnaSeqType[key].append(value)
+
 results = db.sql('''
         select a1.accid as primary, a2.accid as secondary, e._Experiment_key, e.confidence,
             t1.term as exptType, t2.term as evalState, t3.term as studyType, 
@@ -133,6 +152,7 @@ fp.write('Experiment Type' + TAB)
 fp.write('Evaluation State' + TAB)
 fp.write('Study Type' + TAB)
 fp.write('Curation State' + TAB)
+fp.write('RNA-Seq Type' + TAB)
 fp.write('Variables' + TAB)
 fp.write('Confidence' + TAB)
 fp.write('Expression Atlas?' + TAB)
@@ -156,7 +176,7 @@ for key in exptDict:
     for r in exptDict[key]:
         varTerm = r['varTerm']
         # not all experiments have variable terms
-        if varTerm != None:
+        if varTerm != None and varTerm not in ('bulk RNA-seq', 'single cell RNA-seq', 'spatial RNA-seq'):
             varList.append(varTerm)
     varTerms = '|'.join(varList)
 
@@ -178,6 +198,11 @@ for key in exptDict:
     fp.write(evalState + TAB)
     fp.write(studyType + TAB)
     fp.write(curationState + TAB)
+
+    if primary in rnaSeqType:
+        fp.write('|'.join(rnaSeqType[primary]))
+    fp.write(TAB)
+
     fp.write(varTerms + TAB)
     fp.write(confidence + TAB)
     fp.write(eaSet + TAB)
