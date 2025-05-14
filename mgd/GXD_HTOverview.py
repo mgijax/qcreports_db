@@ -176,7 +176,7 @@ for key in exptDict:
     for r in exptDict[key]:
         varTerm = r['varTerm']
         # not all experiments have variable terms
-        # skip these terms that also appear in rnpSeqType lookup; this logical can be removed after e4g-179 is done
+        # skip these terms that also appear in rnpSeqType lookup; this logic can be removed after e4g-179 is done
         if varTerm != None and varTerm not in ('bulk RNA-seq', 'single cell RNA-seq', 'spatial RNA-seq'):
             varList.append(varTerm)
     varTerms = '|'.join(varList)
