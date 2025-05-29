@@ -226,6 +226,11 @@ def runreport(fp):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
+                and not exists (select 1 from BIB_Workflow_Tag wt, VOC_Term t
+                    where b._refs_key = wt._refs_key
+                     and wt._tag_key = t._term_key
+                    and t.term in ('GXD:PoorImageQuality')
+                )
           ''' % (byPublisherIn), None)
 
     db.sql('''
@@ -241,6 +246,11 @@ def runreport(fp):
                 and b.journal in (%s)
                 and a._Assay_key = ac._Object_key 
                 and ac._MGIType_key = 8 
+                and not exists (select 1 from BIB_Workflow_Tag wt, VOC_Term t
+                    where b._refs_key = wt._refs_key
+                    and wt._tag_key = t._term_key
+                    and t.term in ('GXD:PoorImageQuality')
+                )
           ''' % (byPublisherIn), None)
 
     db.sql('create index refs_idx1 on refs(_Refs_key)', None)
@@ -249,11 +259,6 @@ def runreport(fp):
             select distinct r._Refs_key, rtrim(i.figureLabel) as figureLabel
             from refs r, IMG_Image i
             where r._Refs_key = i._Refs_key
-            and not exists (select 1 from BIB_Workflow_Tag wt, VOC_Term t
-                where b._refs_key = wt._refs_key
-                and wt._tag_key = t._term_key
-                and t.term in ('GXD:PoorImageQuality')
-            )
             order by figureLabel
             ''', 'auto')
     fLabels = {}
