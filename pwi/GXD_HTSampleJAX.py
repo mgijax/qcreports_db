@@ -33,7 +33,8 @@ def go (form) :
     results = db.sql('''
         select a.accid, aa.symbol
         from ALL_Allele aa, ACC_Accession a
-        where aa._allele_key = a._object_key
+        where aa.iswildtype = 0
+        and aa._allele_key = a._object_key
         and a._mgitype_key = 11 
         and a.preferred = 1
         and exists (select 1 from PRB_Strain s, ACC_Accession sa, GXD_Genotype g, GXD_AlleleGenotype ga, GXD_HTSample ht
