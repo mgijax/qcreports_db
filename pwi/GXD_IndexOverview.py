@@ -13,6 +13,7 @@
 #       3. J
 #       4. Author
 #       5. Journal
+#       6. Creative Commons = y or n
 #       6. Year of publication
 #       7. Number of index records in J
 #       8. Priority score
@@ -92,6 +93,7 @@ def go(form):
     sys.stdout.write('J#' + TAB)
     sys.stdout.write('Author' + TAB)
     sys.stdout.write('Journal' + TAB)
+    sys.stdout.write('Creative Commons' + TAB)
     sys.stdout.write('Year of publication' + TAB)
     sys.stdout.write('# index records in J#' + TAB)
     sys.stdout.write('Priority score' + TAB)
@@ -346,6 +348,22 @@ def go(form):
         tags[key].append(value)
     #print(tags[229890])
 
+    # 
+    # Creative Commons
+    #
+    creativeCommons = []
+    results = db.sql('''
+            select distinct t._Refs_key
+            from gxdindex g, BIB_Workflow_Data t
+            where g._Refs_key = t._Refs_key
+            and t.extractedtext like '%Creative Commons%'
+            ''', 'auto')
+    for r in results:
+        key = r['_Refs_key']
+        if key not in creativeCommons:
+            creativeCommons.append(key)
+    #print(creativeCommons[229890])
+
     #
     # to print...
     #
@@ -374,6 +392,12 @@ def go(form):
 
     #       5. Journal
         sys.stdout.write(mgi_utils.prvalue(r['journal']) + TAB)
+
+    #       6. Creative Commons
+        if rKey in creativeCommons:
+            sys.stdout.write('yes' + TAB)
+        else:
+            sys.stdout.write('no' + TAB)
 
     #       6. Year of publication
         sys.stdout.write(mgi_utils.prvalue(str(r['year'])) + TAB)
