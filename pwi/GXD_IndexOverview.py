@@ -14,25 +14,28 @@
 #       4. Author
 #       5. Journal
 #       6. Creative Commons = y or n
-#       6. Year of publication
-#       7. Number of index records in J
-#       8. Priority score
-#       9. Tags
-#       10. Number of Alleles
-#       11. Conditional menu choice
-#       12. Recombinase
-#       13. Full Coded? (Y/N)
-#       14. Total # of age/assay combo (purple/blue dots on gxd_index module)
-#       15. Total # of ages analyzed
-#       16-57: 0.5, 1, 1.5...20, E, A (42)
-#       58. Total # of Assay Types analyzed 
-#       59-66.  Assay Types
-#       67. Title
+#       7. Year of publication
+#       8. Number of index records in J
+#       9. Priority score
+#       10. Tags
+#       11. Number of Alleles
+#       12. Conditional menu choice
+#       13. Recombinase
+#       14. Full Coded? (Y/N)
+#       15. Total # of age/assay combo (purple/blue dots on gxd_index module)
+#       16. Total # of ages analyzed
+#       17-58: 0.5, 1, 1.5...20, E, A (42)
+#       59. Total # of Assay Types analyzed 
+#       60-67.  Assay Types
+#       68. Title
 #
 # Usage:
 #       GXD_IndexOverview.py MGI:xxxxx
 #
 # History:
+#
+# lec   006/02/2025
+#       added Creative Commons
 #
 # lec   08/06/2012
 #
@@ -63,7 +66,6 @@ def go(form):
             uploadedIds = parseIds(form['idsUploaded'].value.decode("utf-8").strip())
             idList = enteredIds + uploadedIds
             idString = ",".join("'%s'" % i for i in idList)
-
 
     #
     # assay terms
@@ -395,61 +397,61 @@ def go(form):
 
     #       6. Creative Commons
         if rKey in creativeCommons:
-            sys.stdout.write('yes' + TAB)
+            sys.stdout.write('Y' + TAB)
         else:
-            sys.stdout.write('no' + TAB)
+            sys.stdout.write('N' + TAB)
 
-    #       6. Year of publication
+    #       7. Year of publication
         sys.stdout.write(mgi_utils.prvalue(str(r['year'])) + TAB)
 
-    #       7. Number of index records by J:
+    #       8. Number of index records by J:
         if rKey in indexByJnum:
             sys.stdout.write(str(indexByJnum[rKey][0]))
         sys.stdout.write(TAB)
 
-    #       8. Priority score
+    #       9. Priority score
         sys.stdout.write(r['priorityscore'] + TAB)
 
-    #       9. Tags
+    #       10. Tags
         if rKey in tags:
             sys.stdout.write('|'.join(tags[rKey]) + TAB)
         else:
             sys.stdout.write(TAB)
 
-    #       10. Number of Alleles
+    #       11. Number of Alleles
         if rKey in alleleByJnum:
             sys.stdout.write(str(alleleByJnum[rKey][0]) + TAB)
         else:
             sys.stdout.write(TAB)
 
-    #       11. Conditional menu choice
+    #       12. Conditional menu choice
         sys.stdout.write(r['conditionalmutations'] + TAB)
 
-    #       12. Recombinase
+    #       13. Recombinase
         if rKey in recombinaseByJnum:
             sys.stdout.write(str(recombinaseByJnum[rKey][0]) + TAB)
         else:
             sys.stdout.write(TAB)
 
-    #       13. Full Coded? (Y/N)
+    #       14. Full Coded? (Y/N)
         fullcode = 'N'
         if rKey in fullcodedByJnum:
             fullcode = 'Y'
         sys.stdout.write(fullcode + TAB)
 
-    #       14. Total # of age/assay combo (purple/blue dots on gxd_index module)
+    #       15. Total # of age/assay combo (purple/blue dots on gxd_index module)
         if iKey in indexAssayStage:
             sys.stdout.write(str(len(indexAssayStage[iKey])) + TAB)
         else:
             sys.stdout.write(TAB)
 
-    #       15. Total # of ages analyzed
+    #       16. Total # of ages analyzed
         if iKey in uniqIndexStage:
             sys.stdout.write(str(len(uniqIndexStage[iKey])) + TAB)
         else:
             sys.stdout.write(TAB)
 
-    #       16-57: 0.5, 1, 1.5...20, E, A (42)
+    #       17-58: 0.5, 1, 1.5...20, E, A (42)
         slist = {}
         if iKey in indexStage:
             for s in indexStage[iKey]:
@@ -464,13 +466,13 @@ def go(form):
             else:
                 sys.stdout.write(TAB)
 
-    #       58. Total # of Assay Types analyzed 
+    #       59. Total # of Assay Types analyzed 
         if iKey in uniqIndexAssay:
             sys.stdout.write(str(len(uniqIndexAssay[iKey])) + TAB)
         else:
             sys.stdout.write(TAB)
 
-    #       59-66.  Assay Types
+    #       60-67.  Assay Types
         slist = {}
         if iKey in indexAssay:
             for s in indexAssay[iKey]:
@@ -485,7 +487,7 @@ def go(form):
             else:
                 sys.stdout.write(TAB)
 
-    #       67. Title
+    #       68. Title
         sys.stdout.write(mgi_utils.prvalue(r['title']) + CRT)
             
     sys.stdout.flush()
