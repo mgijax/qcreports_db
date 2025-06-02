@@ -95,7 +95,7 @@ def go(form):
     sys.stdout.write('J#' + TAB)
     sys.stdout.write('Author' + TAB)
     sys.stdout.write('Journal' + TAB)
-    sys.stdout.write('Creative Commons' + TAB)
+    sys.stdout.write('Creative Commons? (Y/N)' + TAB)
     sys.stdout.write('Year of publication' + TAB)
     sys.stdout.write('# index records in J#' + TAB)
     sys.stdout.write('Priority score' + TAB)
