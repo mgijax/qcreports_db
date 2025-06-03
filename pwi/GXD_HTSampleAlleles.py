@@ -1,6 +1,6 @@
 '''
 #
-# GXD HT Sample JAX
+# GXD HT Sample Alleles
 #
 # which alleles are used to annotate GXDHT_Samples?
 #
@@ -16,7 +16,7 @@ import os
 import db
 import reportlib
 
-db.setTrace()
+#db.setTrace()
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
