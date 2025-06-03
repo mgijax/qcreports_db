@@ -77,7 +77,11 @@ def go (form) :
         sys.stdout.write(r['accid'] + TAB)
         sys.stdout.write(r['symbol'] + TAB)
         sys.stdout.write(r['hasJR'] + TAB)
-        sys.stdout.write(r['jaxids'] + TAB)
-        sys.stdout.write(r['strains'] + CRT)
 
+        if r['hasJR'] == 'yes':
+            sys.stdout.write(r['jaxids'] + TAB)
+            sys.stdout.write(r['strains'] + CRT)
+        else:
+            sys.stdout.write(TAB + CRT)
+            
     sys.stdout.flush()
