@@ -64,7 +64,6 @@ def go (form) :
             and sa._mgitype_key = 10
             and sa._logicaldb_key = 22
             )
-        )
         and not exists (select 1 from alleles where aa._allele_key = alleles._allele_key)
         order by symbol
     ''', 'auto')
