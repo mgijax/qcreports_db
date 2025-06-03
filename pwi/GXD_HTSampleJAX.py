@@ -27,7 +27,7 @@ def go (form) :
     #
 
     # Write header
-    sys.stdout.write('MGI id of allele'+ TAB)
+    sys.stdout.write('MGI id of allele' + TAB)
     sys.stdout.write('Allele Symbol' + TAB)
     sys.stdout.write('JR strain association yes/no' + CRT)
 
