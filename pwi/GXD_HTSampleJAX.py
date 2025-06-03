@@ -41,7 +41,7 @@ def go (form) :
         and aa.iswildtype = 0
         and aa._allele_key = a._object_key
         and a._mgitype_key = 11 
-        and a.preferred = 1
+        and a._logicaldb_key = 1
         and exists (select 1 from ACC_Accession sa 
             where g._strain_key = sa._object_key
             and sa._mgitype_key = 10
@@ -58,7 +58,7 @@ def go (form) :
         and aa.iswildtype = 0
         and aa._allele_key = a._object_key
         and a._mgitype_key = 11 
-        and a.preferred = 1
+        and a._logicaldb_key = 1
         and not exists (select 1 from ACC_Accession sa 
             where g._strain_key = sa._object_key
             and sa._mgitype_key = 10
