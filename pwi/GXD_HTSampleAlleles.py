@@ -70,7 +70,7 @@ def go (form) :
             and sa._logicaldb_key = 22
             )
         and not exists (select 1 from alleles where aa._allele_key = alleles._allele_key)
-        order by symbol
+        order by hasJR desc, symbol
     ''', 'auto')
 
     for r in results:
