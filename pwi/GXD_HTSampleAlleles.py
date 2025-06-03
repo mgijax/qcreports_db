@@ -81,9 +81,9 @@ def go (form) :
         sys.stdout.write(r['hasJR'] + TAB)
 
         if r['hasJR'] == 'yes':
-            sys.stdout.write(r['jaxids'] + TAB)
-            sys.stdout.write(r['strains'] + CRT)
-        else:
-            sys.stdout.write(TAB + CRT)
-            
+            sys.stdout.write(r['jaxids'])
+
+        sys.stdout.write(TAB)
+        sys.stdout.write(r['strains'] + CRT)
+
     sys.stdout.flush()
