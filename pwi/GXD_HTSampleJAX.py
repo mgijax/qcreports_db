@@ -2,7 +2,7 @@
 #
 # GXD HT Sample JAX
 #
-# Report lists all alleles that are associated with genotypes used in the HT index
+# which alleles are used to annotate GXDHT_Samples?
 #
 # Report name: GXD HT Index JAX
 #

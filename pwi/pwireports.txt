@@ -64,6 +64,6 @@ GXD_HTSampleAnnotations|GXD HT Sample Report|Lists all curated samples and their
 GXD_IndexOverview|GXD Index Overview|An overview of the data in the GXD index for the set of genes. Any number of genes (up to the number of genes in the GXD index). Enter into form and/or upload a file.|lec|Jackie Finger|2024-05-30|*
 GXD_IndexOverviewUber|GXD Index Uber|An overview of all data in the GXD index.|lec|Jackie Finger|2024-05-30|*
 GXD_HTExperimentPMID|GXD HT Experiment Partially Reviewed Papers|Do PMID search to find unevaluated experiments associated with papers that have an experiment chosen to be indexed.\r\nExperiment Type = RNA-Seq, Not Resolved|liangh|Connie Smith|2025-01-14|
-GXD_HTSampleJAX|GXD HT Index all alleles|How many of those alleles are associated with genotypes used in the HT index?|lec|Connie Smith|2025-06-02|
+GXD_HTSampleJAX|GXD HT Index all alleles|which alleles are used to annotate GXDHT_Samples?|lec|Connie Smith|2025-06-02|
 # UNCOMMENT if needed for development
 #testReport|test|Test report.|jer|Joel Richardson|2024-06-27|*
