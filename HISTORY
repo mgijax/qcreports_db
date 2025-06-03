@@ -1,8 +1,9 @@
-TAG: qcreports_db-6-0-25-??
+TAG: qcreports_db-6-0-25-24
 DATE: 06/03/2025
 STAFF: lec
 wts2-1673/how many alleles sold by Jax are used to annotated GXDHT_Samples?
-        new file:   GXD_HTSampleJAX.py
+wts2-1675/which alleles are used to annotate GXDHT_Samples?
+        new file:   GXD_HTSampleAlleles.py
         modified:   pwireports.txt
 
 TAG: qcreports_db-6-0-25-23
