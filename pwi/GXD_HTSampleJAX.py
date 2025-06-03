@@ -4,7 +4,7 @@
 #
 # which alleles are used to annotate GXDHT_Samples?
 #
-# Report name: GXD HT Index JAX
+# Report name: GXD HT Index all alleles
 #
 # Sort:
 #       Allele Symbol
@@ -33,7 +33,7 @@ def go (form) :
 
     results = db.sql('''
         WITH alleles AS (
-        select distinct a.accid, aa._allele_key, aa.symbol, 'y' as hasJR
+        select distinct a.accid, aa._allele_key, aa.symbol, 'yes' as hasJR
         from GXD_HTSample ht, GXD_Genotype g, GXD_AlleleGenotype ga, ALL_Allele aa, ACC_Accession a
         where ht._genotype_key = g._genotype_key
         and g._genotype_key = ga._genotype_key
@@ -50,7 +50,7 @@ def go (form) :
         )
         select * from alleles
         union
-        select distinct a.accid, aa._allele_key, aa.symbol, 'n' as hasJR
+        select distinct a.accid, aa._allele_key, aa.symbol, 'no' as hasJR
         from GXD_HTSample ht, GXD_Genotype g, GXD_AlleleGenotype ga, ALL_Allele aa, ACC_Accession a
         where ht._genotype_key = g._genotype_key
         and g._genotype_key = ga._genotype_key
