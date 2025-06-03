@@ -47,6 +47,7 @@ def go (form) :
         and aa._allele_key = a._object_key
         and a._mgitype_key = 11 
         and a._logicaldb_key = 1
+        and g._strain_key = s._strain_key
         and g._strain_key = sa._object_key
         and sa._mgitype_key = 10
         and sa._logicaldb_key = 22
