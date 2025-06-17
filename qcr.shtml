@@ -143,7 +143,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CellType_Terms.rpt">Cell Type Terms</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_CellLine.sql.rpt">Cell Lines</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_Stats.current.rpt">GXD Statistics</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_Triage.sql.current.rpt">GXD Triage (weekly)</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_Triage.sql.rpt">GXD Triage (weekly)</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_NonGeneMarkers.rpt">Non-gene markers with GXD annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_NoSequence.rpt">Genes without Sequence with GXD Annotations</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_WithdrawnMarker.rpt">Withdrawn markers with GXD data</A>
