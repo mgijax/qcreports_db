@@ -125,7 +125,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SpecTheiler.sql.rpt">Specimens annotated to structures of > 1 Theiler Stage or Sex</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_ExpPresNotPres.rpt">Assays in which the same anatomical structure is annotated as having expression both present and absent</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_ChildExpNotParent.rpt">Expression present in child but not parent</A>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationStatusMismatch_GXD.sql.rpt">References with littriage status not matching curation status</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_ImagesUnused.rpt">Unused image panes from full coded references</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_FullCodeGene.sql.rpt">Full Coded References that contain indexed Genes that have not been full coded</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_FullCodeMissingIndex.sql.rpt">Full Coded References that are missing a Gene in the Index</A>
@@ -184,6 +183,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoStructure.rpt">GXD HT Samples whose Relevance = Yes but the structure field is null</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTRNASeq.rpt">RNA seq experiments missing needed experimental variable</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTPubMed.rpt">Curated GXD HT Experiments with PMIDs Issues</A>
+<LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationStatusMismatch_GXD.sql.rpt">References with littriage status not matching curation status</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoRNAType.rpt">RNA-Seq Samples missing RNA-Seq Type</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTOverview.rpt">All GXD HT Experiments</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTExpPubMedID.sql.rpt">HT Experiments with PMIDs used by GXD</A>
