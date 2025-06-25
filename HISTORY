@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-25-27
+DATE: 06/25/2025
+STAFF: lec
+wts2-1689/e4g-298/have GXDHT litriage status reflect HT Index curation status = done
+	modified:   qcr.shtml
+	new file:   mgd/BIB_CurationStatusMismatch_GXD.sql
+
 TAG: qcreports_db-6-0-25-26
 TAG: qcreports_db-6-0-25-25
 DATE: 06/17/2025
