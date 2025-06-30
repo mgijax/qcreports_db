@@ -2,9 +2,7 @@
 #
 # GXD HT Experiment To Do List
 #
-# a list of HT Experiments that are either :
-#   Curation State=Not Done
-#   Evaluation=Yes or Maybe
+# a list of HT Experiments where Curation State=Not Done, Evaluation in (Yes,Maybe)
 #
 # Column 1: Experiment ID (primary)
 # Column 2: PubMed ID
@@ -24,7 +22,7 @@ import os
 import db
 import reportlib
 
-db.setTrace()
+#db.setTrace()
 
 CRT = reportlib.CRT
 TAB = reportlib.TAB
@@ -53,7 +51,7 @@ def go (form) :
     and a._mgitype_key = 42 
     and a._logicaldb_key in (189,190) 
     and a.preferred = 1 
-    and t1.term in ('Yes', 'Mabye')
+    and t1.term in ('Yes', 'Maybe')
     and t2.term = 'Not Done'
     )
     (
