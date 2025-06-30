@@ -44,7 +44,7 @@ def go (form) :
     WITH eresults AS (
     select e._experiment_key,
     a.accid as experimentID, 
-    t1.term as evauationState, 
+    t1.term as evaluationState, 
     t2.term as curationState
     from gxd_htexperiment e, voc_term t1, voc_term t2, acc_accession a
     where e._evaluationstate_key = t1._term_key 
@@ -77,13 +77,13 @@ def go (form) :
         and lower(n.note) like lower('%s') 
         )
     )
-    order by evauationState desc, note, pubmedid, experimentID
+    order by evaluationState desc, note, pubmedid, experimentID
     ''', 'auto')
 
     for r in results:
             sys.stdout.write(r['experimentID'] + TAB)
             sys.stdout.write(r['pubmedid'] + TAB))
-            sys.stdout.write(r['evauationState'] + TAB)
+            sys.stdout.write(r['evaluationState'] + TAB)
             note = r['note'].replace('\n', ' ').replace('\t', ' ')
             sys.stdout.write(note + CRT)
 
