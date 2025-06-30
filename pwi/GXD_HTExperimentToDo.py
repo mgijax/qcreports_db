@@ -66,7 +66,7 @@ def go (form) :
     and n._notetype_key = 1047 
     and lower(n.note) like lower('%s') 
     union
-    select e.*, null, p.value as pubmedid
+    select e.*, null as note, p.value as pubmedid
     from eresults e, mgi_property p
     where p._propertytype_key = 1002
     and p._propertyterm_key = 20475430      -- PubMed ID
@@ -82,9 +82,12 @@ def go (form) :
 
     for r in results:
             sys.stdout.write(r['experimentID'] + TAB)
-            sys.stdout.write(r['pubmedid'] + TAB))
+            sys.stdout.write(r['pubmedid'] + TAB)
             sys.stdout.write(r['evaluationState'] + TAB)
-            note = r['note'].replace('\n', ' ').replace('\t', ' ')
+            try:
+                note = r['note'].replace('\n', ' ').replace('\t', ' ')
+            except:
+                note = ""
             sys.stdout.write(note + CRT)
 
     sys.stdout.flush()
