@@ -90,8 +90,14 @@ def go (form) :
 
     for r in results:
             sys.stdout.write(r['experimentID'] + TAB)
-            sys.stdout.write(r['pubmedid'] + TAB)
+
+            try:
+                sys.stdout.write(r['pubmedid'] + TAB)
+            except:
+                sys.stdout.write(TAB)
+
             sys.stdout.write(r['evaluationState'] + TAB)
+
             try:
                 note = r['note'].replace('\n', ' ').replace('\t', ' ')
             except:
