@@ -2,7 +2,9 @@ TAG: qcreports_db-6-0-25-29
 DATE: 06/30/2025
 STAFF: lec
 wts2-1691/e4g-302/produce on demand list of HT experiments selected to be curated
+wts2-1692/e4g-303/list of HT experiments selected to be curated with PMIDs
         new file:   pwi/GXD_HTExperimentToDo.py
+        new file:   pwi/GXD_HTExperimentToDoPMID.py
         modified:   pwi/pwireports.txt
 
 TAG: qcreports_db-6-0-25-28
