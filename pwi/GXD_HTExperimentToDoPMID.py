@@ -74,20 +74,10 @@ def go (form) :
     ''', 'auto')
 
     for r in results:
+            sys.stdout.write(r['pubmedid'] + TAB)
+            sys.stdout.write(r['inMGI'] + TAB)
             sys.stdout.write(r['experimentID'] + TAB)
-
-            try:
-                sys.stdout.write(r['pubmedid'] + TAB)
-            except:
-                sys.stdout.write(TAB)
-
-            sys.stdout.write(r['evaluationState'] + TAB)
-
-            try:
-                note = r['note'].replace('\n', ' ').replace('\t', ' ')
-            except:
-                note = ""
-            sys.stdout.write(note + CRT)
+            sys.stdout.write(r['evaluationState'] + CRT)
 
     sys.stdout.flush()
 
