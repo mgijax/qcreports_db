@@ -75,6 +75,17 @@ def go (form) :
         and n._notetype_key = 1047 
         )
     union
+    -- no PubMed ID, Note
+    select e.*, n.note as note, null
+    from eresults e, mgi_note n
+    where e._experiment_key = n._object_key 
+    and n._notetype_key = 1047 
+    and not exists (select 1 from mgi_property p
+        where e._experiment_key = p._object_key
+        and p._propertytype_key = 1002
+        and p._propertyterm_key = 20475430
+        )
+    union
     -- no PubMed ID, no Note
     select e.*, null, null
     from eresults e
