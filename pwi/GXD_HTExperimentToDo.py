@@ -55,30 +55,33 @@ def go (form) :
     and t2.term = 'Not Done'
     )
     (
+    -- PubMed ID, Note
     select e.*, n.note, p.value as pubmedid
     from eresults e, mgi_property p, mgi_note n
     where e._experiment_key = p._object_key
     and p._propertytype_key = 1002
-    and p._propertyterm_key = 20475430      -- PubMed ID
+    and p._propertyterm_key = 20475430
     and e._experiment_key = n._object_key 
     and n._notetype_key = 1047 
     union
+    -- PubMed ID, no Note
     select e.*, null as note, p.value as pubmedid
     from eresults e, mgi_property p
     where e._experiment_key = p._object_key
     and p._propertytype_key = 1002
-    and p._propertyterm_key = 20475430      -- PubMed ID
+    and p._propertyterm_key = 20475430
     and not exists (select 1 from mgi_note n
         where e._experiment_key = n._object_key 
         and n._notetype_key = 1047 
         )
     union
+    -- no PubMed ID, no Note
     select e.*, null, null
     from eresults e
     where not exists (select 1 from mgi_property p
         where e._experiment_key = p._object_key
         and p._propertytype_key = 1002
-        and p._propertyterm_key = 20475430      -- PubMed ID
+        and p._propertyterm_key = 20475430
         )
     and not exists (select 1 from mgi_note n
         where e._experiment_key = n._object_key 
