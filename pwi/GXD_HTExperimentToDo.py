@@ -4,8 +4,8 @@
 #
 # a list of HT Experiments where Curation State=Not Done, Evaluation in (Yes,Maybe)
 #
-# Column 1: Experiment ID (primary)
-# Column 2: PubMed ID
+# Column 1: Experiment ID
+# Column 2: PubMed ID (if present)
 # Column 3: Evaluation
 # Column 4: Experiment note (if present)
 #
@@ -57,22 +57,32 @@ def go (form) :
     (
     select e.*, n.note, p.value as pubmedid
     from eresults e, mgi_property p, mgi_note n
-    where p._propertytype_key = 1002
+    where e._experiment_key = p._object_key
+    and p._propertytype_key = 1002
     and p._propertyterm_key = 20475430      -- PubMed ID
-    and e._experiment_key = p._object_key
     and e._experiment_key = n._object_key 
     and n._notetype_key = 1047 
-    and lower(n.note) like lower('%s') 
     union
     select e.*, null as note, p.value as pubmedid
     from eresults e, mgi_property p
-    where p._propertytype_key = 1002
+    where e._experiment_key = p._object_key
+    and p._propertytype_key = 1002
     and p._propertyterm_key = 20475430      -- PubMed ID
-    and e._experiment_key = p._object_key
     and not exists (select 1 from mgi_note n
         where e._experiment_key = n._object_key 
         and n._notetype_key = 1047 
-        and lower(n.note) like lower('%s') 
+        )
+    union
+    select e.*, null, null
+    from eresults e
+    where not exists (select 1 from mgi_property p
+        where e._experiment_key = p._object_key
+        and p._propertytype_key = 1002
+        and p._propertyterm_key = 20475430      -- PubMed ID
+        )
+    and not exists (select 1 from mgi_note n
+        where e._experiment_key = n._object_key 
+        and n._notetype_key = 1047 
         )
     )
     order by evaluationState desc, note, pubmedid, experimentID
