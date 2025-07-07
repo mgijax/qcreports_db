@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-25-30
+DATE: 07/07/2025
+STAFF: lec
+wts2-1695/e4g-304/tweak to GXD HT Experiment Partially Reviewed Papers custom report
+        modified:   GXD_HTExperimentPMID.py
+        modified:   pwireports.txt
+
 TAG: qcreports_db-6-0-25-29
 DATE: 06/30/2025
 STAFF: lec
