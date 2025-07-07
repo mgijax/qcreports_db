@@ -36,7 +36,6 @@ def go (form) :
     and p._PropertyTerm_key = t1._Term_key
     and p._mgitype_key = 42 -- GXD HT Experiment
     )
-
     select pubmedids.pmid, a1.accid as expID,
         hte.name as title,
         t2.term as evaluationState,
