@@ -25,12 +25,22 @@ def go (form) :
     results = db.sql('''
     WITH pubmedids as (
     select distinct p.value as pmid
-    from GXD_HTExperiment hte, MGI_Property p
-    where hte._Experiment_key = p._Object_key
+    from MGI_Property p,
+         GXD_HTExperiment hte,
+         VOC_Term t1,
+         VOC_Term t2,
+         VOC_Term t3
+    where hte._experimenttype_key = 20475437 -- RNA-Seq
+    and hte._evaluationstate_key in (20225942,20225944)  -- Yes,Maybe
+    and hte._evaluationstate_key = t2._term_key
+    and hte._curationstate_key = t3._term_key
+    and hte._Experiment_key = p._Object_key
     and p._PropertyType_key = 1002  -- GXD HT Experiment
     and p._propertyterm_key = 20475430 -- PubMed ID
+    and p._PropertyTerm_key = t1._Term_key
     and p._mgitype_key = 42 -- GXD HT Experiment
     )
+
     select pubmedids.pmid, a1.accid as expID,
         hte.name as title,
         t2.term as evaluationState,
@@ -49,6 +59,7 @@ def go (form) :
     and p._PropertyTerm_key = t1._Term_key
     and p._mgitype_key = 42 -- GXD HT Experiment
     and  p._Object_key = hte._Experiment_key
+    --and hte._experimenttype_key in (20475437,20475438) -- RNA-Seq, Not Resolved
     and hte._evaluationstate_key in (99646147,99646148)  -- Predicted Yes, Predicted No
     and hte._evaluationstate_key = t2._term_key
     and hte._curationstate_key = t3._term_key
