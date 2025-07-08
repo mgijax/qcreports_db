@@ -79,21 +79,34 @@ def go (form) :
     db.sql('create index idx3 on repoIDs(_strain_key)', None)
 
     db.sql('''
+    select s._strain_key, string_agg(distinct a.symbol, ', ') as alleleAssocs
+    into temporary table alleleAssociations
+    from strains s, prb_strain_marker m, all_allele a
+    where s._strain_key = m._strain_key 
+    and m._allele_key = a._allele_key 
+    and a._allele_status_key in (847114, 3983021)
+    group by s._strain_key
+    ''', None)
+    db.sql('create index idx4 on alleleAssociations(_strain_key)', None)
+
+    db.sql('''
     select s.strain, 
     s._strain_key, 
     s.strainType,
     s.mgiID, 
     s.private, 
     s.strainAttributes,
+    aa.alleleAssocs,
     string_agg(distinct s.repoID, ', ') as repoIDS, 
-    string_agg(distinct a.symbol, ', ') as alleleSymbols 
+    string_agg(distinct a.symbol, ', ') as alleleSymbols
     into temporary table final 
     from repoIDs s 
-            left outer join all_allele a on (s._strain_key = a._strain_key and a._allele_status_key in (847114, 3983021)) 
-    group by 1, 2, 3, 4, 5, 6
+            left outer join all_allele a on (s._strain_key = a._strain_key and a._allele_status_key in (847114, 3983021))
+            left outer join alleleAssociations aa on (s._strain_key = aa._strain_key)
+    group by 1, 2, 3, 4, 5, 6, 7
     order by s.strain
     ''', None)
-    db.sql('create index idx4 on final(_strain_key)', None)
+    db.sql('create index idx5 on final(_strain_key)', None)
 
     results = db.sql('''
     select f.strain, f.strainType, f.strainAttributes,
@@ -101,7 +114,8 @@ def go (form) :
     f.mgiID, 
     f.private, 
     f.repoids, 
-    f.alleleSymbols 
+    f.alleleSymbols,
+    f.alleleAssocs
     from final f left outer join strainSynHist sh on (f._strain_key = sh._strain_key) 
     order by f.strain
     ''', 'auto')
@@ -113,7 +127,8 @@ def go (form) :
     sys.stdout.write('mgiID' + TAB)
     sys.stdout.write('private' + TAB)
     sys.stdout.write('repoids' + TAB)
-    sys.stdout.write('alleleSymbols' + CRT)
+    sys.stdout.write('alleles (strain of origin)' + TAB)
+    sys.stdout.write('alleles (associations)' + CRT)
 
     for r in results:
             sys.stdout.write(r['strain'] + TAB)
@@ -125,9 +140,14 @@ def go (form) :
             sys.stdout.write(r['repoids'] + TAB)
 
             if r['alleleSymbols'] == None:
+                    sys.stdout.write(TAB)
+            else:
+                    sys.stdout.write(r['alleleSymbols'] + TAB)
+
+            if r['alleleAssocs'] == None:
                     sys.stdout.write(CRT)
             else:
-                    sys.stdout.write(r['alleleSymbols'] + CRT)
+                    sys.stdout.write(r['alleleAssocs'] + CRT)
 
     sys.stdout.flush()
 
