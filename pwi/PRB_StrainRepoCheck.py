@@ -62,12 +62,15 @@ def go (form) :
     db.sql('create index idx2 on strainsOtherIDs(_strain_key)', None)
 
     db.sql('''
-    select s._strain_key, string_agg(distinct a.symbol, ', ') as alleleAssocs
+    select s._strain_key, string_agg(distinct aa.accid, ', ') as alleleAssocs
     into temporary table alleleAssociations
-    from strains s, prb_strain_marker m, all_allele a
+    from strains s, prb_strain_marker m, all_allele a, acc_accession aa
     where s._strain_key = m._strain_key 
     and m._allele_key = a._allele_key 
     and a._allele_status_key in (847114, 3983021)
+    and a._allele_key = aa._object_key
+    and aa._mgitype_key = 11
+    and aa.preferred = 1
     group by s._strain_key
     ''', None)
     db.sql('create index idx3 on alleleAssociations(_strain_key)', None)
