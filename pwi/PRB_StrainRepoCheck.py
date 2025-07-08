@@ -61,16 +61,30 @@ def go (form) :
     ''', None)
     db.sql('create index idx2 on strainsOtherIDs(_strain_key)', None)
 
+    db.sql('''
+    select s._strain_key, string_agg(distinct a.symbol, ', ') as alleleAssocs
+    into temporary table alleleAssociations
+    from strains s, prb_strain_marker m, all_allele a
+    where s._strain_key = m._strain_key 
+    and m._allele_key = a._allele_key 
+    and a._allele_status_key in (847114, 3983021)
+    group by s._strain_key
+    ''', None)
+    db.sql('create index idx3 on alleleAssociations(_strain_key)', None)
+
     results = db.sql('''
     select s.inputID, 
     s.mgiID, 
     s.strain, 
     s.private, 
+    aa.alleleAssocs,
     string_agg(distinct s.otherID, 
     ', ') as otherIDS, 
     string_agg(distinct a.symbol, ', ') as alleleSymbols 
-    from strainsOtherIDs s left outer join all_allele a on (s._strain_key = a._strain_key and a._allele_status_key in (847114, 3983021)) 
-    group by 1,2,3,4 
+    from strainsOtherIDs s 
+        left outer join all_allele a on (s._strain_key = a._strain_key and a._allele_status_key in (847114, 3983021)) 
+        left outer join alleleAssociations aa on (s._strain_key = aa._strain_key)
+    group by 1,2,3,4,5
     order by s.inputID
     ''', 'auto')
 
@@ -79,7 +93,8 @@ def go (form) :
     sys.stdout.write('strain' + TAB)
     sys.stdout.write('private' + TAB)
     sys.stdout.write('otherIDS' + TAB)
-    sys.stdout.write('alleleSymbols' + CRT)
+    sys.stdout.write('alleles (strain of origin)' + TAB)
+    sys.stdout.write('alleles (associations)' + CRT)
 
     for r in results:
             sys.stdout.write(r['inputID'] + TAB)
@@ -93,9 +108,14 @@ def go (form) :
                     sys.stdout.write(r['otherIDS'] + TAB)
 
             if r['alleleSymbols'] == None:
+                    sys.stdout.write(TAB)
+            else:
+                    sys.stdout.write(r['alleleSymbols'] + TAB)
+
+            if r['alleleAssocs'] == None:
                     sys.stdout.write(CRT)
             else:
-                    sys.stdout.write(r['alleleSymbols'] + CRT)
+                    sys.stdout.write(r['alleleAssocs'] + CRT)
 
     sys.stdout.flush()
 
