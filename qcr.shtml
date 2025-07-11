@@ -287,7 +287,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GIA_MRK_ENSEMBL.rpt">Ensembl Associations for Gene Index</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GIA_MRK_Sequence.rpt">Sequence Associations for Gene Index</A> <B>(yz)</B>
 <LI><A HREF="/data/reports/reports_db/output/MGI_BioTypeConflict.rpt">MGI Biotype Conflict Public Report</A> <B>(cjb)</B>
-<LI>QTL Reports (yz)
+<LI>QTL Reports <B>(yz)</B>
     <OL>
     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_1.rpt">QTL markers that have no mapping and no allele associations</A>
     <LI><A HREF="/data/reports/qcreports_db/output/MRK_QTL_2.rpt">QTL markers that have mapping but no allele associations</A>
@@ -362,9 +362,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(csmith)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/tssgeneload/index.html">TSS-to-Gene Load</A> <B>(paul hale)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emalload/index.html">Endonuclease-mediated Allele Load (IMPC CRISPR)</A> <B>(laurens)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/entrezgeneload/index.html">EntrezGene Load Human/Rat/etc</A>
 </OL>
 
 <HR>
