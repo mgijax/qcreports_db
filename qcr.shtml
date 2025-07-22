@@ -181,7 +181,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleTheilerAge.rpt">GXD HT Samples with incompatible Theiler stages and ages</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoAge.sql.rpt">GXD HT Samples with incorrect age/age range values</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoStructure.rpt">GXD HT Samples whose Relevance = Yes but the structure field is null</A>
-<LI><A HREF="/data/reports/qcreports_db/output/GXD_HTRNASeq.rpt">RNA seq experiments missing needed experimental variable</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTPubMed.rpt">Curated GXD HT Experiments with PMIDs Issues</A>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationStatusMismatch_GXD.sql.rpt">References with littriage status not matching curation status</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_HTSampleNoRNAType.rpt">RNA-Seq Samples missing RNA-Seq Type</A>
