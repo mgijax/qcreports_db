@@ -1,3 +1,10 @@
+TAG: qcreports_db-6-0-26-3
+DATE: 07/22/2025
+STAFF: lec
+        deleted:    mgd/GXD_HTRNASeq.py
+	modified:   mgd/GXD_HTOverview.py
+        modified:   qcr.shtml
+
 TAG: qcreports_db-6-0-26-2
 DATE: 07/11/2025
 STAFF: lec
