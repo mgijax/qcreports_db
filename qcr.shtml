@@ -223,6 +223,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GO_GPI_verify.rpt">Report: Verify GPI file</A> <B>(ln)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GO_PM2GeneRefsNotInMGI.rpt">Report: Papers not in MGI for genes without experimental GO annotations</A> <B>(csmith)</B>
 <LI><A HREF="/data/loads/mgi/goload/logs/inferredfrom.log">Report: Sunday/Inferred From Text/linkout errors</A> <B>(ln)</B>
+<LI><A HREF="/data/reports/qcreports_db/output/GO_gpi.rpt">Report: GOA GCRPs Not Cross-Referenced in the MGI GPI</A> <B>(ln)</B>
 </OL>
 
 <A NAME="nomenclature"><B>Nomenclature (mmh)</B></A>
