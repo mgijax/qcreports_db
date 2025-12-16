@@ -319,7 +319,6 @@ be used at times to test reports for <I>future</I> public consumption.)
 
 <A NAME="metrics"><B>Curation Metrics</B></A>
 <OL>
-<LI><A HREF="/data/reports/qcreports_db/output/BIB_CurationMetrics.sql.rpt">J: Numbers Assigned</A> <B>(jfinger)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_Index.sql.rpt">GXD Curation - Index</A> <B>(ringwald)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_CurationMetrics_FullCoded.sql.rpt">GXD Curation - Full-coded</A> <B>(ringwald)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/PHENO_CurationMetrics.sql.rpt">Pheno Curation</A> <B>(mnk)</B>

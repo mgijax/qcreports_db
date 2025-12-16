@@ -4,6 +4,7 @@ STAFF: lec
 wts2-1778/sprt-161/Remove Obsolete Public, QC Reports
         deleted:    mgd/PRB_StrainJAX3.py
         deleted:    monthly/GXD_NotRouted.py
+	deleted:    weekly/BIB_CurationMetrics.sql
         deleted:    weekly/BIB_COVRefTagCounts.py
         deleted:    weekly/BIB_Covid.py
 
