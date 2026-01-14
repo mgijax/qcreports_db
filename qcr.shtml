@@ -44,7 +44,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/loads/mgi/littriageload/logs/littriageload.error.shtml">Lit Triage Errors</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingPDFs.sql.rpt">J#'s missing PDF's</A> <B>(jeo)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/WF_SupplementalData.rpt">Supplemental Data Needed</A> <B>(jeo, neb)</B>
-<LI><A HREF="/data/loads/mgi/pdfdownload/logs/noPdfs.log">Missing PDFs from PMC - automated downloads attempted, but could not find a PDF file</A> <B>(jeo, neb)</B>
+<LI><A HREF="/data/loads/mgi/pdfdownload/logs/noPdfs_pmc.log">Missing PDFs from PMC - automated downloads attempted, but could not find a PDF file</A> <B>(jeo, neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_MissingDOI.sql.rpt">References Missing DOI number</A> <B>(neb)</B>
 <LI><A HREF="/data/reports/qcreports_db/output/BIB_Duplicates.sql">References with Duplicate Titles</A> <B>(cms)</B>
 </OL>
@@ -168,7 +168,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_KnockInGene.sql.rpt">GXD Knock Ins where the assayed Gene is not the Gene which is mutated in the Genotype</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SpecimenTypeConflict.rpt">Specimen Type (Hybridization) Conflict</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SeqID.rpt">Probes used in GXD Assay w/ Seq IDs/Seq ID Attached to another Marker</A>
-<LI><A HREF="/data/reports/qcreports_db/output/PRB_Reference.sql.rpt">Probe/Antigen issues</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PRB_Reference.sql.rpt">Probe/Antibody issues</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/gxd">Archived GXD Reports</A>
 </OL>
 <A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>

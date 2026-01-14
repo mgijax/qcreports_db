@@ -205,23 +205,23 @@ order by a.accid
 ;
 
 \echo ''
-\echo 'Antigens with source information but both tissue and cell line are Not specified'
+\echo 'Antibodies with source information but both tissue and cell line are Not specified'
 \echo ''
 
-select distinct _Antigen_key, antigenName, mgiID 
-INTO TEMPORARY TABLE antigens 
-from GXD_Antigen_View  g, PRB_Source s 
+select distinct _Antibody_key, antibodyName, mgiID 
+INTO TEMPORARY TABLE antibodies
+from GXD_Antibody_View g, PRB_Source s 
 where s._Source_key = g._Source_key 
-and g._Organism_key = 1  
+and g.antigenOrganismKey = 1  
 and g._CellLine_key = 316335  
 and g._Tissue_key = -1  
 and s.description is not null
 ;
 
-INSERT INTO antigens 
-select distinct _Antigen_key, antigenName, mgiID 
-from GXD_Antigen_View 
-where _Organism_key = 1
+INSERT INTO antibodies
+select distinct _Antibody_key, antibodyName, mgiID 
+from GXD_Antibody_View 
+where antigenOrganismKey = 1
 and _CellLine_key = 316335 
 and _Tissue_key = -1 
 and (age != 'Not Specified' 
@@ -229,8 +229,8 @@ or _Strain_key != -1
 or _Gender_key != 315167)
 ;
 
-select mgiID, antigenName
-from antigens
+select mgiID, antibodyName
+from antibodies
 ;
 
 \echo ''
