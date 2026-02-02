@@ -358,7 +358,11 @@ def go(form):
             select distinct t._Refs_key
             from gxdindex g, BIB_Workflow_Data t
             where g._Refs_key = t._Refs_key
-            and t.extractedtext like '%Creative Commons%'
+            and (
+                t.extractedtext like '%Creative Commons%'
+                or
+                t.extractedtext like '%creativecommons%'
+            )
             ''', 'auto')
     for r in results:
         key = r['_Refs_key']
