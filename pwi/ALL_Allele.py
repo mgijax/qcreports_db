@@ -40,7 +40,7 @@ def go (form) :
     union
     select a.*, null
     from alleles a
-    and not exists (select 1 from  MGI_Note n
+    where not exists (select 1 from  MGI_Note n
         where a._Allele_key = n._Object_key
         and n._MGIType_key = 11
         and n._NoteType_key = 1022
