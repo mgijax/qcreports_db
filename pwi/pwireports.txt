@@ -56,7 +56,7 @@ ALL_VariantToBeReviewed2|Variants with "mut=" in the nomen note but no variant r
 BIB_ByPubMedId|PubMed Id in/not in MGI|Enter PubMed Id.\r\n\r\nIf PubMed Id exists in MGI, then display PubMed Id and isDiscard value.\r\n \r\n|lec|Cindy Smith|2018-12-28|list of PubMed Ids
 ALL_MPChild|MP Term and Child Annotations|Retrieve all annotated genotypes, and any notes for the specified MP Term ID, \r\n or any of its children. \r\n \r\nOrdered by allelepairs, genotype_id, annotatedTerm, jnum, _note_key|lec|Anna Anagnostopoulos|2022-09-08|MP Term ID#
 ALL_MPGenotype|MP Term Genotype and Notes QC|Retrieve all directly annotated genotypes, and any notes for the specified MP Term ID. \r\nRequested in TR10423.|lec|Cindy Smith|2022-06-22|MP Term ID
-PRB_StrainNomenCheck|Strain Check by Strain Nomenclature|Lookup IMSR Strain Info by Strain Nomenclature\r\nEnter a space delimited set of strain names\r\nExamples: MRL/MpJ    129.B6-GIX<->/Rbrc|sc|Michelle Perry|2020-03-13|list of Strain Nomenclature
+PRB_StrainNomenCheck|Strain Check by Strain Nomenclature|Lookup IMSR Strain Info by Strain Nomenclature\r\nEnter a space delimited set of strain names\r\nExamples: MRL/MpJ 129.B6-GIX<->/Rbrc|sc|Michelle Perry|2020-03-13|list of Strain Nomenclature
 PRB_StrainRepoCheck|Strain Check by Strain Repository ID|Lookup IMSR Strain Info by Repository IDs\r\nEnter a space delimited set of Repository IDs\r\nExamples: MMRRC:037343   RBRC00257   000486|sc|Michelle Perry|2020-03-13|list of Strain Repository ID
 GXD_FCHighlight|GXD FC Highlight|GXD recently coded highlights. Lists papers that have images attached, less than 2 years old, and do not have the GXD:HighlightReference tag.|lec|Jacqueline Finger|2023-11-27|
 ALL_CheckByCreationDate|Allele Check by Creation Date|Look up allele information based on date of creation.|lec|Michelle Perry|2024-01-30|Creation Date
@@ -67,6 +67,6 @@ GXD_HTExperimentPMID|GXD HT Experiment Partially Reviewed Papers|Do PMID search 
 GXD_HTSampleAlleles|GXD HT Index all alleles|which alleles (excluding wild type) are used to annotate GXDHT_Samples?|lec|Connie Smith|2025-06-02|
 GXD_HTExperimentToDo|GXD HT Experiment To Do List|A list of HT Experiments where Curation State=Not Done and Evaluation in (Yes, Maybe)|lec|Connie Smith|2025-06-30|
 GXD_HTExperimentToDoPMID|GXD HT Experiment To Do List with PMIDs|A list of HT Experiments where Curation State=Not Done and Evaluation in (Yes, Maybe)\r\nand have an associated PMID|lec|Connie Smith|2025-07-01|
-GXD_ImageNeedCreativeCommons|GXD Images need Creative Commons License|J# has expression image stubs.\r\nextracted text contains the word ‘creative’ (case-insensitive)\r\nfind any image stub that does not have a copyright statement.|lec|Jackie Finger|2026-02-02|
+GXD_ImageNeedCreativeCommons|GXD Images need Creative Commons License|J# has expression image stubs\r\nyear >= 2025\r\nextracted text contains the word ‘creative’ (case-insensitive)\r\nfind any image stub that does not have a copyright statement|lec|Jackie Finger|2026-02-02|
 # UNCOMMENT if needed for development
 #testReport|test|Test report.|jer|Joel Richardson|2024-06-27|*
