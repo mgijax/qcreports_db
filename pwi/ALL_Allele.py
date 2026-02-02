@@ -50,7 +50,7 @@ def go (form) :
 
     for r in results:
             sys.stdout.write(r['symbol'] + TAB)
-            sys.stdout.write(r[accid'] + TAB)
+            sys.stdout.write(r['accid'] + TAB)
 
             if r['note'] != None:
                     note = r['note'].replace('\n', ' ').replace('\t', ' ')
