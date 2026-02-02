@@ -30,6 +30,7 @@ def go (form) :
     and aa._LogicalDB_key = 1
     and aa._MGIType_key = 11
     and a._Allele_Status_key = t._term_key
+    and a.iswildtype = 0
     )
     select a.*, n.note
     from alleles a, MGI_Note n
