@@ -47,7 +47,7 @@ def go(form):
                 and n._NoteType_key = 1023
                 )
             and i._Refs_key = r._Refs_key
-            and r.year >= 2023
+            and r.year >= 2021
             and i._Image_key = a._Object_key
             and a._Logicaldb_key = 1
             and a._MGIType_key = 9
