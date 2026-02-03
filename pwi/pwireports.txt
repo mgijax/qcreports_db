@@ -67,7 +67,7 @@ GXD_HTExperimentPMID|GXD HT Experiment Partially Reviewed Papers|Do PMID search 
 GXD_HTSampleAlleles|GXD HT Index all alleles|which alleles (excluding wild type) are used to annotate GXDHT_Samples?|lec|Connie Smith|2025-06-02|
 GXD_HTExperimentToDo|GXD HT Experiment To Do List|A list of HT Experiments where Curation State=Not Done and Evaluation in (Yes, Maybe)|lec|Connie Smith|2025-06-30|
 GXD_HTExperimentToDoPMID|GXD HT Experiment To Do List with PMIDs|A list of HT Experiments where Curation State=Not Done and Evaluation in (Yes, Maybe)\r\nand have an associated PMID|lec|Connie Smith|2025-07-01|
-GXD_ImageNeedCreativeCommons|GXD Images need Creative Commons License|J# has expression image stubs\r\npublication year >= 2021\r\nextracted text contains the word 'creative commons' or 'creativecommons' (case-insensitive)\r\nfind any image stub that does not have a copyright statement\r\nexclude Assay Type 'Recombinase reporter', 'In situ reporter (transgenci)'\r\nsort by J#, Figure label|lec|Jackie Finger|2026-02-02|
+GXD_ImageNeedCreativeCommons|GXD Images need Creative Commons License|J# has expression image stubs\r\npublication year >= 2021\r\nextracted text contains the word 'creative commons' or 'creativecommons' (case-insensitive)\r\nfind any image stub that does not have a copyright statement\r\nexclude Assay Type 'Recombinase reporter', 'In situ reporter (transgenic)'\r\nsort by J#, Figure label|lec|Jackie Finger|2026-02-02|
 ALL_Allele|All Alleles|All Alleles Excluding Wild Type Order by Allele Symbol|lec|Michelle Perry|2026-02-02|
 # UNCOMMENT if needed for development
 #testReport|test|Test report.|jer|Joel Richardson|2024-06-27|*
