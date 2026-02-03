@@ -52,7 +52,7 @@ def go(form):
                 )
             and not exists (select 1 from GXD_Assay ga
                 where i._refs_key = ga._refs_key
-                and ga._assaytype_key not in (10,11)
+                and ga._assaytype_key in (10,11)
                 )
             and i._Refs_key = r._Refs_key
             and i._Image_key = a._Object_key
