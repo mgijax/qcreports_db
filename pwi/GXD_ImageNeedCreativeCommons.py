@@ -5,9 +5,11 @@
 #
 # Report:
 #
-# select GXD images that do not contain any Copyright
-# but Reference/PDF does contain 'Creative Commons' or 'creativecommons'
-# exclude Assay Type 'Recombinase reporter' (11), 'In situ reporter (transgenci)' (10)
+# J# has expression image stubs
+# exclude Assay Type 'Recombinase reporter', 'In situ reporter (transgenic)'
+# extracted text contains the word 'creative commons' or 'creativecommons' (case-insensitive)
+# find any image stub that does not have a copyright statement
+# sort by J#, Figure label
 # 
 # Usage:
 #       GXD_ImageNeedCreativeCommons.py
