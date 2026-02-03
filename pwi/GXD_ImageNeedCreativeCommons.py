@@ -67,9 +67,9 @@ def go(form):
 
     for r in results:
 
+        sys.stdout.write(r['journal'] + TAB)
         sys.stdout.write(r['accID'] + TAB)
         sys.stdout.write(r['jnumID'] + TAB)
-        sys.stdout.write(r['journal'] + TAB)
         sys.stdout.write(r['figureLabel'] + CRT)
             
     sys.stdout.flush()
