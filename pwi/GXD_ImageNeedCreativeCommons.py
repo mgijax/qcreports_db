@@ -6,7 +6,8 @@
 # Report:
 #
 # select GXD images that do not contain any Copyright
-# but Reference/PDF does contain Creative Commons
+# but Reference/PDF does contain 'Creative Commons' or 'creativecommons'
+# year >= 2021
 # 
 # Usage:
 #       GXD_ImageNeedCreativeCommons.py
@@ -65,14 +66,8 @@ def go(form):
 
     for r in results:
 
-    #       1. MGI ID
         sys.stdout.write(r['accID'] + TAB)
-
-    #       2. J
         sys.stdout.write(r['jnumID'] + TAB)
-
-    #       3. Figure label
-
         sys.stdout.write(r['figureLabel'] + CRT)
             
     sys.stdout.flush()
