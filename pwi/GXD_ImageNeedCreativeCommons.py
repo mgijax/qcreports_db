@@ -8,6 +8,7 @@
 # select GXD images that do not contain any Copyright
 # but Reference/PDF does contain 'Creative Commons' or 'creativecommons'
 # year >= 2021
+# exclude Assay Type 'Recombinase reporter' (11), 'In situ reporter (transgenci)' (10)
 # 
 # Usage:
 #       GXD_ImageNeedCreativeCommons.py
@@ -47,6 +48,10 @@ def go(form):
                 where i._Image_key = n._Object_key
                 and n._MGIType_key = 9
                 and n._NoteType_key = 1023
+                )
+            and not exists (select 1 from GXD_Assay ga
+                where i._refs_key = ga._refs_key
+                and ga._assaytype_key not in (10,11)
                 )
             and i._Refs_key = r._Refs_key
             and r.year >= 2021
