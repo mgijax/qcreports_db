@@ -61,7 +61,7 @@ def go(form):
                     t.extractedtext like '%creativecommons%'
                 )
             )
-            order by c.jnumID
+            order by c.jnumID, i.figureLabel
             ''', 'auto')
 
     for r in results:
