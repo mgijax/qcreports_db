@@ -6,7 +6,7 @@
 # Report:
 #
 # J# has expression image stubs
-# exclude Assay Type 'Recombinase reporter', 'In situ reporter (transgenic)'
+# exclude Assay Type in ('Recombinase reporter','In situ reporter (transgenic)')
 # extracted text contains the word 'creative commons' or 'creativecommons' (case-insensitive)
 # find any image stub that does not have a copyright statement
 # sort by J#, Figure label
