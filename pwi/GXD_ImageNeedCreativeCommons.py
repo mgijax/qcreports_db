@@ -36,10 +36,11 @@ def go(form):
 
     sys.stdout.write('MGI ID of image stub' + TAB)
     sys.stdout.write('J#' + TAB)
+    sys.stdout.write('Journal' + TAB)
     sys.stdout.write('Figure label' + CRT)
 
     results = db.sql('''
-            select a.accID, c.jnumID, i.figureLabel
+            select a.accID, c.jnumID, c.journal, i.figureLabel
             from IMG_Image i, ACC_Accession a, BIB_Citation_Cache c, BIB_Refs r
             where i._imageclass_key = 6481781
             and not exists (select 1 from MGI_Note n
@@ -68,6 +69,7 @@ def go(form):
 
         sys.stdout.write(r['accID'] + TAB)
         sys.stdout.write(r['jnumID'] + TAB)
+        sys.stdout.write(r['journal'] + TAB)
         sys.stdout.write(r['figureLabel'] + CRT)
             
     sys.stdout.flush()
