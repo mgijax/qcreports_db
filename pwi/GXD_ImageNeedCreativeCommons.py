@@ -34,9 +34,9 @@ PAGE = reportlib.PAGE
 
 def go(form):
 
+    sys.stdout.write('Journal' + TAB)
     sys.stdout.write('MGI ID of image stub' + TAB)
     sys.stdout.write('J#' + TAB)
-    sys.stdout.write('Journal' + TAB)
     sys.stdout.write('Figure label' + CRT)
 
     results = db.sql('''
