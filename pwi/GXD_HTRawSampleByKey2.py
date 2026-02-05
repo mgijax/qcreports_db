@@ -1,12 +1,11 @@
 
 '''
 #
-# GXD HT Raw Sample Key Search
+# GXD HT Raw Sample Key Search 2
 #
 # Search GXD HT Raw Sample Key 
-# -- sort by relevance, experiment ID, sample ID 
+# -- sort by experiment type, relevance, curation status, experiment ID
 # -- results limited to 5000 
-# -- both key and value columns are aggregated
 #
 # 1: Experiment ID (sort 4)
 # 2: Experiment Type (sort 1)
