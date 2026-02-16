@@ -40,6 +40,7 @@ TAB = reportlib.TAB
 
 byPublisher = [
 'Brain Res Gene Expr Patterns',
+'Cells Dev', 
 'Dev Biol', 
 'Dev Dyn', 
 'Development', 
@@ -51,7 +52,6 @@ byPublisher = [
 'J Comp Neurol', 
 'J Lipid Res', 
 'Mech Dev', 
-'Cells Dev', 
 'Mol Reprod Dev',
 'Proc Natl Acad Sci U S A'
 ]
@@ -148,47 +148,72 @@ byHybrid = [
 'Chromosome Res',
 'Eur J Hum Genet',
 'Gene Ther',
+'Genes Immun',
 'Glycobiology',
 'Hum Mol Genet',
 'Hum Reprod',
-'J Gerontol A Biol Sci Med Sci',
-'Mol Biol Evol',
-'Toxicol Sci',
-'Genes Immun',
 'Hypertens Res',
 'Int J Obes (Lond)',
+'J Gerontol A Biol Sci Med Sci',
 'J Hum Genet',
 'Lab Invest',
 'Leukemia',
+'Mol Biol Evol',
 'Mucosal Immunol',
+'Nat Biotechnol',
+'Nat Cardiovasc Res',
+'Nat Cell Biol',
+'Nat Genet',
+'Nat Neurosci',
+'Nat Struct Mol Biol',
+'Nature',
 'Oncogene',
 'Pediatr Res',
+'Toxicol Sci',
 'Transgenic Res'
 ]
 
 byOtherHybrid = [
-'Cell Cycle', 
-'EMBO J', 
-'EMBO Rep', 
-'J Invest Dermatol', 
-'Immunol Cell Biol',
-'Mol Cell Biol', 
-'Mol Psychiatry',
 'Am J Hum Genet',
 'Biochem Biophys Res Commun',
+'Cell Cycle', 
+'Cell',
+'Cell Genom',
+'Cell Host Microbe',
+'Cell Metab',
+'Cell Rep Methods',
+'Cancer Cell',
+'Cell Stem Cell',
+'Cell Rep Med',
+'Curr Biol',
+'Dev Cell',
 'Differentiation',
+'EMBO J', 
+'EMBO Rep', 
 'Eur J neurosci',
 'FASEB J',
 'FEBS Lett',
+'Heliyon',
+'iScience',
+'Immunity',
+'Immunol Cell Biol',
 'J Cell Sci',
-'Mol Cell Neurosci'
+'J Invest Dermatol', 
+'Mol Cell',
+'Mol Cell Biol', 
+'Mol Cell Neurosci',
+'Mol Psychiatry',
+'Neuron',
+'STAR Protocols',
+'Trends Neurosci',
+'Trends Genet'
 ]
 
 byCopyrightDelay = [
-'J Neurosci', 
 'J Cell Biol',
 'J Exp Med',
-'J Gen Physiol'
+'J Gen Physiol',
+'J Neurosci', 
 ]
 
 def runreport(fp):
@@ -304,7 +329,7 @@ def runreport(fp):
     fp.write(2*CRT)
 
     count = 0
-    fp.write(TAB + 'By Other Hybrid:' + CRT + 2*TAB)
+    fp.write(TAB + 'Cell Press & other Hybrid Journals:' + CRT + 2*TAB)
     for j in byOtherHybrid:
         fp.write(str.ljust(j, 25) + TAB)
         count = count + 1
