@@ -33,7 +33,7 @@
 #           a custom form is defined in the report's .html file. 
 #
 BIB_BioRxiv|BioRxiv articles and published articles with the same title||sc|Jackie Finger|2021-04-07|
-GXD_HTExperimentByNote|GXD HT Experiment Note Search|Search GXD HT Experiment Note Search\r\n--sort by experiment type (custom ordering), relevance (custom ordering), experiment ID|lec|Connie Smith|2022-10-03|Experiment Note Text
+GXD_HTExperimentByNote|GXD HT Experiment Note Search|GXD HT Experiment Note Search\r\n--sort by experiment type (custom ordering), relevance (custom ordering), experiment ID|lec|Connie Smith|2022-10-03|Experiment Note Text
 GXD_HTExperimentCuratedNote|GXD HT Experiment notes displayed to the public|Report name: HT Experiment notes displayed to the public\r\n\r\nFields:\r\n\r\nExperiment ID\r\n\r\nNote (primary sort)|lec|Connie Smith|2024-03-19|
 GXD_HTExperimentByProperty|GXD HT Experiment Properties Search|Search GXD HT Experiment Properties:\r\n-- Raw Experimental Factor\r\n-- Raw Experiment Type\r\n-- Raw Contact Name (Provider)\r\n-- PubMed ID|sc|Connie Smith|2018-08-31|Property Term Text
 GXD_HTRawSampleByKey|GXD HT Raw Sample Key Search|Search GXD HT Raw Sample Key\r\n-- sort by experiment type (custom ordering), relevance (custom ordering), experiment ID, sample ID\r\n-- results limited to 5000\r\n-- both key and value columns are aggregated|sc|Connie Smith|2022-01-12|Raw Sample Key
