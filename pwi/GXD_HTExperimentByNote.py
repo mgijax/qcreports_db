@@ -64,7 +64,7 @@ def go (form) :
     where p._propertytype_key = 1002
     and p._propertyterm_key = 20475430      -- PubMed ID
     and e._experiment_key = p._object_key
-    group by 1, 2, 3, 4, 5, 6, 7
+    group by 1, 2, 3, 4, 5, 6, 7, 8
     union
     select e.*, null
     from eresults e
