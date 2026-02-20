@@ -30,6 +30,11 @@ def go (form) :
     t.term as relevance, 
     string_agg(distinct kv.key, ', ') as keys, 
     string_agg(distinct kv.value, ', ') as values,
+    case 
+            when t2.term = 'RNA-Seq' then 1 
+            when t2.term = 'Not Resolved' then 2 
+            when t2.term = 'transcription profiling by array' then 3 
+    end as experimenttypeOrder,
     case
             when t.term = 'Predicted Yes' then 1
             when t.term = 'Predicted No' then 2
@@ -54,7 +59,7 @@ def go (form) :
     and a._logicaldb_key = 190 
     and a.preferred = 1 
     group by 1, 2, 3, 4 
-    order by relevanceOrder, a.accid, rs.accid 
+    order by experimenttypeOrder, relevanceOrder, ExperimentID, SampleID
     limit 5000
     ''' % (value), 'auto')
 

@@ -34,7 +34,12 @@ def go (form) :
     a.accid as ExperimentID, 
     t2.term as experimenttype, 
     t.term as relevance, 
-    n.note
+    n.note,
+    case 
+            when t2.term = 'RNA-Seq' then 1 
+            when t2.term = 'Not Resolved' then 2 
+            when t2.term = 'transcription profiling by array' then 3 
+    end as experimenttypeOrder
     from gxd_htexperiment e, voc_term t, voc_term t2, acc_accession a, mgi_note n
     where e._evaluationstate_key = t._term_key 
     and e._experimenttype_key = t2._term_key 
@@ -52,7 +57,7 @@ def go (form) :
     where p._propertytype_key = 1002
     and p._propertyterm_key = 20475430      -- PubMed ID
     and e._experiment_key = p._object_key
-    group by 1, 2, 3, 4, 5, 6
+    group by 1, 2, 3, 4, 5, 6, 7
     union
     select e.*, null
     from eresults e
@@ -61,7 +66,7 @@ def go (form) :
             and p._propertyterm_key = 20475430      -- PubMed ID
             and e._experiment_key = p._object_key
             )
-    order by experimenttype, relevance, ExperimentID
+    order by experimenttypeOrder, ExperimentID
     ''' % (value), 'auto')
 
     sys.stdout.write('ExperimentID' + TAB)

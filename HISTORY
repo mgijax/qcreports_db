@@ -1,3 +1,13 @@
+TAG: qcreports_db-6-0-27-5
+DATE: 02/20/2026
+STAFF: lec
+wts2-1808/add more custom ordering to HT custom reports
+        modified:   GXD_HTExperimentByNote.py
+        modified:   GXD_HTRawSampleByKey.py
+        modified:   GXD_HTRawSampleByKey2.py
+        modified:   GXD_HTRawSampleByValue.py
+        modified:   GXD_HTRawSampleByValue2.py
+
 TAG: qcreports_db-6-0-27-4
 DATE: 02/16/2026
 STAFF: lec

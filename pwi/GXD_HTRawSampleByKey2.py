@@ -32,7 +32,19 @@ def go (form) :
     t2.term as experimenttype,
     t.term as relevance,
     t3.term as curationStatus,
-    e.name
+    e.name,
+    case 
+            when t2.term = 'RNA-Seq' then 1 
+            when t2.term = 'Not Resolved' then 2 
+            when t2.term = 'transcription profiling by array' then 3 
+    end as experimenttypeOrder,
+    case 
+            when t.term = 'Predicted Yes' then 1 
+            when t.term = 'Predicted No' then 2 
+            when t.term = 'Maybe' then 3 
+            when t.term = 'Yes' then 4 
+            when t.term = 'No' then 5
+    end as relevanceOrder
     from gxd_htrawsample rs,
          mgi_keyvalue kv,
          gxd_htexperiment e,
@@ -51,7 +63,7 @@ def go (form) :
     and a._mgitype_key = 42 -- experiment
     and a._logicaldb_key = 190
     and a.preferred = 1
-    order by t2.term, t.term, t3.term, a.accid
+    order by experimenttypeOrder, relevanceOrder, curationStatus, ExperimentID
     limit 5000
     ''' % (value), 'auto')
 
