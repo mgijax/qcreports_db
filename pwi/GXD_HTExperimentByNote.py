@@ -39,7 +39,14 @@ def go (form) :
             when t2.term = 'RNA-Seq' then 1 
             when t2.term = 'Not Resolved' then 2 
             when t2.term = 'transcription profiling by array' then 3 
-    end as experimenttypeOrder
+    end as experimenttypeOrder,
+    case 
+            when t.term = 'Predicted Yes' then 1 
+            when t.term = 'Predicted No' then 2 
+            when t.term = 'Maybe' then 3 
+            when t.term = 'Yes' then 4 
+            when t.term = 'No' then 5
+    end as relevanceOrder
     from gxd_htexperiment e, voc_term t, voc_term t2, acc_accession a, mgi_note n
     where e._evaluationstate_key = t._term_key 
     and e._experimenttype_key = t2._term_key 
@@ -66,7 +73,7 @@ def go (form) :
             and p._propertyterm_key = 20475430      -- PubMed ID
             and e._experiment_key = p._object_key
             )
-    order by experimenttypeOrder, ExperimentID
+    order by experimenttypeOrder, relevanceOrder, ExperimentID
     ''' % (value), 'auto')
 
     sys.stdout.write('ExperimentID' + TAB)
