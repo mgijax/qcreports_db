@@ -243,6 +243,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_StrainNonStdNoData.sql.rpt">Non-Standard Strains with no JR# and no data attached</A>
 <LI><A HREF="/data/reports/qcreports_db/output/MLP_Nomenclature.sql.rpt">Strains Affected by recent Nomenclature changes</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain4.rpt">Strains with MGI IDs that have more than one additional external ID</A>
+<LI><A HREF="/data/reports/qcreports_db/output/PRB_Strain_Repository.rpt">Repostory strains: total associated publication numbers and total strains published</A>
 </OL>
 
 <A NAME="strainsjax"><B>Strains - JAX (honda)</B></A>
