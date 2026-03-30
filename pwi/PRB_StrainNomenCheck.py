@@ -140,7 +140,11 @@ def go (form) :
             sys.stdout.write(r['synonymOrHistory'] + TAB)
             sys.stdout.write(r['mgiID'] + TAB)
             sys.stdout.write(r['private'] + TAB)
-            sys.stdout.write(r['repoids'] + TAB)
+
+            if r['repoids'] == None:
+                    sys.stdout.write(TAB)
+            else:
+                    sys.stdout.write(r['repoids'] + TAB)
 
             if r['alleleSymbols'] == None:
                     sys.stdout.write(TAB)
