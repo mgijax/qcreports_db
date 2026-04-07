@@ -30,8 +30,41 @@ SPACE = reportlib.SPACE
 TAB = reportlib.TAB
 PAGE = reportlib.PAGE
 
-fp = reportlib.init(sys.argv[0], 'Invalid MGI ids used in assay and specimen notes', os.environ['QCOUTPUTDIR'])
+fp = reportlib.init(sys.argv[0], '', os.environ['QCOUTPUTDIR'])
 
+fp.write('\tInvalid MGI ids used in assay notes\n\n')
+cmd = '''
+select c.jnumid, c.numericpart, a.accid, m.symbol, gt.assaytype, n.assaynote as note
+from gxd_assay ga, bib_citation_cache c, acc_accession a, mrk_marker m, gxd_assaytype gt, gxd_assaynote n
+where ga._refs_key = c._refs_key
+and ga._assay_key = a._object_key
+and a._mgitype_key = 8
+and ga._marker_key = m._marker_key
+and ga._assaytype_key = gt._assaytype_key
+and ga._assay_key = n._assay_key
+and n.assaynote like '%MGI:%'
+order by c.numericpart, a.accid
+'''
+
+results = db.sql(cmd, 'auto')
+for r in results:
+    notes = r['note'].split('MGI:')
+    notes = notes[1].split('|')
+    notes = notes[0].split('(')
+    notes = notes[0].split(')')
+    notes = notes[0].split('.')
+    accid = 'MGI:' + notes[0]
+    accid = accid.replace(' ', '')
+    findmgiid = db.sql('''select * from acc_accession where accid = '%s' ''' % (accid), 'auto')
+    if len(findmgiid) == 0:
+        #print('''select * from acc_accession where accid = '%s' ''' % (accid))
+        fp.write(r['jnumid'] + TAB)
+        fp.write(r['accid'] + TAB)
+        fp.write(r['symbol'] + TAB)
+        fp.write(r['assaytype'] + TAB)
+        fp.write(r['note'] + CRT)
+
+fp.write('\n\tInvalid MGI ids used in specimen notes\n\n')
 cmd = '''
 select c.jnumid, c.numericpart, a.accid, m.symbol, gt.assaytype, gs.specimenlabel, gs.age, gs.specimennote as note
 from gxd_assay ga, bib_citation_cache c, acc_accession a, mrk_marker m, gxd_assaytype gt, gxd_specimen gs
@@ -46,7 +79,6 @@ order by c.numericpart, a.accid
 '''
 
 results = db.sql(cmd, 'auto')
-
 for r in results:
     notes = r['note'].split('MGI:')
     notes = notes[1].split('|')
