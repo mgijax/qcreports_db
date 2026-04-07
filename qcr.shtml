@@ -170,6 +170,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SpecimenTypeConflict.rpt">Specimen Type (Hybridization) Conflict</A>
 <LI><A HREF="/data/reports/qcreports_db/output/GXD_SeqID.rpt">Probes used in GXD Assay w/ Seq IDs/Seq ID Attached to another Marker</A>
 <LI><A HREF="/data/reports/qcreports_db/output/PRB_Reference.sql.rpt">Probe/Antibody issues</A>
+<LI><A HREF="/data/reports/qcreports_db/output/GXD_InvalidMGIId.rpt">Invalid MGI ids used in assay and specimen notes</A>
 <LI><A HREF="/data/reports/qcreports_db/archive/gxd">Archived GXD Reports</A>
 </OL>
 <A NAME="gxdht"><B>GXD HT Experiments (cms)</B></A>
