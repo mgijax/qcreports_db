@@ -1,5 +1,5 @@
-TAG: qcreports_db-6-0-28-1
-DATE: 04/07/2026
+TAG: qcreports_db-6-0-27-9
+DATE: 04/08/2026
 STAFF: lec
 wts2-1838/Invalid MGI ids used in assay and specimen notes
         new file:   monthly/GXD_InvalidMGIId.py
