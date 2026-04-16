@@ -105,7 +105,6 @@ byCreativeComments = [
 'Front Physiol',
 'Genome Biol',
 'Int J Mol Sci',
-'iScience',
 'J Biol', 
 'J Biomed Sci',
 'JCI Insight',
