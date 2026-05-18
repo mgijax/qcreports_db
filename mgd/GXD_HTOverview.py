@@ -80,7 +80,7 @@ for r in results:
 
 results = db.sql('''select sm._object_key
         from MGI_SetMember sm, MGI_Set s
-        where s.name = 'RNASeq Load Experiments'
+        where s.name in ('RNASeq Load Experiments', 'Baseline RNASeq Load Experiments')
         and s._Set_key = sm._Set_key''', 'auto')
 for r in results:
     rnaSeqList.append(r['_object_key'])
