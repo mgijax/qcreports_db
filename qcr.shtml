@@ -362,7 +362,7 @@ be used at times to test reports for <I>future</I> public consumption.)
 <LI><A HREF="/usrlocalmgi/live/dataload/htmpload/index.html">HTMP load: IMPC/Lacz</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/pirsfload/index.html">PIRSF Load</A> <B>(csmith)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/gotextload/index.html">GO Text Load</A> <B>(csmith)</B>
-<LI><A HREF="/usrlocalmgi/live/dataload/alleleload/impcindex.html">Allele Molecular IMPC Note Load</A> <B>(csmith, anna)</B>
+<LI><A HREF="/usrlocalmgi/live/dataload/alleleload/impc_index.shtml">Allele Molecular IMPC Note Load</A> <B>(csmith, anna)</B>
 <LI><A HREF="/usrlocalmgi/live/dataload/emalload/index.html">Endonuclease-mediated Allele Load (IMPC CRISPR)</A> <B>(laurens)</B>
 </OL>
 
