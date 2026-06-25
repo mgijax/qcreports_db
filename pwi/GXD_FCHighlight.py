@@ -98,10 +98,10 @@ def go (form) :
                     printGel = False
 
             if printJnum == False:
-                    printTitle = r['title']
                     sys.stdout.write(r['jnumid'] + TAB)
                     sys.stdout.write(r['journal'] + TAB)
                     sys.stdout.write(str(r['images']) + TAB)
+                    printTitle = r['title']
                     printJnum = True
 
             if r['assaytype'] == 'gel':
