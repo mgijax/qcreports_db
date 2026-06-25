@@ -97,9 +97,8 @@ def go (form) :
                     printJnum = False
                     printGel = False
 
-            printTitle = r['title']
-
             if printJnum == False:
+                    printTitle = r['title']
                     sys.stdout.write(r['jnumid'] + TAB)
                     sys.stdout.write(r['journal'] + TAB)
                     sys.stdout.write(str(r['images']) + TAB)
