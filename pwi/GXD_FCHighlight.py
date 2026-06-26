@@ -91,6 +91,7 @@ def go (form) :
         key = r['_refs_key']
 
         if currentKey != key:
+
             if currentKey > 0:
                 sys.stdout.write(currentInfo + str(gelCount) + TAB + str(insituCount) + TAB + currentTitle + CRT)
 
