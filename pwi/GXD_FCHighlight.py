@@ -84,42 +84,28 @@ def go (form) :
     sys.stdout.write('number of insitu image panes' + TAB)
     sys.stdout.write('title' + CRT)
 
-    printJnum = False
-    printGel = False
-    printInSitu = False
-    printTitle = ""
+    currentKey = 0
+    currentTitle = ""
 
     for r in results:
+        key = r['_refs_key']
 
-            if printGel == True and r['assaytype'] != 'insitu':
-                    sys.stdout.write('0' + TAB)
-                    sys.stdout.write(printTitle + CRT)
-                    printJnum = False
-                    printGel = False
+        if currentKey != key:
+            if currentKey > 0:
+                sys.stdout.write(currentInfo + str(gelCount) + TAB + str(insituCount) + TAB + currentTitle + CRT)
 
-            if printJnum == False:
-                    sys.stdout.write(r['jnumid'] + TAB)
-                    sys.stdout.write(r['journal'] + TAB)
-                    sys.stdout.write(str(r['images']) + TAB)
-                    printTitle = r['title']
-                    printJnum = True
+            currentInfo = r['jnumid'] + TAB + r['journal'] + TAB + str(r['images']) + TAB
+            currentTitle = r['title']
+            gelCount = 0
+            insituCount = 0
+            currentKey = key
 
-            if r['assaytype'] == 'gel':
-                    sys.stdout.write(str(r['imagepanes']) + TAB)
-                    printGel = True
-                    continue
+        if r['assaytype'] == 'gel':
+            gelCount = r['imagepanes']
 
-            if printGel == False:
-                    sys.stdout.write('0' + TAB)
-
-            sys.stdout.write(str(r['imagepanes']) + TAB)
-            sys.stdout.write(printTitle + CRT)
-            printJnum = False
-            printGel = False
-
-    if printGel == True and printInSitu == False:
-            sys.stdout.write('0' + TAB)
-            sys.stdout.write(printTitle + CRT)
-
+        if r['assaytype'] == 'insitu':
+            insituCount = r['imagepanes']
+            
+    sys.stdout.write(currentInfo + str(gelCount) + TAB + str(insituCount) + TAB + currentTitle + CRT)
     sys.stdout.flush()
 
