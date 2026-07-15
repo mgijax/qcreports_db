@@ -79,7 +79,7 @@ order by accID
 \echo 'JPGs but no Copyright Statement'
 \echo ''
 
-select i.mgiID, i.jnumID
+select distinct i.mgiID, i.jnumID
 from IMG_Image_View i
 where i._ImageClass_key in (6481782, 6481783)
 and i._ImageType_key = 1072158
