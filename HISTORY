@@ -1,3 +1,9 @@
+TAG: qcreports_db-6-0-29-1
+DATE: 08/24/2026
+STAFF: lec
+wts2-1885/GXD_Stats.current.rpt:  add another electronic reference
+        modified:   mgd/GXD_Stats.py
+
 TAG: qcreports_db-6-0-28-7
 TAG: qcreports_db-6-0-28-6
 DATE: 06/26/2026
