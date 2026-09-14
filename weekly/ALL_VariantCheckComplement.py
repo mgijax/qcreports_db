@@ -102,8 +102,10 @@ for r in resultsD:
     variantKey = r['_Variant_key']
     dictKey = '%s|%s' % (alleleKey, variantKey)
 
-    genRef =  r['referenceSequence']
+    genRef = r['referenceSequence']
     genVar = r['variantSequence']
+    if genRef == None:
+        continue
     if genRef == None and genVar == None:
         continue
     if dictKey not in resultsDict:
