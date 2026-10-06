@@ -2,6 +2,10 @@
 \echo ''
 \echo 'HT Sample Hemizygous Genotype Check'
 \echo ''
+\echo 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
+\echo 'mutated gene on X or Y'
+\echo 'sex = male'
+\echo ''
 
 /* genotypes that have 2 alleles and pair state = heterozygous or homozygous and chromosome is X or Y */
 
@@ -17,12 +21,6 @@ and m.chromosome in ('X','Y')
 
 create index idx1 on genotypes(_Genotype_key)
 ;
-
-\echo ''
-\echo 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
-\echo 'mutated gene on X or Y'
-\echo 'sex = male'
-\echo ''
 
 select distinct a.accID as "Experiment ID", s.name as "Sample Name",
 	substring(g.name, 1, 30) as "name of allele1 of genotype"
