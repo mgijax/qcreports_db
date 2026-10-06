@@ -68,4 +68,9 @@ foreach i (*GXD*.py)
     endif
 end
 
+foreach i (GXD*.sql)
+    echo `date`: $i | tee -a ${LOG}
+    ${QCRPTS}/reports.csh $i ${QCOUTPUTDIR}/$i.rpt ${PG_DBSERVER} ${PG_DBNAME}
+end
+
 echo `date`: End nightly GXD QC reports | tee -a ${LOG}
