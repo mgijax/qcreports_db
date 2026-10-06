@@ -19,7 +19,6 @@ create index idx1 on genotypes(_Genotype_key)
 ;
 
 \echo ''
-\echo 'specimens'
 \echo 'genotypes that have 2 alleles and pair state = heterozygous or homozygous'
 \echo 'mutated gene on X or Y'
 \echo 'sex = male'
