@@ -30,6 +30,7 @@ and s._sex_key = 315165
 and s._Experiment_key = a._Object_key
 and a._MGIType_key = 42
 and a._LogicalDB_key in (189, 190)
+and a.preferred = 1
 order by a.acciD
 ;
 
